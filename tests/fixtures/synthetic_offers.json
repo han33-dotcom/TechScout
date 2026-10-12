@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "synthetic": true,
+  "provenance": {
+    "created_on": "2026-10-12",
+    "owner": "Tech Scout project",
+    "license": "MIT",
+    "method": "Manually authored fictional facts; no retailer data, images or descriptions copied.",
+    "warning": "Invented offers for offline development only; not real prices, availability, permissions or evaluation results."
+  },
+  "sources": [
+    {
+      "id": "synthetic_a",
+      "name": "Fictional Shop A"
+    },
+    {
+      "id": "synthetic_b",
+      "name": "Fictional Shop B"
+    },
+    {
+      "id": "synthetic_c",
+      "name": "Fictional Shop C"
+    }
+  ],
+  "reference_request": {
+    "device_model": "iPhone 17",
+    "storage_gb": 256,
+    "allowed_colors": [
+      "Black"
+    ],
+    "sim": "physical+esim",
+    "condition": "new",
+    "budget": {
+      "amount": "1100.00",
+      "currency": "USD"
+    },
+    "fulfillment": "delivery",
+    "city": "Beirut"
+  },
+  "offers": [
+    {
+      "id": "demo-a-1",
+      "source_id": "synthetic_a",
+      "device_model": "iPhone 17",
+      "storage_gb": 256,
+      "color": "Black",
+      "sim": "physical+esim",
+      "condition": "new",
+      "currency": "USD",
+      "tax_included": true,
+      "in_stock": true,
+      "is_purchasable": true,
+      "warranty": {
+        "provider": "Fictional Demo Service",
+        "months": 12,
+        "territory": "LB"
+      },
+      "delivery": {
+        "city": "Beirut",
+        "charge": "5.00",
+        "estimated_business_days": [
+          2,
+          3
+        ]
+      },
+      "pickup_branch_stock": null,
+      "price": "1000.00",
+      "scenario": "matching_offer",
+      "expected_outcome": "candidate total USD 1005.00 before simulated final verification"
+    },
+    {
+      "id": "demo-b-1",
+      "source_id": "synthetic_b",
+      "device_model": "iPhone 17",
+      "storage_gb": 256,
+      "color": "White",
+      "sim": "physical+esim",
+      "condition": "new",
+      "currency": "USD",
+      "tax_included": true,
+      "in_stock": true,
+      "is_purchasable": true,
+      "warranty": {
+        "provider": "Fictional Demo Service",
+        "months": 12,
+        "territory": "LB"
+      },
+      "delivery": {
+        "city": "Beirut",
+        "charge": "5.00",
+        "estimated_business_days": [
+          2,
+          3
+        ]
+      },
+      "pickup_branch_stock": null,
+      "price": "970.00",
+      "scenario": "wrong_color",
+      "expected_outcome": "reject under reference request"
+    },
+    {
+      "id": "demo-c-1",
+      "source_id": "synthetic_c",
+      "device_model": "iPhone 17",
+      "storage_gb": 256,
+      "color": "Black",
+      "sim": "physical+esim",
+      "condition": "new",
+      "currency": "USD",
+      "tax_included": true,
+      "in_stock": true,
+      "is_purchasable": true,
+      "warranty": {
+        "provider": "Fictional Demo Service",
+        "months": 12,
+        "territory": "LB"
+      },
+      "delivery": {
+        "city": "Beirut",
+        "charge": null,
+        "estimated_business_days": [
+          2,
+          3
+        ]
+      },
+      "pickup_branch_stock": null,
+      "price": "980.00",
+      "scenario": "unknown_delivery_fee",
+      "expected_outcome": "unresolved; never insert zero fee"
+    },
+    {
+      "id": "demo-b-2",
+      "source_id": "synthetic_b",
+      "device_model": "iPhone 17",
+      "storage_gb": 256,
+      "color": "Black",
+      "sim": "esim-only",
+      "condition": "new",
+      "currency": "USD",
+      "tax_included": true,
+      "in_stock": true,
+      "is_purchasable": true,
+      "warranty": {
+        "provider": "Fictional Demo Service",
+        "months": 12,
+        "territory": "LB"
+      },
+      "delivery": {
+        "city": "Beirut",
+        "charge": "5.00",
+        "estimated_business_days": [
+          2,
+          3
+        ]
+      },
+      "pickup_branch_stock": null,
+      "price": "930.00",
+      "scenario": "wrong_sim_configuration",
+      "expected_outcome": "reject under reference request"
+    },
+    {
+      "id": "demo-c-2",
+      "source_id": "synthetic_c",
+      "device_model": "iPhone 17",
+      "storage_gb": 256,
+      "color": "Black",
+      "sim": "physical+esim",
+      "condition": "new",
+      "currency": "USD",
+      "tax_included": true,
+      "in_stock": true,
+      "is_purchasable": false,
+      "warranty": {
+        "provider": "Fictional Demo Service",
+        "months": 12,
+        "territory": "LB"
+      },
+      "delivery": {
+        "city": "Beirut",
+        "charge": "5.00",
+        "estimated_business_days": [
+          2,
+          3
+        ]
+      },
+      "pickup_branch_stock": null,
+      "price": "0.00",
+      "scenario": "nonpurchasable_zero_price",
+      "expected_outcome": "exclude; not a free phone"
+    },
+    {
+      "id": "demo-a-2",
+      "source_id": "synthetic_a",
+      "device_model": "iPhone 17",
+      "storage_gb": 256,
+      "color": "Black",
+      "sim": "physical+esim",
+      "condition": "new",
+      "currency": "USD",
+      "tax_included": true,
+      "in_stock": false,
+      "is_purchasable": true,
+      "warranty": {
+        "provider": "Fictional Demo Service",
+        "months": 12,
+        "territory": "LB"
+      },
+      "delivery": {
+        "city": "Beirut",
+        "charge": "5.00",
+        "estimated_business_days": [
+          2,
+          3
+        ]
+      },
+      "pickup_branch_stock": null,
+      "price": "900.00",
+      "scenario": "out_of_stock",
+      "expected_outcome": "reject"
+    }
+  ]
+}

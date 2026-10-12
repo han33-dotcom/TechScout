@@ -1,0 +1,189 @@
+{
+  "reviewed_on": "2026-10-12",
+  "timezone": "Asia/Beirut",
+  "scope": "Selected direct policy/robots/catalog responses; browser/search research supplemented these reads.",
+  "raw_snapshots": "Kept in private research archives outside this repository; not redistributed under MIT.",
+  "responses": [
+    {
+      "url": "https://abedtahan.com/policies/terms-of-service",
+      "observed_at": "2026-10-11T20:59:55.473540+00:00",
+      "status": 200,
+      "final_url": "https://abedtahan.com/policies/terms-of-service",
+      "sha256": "d41e5af6bab1ddbab971669a424b8d2c11b6742af4dfb9ec91ff2cf91c377374"
+    },
+    {
+      "url": "https://istyle.com.lb/policies/terms-of-service",
+      "observed_at": "2026-10-11T20:59:56.505059+00:00",
+      "status": 200,
+      "final_url": "https://istyle.com.lb/policies/terms-of-service",
+      "sha256": "1237b64de13fb153f4dc5ec87164501209fb021eb9ff52fd2dcb75f743fd8e9c"
+    },
+    {
+      "url": "https://techzone.com.lb/terms-and-conditions/",
+      "observed_at": "2026-10-11T20:59:56.534697+00:00",
+      "status": 200,
+      "final_url": "https://techzone.com.lb/terms-and-conditions/",
+      "sha256": "1d4b294f9ea6013837fe4bdf290f9965b69191b11297913cf086a5cb7a2281df"
+    },
+    {
+      "url": "https://istoreplus.me/policies/terms-of-service",
+      "observed_at": "2026-10-11T20:59:56.911585+00:00",
+      "status": 200,
+      "final_url": "https://istoreplus.me/policies/terms-of-service",
+      "sha256": "10e2661962806f4520c3ab1aa9f4b77ae9810d8c58cd40849953cae4d0f6411e"
+    },
+    {
+      "url": "https://classcellulars.com/robots.txt",
+      "observed_at": "2026-10-11T20:59:57.339889+00:00",
+      "status": 200,
+      "final_url": "https://classcellulars.com/robots.txt",
+      "sha256": "63314b553f83653ab10aa4bc9d64e8157c2b0fe5b52c5785f123ef5570d4d1c2"
+    },
+    {
+      "url": "https://classcellulars.com/privacy-policy/",
+      "observed_at": "2026-10-12T14:01:46.694564+00:00",
+      "status": 200,
+      "final_url": "https://classcellulars.com/privacy-policy/",
+      "sha256": "03c7edf0bafddc9f84b517bdef8a8cbb60418abee2f9c342f5e8f376eef35f69"
+    },
+    {
+      "url": "https://classcellulars.com/terms-of-use",
+      "observed_at": "2026-10-12T14:01:46.693608+00:00",
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "url": "https://kaystore.com/kaystore-terms-and-conditions/",
+      "observed_at": "2026-10-12T14:01:47.540509+00:00",
+      "status": 200,
+      "final_url": "https://kaystore.com/kaystore-terms-and-conditions/",
+      "sha256": "e66304e7fb2380bf743adbf2da8ec4af8b3125aca2cb46bdaaf88e6ce376027f"
+    },
+    {
+      "url": "https://ayoubcomputers.com/terms-of-service/",
+      "observed_at": "2026-10-12T14:01:47.653846+00:00",
+      "status": 200,
+      "final_url": "https://ayoubcomputers.com/terms-of-service/",
+      "sha256": "43c655ad8f4f0e21b8bdc1dec4537818bcec6bf8235d106d45bd158147fec521"
+    },
+    {
+      "url": "https://ayoubcomputers.com/robots.txt",
+      "observed_at": "2026-10-12T14:01:57.116106+00:00",
+      "status": 200,
+      "final_url": "https://ayoubcomputers.com/robots.txt",
+      "sha256": "7e84490cbbd8983d7faef282ea9a0df7d1c48ed81d62f554f451a61cb4138ef4"
+    },
+    {
+      "url": "https://mojitech.net/robots.txt",
+      "observed_at": "2026-10-12T14:01:58.050517+00:00",
+      "status": 200,
+      "final_url": "https://mojitech.net/robots.txt",
+      "sha256": "1cceab86b68e9e27ff9ffc16aa00241ef86de3e827a4420246ea581d9fc82228"
+    },
+    {
+      "url": "https://mojitech.net/product-category/apple-products/iphones/",
+      "observed_at": "2026-10-12T14:10:22.680633+00:00",
+      "status": 200,
+      "final_url": "https://mojitech.net/product-category/apple-products/iphones/",
+      "sha256": "e61a221ea7d5474246a613aaac9a613837c493d4e02892f50d91d5709c5648f7"
+    },
+    {
+      "url": "https://mojitech.net/refund_returns/",
+      "observed_at": "2026-10-12T14:10:22.681632+00:00",
+      "status": 200,
+      "final_url": "https://mojitech.net/refund_returns/",
+      "sha256": "f49031f49bcfd77b516985f19858836229be59f470d7d16fa259573253045ac5"
+    },
+    {
+      "url": "https://beytech.com.lb/robots.txt",
+      "observed_at": "2026-10-12T14:26:45.523383+00:00",
+      "status": 200,
+      "final_url": "https://beytech.com.lb/robots.txt",
+      "sha256": "933846b8468106ac04b4ce703ac04f27090a20217b8d4f5a572eb53efb005b7c"
+    },
+    {
+      "url": "https://beytech.com.lb/product/apple-iphone-17-1-sim-2-years-warranty/",
+      "observed_at": "2026-10-12T14:26:45.524388+00:00",
+      "status": 200,
+      "final_url": "https://beytech.com.lb/product/apple-iphone-17-1-sim-2-years-warranty/",
+      "sha256": "62a1ad8be8a5a738023f6bf1f9a63b6b93e3d6f92fd86808bdd72787a954c69a"
+    },
+    {
+      "url": "https://mojitech.net/shop/brands/apple-brands/apple-iphone-17-256gb/",
+      "observed_at": "2026-10-12T14:26:46.253674+00:00",
+      "status": 200,
+      "final_url": "https://mojitech.net/shop/brands/apple-brands/apple-iphone-17-256gb/",
+      "sha256": "f31a04d5a76a64a6586e325063486d69e5e148c2820e4401ed4fa28b14db34e8"
+    },
+    {
+      "url": "https://classcellulars.com/contact/",
+      "observed_at": "2026-10-12T14:26:47.978411+00:00",
+      "status": 200,
+      "final_url": "https://classcellulars.com/contact/",
+      "sha256": "1c7b875c2e351d4da31fd178dd9e6f939875cb9b58c8ed8a984bf2785c3ed589"
+    },
+    {
+      "url": "https://beytech.com.lb/wp-json/wc/store/v1/products?slug=apple-iphone-17-1-sim-2-years-warranty",
+      "observed_at": "2026-10-12T14:28:56.584195+00:00",
+      "status": 200,
+      "final_url": "https://beytech.com.lb/wp-json/wc/store/v1/products?slug=apple-iphone-17-1-sim-2-years-warranty",
+      "sha256": "e92cfa0c9ddbf7a26b359d47585fe8a8db40dc586b69ff6f24af62d1bf29a18c"
+    },
+    {
+      "url": "https://mojitech.net/wp-json/wc/store/v1/products?slug=apple-iphone-17-256gb",
+      "observed_at": "2026-10-12T14:28:56.585213+00:00",
+      "status": 200,
+      "final_url": "https://mojitech.net/wp-json/wc/store/v1/products?slug=apple-iphone-17-256gb",
+      "sha256": "d6918040c6b88a8aac3d132cdb5ad2129fe14b38a05ae3f14dbce777a9abeb15"
+    },
+    {
+      "url": "https://mojitech.net/contact-us/",
+      "observed_at": "2026-10-12T14:28:57.367986+00:00",
+      "status": 200,
+      "final_url": "https://mojitech.net/contact-us/",
+      "sha256": "1f621c9f397cb8c49628f404bd183364abcc9a718027da0e4ca13204fe002118"
+    },
+    {
+      "url": "https://beytech.com.lb/contact-us/",
+      "observed_at": "2026-10-12T14:28:57.876727+00:00",
+      "status": 200,
+      "final_url": "https://beytech.com.lb/contact-us/",
+      "sha256": "70c9fb27d14af5658e04d3ed85b5e9964d9dd824a756a44bf72d8a3626fde9d3"
+    },
+    {
+      "url": "https://beytech.com.lb/privacy-policy-2/",
+      "observed_at": "2026-10-12T14:28:58.360137+00:00",
+      "status": 200,
+      "final_url": "https://beytech.com.lb/privacy-policy-2/",
+      "sha256": "02c505a4693e4944bd2667239028d84e57842277f5f31f9f0f9943d41b145ab3"
+    },
+    {
+      "url": "https://beytech.com.lb/warranty-terms-conditions/",
+      "observed_at": "2026-10-12T14:28:59.826141+00:00",
+      "status": 200,
+      "final_url": "https://beytech.com.lb/warranty-terms-conditions/",
+      "sha256": "0020ef1d556e3ecbaa19d94c8b01faf1206145c2775402ce9cab504ec734933b"
+    },
+    {
+      "url": "https://classcellulars.com/wp-json/wc/store/v1/products?slug=iphone-17",
+      "observed_at": "2026-10-12T14:49:10.066787+00:00",
+      "status": 200,
+      "final_url": "https://classcellulars.com/wp-json/wc/store/v1/products?slug=iphone-17",
+      "sha256": "53a57df9e917ce14ed7d2a41499bdfb63108862601b72a0eb54aa3c219efc9ef"
+    },
+    {
+      "url": "https://mojitech.net/wp-json/wc/store/v1/products?slug=apple-iphone-17-256gb",
+      "observed_at": "2026-10-12T14:49:10.071693+00:00",
+      "status": 200,
+      "final_url": "https://mojitech.net/wp-json/wc/store/v1/products?slug=apple-iphone-17-256gb",
+      "sha256": "d6918040c6b88a8aac3d132cdb5ad2129fe14b38a05ae3f14dbce777a9abeb15"
+    },
+    {
+      "url": "https://beytech.com.lb/wp-json/wc/store/v1/products?slug=apple-iphone-17-1-sim-2-years-warranty",
+      "observed_at": "2026-10-12T14:49:11.201397+00:00",
+      "status": 200,
+      "final_url": "https://beytech.com.lb/wp-json/wc/store/v1/products?slug=apple-iphone-17-1-sim-2-years-warranty",
+      "sha256": "e92cfa0c9ddbf7a26b359d47585fe8a8db40dc586b69ff6f24af62d1bf29a18c"
+    }
+  ],
+  "project_access_assumption": "Public website data is treated as unrestricted for this project, per the user. Evidence documents technical availability, not merchant permission."
+}

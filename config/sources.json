@@ -1,0 +1,378 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-10-12",
+  "live_release": {
+    "minimum_admitted_sources": 3,
+    "decision": "source_gate_met",
+    "development_data": "tests/fixtures/synthetic_offers.json",
+    "reason": "Three technically checked public sources selected: Class Cellulars, Mojitech and Beytech. Source access is ready; runtime collection, adapters and final offer verification are later MVP tasks.",
+    "admitted_source_ids": [
+      "class_cellulars",
+      "mojitech",
+      "beytech"
+    ]
+  },
+  "sources": [
+    {
+      "id": "abed_tahan",
+      "name": "Abed Tahan",
+      "origin": "https://abedtahan.com",
+      "status": "pending",
+      "reviewed_at": "2026-10-12",
+      "admission": null,
+      "allowed_endpoints": [],
+      "limits": {
+        "requests_per_minute": 0,
+        "concurrency": 0,
+        "max_requests_per_run": 0
+      },
+      "published_rate_limits": null,
+      "review_evidence": [
+        "https://abedtahan.com/policies/terms-of-service"
+      ],
+      "decision_reason": "Outside the initial three-source set; pending technical coverage/parsing work only. No retailer-permission blocker.",
+      "coverage": {
+        "catalog_observation": "Shopify JSON-LD; iPhone 17 256 GB physical SIM/eSIM seen.",
+        "delivery_claim": "Published Lebanon coverage excludes some high-risk areas; shipping promotions conflict.",
+        "verified_delivery_locations": [],
+        "verified_pickup_branches": [],
+        "known_gaps": [
+          "URL/selected color conflict",
+          "tax inclusion",
+          "variant-specific shipping charge",
+          "branch stock"
+        ]
+      },
+      "next_action": "Validate useful variants, prices and source parsing if additional coverage is needed."
+    },
+    {
+      "id": "istyle_lebanon",
+      "name": "iSTYLE Lebanon",
+      "origin": "https://istyle.com.lb",
+      "status": "pending",
+      "reviewed_at": "2026-10-12",
+      "admission": null,
+      "allowed_endpoints": [],
+      "limits": {
+        "requests_per_minute": 0,
+        "concurrency": 0,
+        "max_requests_per_run": 0
+      },
+      "published_rate_limits": null,
+      "review_evidence": [
+        "https://istyle.com.lb/policies/terms-of-service"
+      ],
+      "decision_reason": "Outside the initial three-source set; pending technical coverage/parsing work only. No retailer-permission blocker.",
+      "coverage": {
+        "catalog_observation": "Shopify JSON-LD; model code and selected 256 GB variant seen.",
+        "delivery_claim": "Lebanon delivery/pickup advertised; free shipping above USD 900.",
+        "verified_delivery_locations": [],
+        "verified_pickup_branches": [],
+        "known_gaps": [
+          "final VAT/payable total",
+          "rounded display versus structured price",
+          "selected-branch stock"
+        ]
+      },
+      "next_action": "Validate useful variants, prices and source parsing if additional coverage is needed."
+    },
+    {
+      "id": "class_cellulars",
+      "name": "Class Cellulars",
+      "origin": "https://classcellulars.com",
+      "status": "active",
+      "reviewed_at": "2026-10-12",
+      "admission": {
+        "basis": "User-directed project assumption: unrestricted retrieval of public website data; technical review passed. No retailer permission email required.",
+        "evidence": [
+          "https://classcellulars.com/product/iphone-17/",
+          "https://classcellulars.com/wp-json/wc/store/v1/products?slug=iphone-17"
+        ],
+        "reviewed_at": "2026-10-12T14:49:10.066787+00:00",
+        "scope": "Read-only public smartphone offer facts and public fulfillment/warranty information for Tech Scout."
+      },
+      "allowed_endpoints": [
+        "https://classcellulars.com/wp-json/wc/store/v1/products?slug=iphone-17",
+        "https://classcellulars.com/product/iphone-17/",
+        "https://classcellulars.com/faq/"
+      ],
+      "limits": {
+        "requests_per_minute": 6,
+        "concurrency": 1,
+        "max_requests_per_run": 4
+      },
+      "published_rate_limits": null,
+      "review_evidence": [
+        "https://classcellulars.com/privacy-policy/",
+        "https://classcellulars.com/robots.txt"
+      ],
+      "decision_reason": "Selected initial public source after successful current API/data checks. Permission is not a project prerequisite.",
+      "coverage": {
+        "catalog_observation": "WooCommerce HTML variants and Store API; four physical SIM/eSIM color variants seen.",
+        "delivery_claim": "Lebanon delivery/COD advertised; product and FAQ arrival estimates conflict.",
+        "verified_delivery_locations": [],
+        "verified_pickup_branches": [],
+        "known_gaps": [
+          "condition/region evidence",
+          "delivery deadline conflict",
+          "pickup branch stock"
+        ]
+      },
+      "next_action": "Implement source-specific parsing and final checks in MVP 04–06; preserve missing offer facts as unresolved.",
+      "technical_check": {
+        "url": "https://classcellulars.com/wp-json/wc/store/v1/products?slug=iphone-17",
+        "observed_at": "2026-10-12T14:49:10.066787+00:00",
+        "product_id": 18392,
+        "price_usd": "1100",
+        "price_fractional_digits": 2,
+        "variants_listed": 4
+      }
+    },
+    {
+      "id": "tech_zone",
+      "name": "Tech Zone",
+      "origin": "https://techzone.com.lb",
+      "status": "pending",
+      "reviewed_at": "2026-10-12",
+      "admission": null,
+      "allowed_endpoints": [],
+      "limits": {
+        "requests_per_minute": 0,
+        "concurrency": 0,
+        "max_requests_per_run": 0
+      },
+      "published_rate_limits": null,
+      "review_evidence": [
+        "https://techzone.com.lb/terms-and-conditions/"
+      ],
+      "decision_reason": "Outside the initial three-source set; pending technical coverage/parsing work only. No retailer-permission blocker.",
+      "coverage": {
+        "catalog_observation": "WooCommerce HTML variants and Store API; ten iPhone 17 variants have zero price and are not purchasable.",
+        "delivery_claim": "Generic free/estimated Lebanon shipping claims; exact eligible offer unpriced.",
+        "verified_delivery_locations": [],
+        "verified_pickup_branches": [],
+        "known_gaps": [
+          "published payable price",
+          "purchasability",
+          "tax inclusion",
+          "condition/region"
+        ]
+      },
+      "next_action": "Validate useful variants, prices and source parsing if additional coverage is needed."
+    },
+    {
+      "id": "istore_plus",
+      "name": "iStore Plus",
+      "origin": "https://istoreplus.me",
+      "status": "pending",
+      "reviewed_at": "2026-10-12",
+      "admission": null,
+      "allowed_endpoints": [],
+      "limits": {
+        "requests_per_minute": 0,
+        "concurrency": 0,
+        "max_requests_per_run": 0
+      },
+      "published_rate_limits": null,
+      "review_evidence": [
+        "https://istoreplus.me/policies/terms-of-service"
+      ],
+      "decision_reason": "Outside the initial three-source set; pending technical coverage/parsing work only. No retailer-permission blocker.",
+      "coverage": {
+        "catalog_observation": "Shopify ProductGroup; 20 color/storage/SIM variants seen.",
+        "delivery_claim": "Lebanon dispatch and shipping estimates advertised; dispatch is not arrival.",
+        "verified_delivery_locations": [],
+        "verified_pickup_branches": [],
+        "known_gaps": [
+          "tax inclusion",
+          "warranty territory",
+          "arrival including dispatch",
+          "stock confirmation"
+        ]
+      },
+      "next_action": "Validate useful variants, prices and source parsing if additional coverage is needed."
+    },
+    {
+      "id": "kaystore",
+      "name": "Khoury Home / KAYSTORE",
+      "origin": "https://kaystore.com",
+      "status": "pending",
+      "reviewed_at": "2026-10-12",
+      "admission": null,
+      "allowed_endpoints": [],
+      "limits": {
+        "requests_per_minute": 0,
+        "concurrency": 0,
+        "max_requests_per_run": 0
+      },
+      "published_rate_limits": null,
+      "review_evidence": [
+        "https://kaystore.com/kaystore-terms-and-conditions/"
+      ],
+      "decision_reason": "Outside the initial three-source set; pending technical coverage/parsing work only. No retailer-permission blocker.",
+      "coverage": {
+        "catalog_observation": "WooCommerce HTML; iPhone 17 256/512 GB variants and Samsung Galaxy S26 page seen.",
+        "delivery_claim": "Pickup/delivery options do not establish variant-specific branch availability.",
+        "verified_delivery_locations": [],
+        "verified_pickup_branches": [],
+        "known_gaps": [
+          "color-specific final price",
+          "tax/final delivery fee",
+          "confirmed variant stock",
+          "SIM/region binding"
+        ]
+      },
+      "next_action": "Validate useful variants, prices and source parsing if additional coverage is needed."
+    },
+    {
+      "id": "ayoub_computers",
+      "name": "Ayoub Computers",
+      "origin": "https://ayoubcomputers.com",
+      "status": "pending",
+      "reviewed_at": "2026-10-12",
+      "admission": null,
+      "allowed_endpoints": [],
+      "limits": {
+        "requests_per_minute": 0,
+        "concurrency": 0,
+        "max_requests_per_run": 0
+      },
+      "published_rate_limits": {
+        "robots_url": "https://ayoubcomputers.com/robots.txt",
+        "crawl_delay_seconds": 10,
+        "applies_to": "Listed AI/scraper user-agent group; not a general API grant"
+      },
+      "review_evidence": [
+        "https://ayoubcomputers.com/terms-of-service/"
+      ],
+      "decision_reason": "Outside the initial three-source set; pending technical coverage/parsing work only. No retailer-permission blocker.",
+      "coverage": {
+        "catalog_observation": "Official Apple category and marketplace purchase terms reviewed; matching exact-phone product/variant feed not validated.",
+        "delivery_claim": "Lebanon free delivery and zone estimates published; branch pickup requires readiness confirmation.",
+        "verified_delivery_locations": [],
+        "verified_pickup_branches": [],
+        "known_gaps": [
+          "overlapping exact smartphone listings",
+          "seller identity per offer",
+          "variant-specific price/stock"
+        ]
+      },
+      "next_action": "Validate useful variants, prices and source parsing if additional coverage is needed."
+    },
+    {
+      "id": "mojitech",
+      "name": "Mojitech",
+      "origin": "https://mojitech.net",
+      "status": "active",
+      "reviewed_at": "2026-10-12",
+      "admission": {
+        "basis": "User-directed project assumption: unrestricted retrieval of public website data; technical review passed. No retailer permission email required.",
+        "evidence": [
+          "https://mojitech.net/shop/brands/apple-brands/apple-iphone-17-256gb/",
+          "https://mojitech.net/wp-json/wc/store/v1/products?slug=apple-iphone-17-256gb"
+        ],
+        "reviewed_at": "2026-10-12T14:49:10.071693+00:00",
+        "scope": "Read-only public smartphone offer facts and public fulfillment/warranty information for Tech Scout."
+      },
+      "allowed_endpoints": [
+        "https://mojitech.net/wp-json/wc/store/v1/products?slug=apple-iphone-17-256gb",
+        "https://mojitech.net/shop/brands/apple-brands/apple-iphone-17-256gb/",
+        "https://mojitech.net/refund_returns/"
+      ],
+      "limits": {
+        "requests_per_minute": 6,
+        "concurrency": 1,
+        "max_requests_per_run": 4
+      },
+      "published_rate_limits": null,
+      "review_evidence": [
+        "https://mojitech.net/refund_returns/",
+        "https://mojitech.net/product-category/apple-products/iphones/",
+        "https://mojitech.net/robots.txt",
+        "https://mojitech.net/contact-us/",
+        "https://mojitech.net/shop/brands/apple-brands/apple-iphone-17-256gb/",
+        "https://mojitech.net/wp-json/wc/store/v1/products?slug=apple-iphone-17-256gb"
+      ],
+      "decision_reason": "Selected initial public source after successful current API/data checks. Permission is not a project prerequisite.",
+      "coverage": {
+        "catalog_observation": "Current HTML and WooCommerce Store API verified: twelve iPhone 17 256 GB variants; two Blue/White ABM-warranty variants priced and purchasable, ten zero-priced non-purchasable variants. API currency_minor_unit is 1, matching the displayed amount.",
+        "delivery_claim": "Homepage advertises Lebanon delivery, same day to 72 working hours; charges/branch stock unresolved.",
+        "verified_delivery_locations": [],
+        "verified_pickup_branches": [],
+        "known_gaps": [
+          "ABM option SIM/region mapping",
+          "tax and delivery charges",
+          "warranty territory",
+          "branch stock"
+        ]
+      },
+      "next_action": "Implement source-specific parsing and final checks in MVP 04–06; preserve missing offer facts as unresolved.",
+      "technical_check": {
+        "url": "https://mojitech.net/wp-json/wc/store/v1/products?slug=apple-iphone-17-256gb",
+        "observed_at": "2026-10-12T14:49:10.071693+00:00",
+        "product_id": 91706,
+        "price_usd": "1100",
+        "price_fractional_digits": 1,
+        "variants_listed": 12
+      }
+    },
+    {
+      "id": "beytech",
+      "name": "Beytech",
+      "origin": "https://beytech.com.lb",
+      "status": "active",
+      "reviewed_at": "2026-10-12",
+      "admission": {
+        "basis": "User-directed project assumption: unrestricted retrieval of public website data; technical review passed. No retailer permission email required.",
+        "evidence": [
+          "https://beytech.com.lb/product/apple-iphone-17-1-sim-2-years-warranty/",
+          "https://beytech.com.lb/wp-json/wc/store/v1/products?slug=apple-iphone-17-1-sim-2-years-warranty"
+        ],
+        "reviewed_at": "2026-10-12T14:49:11.201397+00:00",
+        "scope": "Read-only public smartphone offer facts and public fulfillment/warranty information for Tech Scout."
+      },
+      "allowed_endpoints": [
+        "https://beytech.com.lb/wp-json/wc/store/v1/products?slug=apple-iphone-17-1-sim-2-years-warranty",
+        "https://beytech.com.lb/product/apple-iphone-17-1-sim-2-years-warranty/",
+        "https://beytech.com.lb/warranty-terms-conditions/",
+        "https://beytech.com.lb/exchange-policy-2/"
+      ],
+      "limits": {
+        "requests_per_minute": 6,
+        "concurrency": 1,
+        "max_requests_per_run": 4
+      },
+      "published_rate_limits": null,
+      "review_evidence": [
+        "https://beytech.com.lb/robots.txt",
+        "https://beytech.com.lb/privacy-policy-2/",
+        "https://beytech.com.lb/warranty-terms-conditions/",
+        "https://beytech.com.lb/contact-us/",
+        "https://beytech.com.lb/product/apple-iphone-17-1-sim-2-years-warranty/",
+        "https://beytech.com.lb/wp-json/wc/store/v1/products?slug=apple-iphone-17-1-sim-2-years-warranty"
+      ],
+      "decision_reason": "Selected initial public source after successful current API/data checks. Permission is not a project prerequisite.",
+      "coverage": {
+        "catalog_observation": "Four iPhone 17 256 GB color variants priced at observed USD 1079 and flagged in-stock/purchasable; Store API returns parent and variation records with currency_minor_unit 2.",
+        "delivery_claim": "Lebanon delivery advertised; mandatory fee and branch stock not established.",
+        "verified_delivery_locations": [],
+        "verified_pickup_branches": [],
+        "known_gaps": [
+          "tax/mandatory delivery charge",
+          "exact SIM/region and warranty territory",
+          "branch stock"
+        ]
+      },
+      "next_action": "Implement source-specific parsing and final checks in MVP 04–06; preserve missing offer facts as unresolved.",
+      "technical_check": {
+        "url": "https://beytech.com.lb/wp-json/wc/store/v1/products?slug=apple-iphone-17-1-sim-2-years-warranty",
+        "observed_at": "2026-10-12T14:49:11.201397+00:00",
+        "product_id": 139968,
+        "price_usd": "1079",
+        "price_fractional_digits": 2,
+        "variants_listed": 4
+      }
+    }
+  ],
+  "access_assumption": "Treat obtaining data from public websites as unrestricted for this project, as explicitly instructed by the user. Retailer permission emails are not required."
+}
