@@ -1,0 +1,63 @@
+{
+  "synthetic": true,
+  "note": "Fictional contract examples; not real retailer prices or availability.",
+  "request": {
+    "schema_version": 1,
+    "request_id": "request-1",
+    "manufacturer": "Apple",
+    "model": "iPhone 17",
+    "storage_gb": 256,
+    "allowed_colors": ["Black"],
+    "sim": "physical+esim",
+    "allowed_regions": ["any"],
+    "warranty_requirement": {"provider": null, "min_months": 12, "territory": "LB"},
+    "budget": {"amount": "1100.00", "currency": "USD"},
+    "payment_basis": "cash",
+    "fulfillment": {"mode": "pickup", "country": "LB", "city": "Beirut", "branch_id": "beirut-branch"},
+    "allowed_markets": ["LB"],
+    "deadline": {"arrive_by": "2026-10-20T18:00:00+03:00", "basis": "guaranteed"}
+  },
+  "offer": {
+    "schema_version": 1,
+    "offer_id": "offer-1",
+    "source_id": "seller-1",
+    "seller_id": "seller-1",
+    "variant": {
+      "source_id": "seller-1", "product_id": "parent-1", "variant_id": "variant-1",
+      "manufacturer": {"state": "known", "value": "Apple", "evidence_ids": ["ev-manufacturer"]},
+      "model": {"state": "known", "value": "iPhone 17", "evidence_ids": ["ev-model"]},
+      "storage_gb": {"state": "known", "value": 256, "evidence_ids": ["ev-storage"]},
+      "color": {"state": "known", "value": "Black", "evidence_ids": ["ev-color"]},
+      "sim": {"state": "known", "value": "physical+esim", "evidence_ids": ["ev-sim"]},
+      "region": {"state": "unknown", "reason": "Region is not published"},
+      "raw_attributes": {"sku": "shared-sku", "Color": "Black", "SIM": "Nano SIM + eSIM"}
+    },
+    "price": {"state": "known", "value": {"amount": "1000.00", "currency": "USD"}, "evidence_ids": ["ev-price"]},
+    "payment_basis": {"state": "unknown", "reason": "Payment-specific price terms are not published"},
+    "raw_price": "100000",
+    "price_fractional_digits": 2,
+    "condition": {"state": "known", "value": "new", "evidence_ids": ["ev-condition"]},
+    "purchasable": {"state": "known", "value": true, "evidence_ids": ["ev-purchasable"]},
+    "online_stock": {"state": "known", "value": true, "evidence_ids": ["ev-online-stock"]},
+    "pickup_stock": [{"branch_id": "beirut-branch", "city": "Beirut", "stock": {"state": "unknown", "reason": "Online stock does not confirm branch stock"}}],
+    "warranty": {
+      "provider": {"state": "unknown", "reason": "Provider is not published"},
+      "months": {"state": "unknown", "reason": "Duration is not published"},
+      "territory": {"state": "unknown", "reason": "Territory is not published"}
+    },
+    "fulfillment": {"mode": "pickup", "country": "LB", "city": "Beirut", "branch_id": "beirut-branch"},
+    "arrival": {"state": "unknown", "reason": "Pickup readiness is unconfirmed"},
+    "costs": [{"kind": "payment", "state": "unknown", "amount": null, "reason": "Mandatory fee is not published"}],
+    "evidence": [
+      {"evidence_id": "ev-manufacturer", "source_id": "seller-1", "product_id": "parent-1", "variant_id": "variant-1", "scope": "variant", "field_path": "variant.manufacturer", "origin_url": "https://seller.example/product", "final_url": "https://seller.example/product", "observed_at": "2026-10-12T14:00:00Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "1", "json_pointer": "/attributes/manufacturer"},
+      {"evidence_id": "ev-model", "source_id": "seller-1", "product_id": "parent-1", "variant_id": "variant-1", "scope": "variant", "field_path": "variant.model", "origin_url": "https://seller.example/product", "final_url": "https://seller.example/product", "observed_at": "2026-10-12T14:00:00Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "1", "json_pointer": "/attributes/model"},
+      {"evidence_id": "ev-storage", "source_id": "seller-1", "product_id": "parent-1", "variant_id": "variant-1", "scope": "variant", "field_path": "variant.storage_gb", "origin_url": "https://seller.example/product", "final_url": "https://seller.example/product", "observed_at": "2026-10-12T14:00:00Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "1", "json_pointer": "/attributes/storage_gb"},
+      {"evidence_id": "ev-color", "source_id": "seller-1", "product_id": "parent-1", "variant_id": "variant-1", "scope": "variant", "field_path": "variant.color", "origin_url": "https://seller.example/product", "final_url": "https://seller.example/product", "observed_at": "2026-10-12T14:00:00Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "1", "json_pointer": "/attributes/color"},
+      {"evidence_id": "ev-sim", "source_id": "seller-1", "product_id": "parent-1", "variant_id": "variant-1", "scope": "variant", "field_path": "variant.sim", "origin_url": "https://seller.example/product", "final_url": "https://seller.example/product", "observed_at": "2026-10-12T14:00:00Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "1", "json_pointer": "/attributes/sim"},
+      {"evidence_id": "ev-price", "source_id": "seller-1", "product_id": "parent-1", "variant_id": "variant-1", "scope": "variant", "field_path": "price", "origin_url": "https://seller.example/product", "final_url": "https://seller.example/product", "observed_at": "2026-10-12T14:00:00Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "1", "json_pointer": "/prices/price"},
+      {"evidence_id": "ev-condition", "source_id": "seller-1", "product_id": "parent-1", "variant_id": "variant-1", "scope": "variant", "field_path": "condition", "origin_url": "https://seller.example/product", "final_url": "https://seller.example/product", "observed_at": "2026-10-12T14:00:00Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "1", "excerpt": "Condition: new"},
+      {"evidence_id": "ev-purchasable", "source_id": "seller-1", "product_id": "parent-1", "variant_id": "variant-1", "scope": "variant", "field_path": "purchasable", "origin_url": "https://seller.example/product", "final_url": "https://seller.example/product", "observed_at": "2026-10-12T14:00:00Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "1", "json_pointer": "/is_purchasable"},
+      {"evidence_id": "ev-online-stock", "source_id": "seller-1", "product_id": "parent-1", "variant_id": "variant-1", "scope": "variant", "field_path": "online_stock", "origin_url": "https://seller.example/product", "final_url": "https://seller.example/product", "observed_at": "2026-10-12T14:00:00Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "1", "json_pointer": "/is_in_stock"}
+    ]
+  }
+}
