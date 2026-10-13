@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "techscout"
+version = "0.1.0"
+description = "Exact-device shopping comparison for buyers in Lebanon"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+# Pinned versions live in requirements.txt so pip, Docker and CI install the same set.
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+
+[tool.setuptools]
+packages = ["app"]
