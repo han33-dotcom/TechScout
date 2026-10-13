@@ -3,6 +3,9 @@
 Use [docs/collaborator-setup.md](docs/collaborator-setup.md) for Windows/macOS setup,
 assistant instruction-loading checks and individual onboarding evidence.
 
+Use [docs/pr-policy-activation.md](docs/pr-policy-activation.md) for PR metadata,
+scoped exemptions and the owner checklist for required-check activation.
+
 ## Setup
 
 Use Python 3.11 for the shared baseline. Create a virtual environment at the repository
