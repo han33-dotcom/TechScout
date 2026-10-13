@@ -1,5 +1,8 @@
 # Working on TechScout
 
+Use [docs/collaborator-setup.md](docs/collaborator-setup.md) for Windows/macOS setup,
+assistant instruction-loading checks and individual onboarding evidence.
+
 ## Setup
 
 Use Python 3.11 for the shared baseline. Create a virtual environment at the repository

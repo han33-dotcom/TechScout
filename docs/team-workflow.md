@@ -76,4 +76,5 @@ changes. Restart/refresh the assistant and verify the active instruction sources
 branch target and checks. Ordinary web chats require the current files supplied
 explicitly if repository instruction loading is unavailable.
 
-Detailed individual tool setup and smoke checks belong to the next onboarding task.
+Follow [collaborator-setup.md](collaborator-setup.md) for individual tool setup,
+instruction-loading smoke checks and evidence records.
