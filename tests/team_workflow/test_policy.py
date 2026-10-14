@@ -3,7 +3,8 @@ import unittest
 from scripts.team_workflow.policy import validate_pr_metadata, approved_exemptions
 
 
-def body(project="Sentra", url="https://www.notion.so/0123456789abcdef0123456789abcdef"):
+def body(project="Sentra", url=None):
+    url = url or f"https://github.com/han33-dotcom/{project}/issues/16"
     return (
         f"Project: {project}\nTask URL: {url}\n"
         "## What & why\nAdd a date filter to the dashboard.\n"
@@ -28,7 +29,7 @@ class PolicyTests(unittest.TestCase):
                 self.assertEqual(validate_pr_metadata(body(project), set(), repo, base), [])
 
     def test_missing_link_fails(self):
-        text = body().replace("Task URL: https://www.notion.so/0123456789abcdef0123456789abcdef\n", "")
+        text = body().replace("Task URL: https://github.com/han33-dotcom/Sentra/issues/16\n", "")
         self.assertTrue(validate_pr_metadata(text, set(), "han33-dotcom/Sentra", "develop"))
 
     def test_bad_link_domains_credentials_queries_and_missing_page_id_fail(self):
@@ -41,12 +42,8 @@ class PolicyTests(unittest.TestCase):
             with self.subTest(url=url):
                 self.assertTrue(validate_pr_metadata(body(url=url), set(), "han33-dotcom/Sentra", "develop"))
 
-    def test_notion_page_urls_with_titles_dashes_and_pvs_are_supported(self):
-        for url in [
-            "https://www.notion.so/Task-0123456789abcdef0123456789abcdef?pvs=4",
-            "https://app.notion.com/p/01234567-89ab-cdef-0123-456789abcdef",
-        ]:
-            self.assertEqual(validate_pr_metadata(body(url=url), set(), "han33-dotcom/Sentra", "develop"), [])
+    def test_notion_links_are_replaced_by_repository_issue_links(self):
+        self.assertTrue(validate_pr_metadata(body(url="https://app.notion.com/p/0123456789abcdef0123456789abcdef"), set(), "han33-dotcom/Sentra", "develop"))
 
     def test_wrong_project_id_unknown_repository_and_wrong_base_fail(self):
         for text, repo, base in [
@@ -72,7 +69,7 @@ class PolicyTests(unittest.TestCase):
         self.assertTrue(validate_pr_metadata(body()+"Task URL: https://notion.so/0123456789abcdef0123456789abcdef\n", set(), "han33-dotcom/Sentra", "develop"))
 
     def test_approved_maintenance_and_release_can_omit_task(self):
-        text = body().replace("Task URL: https://www.notion.so/0123456789abcdef0123456789abcdef\n", "")
+        text = body().replace("Task URL: https://github.com/han33-dotcom/Sentra/issues/16\n", "")
         self.assertEqual(validate_pr_metadata(text, {"workflow-maintenance"}, "han33-dotcom/Sentra", "develop"), [])
         self.assertEqual(validate_pr_metadata(text, {"release"}, "han33-dotcom/Sentra", "main"), [])
         self.assertTrue(validate_pr_metadata(text, {"release"}, "han33-dotcom/TechScout", "main"))

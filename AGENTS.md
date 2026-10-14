@@ -1,6 +1,6 @@
 # TechScout agent instructions
 
-Policy version: 1. This is the canonical policy for coding and review agents.
+Policy version: 2. This is the canonical policy for coding and review agents.
 Read [CONTRIBUTING.md](CONTRIBUTING.md) and the relevant project documents.
 Follow applicable nested instructions if they are added later.
 
@@ -13,6 +13,10 @@ describe the planned backend, retrieval or shopping flow as implemented.
 - Source policy: [docs/source-admission.md](docs/source-admission.md).
 - Contract implementation: `app/contracts.py`; source selection: `app/source_registry.py`.
 - Team workflow and rollout: [docs/team-workflow.md](docs/team-workflow.md).
+
+Documentation index: [docs/README.md](docs/README.md). General references and meeting
+notes live in the project Wiki after publication. Consult relevant Wiki decisions
+when a task depends on them; summarize code-affecting decisions in reviewed docs.
 
 ## Starting work
 
@@ -58,9 +62,11 @@ and build checks. A passing test suite alone does not prove shopping-flow comple
 
 ## Handoff and Definition of Done
 
-- Link the Notion task URL and task ID, when available, in the PR description.
+- Link the same-repository GitHub issue URL (Task ID is optional and uses its issue number), in the PR description.
   Explain the change, validation and limitations. Explain workflow-only changes
   explicitly when they have no implementation task.
+- Use Related to #NUMBER, not automatic issue-closing keywords. Keep issues open
+  until a teammate records acceptance; Project Status and issue closure are distinct.
 - Record lasting decisions in repository documentation or the linked task, not only
   in a private assistant conversation.
 - Reviews inspect the current PR head and applicable acceptance criteria. Put actionable
@@ -70,7 +76,7 @@ and build checks. A passing test suite alone does not prove shopping-flow comple
   merge automatically or dismiss unresolved findings.
 - Implemented means required implementation PRs merged into `main`. Done requires
   a human to verify acceptance criteria, including deployment/demo work where applicable.
-- Do not claim AI review, Slack notification or Notion synchronization happened unless
+- Do not claim AI review, Slack notification or Project synchronization happened unless
   their actual results are available. See the rollout status in the team guide.
 
 ## Code Review Rules

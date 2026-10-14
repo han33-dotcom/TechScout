@@ -1,15 +1,16 @@
 """Read-only check of current PR metadata using the trusted base-branch policy."""
 import json
 import os
+import re
 import sys
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, build_opener, HTTPRedirectHandler
 
 if __package__:
-    from .policy import PROJECTS, approved_exemptions, validate_pr_metadata
+    from .policy import PROJECTS, approved_exemptions, validate_pr_metadata, visible_text, task_issue_number
 else:
-    from policy import PROJECTS, approved_exemptions, validate_pr_metadata
+    from policy import PROJECTS, approved_exemptions, validate_pr_metadata, visible_text, task_issue_number
 
 
 def pages(fetch, path):
@@ -45,6 +46,15 @@ def check_pr_event(event, repo, fetch):
     timeline = pages(fetch, f"/issues/{number}/timeline")
     labels, errors = approved_exemptions(pr, paths, timeline, repo)
     errors.extend(validate_pr_metadata(pr.get("body") or "", labels, repo, pr["base"]["ref"]))
+    urls = re.findall(r"^Task URL:\s*(.*?)\s*$", visible_text(pr.get("body") or ""), flags=re.M)
+    if len(urls) == 1:
+        task_number = task_issue_number(urls[0], repo)
+        if task_number is not None:
+            issue = fetch(f"/issues/{task_number}")
+            if issue.get("number") != task_number:
+                errors.append("Task issue identity could not be verified.")
+            if "pull_request" in issue:
+                errors.append("Task URL must reference an issue, not a pull request.")
     latest = fetch(f"/pulls/{number}")
     if (latest["head"]["sha"] != pr["head"]["sha"]
             or latest["base"]["sha"] != pr["base"]["sha"]

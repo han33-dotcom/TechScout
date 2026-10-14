@@ -1,80 +1,79 @@
 # TechScout team workflow
 
-## Current rollout
+## Rollout status
 
-This change introduces shared instructions and contribution guidance. Automatic shared
-AI review, Slack notifications, task synchronization and automated fixes are later
-steps. Do not assume these services are active because their target flow is documented.
+Issue-based policy and Project synchronization code are prepared on the workflow
+foundation PR. They become active only after reviewed merges and owner activation.
+Project board creation, Wiki publication, Slack subscriptions and the human pilot
+are pending. Shared cloud AI review remains optional and deferred.
 
-Workspace: `nsquared`. Project channel: `#eece503p-techscout`.
-Work branches and implementation PRs target `main`. The backend PR may introduce
-additional setup and CI; always inspect the current branch before starting.
+Workspace: `nsquared` (`T0C8YHJMXAN`). Channel: `#eece503p-techscout`.
+Implementation PRs target `main`.
 
-## Ownership
+## Where work lives
 
-| Participant/tool | Responsibility |
+| Place | Responsibility |
 |---|---|
-| Task owner and assistant | Implement the scope, validate it, open a PR and address accepted findings |
-| Human reviewer and assistant | Inspect current code against task criteria; human decides approval |
-| Notion | Tasks, acceptance criteria, assignments, deadlines and completion evidence |
-| GitHub | Code, validation, actionable review findings and merge evidence |
-| Slack | Team discussion and links to the shared task/PR |
-| Automation, when enabled | Shared AI reviews, notifications and configured status updates |
+| GitHub Issues + Project | Scope, assignee, reviewer, acceptance criteria, priority, due date and progress |
+| Repository `docs/` | Technical documentation, architecture, setup and API contracts |
+| Root AGENTS.md / CLAUDE.md | Shared coding/review policy and Claude Code import |
+| GitHub Wiki | Meeting notes, background and general references |
+| Slack | Discussion and project-specific task/PR links |
 
-All coding agents use the canonical `AGENTS.md`. Claude Code imports it through
-`CLAUDE.md`. Teammates configure their own accounts and refresh their sessions when
-instructions change; no private assistant conversation is assumed to be shared.
+Start with the [documentation index](README.md). Keep one authoritative copy of a
+document. If Wiki decisions affect code, summarize the technical consequences in
+the relevant repository document through a PR. Agents consult Wiki context when
+needed; ordinary code clones do not include the separate Wiki repository.
+Existing Notion reports and original tasks remain available as historical records;
+new software tasks belong in GitHub. Private attachments and participant material
+must not be published in public Issues, Wiki pages or repository documentation.
 
 ## Everyday handoff
 
-1. Define a Notion task with a human owner/reviewer and observable acceptance criteria.
-2. Start a focused branch from current `main`; load shared instructions and the task.
-3. Implement and run `python -m unittest discover -s tests -v` with current requirements.
-4. Open a PR into `main`, linking the task and describing the change, checks and limitations.
-5. The reviewer/assistant reads that PR and leaves actionable findings on GitHub.
-6. The author/assistant reads accepted findings directly, fixes them and reruns validation.
-   One writer works on the branch at a time; reviews reference the current head.
-7. The human reviewer approves when satisfied, and the PR merges through GitHub.
-8. Verify acceptance and record completion. Before automation is enabled, share the PR
-   link and update Notion manually. After activation, check synchronization results.
+1. Create an issue using **Team task**; set its assignee, human reviewer, acceptance
+   checklist, priority and deadline. Add it to this project's board.
+2. Pull current `main`, refresh the assistant's instructions and create a focused
+   work branch. One writer works on the branch at a time.
+3. Implement the issue scope and run the checks in AGENTS.md.
+4. Open a PR into `main` with `Project: TechScout` and one full `Task URL:` pointing
+   to this repository's issue. Optional task ID uses the issue number, not a legacy
+   Notion ID. Include what/why, test evidence and risks.
+5. Use **Related to #NUMBER**, not Closes/Fixes/Resolves. Automatic closing keywords
+   would bypass the separate human acceptance step.
+6. The teammate opens the PR from GitHub or Slack and asks their own assistant to
+   review its current head and issue criteria. Findings stay on the PR.
+7. The author's assistant reads the findings directly, fixes accepted issues and
+   reruns checks. The human reviewer decides approval; agents do not approve or merge
+   on someone's behalf.
+8. Merge through the existing review rules. All required implementation PRs merged
+   means **Implemented**. A teammate records acceptance evidence, sets **Done** and
+   then closes the issue. Until activation, update the board and share links manually.
 
-## Simple example: unknown delivery fee
+The tracking issue for this rollout is [#5](https://github.com/han33-dotcom/TechScout/issues/5).
+Task ownership does not require buying a cloud AI reviewer. Personal assistants run
+when their human starts them; a Slack notification does not start a teammate's chat.
 
-Ahmad owns a task to preserve an unpublished delivery fee as unknown. Mohammad
-Nasrallah is its human reviewer. Ahmad's assistant reads the policy, implements on
-a feature branch, runs offline tests and opens a linked PR into `main`.
-
-Mohammad asks Claude Code to review the PR against the evidence contracts. Claude
-records findings on GitHub, and Mohammad decides which require correction. Ahmad's
-assistant reads those findings directly and fixes them. Mohammad verifies the latest
-head, approves and merges. A human verifies that unknown fees never become zero and
-records Done. Shared AI review, Slack notification and status sync join this flow
-only after they are activated and verified.
-
-## Task status meanings
+## Status meanings
 
 | Status | Evidence |
 |---|---|
-| Not started | Task scoped, work not begun |
-| In progress | Implementation underway |
-| In review | PR ready for review |
-| Changes requested | Accepted review findings remain |
-| Implemented | Required implementation PRs merged into main |
-| Blocked | Human-recorded dependency/decision with reason |
-| Done | Human verifies acceptance and records evidence |
+| Not started | Scoped task, implementation not begun |
+| In progress | Work underway or only draft PRs open |
+| In review | At least one implementation PR ready for review |
+| Changes requested | Outstanding change request from an independent configured human reviewer |
+| Implemented | All linked implementation PRs merged into `main` |
+| Blocked | Human-recorded dependency or decision; include reason |
+| Done | Teammate verifies acceptance and records evidence |
 
-The current tracker may still have only its original statuses. Use a clear note
-until the schema upgrade. A single merged PR does not complete a task that needs
-other PRs, deployment or acceptance checks. Manual Blocked/Done states are not
-silently overwritten.
+Automation never sets Done, closes issues or overwrites manual Done/Blocked.
+Closed-unmerged PRs require triage; reconcile removed scope/links explicitly.
+A release PR does not mark every associated feature accepted.
 
-## Refreshing shared policy
+## Activation and collaborator refresh
 
-After instructions merge, update clean local `main` with `git pull --ff-only`.
-Bring `origin/main` into an ongoing feature branch deliberately, preserving local
-changes. Restart/refresh the assistant and verify the active instruction sources,
-branch target and checks. Ordinary web chats require the current files supplied
-explicitly if repository instruction loading is unavailable.
-
-Follow [collaborator-setup.md](collaborator-setup.md) for individual tool setup,
-instruction-loading smoke checks and evidence records.
+Follow [GitHub workspace activation](github-workspace-activation.md) and
+[PR policy activation](pr-policy-activation.md). Each teammate still completes
+[collaborator setup](collaborator-setup.md). After policy merges, pull `main`,
+update ongoing feature branches deliberately and refresh/restart the assistant.
+Normal web chats need current repository instructions supplied explicitly when
+automatic loading is unavailable.

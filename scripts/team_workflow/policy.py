@@ -1,6 +1,6 @@
 """Deterministic PR metadata and independently approved exemption policy."""
 import re
-from urllib.parse import parse_qsl, unquote, urlsplit
+from urllib.parse import urlsplit
 
 PROJECTS = {
     "han33-dotcom/Sentra": ("Sentra", "SEN", "develop"),
@@ -13,7 +13,6 @@ APPROVERS = {
 EXEMPTIONS = {"workflow-maintenance", "release"}
 WORKFLOW_FILES = {"AGENTS.md", "CLAUDE.md", "CONTRIBUTING.md", ".gitignore"}
 WORKFLOW_PREFIXES = ("docs/", ".github/", "scripts/team_workflow/", "tests/team_workflow/")
-PAGE_ID = r"(?:[0-9a-fA-F]{32}|[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12})"
 
 
 def visible_text(body):
@@ -27,19 +26,17 @@ def visible_text(body):
     return "\n".join(lines)
 
 
-def valid_task_url(value):
+def task_issue_number(value, repo):
+    """Accept only a canonical HTTPS issue URL for the configured repository."""
     try:
         url = urlsplit(value)
-        return (
-            url.scheme == "https"
-            and url.hostname in {"notion.so", "www.notion.so", "notion.com", "www.notion.com", "app.notion.com"}
-            and not url.username and not url.password and url.port is None
-            and re.search(PAGE_ID + r"$", unquote(url.path)) is not None
-            and all(key == "pvs" and val.isdigit() for key, val in parse_qsl(url.query, keep_blank_values=True))
-            and not url.fragment
-        )
-    except ValueError:
-        return False
+        match = re.fullmatch(r"/" + re.escape(repo) + r"/issues/([1-9][0-9]*)", url.path, re.I)
+        if (url.scheme == "https" and url.netloc == "github.com" and match
+                and not url.query and not url.fragment):
+            return int(match[1])
+    except (ValueError, TypeError):
+        pass
+    return None
 
 
 def validate_pr_metadata(body: str, labels: set[str], repo: str, base: str) -> list[str]:
@@ -61,10 +58,16 @@ def validate_pr_metadata(body: str, labels: set[str], repo: str, base: str) -> l
     urls = re.findall(r"^Task URL:\s*(.*?)\s*$", text, flags=re.M)
     exempt = bool(labels & EXEMPTIONS)
     if urls:
-        if len(urls) != 1 or not valid_task_url(urls[0]):
-            errors.append("Task URL must be one valid HTTPS Notion page link.")
+        if len(urls) != 1 or task_issue_number(urls[0], repo) is None:
+            errors.append("Task URL must be one canonical HTTPS GitHub issue link in this repository.")
     elif not exempt:
         errors.append("Provide a Task URL or an independently approved scoped exemption.")
+    if len(ids) == 1 and len(urls) == 1:
+        number = task_issue_number(urls[0], repo)
+        if number is not None and ids[0] != f"{prefix}-{number}":
+            errors.append("Task ID must match the linked GitHub issue number.")
+    if re.search(r"\b(?:close[sd]?|fix(?:es|ed)?|resolve[sd]?)\b[\s:*_]+(?:#[1-9][0-9]*|[\w.-]+/[\w.-]+#[1-9][0-9]*|https://github\.com/[\w.-]+/[\w.-]+/issues/[1-9][0-9]*)", text, re.I):
+        errors.append("Use Related to instead of automatic issue-closing keywords; human acceptance controls Done.")
     sections = {}
     current = None
     for line in text.splitlines():

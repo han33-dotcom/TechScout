@@ -1,6 +1,6 @@
 Project: TechScout
 Task URL:
-<!-- Paste the Notion task page URL. Task ID is optional until assigned. -->
+<!-- Paste https://github.com/han33-dotcom/TechScout/issues/NUMBER. Optional Task ID: TECH-NUMBER. -->
 
 ## What & why
 <!-- Explain the change and acceptance criteria. -->
@@ -12,3 +12,5 @@ Task URL:
 
 ## Risks / limitations
 <!-- Record unresolved facts, compatibility changes and unavailable validation. -->
+
+<!-- Use Related to #NUMBER; close tasks only after human acceptance, not automatically on merge. -->

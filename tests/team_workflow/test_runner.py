@@ -8,7 +8,7 @@ class RunnerTests(unittest.TestCase):
                  "pull_request": {"number": 15, "head": {"sha": "current"},
                                   "base": {"sha": "base"}}}
         pr = {"number": 15, "state": "open", "body":
-              "Project: Sentra\nTask URL: https://notion.so/0123456789abcdef0123456789abcdef\n"
+              "Project: Sentra\nTask URL: https://github.com/han33-dotcom/Sentra/issues/16\n"
               "## What & why\nFix the filter.\n## How tested\nTests passed.\n"
               "## Risks / limitations\nNo live checks.\n",
               "changed_files": 1, "labels": [], "user": {"login": "han33-dotcom"},
@@ -17,6 +17,8 @@ class RunnerTests(unittest.TestCase):
                        "repo": {"full_name": "han33-dotcom/Sentra"}}}
         files = [{"filename": "src/sentra/viewer_app.py"}]
         def fetch(path):
+            if path == "/issues/16":
+                return {"number": 16, "state": "open"}
             if path == "/pulls/15":
                 return pr
             if "/files?" in path:

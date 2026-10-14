@@ -11,15 +11,20 @@ Individual collaborator onboarding can remain pending during this preparation.
 
 Use the PR template:
 - Exactly one `Project: TechScout` line.
-- Exactly one `Task URL:` line containing the HTTPS Notion page URL.
+- Exactly one `Task URL:` line containing the canonical HTTPS GitHub issue URL from this repository.
 - Optional `Task ID:` with TECH-number when assigned; never invent an ID.
 - Completed `## What & why`, `## How tested` and `## Risks / limitations` sections.
 
-HTML comments and fenced examples do not satisfy the fields. Notion page links may
-use official notion.so/notion.com hosts with page IDs and an optional pvs query.
-The deterministic check validates URL shape and declared project/ID, not Notion
-page ownership; API-backed tracker membership verification is a later synchronization
-step. Human reviewers verify that the actual task belongs to the project.
+HTML comments and fenced examples do not satisfy the fields. Use exactly
+`https://github.com/han33-dotcom/PROJECT/issues/NUMBER`, substituting this
+repository's name and positive issue number. No query, fragment, credentials,
+port or PR URL is accepted. The read-only checker fetches that issue from this
+repository and rejects GitHub issue endpoints that actually represent PRs.
+Optional Task ID uses the matching issue number (SEN-NUMBER / TECH-NUMBER),
+not a legacy imported Notion ID. Use Related to #NUMBER instead of automatic
+issue-closing keywords; merging is Implemented, and acceptance controls Done.
+The validator checks PR descriptions. Reviewers must also check closing keywords
+in commit messages and GitHub Development links; those can close issues independently.
 
 ## Scoped exemptions
 

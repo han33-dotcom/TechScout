@@ -36,7 +36,7 @@ Recheck requirements/setup when the pending backend work merges.
 3. Read [AGENTS.md](AGENTS.md) and the linked task's acceptance criteria.
 4. Implement, run the offline suite and open a PR into `main`. Use conventional
    commit messages such as `feat:`, `fix:` or `docs:`.
-5. Link the Notion task and document what changed, why, checks and limitations.
+5. Link the GitHub issue and document what changed, why, checks and limitations.
 6. A teammate reviews the latest PR; the author addresses accepted findings and
    reruns checks. The human reviewer supplies the approval.
 7. Merge through GitHub after applicable checks and review requirements are satisfied.
@@ -60,10 +60,10 @@ and repository context explicitly.
 
 Review findings belong on the PR. The author and their assistant read them there;
 there is no requirement to copy private chat histories between teammates.
-Record durable design decisions in project documents or the linked Notion task.
+Record durable design decisions in project documents or the linked GitHub issue.
 
 ## Completion
 
 Implemented means the required PRs have merged. Done means a human has verified the
 task acceptance criteria and recorded evidence. Before status synchronization is
-enabled, update Notion manually. Report failed or skipped checks honestly.
+enabled, update the GitHub Project manually. Report failed or skipped checks honestly.

@@ -17,3 +17,11 @@ Python 3.10+ and the standard library are sufficient for this task. Run from the
 `app.source_registry.get_active_source(source_id)` rereads the technical source registry and requires an active unique source with review provenance, scoped HTTPS endpoints and positive operating limits. The legacy `admission` field contains the public-access assumption and technical review, not merchant permission.
 
 See [evidence metadata](docs/source-evidence.json) for captured public responses and [synthetic offers](tests/fixtures/synthetic_offers.json) for optional offline failure fixtures. The [outreach drafts](docs/retailer-access-requests.md) are superseded and must not be sent.
+
+## Team workspace
+
+Use the [documentation index](docs/README.md) and [team workflow](docs/team-workflow.md).
+Software tasks live in GitHub Issues and the project board; technical documents stay
+in this repository. Meeting notes and general references belong in the Wiki after
+publication. See [workspace activation](docs/github-workspace-activation.md) for the
+current rollout status. Shared cloud AI review is optional and deferred.

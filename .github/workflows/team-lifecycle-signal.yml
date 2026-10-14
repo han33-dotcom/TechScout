@@ -1,0 +1,14 @@
+name: Team lifecycle signal
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened, closed, ready_for_review, converted_to_draft]
+  pull_request_review:
+    types: [submitted, edited, dismissed]
+permissions: {}
+jobs:
+  signal:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    steps:
+      - name: Wake trusted default-branch reconciliation
+        run: echo "Metadata reconciliation is performed by the trusted workflow."
