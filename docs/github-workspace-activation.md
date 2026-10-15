@@ -6,8 +6,9 @@ Repository changes remain in the workflow foundation PR awaiting teammate review
 The private [TechScout board](https://github.com/users/han33-dotcom/projects/2) and public
 [Wiki](https://github.com/han33-dotcom/TechScout/wiki) were published on October 14, 2026.
 On October 15, approved board Write grants and Slack PR/review subscriptions were
-applied and verified. Project credentials, default-branch activation and the human
-acceptance pilot remain pending. Board status is updated manually until activation.
+applied and verified. Expiring Projects credentials and the actual Project node IDs
+were securely saved and verified later that day. Default-branch activation and the
+human acceptance pilot remain pending. Board status is updated manually until activation.
 Both repositories explicitly have `TEAM_SYNC_ENABLED=false`.
 No Notion API token or synchronization is needed for the new setup.
 
@@ -39,8 +40,9 @@ emails were excluded from the public import.
 Teammates still need to verify opening the board from their own accounts.
 Repository permissions do not automatically confer Project access.
 
-Before activation, verify that the Project links exactly this repository and that
-collaborators can open it. Its private visibility does not make repository issues
+The authenticated Project API verified the owner, private visibility, required fields
+and exactly one linked repository matching this project on October 15. Before
+activation, teammates must also verify opening the board from their own accounts. Its private visibility does not make repository issues
 private; these issues and the Wiki are public.
 
 ## Project synchronization credentials and activation
@@ -117,8 +119,12 @@ notification does not automatically launch a teammate's personal AI assistant.
   job log confirms `Bootstrap pending`; the policy check is not activated as required.
 - `Team project sync` is absent from `main`; enabling it or dispatching a credentialed
   run from the unreviewed foundation branch would not satisfy activation.
-- `PROJECTS_TOKEN` and actual `TEAM_PROJECT_ID` are not yet configured. Credential
-  entry must happen through a secure local prompt or GitHub, never chat or logs.
+- `PROJECTS_TOKEN` was entered through a masked local prompt and encrypted into this
+  repository's Actions secrets. Its `project` scope and authenticated read access
+  were verified; it expires November 14, 2026. No plaintext token was logged or saved.
+- `TEAM_PROJECT_ID=PVT_kwHOC_Gyqs4BnAcm` and `TEAM_SYNC_ENABLED=false`
+  were read back from Actions variables. A workflow dry run and credentialed write
+  test remain pending until reviewed code reaches `main`.
 - Subscription configuration is verified; actual PR/review notification delivery,
   replay behavior and duplicate suppression still require the human pilot.
 
