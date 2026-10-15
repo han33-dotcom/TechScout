@@ -1,0 +1,47 @@
+name: PR policy
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened, ready_for_review, labeled, unlabeled]
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: read
+
+concurrency:
+  group: pr-policy-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  policy-tests:
+    name: policy-tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - name: Proposed policy regression tests (no secrets)
+        run: python3 -m unittest discover -s tests/team_workflow -v
+
+  policy:
+    name: pr-policy
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out only the immutable base commit
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: trusted
+          persist-credentials: false
+      - name: Validate current PR with base-branch policy
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ ! -f trusted/scripts/team_workflow/check_pr.py ]; then
+            echo "Bootstrap pending: merge reviewed foundation policy before activating this required check."
+            exit 1
+          fi
+          python3 trusted/scripts/team_workflow/check_pr.py

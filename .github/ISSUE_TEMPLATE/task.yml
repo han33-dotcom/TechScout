@@ -1,0 +1,44 @@
+name: Team task
+description: Scoped work with acceptance criteria and a human reviewer
+title: "[Task] "
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome and scope
+      description: Describe what should work and the limits of this task.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Use checkboxes for observable outcomes and edge cases.
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options: [High, Medium, Low]
+      default: 1
+  - type: input
+    id: reviewer
+    attributes:
+      label: Human reviewer
+      description: A teammate other than the implementer; use their GitHub handle.
+  - type: input
+    id: due
+    attributes:
+      label: Due date
+      description: Optional YYYY-MM-DD; set the Project Due date field as well.
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies and related work
+      description: Link related issues and required implementation PRs. Explain blockers.
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Completion evidence
+      description: Record tests, review and acceptance evidence. Merge means Implemented; a teammate records Done and then closes the issue.
