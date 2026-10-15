@@ -2,9 +2,9 @@
 
 ## Prepared versus active
 
-The policy implementation and regression tests are prepared on the foundation PR.
-Required-check enforcement is not active until a human merges the policy and an
-owner configures branch protection/rulesets. Existing review protections still apply.
+The foundation policy was reviewed by `MohamadNasrallah` and merged on October 15.
+Required-check enforcement still needs the owner activation and live test below.
+Existing review protections remain active; follow-up fixes need their own review.
 Individual collaborator onboarding can remain pending during this preparation.
 
 ## PR handoff
@@ -41,6 +41,9 @@ passing code checks and human PR approval.
 
 The `release` exemption is not available for TechScout.
 
+TechScout exemption actors are `han33-dotcom`, `MohamadNasrallah` and
+`Ahmad860187`; the author still cannot exempt their own PR.
+
 Labels must exist in GitHub before a teammate applies them. No author-created label
 is treated as independently approved merely because its text matches an exemption.
 
@@ -62,9 +65,12 @@ and approve the bootstrap merge under existing protections. Do not make this new
 check required before that bootstrap, and do not bypass existing required checks.
 
 
-The workflow definition itself is reviewable PR content on the ordinary pull_request
-event. Protect workflow/policy files through human and CODEOWNER review; the check
-does not claim to prevent a privileged maintainer from rewriting enforcement rules.
+The Python validator checkout is trusted base code; the workflow definition is
+still PR-controlled content on the ordinary `pull_request` event. A PR changing
+`.github/workflows/pr-policy.yml` could change its steps. CODEOWNER review is the
+security boundary for workflow/policy changes, not a guarantee from this check.
+The existing wildcard CODEOWNERS rule covers these files. TechScout main now requires
+CODEOWNER approval; one approval, stale-review dismissal and no bypasses are retained.
 
 ## Owner activation checklist
 

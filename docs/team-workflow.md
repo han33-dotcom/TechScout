@@ -2,12 +2,12 @@
 
 ## Rollout status
 
-Issue-based policy and Project synchronization code are prepared on the workflow
-foundation PR. They become active only after reviewed merges and owner activation.
-The [private Project board](https://github.com/users/han33-dotcom/projects/2) and
-[public Wiki](https://github.com/han33-dotcom/TechScout/wiki) were published on October 14, 2026.
-Slack subscriptions, remaining board access, sync credentials and the human pilot
-are pending. Shared cloud AI review remains optional and deferred.
+The foundation PR was approved by `MohamadNasrallah` and merged on October 15, 2026,
+into `main` ([#4](https://github.com/han33-dotcom/TechScout/pull/4)).
+The private Project board, public Wiki, approved board access, Slack subscriptions
+and expiring sync credentials are configured. GitHub approval and merge messages
+were observed in the project channel. Sync remains disabled pending reviewed
+follow-ups, activation checks and the human pilot. Shared cloud AI review is deferred.
 
 Workspace: `nsquared` (`T0C8YHJMXAN`). Channel: `#eece503p-techscout`.
 Implementation PRs target `main`.
@@ -63,12 +63,14 @@ when their human starts them; a Slack notification does not start a teammate's c
 | In progress | Work underway or only draft PRs open |
 | In review | At least one implementation PR ready for review |
 | Changes requested | Outstanding change request from an independent configured human reviewer |
-| Implemented | All linked implementation PRs merged into `main` |
-| Blocked | Human-recorded dependency or decision; include reason |
+| Implemented | All remaining implementation PRs merged into `main` |
 | Done | Teammate verifies acceptance and records evidence |
+| Blocked | Human-recorded dependency or decision; include reason |
 
 Automation never sets Done, closes issues or overwrites manual Done/Blocked.
-Closed-unmerged PRs require triage; reconcile removed scope/links explicitly.
+Closed-unmerged PRs are treated as abandoned attempts when open or merged PRs
+remain for the same task. Only abandoned PRs still require triage and preserve the
+current status. Humans must reconcile any removed scope before accepting the task.
 A release PR does not mark every associated feature accepted.
 
 ## Activation and collaborator refresh

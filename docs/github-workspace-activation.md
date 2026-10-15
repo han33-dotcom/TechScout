@@ -2,7 +2,9 @@
 
 ## Current state
 
-Repository changes remain in the workflow foundation PR awaiting teammate review.
+Foundation [PR #4](https://github.com/han33-dotcom/TechScout/pull/4) was approved by
+`MohamadNasrallah` and merged into `main` on October 15, 2026. The reviewed sync
+fix and live activation checks are still required.
 The private [TechScout board](https://github.com/users/han33-dotcom/projects/2) and public
 [Wiki](https://github.com/han33-dotcom/TechScout/wiki) were published on October 14, 2026.
 On October 15, approved board Write grants and Slack PR/review subscriptions were
@@ -15,7 +17,8 @@ No Notion API token or synchronization is needed for the new setup.
 ## Project board
 
 The board already exists; do not create a duplicate. It has all seven Status options:
-Not started, In progress, In review, Changes requested, Implemented, Blocked and Done.
+Not started, In progress, In review, Changes requested, Implemented, Done and Blocked.
+This is also the saved board column order, verified after reload on October 15.
 The Status board and **All tasks** table are available. For your own work, filter
 Assignees with `assignee:@me`; a dedicated saved My tasks view remains optional polish.
 
@@ -87,9 +90,9 @@ repository bootstrap copies have been removed. Technical documentation remains i
 
 Verify that Wiki editing remains restricted to repository collaborators.
 Do not publish participant data, private contacts, university attachments or original
-private meeting records without explicit approval. The references page currently
-links agent instructions on the foundation branch; after the reviewed merge, update
-that link to the normal implementation branch.
+private meeting records without explicit approval. The references page still needs
+its foundation-branch agent-instruction link updated to the normal implementation
+branch after rollout changes settle.
 
 ## Slack subscriptions
 
@@ -111,22 +114,26 @@ notification does not automatically launch a teammate's personal AI assistant.
 
 ## October 15 verification checkpoint
 
-- Foundation PR remains unmerged with no submitted teammate approval. `Ahmad860187` was requested on #4.
+- `MohamadNasrallah` approved the current foundation head and merged #4 into `main`.
 - The existing one-approval requirement and stale-review dismissal are preserved;
   branch protections were not weakened.
-- CI and policy regression jobs passed at implementation head `45e9510bf857`.
-  Subsequent documentation-only commits need their own CI result. The metadata
-  job log confirms `Bootstrap pending`; the policy check is not activated as required.
-- `Team project sync` is absent from `main`; enabling it or dispatching a credentialed
-  run from the unreviewed foundation branch would not satisfy activation.
+- Foundation CI and policy regression jobs passed at reviewed head `dae431ee1797`.
+  Its metadata job logged `Bootstrap pending`. Follow-up PRs can now validate
+  against the merged base; required-check enforcement remains pending.
+- `Team project sync` is on TechScout `main`, but sync remains disabled until the
+  reviewed abandoned-PR fix reaches `main` and the dry-run/write pilot is verified.
 - `PROJECTS_TOKEN` was entered through a masked local prompt and encrypted into this
   repository's Actions secrets. Its `project` scope and authenticated read access
   were verified; it expires November 14, 2026. No plaintext token was logged or saved.
 - `TEAM_PROJECT_ID=PVT_kwHOC_Gyqs4BnAcm` and `TEAM_SYNC_ENABLED=false`
   were read back from Actions variables. A workflow dry run and credentialed write
-  test remain pending until reviewed code reaches `main`.
-- Subscription configuration is verified; actual PR/review notification delivery,
-  replay behavior and duplicate suppression still require the human pilot.
+  test remain pending until reviewed follow-up code reaches `main`.
+- GitHub approval and merge notifications were observed in this channel on October
+  15. Draft/change-request/fix delivery, replay behavior and duplicate suppression
+  remain part of the human pilot.
+- `workflow-maintenance` now exists; TechScout does not support release exemptions.
+- Main now requires CODEOWNER review. Existing approval count, stale-review
+  dismissal, blocked force-push/deletion rules and empty bypass list are preserved.
 
 ## Pilot
 
