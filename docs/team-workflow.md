@@ -4,7 +4,9 @@
 
 Issue-based policy and Project synchronization code are prepared on the workflow
 foundation PR. They become active only after reviewed merges and owner activation.
-Project board creation, Wiki publication, Slack subscriptions and the human pilot
+The [private Project board](https://github.com/users/han33-dotcom/projects/2) and
+[public Wiki](https://github.com/han33-dotcom/TechScout/wiki) were published on October 14, 2026.
+Slack subscriptions, remaining board access, sync credentials and the human pilot
 are pending. Shared cloud AI review remains optional and deferred.
 
 Workspace: `nsquared` (`T0C8YHJMXAN`). Channel: `#eece503p-techscout`.
@@ -30,8 +32,8 @@ must not be published in public Issues, Wiki pages or repository documentation.
 
 ## Everyday handoff
 
-1. Create an issue using **Team task**; set its assignee, human reviewer, acceptance
-   checklist, priority and deadline. Add it to this project's board.
+1. Create an issue using **Team task**; set its native Assignees field, **Human reviewer** (a teammate's GitHub handle),
+   acceptance checklist, Priority and Due date. Add it to this project's board.
 2. Pull current `main`, refresh the assistant's instructions and create a focused
    work branch. One writer works on the branch at a time.
 3. Implement the issue scope and run the checks in AGENTS.md.
