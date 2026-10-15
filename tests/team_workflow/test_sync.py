@@ -31,6 +31,26 @@ class FixtureClient:
 
 
 class SyncTests(unittest.TestCase):
+    def test_abandoned_pr_and_replacement_reconcile_without_errors_or_duplicates(self):
+        for state, merged_at, expected in [
+            ("open", None, "In review"),
+            ("closed", "2026-10-15", "Implemented"),
+        ]:
+            with self.subTest(state=state):
+                client = FixtureClient()
+                replacement = dict(client.pulls[0], state=state, merged_at=merged_at)
+                abandoned = dict(client.pulls[0], number=1, state="closed")
+                client.pulls = [abandoned, replacement]
+                preview = synchronize("han33-dotcom/TechScout", "project", client)
+                self.assertEqual(preview[0]["status"], expected)
+                self.assertEqual(preview[0]["errors"], [])
+                self.assertEqual(client.writes, [])
+                result = synchronize("han33-dotcom/TechScout", "project", client, dry_run=False)
+                self.assertEqual(result[0]["errors"], [])
+                synchronize("han33-dotcom/TechScout", "project", client, dry_run=False)
+                self.assertEqual(client.writes, [expected])
+                self.assertFalse(client.closed)
+
     def test_dry_run_does_not_write_and_reports_planned_status(self):
         client = FixtureClient()
         output = synchronize("han33-dotcom/TechScout", "project", client, dry_run=True)

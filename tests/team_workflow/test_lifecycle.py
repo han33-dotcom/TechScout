@@ -23,9 +23,26 @@ class LifecycleTests(unittest.TestCase):
         self.assertEqual(plan_status("In review", True, [pr()]), (None, []))
 
     def test_closed_unmerged_requires_triage_and_never_completes_task(self):
-        status, errors = plan_status("In review", False, [pr("closed"), pr("closed", merged=True)])
+        status, errors = plan_status("In review", False, [pr("closed"), pr("closed")])
         self.assertIsNone(status)
         self.assertTrue(errors)
+
+    def test_abandoned_pr_does_not_block_its_replacement(self):
+        for replacement, expected in [
+            (pr(draft=True), "In progress"),
+            (pr(), "In review"),
+            (pr(change=True), "Changes requested"),
+            (pr("closed", merged=True), "Implemented"),
+        ]:
+            for pulls in [[pr("closed"), replacement], [replacement, pr("closed")]]:
+                with self.subTest(expected=expected, pulls=pulls):
+                    self.assertEqual(plan_status("In review", False, pulls), (expected, []))
+
+    def test_replacement_preserves_manual_states_and_closed_issue(self):
+        pulls = [pr("closed"), pr("closed", merged=True)]
+        for current in ["Done", "Blocked"]:
+            self.assertEqual(plan_status(current, False, pulls), (None, []))
+        self.assertEqual(plan_status("In review", True, pulls), (None, []))
 
     def test_reopened_pr_returns_to_review_and_no_pr_keeps_status(self):
         self.assertEqual(plan_status("Implemented", False, [pr()]), ("In review", []))
