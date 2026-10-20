@@ -342,7 +342,8 @@ class Offer(Contract):
 
 class ToolError(Model):
     code: Literal['TIMEOUT', 'RATE_LIMIT', 'SOURCE_DISABLED', 'INVALID_SCHEMA',
-                  'FIELD_CONFLICT', 'NO_PRICE', 'NETWORK_ERROR', 'BUDGET_EXHAUSTED']
+                  'FIELD_CONFLICT', 'NO_PRICE', 'NETWORK_ERROR', 'BUDGET_EXHAUSTED',
+                  'BLOCKED', 'HTTP_ERROR']
     message: Text
     retryable: StrictBool
 

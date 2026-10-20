@@ -169,6 +169,16 @@ class ContractTests(unittest.TestCase):
         result = c.ToolResult(status='partial', data={'offers': []}, errors=[error], duration_ms=10)
         self.assertEqual(result.errors[0].code, 'TIMEOUT')
 
+    def test_gate_refusals_have_their_own_codes(self):
+        for code, message in (('BLOCKED', 'blocked:redirect to a private address'),
+                              ('HTTP_ERROR', 'http:404 product page not found')):
+            error = dict(code=code, message=message, retryable=False)
+            result = c.ToolResult(status='error', errors=[error], duration_ms=3)
+            restored = c.ToolResult.model_validate_json(result.model_dump_json())
+            self.assertEqual((restored.schema_version, restored.errors[0].code), (1, code))
+        with self.assertRaises(ValidationError):
+            c.ToolError(code='FORBIDDEN', message='not a listed code', retryable=False)
+
     def test_run_abstention_and_verification_time_are_explicit(self):
         item = dict(run_id='run-1', request_id='request-1', status='abstained',
                     stop_reason='No qualifying offers', started_at='2026-10-12T13:59:00Z',

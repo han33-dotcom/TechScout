@@ -75,5 +75,30 @@ reasons, source coverage, usage and stop reason. Verification timestamps must fa
 inside the run. An empty recommendation list may be an explicit abstention or partial
 result; a failed/cancelled run cannot masquerade as completed recommendations.
 
+## Tool error codes
+
+`ToolError.code` is a closed list. `retryable` says whether the same request may be sent
+again within the run; only the source gate (Task 4) retries, and callers must not re-send.
+
+| Code | Meaning | Usually retryable |
+|---|---|---|
+| `TIMEOUT` | A connect, read or overall deadline expired | Yes |
+| `RATE_LIMIT` | The store answered 429, or the gate's own per-source limit is full | Yes |
+| `NETWORK_ERROR` | Connection failure, reset, truncated reply, failed DNS lookup or TLS verification | Yes, except TLS |
+| `SOURCE_DISABLED` | The source is unknown, not active, not selected or misconfigured in the registry | No |
+| `BLOCKED` | The gate refused the request or its reply on safety policy | No |
+| `HTTP_ERROR` | The store answered with a permanent HTTP status (not 429) | No |
+| `INVALID_SCHEMA` | The reply arrived but is malformed or not the expected shape | No |
+| `BUDGET_EXHAUSTED` | The source's per-run cap or the run budget has no room left | No |
+| `FIELD_CONFLICT` | Fetched facts disagree | No |
+| `NO_PRICE` | No usable price was published | No |
+
+`BLOCKED` messages start with a fixed reason: `blocked:url` (not an allow-listed endpoint),
+`blocked:method` (not a read), `blocked:dns` (a resolved address is not public),
+`blocked:redirect` (unsafe or too many redirects), `blocked:size` (reply over the size cap)
+or `blocked:encoding` (unsupported content encoding). `HTTP_ERROR` messages start with
+`http:<status>`. `BLOCKED` and `HTTP_ERROR` were added within `schema_version: 1`: the change
+only widens the accepted values, so every stored version 1 result still validates.
+
 JSON examples are in `tests/fixtures/contracts.json`. Future tasks must retain this
 shape or deliberately update its version, documentation and affected consumers.
