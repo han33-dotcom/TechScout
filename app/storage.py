@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 import re
 import sys
+import uuid
 
 from sqlalchemy import (
     JSON, CheckConstraint, Column, Date, DateTime, ForeignKey, Integer, MetaData, Numeric,
@@ -184,12 +185,17 @@ class SnapshotStore:
     def put(self, content: bytes) -> str:
         sha256 = hashlib.sha256(content).hexdigest()
         path = self._path(sha256)
-        if not path.exists():
-            path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-            temporary = path.with_suffix('.tmp')
-            temporary.write_bytes(content)
-            os.chmod(temporary, 0o600)
-            os.replace(temporary, path)
+        try:
+            if hashlib.sha256(path.read_bytes()).hexdigest() == sha256:
+                return sha256
+        except FileNotFoundError:
+            pass
+        # Missing or damaged: write under a unique temporary name so concurrent saves can't collide.
+        path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        temporary = path.with_name(f'{sha256}.{os.getpid()}.{uuid.uuid4().hex}.tmp')
+        temporary.write_bytes(content)
+        os.chmod(temporary, 0o600)
+        os.replace(temporary, path)
         return sha256
 
     def get(self, sha256: str) -> bytes:
@@ -325,6 +331,11 @@ class Storage:
 
     def record_action(self, run_id, tool, arguments, result: ToolResult, external_calls=0,
                       planner_turns=0, spend: Decimal = Decimal('0')):
+        # Usage only grows; a negative value would also make recovery's BudgetUsage invalid.
+        if not isinstance(spend, Decimal) or not spend.is_finite() or spend < 0:
+            raise ValueError('Spend must be a finite, non-negative Decimal')
+        if any(type(n) is not int or n < 0 for n in (external_calls, planner_turns)):
+            raise ValueError('Budget counters must be non-negative integers')
         with self.transaction() as db:
             run = db.execute(select(runs.c.status, runs.c.spend_amount)
                              .where(runs.c.run_id == run_id).with_for_update()).first()
@@ -369,7 +380,11 @@ class Storage:
         return None if row is None or row.result is None else RunResult.model_validate(row.result)
 
     def recover_interrupted_runs(self, now=None) -> list[str]:
-        """Close runs left 'running' by a crash as partial; never resume stale searches."""
+        """Close runs left 'running' by a crash as partial; never resume stale searches.
+
+        Assumes a single application process: every 'running' run is treated as orphaned.
+        Multiple workers or replicas need run ownership or a heartbeat first (MVP 11).
+        """
         now = now or _now()
         recovered = []
         with self.transaction() as db:

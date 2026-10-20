@@ -1,6 +1,6 @@
 # Tech Scout
 
-Exact-device shopping comparison for buyers in Lebanon. The MVP is one Python/FastAPI application, Postgres and a simple buyer interface.
+Exact-device shopping comparison for buyers in Lebanon. The planned MVP is one Python/FastAPI application, Postgres and a simple buyer interface; the backend foundation exists, the buyer interface is not built yet.
 
 ## Current implementation
 
@@ -26,7 +26,7 @@ If ports 5432 or 8000 are taken, set `DB_PORT`/`APP_PORT` in `.env` (and use tha
 
 ## Local development
 
-Python 3.10+. Run from the repository root:
+Python 3.11 (the team and CI baseline). Run from the repository root:
 
 ```powershell
 python -m venv .venv

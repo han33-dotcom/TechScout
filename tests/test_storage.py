@@ -115,6 +115,9 @@ class StorageTests(unittest.TestCase):
         path.write_bytes(b'tampered')
         with self.assertRaisesRegex(ValueError, 'does not match'):
             self.storage.load_snapshot(sha)
+        self.assertEqual(self.storage.save_snapshot(body, 'application/json'), sha)  # repairs it
+        self.assertEqual(self.storage.load_snapshot(sha), body)
+        self.assertEqual(list(path.parent.glob('*.tmp')), [])
         for bad in ('../' * 3 + 'etc/passwd', 'A' * 64, sha[:-1]):
             with self.assertRaises((ValueError, KeyError)):
                 self.storage.load_snapshot(bad)
@@ -151,6 +154,21 @@ class StorageTests(unittest.TestCase):
             self.storage.record_action('run-1', 'search', {}, ok)
         with self.assertRaisesRegex(ValueError, 'running run'):
             self.storage.finish_run(result.model_copy(update={'status': 'abstained'}))
+
+    def test_invalid_usage_is_rejected_and_run_still_recovers(self):
+        request = c.ShoppingRequest.model_validate(EXAMPLE['request'])
+        self.storage.start_run('run-4', request, started_at=STARTED)
+        ok = c.ToolResult(status='ok', duration_ms=5)
+        for usage in [dict(spend=Decimal('-1.00')), dict(spend=Decimal('NaN')), dict(spend=0.1),
+                      dict(external_calls=-1), dict(planner_turns=-1), dict(external_calls=True)]:
+            with self.subTest(usage=usage), self.assertRaises(ValueError):
+                self.storage.record_action('run-4', 'search', {}, ok, **usage)
+        self.assertEqual(self.storage.list_actions('run-4'), [])
+        self.assertEqual(self.storage.recover_interrupted_runs(STARTED + timedelta(seconds=1)),
+                         ['run-4'])
+        usage = self.storage.load_run('run-4').usage
+        self.assertEqual((usage.external_calls, usage.planner_turns, usage.spend.amount),
+                         (0, 0, Decimal('0')))
 
     def test_finished_run_round_trips(self):
         request = c.ShoppingRequest.model_validate(EXAMPLE['request'])
