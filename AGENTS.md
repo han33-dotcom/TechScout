@@ -7,11 +7,13 @@ Follow applicable nested instructions if they are added later.
 ## Project and architecture
 
 TechScout compares exact-device shopping offers for buyers in Lebanon. The current
-main branch implements shopping/evidence contracts and the source registry; do not
-describe the planned backend, retrieval or shopping flow as implemented.
+main branch implements shopping/evidence contracts, the source registry and the
+backend foundation (FastAPI app, Postgres storage, migrations); do not describe the
+planned retrieval or shopping flow as implemented.
 - MVP and shared contracts: [docs/mvp-spec.md](docs/mvp-spec.md).
 - Source policy: [docs/source-admission.md](docs/source-admission.md).
 - Contract implementation: `app/contracts.py`; source selection: `app/source_registry.py`.
+- Persistence and app setup: `app/storage.py`, `app/main.py`, `migrations/`; startup in the README.
 - Team workflow and rollout: [docs/team-workflow.md](docs/team-workflow.md).
 
 Documentation index: [docs/README.md](docs/README.md). General references and meeting
@@ -25,7 +27,6 @@ when a task depends on them; summarize code-affecting decisions in reviewed docs
 3. Use a focused work branch from `main`; open implementation PRs into `main`.
    Do not push directly to `main` or overwrite another collaborator's branch.
 4. Check open PRs before changing shared contracts or introducing infrastructure.
-   Backend work may exist on a pending branch; preserve it when it merges.
 5. Identify missing context/access rather than inventing requirements or task IDs.
    Keep unrelated refactoring and dependencies out of a focused task.
 
@@ -57,8 +58,8 @@ python -m unittest discover -s tests -v
 ```
 Use the configured virtual-environment Python; Windows may use
 `.venv/Scripts/python.exe`. Report exact results and unavailable validation.
-Recheck the current CI after backend changes merge; preserve its additional database
-and build checks. A passing test suite alone does not prove shopping-flow completeness.
+CI (`ci.yml`) also runs the suite against Postgres and builds the Docker image;
+preserve those database and build checks. A passing test suite alone does not prove shopping-flow completeness.
 
 ## Handoff and Definition of Done
 
