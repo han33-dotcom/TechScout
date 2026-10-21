@@ -4,7 +4,8 @@
 
 The foundation policy was reviewed by `MohamadNasrallah` and merged on October 15.
 The owner enabled required `test`, `build` and `pr-policy` checks on October 21.
-Live negative/positive merge-blocking tests and the human pilot remain pending.
+Live policy failure/recovery tests on #30 passed. Isolating policy-based merge
+blocking with all other requirements satisfied, and the human pilot, remain pending.
 Existing review protections remain active; follow-up fixes need their own review.
 Individual collaborator onboarding can remain pending during this preparation.
 
@@ -76,7 +77,8 @@ CODEOWNER approval; one approval, stale-review dismissal and no bypasses are ret
 ## Owner activation checklist
 
 The owner authorized the settings changes through the authenticated GitHub REST
-API. Settings were read back; the live behavioral checks below are still required.
+API. Settings were read back, and #30 exercised missing metadata, unauthorized
+self-exemption and recovery. The isolated blocking/stale-approval pilot remains.
 
 1. Inspect the PR and verify code, policy regression tests and existing CI results.
    Confirm at least one other human approval before merge.
@@ -88,8 +90,10 @@ API. Settings were read back; the live behavioral checks below are still require
    Keep force pushes/deletion blocked; avoid ordinary-user bypasses.
 5. Require the actual code-check names and `pr-policy`, selecting GitHub Actions as
    the expected source when offered. Do not require job names guessed from a matrix.
-6. Edit the test PR to remove its task link (without an exemption): verify the policy
-   check fails and GitHub blocks merge. Restore the link and verify a fresh success.
+6. With current human approval and other required checks passing, remove the task
+   link without an exemption: verify the policy fails and GitHub blocks merge.
+   Restore the link and verify fresh success. A blocked PR that also lacks approval
+   does not isolate which requirement caused the block.
 7. Confirm the author cannot supply their own required approval. A different teammate
    performs the approval and verifies approval becomes stale after a new commit.
 8. Record settings and pilot evidence in the workflow task; delete/close only the
@@ -101,7 +105,7 @@ Expected code jobs to verify in live results:
 - `pr-policy`
 
 Backend PR #3 merged and both backend jobs passed on current `main`. They are
-required together with `pr-policy`; this activation PR retires `ci-foundation.yml`.
+required together with `pr-policy`; #30 retired `ci-foundation.yml`.
 Do not replace backend database, migration/fixture or Docker checks with a unit-only suite.
 
 ## Verification available now
