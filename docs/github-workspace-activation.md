@@ -2,18 +2,19 @@
 
 ## Current state
 
-Foundation [PR #4](https://github.com/han33-dotcom/TechScout/pull/4) was approved by
-`MohamadNasrallah` and merged into `main` on October 15, 2026. The reviewed sync
-fix (#29) is also merged; the preview-gate follow-up and live activation checks
-are still required.
-The private [TechScout board](https://github.com/users/han33-dotcom/projects/2) and public
-[Wiki](https://github.com/han33-dotcom/TechScout/wiki) were published on October 14, 2026.
-On October 15, approved board Write grants and Slack PR/review subscriptions were
-applied and verified. Expiring Projects credentials and the actual Project node IDs
-were securely saved and verified later that day. Default-branch activation and the
-human acceptance pilot remain pending. Board status is updated manually until activation.
-Both repositories explicitly have `TEAM_SYNC_ENABLED=false`.
-No Notion API token or synchronization is needed for the new setup.
+The reviewed workflow is on `main`. Project synchronization was enabled on
+October 21, 2026 after successful credentialed no-write previews and the owner's
+confirmation that the listed teammates can open their private boards from their
+own accounts. Live status writes succeeded; the full human acceptance pilot
+[#31](https://github.com/han33-dotcom/TechScout/issues/31) remains pending.
+The rollout issue #5 stays open until that pilot and acceptance reconciliation
+are verified. Local agent onboarding is a separate, still-unverified check.
+
+The existing private Project board, public Wiki, approved Write grants and native
+Slack PR/review subscriptions remain in use. `TEAM_SYNC_ENABLED=true` now allows
+metadata-only status updates. No Notion token or synchronization is required.
+Backend #3 and preview/CI consolidation #30 are merged. Required CI retains
+SQLite/Postgres tests, migrations/fixtures and the Docker build.
 
 ## Project board
 
@@ -41,12 +42,11 @@ emails were excluded from the public import.
 
 `MohamadNasrallah` retains board Write access. The owner-approved Write grant for
 `Ahmad860187` was applied on October 15; Manage access shows both with Role: Write.
-Teammates still need to verify opening the board from their own accounts.
+The owner confirmed on October 21 that listed teammates opened the board from their own accounts.
 Repository permissions do not automatically confer Project access.
 
 The authenticated Project API verified the owner, private visibility, required fields
-and exactly one linked repository matching this project on October 15. Before
-activation, teammates must also verify opening the board from their own accounts. Its private visibility does not make repository issues
+and exactly one linked repository matching this project on October 15. The owner confirmed teammate access on October 21. Its private visibility does not make repository issues
 private; these issues and the Wiki are public.
 
 ## Project synchronization credentials and activation
@@ -66,7 +66,7 @@ when the reviewed workflow code is on the repository's **default branch** (`main
 the correct Project exists, and its fields, repository link and credentials are
 verified. Do not bypass branch protections.
 
-After the preview-gate change merges, run **Team project sync** manually with
+For activation or reactivation, run **Team project sync** manually with
 dry_run checked while `TEAM_SYNC_ENABLED=false`. Inspect proposed transitions
 before enabling sync; scheduled/event runs and manual writes remain disabled.
 Then enable sync and run an approved fixture with dry_run unchecked. The worker consumes current
@@ -100,7 +100,8 @@ private meeting records without explicit approval. The references page links age
 
 GitHub's official Slack app is installed in **nsquared** (`nsquared-corp`), with its
 GitHub installation restricted to Sentra and TechScout. Optional code-channel
-management was unchecked; shared cloud AI review remains deferred.
+management was unchecked. AI review is optional; automated Codex comments were
+observed on #32/#33, with no configuration change made by this rollout.
 
 In `#eece503p-techscout`, GitHub [confirmed the subscription](https://nsquared-corp.slack.com/archives/C0C8SHN88CT/p1792048965356559)
 for `pulls` and `reviews`; `/github subscribe list` shows only this repository.
@@ -114,12 +115,28 @@ Inspect `/github subscribe list` before changing subscriptions. Native messages 
 those messages. Task descriptions and review details remain on GitHub. Receiving a
 notification does not automatically launch a teammate's personal AI assistant.
 
-## October 21 activation checkpoint
+## October 21 live activation evidence
+
+- The owner confirmed all listed teammates opened their boards from their own
+  accounts. This confirms access, not their local assistant setup or task acceptance.
+- [Credentialed preview](https://github.com/han33-dotcom/TechScout/actions/runs/39604507686)
+  passed on reviewed default-branch code while writes were disabled, including the
+  synthetic draft pilot. Proposed transitions were inspected before enabling sync.
+- [First write run](https://github.com/han33-dotcom/TechScout/actions/runs/39604701247) passed
+  with `DRY_RUN=false`; pilot #31 moved Not started to In progress.
+- [Independent readback](https://github.com/han33-dotcom/TechScout/actions/runs/39604900665)
+  passed and showed the pilot already In progress, matching its planned status.
+- Rollout #5 moved to Implemented and active task #9 to In review. Historical Done
+  task #8 was preserved in both the write run and subsequent readback.
+- No human change request, approval-staleness, final merge/acceptance or closed/
+  Done/Blocked replay is claimed. Those steps remain in the pilot issue.
+
+## October 21 checkpoint before live activation (historical)
 
 - Mohamad approved follow-up #29, which merged into `main` on October 15.
 - Backend #3 has merged; actual `test` (SQLite/Postgres, migrations and fixtures)
   and `build` jobs passed on current `main`. Both jobs and `pr-policy` are now
-  required from GitHub Actions. The redundant foundation CI is retired in this PR.
+  required from GitHub Actions. The redundant foundation CI was retired in #30.
 - Main requires one CODEOWNER approval, stale-approval dismissal and resolved
   review threads, with no bypass actors and force pushes/deletion blocked.
 - `TEAM_SYNC_ENABLED=false` and the Project node ID were read back. The existing
@@ -128,7 +145,8 @@ notification does not automatically launch a teammate's personal AI assistant.
 - Teammate board access checks, migration acceptance reconciliation, the full
   review/change/fix/acceptance pilot and replay checks remain pending.
 - Live policy tests on #30 rejected a missing task link and a self-applied
-  exemption. GitHub reported merging blocked; restoring the task link and removing
+  exemption. GitHub reported merging blocked while human approval was also missing;
+  this did not isolate which requirement blocked it. Restoring the task link and removing
   the temporary label recovered a successful policy check. The
   [self-exemption run](https://github.com/han33-dotcom/TechScout/actions/runs/39586017974/job/119174988009)
   records the independent-label rejection. No human approval was supplied by an agent.

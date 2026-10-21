@@ -27,7 +27,7 @@ For an existing checkout, first run `git status --short`. If it shows changes,
 preserve them using your normal local process before switching branches. Do not
 reset, clean, force-pull or automatically discard them.
 
-When these workflow PRs are merged, run from a clean checkout:
+The workflow policy is merged. Run from a clean checkout:
 ```text
 git fetch origin
 git switch main
@@ -39,23 +39,23 @@ If fast-forward fails, inspect the divergence with your teammate; do not replace
 the checkout. Bring the updated `origin/main` into an ongoing work branch
 deliberately. Implementation PRs target `main`.
 
-**While the workflow PR is still open:** inspect it without moving your active branch.
-From the existing repository root, choose a sibling path that does not already exist:
+**Separate verification checkout:** inspect merged policy without moving your active
+branch. From the repository root, choose a sibling path that does not exist:
 ```text
 git fetch origin
-git worktree add --detach ../TechScout-workflow-check origin/ci/team-workflow-foundation
+git worktree add --detach ../TechScout-workflow-check origin/main
 cd ../TechScout-workflow-check
 git rev-parse HEAD
 ```
-This separate checkout is for setup verification. A pending policy commit is not
-the team's merged policy. Record the exact commit you checked; repeat after merge.
+Record the exact merged policy commit you checked. Use an explicitly selected PR
+ref only when reviewing a later proposed policy change; it is not merged policy.
 
 For a first checkout:
 ```text
 git clone https://github.com/han33-dotcom/TechScout.git
 cd TechScout
 ```
-Then follow the merged or pending-policy route above.
+Then update the integration branch using the merged-policy route above.
 
 ## 2. Configure dependencies in that checkout
 
@@ -172,7 +172,7 @@ Repository:
 OS:
 Assistant product + surface + version/build (or unavailable):
 Policy commit:
-Merged policy or pending PR checkout:
+Merged policy commit or explicitly identified proposed PR checkout:
 Instruction evidence (sources displayed/read, or manual contents supplied):
 Smoke-check result and relevant limitations:
 Commands run / test counts / skips / failures:
