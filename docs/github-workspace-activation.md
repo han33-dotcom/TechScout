@@ -127,6 +127,18 @@ notification does not automatically launch a teammate's personal AI assistant.
   the default-branch preview. No live Project write or pilot is claimed.
 - Teammate board access checks, migration acceptance reconciliation, the full
   review/change/fix/acceptance pilot and replay checks remain pending.
+- Live policy tests on #30 rejected a missing task link and a self-applied
+  exemption. GitHub reported merging blocked; restoring the task link and removing
+  the temporary label recovered a successful policy check. The
+  [self-exemption run](https://github.com/han33-dotcom/TechScout/actions/runs/39586017974/job/119174988009)
+  records the independent-label rejection. No human approval was supplied by an agent.
+- All 23 migrated issues were inventoried and their GitHub task IDs distinguished
+  from retained historical Notion identifiers. #8 records the reviewed backend
+  merge while retaining the original handoff as history. All 23 remain open;
+  imported Done states have not been converted into new human acceptance evidence.
+- Dedicated synthetic pilot [#31](https://github.com/han33-dotcom/TechScout/issues/31)
+  records the remaining human actions and evidence. Its criteria remain unchecked
+  until observed; the rollout issue remains open.
 
 ## October 15 verification checkpoint (historical)
 
