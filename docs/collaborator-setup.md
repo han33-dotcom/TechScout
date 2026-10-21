@@ -80,7 +80,7 @@ python3.11 -m venv .venv
 ```
 
 Expected: Python 3.11.x; installation succeeds; `pip check` reports no broken
-requirements. Refresh the current requirements and backend documentation after backend changes merge; additional database checks are not claimed to have run by this guide.
+requirements. Use the current requirements and README for the merged backend. CI also verifies Postgres, migrations/fixtures and the Docker build; local unit checks do not replace them.
 A missing package/tool is a setup issue to record, not permission to report passing checks.
 
 ## 3. Verify the assistant loads this repository's policy
@@ -155,7 +155,7 @@ macOS / POSIX:
 ```
 
 Expected: tests return exit code 0, with no failures.
-The current main baseline contains 27 offline tests. Do not hardcode that count as a future requirement; record the count from the checked-out commit.
+Record the test count from the checked-out commit; do not treat an old onboarding count as the current baseline.
 Record the actual command and summary. Any failing/unavailable check leaves local
 verification pending. A plain web-chat assistant can help interpret output but
 cannot certify commands it did not execute or observe.
