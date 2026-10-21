@@ -9,7 +9,7 @@ scoped exemptions and the owner checklist for required-check activation.
 ## Setup
 
 Use Python 3.11 for the shared baseline. Create a virtual environment at the repository
-root and install the current requirements; main currently needs Pydantic.
+root and install the current pinned backend requirements.
 
 Windows PowerShell:
 ```powershell
@@ -26,7 +26,7 @@ python3.11 -m venv .venv
 ```
 
 Keep local environments, credentials and operational configuration out of commits.
-Recheck requirements/setup when the pending backend work merges.
+Use the README for Postgres, migrations and fixture-loading checks.
 
 ## Branch and PR flow
 
@@ -41,9 +41,9 @@ Recheck requirements/setup when the pending backend work merges.
    reruns checks. The human reviewer supplies the approval.
 7. Merge through GitHub after applicable checks and review requirements are satisfied.
 
-The existing main ruleset requires one approving review and dismisses stale approvals.
-Follow the actual configured requirements; do not bypass them. More CI/metadata
-enforcement is part of the later team-workflow rollout.
+Main requires one CODEOWNER approval, dismisses stale approvals and requires
+resolved review threads. The `test`, `build` and `pr-policy` checks are required
+from GitHub Actions. Follow the configured rules; do not bypass them.
 
 ## Shared instructions and handoff
 
