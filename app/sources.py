@@ -35,6 +35,7 @@ CALL_TIMEOUT_S = SOFT_DEADLINE_S + PHASE_TIMEOUT_S
 MAX_WAIT_S = 10.0
 BACKOFF_S = (1.0, 2.0)
 WINDOW_S = 60.0
+RUN_COUNT_TTL_S = 3600.0  # far above the 120-second run cap proposed in MVP 11: only ended runs are dropped
 USER_AGENT = 'TechScout/0.1 (+https://github.com/han33-dotcom/TechScout)'
 ACCEPT_ENCODING = 'gzip'
 HEADERS = {'Accept-Encoding': ACCEPT_ENCODING, 'User-Agent': USER_AGENT}
@@ -150,6 +151,7 @@ def to_tool_result(outcomes: Iterable[FetchOutcome]) -> ToolResult:
 class _Slot:
     run_id: str
     source_id: str
+    limits: SourceLimits
     planned: float
     wait: float
     queued: bool
@@ -162,6 +164,8 @@ class SourceLimiter:
     State is shared by every run that uses the same limiter; gates built without one share a
     process-wide limiter. Concurrency waits block on a condition, never on sleep(), and
     requests in flight count against the store's current limit, even after it is lowered.
+    A request that waited is checked again against the limits the registry gives after the
+    wait. A run's counts are dropped once it has asked for nothing for RUN_COUNT_TTL_S.
     """
 
     def __init__(self, concurrency_wait_s: float = 10.0, max_wait_s: float = MAX_WAIT_S,
@@ -171,6 +175,7 @@ class SourceLimiter:
         self._lock = condition_factory()
         self._dispatches: dict[str, list[float]] = {}
         self._used: dict[tuple[str, str], int] = {}
+        self._last_asked: dict[tuple[str, str], float] = {}  # least recently asked first
         self._cool_until: dict[str, float] = {}
         self._in_flight: dict[str, int] = {}
         self._latest = float('-inf')
@@ -192,6 +197,9 @@ class SourceLimiter:
     def acquire(self, run_id: str, source_id: str, limits: SourceLimits, now: float, wait: float) -> _Slot:
         with self._lock:
             now = self._now(now)
+            self._prune(now)
+            self._last_asked.pop((run_id, source_id), None)
+            self._last_asked[run_id, source_id] = now
             if self._used.get((run_id, source_id), 0) >= limits.max_requests_per_run:
                 raise _Refusal('BUDGET_EXHAUSTED', source_id, 'per-run request cap reached')
             window = sorted(t for t in self._dispatches.get(source_id, ()) if t > now - WINDOW_S)
@@ -202,7 +210,7 @@ class SourceLimiter:
                 raise _Refusal('RATE_LIMIT', source_id, 'per-source rate limit or cool-down in effect',
                                retryable=True)
             queued = self._in_flight.get(source_id, 0) >= limits.concurrency
-            slot = _Slot(run_id, source_id, now + wait, wait, queued)
+            slot = _Slot(run_id, source_id, limits, now + wait, wait, queued)
             self._dispatches[source_id] = [*window, slot.planned]
             self._used[run_id, source_id] = self._used.get((run_id, source_id), 0) + 1
             if not self._lock.wait_for(lambda: self._in_flight.get(source_id, 0) < limits.concurrency,
@@ -215,11 +223,26 @@ class SourceLimiter:
             self._in_flight[source_id] = self._in_flight.get(source_id, 0) + 1
         return slot
 
-    def check_pause(self, slot: _Slot) -> None:
-        # A pause known at acquire ends by slot.planned, so a later one was asked for during the wait.
+    def recheck(self, slot: _Slot, limits: SourceLimits) -> None:
+        """After a wait: refuse if the store asked for a pause or its limits were lowered meanwhile.
+
+        Nothing has been sent, so a refused slot is given back by release() as usual.
+        """
         with self._lock:
+            # A pause known at acquire ends by slot.planned, so a later one was asked for during the wait.
             if self._cool_until.get(slot.source_id, slot.planned) > slot.planned:
                 raise _Refusal('RATE_LIMIT', slot.source_id, 'store asked for a pause', retryable=True)
+            if limits == slot.limits:
+                return  # unchanged, so acquire's checks still hold
+            # This slot is already counted in each total, and in flight.
+            if self._used.get((slot.run_id, slot.source_id), 0) > limits.max_requests_per_run:
+                raise _Refusal('BUDGET_EXHAUSTED', slot.source_id, 'per-run request cap reached')
+            minute = [t for t in self._dispatches[slot.source_id] if t <= slot.planned < t + WINDOW_S]
+            if len(minute) > limits.requests_per_minute:
+                raise _Refusal('RATE_LIMIT', slot.source_id, 'per-source rate limit or cool-down in effect',
+                               retryable=True)
+            if self._in_flight[slot.source_id] > limits.concurrency:
+                raise _Refusal('RATE_LIMIT', slot.source_id, 'concurrency limit busy', retryable=True)
 
     def mark_sent(self, slot: _Slot, now: float) -> None:
         with self._lock:
@@ -241,9 +264,20 @@ class SourceLimiter:
         window = self._dispatches[slot.source_id]
         if slot.planned in window:
             window.remove(slot.planned)
-        self._used[slot.run_id, slot.source_id] -= 1
+        if (slot.run_id, slot.source_id) in self._used:  # gone only if held past RUN_COUNT_TTL_S
+            self._used[slot.run_id, slot.source_id] -= 1
+
+    def _prune(self, now: float) -> None:
+        # Least recently asked first, so each acquire stops at the first run still in use.
+        while self._last_asked:
+            key = next(iter(self._last_asked))
+            if now - self._last_asked[key] <= RUN_COUNT_TTL_S:
+                return
+            del self._last_asked[key]
+            self._used.pop(key, None)
 
 
+# Process-wide, like run recovery's single-process assumption; several workers need shared limits (MVP 11).
 _SHARED_LIMITER = SourceLimiter()  # so gates built separately still keep each store's limits
 
 
@@ -406,9 +440,9 @@ class SourceGate:
                 raise _Refusal('BUDGET_EXHAUSTED', source_id, 'the run budget refused the call')
             if slot.wait:
                 self._sleep(slot.wait)
-            if slot.wait or slot.queued:  # the store may have been switched off or paused meanwhile
-                endpoints = self._allowed(source_id, url)[0]
-                self._limiter.check_pause(slot)
+            if slot.wait or slot.queued:  # the store may have been switched off, paused or limited meanwhile
+                endpoints, limits = self._allowed(source_id, url)
+                self._limiter.recheck(slot, limits)
             start = self._clock()
             guard = _AttemptGuard(source_id, self._clock, start)
             address = self._checked_address(source_id, httpx2.URL(url).host)

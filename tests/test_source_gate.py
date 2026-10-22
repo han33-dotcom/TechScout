@@ -1467,6 +1467,19 @@ class ConnectionTests(GateCase):
             [(context, hostname)] = rec.tls
             self.assertEqual((context.verify_mode, context.check_hostname, hostname),
                              (ssl.CERT_REQUIRED, True, 'mojitech.net'))
+        with self.subTest('httpx2 still sends through the pinned pool the gate puts in HTTPTransport._pool'):
+            # _pool is private to httpx2; if a release stops using it, pinning is silently bypassed.
+            self.reset()
+            rec, backends = Recorder(self), []
+            send = httpcore2.ConnectionPool.handle_request
+
+            def spy(pool, request):
+                backends.append(type(pool._network_backend))
+                return send(pool, request)
+            with mock.patch.object(httpcore2.ConnectionPool, 'handle_request', spy):
+                self.assertOk(self.fetch('mojitech', M_API, gate=self.make_gate(backend=rec)))
+            self.assertEqual(backends, [sources._PinnedBackend], 'HTTPTransport._pool is no longer used')
+            self.assertEqual(rec.connects, [(PUBLIC, 443)])
         source = (ROOT / 'app' / 'sources.py').read_text(encoding='utf-8')
         for text in ('verify=False', 'CERT_NONE', 'check_hostname = False', 'check_hostname=False',
                      '_create_unverified_context', 'NetRCAuth', 'httpx2.Client', 'proxy='):
@@ -1604,6 +1617,33 @@ class LimitTests(GateCase):
             self.clock.set(1060.0)
             self.assertOk(self.fetch('alpha', A1, gate=gate))
             self.assertEqual((self.transport.times, self.sleep.calls), ([1009.0, 1069.0], [9.0]))
+        # The second case's times make (oldest + 60) - 60 round below the oldest send, so a recheck
+        # written that way would count it and refuse a request that fits.
+        changes = [('a minute limit lowered during the wait applies before sending',
+                    alpha(requests_per_minute=2, max_requests_per_run=10), 1000.0, 1055.0, False),
+                   ('another limit changed during the wait still sends at the edge',
+                    alpha(max_requests_per_run=9), 131057.78419706, 131112.41619398515, True)]
+        for name, later, first, at, sends in changes:
+            with self.subTest(name):
+                self.use_registry([alpha(max_requests_per_run=10), beta()])
+                self.reset()
+                self.serve(A1)
+                change = lambda later=later: self.use_registry([later, beta()])
+                gate = self.make_gate(sleep=lambda s, change=change: (self.sleep(s), change()))
+                for i in range(6):
+                    self.clock.set(first + i)
+                    self.assertOk(self.fetch('alpha', A1, gate=gate))
+                self.clock.set(at)
+                o = self.fetch('alpha', A1, gate=gate)
+                self.assertEqual(self.sleep.calls, [first + 60 - at])
+                if sends:
+                    self.assertOk(o)
+                    self.assertEqual((len(self.transport.requests), self.transport.times[-1]),
+                                     (7, first + 60))
+                else:
+                    self.assertRefused(o, 'RATE_LIMIT', retryable=True)
+                    self.assertEqual((len(self.transport.requests), self.run.releases), (6, 1))
+                    self.assertEqual(gate.requests_used(self.run.run_id, 'alpha'), 6)
 
     def test_LIM_02_the_minute_limit_is_shared_by_every_run(self):
         self.serve(A1)
@@ -1695,6 +1735,35 @@ class LimitTests(GateCase):
             self.assertEqual(self.transport.max_in_flight['alpha.example'], 2)
             self.assertOk(self.fetch('alpha', A3, budget=self.budget('run-after'), gate=gate))
             self.assertEqual((set(self.transport.urls[:2]), self.transport.urls[2:]), ({A1, A2}, [A3]))
+        with self.subTest('a concurrency lowered while a request is queued applies before it is sent'):
+            self.use_registry([alpha(concurrency=2), beta()])
+            self.reset()
+            waiting = threading.Event()
+            gate = self.make_gate(limiter=SourceLimiter(condition_factory=lambda: WatchedCondition(waiting)))
+            inside = {url: threading.Event() for url in (A1, A2)}
+            release = {url: threading.Event() for url in (A1, A2)}
+            for url, reply in ((A1, json_ok()), (A2, html_ok())):
+                hold = lambda url=url: (inside[url].set(), release[url].wait(5))
+                self.transport.route(url, after(hold, reply))
+            self.serve(A3)
+            runs = {url: self.budget(f'run-{i}') for i, url in enumerate((A1, A2, A3), 1)}
+            workers = {url: Worker(lambda url=url: self.fetch('alpha', url, budget=runs[url], gate=gate))
+                       for url in (A1, A2, A3)}
+            for url in (A1, A2):
+                workers[url].start()
+                self.assertTrue(inside[url].wait(5))
+            workers[A3].start()
+            self.assertTrue(waiting.wait(5))
+            self.use_registry([alpha(concurrency=1), beta()])
+            release[A1].set()  # wakes the queued request with one request still in flight
+            self.assertOk(workers[A1].outcome())
+            self.assertRefused(workers[A3].outcome(), 'RATE_LIMIT', retryable=True)
+            self.assertEqual((self.transport.urls, runs[A3].releases), ([A1, A2], 1))
+            self.assertEqual(gate.requests_used(runs[A3].run_id, 'alpha'), 0)
+            release[A2].set()
+            self.assertOk(workers[A2].outcome())
+            self.assertOk(self.fetch('alpha', A3, budget=self.budget('run-after'), gate=gate))
+            self.assertEqual(self.transport.urls, [A1, A2, A3])
 
     def test_LIM_04_two_different_stores_can_be_fetched_at_the_same_time(self):
         barrier = threading.Barrier(2, timeout=5)
@@ -1730,6 +1799,44 @@ class LimitTests(GateCase):
             self.use_registry([alpha(max_requests_per_run=1), beta()])
             self.assertRefused(self.fetch('alpha', A1), 'BUDGET_EXHAUSTED')
             self.assertEqual(len(self.transport.requests), 1)
+        with self.subTest('a cap lowered during a retry wait applies before sending'):
+            self.use_registry([alpha(), beta()])
+            self.reset()
+            self.transport.route(A1, respond(503), json_ok())
+            lower = lambda: self.use_registry([alpha(max_requests_per_run=1), beta()])
+            gate = self.make_gate(sleep=lambda s: (self.sleep(s), lower()))
+            o = self.fetch('alpha', A1, gate=gate)
+            self.assertEqual(self.codes(o), [('NETWORK_ERROR', True), ('BUDGET_EXHAUSTED', False)])
+            self.assertEqual((len(self.transport.requests), self.sleep.calls), (1, [1.0]))
+            self.assertEqual((self.run.granted, self.run.commits, self.run.releases), (2, 1, 1))
+            self.assertEqual(gate.requests_used(self.run.run_id, 'alpha'), 1)
+        with self.subTest('counts of a run idle for an hour are dropped and a live run keeps its own'):
+            self.use_registry([alpha(), beta()])
+            self.reset()
+            self.serve(A1, B1)
+            limiter = SourceLimiter()
+            gate = self.make_gate(limiter=limiter)
+            old, live, other = self.budget('run-old'), self.budget('run-live'), self.budget('run-other')
+            for at, run in ((1000.0, old), (1000.0, live), (3000.0, live), (4600.0, live)):
+                self.clock.set(at)
+                self.assertOk(self.fetch('alpha', A1, budget=run, gate=gate))
+            # run-old has been idle for exactly 3600 s: still kept.
+            self.assertEqual([gate.requests_used(r.run_id, 'alpha') for r in (old, live)], [1, 3])
+            self.clock.set(4600.5)
+            self.assertOk(self.fetch('beta', B1, budget=other, gate=gate))
+            self.assertEqual([gate.requests_used(r.run_id, 'alpha') for r in (old, live)], [0, 3])
+            self.assertOk(self.fetch('alpha', A1, budget=live, gate=gate))
+            self.assertRefused(self.fetch('alpha', A1, budget=live, gate=gate), 'BUDGET_EXHAUSTED')
+            # A short run every ten minutes beside one that keeps asking: only the last hour's runs stay.
+            self.use_registry([alpha(), beta(max_requests_per_run=100)])
+            steady = self.budget('run-steady', max_calls=100)
+            for i in range(50):
+                self.clock.set(5000.0 + 600 * i)
+                for run in (steady, self.budget(f'run-{i}')):
+                    self.assertOk(self.fetch('beta', B1, budget=run, gate=gate))
+            self.assertEqual((len(limiter._used), len(limiter._last_asked)), (8, 8))
+            used = [gate.requests_used(r, 'beta') for r in ('run-steady', 'run-43', 'run-42')]
+            self.assertEqual(used, [50, 1, 0])
 
     def test_LIM_06_retries_and_redirect_hops_count_toward_the_limits(self):
         with self.subTest('retries use the run allowance'):

@@ -70,7 +70,9 @@ permission. Active entries require a review, scoped HTTPS endpoints and positive
 limits. URL validation here is structural. The Task 4 source gate (`app/sources.py`) sends
 only GETs, and only to a URL that exactly matches an `allowed_endpoints` entry (no
 templates, so a new page or query needs a new entry) of a source that is active and listed
-in `live_release.admitted_source_ids`, re-read again after any wait. An endpoint whose path
+in `live_release.admitted_source_ids`, re-read again after any wait (a request that no
+longer fits the per-run cap, minute limit or concurrency read then, because they were
+lowered meanwhile, is refused, not sent). An endpoint whose path
 or query names a cart, checkout, account, login, admin or form route, or `_method`, disables
 the source (`ACTION_PATH_DENYLIST`). On every request it checks DNS answers, redirects (at
 most 3, each to an allowed endpoint), reply framing, size (2 MiB) and encoding (none, or
@@ -80,7 +82,9 @@ lookup and the operating system's certificate check are bounded by the operating
 instead. A reservation is released, not committed, when nothing was sent. Per-source limits,
 cool-downs and per-run counts live in one limiter that every gate in the process shares
 unless given its own (a gate given another clock, as in tests, needs its own); they are not
-shared between processes, so the MVP runs one worker. The gate ignores proxy settings, but
+shared between processes, so the MVP runs one worker. A run's per-run counts are dropped
+once it has asked for nothing for an hour (`RUN_COUNT_TTL_S`), far longer than a run may
+last, so the limiter does not grow with every run. The gate ignores proxy settings, but
 on Linux OpenSSL still reads `SSL_CERT_FILE` and `SSL_CERT_DIR`, so the process environment
 must be trusted.
 
