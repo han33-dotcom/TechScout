@@ -75,5 +75,37 @@ reasons, source coverage, usage and stop reason. Verification timestamps must fa
 inside the run. An empty recommendation list may be an explicit abstention or partial
 result; a failed/cancelled run cannot masquerade as completed recommendations.
 
+## Tool error codes
+
+`ToolError.code` is a closed list. `retryable` says whether the same request may be sent
+again within the run; only the source gate (Task 4) retries, and callers must not re-send.
+
+| Code | Meaning | Usually retryable |
+|---|---|---|
+| `TIMEOUT` | A connect, read or overall deadline expired | Yes |
+| `RATE_LIMIT` | The store answered 429, or the gate's own per-source limit is full | Yes |
+| `NETWORK_ERROR` | Connection failure, reset, truncated reply, a 502, 503 or 504 reply, failed DNS lookup or TLS verification | Yes, except TLS |
+| `SOURCE_DISABLED` | The source is unknown, not active, not selected or misconfigured in the registry | No |
+| `BLOCKED` | The gate refused the request or its reply on safety policy | No (enforced) |
+| `HTTP_ERROR` | A permanent HTTP status: any non-2xx reply, including 500, except 429 (`RATE_LIMIT`), 502, 503 and 504 (`NETWORK_ERROR`) and redirects (followed, or `BLOCKED`) | No (enforced) |
+| `INVALID_SCHEMA` | The reply arrived but is malformed or not the expected shape | No |
+| `BUDGET_EXHAUSTED` | The source's per-run cap or the run budget has no room left | No |
+| `FIELD_CONFLICT` | Fetched facts disagree | No |
+| `NO_PRICE` | No usable price was published | No |
+
+`BLOCKED` messages start with a fixed reason: `blocked:url` (not an allow-listed endpoint),
+`blocked:method` (not a read), `blocked:dns` (a resolved address is not public),
+`blocked:redirect` (unsafe or too many redirects), `blocked:size` (reply over the size cap)
+or `blocked:encoding` (unsupported content encoding). `HTTP_ERROR` messages start with
+`http:<status>`, the three-digit status code. Each prefix is followed by a space or ends the
+message. The contract enforces these rules: it rejects a `BLOCKED` or `HTTP_ERROR` record
+whose message does not start with its documented prefix (for example `blocked:urlx`,
+`http:4040`, or an `http:` prefix on a `BLOCKED` record) or whose `retryable` is true.
+Other codes keep free-text messages and their own `retryable` value.
+
+`BLOCKED` and `HTTP_ERROR` were added within `schema_version: 1`, together with these
+checks. Every stored version 1 result stays valid: until this change the contract rejected
+both codes, so no stored record can contain them, and the other codes are unchanged.
+
 JSON examples are in `tests/fixtures/contracts.json`. Future tasks must retain this
 shape or deliberately update its version, documentation and affected consumers.
