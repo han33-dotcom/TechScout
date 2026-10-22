@@ -1431,6 +1431,19 @@ class ConnectionTests(GateCase):
             self.assertFalse(forbidden & set(parameters))
             self.assertNotIn(inspect.Parameter.VAR_KEYWORD, [p.kind for p in parameters.values()])
         self.use_registry([mojitech()])
+        with self.subTest('httpx2 still sends through the pinned pool the gate puts in HTTPTransport._pool'):
+            # _pool is private to httpx2; if a release stops using it, pinning is silently bypassed.
+            # Checked first and stopped before any connection, so that failure names its cause.
+            rec, send = Recorder(self), httpcore2.ConnectionPool.handle_request
+
+            def spy(pool, request):
+                if type(pool._network_backend) is not sources._PinnedBackend:
+                    raise RealIOAttempt('HTTPTransport._pool is no longer used')
+                return send(pool, request)
+            with mock.patch.object(httpcore2.ConnectionPool, 'handle_request', spy):
+                self.assertOk(self.fetch('mojitech', M_API, gate=self.make_gate(backend=rec)))
+            self.assertEqual(rec.connects, [(PUBLIC, 443)])
+            self.reset()
         rec = Recorder(self)
         gate = self.make_gate(backend=rec)
         guard = sources._AttemptGuard('mojitech', self.clock.monotonic, self.clock.monotonic())
@@ -1467,20 +1480,7 @@ class ConnectionTests(GateCase):
             [(context, hostname)] = rec.tls
             self.assertEqual((context.verify_mode, context.check_hostname, hostname),
                              (ssl.CERT_REQUIRED, True, 'mojitech.net'))
-        with self.subTest('httpx2 still sends through the pinned pool the gate puts in HTTPTransport._pool'):
-            # _pool is private to httpx2; if a release stops using it, pinning is silently bypassed.
-            self.reset()
-            rec, backends = Recorder(self), []
-            send = httpcore2.ConnectionPool.handle_request
-
-            def spy(pool, request):
-                backends.append(type(pool._network_backend))
-                return send(pool, request)
-            with mock.patch.object(httpcore2.ConnectionPool, 'handle_request', spy):
-                self.assertOk(self.fetch('mojitech', M_API, gate=self.make_gate(backend=rec)))
-            self.assertEqual(backends, [sources._PinnedBackend], 'HTTPTransport._pool is no longer used')
-            self.assertEqual(rec.connects, [(PUBLIC, 443)])
-        source = (ROOT / 'app' / 'sources.py').read_text(encoding='utf-8')
+        source =(ROOT / 'app' / 'sources.py').read_text(encoding='utf-8')
         for text in ('verify=False', 'CERT_NONE', 'check_hostname = False', 'check_hostname=False',
                      '_create_unverified_context', 'NetRCAuth', 'httpx2.Client', 'proxy='):
             self.assertFalse(text in source, text)
@@ -1683,6 +1683,47 @@ class LimitTests(GateCase):
             o = self.fetch('alpha', A1, gate=gate)
             self.assertEqual(self.codes(o), [('NETWORK_ERROR', True), ('RATE_LIMIT', True)])
             self.assertEqual((self.transport.urls, self.transport.times), ([A1, A2], [1000.0, 1001.0]))
+        # A process frozen in a retry wait (or before a request that never waited) wakes after its
+        # planned minute has passed; the request still counts itself in the minute it is sent in.
+        two_a_minute = [alpha(concurrency=3, requests_per_minute=2, max_requests_per_run=10), beta()]
+        for others, sends in ((2, False), (1, True), (0, True)):
+            with self.subTest('a retry held past its planned minute counts itself', others=others):
+                self.use_registry(two_a_minute)
+                self.reset()
+                self.serve(A2)
+                self.transport.route(A1, respond(503), json_ok())
+
+                def frozen(seconds, others=others):
+                    self.sleep(seconds)
+                    self.clock.set(1100.0)
+                    for _ in range(others):
+                        self.assertOk(self.fetch('alpha', A2, budget=self.budget('run-2'), gate=gate))
+                gate = self.make_gate(sleep=frozen)
+                o = self.fetch('alpha', A1, gate=gate)
+                if sends:
+                    self.assertOk(o)
+                    self.assertEqual(self.transport.times, [1000.0] + [1100.0] * (others + 1))
+                else:
+                    self.assertEqual(self.codes(o), [('NETWORK_ERROR', True), ('RATE_LIMIT', True)])
+                    self.assertEqual(self.transport.times, [1000.0, 1100.0, 1100.0])
+        with self.subTest('a request that never waited is checked again after a stall'):
+            self.use_registry(two_a_minute)
+            self.reset()
+            self.serve(A1, A2)
+            gate, run = self.make_gate(), self.budget('run-1')
+            reserve = run.reserve_call
+
+            def stalled(source_id, max_seconds):  # frozen for 100 s before the first request is sent
+                run.reserve_call = reserve
+                self.clock.set(1100.0)
+                for _ in range(2):
+                    self.assertOk(self.fetch('alpha', A2, budget=self.budget('run-2'), gate=gate))
+                return reserve(source_id, max_seconds)
+            run.reserve_call = stalled
+            o = self.fetch('alpha', A1, budget=run, gate=gate)
+            self.assertRefused(o, 'RATE_LIMIT', retryable=True)
+            self.assertEqual((self.transport.urls, self.transport.times), ([A2, A2], [1100.0, 1100.0]))
+            self.assertEqual((run.calls, run.releases), (1, 1))
 
     def test_LIM_02_the_minute_limit_is_shared_by_every_run(self):
         self.serve(A1)

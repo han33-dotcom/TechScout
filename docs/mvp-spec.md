@@ -70,10 +70,11 @@ permission. Active entries require a review, scoped HTTPS endpoints and positive
 limits. URL validation here is structural. The Task 4 source gate (`app/sources.py`) sends
 only GETs, and only to a URL that exactly matches an `allowed_endpoints` entry (no
 templates, so a new page or query needs a new entry) of a source that is active and listed
-in `live_release.admitted_source_ids`, re-read again after any wait (a request that no
-longer fits the per-run cap, minute limit or concurrency read then, for example because
-they were lowered meanwhile, is refused, not sent; its minute is counted back from the
-actual send, so requests sent while it waited count too). An endpoint whose path
+in `live_release.admitted_source_ids`, re-read again after any wait. Just before sending,
+every request is checked again against the per-run cap, minute limit and concurrency read
+last; one that no longer fits, for example because they were lowered meanwhile, is refused,
+not sent. Its minute is counted back from the actual send, so requests sent while it
+waited or stalled count too. An endpoint whose path
 or query names a cart, checkout, account, login, admin or form route, or `_method`, disables
 the source (`ACTION_PATH_DENYLIST`). On every request it checks DNS answers, redirects (at
 most 3, each to an allowed endpoint), reply framing, size (2 MiB) and encoding (none, or

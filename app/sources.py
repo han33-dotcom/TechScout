@@ -165,8 +165,8 @@ class SourceLimiter:
     State is shared by every run that uses the same limiter; gates built without one share a
     process-wide limiter. Concurrency waits block on a condition, never on sleep(), and
     requests in flight count against the store's current limit, even after it is lowered.
-    A request that waited is checked again against the limits the registry gives after the
-    wait. A run's counts are dropped once it has asked no store for RUN_COUNT_TTL_S.
+    Every request is checked again just before it is sent, against the limits the registry
+    gives after any wait. A run's counts are dropped once it has asked no store for RUN_COUNT_TTL_S.
     """
 
     def __init__(self, concurrency_wait_s: float = 10.0, max_wait_s: float = MAX_WAIT_S,
@@ -226,11 +226,11 @@ class SourceLimiter:
         return slot
 
     def recheck(self, slot: _Slot, limits: SourceLimits, now: float) -> None:
-        """After a wait: refuse if the store asked for a pause or the request no longer fits.
+        """Just before sending: refuse if the store asked for a pause or the request no longer fits.
 
-        limits are the ones the registry gives now, and the minute is counted back from now,
-        the actual send, so requests sent while this one waited count too. Nothing has been
-        sent, so a refused slot is given back by release() as usual.
+        limits are the ones the registry gives after any wait, and the minute is counted back
+        from now, the actual send, so requests sent while this one waited or stalled count too.
+        Nothing has been sent, so a refused slot is given back by release() as usual.
         """
         with self._lock:
             # A pause known at acquire ends by slot.planned, so a later one was asked for during the wait.
@@ -241,6 +241,8 @@ class SourceLimiter:
                 raise _Refusal('BUDGET_EXHAUSTED', slot.source_id, 'per-run request cap reached')
             at = max(slot.planned, self._now(now))  # a queued request is sent later than planned
             minute = [t for t in self._dispatches[slot.source_id] if t <= at < t + WINDOW_S]
+            if at >= slot.planned + WINDOW_S:  # held so long that its own entry has left that minute
+                minute.append(at)
             if len(minute) > limits.requests_per_minute:
                 raise _Refusal('RATE_LIMIT', slot.source_id, 'per-source rate limit or cool-down in effect',
                                retryable=True)
@@ -445,7 +447,7 @@ class SourceGate:
                 self._sleep(slot.wait)
             if slot.wait or slot.queued:  # the store may have been switched off, paused or limited meanwhile
                 endpoints, limits = self._allowed(source_id, url)
-                self._limiter.recheck(slot, limits, self._clock())
+            self._limiter.recheck(slot, limits, self._clock())  # a stall without a wait counts too
             start = self._clock()
             guard = _AttemptGuard(source_id, self._clock, start)
             address = self._checked_address(source_id, httpx2.URL(url).host)
