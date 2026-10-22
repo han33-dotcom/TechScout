@@ -67,13 +67,69 @@ Cost calculation and deduplication are Task 9, not model behavior.
 `SourcePolicy` retains Task 1's `id`, `origin`, `status`, `admission`,
 `allowed_endpoints` and `limits`. `admission` is technical review metadata, not merchant
 permission. Active entries require a review, scoped HTTPS endpoints and positive
-limits. URL validation is structural; DNS, redirects and HTTP budgets are Task 4.
+limits. URL validation here is structural. The Task 4 source gate (`app/sources.py`) sends
+only GETs, and only to a URL that exactly matches an `allowed_endpoints` entry (no
+templates, so a new page or query needs a new entry) of a source that is active and listed
+in `live_release.admitted_source_ids`, re-read again after any wait. Just before sending,
+every request is checked again against the per-run cap, minute limit and concurrency read
+last; one that no longer fits, for example because they were lowered meanwhile, is refused,
+not sent. Its minute is counted back from the actual send, so requests sent while it
+waited or stalled count too. An endpoint whose path
+or query names a cart, checkout, account, login, admin or form route, or `_method`, disables
+the source (`ACTION_PATH_DENYLIST`). On every request it checks DNS answers, redirects (at
+most 3, each to an allowed endpoint), reply framing, size (2 MiB) and encoding (none, or
+gzip at most twice with each stream ending exactly at its trailer), per-source limits and
+the run budget. Every network wait in an attempt ends by a 10-second deadline; only the DNS
+lookup and the operating system's certificate check are bounded by the operating system
+instead. A reservation is released, not committed, when nothing was sent. Per-source limits,
+cool-downs and per-run counts live in one limiter that every gate in the process shares
+unless given its own (a gate given another clock, as in tests, needs its own); they are not
+shared between processes, so the MVP runs one worker. A run's per-run counts are dropped
+once it has asked no store for an hour (`RUN_COUNT_TTL_S`), so the limiter does not grow
+with every run. That is far longer than the 120-second run cap MVP 11 plans, but nothing
+enforces that cap yet, so until then a run that pauses for an hour starts its counts
+again. The gate ignores proxy settings, but
+on Linux OpenSSL still reads `SSL_CERT_FILE` and `SSL_CERT_DIR`, so the process environment
+must be trusted.
 
 Tool results and source coverage distinguish ok, partial and error with consistent
 error records; tool results also include measured duration. Run results carry up to three verified recommendations, unresolved/rejected
 reasons, source coverage, usage and stop reason. Verification timestamps must fall
 inside the run. An empty recommendation list may be an explicit abstention or partial
 result; a failed/cancelled run cannot masquerade as completed recommendations.
+
+## Tool error codes
+
+`ToolError.code` is a closed list. `retryable` says whether the same request may be sent
+again within the run; only the source gate (Task 4) retries, and callers must not re-send.
+
+| Code | Meaning | Usually retryable |
+|---|---|---|
+| `TIMEOUT` | A connect, read or overall deadline expired | Yes |
+| `RATE_LIMIT` | The store answered 429, or the gate's own per-source limit is full | Yes |
+| `NETWORK_ERROR` | Connection failure, reset, truncated reply, a 502, 503 or 504 reply, failed DNS lookup or TLS verification | Yes, except TLS |
+| `SOURCE_DISABLED` | The source is unknown, not active, not selected or misconfigured in the registry | No |
+| `BLOCKED` | The gate refused the request or its reply on safety policy | No (enforced) |
+| `HTTP_ERROR` | A permanent HTTP status: any non-2xx reply, including 500, except 429 (`RATE_LIMIT`), 502, 503 and 504 (`NETWORK_ERROR`) and redirects (followed, or `BLOCKED`) | No (enforced) |
+| `INVALID_SCHEMA` | The reply arrived but is malformed, has no length framing or is not the expected shape | No |
+| `BUDGET_EXHAUSTED` | The source's per-run cap or the run budget has no room left | No |
+| `FIELD_CONFLICT` | Fetched facts disagree | No |
+| `NO_PRICE` | No usable price was published | No |
+
+`BLOCKED` messages start with a fixed reason: `blocked:url` (not an allow-listed endpoint),
+`blocked:method` (reserved: the gate only sends GET, and a registry entry allowing another
+method disables the source), `blocked:dns` (a resolved address is not public),
+`blocked:redirect` (unsafe or too many redirects), `blocked:size` (reply over the size cap)
+or `blocked:encoding` (unsupported content encoding). `HTTP_ERROR` messages start with
+`http:<status>`, the three-digit status code. Each prefix is followed by a space or ends the
+message. The contract enforces these rules: it rejects a `BLOCKED` or `HTTP_ERROR` record
+whose message does not start with its documented prefix (for example `blocked:urlx`,
+`http:4040`, or an `http:` prefix on a `BLOCKED` record) or whose `retryable` is true.
+Other codes keep free-text messages and their own `retryable` value.
+
+`BLOCKED` and `HTTP_ERROR` were added within `schema_version: 1`, together with these
+checks. Every stored version 1 result stays valid: until this change the contract rejected
+both codes, so no stored record can contain them, and the other codes are unchanged.
 
 JSON examples are in `tests/fixtures/contracts.json`. Future tasks must retain this
 shape or deliberately update its version, documentation and affected consumers.
