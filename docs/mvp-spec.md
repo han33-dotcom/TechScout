@@ -101,8 +101,8 @@ again within the run; only the source gate (Task 4) retries, and callers must no
 | `RATE_LIMIT` | The store answered 429, or the gate's own per-source limit is full | Yes |
 | `NETWORK_ERROR` | Connection failure, reset, truncated reply, a 502, 503 or 504 reply, failed DNS lookup or TLS verification | Yes, except TLS |
 | `SOURCE_DISABLED` | The source is unknown, not active, not selected or misconfigured in the registry | No |
-| `BLOCKED` | The gate refused the request or its reply on safety policy | No |
-| `HTTP_ERROR` | The store answered with a permanent HTTP status (not 429) | No |
+| `BLOCKED` | The gate refused the request or its reply on safety policy | No (enforced) |
+| `HTTP_ERROR` | A permanent HTTP status: any non-2xx reply, including 500, except 429 (`RATE_LIMIT`), 502, 503 and 504 (`NETWORK_ERROR`) and redirects (followed, or `BLOCKED`) | No (enforced) |
 | `INVALID_SCHEMA` | The reply arrived but is malformed, has no length framing or is not the expected shape | No |
 | `BUDGET_EXHAUSTED` | The source's per-run cap or the run budget has no room left | No |
 | `FIELD_CONFLICT` | Fetched facts disagree | No |
@@ -113,8 +113,15 @@ again within the run; only the source gate (Task 4) retries, and callers must no
 method disables the source), `blocked:dns` (a resolved address is not public),
 `blocked:redirect` (unsafe or too many redirects), `blocked:size` (reply over the size cap)
 or `blocked:encoding` (unsupported content encoding). `HTTP_ERROR` messages start with
-`http:<status>`. `BLOCKED` and `HTTP_ERROR` were added within `schema_version: 1`: the change
-only widens the accepted values, so every stored version 1 result still validates.
+`http:<status>`, the three-digit status code. Each prefix is followed by a space or ends the
+message. The contract enforces these rules: it rejects a `BLOCKED` or `HTTP_ERROR` record
+whose message does not start with its documented prefix (for example `blocked:urlx`,
+`http:4040`, or an `http:` prefix on a `BLOCKED` record) or whose `retryable` is true.
+Other codes keep free-text messages and their own `retryable` value.
+
+`BLOCKED` and `HTTP_ERROR` were added within `schema_version: 1`, together with these
+checks. Every stored version 1 result stays valid: until this change the contract rejected
+both codes, so no stored record can contain them, and the other codes are unchanged.
 
 JSON examples are in `tests/fixtures/contracts.json`. Future tasks must retain this
 shape or deliberately update its version, documentation and affected consumers.

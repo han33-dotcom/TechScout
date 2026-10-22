@@ -20,7 +20,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   reconcile:
-    if: vars.TEAM_SYNC_ENABLED == 'true'
+    if: vars.TEAM_SYNC_ENABLED == 'true' || (github.event_name == 'workflow_dispatch' && inputs.dry_run == true)
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:

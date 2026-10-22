@@ -4,7 +4,8 @@
 
 Foundation [PR #4](https://github.com/han33-dotcom/TechScout/pull/4) was approved by
 `MohamadNasrallah` and merged into `main` on October 15, 2026. The reviewed sync
-fix and live activation checks are still required.
+fix (#29) is also merged; the preview-gate follow-up and live activation checks
+are still required.
 The private [TechScout board](https://github.com/users/han33-dotcom/projects/2) and public
 [Wiki](https://github.com/han33-dotcom/TechScout/wiki) were published on October 14, 2026.
 On October 15, approved board Write grants and Slack PR/review subscriptions were
@@ -65,8 +66,10 @@ when the reviewed workflow code is on the repository's **default branch** (`main
 the correct Project exists, and its fields, repository link and credentials are
 verified. Do not bypass branch protections.
 
-Run **Team project sync** manually with dry_run checked. Inspect proposed transitions,
-then run an approved fixture with dry_run unchecked. The worker consumes current
+After the preview-gate change merges, run **Team project sync** manually with
+dry_run checked while `TEAM_SYNC_ENABLED=false`. Inspect proposed transitions
+before enabling sync; scheduled/event runs and manual writes remain disabled.
+Then enable sync and run an approved fixture with dry_run unchecked. The worker consumes current
 metadata rather than event bodies; it does not check out PR code or execute task text.
 Events wake it through a separate signal workflow with no credentials or checkout.
 Daily reconciliation repairs missed events; same-repository writes are serialized.
@@ -90,9 +93,8 @@ repository bootstrap copies have been removed. Technical documentation remains i
 
 Verify that Wiki editing remains restricted to repository collaborators.
 Do not publish participant data, private contacts, university attachments or original
-private meeting records without explicit approval. The references page still needs
-its foundation-branch agent-instruction link updated to the normal implementation
-branch after rollout changes settle.
+private meeting records without explicit approval. The references page links agent instructions on the normal implementation branch
+(Sentra `develop`, TechScout `main`), updated on October 21.
 
 ## Slack subscriptions
 
@@ -112,7 +114,33 @@ Inspect `/github subscribe list` before changing subscriptions. Native messages 
 those messages. Task descriptions and review details remain on GitHub. Receiving a
 notification does not automatically launch a teammate's personal AI assistant.
 
-## October 15 verification checkpoint
+## October 21 activation checkpoint
+
+- Mohamad approved follow-up #29, which merged into `main` on October 15.
+- Backend #3 has merged; actual `test` (SQLite/Postgres, migrations and fixtures)
+  and `build` jobs passed on current `main`. Both jobs and `pr-policy` are now
+  required from GitHub Actions. The redundant foundation CI is retired in this PR.
+- Main requires one CODEOWNER approval, stale-approval dismissal and resolved
+  review threads, with no bypass actors and force pushes/deletion blocked.
+- `TEAM_SYNC_ENABLED=false` and the Project node ID were read back. The existing
+  `PROJECTS_TOKEN` secret remains present; its next live authentication check is
+  the default-branch preview. No live Project write or pilot is claimed.
+- Teammate board access checks, migration acceptance reconciliation, the full
+  review/change/fix/acceptance pilot and replay checks remain pending.
+- Live policy tests on #30 rejected a missing task link and a self-applied
+  exemption. GitHub reported merging blocked; restoring the task link and removing
+  the temporary label recovered a successful policy check. The
+  [self-exemption run](https://github.com/han33-dotcom/TechScout/actions/runs/39586017974/job/119174988009)
+  records the independent-label rejection. No human approval was supplied by an agent.
+- All 23 migrated issues were inventoried and their GitHub task IDs distinguished
+  from retained historical Notion identifiers. #8 records the reviewed backend
+  merge while retaining the original handoff as history. All 23 remain open;
+  imported Done states have not been converted into new human acceptance evidence.
+- Dedicated synthetic pilot [#31](https://github.com/han33-dotcom/TechScout/issues/31)
+  records the remaining human actions and evidence. Its criteria remain unchecked
+  until observed; the rollout issue remains open.
+
+## October 15 verification checkpoint (historical)
 
 - `MohamadNasrallah` approved the current foundation head and merged #4 into `main`.
 - The existing one-approval requirement and stale-review dismissal are preserved;

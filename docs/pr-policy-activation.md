@@ -3,7 +3,8 @@
 ## Prepared versus active
 
 The foundation policy was reviewed by `MohamadNasrallah` and merged on October 15.
-Required-check enforcement still needs the owner activation and live test below.
+The owner enabled required `test`, `build` and `pr-policy` checks on October 21.
+Live negative/positive merge-blocking tests and the human pilot remain pending.
 Existing review protections remain active; follow-up fixes need their own review.
 Individual collaborator onboarding can remain pending during this preparation.
 
@@ -74,8 +75,8 @@ CODEOWNER approval; one approval, stale-review dismissal and no bypasses are ret
 
 ## Owner activation checklist
 
-The connected GitHub tools do not expose branch-protection/ruleset writes. An owner
-must perform these settings steps, or explicitly authorize another supported route.
+The owner authorized the settings changes through the authenticated GitHub REST
+API. Settings were read back; the live behavioral checks below are still required.
 
 1. Inspect the PR and verify code, policy regression tests and existing CI results.
    Confirm at least one other human approval before merge.
@@ -95,13 +96,13 @@ must perform these settings steps, or explicitly authorize another supported rou
    synthetic test PR after verification.
 
 Expected code jobs to verify in live results:
-- `foundation-test` (temporary minimal CI)
+- `test` (SQLite/Postgres, migrations and fixture loading)
+- `build` (Docker image)
 - `pr-policy`
 
-Backend PR #3 separately introduces `test` and `build`. After it merges, verify both
-backend jobs on an actual PR, require them, then retire ci-foundation.yml and its
-required job together. Keep pr-policy required. Do not replace backend database,
-migration/fixture or Docker checks with the temporary unit suite.
+Backend PR #3 merged and both backend jobs passed on current `main`. They are
+required together with `pr-policy`; this activation PR retires `ci-foundation.yml`.
+Do not replace backend database, migration/fixture or Docker checks with a unit-only suite.
 
 ## Verification available now
 
