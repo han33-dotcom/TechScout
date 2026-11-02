@@ -90,8 +90,9 @@ self-exemption and recovery. The isolated blocking/stale-approval pilot remains.
    Keep force pushes/deletion blocked; avoid ordinary-user bypasses.
 5. Require the actual code-check names and `pr-policy`, selecting GitHub Actions as
    the expected source when offered. Do not require job names guessed from a matrix.
-6. With current human approval and other required checks passing, remove the task
-   link without an exemption: verify the policy fails and GitHub blocks merge.
+6. With the branch up to date with `main`, review threads resolved, current human
+   approval and other required checks passing, remove the task link without an
+   exemption: verify the policy fails and GitHub blocks merge.
    Restore the link and verify fresh success. A blocked PR that also lacks approval
    does not isolate which requirement caused the block.
 7. Confirm the author cannot supply their own required approval. A different teammate

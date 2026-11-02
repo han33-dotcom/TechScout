@@ -12,3 +12,4 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 - [retailer access requests](retailer-access-requests.md)
 - [source admission](source-admission.md)
 - [team workflow](team-workflow.md)
+- [synthetic workflow pilot](workflow-pilot.md)
