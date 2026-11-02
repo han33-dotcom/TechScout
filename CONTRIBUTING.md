@@ -44,6 +44,9 @@ Use the README for Postgres, migrations and fixture-loading checks.
 Main requires one CODEOWNER approval, dismisses stale approvals and requires
 resolved review threads. The `test`, `build` and `pr-policy` checks are required
 from GitHub Actions. Follow the configured rules; do not bypass them.
+The branch must be up to date with `main` before merge. After a prerequisite PR
+merges, deliberately update stacked work branches and rerun required checks;
+preserve local work and obtain a fresh approval if GitHub dismisses the old one.
 
 ## Shared instructions and handoff
 
@@ -65,5 +68,5 @@ Record durable design decisions in project documents or the linked GitHub issue.
 ## Completion
 
 Implemented means the required PRs have merged. Done means a human has verified the
-task acceptance criteria and recorded evidence. Before status synchronization is
-enabled, update the GitHub Project manually. Report failed or skipped checks honestly.
+task acceptance criteria and recorded evidence. Status synchronization is active;
+humans still record acceptance and control Done. Report failed or skipped checks honestly.
