@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "request_id": "example-iphone17-beirut",
+  "manufacturer": "Apple",
+  "model": "iPhone 17",
+  "storage_gb": 256,
+  "allowed_colors": ["Black"],
+  "sim": "any",
+  "allowed_regions": ["any"],
+  "warranty_requirement": null,
+  "budget": {"amount": "1100.00", "currency": "USD"},
+  "payment_basis": "cash",
+  "fulfillment": {"mode": "delivery", "country": "LB", "city": "Beirut"},
+  "allowed_markets": ["LB"],
+  "deadline": null
+}

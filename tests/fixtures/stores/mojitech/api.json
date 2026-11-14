@@ -1,0 +1,298 @@
+[
+ {
+  "id": 91724,
+  "name": "Apple iPhone 17 | 256GB",
+  "slug": "apple-iphone-17-256gb",
+  "parent": 91706,
+  "type": "variation",
+  "variation": "Color: bleu, ESIM: ABM 2YEARS WARRANTY",
+  "permalink": "https://mojitech.net/shop/brands/apple-brands/apple-iphone-17-256gb/?attribute_color=bleu&attribute_esim=ABM+2YEARS+WARRANTY",
+  "sku": "",
+  "prices": {
+   "price": "0",
+   "regular_price": "0",
+   "sale_price": "0",
+   "price_range": null,
+   "currency_code": "USD",
+   "currency_symbol": "$",
+   "currency_minor_unit": 1,
+   "currency_decimal_separator": ".",
+   "currency_thousand_separator": ",",
+   "currency_prefix": "$",
+   "currency_suffix": ""
+  },
+  "is_purchasable": false,
+  "is_in_stock": true,
+  "attributes": [],
+  "variations": [],
+  "tags": [],
+  "categories": [],
+  "brands": []
+ },
+ {
+  "id": 91706,
+  "name": "Apple iPhone 17 | 256GB",
+  "slug": "apple-iphone-17-256gb",
+  "parent": 0,
+  "type": "variable",
+  "variation": "",
+  "permalink": "https://mojitech.net/shop/brands/apple-brands/apple-iphone-17-256gb/",
+  "sku": "",
+  "prices": {
+   "price": "0",
+   "regular_price": "0",
+   "sale_price": "0",
+   "price_range": null,
+   "currency_code": "USD",
+   "currency_symbol": "$",
+   "currency_minor_unit": 1,
+   "currency_decimal_separator": ".",
+   "currency_thousand_separator": ",",
+   "currency_prefix": "$",
+   "currency_suffix": ""
+  },
+  "is_purchasable": false,
+  "is_in_stock": true,
+  "attributes": [
+   {
+    "id": 0,
+    "name": "Color",
+    "taxonomy": null,
+    "has_variations": true,
+    "terms": [
+     {
+      "id": 0,
+      "name": "lavender",
+      "slug": "lavender"
+     },
+     {
+      "id": 0,
+      "name": "bleu",
+      "slug": "bleu"
+     },
+     {
+      "id": 0,
+      "name": "sage",
+      "slug": "sage"
+     },
+     {
+      "id": 0,
+      "name": "white",
+      "slug": "white"
+     },
+     {
+      "id": 0,
+      "name": "black",
+      "slug": "black"
+     }
+    ]
+   },
+   {
+    "id": 0,
+    "name": "ESIM",
+    "taxonomy": null,
+    "has_variations": true,
+    "terms": [
+     {
+      "id": 0,
+      "name": "ESIM ACT",
+      "slug": "ESIM ACT"
+     },
+     {
+      "id": 0,
+      "name": "ESIM ACT TECH+",
+      "slug": "ESIM ACT TECH+"
+     },
+     {
+      "id": 0,
+      "name": "ABM 2YEARS WARRANTY",
+      "slug": "ABM 2YEARS WARRANTY"
+     }
+    ]
+   }
+  ],
+  "variations": [
+   {
+    "id": 91724,
+    "attributes": [
+     {
+      "name": "Color",
+      "value": "bleu"
+     },
+     {
+      "name": "ESIM",
+      "value": "ABM 2YEARS WARRANTY"
+     }
+    ]
+   },
+   {
+    "id": 91725,
+    "attributes": [
+     {
+      "name": "Color",
+      "value": "white"
+     },
+     {
+      "name": "ESIM",
+      "value": "ABM 2YEARS WARRANTY"
+     }
+    ]
+   },
+   {
+    "id": 91707,
+    "attributes": [
+     {
+      "name": "Color",
+      "value": "lavender"
+     },
+     {
+      "name": "ESIM",
+      "value": "ESIM ACT"
+     }
+    ]
+   },
+   {
+    "id": 91708,
+    "attributes": [
+     {
+      "name": "Color",
+      "value": "lavender"
+     },
+     {
+      "name": "ESIM",
+      "value": "ESIM ACT TECH+"
+     }
+    ]
+   },
+   {
+    "id": 91709,
+    "attributes": [
+     {
+      "name": "Color",
+      "value": "bleu"
+     },
+     {
+      "name": "ESIM",
+      "value": "ESIM ACT"
+     }
+    ]
+   },
+   {
+    "id": 91710,
+    "attributes": [
+     {
+      "name": "Color",
+      "value": "bleu"
+     },
+     {
+      "name": "ESIM",
+      "value": "ESIM ACT TECH+"
+     }
+    ]
+   },
+   {
+    "id": 91711,
+    "attributes": [
+     {
+      "name": "Color",
+      "value": "sage"
+     },
+     {
+      "name": "ESIM",
+      "value": "ESIM ACT"
+     }
+    ]
+   },
+   {
+    "id": 91712,
+    "attributes": [
+     {
+      "name": "Color",
+      "value": "sage"
+     },
+     {
+      "name": "ESIM",
+      "value": "ESIM ACT TECH+"
+     }
+    ]
+   },
+   {
+    "id": 91713,
+    "attributes": [
+     {
+      "name": "Color",
+      "value": "white"
+     },
+     {
+      "name": "ESIM",
+      "value": "ESIM ACT"
+     }
+    ]
+   },
+   {
+    "id": 91714,
+    "attributes": [
+     {
+      "name": "Color",
+      "value": "white"
+     },
+     {
+      "name": "ESIM",
+      "value": "ESIM ACT TECH+"
+     }
+    ]
+   },
+   {
+    "id": 91715,
+    "attributes": [
+     {
+      "name": "Color",
+      "value": "black"
+     },
+     {
+      "name": "ESIM",
+      "value": "ESIM ACT"
+     }
+    ]
+   },
+   {
+    "id": 91716,
+    "attributes": [
+     {
+      "name": "Color",
+      "value": "black"
+     },
+     {
+      "name": "ESIM",
+      "value": "ESIM ACT TECH+"
+     }
+    ]
+   }
+  ],
+  "tags": [
+   {
+    "id": 2592,
+    "name": "Iphone",
+    "slug": "iphone"
+   }
+  ],
+  "categories": [
+   {
+    "id": 1441,
+    "name": "Apple",
+    "slug": "apple-brands"
+   },
+   {
+    "id": 205,
+    "name": "Apple Products",
+    "slug": "apple-products"
+   },
+   {
+    "id": 121,
+    "name": "Iphones",
+    "slug": "iphones"
+   }
+  ],
+  "brands": []
+ }
+]

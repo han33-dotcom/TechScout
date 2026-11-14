@@ -1,7 +1,7 @@
 # Tech Scout MVP contract v1
 
-Task 2 defines the shared data format. It does not retrieve, compare or recommend
-products yet. The first workflow is exact **new smartphones in Lebanon**, with
+Task 2 defines the shared data format; the shopping workflow built on it is described
+under [Shopping workflow](#shopping-workflow-mvp-05-12). The first workflow is exact **new smartphones in Lebanon**, with
 pickup or domestic delivery. Wider electronics and international comparison remain
 the product vision. Public website retrieval is assumed unrestricted for this project.
 
@@ -86,9 +86,9 @@ cool-downs and per-run counts live in one limiter that every gate in the process
 unless given its own (a gate given another clock, as in tests, needs its own); they are not
 shared between processes, so the MVP runs one worker. A run's per-run counts are dropped
 once it has asked no store for an hour (`RUN_COUNT_TTL_S`), so the limiter does not grow
-with every run. That is far longer than the 120-second run cap MVP 11 plans, but nothing
-enforces that cap yet, so until then a run that pauses for an hour starts its counts
-again. The gate ignores proxy settings, but
+with every run. That is far longer than the 120-second run cap, which the run budget
+(MVP 11, `app/runs.py`) enforces: a run's budget refuses requests past its deadline and is
+closed when the run ends, so a finished run never asks again. The gate ignores proxy settings, but
 on Linux OpenSSL still reads `SSL_CERT_FILE` and `SSL_CERT_DIR`, so the process environment
 must be trusted.
 
@@ -97,6 +97,93 @@ error records; tool results also include measured duration. Run results carry up
 reasons, source coverage, usage and stop reason. Verification timestamps must fall
 inside the run. An empty recommendation list may be an explicit abstention or partial
 result; a failed/cancelled run cannot masquerade as completed recommendations.
+
+## Shopping workflow (MVP 05-12)
+
+One search runs as fixed stages in `app/runs.py`: clarify, retrieve, assess, investigate,
+verify and results. Code decides eligibility, cost, ranking and every limit; the planner
+only picks the next evidence action from a menu the run controller builds. Real store
+facts come from the source gate; nothing is bought, reserved or messaged.
+
+### Store readers (MVP 05-06)
+
+`app/adapters/` turns gate replies into version 1 offers with evidence. Readers never open
+connections: each call gets a fetch bound to one run's budget and its own store, and returns
+the raw replies to store before the evidence that cites them. Class Cellulars, Mojitech and
+Beytech share a WooCommerce reader (`woocommerce.py`): the Store API slug query gives the
+product and its declared minor unit, and the product page's variation form gives every
+variation's price, stock and purchasability. Each variation becomes one offer with
+variant-scoped evidence; a parent record is never an offer. Zero prices, too many decimals,
+schema changes, missing prices and AJAX-only pages stay unknown or give `INVALID_SCHEMA`;
+they never become comparable offers. Store-wide pages (Class FAQ, Mojitech returns, Beytech
+warranty and exchange) become policy facts that `apply_policy` binds to offers, keeping a
+conflict when a policy disagrees with the product page. Store text never reaches a reason:
+every reason is fixed wording. What each store publishes, and what it does not (no store
+states device condition), is in [source coverage](source-coverage.md). Test fixtures are
+minimized from captured public pages; see `tests/fixtures/stores/PROVENANCE.md`.
+
+### Variant identity (MVP 07)
+
+`app/identity.py` canonicalizes manufacturer, model and color with our own tables
+(`app/devices.py`, `identity.COLOR_ALIASES`; 'bleu' is Blue; unmapped colors become title
+case) without changing any fact's state or evidence. Duplicate offers are keyed by source,
+product and variant ID; a SKU is never a key, so variants sharing a SKU stay separate.
+Repeated records keep the latest observation of the phone; disagreeing identity facts become
+conflicts carrying both evidence records. A link such as a permalink naming another color only
+adds a fixed-wording warning; it never changes a fact.
+
+### Eligibility (MVP 08)
+
+`check_eligibility(request, offer)` in `app/eligibility.py` runs fixed checks (fulfillment
+route, condition, manufacturer, model, storage, color, SIM, region, purchasable, stock,
+price, payment basis, warranty, deadline, market). Each passes, fails or stays unresolved;
+conflicts and missing required facts are unresolved, never passes. Every unresolved check
+names the offer field it needs as an evidence gap with a fixed reason. Online stock never
+proves branch stock, and an arrival estimate never satisfies a guaranteed deadline. Arrival
+claims are absolute windows built by the readers in Beirut time from calendar or working
+days (Monday to Friday; public holidays are not modelled), using the wider of UTC+2 and
+UTC+3.
+
+### Costs (MVP 09)
+
+`calculate_cost(request, offer, fx=(), now=None)` in `app/costs.py` returns a verified total
+only when the price and every applying charge (VAT, delivery, payment surcharge, other) are
+settled; otherwise it returns the known subtotal, fixed reasons and evidence gaps. Arithmetic
+is exact Decimal; a conversion that needs rounding rounds up, so rounding cannot admit an
+over-budget offer. Included VAT is not added twice. Promotion conditions use a small grammar
+(`min_subtotal:<CUR>:<amount>`, `city:<name>`, `payment:<cash|card>`); anything else stays
+unresolved. Conflicting shipping terms, expired quotes and any listed unknown charge keep the
+total unresolved. Pickup totals exclude travel and say so in `basis`. A budget in another
+currency needs a timestamped exchange rate no older than 24 hours.
+
+### Run control, budgets and traces (MVP 11)
+
+`run_search(request, deps)` runs one search within `RunCaps` (120 seconds, 40 external calls,
+6 planner turns, USD 1.00 variable spend; 30 seconds, 10 calls and USD 0.25 of those are held
+back for final verification and are never extra). The gate reserves every attempt, retries
+included, against the run budget, and each tool is offered only when its requests fit at the
+gate's full 15-second per-attempt timeout and within the store's per-run cap. Planner spend is
+reserved before a call; an unknown price or cost stops further spend. Cancellation and budget
+exhaustion stop further tools and keep truthful partial results; a crashed run is closed as
+partial on restart, never resumed. Each step is stored as an action and logged as one JSON
+trace line on `techscout.trace` (stage, tool, planner turn, calls, retries, error codes,
+evidence count, tokens and spend), and the final record carries the run's metrics. Up to three
+recommendations, cheapest verified total first, are shown only for offers whose evidence was
+observed during the run; otherwise the run abstains with each offer's reasons. Candidate
+discovery is the configured product endpoints for now; indexed discovery (MVP 10) comes later.
+`python -m app.runs search REQUEST.json` runs one search by hand (see the README).
+
+### Planner (MVP 12)
+
+`app/planner.py` holds the planner interface, two baselines (`RulePlanner`, which picks the
+action that may settle the most open gaps, and `NoInvestigationPlanner`) and
+`AnthropicPlanner`, configured in `config/evaluation.json` (model, effort, prompt version,
+server-side fallbacks, pricing and caps). The model sees only constraint values, gap field
+paths with fixed reasons, aliased offer IDs and the action menu, never seller text, URLs or
+free buyer text, and answers by choosing one menu action or stopping through a strict tool.
+Anything else is rejected and counted as a turn. Each call is stateless and is made only when
+the model is priced and the run budget grants a conservative spend reservation; the cost is
+then priced from the reply's usage. Tests use a scripted client; no test calls the API.
 
 ## Tool error codes
 

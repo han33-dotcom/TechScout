@@ -149,10 +149,15 @@ def make_evidence(outcome: FetchOutcome, *, adapter_version: str, field_path: st
 
 
 def policy_evidence(policy: PolicyDocument, fact: PolicyFact, field_path: str) -> Evidence:
-    """Store-wide evidence for one offer field; the same page and field always give the same ID."""
+    """Store-wide evidence for one offer field; the same statement and field always give the same ID.
+
+    The tag names the statement's place on the page, so two statements on one topic (delivery
+    times for two zones) never share an ID.
+    """
     return Evidence(
         evidence_id=evidence_id(policy.source_id, f'policy-{policy.policy_id}', field_path,
-                                policy.response_sha256, policy.observed_at, fact.topic),
+                                policy.response_sha256, policy.observed_at,
+                                f'{fact.topic}{policy.facts.index(fact)}'),
         source_id=policy.source_id, scope='source', field_path=field_path, origin_url=policy.url,
         final_url=policy.final_url, observed_at=policy.observed_at,
         response_sha256=policy.response_sha256, adapter_version=policy.adapter_version,
