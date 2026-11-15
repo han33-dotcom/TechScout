@@ -126,13 +126,17 @@ class Tracer:
 
     def planner_turn(self, decision: PlannerDecision, *, arguments: dict, duration_ms: int,
                      spend: Decimal = _ZERO, rejected: str | None = None,
-                     action: PlannerAction | None = None) -> TraceRecord:
+                     action: PlannerAction | None = None, not_run: str | None = None) -> TraceRecord:
         """One counted planner turn. `rejected` is the controller's fixed reason for refusing the
-        decision; refused and invalid decisions are recorded as malformed replies."""
+        decision; refused and invalid decisions are recorded as malformed replies. `not_run` is the
+        controller's fixed code for why a valid chosen action was not started (such as 'cancelled'
+        or 'time')."""
         info = {'decision': decision.kind, 'reason': decision.reason[:MAX_REASON]}
         if action is not None:
             info.update(action_id=action.action_id, tool=action.tool, source_id=action.source_id,
                         target=action.target)
+        if not_run is not None:
+            info['not_run'] = not_run
         usage = decision.usage
         if usage is not None:
             info.update(model=usage.model[:100], input_tokens=usage.input_tokens,

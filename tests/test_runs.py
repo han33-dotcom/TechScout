@@ -279,8 +279,9 @@ class ScriptedPlanner:
     name = 'scripted'
     config = {'provider': 'test'}
 
-    def __init__(self, *steps):
+    def __init__(self, *steps, max_call_seconds=0.0):
         self.steps, self.states, self.budgets = list(steps), [], []
+        self.max_call_seconds = max_call_seconds
 
     def decide(self, state, budget):
         self.states.append(state)
@@ -342,6 +343,13 @@ class RunCase(unittest.TestCase):
 
     def names(self, run_id='run-1'):
         return [a['tool'] for a in self.storage.list_actions(run_id)]
+
+    def slow_act(self, seconds):
+        """A planner step that takes `seconds` on the run clock, then acts on the first menu entry."""
+        def step(state, budget):
+            self.clock.advance(seconds)
+            return act(state.actions[0].action_id)
+        return step
 
     def action(self, run_id, tool, index=0):
         return [a for a in self.storage.list_actions(run_id) if a['tool'] == tool][index]
@@ -554,6 +562,58 @@ class LimitTests(RunCase):
         self.assertEqual(result.usage.external_calls, 6)
         self.assertNotIn('planner', self.names())
 
+    def test_no_turn_starts_unless_the_planner_call_and_an_action_fit(self):
+        self.stores['gamma'].on_search = lambda: self.clock.advance(72.0)  # retrieval ends at 75 s
+        planner = ScriptedPlanner(self.slow_act(30.0), max_call_seconds=30.0)
+        result = self.search(planner)
+        # A one-request policy read fits by itself (75 + 15 <= 90 s, before the 30-second reserve),
+        # but not after a 30-second planner call, so the planner is never asked or paid.
+        self.assertEqual(planner.states, [])
+        self.assertNotIn('planner', self.names())
+        self.assertEqual((result.status, result.stop_reason), ('partial', runs.STOP_TIME))
+        self.assertEqual(result.usage.elapsed_ms, 75000)
+        self.assertEqual({c.status for c in result.source_coverage}, {'ok'})
+        self.assertTruthful(result)
+
+    def test_a_turn_that_fits_runs_its_action_and_keeps_the_verification_reserve(self):
+        self.stores['gamma'].on_search = lambda: self.clock.advance(42.0)  # retrieval ends at 45 s
+        planner = ScriptedPlanner(self.slow_act(30.0), max_call_seconds=30.0)
+        left, enter = [], runs.RunBudget.enter_final_phase
+
+        def spy(budget):
+            left.append(budget.caps.seconds - (self.clock.monotonic() - 1000.0))
+            enter(budget)
+
+        with mock.patch.object(runs.RunBudget, 'enter_final_phase', spy):
+            result = self.search(planner)
+        self.assertEqual(len(planner.states), 1)  # 45 + 30 + 15 = 90 s: exactly fits
+        self.assertIn(('fetch_policy', 'faq'), self.stores['alpha'].calls)
+        self.assertEqual({c.status for c in result.source_coverage}, {'ok'})
+        self.assertEqual((result.status, result.stop_reason), ('partial', runs.STOP_TIME))
+        self.assertGreaterEqual(left[0], RunCaps().reserve_seconds)
+
+    def test_a_chosen_action_that_no_longer_fits_is_not_run(self):
+        self.stores['gamma'].on_search = lambda: self.clock.advance(69.0)  # retrieval ends at 72 s
+        planner = ScriptedPlanner(self.slow_act(5.0))  # declares no call time, then takes 5 s
+        result = self.search(planner)
+        self.assertEqual(len(planner.states), 1)
+        # 77 + 15 > 90 s: the read is not started, so no request, coverage error or attempt mark.
+        self.assertEqual(self.stores['alpha'].calls, [('search_candidates', None)])
+        self.assertEqual(len(self.gate.requests), 6)
+        self.assertNotIn('fetch_policy', self.names())
+        self.assertEqual({c.status for c in result.source_coverage}, {'ok'})
+        self.assertEqual((result.status, result.stop_reason), ('partial', runs.STOP_TIME))
+        record = self.action('run-1', 'planner')['result']['data']
+        self.assertEqual((record['decision'], record['action_id'], record['not_run']), ('act', 'A1', 'time'))
+        self.assertTruthful(result)
+
+    def test_a_planner_must_declare_its_call_time(self):
+        for value in (None, -1.0, float('inf'), True):
+            with self.subTest(value), self.assertRaisesRegex(ValueError, 'max_call_seconds'):
+                run_search(REQUEST, self.deps(ScriptedPlanner(STOP, max_call_seconds=value)), run_id='run-1')
+        self.assertEqual(self.gate.requests, [])
+        self.assertIsNone(self.storage.run_status('run-1'))
+
     def test_a_store_cap_trims_the_menu_without_marking_the_run_partial(self):
         self.write_registry(alpha={'max_requests_per_run': 2})
         planner = ScriptedPlanner(lambda state, budget: RulePlanner().decide(state, budget))
@@ -689,6 +749,23 @@ class CancellationAndFailureTests(RunCase):
                          [('alpha', 'ok'), ('beta', 'error'), ('gamma', 'error')])
         self.assertEqual(result.source_coverage[1].errors[0].code, 'BUDGET_EXHAUSTED')
         self.assertNotIn('planner', self.names())
+        self.assertTruthful(result)
+
+    def test_cancelling_during_a_planner_turn_runs_no_further_tool(self):
+        event = threading.Event()
+
+        def cancel_then_act(state, budget):
+            event.set()
+            return act(state.actions[0].action_id)
+
+        result = self.search(ScriptedPlanner(cancel_then_act), cancel=event)
+        self.assertEqual((result.status, result.stop_reason, result.recommendations),
+                         ('cancelled', runs.STOP_CANCELLED, []))
+        self.assertEqual(len(self.gate.requests), 6)
+        self.assertEqual(self.stores['alpha'].calls, [('search_candidates', None)])
+        self.assertNotIn('fetch_policy', self.names())
+        self.assertEqual({c.status for c in result.source_coverage}, {'ok'})
+        self.assertEqual(self.action('run-1', 'planner')['result']['data']['not_run'], 'cancelled')
         self.assertTruthful(result)
 
     def test_a_crash_leaves_the_run_for_restart_recovery_and_no_further_tools(self):

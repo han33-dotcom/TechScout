@@ -7,7 +7,10 @@ here from open gaps and what still fits, and it never sees seller text.
 
 A run is 'partial' when the run budget (time, external calls, spend) or the planner turn cap
 stopped it while an affordable action could still settle an open gap; a store's own per-run
-request cap only removes actions from the menu. 'cancelled' and 'error' runs never carry
+request cap only removes actions from the menu. Planner time counts against the time budget:
+a turn starts only when the planner's longest call and an action both fit before the
+verification reserve, and the chosen action is checked again just before it runs.
+'cancelled' and 'error' runs never carry
 recommendations, and a run interrupted by a crash is closed as partial on restart, never resumed.
 """
 import argparse
@@ -474,7 +477,8 @@ def run_search(request: ShoppingRequest, deps: RunDependencies, *, run_id: str |
     cancel is a threading.Event or a callable returning True once the buyer cancels; it is
     checked before every step and on every gate request. An unexpected exception ends the run as
     'error' (traced, no recommendations). Exceptions before the run is stored (an unknown request
-    type, a duplicate run ID, or a reader registered under another store's ID) are raised.
+    type, a planner without a valid max_call_seconds, a duplicate run ID, or a reader registered
+    under another store's ID) are raised.
     """
     if not isinstance(request, ShoppingRequest):
         raise TypeError('run_search needs a ShoppingRequest')
@@ -571,6 +575,9 @@ class _Run:
         self.tracer = Tracer(deps.storage, run_id)
         self.query = CandidateQuery.from_request(request)
         self.planner = deps.planner if deps.planner is not None else RulePlanner()
+        # Charged against the time budget before every turn (see _menu).
+        self.planner_seconds = getattr(self.planner, 'max_call_seconds', None)
+        _check_seconds('planner max_call_seconds', self.planner_seconds)
         self.assess_fn = deps.assess or (lambda req, offers: default_assess(req, offers, now=self._now()))
         self.planner_view = request_constraints(request)
         self.sources: list[str] = []
@@ -791,8 +798,11 @@ class _Run:
                         if refusals.get(r, 0) > refusals_before.get(r, 0)), None)
         action = (next((a for a in menu if a.action_id == decision.action_id), None)
                   if decision.kind == 'act' else None)
+        # Checked again now: a cancel, or a planner call that ran past its declared time, may have
+        # left no room for the chosen action. An action that does not fit is not run at all.
+        not_run = None if action is None else self._blocked(action.calls, self._rooms()[action.source_id])
         self.tracer.planner_turn(
-            decision, duration_ms=duration, spend=spend, action=action,
+            decision, duration_ms=duration, spend=spend, action=action, not_run=not_run,
             rejected='action is not in the menu' if decision.kind == 'act' and action is None else None,
             arguments={'turn': turn, 'gaps': len(gaps), 'withheld_gaps': withheld,
                        'actions': [a.action_id for a in menu]})
@@ -806,6 +816,8 @@ class _Run:
                 return False
             self.history.append({'turn': turn, 'outcome': 'invalid'})
             return True
+        if not_run is not None:
+            return True  # the next menu ends the run with the matching reason, or offers what still fits
         self._execute(action, turn)
         return True
 
@@ -879,11 +891,16 @@ class _Run:
 
     def _menu(self, gaps: list[EvidenceGap]) -> tuple[list[PlannerAction], str | None, bool]:
         """Actions that fit every limit now, numbered A1, A2...; why the others do not fit; and
-        whether any action could settle a gap at all."""
+        whether any action could settle a gap at all.
+
+        Each action must still fit after the planner's own call (its max_call_seconds), so a turn
+        starts only when the planner and at least one action both fit before the verification
+        reserve; an empty menu for time ends the run before the turn is counted or paid for.
+        """
         candidates, rooms = self._candidates(gaps), self._rooms()
         menu, reasons = [], set()
         for tool, source_id, target, settles, calls in candidates:
-            reason = self._blocked(calls, rooms[source_id])
+            reason = self._blocked(calls, rooms[source_id], self.planner_seconds)
             if reason is None:
                 menu.append(PlannerAction(action_id=f'A{len(menu) + 1}', tool=tool, source_id=source_id,
                                           target=target, settles=settles, calls=calls))
@@ -905,10 +922,11 @@ class _Run:
                 rooms[source_id] = max(0, limits.max_requests_per_run - self.budget.calls_used(source_id))
         return rooms
 
-    def _blocked(self, calls: int, room: int) -> str | None:
-        """Why a tool needing `calls` gate requests cannot start now: the run's own limits first,
-        each request counted at the gate's full per-attempt timeout, then the store's cap."""
-        reason = self.budget.shortfall(calls, calls * CALL_TIMEOUT_S)
+    def _blocked(self, calls: int, room: int, extra_seconds: float = 0.0) -> str | None:
+        """Why a tool needing `calls` gate requests cannot start now (or after `extra_seconds`
+        more, such as a planner call): the run's own limits first, each request counted at the
+        gate's full per-attempt timeout, then the store's cap."""
+        reason = self.budget.shortfall(calls, extra_seconds + calls * CALL_TIMEOUT_S)
         if reason in ('cancelled', 'closed'):
             return 'cancelled'
         return reason or ('store' if room < calls else None)

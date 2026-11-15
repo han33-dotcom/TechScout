@@ -92,9 +92,15 @@ class Planner(Protocol):
 
     budget offers reserve_spend(amount: Decimal | None) -> SpendReservation | None. A planner that
     pays for its turns reserves before each call and settles that reservation itself.
+
+    max_call_seconds is the longest one decide() call may take. The run controller charges it
+    against the run's time budget before each turn: it offers only actions that still fit before
+    the final-verification reserve after that much planner time, and checks the chosen action
+    again just before running it.
     """
     name: str
     config: dict
+    max_call_seconds: float
 
     def decide(self, state: PlannerState, budget) -> PlannerDecision: ...
 
@@ -103,6 +109,7 @@ class RulePlanner:
     """Deterministic baseline: the action that may settle the most open gaps, else stop."""
     name = 'rule-planner'
     config = {'provider': 'none', 'model': 'rule-planner'}
+    max_call_seconds = 0.0  # no external call
 
     def decide(self, state: PlannerState, budget=None) -> PlannerDecision:
         open_gaps = {g.gap_id for g in state.gaps}
@@ -117,6 +124,7 @@ class NoInvestigationPlanner:
     """Second baseline: never investigates, so a run keeps what retrieval alone found."""
     name = 'no-investigation'
     config = {'provider': 'none', 'model': 'no-investigation'}
+    max_call_seconds = 0.0
 
     def decide(self, state: PlannerState, budget=None) -> PlannerDecision:
         return PlannerDecision(kind='stop', reason='this baseline never investigates')
@@ -474,8 +482,13 @@ class AnthropicPlanner:
     budget grants a conservative spend reservation; the planner then commits the cost priced from
     the reply's usage, or commits it as unknown (the budget keeps the reservation) and stops when
     that usage cannot be priced.
+
+    max_call_seconds is the call timeout. The SDK applies it to each network step, not to the whole
+    call, so a degraded connection can run longer; the controller's re-check of the chosen action
+    then runs nothing that no longer fits.
     """
     name = 'anthropic-planner'
+    max_call_seconds = CALL_TIMEOUT_S
 
     def __init__(self, config: dict, client=None):
         self._settings = PlannerConfig.model_validate(config)
