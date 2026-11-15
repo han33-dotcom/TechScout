@@ -224,6 +224,28 @@ class DeviceLineTests(CostTestCase):
                       valid_until=NOW - timedelta(hours=1), tag='card')
         self.assertVerified(calc(build_offer('999.00', costs=[TAX_INCLUDED, FREE_DELIVERY, card])), '999.00')
 
+    def test_an_expired_quote_for_the_price_that_might_apply_ends_it(self):
+        # A condition that cannot be checked might hold, so its ended quote may have ended the price:
+        # open while it runs, and still open once it has expired.
+        for condition in ('member:gold', 'payment:crypto', 'min_subtotal:EUR:500'):
+            with self.subTest(condition=condition):
+                running = charge('device', 'additional', '999.00', conditions=[condition],
+                                 valid_until=NOW + timedelta(hours=1), tag='running')
+                offer = build_offer('999.00', costs=[TAX_INCLUDED, FREE_DELIVERY, running])
+                self.assertUnresolved(calc(offer), 'device promotion condition cannot be checked')
+                ended = charge('device', 'additional', '999.00', conditions=[condition],
+                               valid_until=NOW - timedelta(hours=1), tag='ended')
+                self.assertUnresolved(calc(build_offer('999.00', costs=[TAX_INCLUDED, FREE_DELIVERY, ended])),
+                                      'device quote has expired', gap='costs.device')
+                # One that ended before the price was observed does not bind it, and one for another
+                # amount never ends the price.
+                before = charge('device', 'additional', '999.00', conditions=[condition],
+                                valid_until=OBSERVED - timedelta(hours=1), tag='before')
+                self.assertVerified(calc(build_offer('999.00', costs=[TAX_INCLUDED, FREE_DELIVERY, before])),
+                                    '999.00')
+                self.assertVerified(calc(build_offer('1030.00', costs=[TAX_INCLUDED, FREE_DELIVERY, ended])),
+                                    '1030.00')
+
     def test_a_lapsed_price_is_never_replaced_by_a_term_for_another_amount(self):
         # Before the quote ends the undated term conflicts with the price; afterwards it still
         # cannot settle the device line at its own amount.

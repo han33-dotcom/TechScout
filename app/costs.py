@@ -1,12 +1,12 @@
 """Cost engine (MVP 09): an offer's exact payable total, or the reasons it cannot be verified.
 
-Deterministic rules only. The device line is the offer's known price, which lapses with an
-applying device quote that repeats it unless the price was observed after that quote ended (a
-price fact has no expiry of its own). A lapsed price is never replaced by a term for another
-amount, which leaves the device line open. VAT always applies and delivery applies to a delivery
-request; neither can be settled as not_applicable, which needs no evidence. Payment surcharges
-and other listed charges count when they apply. Travel is never added: a pickup total is the
-store payable amount, travel excluded. Buyer-supplied travel is not supported, because
+Deterministic rules only. The device line is the offer's known price, which lapses with a device
+quote that repeats it and applies or might apply, unless the price was observed after that quote
+ended (a price fact has no expiry of its own). A lapsed price is never replaced by a term for
+another amount, which leaves the device line open. VAT always applies and delivery applies to a
+delivery request; neither can be settled as not_applicable, which needs no evidence. Payment
+surcharges and other listed charges count when they apply. Travel is never added: a pickup total
+is the store payable amount, travel excluded. Buyer-supplied travel is not supported, because
 ShoppingRequest v1 has no field for it, so a store-listed travel charge is never added either.
 Unknown charges stay unknown, never zero; one listed anywhere on the offer keeps the total open,
 since a Recommendation cannot carry it. Only a fully known total gets a budget check. Reasons
@@ -106,13 +106,14 @@ def calculate_cost(request: ShoppingRequest, offer: Offer, *, fx: Sequence[FxRat
         reason = 'price is unknown' if offer.price.state == 'unknown' else 'prices conflict'
         lines = [_Line('device', reason=reason, gap='price')]
     else:
-        # Fact[Money] has no expiry: the price lapses with the earliest applying device quote that
-        # repeats it, unless the price was observed again after that quote ended.
+        # Fact[Money] has no expiry: the price lapses with the earliest device quote that repeats
+        # it and applies or might apply (only a failing condition rules it out), unless the price
+        # was observed again after that quote ended.
         seen = max((e.observed_at for e in offer.evidence if e.evidence_id in offer.price.evidence_ids),
                    default=None)
         ends = [c.valid_until for c in listed['device']
                 if c.state == 'additional' and c.amount == price and c.valid_until is not None
-                and (seen is None or c.valid_until >= seen) and _applies(c, request, price) is True]
+                and (seen is None or c.valid_until >= seen) and _applies(c, request, price) is not False]
         device = CostComponent(kind='device', state='additional', amount=price,
                                evidence_ids=list(offer.price.evidence_ids),
                                valid_until=min(ends, default=None))
