@@ -224,6 +224,36 @@ class DeviceLineTests(CostTestCase):
                       valid_until=NOW - timedelta(hours=1), tag='card')
         self.assertVerified(calc(build_offer('999.00', costs=[TAX_INCLUDED, FREE_DELIVERY, card])), '999.00')
 
+    def test_a_lapsed_price_is_never_replaced_by_a_term_for_another_amount(self):
+        # Before the quote ends the undated term conflicts with the price; afterwards it still
+        # cannot settle the device line at its own amount.
+        held = charge('device', 'additional', '1030.00', valid_until=NOW - timedelta(hours=1), tag='held')
+        cheap = charge('device', 'additional', '999.00', tag='cheap')
+        offer = build_offer('1030.00', costs=[TAX_INCLUDED, FREE_DELIVERY, held, cheap])
+        request = build_request(budget='1000.00')
+        self.assertUnresolved(calc(offer, request, now=NOW - timedelta(hours=2)),
+                              'conflicting device terms', gap='costs.device')
+        self.assertUnresolved(calc(offer, request), 'device quote has expired', gap='costs.device')
+        # The mirror case: an ended sale price is not replaced by the regular price.
+        sale = charge('device', 'additional', '999.00', valid_until=NOW - timedelta(hours=1), tag='sale')
+        regular = charge('device', 'additional', '1030.00', tag='regular')
+        mirror = build_offer('999.00', costs=[TAX_INCLUDED, FREE_DELIVERY, sale, regular])
+        self.assertUnresolved(calc(mirror), 'device quote has expired', gap='costs.device')
+        # Nor by a conditional term that applies to this order, or by an included device term.
+        cash = charge('device', 'additional', '999.00', conditions=['payment:cash'], tag='cash')
+        included = charge('device', 'included', tag='included')
+        for term in (cash, included):
+            with self.subTest(state=term.state):
+                offer = build_offer('1030.00', costs=[TAX_INCLUDED, FREE_DELIVERY, held, term])
+                self.assertUnresolved(calc(offer), 'device quote has expired', gap='costs.device')
+        # A current quote for the price still settles it, and a current term for another amount
+        # still conflicts with that quote.
+        live = charge('device', 'additional', '1030.00', valid_until=NOW + timedelta(hours=1), tag='live')
+        self.assertVerified(calc(build_offer('1030.00', costs=[TAX_INCLUDED, FREE_DELIVERY, held, live])),
+                            '1030.00')
+        both = build_offer('1030.00', costs=[TAX_INCLUDED, FREE_DELIVERY, held, live, cheap])
+        self.assertUnresolved(calc(both), 'conflicting device terms', gap='costs.device')
+
 class ChargeTests(CostTestCase):
     def test_unknown_charges_never_become_zero(self):
         cases = [

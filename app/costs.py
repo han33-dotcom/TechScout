@@ -2,7 +2,8 @@
 
 Deterministic rules only. The device line is the offer's known price, which lapses with an
 applying device quote that repeats it unless the price was observed after that quote ended (a
-price fact has no expiry of its own). VAT always applies and delivery applies to a delivery
+price fact has no expiry of its own). A lapsed price is never replaced by a term for another
+amount, which leaves the device line open. VAT always applies and delivery applies to a delivery
 request; neither can be settled as not_applicable, which needs no evidence. Payment surcharges
 and other listed charges count when they apply. Travel is never added: a pickup total is the
 store payable amount, travel excluded. Buyer-supplied travel is not supported, because
@@ -115,7 +116,12 @@ def calculate_cost(request: ShoppingRequest, offer: Offer, *, fx: Sequence[FxRat
         device = CostComponent(kind='device', state='additional', amount=price,
                                evidence_ids=list(offer.price.evidence_ids),
                                valid_until=min(ends, default=None))
-        lines = [_line('device', [device, *listed['device']], required=True, **order)]
+        line = _line('device', [device, *listed['device']], required=True, **order)
+        if line.reason is None and line.amount != price.amount:
+            # Only possible once the price has lapsed: a current term for another amount would
+            # conflict with a live price, and it cannot stand in for one that has lapsed.
+            line = _Line('device', reason='device quote has expired', gap='costs.device')
+        lines = [line]
     lines.append(_line('tax', listed['tax'], required=True, **order))
     if route.mode == 'delivery':  # for a pickup, delivery terms do not apply and are ignored
         lines.append(_line('delivery', listed['delivery'], required=True, **order))
