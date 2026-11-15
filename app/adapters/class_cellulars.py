@@ -101,7 +101,8 @@ CONFIG = StoreConfig(
     products=(ProductEndpoints(
         key='18392', api_url=f'{ORIGIN}/wp-json/wc/store/v1/products?slug=iphone-17',
         page_url=f'{ORIGIN}/product/iphone-17/', label='iPhone 17'),),
-    policies=(PolicyPage('faq', f'{ORIGIN}/faq/', ('payment_basis', 'arrival'), faq_facts),),
+    policies=(PolicyPage('faq', f'{ORIGIN}/faq/', ('payment_basis', 'arrival'), faq_facts,
+                         delivery_only=('payment_basis', 'arrival')),),
     sim_map=MappingProxyType({'nano sim / esim': 'physical+esim', 'esim': 'esim-only'}),
     page_facts=page_facts,
     policy_effect=apply_faq,

@@ -166,11 +166,16 @@ class ProductEndpoints:
 
 @dataclass(frozen=True)
 class PolicyPage:
-    """A store-wide page, the offer field paths it may settle, and its statement reader."""
+    """A store-wide page, the offer field paths it may settle, and its statement reader.
+
+    settles lists only paths the store's policy_effect can change; delivery_only names those it
+    changes for delivery offers alone, so a pickup run is not offered a page that settles nothing.
+    """
     policy_id: str
     url: str
     settles: tuple[str, ...]
     extract: Callable[[str], tuple[PolicyFact, ...]]
+    delivery_only: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -1125,7 +1130,13 @@ class WooCommerceAdapter:
 
     @property
     def policy_topics(self) -> dict[str, tuple[str, ...]]:
+        """Every path each page may settle, on any route."""
         return {p.policy_id: p.settles for p in self.config.policies}
+
+    def policy_topics_for(self, mode: str) -> dict[str, tuple[str, ...]]:
+        """The paths each page may settle for an offer on this route ('delivery' or 'pickup')."""
+        return {p.policy_id: tuple(s for s in p.settles if mode == 'delivery' or s not in p.delivery_only)
+                for p in self.config.policies}
 
     def search_candidates(self, fetch: Fetch, query: CandidateQuery) -> AdapterResult:
         """Every actual variation of each product the query's model does not rule out."""

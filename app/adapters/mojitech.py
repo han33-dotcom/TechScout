@@ -82,7 +82,8 @@ CONFIG = StoreConfig(
     products=(ProductEndpoints(
         key='91706', api_url=f'{ORIGIN}/wp-json/wc/store/v1/products?slug=apple-iphone-17-256gb',
         page_url=f'{ORIGIN}/shop/brands/apple-brands/apple-iphone-17-256gb/', label='iPhone 17'),),
-    policies=(PolicyPage('refund_returns', f'{ORIGIN}/refund_returns/', ('arrival',), refund_facts),),
+    policies=(PolicyPage('refund_returns', f'{ORIGIN}/refund_returns/', ('arrival',), refund_facts,
+                         delivery_only=('arrival',)),),
     warranty_names=frozenset({'esim'}),
     sim_map=MappingProxyType({'esim act': 'esim-only', 'esim act tech+': 'esim-only',
                               'abm 2years warranty': None}),

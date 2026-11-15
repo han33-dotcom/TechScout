@@ -105,6 +105,31 @@ class ContractTests(ReaderTestCase):
                     self.assertTrue(result.offers)
                     self.assertEqual({len(o.pickup_stock) for o in result.offers}, {0})
 
+    def test_every_policy_topic_a_route_offers_can_change_that_field(self):
+        """A run fetches a page for the paths it may settle, so each must really be settled."""
+        bare = {'payment_basis': 'payment terms are not published on the product page',
+                'arrival': 'delivery time is not published'}
+        for source, adapter in adapters.ADAPTERS.items():
+            for mode in ('delivery', 'pickup'):
+                fetch = FakeFetch(routes(source))
+                offer = adapter.search_candidates(fetch, query(mode=mode)).offers[0]
+                for policy_id, settles in adapter.policy_topics_for(mode).items():
+                    with self.subTest(source=source, mode=mode, policy=policy_id):
+                        self.assertLessEqual(set(settles), set(adapter.policy_topics[policy_id]))
+                        [document] = adapter.fetch_policy(fetch, policy_id).policies
+                        if not settles:
+                            self.assertEqual(adapter.apply_policy(offer, document), offer)
+                        for path in settles:
+                            self.assertIn(path, bare, 'a policy can settle only these fields')
+                            data = offer.model_dump(mode='json')
+                            data[path] = {'state': 'unknown', 'reason': bare[path]}
+                            before = Offer.model_validate(data)
+                            after = adapter.apply_policy(before, document)
+                            self.assertNotEqual(getattr(after, path), getattr(before, path), path)
+                        for path in set(adapter.policy_topics[policy_id]) - set(settles):
+                            after = adapter.apply_policy(offer, document)
+                            self.assertEqual(getattr(after, path), getattr(offer, path), path)
+
     def test_fixed_wording_only(self):
         self.assertFalse(FIXED_REASONS & ERROR_REASONS)
         for reason in FIXED_REASONS | ERROR_REASONS:

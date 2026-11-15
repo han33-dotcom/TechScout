@@ -85,8 +85,7 @@ class BeytechTests(ReaderTestCase):
         for offer in result.offers:
             after = ADAPTER.apply_policy(offer, warranty.policies[0])
             self.assertEqual(ADAPTER.apply_policy(after, exchange.policies[0]), offer)
-        self.assertEqual(ADAPTER.policy_topics, {
-            'warranty': ('warranty.provider', 'warranty.months', 'warranty.territory'), 'exchange': ()})
+        self.assertEqual(ADAPTER.policy_topics, {'warranty': (), 'exchange': ()})  # never offered to a run
 
     def test_search_and_both_policies_use_the_whole_per_run_cap(self):
         fetch = FakeFetch(routes('beytech'), cap=4)

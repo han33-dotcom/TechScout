@@ -66,8 +66,8 @@ CONFIG = StoreConfig(
         api_url=f'{ORIGIN}/wp-json/wc/store/v1/products?slug=apple-iphone-17-1-sim-2-years-warranty',
         page_url=f'{ORIGIN}/product/apple-iphone-17-1-sim-2-years-warranty/'),),
     policies=(
-        PolicyPage('warranty', f'{ORIGIN}/warranty-terms-conditions/',
-                   ('warranty.provider', 'warranty.months', 'warranty.territory'), warranty_facts),
+        # The page states no length, provider or territory, and no policy effect reads it.
+        PolicyPage('warranty', f'{ORIGIN}/warranty-terms-conditions/', (), warranty_facts),
         PolicyPage('exchange', f'{ORIGIN}/exchange-policy-2/', (), exchange_facts),
     ),
     # One physical SIM slot plus eSIM, as Apple sells the iPhone 17 in this region.
