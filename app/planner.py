@@ -212,6 +212,9 @@ class EvaluationCaps(Model):
         if (self.reserve_seconds >= self.seconds or self.reserve_calls >= self.external_calls
                 or self.reserve_spend_usd > self.spend_usd):
             raise ValueError('Each reserve must fit inside its cap')
+        from app.runs import MAX_RUN_SECONDS  # here, not at the top: app.runs imports this module
+        if self.seconds > MAX_RUN_SECONDS:  # so a run always ends inside the recovery lease
+            raise ValueError(f'A run may last at most {MAX_RUN_SECONDS:g} seconds')
         return self
 
 

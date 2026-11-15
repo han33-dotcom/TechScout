@@ -401,7 +401,9 @@ class RunBudget:
 
     @property
     def spend_unknown(self) -> bool:
-        """True when some recorded spend had an unknown cost, so the spend total is a lower bound."""
+        """True when some spend had an unknown cost, so the spend total is not exact: it keeps the
+        whole reservation of each call committed as unknown (an upper bound for that call) and leaves
+        out a cost reported in another currency."""
         return self._spend_unknown
 
     @property
@@ -1236,7 +1238,11 @@ def main(argv: Sequence[str] | None = None, *, dependencies: RunDependencies | N
     except (OSError, ValidationError) as exc:
         print(f'Cannot read the request: {type(exc).__name__}', file=sys.stderr)
         return 2
-    caps = RunCaps.from_config(json.loads(DEFAULT_CONFIG.read_text(encoding='utf-8'))['caps'])
+    try:
+        caps = RunCaps.from_config(json.loads(DEFAULT_CONFIG.read_text(encoding='utf-8'))['caps'])
+    except (OSError, ValueError, KeyError, TypeError) as exc:  # JSON errors are ValueErrors
+        print(f'Cannot read the run caps in {DEFAULT_CONFIG.name}: {type(exc).__name__}', file=sys.stderr)
+        return 2
     if args.planner == 'none':
         caps = replace(caps, planner_turns=0)
     try:

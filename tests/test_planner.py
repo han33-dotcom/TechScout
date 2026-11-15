@@ -272,6 +272,7 @@ class PlannerConfigTests(unittest.TestCase):
                                   {**prices, MODEL: {**prices[MODEL], 'input': '0'}}),
             'spend reserve above its cap': changed('caps', 'reserve_spend_usd', '1.50'),
             'call reserve as large as its cap': changed('caps', 'reserve_calls', 40),
+            'run longer than half the recovery lease': changed('caps', 'seconds', 301),
             'misspelled baseline': changed(None, 'baselines', ['rule-planer']),
             'newer schema': changed(None, 'schema_version', 2),
         }
