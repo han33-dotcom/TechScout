@@ -253,8 +253,9 @@ directly.
 back for final verification and are never extra). Final live verification (MVP 13) is not built,
 so nothing uses the reserve yet: in practice, investigation gets 90 seconds, 30 calls and USD 0.75.
 `RunCaps.seconds` may be at most 300, half the recovery lease, so a run that keeps to its caps is
-not taken for an abandoned one. A run that stalls past 10 minutes in a planner call or an
-OS-bounded lookup can be closed by another process's recovery; it then stops on a storage error
+not taken for an abandoned one. A run that stalls past 10 minutes in an OS-bounded lookup, a
+database write, or a planner that overruns its `max_call_seconds` (the model planner drops its
+call at 30 seconds) can be closed by another process's recovery; it then stops on a storage error
 (see the README). The gate reserves every
 attempt, retries included, against the run budget, and each tool is offered only when its
 requests fit at the gate's full 15-second per-attempt timeout and within the store's per-run cap.
@@ -265,8 +266,10 @@ sending.
 Planner time counts against the time budget. Each planner declares `max_call_seconds`: 30 for
 the model planner, 0 for the two baselines. The model planner holds its whole call to that time:
 a call still running then is abandoned and reported as 'planner call timed out', and its cost is
-committed as unknown, which ends the run partial with 'planner cost is unknown'. An action is offered only if that
-planner time plus the action's requests at 15 seconds each fit before the verification reserve,
+committed as unknown, which ends the run partial with 'planner cost is unknown'. If its setup
+already used the whole time, it sends nothing and releases the reservation. An action is offered
+only if that planner time plus the action's requests at 15 seconds each fit before the
+verification reserve,
 so a turn starts only when the planner call and an action both fit. When nothing fits for time,
 the run ends partial with 'time budget reached' before the turn is counted or paid for. With the
 default caps, a model-planner turn can start only until t=45 s for a one-request policy read and
@@ -279,16 +282,21 @@ then offers what still fits, or ends the run with the matching stop reason.
 Planner spend is reserved before a call. Any planner turn whose cost becomes unknown ends the run
 as partial with 'planner cost is unknown', whatever the planner decided, and runs no chosen
 action. The causes are a configured model without a price (no call is made), a reply that cannot
-be priced, a call that failed after it may have been billed (a timeout, a lost connection, an
-unreadable reply or an unexpected client error) and a cost reported in a currency other than
-USD. For a billed call the budget keeps the whole reservation as spent. The stop reason and the results
-record's `budget.spend_unknown` (`BudgetUsage` has no such flag) mark that `RunResult.usage.spend`
-is not exact: after a kept reservation it is an upper bound, and after a cost reported in
-another currency, that cost is not counted.
+be priced, a call that failed after it may have been billed (a timeout, a lost connection or an
+unreadable reply) and a cost reported in a currency other than USD. For a billed call the budget
+keeps the whole reservation as spent. The results record's `budget.spend_unknown` (`BudgetUsage`
+has no such flag) marks that `RunResult.usage.spend` is not exact: after a kept reservation it is
+an upper bound, and after a cost reported in another currency, that cost is not counted. A
+configured model without a price ends the run with the same stop reason, but no call is made, so
+`budget.spend_unknown` stays false and the spend is exact. Any other exception from the planner
+call ends the run `error` with 'run stopped on an unexpected error'; its reservation is still kept
+as an upper bound, with `budget.spend_unknown` true.
 Rate-limited calls and calls the API refused are released, and a later turn may call again.
 
 A run ends `error` with 'no store could be searched' when every store's search failed or none
-could run under the store request caps. A run where only some stores failed stays `complete` or
+could run under the store request caps, unless the run's own time or call budget cut retrieval
+short (a store skipped for time or calls, or a gate request refused by the run budget): that run
+ends `partial` with the limit's stop reason, and `source_coverage` shows every store. A run where only some stores failed stays `complete` or
 `abstained`; only `source_coverage` shows the failed store. When the only open gaps left cannot
 be shown to the planner safely (for example, on an offer whose ID is not in the reader form),
 investigation ends with 'open gaps could not be shown to the planner safely', and the

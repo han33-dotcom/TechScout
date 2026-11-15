@@ -19,7 +19,7 @@ MVP 05–06 add store readers for the three sources (`app/adapters/`), with a [c
 From a fresh checkout:
 
 ```powershell
-Copy-Item .env.example .env          # then set POSTGRES_PASSWORD (and DATABASE_URL) in .env
+Copy-Item .env.example .env          # then set POSTGRES_PASSWORD in .env
 docker compose up -d --build         # starts Postgres, runs migrations, serves on 127.0.0.1:8000
 docker compose exec app python -m app.storage load-fixtures
 curl http://127.0.0.1:8000/health    # {"status":"ok","database":"ok"}
@@ -38,7 +38,7 @@ python -m venv .venv
 .venv\Scripts\python -m unittest discover -s tests -v
 ```
 
-Without `DATABASE_URL`, the app and Alembic use a local SQLite file (`techscout.db`), which is convenient for quick experiments; Postgres is the supported database. To use the Compose database from the host, set `DATABASE_URL` from `.env.example`, then:
+Without `DATABASE_URL`, the app and Alembic use a local SQLite file (`techscout.db`), which is convenient for quick experiments; Postgres is the supported database. To use the Compose database from the host, export `DATABASE_URL` in your shell (see `.env.example`; nothing reads it from `.env`), then:
 
 ```powershell
 alembic upgrade head                      # apply migrations
@@ -54,9 +54,9 @@ python -m app.runs search examples/request-iphone17-beirut.json --planner none  
 python -m app.runs search examples/request-iphone17-beirut.json --planner model # paid model planner
 ```
 
-Each search first closes runs that a crash left `running`, once they started more than 10 minutes ago. The result prints as JSON. Press Ctrl+C once and wait: the run stops before its next step and the result prints. A second Ctrl+C aborts without a result and leaves the run `running` until recovery closes it, more than 10 minutes after it started. A run in which no store could be searched ends with status `error` and stop reason `no store could be searched`, and the command exits 1. If the database cannot be used before the run starts (for example, migrations were not applied), the command prints `The run could not start: <Error>` and exits 1. If a run stops on a storage failure after it was stored (for example, another process closed it), the command prints `Run <id> stopped on an unexpected <Error> without storing its result (stored status: <status>)` instead of a result and exits 1. `--planner none` runs the no-investigation baseline (`no-investigation` in the stored run) and, unless it ends in error, is cancelled or hits a run limit, ends with `investigation is disabled for this run`.
+Each search first closes runs that a crash left `running`, once they started more than 10 minutes ago. The result prints as JSON. Press Ctrl+C once and wait: the run stops before its next step and the result prints. A second Ctrl+C aborts without a result and leaves the run `running` until recovery closes it, more than 10 minutes after it started. The command exits 0 when it prints a result, unless the run's status is `error`, and then it exits 1; an `error` run ends with `no store could be searched`, `no admitted source has a reader` or `run stopped on an unexpected error`. A run cut short by its own time or call budget ends `partial` with that limit's stop reason and exits 0, even if no store was searched, so check `source_coverage`. The command exits 1 without a result when the database cannot be used before the run starts, for example because migrations were not applied (`The run could not start: <Error>`); when the run stops on a storage failure after it was stored, for example because another process closed it (`Run <id> stopped on an unexpected <Error> without storing its result (stored status: <status>)`); and when even the stored status cannot be read (`Run <id> failed on an unexpected <Error>; whether it was stored could not be read`). It exits 2 before any store request when the request file cannot be read (`Cannot read the request: <Error>`), when the caps in `config/evaluation.json` cannot be read (`Cannot read the run caps in evaluation.json: <Error>`), or when the planner cannot be set up, for example `--planner model` without API credentials (`Cannot set up the model planner: <Error>`). `--planner none` runs the no-investigation baseline (`no-investigation` in the stored run) and, unless it ends in error, is cancelled or hits a run limit, ends with `investigation is disabled for this run`.
 
-Runs use no exchange rates, so give the budget in USD, the price currency of every admitted store; with a budget in another currency, no offer can be verified. The model planner needs `ANTHROPIC_API_KEY` exported in the shell that runs the command (nothing reads it from `.env`, and Compose does not pass it to the container) and under the default caps spends at most USD 0.75 (the USD 1.00 spend cap less the USD 0.25 verification reserve, which nothing uses yet). The ordinary test suite never contacts a store.
+Runs use no exchange rates, so give the budget in USD, the price currency of every admitted store; with a budget in another currency, no offer can be verified. The model planner needs API credentials, such as `ANTHROPIC_API_KEY`, exported in the shell that runs the command (nothing reads it from `.env`, and Compose does not pass it to the container) and under the default caps spends at most USD 0.75 (the USD 1.00 spend cap less the USD 0.25 verification reserve, which nothing uses yet). The ordinary test suite never contacts a store.
 
 To run the storage tests against Postgres as well, point `TEST_DATABASE_URL` at a disposable database (the tests reset its schema). CI runs both SQLite and Postgres, plus a Docker build.
 

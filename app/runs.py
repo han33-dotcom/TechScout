@@ -11,7 +11,8 @@ request cap only removes actions from the menu. A planner turn whose cost became
 ends the run as partial. Planner time counts against the time budget: a turn starts only when
 the planner's longest call and an action both fit before the verification reserve, and the
 chosen action is checked again just before it runs. A run in which no store could be searched
-(every search failed, or none could run) is an 'error' run, never an ordinary abstention.
+(every search failed, or none could run) is an 'error' run, never an ordinary abstention, unless
+the run's own time or call budget cut retrieval short: then it is partial with that limit's reason.
 'cancelled' and 'error' runs never carry recommendations. A run interrupted by a crash is closed
 as partial, never resumed, by the next web-app start or command-line search once it is older
 than the recovery lease (app.storage).
