@@ -1,6 +1,6 @@
 {
   "synthetic": true,
-  "note": "Fictional offer (MVP 07): the store links name White, but the selected variant's own facts say Black. Not real retailer data.",
+  "note": "Fictional offer (MVP 07): the store links name White, but the selected variant's own facts say Black. Not real retailer data; a stand-in for the White-URL/Black-product case captured during source selection, which is not in this repository (see README.md).",
   "offer": {
     "schema_version": 1,
     "offer_id": "seller-1:parent-1:variant-black",

@@ -1,7 +1,8 @@
 """Offline tests for variant identity (MVP 07): canonical values, link hints and repeated records.
 
-Offers are synthetic Offer contracts built here or loaded from tests/fixtures/identity; no store
-is contacted. Tests marked "Done when" cover the MVP 07 acceptance list.
+Offers are synthetic Offer contracts built here or loaded from tests/fixtures/identity, or read
+offline by the store readers from the minimized captures in tests/fixtures/stores; no store is
+contacted. Tests marked "Done when" cover the MVP 07 acceptance list.
 """
 from datetime import datetime, timedelta, timezone
 import hashlib
@@ -471,6 +472,23 @@ class DeduplicateTests(unittest.TestCase):
         # Store values remain data inside the conflict, for people to inspect.
         self.assertEqual(kept.variant.color.alternatives, ['Black', canonical_color(injected)])
         self.assertEqual(kept.variant.region.alternatives, ['Lebanon', 'Middle East'])
+
+
+class CapturedStoreTests(unittest.TestCase):
+    def test_captured_reads_keep_variants_apart_and_merge_rereads(self):
+        # Class Cellulars shares SKU IBX6XH-6-1-5 across four colors; Mojitech has twelve color and
+        # option combinations, two (ABM) with no SIM type. Two reads five minutes apart.
+        from app.adapters import ADAPTERS
+        from tests.adapters import OBSERVED as READ_AT, FakeFetch, query, routes
+        for source, count in (('class_cellulars', 4), ('mojitech', 12), ('beytech', 4)):
+            with self.subTest(source=source):
+                first, second = (ADAPTERS[source].search_candidates(
+                    FakeFetch(routes(source), observed_at=READ_AT + timedelta(minutes=m)), query()).offers
+                    for m in (0, 5))
+                result = deduplicate([*first, *second])
+                self.assertEqual(result.offers, list(second))
+                self.assertEqual((len(result.merged), result.conflicts), (count, []))
+                self.assertEqual([normalize_variant(o).warnings for o in result.offers], [[]] * count)
 
 
 if __name__ == '__main__':
