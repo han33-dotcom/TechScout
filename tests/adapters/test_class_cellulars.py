@@ -195,7 +195,10 @@ class ClassCellularsTests(ReaderTestCase):
             after = ADAPTER.apply_policy(result.offers[0], self.faq(fetch))
             self.assertEqual((after.arrival.state, after.arrival.reason),
                              ('unknown', 'pickup readiness is not published'))
-            self.assertEqual(after.payment_basis.value, 'cash')
+            # 'Cash on delivery' answers for online orders, not for paying at a branch.
+            self.assertEqual((after.payment_basis.state, after.payment_basis.reason),
+                             ('unknown', 'payment terms are not published on the product page'))
+            self.assertEqual(after, result.offers[0])  # the FAQ changes nothing on a pickup offer
         with self.subTest('no estimate on the page'):
             page = fixture('class_cellulars/page.html').replace(f'<li>{ESTIMATE}</li>'.encode(), b'')
             fetch, result = self.search(table=routes('class_cellulars', {CLASS_PAGE: page}))

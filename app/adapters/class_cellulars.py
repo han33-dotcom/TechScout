@@ -2,8 +2,9 @@
 
 The product page states VAT inclusion next to the price, a 14-30 day delivery estimate, an
 18-month warranty at Genuine Warranty Center and a free-shipping banner. The FAQ states delivery
-times for Beirut and outside it, cash-on-delivery-only payment and a three-day return window,
-which can conflict with the product page's estimate; apply_policy keeps both.
+times for Beirut and outside it, cash-on-delivery-only payment and a three-day return window. The
+delivery time can conflict with the product page's estimate; apply_policy keeps both. The FAQ
+speaks to online (delivery) orders, so it settles nothing for a pickup offer.
 """
 from decimal import Decimal
 import re
@@ -77,16 +78,16 @@ def _zone(city: str) -> str:
 
 
 def apply_faq(offer: Offer, policy: PolicyDocument) -> Offer:
-    """Cash only settles the payment basis; the zone's delivery time joins the page's estimate."""
-    if policy.policy_id != 'faq':
+    """Cash on delivery settles a delivery offer's payment basis; the zone's delivery time joins the
+    page's estimate. The FAQ answers for online orders only, so a pickup offer keeps both unknown."""
+    if policy.policy_id != 'faq' or offer.fulfillment.mode != 'delivery':
         return offer
     for fact in policy.facts:
         value = fact.value
         if fact.topic == 'payment' and value.get('only') is True and value.get('methods') == ['cash']:
             offer = merge_policy_fact(offer, policy, fact, 'payment_basis', 'cash',
                                       conflict_reason=PAYMENT_CONFLICT)
-        elif (fact.topic == 'delivery_time' and offer.fulfillment.mode == 'delivery'
-              and value.get('zone') == _zone(offer.fulfillment.city)):
+        elif fact.topic == 'delivery_time' and value.get('zone') == _zone(offer.fulfillment.city):
             window = policy_window(policy.observed_at, value)
             if window is not None:
                 offer = merge_policy_fact(offer, policy, fact, 'arrival', window,
