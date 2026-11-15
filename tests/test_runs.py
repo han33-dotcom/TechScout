@@ -814,6 +814,27 @@ class PlannerTests(RunCase):
         self.assertNotIn('IGNORE PREVIOUS', json.dumps(reasons))
         self.assertNotIn('IGNORE PREVIOUS', result.stop_reason)
 
+    def test_gaps_withheld_from_the_planner_are_not_reported_as_no_open_gaps(self):
+        self.stores = {'alpha': FakeStore('alpha', [('101 X', 'Black', '1000.00')]),
+                       'beta': FakeStore('beta'), 'gamma': FakeStore('gamma')}
+        planner = ScriptedPlanner(STOP)
+        result = self.search(planner)
+        self.assertEqual(planner.states, [])  # nothing safe to show, so the planner is never asked
+        self.assertEqual((result.status, result.stop_reason), ('abstained', runs.STOP_GAPS_WITHHELD))
+        self.assertEqual([i.offer_id for i in result.unresolved], ['alpha:100:101 X'])
+        self.assertEqual(self.action('run-1', 'stage:investigate')['result']['data'],
+                         {'turns': 0, 'stop_reason': runs.STOP_GAPS_WITHHELD, 'withheld_gaps': 2})
+
+        # The planner settles the plain offer; the other offer's gaps stay withheld.
+        self.stores = {'alpha': FakeStore('alpha', [('101', 'Black', '1000.00')]),
+                       'beta': FakeStore('beta', [('201 X', 'Blue', '990.00')]), 'gamma': FakeStore('gamma')}
+        result = self.search(run_id='run-2')
+        self.assertEqual((result.status, result.stop_reason), ('complete', runs.STOP_GAPS_WITHHELD))
+        self.assertEqual([r.offer.offer_id for r in result.recommendations], ['alpha:100:101'])
+        self.assertEqual([i.offer_id for i in result.unresolved], ['beta:100:201 X'])
+        self.assertEqual(self.action('run-2', 'stage:investigate')['result']['data']['withheld_gaps'], 2)
+        self.assertTruthful(result, 'run-2')
+
     def test_planner_spend_is_reserved_committed_and_traced(self):
         def paid(state, budget):
             self.assertFalse(hasattr(budget, 'reserve_call'))  # the planner can only reserve spend

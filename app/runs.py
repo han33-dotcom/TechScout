@@ -62,6 +62,7 @@ MAX_RECOMMENDATIONS = 3
 # Fixed stop reasons; RunResult.stop_reason is always one of these.
 STOP_NO_GAPS = 'no open evidence gaps remain'
 STOP_NO_ACTION = 'no available action can settle the open gaps'
+STOP_GAPS_WITHHELD = 'open gaps could not be shown to the planner safely'
 STOP_STORE_CAPS = 'store request caps leave no action for the open gaps'
 STOP_PLANNER = 'the planner chose to stop'
 STOP_NO_INVESTIGATION = 'investigation is disabled for this run'
@@ -93,7 +94,10 @@ _NOT_SEARCHED = {
     'store': 'not searched; the store request cap has no room',
 }
 # What may reach the planner: plain identifiers (the planner's own check) and short printable
-# reasons, never free text. A gap that fails is withheld, so it cannot spoil a whole turn's state.
+# reasons, never free text. A gap that fails is withheld, so it cannot spoil a whole turn's state;
+# when only withheld gaps remain, investigation ends with STOP_GAPS_WITHHELD. Offer IDs must be
+# plain source:product:variant IDs as the store readers build them (app.adapters.base.offer_id);
+# the contract allows any text, so gaps on offers with other IDs are always withheld.
 _PLAIN = re.compile(r'[A-Za-z0-9][A-Za-z0-9_.-]{0,119}')
 _OFFER_ID = re.compile(r'[A-Za-z0-9][A-Za-z0-9_.-]{0,63}(:[A-Za-z0-9][A-Za-z0-9_.-]{0,63}){2}')
 MAX_GAP_REASON = 200
@@ -626,6 +630,7 @@ class _Run:
         self.history: list[dict] = []
         self.limit: str | None = None  # the first run limit that stopped work early
         self.stop_reason: str | None = None  # why investigation ended
+        self.withheld_gaps = 0  # open gaps last held back from the planner (_open_gaps)
         self.stage = 'clarify'
         self.started_at: datetime | None = None
 
@@ -654,7 +659,8 @@ class _Run:
             data.update(self._counts())
         with self._stage('investigate') as data:
             self._investigate()
-            data.update(turns=self.budget.turns_used(), stop_reason=self.stop_reason)
+            data.update(turns=self.budget.turns_used(), stop_reason=self.stop_reason,
+                        withheld_gaps=self.withheld_gaps)
         with self._stage('verify') as data:
             finalists = self._verify(data)
         return self._finish(finalists)
@@ -792,8 +798,10 @@ class _Run:
             return
         while True:
             gaps, withheld = self._open_gaps()
-            if not gaps:
-                self.stop_reason = STOP_CANCELLED if self._cancelled() else STOP_NO_GAPS
+            self.withheld_gaps = withheld
+            if not gaps:  # gaps held back for their shape get no action, so they end investigation
+                self.stop_reason = (STOP_CANCELLED if self._cancelled()
+                                    else STOP_GAPS_WITHHELD if withheld else STOP_NO_GAPS)
                 return
             menu, shortfall, any_candidate = self._menu(gaps)
             if not menu:
