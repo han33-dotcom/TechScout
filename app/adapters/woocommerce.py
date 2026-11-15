@@ -146,10 +146,11 @@ UNKNOWN_OFFER = 'unknown offer'
 UNKNOWN_POLICY = 'unknown policy'
 OFFER_NOT_LISTED = 'offer is not listed'
 POLICY_MARKUP = 'policy page markup could not be read'
+POLICY_NO_STATEMENTS = 'policy page states nothing the reader recognizes'
 ERROR_REASONS = frozenset({
     API_UNREADABLE, API_PRODUCTS, PRODUCT_CHANGED, PRICE_FIELDS, PRODUCT_FIELDS, VARIATION_FIELDS,
     PAGE_MARKUP, NO_FORM, AJAX_ONLY, FORM_FIELDS, OFFER_UNREADABLE, UNKNOWN_OFFER, UNKNOWN_POLICY,
-    OFFER_NOT_LISTED, POLICY_MARKUP,
+    OFFER_NOT_LISTED, POLICY_MARKUP, POLICY_NO_STATEMENTS,
 })
 
 
@@ -1167,7 +1168,11 @@ class WooCommerceAdapter:
         return self._result([read], [self._error(OFFER_NOT_LISTED)] if missing else [])
 
     def fetch_policy(self, fetch: Fetch, policy_id: str) -> AdapterResult:
-        """One policy page's statements; their evidence is made when apply_policy uses them."""
+        """One policy page's statements; their evidence is made when apply_policy uses them.
+
+        A configured page in which the reader recognizes no statement has probably changed its
+        wording, so the read is partial with INVALID_SCHEMA; the document is still returned.
+        """
         page = self._policies.get(policy_id) if isinstance(policy_id, str) else None
         data = {'policy_id': policy_id if isinstance(policy_id, str) else None, 'facts': 0}
         if page is None:
@@ -1186,7 +1191,8 @@ class WooCommerceAdapter:
             source_id=self.source_id, policy_id=page.policy_id, url=outcome.origin_url,
             final_url=outcome.final_url, observed_at=outcome.observed_at,
             response_sha256=outcome.response_sha256, adapter_version=self.adapter_version, facts=facts)
-        return AdapterResult(tool_result([outcome], [], {**data, 'facts': len(facts)}, [], True),
+        errors = [] if facts else [self._error(POLICY_NO_STATEMENTS)]
+        return AdapterResult(tool_result([outcome], errors, {**data, 'facts': len(facts)}, [], True),
                              policies=(document,), snapshots=(snapshot,))
 
     def apply_policy(self, offer: Offer, policy: PolicyDocument) -> Offer:

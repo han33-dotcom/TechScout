@@ -467,6 +467,17 @@ class FailureTests(ReaderTestCase):
         self.assertEqual(unreadable.tool_result.errors, [schema('policy page markup could not be read')])
         self.assertEqual(len(unreadable.snapshots), 1)
 
+    def test_policy_page_with_no_recognized_statement_is_reported(self):
+        moved = b'<html><body><h1>FAQ</h1><p>Our policies have moved. Please call us.</p></body></html>'
+        result = CLASS.fetch_policy(FakeFetch(routes('class_cellulars', {CLASS_FAQ: moved})), 'faq')
+        tool = result.tool_result
+        self.assertEqual((tool.status, tool.errors, tool.data['facts']),
+                         ('partial', [schema('policy page states nothing the reader recognizes')], 0))
+        self.assertEqual((len(result.policies), len(result.snapshots)), (1, 1))
+        [document] = result.policies
+        offer = CLASS.search_candidates(FakeFetch(routes('class_cellulars')), query()).offers[0]
+        self.assertEqual(CLASS.apply_policy(offer, document), offer)
+
 
 class PolicyTests(ReaderTestCase):
     def offer_and_faq(self):
