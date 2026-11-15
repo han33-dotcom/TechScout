@@ -228,6 +228,35 @@ class EndToEndTests(unittest.TestCase):
                                   r'its result \(stored status: partial\)$')
         self.assertEqual(len(self.sent), 3)  # the request in flight; nothing after the run was closed
 
+    def test_the_search_command_says_no_run_started_when_the_database_is_not_migrated(self):
+        directory = tempfile.TemporaryDirectory(ignore_cleanup_errors=True)
+        self.addCleanup(directory.cleanup)
+        tmp = Path(directory.name)
+        unmigrated = Storage(f"sqlite:///{tmp / 'empty.db'}", tmp / 'evidence')  # no tables created
+        self.addCleanup(unmigrated.engine.dispose)
+        deps = self.deps()
+        deps = RunDependencies(gate=deps.gate, storage=unmigrated, adapters=ADAPTERS, registry_path=REGISTRY,
+                               wall_clock=self.clock.now, clock=self.clock.monotonic)
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            code = runs.main(['search', str(ROOT / 'examples' / 'request-iphone17-beirut.json')],
+                             dependencies=deps)
+        self.assertEqual((code, out.getvalue(), err.getvalue().strip()),
+                         (1, '', 'The run could not start: OperationalError'))
+        self.assertEqual(self.sent, [])
+
+    def test_the_search_command_does_not_claim_a_run_stopped_when_its_status_cannot_be_read(self):
+        deps = self.deps()
+        out, err = io.StringIO(), io.StringIO()
+        with (mock.patch.object(runs, 'run_search', side_effect=ValueError('run failed')),
+              mock.patch.object(self.storage, 'run_status', side_effect=RuntimeError('database went away')),
+              contextlib.redirect_stdout(out), contextlib.redirect_stderr(err)):
+            code = runs.main(['search', str(ROOT / 'examples' / 'request-iphone17-beirut.json')],
+                             dependencies=deps)
+        self.assertEqual((code, out.getvalue()), (1, ''))
+        self.assertRegex(err.getvalue().strip(), r'^Run run-[0-9a-f]{32} failed on an unexpected ValueError; '
+                                                 r'whether it was stored could not be read$')
+
     def test_ctrl_c_during_the_search_command_cancels_the_run(self):
         handle, budgets = self.handle, []
 

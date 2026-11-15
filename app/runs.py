@@ -1248,7 +1248,11 @@ def main(argv: Sequence[str] | None = None, *, dependencies: RunDependencies | N
 
     def work():
         try:
-            closed = deps.storage.recover_interrupted_runs()  # never a run that may still be live
+            try:
+                closed = deps.storage.recover_interrupted_runs()  # never a run that may still be live
+            except Exception:
+                outcome['started'] = False  # this run was never stored (unmigrated or unreachable database)
+                raise
             if closed:
                 log.warning('Marked %d interrupted run(s) as partial: %s', len(closed), closed)
             outcome['result'] = run_search(request, deps, run_id=run_id, caps=caps, cancel=cancel)
@@ -1271,11 +1275,14 @@ def main(argv: Sequence[str] | None = None, *, dependencies: RunDependencies | N
         error = outcome.get('error')
         name = type(error).__name__ if error is not None else 'interruption'
         try:
-            status = deps.storage.run_status(run_id)
+            status = deps.storage.run_status(run_id) if outcome.get('started', True) else None
         except Exception:
             status = 'unknown'
         if status is None:
             print(f'The run could not start: {name}', file=sys.stderr)
+        elif status == 'unknown':  # the database failed after the run may have been stored
+            print(f'Run {run_id} failed on an unexpected {name}; whether it was stored could not be read',
+                  file=sys.stderr)
         else:
             print(f'Run {run_id} stopped on an unexpected {name} without storing its result '
                   f'(stored status: {status})', file=sys.stderr)
