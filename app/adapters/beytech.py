@@ -1,9 +1,10 @@
 """Beytech reader (MVP 05): the iPhone 17 '1 Sim - 2 Years Warranty' product and two policy pages.
 
-The product name carries the SIM and warranty statements, and a non-variation Brand attribute
-names Apple (the page's JSON-LD brand reads 'Electronics' and is not used). The warranty page
-covers repairs only, with the original invoice; the exchange page allows one exchange within
-5 days but lists mobiles as non-returnable. Neither page settles an offer field.
+The product name carries the warranty statement and '1 Sim', whose SIM type is not confirmed
+(docs/source-coverage.md), and a non-variation Brand attribute names Apple (the page's JSON-LD
+brand reads 'Electronics' and is not used). The warranty page covers repairs only, with the
+original invoice; the exchange page allows one exchange within 5 days but lists mobiles as
+non-returnable. Neither page settles an offer field.
 """
 import re
 from types import MappingProxyType
@@ -70,8 +71,9 @@ CONFIG = StoreConfig(
         PolicyPage('warranty', f'{ORIGIN}/warranty-terms-conditions/', (), warranty_facts),
         PolicyPage('exchange', f'{ORIGIN}/exchange-policy-2/', (), exchange_facts),
     ),
-    # One physical SIM slot plus eSIM, as Apple sells the iPhone 17 in this region.
-    name_sim=MappingProxyType({'1 sim': 'physical+esim'}),
+    # '1 Sim' speaks to the SIM but the store never writes eSIM: reading it as one physical slot
+    # plus eSIM is an assumption, so the SIM type stays unknown until the store confirms it.
+    name_sim=MappingProxyType({'1 sim': None}),
     page_facts=page_facts,
     name_warranty=name_warranty,
 )

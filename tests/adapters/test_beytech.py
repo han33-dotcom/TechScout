@@ -1,7 +1,8 @@
 """Beytech reader on minimized captures (MVP 05/06).
 
 Four actual color variants with distinct SKUs; Apple from the Brand attribute, 256 GB from the
-'M Size' option, and the SIM type and warranty length from the product name.
+'M Size' option, and the warranty length from the product name; its '1 Sim' leaves the SIM type
+unknown until the store confirms what it means.
 """
 from decimal import Decimal
 import unittest
@@ -49,7 +50,8 @@ class BeytechTests(ReaderTestCase):
         storage = evidence(offer, variant.storage_gb.evidence_ids)
         self.assertEqual([(e.json_pointer, e.excerpt) for e in storage], [
             (None, 'variation 139979 attribute_m-size 256 GB'), ('/1/variations/1/attributes/0/value', None)])
-        self.assertEqual(variant.sim.value, 'physical+esim')  # '1 Sim': one physical slot plus eSIM
+        self.assertEqual((variant.sim.state, variant.sim.reason),
+                         ('unknown', 'SIM type in the product name is not confirmed'))  # '1 Sim'
         [sim] = evidence(offer, variant.sim.evidence_ids)
         self.assertEqual((sim.scope, sim.variant_id, sim.json_pointer), ('variant', '139979', '/1/name'))
         warranty = offer.warranty

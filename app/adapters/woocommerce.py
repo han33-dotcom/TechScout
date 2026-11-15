@@ -93,6 +93,7 @@ SIM_NOT_STATED = 'SIM type is not stated for this option'
 SIM_UNRECOGNIZED = 'SIM option is not recognized'
 SIM_CONFLICT = 'store reports different SIM types for this variation'
 SIM_ANY = 'variation accepts any SIM option'
+SIM_NAME_UNCONFIRMED = 'SIM type in the product name is not confirmed'
 REGION_UNKNOWN = 'region is not published'
 CONDITION_UNKNOWN = 'condition is not published'
 CONDITION_UNRECOGNIZED = 'condition option is not recognized'
@@ -120,7 +121,8 @@ FIXED_REASONS = frozenset({
     MANUFACTURER_UNKNOWN, MANUFACTURER_CONFLICT, MODEL_UNKNOWN, MODEL_ANY, MODEL_UNREADABLE, MODEL_CONFLICT,
     STORAGE_UNKNOWN, STORAGE_UNREADABLE,
     STORAGE_SEVERAL, STORAGE_CONFLICT, STORAGE_ANY, COLOR_UNKNOWN, COLOR_UNREADABLE, COLOR_CONFLICT,
-    COLOR_ANY, SIM_UNKNOWN, SIM_NOT_STATED, SIM_UNRECOGNIZED, SIM_CONFLICT, SIM_ANY, REGION_UNKNOWN,
+    COLOR_ANY, SIM_UNKNOWN, SIM_NOT_STATED, SIM_UNRECOGNIZED, SIM_CONFLICT, SIM_ANY, SIM_NAME_UNCONFIRMED,
+    REGION_UNKNOWN,
     CONDITION_UNKNOWN,
     CONDITION_UNRECOGNIZED, CONDITION_CONFLICT, CONDITION_ANY, WARRANTY_PROVIDER_UNKNOWN,
     WARRANTY_MONTHS_UNKNOWN, WARRANTY_TERRITORY_UNKNOWN, WARRANTY_CONFLICT, PAYMENT_UNKNOWN, CASH_AND_CARD,
@@ -225,7 +227,8 @@ class StoreConfig:
     # Normalized option value (casefolded, single spaces) -> SIM type, or None when the option
     # does not say; values missing from the table are unrecognized.
     sim_map: Mapping[str, Sim | None] = field(default_factory=lambda: MappingProxyType({}))
-    name_sim: Mapping[str, Sim] = field(default_factory=lambda: MappingProxyType({}))  # product-name phrases
+    # Product-name phrase -> SIM type, or None for a phrase about the SIM whose type is not confirmed.
+    name_sim: Mapping[str, Sim | None] = field(default_factory=lambda: MappingProxyType({}))
     page_facts: Callable[[str], PageFacts] = no_page_facts  # reads the product page's visible text
     name_warranty: Callable[[str], WarrantyStatement | None] = no_statement  # reads the product name
     option_warranty: Callable[[str], WarrantyStatement | None] = no_statement  # reads a warranty option
@@ -925,11 +928,18 @@ class _OfferBuilder:
                 silent += records
             else:
                 stated.append((self.cfg.sim_map[key], records))
+        unconfirmed = []
         for text, sim in self.cfg.name_sim.items():
             if phrase(text).search(self.api.name):
-                stated.append((sim, [self.name_record(field_path, 'variant')]))
+                record = self.name_record(field_path, 'variant')
+                if sim is None:
+                    unconfirmed.append(record)
+                else:
+                    stated.append((sim, [record]))
         if stated:
             return self.combine(stated, SIM_UNKNOWN, SIM_CONFLICT)
+        if unconfirmed:
+            return self.unknown(SIM_NAME_UNCONFIRMED, unconfirmed + silent)
         return self.unknown(SIM_NOT_STATED, silent) if silent else self.unknown(SIM_UNKNOWN)
 
     def condition(self) -> dict:

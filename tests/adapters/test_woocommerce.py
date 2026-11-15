@@ -576,7 +576,7 @@ class ConfigurationTests(unittest.TestCase):
         self.assertEqual(dict(mojitech.CONFIG.sim_map),
                          {'esim act': 'esim-only', 'esim act tech+': 'esim-only',
                           'abm 2years warranty': None})
-        self.assertEqual(dict(beytech.CONFIG.name_sim), {'1 sim': 'physical+esim'})
+        self.assertEqual(dict(beytech.CONFIG.name_sim), {'1 sim': None})  # unconfirmed
         self.assertEqual(mojitech.option_warranty('ABM 2YEARS WARRANTY'), ('ABM', 24))
         self.assertIsNone(mojitech.option_warranty('ESIM ACT'))
         name = f'Apple | iPhone 17 {EN_DASH} 1 Sim {EN_DASH} 2 Years Warranty'
