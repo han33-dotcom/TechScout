@@ -193,6 +193,31 @@ class DeviceLineTests(CostTestCase):
                               'conflicting device terms', gap='costs.device')
 
 
+    def test_an_expired_quote_for_the_price_leaves_the_device_line_open(self):
+        # The price fact has no expiry; a listed quote for the same price that has ended ends it.
+        ended = charge('device', 'additional', '999.00', valid_until=NOW - timedelta(hours=1), tag='sale')
+        self.assertUnresolved(calc(build_offer('999.00', costs=[TAX_INCLUDED, FREE_DELIVERY, ended])),
+                              'device quote has expired', gap='costs.device')
+        # Still running at 10:00.
+        self.assertVerified(calc(build_offer('999.00', costs=[TAX_INCLUDED, FREE_DELIVERY, ended]),
+                                 now=NOW - timedelta(hours=2)), '999.00')
+        # A quote that ended before the price was observed again does not bind that price.
+        before = charge('device', 'additional', '999', valid_until=OBSERVED - timedelta(hours=1),
+                        tag='old')
+        self.assertVerified(calc(build_offer('999.00', costs=[TAX_INCLUDED, FREE_DELIVERY, before])),
+                            '999.00')
+        # An expired quote for another amount is replaced by the current price.
+        self.assertVerified(calc(build_offer('1030.00', costs=[TAX_INCLUDED, FREE_DELIVERY, ended])),
+                            '1030.00')
+        # A current quote for the same amount keeps it verified.
+        live = charge('device', 'additional', '999.00', valid_until=NOW + timedelta(hours=1), tag='live')
+        self.assertVerified(calc(build_offer('999.00', costs=[TAX_INCLUDED, FREE_DELIVERY, ended, live])),
+                            '999.00')
+        # A quote whose condition fails for this order does not bind the price.
+        card = charge('device', 'additional', '999.00', conditions=['payment:card'],
+                      valid_until=NOW - timedelta(hours=1), tag='card')
+        self.assertVerified(calc(build_offer('999.00', costs=[TAX_INCLUDED, FREE_DELIVERY, card])), '999.00')
+
 class ChargeTests(CostTestCase):
     def test_unknown_charges_never_become_zero(self):
         cases = [
