@@ -167,6 +167,34 @@ class AdversarialTests(ReaderTestCase):
                 self.assertEqual(fetch.urls(), [CLASS_API])  # no page request without a usable product
                 self.assertEqual(len(result.snapshots), 1)  # the body that arrived is still kept
 
+    def test_a_model_option_must_agree_with_the_product_name(self):
+        terms = [{'id': 0, 'slug': s, 'name': n} for s, n in (('iphone-17', 'iPhone 17'),
+                 ('iphone-17-pro', 'iPhone 17 Pro'), ('iphone-17-plus', 'iPhone 17 Plus'))]
+        cases = [('iphone-17', 'known', None, 'iPhone 17'),
+                 ('iphone-17-pro', 'conflict', 'model option and product name disagree', None),
+                 ('iphone-17-plus', 'unknown', 'model option is not a known model', None),  # not a substring
+                 ('', 'unknown', 'variation accepts any model option', None)]
+        for slug, state, reason, value in cases:
+            with self.subTest(option=slug):
+                records = json.loads(fixture('class_cellulars/api.json'))
+                parent = records[1]
+                parent['attributes'].append({'id': 9, 'name': 'Model', 'taxonomy': 'pa_model',
+                                             'has_variations': True, 'terms': terms})
+                for entry in parent['variations']:
+                    option = slug if entry['id'] == 19116 else 'iphone-17'
+                    entry['attributes'].append({'name': 'Model', 'value': option})
+                _, result = self.search({CLASS_API: json.dumps(records).encode()})
+                offers = by_id(result)
+                model = offers['19116'].variant.model
+                self.assertEqual((model.state, model.reason, model.value), (state, reason, value))
+                self.assertEqual(offers['20648'].variant.model.value, 'iPhone 17')
+                if state == 'conflict':
+                    self.assertEqual(model.alternatives, ['iPhone 17 Pro', 'iPhone 17'])
+                if state == 'known':
+                    cited = evidence(offers['19116'], model.evidence_ids)
+                    self.assertEqual([(e.scope, e.json_pointer) for e in cited], [
+                        ('variant', '/1/variations/1/attributes/3/value'), ('product', '/1/name')])
+
     def test_identical_api_repeats_are_one_statement(self):
         for repeat in (repeated_record, repeated_list_entry, repeated_option):
             with self.subTest(repeat=repeat.__name__):

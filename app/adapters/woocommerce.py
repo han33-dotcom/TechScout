@@ -27,6 +27,7 @@ from app.adapters.base import (
 )
 from app.contracts import ArrivalWindow, Evidence, Model, Offer, Sim, ToolError
 from app.devices import canonical_manufacturer, find_manufacturers, match_model, storage_tokens
+from app.identity import known_model
 from app.sources import FetchOutcome
 
 # Attribute names are compared in this normalized form: 'pa_storage-capacity' reads 'storage capacity'.
@@ -35,6 +36,8 @@ STORAGE_NAMES = frozenset({'storage', 'storage capacity', 'capacity', 'm size', 
 SIM_NAMES = frozenset({'sim', 'sim type', 'esim'})
 CONDITION_NAMES = frozenset({'condition'})
 BRAND_NAMES = frozenset({'brand', 'manufacturer'})
+# Not 'version': stores use it for a region or spec ('Middle East Version').
+MODEL_NAMES = frozenset({'model', 'phone model'})
 CONDITIONS = frozenset({'new', 'used', 'refurbished'})
 CURRENCY = re.compile(r'[A-Z]{3}')
 DIGITS = re.compile(r'[0-9]+')
@@ -73,6 +76,9 @@ STOCK_BACKORDER = 'variation is on backorder'
 MANUFACTURER_UNKNOWN = 'manufacturer is not published'
 MANUFACTURER_CONFLICT = 'product data names different manufacturers'
 MODEL_UNKNOWN = 'product name does not name a known model'
+MODEL_ANY = 'variation accepts any model option'
+MODEL_UNREADABLE = 'model option is not a known model'
+MODEL_CONFLICT = 'model option and product name disagree'
 STORAGE_UNKNOWN = 'storage is not published'
 STORAGE_UNREADABLE = 'storage option is not a recognized size'
 STORAGE_SEVERAL = 'product name lists several storage sizes'
@@ -111,7 +117,8 @@ FIXED_REASONS = frozenset({
     NOT_ON_PAGE, PAGE_UNREAD, FORM_UNREAD, PRICE_NOT_NUMBER, PRICE_INVALID, PRICE_DECIMALS, PRICE_ZERO,
     NO_CURRENCY, PRICE_CONFLICT, PURCHASABLE_UNKNOWN, PURCHASABLE_CONFLICT, STOCK_UNKNOWN, STOCK_CONFLICT,
     STOCK_BACKORDER,
-    MANUFACTURER_UNKNOWN, MANUFACTURER_CONFLICT, MODEL_UNKNOWN, STORAGE_UNKNOWN, STORAGE_UNREADABLE,
+    MANUFACTURER_UNKNOWN, MANUFACTURER_CONFLICT, MODEL_UNKNOWN, MODEL_ANY, MODEL_UNREADABLE, MODEL_CONFLICT,
+    STORAGE_UNKNOWN, STORAGE_UNREADABLE,
     STORAGE_SEVERAL, STORAGE_CONFLICT, STORAGE_ANY, COLOR_UNKNOWN, COLOR_UNREADABLE, COLOR_CONFLICT,
     COLOR_ANY, SIM_UNKNOWN, SIM_NOT_STATED, SIM_UNRECOGNIZED, SIM_CONFLICT, SIM_ANY, REGION_UNKNOWN,
     CONDITION_UNKNOWN,
@@ -856,10 +863,18 @@ class _OfferBuilder:
         return self.combine(found, MANUFACTURER_UNKNOWN, MANUFACTURER_CONFLICT)
 
     def model(self) -> dict:
+        """The variation's model option and the product name's model; disagreement is a conflict."""
+        field_path = 'variant.model'
+        found, open_, empty = self.options(MODEL_NAMES, field_path)
+        if open_:
+            return self.unknown(MODEL_ANY)
+        named = [(known_model(value), records) for value, records in found]  # exactly a model, no substring
+        if empty or any(name is None for name, _ in named):
+            return self.unknown(MODEL_UNREADABLE)
         name = match_model(self.api.name)
-        if name is None:
-            return self.unknown(MODEL_UNKNOWN)
-        return self.known(name, [self.name_record('variant.model', 'product')])
+        if name is not None:
+            named.append((name, [self.name_record(field_path, 'product')]))
+        return self.combine(named, MODEL_UNKNOWN, MODEL_CONFLICT)
 
     def storage(self) -> dict:
         """The variation's storage option; otherwise the one size the product name gives."""
