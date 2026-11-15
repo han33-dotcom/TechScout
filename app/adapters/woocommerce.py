@@ -812,8 +812,8 @@ class _OfferBuilder:
             # how a backorder without customer notification shows.
             if BACKORDER_CLASS.search(note) or (item.data.get('backorders_allowed') is True
                                                 and not IN_STOCK_CLASS.search(note)):
-                records.append(self.page_record('online_stock', 'variant', f'variation {self.vid} on backorder',
-                                                f'item{item.index}-backorder'))
+                records.append(self.page_record('online_stock', 'variant',
+                                                f'variation {self.vid} on backorder', f'item{item.index}-backorder'))
         if self.record is not None and self.record[1].get('is_on_backorder') is True:
             records.append(self.api_record('online_stock', 'variant',
                                            json_pointer(self.record[0], 'is_on_backorder'), 'api-backorder'))
@@ -1022,17 +1022,16 @@ class _OfferBuilder:
         return costs
 
     def pickup_stock(self) -> list[dict]:
-        """The requested branch (or the city's only configured branch); online stock never proves it."""
+        """The configured branches in the requested city (only the named one, when the request names a
+        branch), each with unknown stock: online stock never proves a branch's stock. A branch is never
+        made up, so a store without a configured branch there lists none."""
         route = self.query.fulfillment
         if route.mode != 'pickup':
             return []
-        if route.branch_id is not None:
-            branch, city = route.branch_id, dict(self.cfg.branches).get(route.branch_id, route.city)
-        else:
-            local = [b for b, c in self.cfg.branches if c.casefold() == route.city.casefold()]
-            branch, city = (local[0] if len(local) == 1 else route.city), route.city
-        return [{'branch_id': branch, 'city': city,
-                 'stock': {'state': 'unknown', 'reason': BRANCH_STOCK_UNKNOWN}}]
+        city = normal(route.city)
+        stock = {'state': 'unknown', 'reason': BRANCH_STOCK_UNKNOWN}
+        return [{'branch_id': branch, 'city': place, 'stock': stock} for branch, place in self.cfg.branches
+                if normal(place) == city and route.branch_id in (None, branch)]
 
     def raw_attributes(self) -> dict:
         """Store values as written, bounded and JSON-safe; informative only."""

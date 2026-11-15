@@ -125,17 +125,23 @@ class ClassCellularsTests(ReaderTestCase):
         self.assertEqual((offer.payment_basis.state, offer.payment_basis.reason),
                          ('unknown', 'payment terms are not published on the product page'))
 
-    def test_pickup_has_one_branch_with_unknown_stock_and_no_delivery_charge(self):
-        cases = [(dict(branch_id='abc-verdun'), 'abc-verdun', 'Beirut'),
-                 (dict(city='Tyre'), 'tyre', 'Tyre'),  # the city's only branch
-                 (dict(), 'Beirut', 'Beirut')]  # three Beirut branches: the request names none
-        for args, branch, city in cases:
+    def test_pickup_lists_configured_branches_with_unknown_stock_and_no_delivery_charge(self):
+        beirut = [('mar-elias', 'Beirut'), ('abc-verdun', 'Beirut'), ('abc-achrafieh', 'Beirut')]
+        cases = [(dict(branch_id='abc-verdun'), [('abc-verdun', 'Beirut')]),
+                 (dict(city='Tyre'), [('tyre', 'Tyre')]),
+                 (dict(), beirut),  # every configured branch in the city: the request names none
+                 (dict(city=' beirut '), beirut),
+                 (dict(city='Zahle'), []),  # no configured branch there: none is made up
+                 (dict(branch_id='hamra'), []),  # not a configured branch
+                 (dict(branch_id='tyre'), [])]  # a configured branch, but in another city
+        for args, branches in cases:
             with self.subTest(**args):
                 _, result = self.search(query(mode='pickup', **args))
                 offer = result.offers[0]
-                [stock] = offer.pickup_stock
-                self.assertEqual((stock.branch_id, stock.city, stock.stock.state, stock.stock.reason),
-                                 (branch, city, 'unknown', 'online stock does not show branch stock'))
+                self.assertEqual([(s.branch_id, s.city) for s in offer.pickup_stock], branches)
+                for stock in offer.pickup_stock:
+                    self.assertEqual((stock.stock.state, stock.stock.reason),
+                                     ('unknown', 'online stock does not show branch stock'))
                 self.assertEqual([c.kind for c in offer.costs], ['tax'])
                 self.assertEqual((offer.arrival.state, offer.arrival.reason),
                                  ('unknown', 'pickup readiness is not published'))

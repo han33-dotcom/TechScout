@@ -94,6 +94,15 @@ class ContractTests(ReaderTestCase):
                             self.assertIn(e.product_id, (None, offer.variant.product_id))
                             self.assertIn(e.variant_id, (None, offer.variant.variant_id))
 
+    def test_a_store_without_a_branch_list_lists_no_pickup_branch(self):
+        for source in ('mojitech', 'beytech'):
+            for branch in (None, 'mar-elias'):  # mar-elias is a Class Cellulars branch
+                with self.subTest(source=source, branch=branch):
+                    q = query(mode='pickup', city='Beirut', branch_id=branch)
+                    result = adapters.get_adapter(source).search_candidates(FakeFetch(routes(source)), q)
+                    self.assertTrue(result.offers)
+                    self.assertEqual({len(o.pickup_stock) for o in result.offers}, {0})
+
     def test_fixed_wording_only(self):
         self.assertFalse(FIXED_REASONS & ERROR_REASONS)
         for reason in FIXED_REASONS | ERROR_REASONS:
@@ -163,7 +172,8 @@ class AdversarialTests(ReaderTestCase):
                 _, result = self.search({CLASS_API: body})
                 self.assertEqual((result.tool_result.status, len(result.offers)), ('ok', 4))
                 offer = by_id(result)['19116']
-                self.assertEqual((offer.variant.color.value, offer.price.value.amount), ('Blue', Decimal('1030.00')))
+                self.assertEqual((offer.variant.color.value, offer.price.value.amount),
+                                 ('Blue', Decimal('1030.00')))
 
     def test_ajax_only_variations_keep_identity_and_leave_prices_unknown(self):
         _, result = self.search({CLASS_PAGE: 'adversarial/ajax_only.page.html'})
@@ -206,7 +216,8 @@ class AdversarialTests(ReaderTestCase):
                  '/0/is_purchasable', 'variation 19116 is_purchasable true variation_is_active true'),
                 (offer.online_stock, 'store reports different stock for this variation',
                  '/0/is_in_stock', 'variation 19116 is_in_stock true')):
-            self.assertEqual((fact.state, fact.reason, fact.alternatives), ('conflict', reason, [False, True]))
+            self.assertEqual((fact.state, fact.reason, fact.alternatives),
+                             ('conflict', reason, [False, True]))
             self.assertEqual([(e.json_pointer, e.excerpt) for e in evidence(offer, fact.evidence_ids)],
                              [(pointer, None), (None, excerpt)])
         agreeing = by_id(self.search({})[1])['19116']  # the captured record agrees and is cited too
