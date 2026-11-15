@@ -35,8 +35,8 @@ CALL_TIMEOUT_S = SOFT_DEADLINE_S + PHASE_TIMEOUT_S
 MAX_WAIT_S = 10.0
 BACKOFF_S = (1.0, 2.0)
 WINDOW_S = 60.0
-# A run that asks no store for this long is treated as ended. The 120-second run cap MVP 11
-# plans is far below it; until that cap is enforced, a run that pauses this long starts afresh.
+# A run that asks no store for this long is treated as ended. It is far above the 120-second run
+# cap the run budget (MVP 11) enforces, and a finished run's budget refuses every request.
 RUN_COUNT_TTL_S = 3600.0
 USER_AGENT = 'TechScout/0.1 (+https://github.com/han33-dotcom/TechScout)'
 ACCEPT_ENCODING = 'gzip'

@@ -8,7 +8,9 @@ MVP 01 is complete: [Class Cellulars, Mojitech and Beytech](docs/source-admissio
 
 MVP 02 defines the shared [request, offer and evidence contracts](docs/mvp-spec.md) in `app/contracts.py`.
 
-MVP 03 adds the backend foundation: a FastAPI application (`app/main.py`), Postgres storage with Alembic migrations (`app/storage.py`, `migrations/`), protected evidence snapshots, Docker Compose and CI. Actual runtime retrieval and adapters are MVP 04–06; cost, eligibility and final verification are later tasks. The shopping workflow is not built yet.
+MVP 03 adds the backend foundation: a FastAPI application (`app/main.py`), Postgres storage with Alembic migrations (`app/storage.py`, `migrations/`), protected evidence snapshots, Docker Compose and CI.
+
+MVP 05–06 add store readers for the three sources (`app/adapters/`), with a [coverage matrix](docs/source-coverage.md) of what each store publishes. MVP 07–09 add the fixed rules: variant identity and deduplication (`app/identity.py`), buyer-constraint eligibility (`app/eligibility.py`) and evidence-bound totals (`app/costs.py`). MVP 11 adds run control with budgets and traces (`app/runs.py`, `app/tracing.py`) and MVP 12 the bounded planner (`app/planner.py`, `config/evaluation.json`). See [Shopping workflow](docs/mvp-spec.md#shopping-workflow-mvp-05-12). Indexed discovery (MVP 10), final re-verification (MVP 13) and the buyer interface are not built yet. No store currently states device condition, so today's searches end with candidates and open doubts rather than recommendations.
 
 ## Run with Docker Compose (Postgres)
 
@@ -41,6 +43,16 @@ alembic upgrade head                      # apply migrations
 python -m app.storage load-fixtures       # load config/sources.json and the synthetic contract example
 uvicorn app.main:app --reload             # http://127.0.0.1:8000
 ```
+
+To run one search by hand, with the migrations applied (a few public requests per store, stored as a run with its trace):
+
+```powershell
+python -m app.runs search examples/request-iphone17-beirut.json                 # rule baseline
+python -m app.runs search examples/request-iphone17-beirut.json --planner none  # retrieval only
+python -m app.runs search examples/request-iphone17-beirut.json --planner model # paid model planner
+```
+
+The result prints as JSON; Ctrl+C cancels the run. The model planner needs `ANTHROPIC_API_KEY` in the environment and spends at most the run's spend cap (USD 1.00). The ordinary test suite never contacts a store.
 
 To run the storage tests against Postgres as well, point `TEST_DATABASE_URL` at a disposable database (the tests reset its schema). CI runs both SQLite and Postgres, plus a Docker build.
 
