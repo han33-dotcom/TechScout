@@ -156,6 +156,25 @@ class AdversarialTests(ReaderTestCase):
         self.assertEqual(offers['18398'].price.value.amount, Decimal('1030.00'))
         self.assertEqual(result.tool_result.data['variants_without_price'], 1)
 
+    def test_api_record_flags_that_disagree_with_the_page_are_conflicts(self):
+        records = json.loads(fixture('class_cellulars/api.json'))
+        self.assertEqual(records[0]['id'], 19116)
+        records[0].update(is_purchasable=False, is_in_stock=False)
+        _, result = self.search({CLASS_API: json.dumps(records).encode()})
+        offer = by_id(result)['19116']
+        for fact, reason, pointer, excerpt in (
+                (offer.purchasable, 'store reports different purchasability for this variation',
+                 '/0/is_purchasable', 'variation 19116 is_purchasable true variation_is_active true'),
+                (offer.online_stock, 'store reports different stock for this variation',
+                 '/0/is_in_stock', 'variation 19116 is_in_stock true')):
+            self.assertEqual((fact.state, fact.reason, fact.alternatives), ('conflict', reason, [False, True]))
+            self.assertEqual([(e.json_pointer, e.excerpt) for e in evidence(offer, fact.evidence_ids)],
+                             [(pointer, None), (None, excerpt)])
+        agreeing = by_id(self.search({})[1])['19116']  # the captured record agrees and is cited too
+        self.assertEqual((agreeing.online_stock.state, agreeing.online_stock.value), ('known', True))
+        self.assertEqual([e.json_pointer for e in evidence(agreeing, agreeing.online_stock.evidence_ids)],
+                         ['/0/is_in_stock', None])
+
     def test_repeated_page_entries(self):
         _, result = self.search({CLASS_PAGE: 'adversarial/duplicate_variation.page.html'})
         offers = by_id(result)

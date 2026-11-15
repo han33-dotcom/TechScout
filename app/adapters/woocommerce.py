@@ -758,12 +758,22 @@ class _OfferBuilder:
         return fact, raw_price, digits
 
     def flags(self, field_path: str, keys: tuple[str, ...], unknown: str, conflict: str) -> dict:
-        """A boolean fact from each page entry's flags: true only when every flag is true."""
+        """A boolean fact from each page entry's flags: true only when every flag is true.
+
+        The API record, when it is this variation, states the first flag too (the Store API has no
+        variation_is_active); a different value is a conflict, as for the price.
+        """
         if self.items is None:
             return self.unknown(self.page.reason)
         if not self.items:
             return self.unknown(NOT_ON_PAGE)
         found = []
+        if self.record is not None:
+            position, record = self.record
+            stated = record.get(keys[0])
+            if isinstance(stated, bool):
+                found.append((stated, [self.api_record(field_path, 'variant', json_pointer(position, keys[0]),
+                                                       'api')]))
         for item in self.items:
             values = [item.data.get(key) for key in keys]
             if not all(isinstance(v, bool) for v in values):
