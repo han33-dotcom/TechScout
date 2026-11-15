@@ -755,6 +755,14 @@ class AssessmentTests(unittest.TestCase):
         self.assertEqual((rejected.decision, rejected.reasons()),
                          ('rejected', ['color White is not in Black']))
 
+    def test_a_doubt_both_rules_state_is_listed_once(self):
+        offer = make_offer(price=None)
+        cost = CostResult(offer_id=offer.offer_id, status='unresolved', basis='delivery to Beirut',
+                          reasons=['price is unknown', 'delivery charge is not published'])
+        assessment = Assessment(offer_id=offer.offer_id, eligibility=check_eligibility(make_request(), offer),
+                                cost=cost)
+        self.assertEqual(assessment.reasons(), ['price is unknown', 'delivery charge is not published'])
+
 
 if __name__ == '__main__':
     unittest.main()

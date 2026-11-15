@@ -126,4 +126,5 @@ class Assessment(Model):
             reasons = [c.reason for c in self.eligibility.checks if c.outcome == 'unresolved']
             if self.cost.status == 'unresolved':
                 reasons += self.cost.reasons
-        return reasons or [f'offer is {self.decision}']
+        # Eligibility and costs can state one doubt alike ('price is unknown'); it is listed once.
+        return list(dict.fromkeys(reasons)) or [f'offer is {self.decision}']
