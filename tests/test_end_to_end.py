@@ -212,7 +212,7 @@ class EndToEndTests(unittest.TestCase):
 
         def close_the_run_on_the_third_request(http_request):
             if len(self.sent) == 2:  # a recovery elsewhere closes the run while it is live
-                self.storage.recover_interrupted_runs(live_for=timedelta(0))
+                self.storage.recover_interrupted_runs(self.clock.now(), live_for=timedelta(0))
             return handle(http_request)
 
         self.handle = close_the_run_on_the_third_request

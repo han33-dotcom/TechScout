@@ -1167,7 +1167,8 @@ class CancellationAndFailureTests(RunCase):
         self.assertEqual([(c.source_id, c.status, [e.code for e in c.errors]) for c in result.source_coverage],
                          [('alpha', 'error', ['INVALID_SCHEMA']), ('beta', 'error', ['BUDGET_EXHAUSTED']),
                           ('gamma', 'error', ['BUDGET_EXHAUSTED'])])
-        self.assertEqual(result.source_coverage[2].errors[0].message, 'gamma: not searched; the run stopped on an error')
+        self.assertEqual(result.source_coverage[2].errors[0].message,
+                         'gamma: not searched; the run stopped on an error')
         self.assertTruthful(result)
 
     def test_a_store_error_keeps_its_coverage_and_the_candidates_already_found(self):

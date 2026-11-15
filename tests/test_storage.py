@@ -194,8 +194,8 @@ class StorageTests(unittest.TestCase):
             with self.subTest(usage=usage), self.assertRaises(ValueError):
                 self.storage.record_action('run-4', 'search', {}, ok, **usage)
         self.assertEqual(self.storage.list_actions('run-4'), [])
-        self.assertEqual(self.storage.recover_interrupted_runs(STARTED + timedelta(seconds=1), live_for=timedelta(0)),
-                         ['run-4'])
+        recovered = self.storage.recover_interrupted_runs(STARTED + timedelta(seconds=1), live_for=timedelta(0))
+        self.assertEqual(recovered, ['run-4'])
         usage = self.storage.load_run('run-4').usage
         self.assertEqual((usage.elapsed_ms, usage.external_calls, usage.planner_turns, usage.spend.amount),
                          (0, 0, 0, Decimal('0')))

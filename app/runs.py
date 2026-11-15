@@ -166,7 +166,8 @@ class RunCaps:
         if self.reserve_seconds >= self.seconds or self.reserve_calls >= self.external_calls:
             raise ValueError('The reserves must leave time and calls before the final phase')
         if self.seconds > MAX_RUN_SECONDS:
-            raise ValueError(f'A run may last at most {MAX_RUN_SECONDS:g} seconds, well inside the recovery lease')
+            raise ValueError(f'A run may last at most {MAX_RUN_SECONDS:g} seconds, '
+                             'well inside the recovery lease')
         if self.reserve_spend > self.spend:
             raise ValueError('The spend reserve is part of the spend cap')
 
@@ -1120,8 +1121,9 @@ class _Run:
                 issues.append(OfferIssue(offer_id=offer.offer_id, reasons=assessment.reasons()))
         if error is not None:  # offers found before the error that were never assessed
             listed = {offer.offer_id for offer, _ in self.assessed}
+            found = dict.fromkeys(o.offer_id for o in self.offers)
             unresolved += [OfferIssue(offer_id=offer_id, reasons=[REASON_ERROR])
-                           for offer_id in dict.fromkeys(o.offer_id for o in self.offers) if offer_id not in listed]
+                           for offer_id in found if offer_id not in listed]
         finished_at = max(self._now(), verified_at)
         usage = self.budget.usage()  # elapsed on the run clock the caps use, never the wall clock
         result = RunResult(
