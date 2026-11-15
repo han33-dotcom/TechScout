@@ -9,7 +9,10 @@ carry it. Only a fully known total gets a budget check. Reasons and gaps use fix
 contract values, never store text.
 
 A kind's charge comes from its components that apply now: every condition holds and the quote
-has not expired. Components that agree count once; disagreeing ones are a conflict. Components
+has not expired. Components that agree count once; disagreeing ones are a conflict. The
+exception is 'other': the contract has no fee identity, so several nonzero 'other' components
+may be separate fees and are never merged; a reader lists distinct fees as one component carrying
+their sum and every fee's evidence, and separately listed ones keep the total open. Components
 whose conditions fail are set aside; if nothing else applies, VAT or delivery has no published
 charge for this order, while an optional surcharge simply does not apply. A set-aside waiver (a
 term that adds nothing: included, not applicable or an additional zero) is the exception: outside
@@ -196,6 +199,10 @@ def _line(kind: str, components: list[CostComponent], *, required: bool, request
     added = [c.amount.amount if c.state == 'additional' else Decimal(0) for c in current]
     if len(set(added)) > 1:
         return _Line(kind, reason=f'conflicting {kind} terms', gap=field)
+    if kind == 'other' and len(current) > 1 and added[0]:
+        # Equal 'other' charges may be one fee restated or several fees; they are never merged.
+        # Re-reading the store cannot settle how a reader listed them, so this is no evidence gap.
+        return _Line(kind, reason='several other charges are listed separately')
     if current:
         return _Line(kind, amount=added[0], component=current[0])
     if expired:

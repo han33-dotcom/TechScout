@@ -384,6 +384,22 @@ class ChargeTests(CostTestCase):
                          ['device', 'tax', 'delivery', 'payment', 'other'])
 
 
+    def test_separately_listed_other_fees_are_never_merged(self):
+        # Two fees of the same amount may be two charges: counting one would understate the total.
+        handling = charge('other', 'additional', '35.00', tag='handling')
+        insurance = charge('other', 'additional', '35.00', tag='insurance')
+        result = calc(build_offer('1050.00', costs=[TAX_INCLUDED, FREE_DELIVERY, handling, insurance]))
+        self.assertUnresolved(result, 'several other charges are listed separately', subtotal=usd('1050.00'))
+        self.assertNotIn('other', [c.kind for c in result.components])
+        # One component carrying the fees' sum and every fee's evidence is totalled.
+        both = CostComponent(kind='other', state='additional', amount=usd('70.00'),
+                             evidence_ids=['ev-costs-other-handling', 'ev-costs-other-insurance'])
+        self.assertVerified(calc(build_offer('1050.00', costs=[TAX_INCLUDED, FREE_DELIVERY, both])),
+                            '1120.00', within=False)
+        # Terms that add nothing still count once.
+        nothing = [charge('other', 'included', tag='a'), charge('other', 'included', tag='b')]
+        self.assertVerified(calc(build_offer(costs=[TAX_INCLUDED, FREE_DELIVERY, *nothing])), '1030.00')
+
 class BudgetTests(CostTestCase):
     def test_rounding_cannot_admit_an_over_budget_offer(self):
         self.assertVerified(calc(build_offer('1100.004')), '1100.004', within=False)
