@@ -480,8 +480,10 @@ class AnthropicPlanner:
     Every turn is stateless: the same system prompt and tools, plus one user message holding the
     prompt view of the state. No call is made unless the configured model is priced and the run
     budget grants a conservative spend reservation; the planner then commits the cost priced from
-    the reply's usage, or commits it as unknown (the budget keeps the reservation) and stops when
-    that usage cannot be priced.
+    the reply's usage. When that usage cannot be priced, or the call failed after it may have been
+    billed, the cost is committed as unknown: the budget keeps the reservation, refuses further
+    spend, and the run controller ends investigation. A call refused unbilled (rate limited or
+    refused by the API) is released, and a later turn may call again.
 
     max_call_seconds is the call timeout. The SDK applies it to each network step, not to the whole
     call, so a degraded connection can run longer; the controller's re-check of the chosen action
@@ -555,9 +557,12 @@ class AnthropicPlanner:
         return request
 
     def _call(self, request: dict, state: PlannerState, reservation, reserved: Decimal) -> PlannerDecision:
-        # Settled exactly once: the conservative charge is kept unless the reply is priced (its cost),
-        # cannot be priced (None, unknown), or the call was refused unbilled (released).
-        charge, billed = reserved, True
+        # Settled exactly once: committed at the reply's priced cost; released when the call was
+        # refused unbilled; otherwise committed as unknown (None), so the budget keeps the whole
+        # reservation and stops further spend. That covers a reply whose usage cannot be priced and
+        # any failure that may have been billed without a usable reply (a timeout, a lost
+        # connection, an unreadable reply, an unexpected client error).
+        charge, billed = None, True
         try:
             try:
                 endpoint = self._client.beta.messages if 'fallbacks' in request else self._client.messages

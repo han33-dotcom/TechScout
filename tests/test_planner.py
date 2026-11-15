@@ -602,7 +602,9 @@ class AnthropicPlannerTests(unittest.TestCase):
         client, budget = FakeClient(RuntimeError('client bug')), FakeBudget()
         with self.assertRaisesRegex(RuntimeError, 'client bug'):
             AnthropicPlanner(CONFIG, client=client).decide(state(), budget)
-        self.assertEqual((budget.commits, budget.open), (budget.asked, 0))
+        # Its cost cannot be read, so it is committed as unknown: the reservation is kept.
+        self.assertEqual((budget.commits, budget.unknown, budget.open), ([None], True, 0))
+        self.assertEqual(budget.spent, budget.asked[0])
 
     @needs_sdk
     def test_sdk_errors_become_invalid_decisions(self):
@@ -623,8 +625,9 @@ class AnthropicPlannerTests(unittest.TestCase):
             with self.subTest(reason):
                 decision, _, budget = self.decide(error)
                 self.assertEqual((decision.kind, decision.reason), ('invalid', reason))
-                if billed:  # the reply may exist, so the conservative charge is kept
-                    self.assertEqual(budget.commits, budget.asked)
+                if billed:  # the reply may exist but its cost cannot be read: kept, as unknown
+                    self.assertEqual((budget.commits, budget.unknown), ([None], True))
+                    self.assertEqual(budget.spent, budget.asked[0])
                     self.assertEqual((decision.usage.priced, decision.usage.cost.amount),
                                      (False, budget.asked[0]))
                 else:
