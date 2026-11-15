@@ -227,10 +227,12 @@ class AdversarialTests(ReaderTestCase):
 
     def test_a_model_option_must_agree_with_the_product_name(self):
         terms = [{'id': 0, 'slug': s, 'name': n} for s, n in (('iphone-17', 'iPhone 17'),
-                 ('iphone-17-pro', 'iPhone 17 Pro'), ('iphone-17-plus', 'iPhone 17 Plus'))]
+                 ('iphone-17-pro', 'iPhone 17 Pro'), ('iphone-17-plus', 'iPhone 17 Plus'),
+                 ('iphone-17-256gb', 'iPhone 17 256GB'))]
         cases = [('iphone-17', 'known', None, 'iPhone 17'),
                  ('iphone-17-pro', 'conflict', 'model option and product name disagree', None),
-                 ('iphone-17-plus', 'unknown', 'model option is not a known model', None),  # not a substring
+                 ('iphone-17-plus', 'unknown', 'model option is not a known model', None),  # a qualifier: another phone
+                 ('iphone-17-256gb', 'unknown', 'model option is not a known model', None),  # exact, not a substring
                  ('', 'unknown', 'variation accepts any model option', None)]
         for slug, state, reason, value in cases:
             with self.subTest(option=slug):
