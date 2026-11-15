@@ -275,10 +275,15 @@ def _pickup_stock(request: ShoppingRequest, offer: Offer) -> tuple[Check, Open]:
     evidence = [i for entries in branches.values() for entry in entries for i in entry.stock.evidence_ids]
     verdicts = {branch_id: _branch_stock(entries) for branch_id, entries in branches.items()}
     named = want.branch_id is not None
-    if any(outcome == 'pass' for outcome, _ in verdicts.values()):
+    in_stock = [branch_id for branch_id, (outcome, _) in verdicts.items() if outcome == 'pass']
+    if in_stock:
+        # A pass cites only the branches that show stock, never another branch's record.
         reason = ('pickup branch shows the variant in stock' if named
                   else 'a pickup branch in the requested city shows the variant in stock')
-        return _check('stock', 'pass', reason + ' (observed, not reserved)', paths, evidence), []
+        return _check('stock', 'pass', reason + ' (observed, not reserved)',
+                      [f'pickup_stock.{branch_id}.stock' for branch_id in in_stock],
+                      [i for branch_id in in_stock for entry in branches[branch_id]
+                       for i in entry.stock.evidence_ids]), []
     if verdicts and all(outcome == 'fail' for outcome, _ in verdicts.values()):
         reason = ('pickup branch shows the variant out of stock' if named
                   else 'every pickup branch in the requested city shows the variant out of stock')

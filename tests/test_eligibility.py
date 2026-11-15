@@ -415,6 +415,12 @@ class PickupStockTests(unittest.TestCase):
             return named(eligibility(*branches))['stock']
 
         self.assertEqual(stock(('mar-elias', 'Beirut', None), ('abc-verdun', 'beirut', True)).outcome, 'pass')
+        # A pass cites the branch that shows stock, not another branch's out-of-stock record.
+        offer = make_offer(route=CITY_PICKUP, branches=[('mar-elias', 'Beirut', True),
+                                                        ('achrafieh', 'Beirut', False)])
+        check = check_of(request, offer, 'stock')
+        self.assertEqual((check.outcome, check.field_paths), ('pass', ['pickup_stock.mar-elias.stock']))
+        self.assertEqual(check.evidence_ids, offer.pickup_stock[0].stock.evidence_ids)
         # Tyre is another city, so its stock does not count; the open Beirut branch becomes the gap.
         result = eligibility(('mar-elias', 'Beirut', None), ('tyre', 'Tyre', True),
                              ('achrafieh', 'Beirut', False))
