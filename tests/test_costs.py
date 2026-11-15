@@ -142,6 +142,12 @@ class DeviceLineTests(CostTestCase):
         device = result.components[0]
         self.assertEqual((device.state, device.amount, device.evidence_ids),
                          ('additional', usd('1100.00'), ['ev-price']))
+        # Exponent zero, as for a whole-pound price, and exponent three.
+        lira = build_offer('92185000', 'LBP', raw_price='92185000', digits=0,
+                           costs=[TAX_INCLUDED, charge('delivery', 'additional', '0', 'LBP')])
+        self.assertVerified(calc(lira, build_request(budget='92185000', currency='LBP')), '92185000',
+                            currency='LBP')
+        self.assertVerified(calc(build_offer('1100.000', raw_price='1100000', digits=3)), '1100.000')
 
     def test_raw_price_must_match_the_declared_amount(self):
         for raw, digits in [('110001', 2), ('1100', 2), ('110000', 3), ('110000', 0)]:
@@ -485,6 +491,19 @@ class BudgetTests(CostTestCase):
                 result = calc(build_offer(), build_request(budget=budget, currency='EUR'),
                               fx=[rate('0.92345', quote='EUR')])
                 self.assertVerified(result, '1030.00', within=within)
+        # An offer priced in pounds against a dollar budget converts the other way, at the exact
+        # boundary: 92185000 x 0.0000111732 is 1030.001442 exactly. Only an LBP->USD rate serves.
+        lira = build_offer('92185000', 'LBP',
+                           costs=[TAX_INCLUDED, charge('delivery', 'additional', '0', 'LBP')])
+        to_usd = rate('0.0000111732', base='LBP', quote='USD')
+        for budget, within in (('1030.001442', True), ('1030.001441', False), ('1030.00', False)):
+            with self.subTest(budget=budget):
+                result = calc(lira, build_request(budget=budget), fx=[to_usd])
+                self.assertVerified(result, '92185000', within=within, currency='LBP')
+                self.assertTrue(result.basis.endswith(
+                    '1 LBP = 0.0000111732 USD (rate evidence fx-LBP-USD-1)'))
+        self.assertUnresolved(calc(lira, build_request(budget='1100.00'), fx=[rate()]), FX_MISSING,
+                              subtotal=Money(amount='92185000', currency='LBP'))
         # Of several fresh rates the least favourable decides, so the choice cannot admit an offer.
         rates = [rate('89500', tag='a'), rate('90000', age=timedelta(hours=1), tag='b')]
         result = calc(build_offer(), build_request(budget='92500000', currency='LBP'), fx=rates)
