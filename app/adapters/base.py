@@ -15,8 +15,15 @@ from app.sources import Expect, FetchOutcome
 
 MAX_EXCERPT = 500
 # Lebanon keeps UTC+2 in winter and UTC+3 in summer. Windows use the offset that makes them wider,
-# so a claim is never read as faster than the store said; public holidays are not modelled.
+# so a claim is never read as faster than the store said.
 _UTC2, _UTC3 = timezone(timedelta(hours=2)), timezone(timedelta(hours=3))
+# Lebanon's fixed-date official holidays, as (month, day): New Year, Armenian Christmas, Saint
+# Maroun, the Annunciation, Labour Day, the Assumption, Independence Day and Christmas. They are
+# skipped only when counting the latest bound of a working-day window, so a holiday can make a
+# deadline harder to pass but never causes a fail. Movable religious holidays (the Eids, both
+# Good Fridays and Easters, Ashura, the Prophet's birthday, the Hijri New Year) and a store's
+# dispatch cutoff are not modelled, so a window can still end too early around them.
+_FIXED_HOLIDAYS = frozenset({(1, 1), (1, 6), (2, 9), (3, 25), (5, 1), (8, 15), (11, 22), (12, 25)})
 _DIGITS = re.compile(r'[0-9]+')
 
 
@@ -181,11 +188,12 @@ def tool_result(outcomes, errors: list[ToolError], data: dict, evidence_ids, pro
                       duration_ms=sum(o.duration_ms for o in outcomes))
 
 
-def _working_days(start: date, count: int) -> date:
+def _working_days(start: date, count: int, *, skip_holidays: bool = False) -> date:
+    """The count-th Monday-to-Friday day after start; with skip_holidays, fixed holidays do not count."""
     day = start
     while count > 0:
         day += timedelta(days=1)
-        if day.weekday() < 5:  # Monday to Friday
+        if day.weekday() < 5 and not (skip_holidays and (day.month, day.day) in _FIXED_HOLIDAYS):
             count -= 1
     return day
 
@@ -195,12 +203,16 @@ def arrival_window(observed_at: datetime, min_days: int, max_days: int, *,
     """A 'N to M days' claim as absolute times, counted from the observation in Beirut.
 
     The earliest time is the start of day N (now, for zero days); the latest is the end of day M.
+    Working days run Monday to Friday; only the latest bound also skips Lebanon's fixed-date
+    holidays, which can only widen the window.
     """
     if not 0 <= min_days <= max_days:
         raise ValueError('Day ranges are non-negative and ordered')
 
-    def shift(start: date, days: int) -> date:
-        return start + timedelta(days=days) if unit == 'calendar' else _working_days(start, days)
+    def shift(start: date, days: int, *, skip_holidays: bool = False) -> date:
+        if unit == 'calendar':
+            return start + timedelta(days=days)
+        return _working_days(start, days, skip_holidays=skip_holidays)
 
     if min_days == 0:
         earliest = observed_at
@@ -208,6 +220,6 @@ def arrival_window(observed_at: datetime, min_days: int, max_days: int, *,
         # The earlier local date, and midnight at UTC+3, which comes first.
         earliest = datetime.combine(shift(observed_at.astimezone(_UTC2).date(), min_days), time(), _UTC3)
     # The later local date, and the end of day at UTC+2, which comes last.
-    last_day = shift(observed_at.astimezone(_UTC3).date(), max_days)
+    last_day = shift(observed_at.astimezone(_UTC3).date(), max_days, skip_holidays=True)
     latest = datetime.combine(last_day, time.max, _UTC2)
     return ArrivalWindow(earliest=max(earliest, observed_at), latest=latest, basis=basis)
