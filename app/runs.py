@@ -7,10 +7,10 @@ here from open gaps and what still fits, and it never sees seller text.
 
 A run is 'partial' when the run budget (time, external calls, spend) or the planner turn cap
 stopped it while an affordable action could still settle an open gap; a store's own per-run
-request cap only removes actions from the menu. Planner time counts against the time budget:
-a turn starts only when the planner's longest call and an action both fit before the
-verification reserve, and the chosen action is checked again just before it runs.
-'cancelled' and 'error' runs never carry
+request cap only removes actions from the menu. A planner turn whose cost became unknown also
+ends the run as partial. Planner time counts against the time budget: a turn starts only when
+the planner's longest call and an action both fit before the verification reserve, and the
+chosen action is checked again just before it runs. 'cancelled' and 'error' runs never carry
 recommendations, and a run interrupted by a crash is closed as partial on restart, never resumed.
 """
 import argparse
