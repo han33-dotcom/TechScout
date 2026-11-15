@@ -2,7 +2,8 @@
 
 Model calls go to fake clients shaped like the SDK's replies or, where the SDK is installed, to the
 real SDK over a mock transport; no test reaches the network or spends money. Budgets are fakes that
-record every spend reservation and how it was settled.
+record every spend reservation and how it was settled; the reduced turn loop takes its turn cap
+from the real run budget.
 """
 from decimal import Decimal
 import json
@@ -24,6 +25,7 @@ from app.planner import (
     PlannerDecision, PlannerState, RulePlanner, UnsafeState, conservative_cost, load_evaluation_config,
     load_planner_config, prompt_view, request_constraints,
 )
+from app.runs import RunBudget, RunCaps
 
 try:
     import anthropic
@@ -196,10 +198,12 @@ class World:
                              'gaps_settled': len(settled)})
 
 
-def drive(planner, world, budget, max_turns=6):
-    """The run controller's loop, reduced: ask, execute the chosen menu action, stop at the cap."""
-    decisions = []
-    for turn in range(max_turns):
+def drive(planner, world, budget, turns=None):
+    """The run controller's loop, reduced: ask, execute the chosen menu action, and stop when the
+    real run budget refuses another turn (the default caps allow six)."""
+    turns, decisions = turns or RunBudget('drive', RunCaps()), []
+    while turns.count_planner_turn():
+        turn = turns.turns_used() - 1
         current = world.state(turn)
         decision = planner.decide(current, budget)
         decisions.append((current, decision))
@@ -720,8 +724,10 @@ class InvestigationTests(unittest.TestCase):
     def test_a_planner_that_never_stops_is_held_to_the_six_turn_cap(self):
         replies = [reply(call('act', action_id='A1', reason='try the FAQ again')) for _ in range(10)]
         client, world, budget = FakeClient(*replies), World(keep_actions=True), FakeBudget()
-        decisions = drive(AnthropicPlanner(CONFIG, client=client), world, budget)
+        turns = RunBudget('drive', RunCaps())
+        decisions = drive(AnthropicPlanner(CONFIG, client=client), world, budget, turns)
         self.assertEqual([d.kind for _, d in decisions], ['act'] * 6)
+        self.assertEqual((turns.turns_used(), turns.refusals), (6, {'turns': 1}))  # the cap stopped it
         self.assertEqual((len(client.calls), len(budget.commits), budget.open), (6, 6, 0))
         self.assertEqual([h['gaps_settled'] for h in world.history], [1, 0, 0, 0, 0, 0])
         self.assertEqual(world.gaps, [ARRIVAL, PRICE])

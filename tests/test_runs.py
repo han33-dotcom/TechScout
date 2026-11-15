@@ -2,8 +2,9 @@
 
 Offline: fake store readers, a fake gate that reserves through the run budget exactly as
 SourceGate does, a stand-in for the fixed rules (MVP 07-09 are separate tasks), scripted
-planners, a fake clock and a temporary SQLite database. One check drives the real SourceGate
-over a scripted transport. Synthetic offers only.
+planners and the real model planner over a scripted client, a fake clock and a temporary SQLite
+database. One check drives the real SourceGate over a scripted transport. Synthetic offers only;
+no model is ever called.
 """
 import ast
 import dataclasses
@@ -891,6 +892,44 @@ class PlannerTests(RunCase):
         self.assertEqual(len(client.calls), 2)
         self.assertEqual((result.status, result.stop_reason), ('abstained', runs.STOP_PLANNER))
         self.assertEqual(result.usage.spend.amount, Decimal('0.0078'))  # only the priced reply is paid
+        self.assertTruthful(result, 'run-2')
+
+
+class ModelPlannerTests(RunCase):
+    """The real model planner over a scripted offline client, through the controller and the real budget."""
+
+    def test_a_model_that_never_stops_is_held_to_the_turn_cap(self):
+        result, client = self.model_search(model_reply('act', action_id='A9', reason='try again'))
+        self.assertEqual((result.status, result.stop_reason, result.usage.planner_turns, len(client.calls)),
+                         ('partial', runs.STOP_TURNS, 6, 6))
+        self.assertEqual(result.usage.spend.amount, 6 * Decimal('0.0078'))  # six priced invalid replies
+        self.assertEqual(self.action('run-1', 'stage:results')['result']['data']['budget']['refusals'],
+                         {'turns': 1})
+        self.assertNotIn('fetch_policy', self.names())
+        self.assertTruthful(result)
+
+    def test_the_model_call_time_is_charged_before_each_turn(self):
+        seconds = AnthropicPlanner.max_call_seconds
+        latest_start = (RunCaps().seconds - RunCaps().reserve_seconds) - seconds - CALL_TIMEOUT_S
+        # Each model call takes its whole timeout. Retrieval (3 s of requests) ends at the latest
+        # moment a turn and a one-request read still fit before the reserve.
+        self.stores['gamma'].on_search = lambda: self.clock.advance(latest_start - 3.0)
+        result, client = self.model_search(model_reply('act', action_id='A1', reason='read the FAQ'),
+                                           seconds=seconds)
+        self.assertEqual(len(client.calls), 1)
+        self.assertIn(('fetch_policy', 'faq'), self.stores['alpha'].calls)
+        self.assertEqual((result.status, result.stop_reason), ('partial', runs.STOP_TIME))
+        self.assertLessEqual(result.usage.elapsed_ms, (RunCaps().seconds - RunCaps().reserve_seconds) * 1000)
+        self.assertEqual({c.status for c in result.source_coverage}, {'ok'})
+        self.assertTruthful(result)
+
+        # One second later, no turn fits: the model is never called or paid.
+        self.stores['gamma'].on_search = lambda: self.clock.advance(latest_start - 2.0)
+        result, client = self.model_search(model_reply('act', action_id='A1', reason='read the FAQ'),
+                                           seconds=seconds, run_id='run-2')
+        self.assertEqual((len(client.calls), result.usage.planner_turns, result.usage.spend.amount),
+                         (0, 0, Decimal('0')))
+        self.assertEqual((result.status, result.stop_reason), ('partial', runs.STOP_TIME))
         self.assertTruthful(result, 'run-2')
 
 
