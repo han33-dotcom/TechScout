@@ -15,6 +15,8 @@ import json
 import math
 from pathlib import Path
 import re
+import threading
+import time
 from typing import Annotated, Literal, Protocol
 
 from pydantic import BeforeValidator, Field, JsonValue, StrictBool, StringConstraints, ValidationError
@@ -462,6 +464,35 @@ def _attempts(response) -> list[tuple] | None:
             for entry in iterations]
 
 
+class _Overrun(Exception):
+    """The planner call was still running when its whole-call deadline passed."""
+
+
+def _bounded(create, request: dict, deadline: float):
+    """create(**request) on a worker thread, waited for until the monotonic deadline at most.
+
+    The SDK timeout bounds each network step, not the whole call, so the wait enforces the total.
+    A call still running at the deadline is abandoned (it ends on its own per-step timeout, and
+    its reply is never read) and _Overrun is raised. The call's own exception is raised here.
+    """
+    done, box = threading.Event(), {}
+
+    def work():
+        try:
+            box['response'] = create(**request, timeout=CALL_TIMEOUT_S)
+        except BaseException as exc:  # handed to the caller, which maps it as before
+            box['error'] = exc
+        finally:
+            done.set()
+
+    threading.Thread(target=work, name='planner-call', daemon=True).start()
+    if not done.wait(max(0.0, deadline - time.monotonic())):
+        raise _Overrun
+    if 'error' in box:
+        raise box.pop('error')
+    return box['response']
+
+
 def _sdk_failures(sdk) -> tuple:
     """The SDK's typed errors, most specific first: a fixed reason, and whether tokens may be billed."""
     if sdk is None:
@@ -487,9 +518,11 @@ class AnthropicPlanner:
     spend, and the run controller ends investigation. A call refused unbilled (rate limited or
     refused by the API) is released, and a later turn may call again.
 
-    max_call_seconds is the call timeout. The SDK applies it to each network step, not to the whole
-    call, so a degraded connection can run longer; the controller's re-check of the chosen action
-    then runs nothing that no longer fits.
+    max_call_seconds is the call timeout, enforced over the whole decide() call. The SDK applies its
+    timeout to each network step, so a degraded connection could otherwise run longer: the call runs
+    on a worker thread, and once max_call_seconds have passed decide() abandons it and reports the
+    call as timed out, with its cost committed as unknown, as for an SDK timeout. The abandoned call
+    ends on its own per-step timeout and its reply, if any, is never read.
     """
     name = 'anthropic-planner'
     max_call_seconds = CALL_TIMEOUT_S
@@ -519,6 +552,7 @@ class AnthropicPlanner:
         self._client = client
 
     def decide(self, state: PlannerState, budget) -> PlannerDecision:
+        deadline = time.monotonic() + self.max_call_seconds
         if not callable(getattr(budget, 'reserve_spend', None)):
             raise TypeError('decide needs the run budget, which reserves spend')
         open_gaps = {g.gap_id for g in state.gaps}
@@ -543,7 +577,7 @@ class AnthropicPlanner:
         reservation = budget.reserve_spend(reserved)
         if reservation is None:
             return PlannerDecision(kind='stop', reason='spend reservation refused; no call made')
-        return self._call(request, state, reservation, reserved)
+        return self._call(request, state, reservation, reserved, deadline)
 
     def _request(self, view: dict) -> dict:
         settings = self._settings
@@ -559,18 +593,23 @@ class AnthropicPlanner:
             request |= {'betas': [FALLBACK_BETA], 'fallbacks': 'default'}
         return request
 
-    def _call(self, request: dict, state: PlannerState, reservation, reserved: Decimal) -> PlannerDecision:
+    def _call(self, request: dict, state: PlannerState, reservation, reserved: Decimal,
+              deadline: float) -> PlannerDecision:
         # Settled exactly once: committed at the reply's priced cost; released when the call was
         # refused unbilled; otherwise committed as unknown (None), so the budget keeps the whole
         # reservation and stops further spend. That covers a reply whose usage cannot be priced and
         # any failure that may have been billed without a usable reply (a timeout, a lost
-        # connection, an unreadable reply, an unexpected client error).
+        # connection, a call still running at the deadline, an unreadable reply, an unexpected
+        # client error).
         charge, billed = None, True
         try:
             try:
                 endpoint = self._client.beta.messages if 'fallbacks' in request else self._client.messages
                 # A copy, so no client can change the stable prompt or tools of later turns.
-                response = endpoint.create(**copy.deepcopy(request), timeout=CALL_TIMEOUT_S)
+                response = _bounded(endpoint.create, copy.deepcopy(request), deadline)
+            except _Overrun:
+                return PlannerDecision(kind='invalid', reason='planner call timed out',
+                                       usage=self._unpriced(reserved))
             except self._caught as exc:
                 reason, billed = self._failure(exc)
                 usage = self._unpriced(reserved) if billed else None

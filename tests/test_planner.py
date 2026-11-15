@@ -12,6 +12,8 @@ import os
 from pathlib import Path
 import shutil
 import tempfile
+import threading
+import time
 from types import SimpleNamespace
 import unittest
 from unittest import mock
@@ -618,6 +620,31 @@ class AnthropicPlannerTests(unittest.TestCase):
         # Its cost cannot be read, so it is committed as unknown: the reservation is kept.
         self.assertEqual((budget.commits, budget.unknown, budget.open), ([None], True, 0))
         self.assertEqual(budget.spent, budget.asked[0])
+
+    def test_a_call_still_running_at_max_call_seconds_is_abandoned_as_timed_out(self):
+        """The SDK timeout bounds each network step only; decide() itself keeps to max_call_seconds."""
+        release, started = threading.Event(), []
+
+        class SlowEndpoint:  # a reply that keeps arriving, so no per-step timeout ever fires
+            def create(self, **request):
+                started.append(request['timeout'])
+                release.wait(5.0)
+                return reply(call('act', action_id='A1', reason='read the FAQ'))
+
+        client = SimpleNamespace(messages=SlowEndpoint(), beta=SimpleNamespace(messages=SlowEndpoint()))
+        planner, budget = AnthropicPlanner(CONFIG, client=client), FakeBudget()
+        planner.max_call_seconds = 0.2  # scaled down from the call timeout
+        self.addCleanup(release.set)
+        begun = time.monotonic()
+        decision = planner.decide(state(), budget)
+        took = time.monotonic() - begun
+        self.assertEqual((decision.kind, decision.reason), ('invalid', 'planner call timed out'))
+        self.assertLess(took, 2.0)
+        self.assertGreaterEqual(took, 0.2)
+        self.assertEqual(started, [CALL_TIMEOUT_S])  # the call was sent, with its per-step timeout
+        # As for an SDK timeout: the reply may have been produced, so its cost is kept as unknown.
+        self.assertEqual((budget.commits, budget.unknown, budget.open), ([None], True, 0))
+        self.assertEqual((decision.usage.priced, decision.usage.cost.amount), (False, budget.asked[0]))
 
     @needs_sdk
     def test_sdk_errors_become_invalid_decisions(self):
