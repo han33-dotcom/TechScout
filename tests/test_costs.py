@@ -626,6 +626,27 @@ class RouteTests(CostTestCase):
         self.assertUnresolved(calc(build_offer(costs=[], route=PICKUP), build_request(route=PICKUP)),
                               'VAT treatment is not published', gap='costs.tax', subtotal=usd('1030.00'))
 
+    def test_city_only_pickup_can_use_branch_specific_costs(self):
+        city_pickup = {'mode': 'pickup', 'country': 'LB', 'city': ' beirut '}
+        request = build_request(route=city_pickup)
+        offer = build_offer(costs=[TAX_INCLUDED, charge('other', 'additional', '4.00')], route=PICKUP)
+        result = calc(offer, request)
+        self.assertVerified(result, '1034.00')
+        self.assertEqual(result.basis, 'pickup at mar-elias; travel excluded')
+
+        offer = build_offer(costs=[], route=PICKUP)
+        result = calc(offer, request)
+        self.assertUnresolved(result, 'VAT treatment is not published', gap='costs.tax', subtotal=usd('1030.00'))
+        self.assertEqual(result.reasons, ['VAT treatment is not published'])
+
+    def test_city_only_pickup_rejects_other_city_or_delivery_costs(self):
+        request = build_request(route={'mode': 'pickup', 'country': 'LB', 'city': 'Beirut'})
+        for route in (PICKUP | {'city': 'Tyre'}, DELIVERY):
+            with self.subTest(route=route):
+                result = calc(build_offer(costs=[TAX_INCLUDED], route=route), request)
+                self.assertUnresolved(result, 'offer was read for a different fulfillment route',
+                                      subtotal=usd('1030.00'))
+
     def test_any_listed_unknown_charge_keeps_the_total_open(self):
         # A Recommendation cannot carry an unknown cost, even one this order would not pay.
         current = charge('delivery', 'additional', '5.00', tag='current')

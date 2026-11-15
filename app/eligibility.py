@@ -260,21 +260,19 @@ def _stock(request: ShoppingRequest, offer: Offer) -> tuple[Check, Open]:
 def _pickup_stock(request: ShoppingRequest, offer: Offer) -> tuple[Check, Open]:
     """Only stock observed at a pickup branch counts; online stock never proves it.
 
-    A named branch must show stock itself. Without one, any branch in the requested city will do.
-    An observation is not a reservation.
+    A branch named by the request or selected for the offer must show its own stock.
+    A city-wide offer can use any branch in that city. An observation is not a reservation.
     """
     want = request.fulfillment
-    branches: dict[str, list[BranchStock]] = {}
-    if want.branch_id is not None:
-        branches[want.branch_id] = [b for b in offer.pickup_stock if b.branch_id == want.branch_id]
-    else:
-        for entry in offer.pickup_stock:
-            if _city(entry.city) == _city(want.city):
-                branches.setdefault(entry.branch_id, []).append(entry)
+    branch_id = want.branch_id or offer.fulfillment.branch_id
+    branches: dict[str, list[BranchStock]] = {} if branch_id is None else {branch_id: []}
+    for entry in offer.pickup_stock:
+        if _city(entry.city) == _city(want.city) and branch_id in (None, entry.branch_id):
+            branches.setdefault(entry.branch_id, []).append(entry)
     paths = [f'pickup_stock.{branch_id}.stock' for branch_id in branches] or ['pickup_stock']
     evidence = [i for entries in branches.values() for entry in entries for i in entry.stock.evidence_ids]
     verdicts = {branch_id: _branch_stock(entries) for branch_id, entries in branches.items()}
-    named = want.branch_id is not None
+    named = branch_id is not None
     in_stock = [branch_id for branch_id, (outcome, _) in verdicts.items() if outcome == 'pass']
     if in_stock:
         # A pass cites only the branches that show stock, never another branch's record.
