@@ -3,7 +3,9 @@
 Each constraint is one named check that passes, fails or stays unresolved, and the offer's outcome
 follows its checks (app.assessment.combine). A known value decides. An unknown or conflicting fact
 never passes a required check: it stays unresolved, with an evidence gap naming the offer field that
-more evidence might settle. Nothing here relaxes a constraint; only a new buyer request can.
+more evidence might settle. A known value the rules cannot read either way (a plain 'Blue' for a
+requested finish, place text naming the required place among other words) stays unresolved too.
+Nothing here relaxes a constraint; only a new buyer request can.
 
 Device identity is compared in canonical form (MVP 07), and only the selected variant's facts count:
 page links and other hints never stand in for them. Online stock never proves stock at a pickup
@@ -31,8 +33,11 @@ CHECKS = ('fulfillment', 'condition', 'manufacturer', 'model', 'storage', 'color
           'purchasable', 'stock', 'price', 'payment_basis', 'warranty', 'deadline', 'market')
 # Spellings (casefolded words) of one place. A warranty territory or device region must name the
 # required place in one of these spellings; a wider claim such as 'international' is another
-# territory, since an international warranty may not be serviced in Lebanon.
-_PLACES = {'lebanon': ('lb', 'lbn', 'lebanon', 'liban', 'lebanese republic')}
+# territory, since an international warranty may not be serviced in Lebanon. Text that names the
+# place among other words ('Lebanon only', 'International (excluding Lebanon)') is not read: it
+# stays unresolved.
+_PLACES = {'lebanon': ('lb', 'lbn', 'lebanon', 'liban', 'lebanese republic', 'republic of lebanon',
+                       'لبنان', 'الجمهورية اللبنانية')}
 PLACE_ALIASES = {alias: name for name, aliases in _PLACES.items() for alias in aliases}
 _IDENTITY = ('manufacturer', 'model', 'storage_gb', 'color', 'sim', 'region')
 _NO_BRANCH_STOCK = 'branch stock is not published'
@@ -94,16 +99,21 @@ def _say(reason, value) -> str:
     return reason(value) if callable(reason) else reason
 
 
-def _judge(name: str, fact: Fact, field_path: str, *, ok: Callable[[object], bool], passed, failed,
-           unknown: str, conflict: str) -> tuple[Check, Open]:
+def _judge(name: str, fact: Fact, field_path: str, *, ok: Callable[[object], bool | None], passed,
+           failed, unknown: str, conflict: str, unclear: str | None = None) -> tuple[Check, Open]:
     """One fact against one constraint: ok decides a known value. An unknown or conflicting fact
     stays unresolved, even when no alternative would pass, and its field becomes a gap.
 
-    passed and failed are fixed texts, or functions of the known value that return one.
+    passed and failed are fixed texts, or functions of the known value that return one. ok returns
+    None for a known value it cannot read either way; that stays unresolved with the unclear gap.
     """
-    if fact.state == 'known':
-        outcome = 'pass' if ok(fact.value) else 'fail'
+    verdict = ok(fact.value) if fact.state == 'known' else None
+    if verdict is not None:
+        outcome = 'pass' if verdict else 'fail'
         reason, open_fields = _say(passed if outcome == 'pass' else failed, fact.value), []
+    elif fact.state == 'known':
+        outcome, reason = 'unresolved', unclear
+        open_fields = [(field_path, reason)]
     else:
         outcome = 'unresolved'
         reason = unknown if fact.state == 'unknown' else conflict
@@ -226,9 +236,10 @@ def _region(request: ShoppingRequest, normalized: NormalizedVariant) -> tuple[Ch
         return _check('region', 'pass', 'any region is allowed', ['variant.region']), []
     # Regions have no table of our own, so a store's region is never shown in a reason.
     wanted = {_place(region) for region in request.allowed_regions}
-    return _judge('region', normalized.region, 'variant.region', ok=lambda value: _place(value) in wanted,
+    return _judge('region', normalized.region, 'variant.region', ok=lambda value: _names_place(value, wanted),
                   passed='region is allowed', failed='region is not one of the allowed regions',
-                  unknown='region is not published', conflict='region observations conflict')
+                  unknown='region is not published', conflict='region observations conflict',
+                  unclear='region is not recognized')
 
 
 def _purchasable(offer: Offer) -> tuple[Check, Open]:
@@ -325,9 +336,11 @@ def _warranty(request: ShoppingRequest, offer: Offer) -> tuple[Check, Open]:
             unknown='warranty duration is not published', conflict='warranty duration observations conflict'))
     territory = _place(need.territory)
     parts.append(_judge(
-        'warranty', warranty.territory, 'warranty.territory', ok=lambda value: _place(value) == territory,
+        'warranty', warranty.territory, 'warranty.territory',
+        ok=lambda value: _names_place(value, {territory}),
         passed='warranty covers the required territory', failed='warranty territory is not the required one',
-        unknown='warranty territory is not published', conflict='warranty territory observations conflict'))
+        unknown='warranty territory is not published', conflict='warranty territory observations conflict',
+        unclear='warranty territory is not recognized'))
     if need.provider is not None:
         provider = _name(need.provider)
         parts.append(_judge(
@@ -422,6 +435,16 @@ def _place(text: str) -> str:
     """A territory or region for comparison, with the spellings of one place made one."""
     name = _name(text)
     return PLACE_ALIASES.get(name, name)
+
+
+def _names_place(text: str, wanted: set[str]) -> bool | None:
+    """True when the text is one of the wanted places; None when it names one among other words,
+    which could narrow or exclude it; False otherwise."""
+    if _place(text) in wanted:
+        return True
+    words = f' {_name(text)} '
+    spellings = wanted | {alias for alias, name in PLACE_ALIASES.items() if name in wanted}
+    return None if any(f' {spelling} ' in words for spelling in spellings) else False
 
 
 def _city(text: str) -> str:

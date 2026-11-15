@@ -550,7 +550,12 @@ class IdentityConstraintTests(unittest.TestCase):
     def test_regions_compare_by_place(self):
         cases = [(['LB'], 'Lebanon', 'pass', 'region is allowed'),
                  (['Middle East'], 'middle-east', 'pass', 'region is allowed'),
-                 (['Middle East'], 'US', 'fail', 'region is not one of the allowed regions')]
+                 (['Middle East'], 'US', 'fail', 'region is not one of the allowed regions'),
+                 (['LB'], 'لبنان', 'pass', 'region is allowed'),
+                 (['LB'], 'Republic of Lebanon', 'pass', 'region is allowed'),
+                 (['LB'], 'Lebanon only', 'unresolved', 'region is not recognized'),
+                 (['Middle East'], 'Middle East and Africa', 'unresolved', 'region is not recognized'),
+                 (['LB'], 'US', 'fail', 'region is not one of the allowed regions')]
         for allowed, region, outcome, reason in cases:
             with self.subTest(allowed=allowed, region=region):
                 check = check_of(make_request(allowed_regions=allowed), make_offer(region=region), 'region')
@@ -601,6 +606,18 @@ class OfferTermsTests(unittest.TestCase):
         self.assertEqual(warranty(LB_WARRANTY, territory='Liban').outcome, 'pass')
         self.assertEqual(judged(warranty(LB_WARRANTY, territory='UAE')),
                          ('fail', 'warranty territory is not the required one'))
+        for written in ('لبنان', 'Republic of Lebanon', 'الجمهورية اللبنانية'):
+            with self.subTest(territory=written):
+                self.assertEqual(warranty(LB_WARRANTY, territory=written).outcome, 'pass')
+        # Text naming Lebanon among other words may narrow or exclude it, so it is not read.
+        for written in ('Lebanon only', 'Lebanon (local)', 'International (excluding Lebanon)', 'LB, UAE'):
+            with self.subTest(territory=written):
+                result = check_eligibility(make_request(),
+                                           make_offer(warranty={**WARRANTY, 'territory': written}))
+                unread = 'warranty territory is not recognized'
+                self.assertEqual(judged(named(result)['warranty']), ('unresolved', unread))
+                self.assertIn(('warranty.territory', unread), open_fields(result))
+        self.assertEqual(warranty({**LB_WARRANTY, 'territory': 'لبنان'}, territory='Lebanon').outcome, 'pass')
         # 'International' is another territory: such a warranty may not be serviced in Lebanon.
         self.assertEqual(warranty(LB_WARRANTY, territory='International').outcome, 'fail')
         provider = {**LB_WARRANTY, 'provider': 'Genuine Warranty Center'}
