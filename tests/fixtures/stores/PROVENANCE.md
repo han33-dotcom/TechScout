@@ -4,9 +4,13 @@ These fixtures are **minimized factual extracts**, not the original responses. E
 from one public reply fetched through the source gate on 2026-11-14 (an allow-listed GET with the
 per-store limits), keeping only what the readers use: record IDs, names, prices, stock and
 purchasability flags, attributes and terms, tags and categories, the price line, the delivery,
-warranty, banner and footer lines, the variation form with each entry reduced to the keys the
-reader reads, and the relevant policy sentences inside minimal markup. Product descriptions,
-images, galleries, scripts, reviews and navigation were removed. Kept sentences are verbatim.
+warranty, banner and footer lines, the variation form with each entry reduced to its ID, prices,
+stock, purchasability and visibility flags, SKU, availability line and attributes, and the
+relevant policy sentences inside minimal markup. The form entries' `backorders_allowed` and the
+Store API records' `is_on_backorder` were not kept, so these captures cannot show whether a store
+uses silent backorders; the backorder tests edit the fixtures synthetically. Product
+descriptions, images, galleries, scripts, reviews and navigation were removed. Kept sentences are
+verbatim.
 
 Hashes and lengths below are of the **original** decoded response bodies, as the gate recorded
 them; the fixtures themselves are smaller and hash differently.
