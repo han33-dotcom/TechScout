@@ -293,6 +293,25 @@ class EndToEndTests(unittest.TestCase):
         self.assertEqual((code, err.getvalue().strip()), (2, 'Cannot read the request: FileNotFoundError'))
         self.assertEqual(self.sent, [])
 
+    def test_the_search_command_rejects_unreadable_run_caps(self):
+        raw = json.loads((ROOT / 'config' / 'evaluation.json').read_text(encoding='utf-8'))
+        too_long = json.loads(json.dumps(raw))
+        too_long['caps']['seconds'] = runs.MAX_RUN_SECONDS + 1
+        cases = {'ValueError': json.dumps(too_long), 'JSONDecodeError': '{not json',
+                 'KeyError': json.dumps({k: v for k, v in raw.items() if k != 'caps'})}
+        for name, text in cases.items():
+            with self.subTest(name), tempfile.TemporaryDirectory() as folder:
+                path = Path(folder) / 'evaluation.json'
+                path.write_text(text, encoding='utf-8')
+                out, err = io.StringIO(), io.StringIO()
+                with (mock.patch.object(runs, 'DEFAULT_CONFIG', path),
+                      contextlib.redirect_stdout(out), contextlib.redirect_stderr(err)):
+                    code = runs.main(['search', str(ROOT / 'examples' / 'request-iphone17-beirut.json')],
+                                     dependencies=self.deps())
+                self.assertEqual((code, err.getvalue().strip(), out.getvalue()),
+                                 (2, f'Cannot read the run caps in evaluation.json: {name}', ''))
+                self.assertEqual(self.sent, [])
+
 
     def test_the_model_planner_without_credentials_stops_before_any_request(self):
         err = io.StringIO()
