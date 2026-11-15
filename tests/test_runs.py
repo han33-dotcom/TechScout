@@ -29,7 +29,8 @@ from app.assessment import Assessment, Check, CostResult, Eligibility, EvidenceG
 from app.contracts import Money, Offer, ShoppingRequest, ToolError, ToolResult
 from app import planner as planner_module
 from app.planner import (
-    AnthropicPlanner, PlannerDecision, PlannerUsage, RulePlanner, load_planner_config, request_constraints,
+    AnthropicPlanner, NoInvestigationPlanner, PlannerDecision, PlannerUsage, RulePlanner, load_planner_config,
+    request_constraints,
 )
 from app.runs import RunCaps, RunDependencies, run_search
 from app.sources import CALL_TIMEOUT_S, FetchOutcome, SourceGate, SourceLimiter
@@ -467,6 +468,38 @@ class CompleteRunTests(RunCase):
         self.assertEqual(self.storage.load_offer('alpha:100:101'), result.recommendations[1].offer)
         self.assertEqual({s.id for s in self.storage.list_sources()}, set(SOURCES))
 
+    def test_each_run_records_its_planner_once(self):
+        self.search()
+        self.search(ScriptedPlanner(STOP), run_id='run-2')
+        self.assertEqual(self.action('run-1', 'stage:clarify')['result']['data']['planner'],
+                         {'name': 'rule-planner', 'config': {'provider': 'none', 'model': 'rule-planner'}})
+        self.assertEqual(self.action('run-2', 'stage:clarify')['result']['data']['planner'],
+                         {'name': 'scripted', 'config': {'provider': 'test'}})
+        stored = [json.dumps(a['result']) for a in self.storage.list_actions('run-1')]
+        self.assertEqual(sum('rule-planner' in record for record in stored), 1)
+
+    def test_a_model_planner_run_records_its_settings_and_each_turns_usage(self):
+        result, client = self.model_search(model_reply('act', action_id='A1', reason='read the FAQ'),
+                                           model_reply('stop', reason='enough'))
+        self.assertEqual(len(client.calls), 2)
+        self.assertEqual((result.status, result.stop_reason), ('complete', runs.STOP_PLANNER))
+        recorded = self.action('run-1', 'stage:clarify')['result']['data']['planner']
+        config = recorded['config']
+        self.assertEqual((recorded['name'], config['model'], config['prompt_version'], config['effort'],
+                          config['fallbacks'], config['pricing_checked_on']),
+                         ('anthropic-planner', CONFIGURED_MODEL, PLANNER_CONFIG['prompt_version'],
+                          PLANNER_CONFIG['effort'], PLANNER_CONFIG['fallbacks'],
+                          str(PLANNER_CONFIG['pricing_checked_on'])))
+        self.assertEqual(config['pricing_usd_per_mtok'][CONFIGURED_MODEL]['output'],
+                         str(PLANNER_CONFIG['pricing_usd_per_mtok'][CONFIGURED_MODEL]['output']))
+        turn = self.action('run-1', 'planner')['result']['data']
+        self.assertEqual({k: turn[k] for k in ('priced', 'prompt_version', 'attempt_models', 'cache_read_tokens',
+                                               'cache_write_tokens', 'input_tokens', 'output_tokens')},
+                         {'priced': True, 'prompt_version': PLANNER_CONFIG['prompt_version'],
+                          'attempt_models': [CONFIGURED_MODEL], 'cache_read_tokens': 0, 'cache_write_tokens': 0,
+                          'input_tokens': 1200, 'output_tokens': 150})
+        self.assertTruthful(result)
+
     def test_trace_lines_are_fixed_json_records_in_seq_order(self):
         result = self.search()
         self.assertEqual(len(self.lines), len(self.storage.list_actions('run-1')))
@@ -673,6 +706,17 @@ class LimitTests(RunCase):
         self.assertEqual(self.gate.requests, [])
         self.assertIsNone(self.storage.run_status('run-1'))
 
+    def test_a_planner_needs_a_name_and_a_json_config(self):
+        cases = {'no name': {'name': ''}, 'config with a Decimal': {'config': {'price': Decimal('1')}},
+                 'config not a mapping': {'config': ['provider']}}
+        for name, changes in cases.items():
+            planner = ScriptedPlanner(STOP)
+            for attribute, value in changes.items():
+                setattr(planner, attribute, value)
+            with self.subTest(name), self.assertRaises(TypeError):
+                run_search(REQUEST, self.deps(planner), run_id='run-1')
+        self.assertIsNone(self.storage.run_status('run-1'))
+
     def test_a_store_cap_trims_the_menu_without_marking_the_run_partial(self):
         self.write_registry(alpha={'max_requests_per_run': 2})
         planner = ScriptedPlanner(lambda state, budget: RulePlanner().decide(state, budget))
@@ -815,6 +859,8 @@ class PlannerTests(RunCase):
         self.assertEqual(turn['reason'], 'planner usage could not be priced')
         # The kept reservation is the most that is known; the stop reason says the total is not exact.
         self.assertEqual(result.usage.spend.amount, Decimal(turn['cost']))
+        self.assertEqual((turn['priced'], turn['input_tokens'], turn['output_tokens'], turn['attempt_models']),
+                         (False, 2000, 100, [CONFIGURED_MODEL, UNPRICED_MODEL]))
         self.assertGreater(result.usage.spend.amount, 0)
         self.assertTruthful(result)
 
@@ -1050,6 +1096,10 @@ class ModuleTests(unittest.TestCase):
         tree = ast.parse((ROOT / 'app' / 'runs.py').read_text(encoding='utf-8'))
         top_level = {node.module for node in tree.body if isinstance(node, ast.ImportFrom)}
         self.assertFalse(top_level & {'app.identity', 'app.eligibility', 'app.costs', 'app.adapters'})
+
+    def test_the_command_line_runs_the_planner_each_baseline_names(self):
+        self.assertIs(type(runs._planner('none')), NoInvestigationPlanner)
+        self.assertIs(type(runs._planner('rule')), RulePlanner)
 
     def test_only_plain_gaps_reach_the_planner(self):
         def gap(**changes):

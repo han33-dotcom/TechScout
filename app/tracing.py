@@ -1,7 +1,10 @@
 """Run traces (MVP 11): every tool call, planner turn and stage of a run, in order.
 
-Each record is one Storage.record_action row carrying what that step added to the run's usage
-(external calls, planner turns, spend), and one JSON line on the 'techscout.trace' logger.
+Each record is one Storage.record_action call: the stored row keeps the step's arguments and
+result (tool results list their fetch attempts; planner turns their decision, tokens, cost and
+whether that cost was priced; the clarify stage the run's planner name and settings), and the
+step's external calls, planner turns and spend are added to the run's totals. Each record is
+also one JSON line, in a fixed shape with those per-step counts, on the 'techscout.trace' logger.
 Arguments hold identifiers, counters and the buyer's constraints only: page text, evidence
 excerpts and other store-written values never enter a trace.
 """
@@ -139,9 +142,13 @@ class Tracer:
             info['not_run'] = not_run
         usage = decision.usage
         if usage is not None:
+            # priced=False: the cost is the reservation kept in its place, an upper bound.
             info.update(model=usage.model[:100], input_tokens=usage.input_tokens,
-                        output_tokens=usage.output_tokens, cost=str(usage.cost.amount),
-                        currency=usage.cost.currency)
+                        output_tokens=usage.output_tokens, cache_read_tokens=usage.cache_read_tokens,
+                        cache_write_tokens=usage.cache_write_tokens, cost=str(usage.cost.amount),
+                        currency=usage.cost.currency, priced=usage.priced,
+                        prompt_version=None if usage.prompt_version is None else usage.prompt_version[:100],
+                        attempt_models=[m[:100] for m in usage.attempt_models])
         problem = rejected or ('the planner returned an invalid decision' if decision.kind == 'invalid'
                                else None)
         errors = ([ToolError(code='INVALID_SCHEMA', message=f'planner: {problem}', retryable=False)]

@@ -62,7 +62,8 @@ class PlannerUsage(Model):
     cost: Money
     cache_read_tokens: Count = 0
     cache_write_tokens: Count = 0
-    # False when the reply could not be priced: cost then holds the reservation kept in its place.
+    # False when the cost could not be priced (an unpriced reply, or a call that failed after it may
+    # have been billed): cost then holds the reservation kept in its place, an upper bound.
     priced: StrictBool = True
     prompt_version: Text | None = None
     attempt_models: list[Text] = Field(default_factory=list)  # every billed attempt, fallbacks included
@@ -99,7 +100,7 @@ class Planner(Protocol):
     again just before running it.
     """
     name: str
-    config: dict
+    config: dict  # JSON settings, recorded with the name once per run; never credentials
     max_call_seconds: float
 
     def decide(self, state: PlannerState, budget) -> PlannerDecision: ...
@@ -137,7 +138,8 @@ def _order(action_id: str) -> int:
 
 # Configuration (config/evaluation.json)
 
-# Prompt texts by version: the configuration selects one, so every run records the text it used.
+# Prompt texts by version: the configuration selects one, and each run records the planner's
+# configuration (prompt_version included) in its clarify stage, so it names the text it used.
 PROMPTS = {
     'planner-v1': (
         'You choose the next evidence action for TechScout, which checks offers for one exact phone '
@@ -495,7 +497,8 @@ class AnthropicPlanner:
     def __init__(self, config: dict, client=None):
         self._settings = PlannerConfig.model_validate(config)
         self._prices = self._settings.pricing_usd_per_mtok
-        self.config = self._settings.model_dump(mode='json')  # recorded with runs; holds no credentials
+        # Recorded once per run, with the clarify stage; holds no credentials.
+        self.config = self._settings.model_dump(mode='json')
         try:
             import anthropic  # imported here so the rest of TechScout and its tests never need it
         except ImportError:

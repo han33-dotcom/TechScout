@@ -38,7 +38,8 @@ from app.contracts import (
     SourcePolicy, ToolError, ToolResult,
 )
 from app.planner import (
-    DEFAULT_CONFIG, Planner, PlannerAction, PlannerDecision, PlannerState, RulePlanner, request_constraints,
+    DEFAULT_CONFIG, NoInvestigationPlanner, Planner, PlannerAction, PlannerDecision, PlannerState, RulePlanner,
+    request_constraints,
 )
 from app.source_registry import DEFAULT_REGISTRY, get_active_source
 from app.sources import CALL_TIMEOUT_S, SourceGate
@@ -478,8 +479,8 @@ def run_search(request: ShoppingRequest, deps: RunDependencies, *, run_id: str |
     cancel is a threading.Event or a callable returning True once the buyer cancels; it is
     checked before every step and on every gate request. An unexpected exception ends the run as
     'error' (traced, no recommendations). Exceptions before the run is stored (an unknown request
-    type, a planner without a valid max_call_seconds, a duplicate run ID, or a reader registered
-    under another store's ID) are raised.
+    type, a planner without a valid max_call_seconds, name or JSON config, a duplicate run ID, or a
+    reader registered under another store's ID) are raised.
     """
     if not isinstance(request, ShoppingRequest):
         raise TypeError('run_search needs a ShoppingRequest')
@@ -494,6 +495,19 @@ def _cancel_signal(cancel) -> Callable[[], bool] | None:
     if callable(cancel):
         return lambda: bool(cancel())
     raise TypeError('cancel is a threading.Event or a callable returning a bool')
+
+
+def _planner_record(planner) -> dict:
+    """The planner's name and settings as JSON, recorded once with each run. Planner configs hold
+    no credentials (the model planner's holds its validated settings and price table)."""
+    name, config = getattr(planner, 'name', None), getattr(planner, 'config', None)
+    if type(name) is not str or not name.strip() or not isinstance(config, Mapping):
+        raise TypeError('A planner has a name and a config mapping')
+    try:
+        config = json.loads(json.dumps(config, allow_nan=False))
+    except (TypeError, ValueError) as exc:
+        raise TypeError('A planner config holds JSON values only') from exc
+    return {'name': name, 'config': config}
 
 
 def _covers(settles: str, field_path: str) -> bool:
@@ -579,6 +593,7 @@ class _Run:
         # Charged against the time budget before every turn (see _menu).
         self.planner_seconds = getattr(self.planner, 'max_call_seconds', None)
         _check_seconds('planner max_call_seconds', self.planner_seconds)
+        self.planner_record = _planner_record(self.planner)  # stored once, with the clarify stage
         self.assess_fn = deps.assess or (lambda req, offers: default_assess(req, offers, now=self._now()))
         self.planner_view = request_constraints(request)
         self.sources: list[str] = []
@@ -611,6 +626,7 @@ class _Run:
     def _pipeline(self) -> RunResult:
         with self._stage('clarify') as data:
             data['sources'] = list(self.sources)
+            data['planner'] = self.planner_record
         if not self.sources:
             return self._finish(error=STOP_NO_SOURCES)
         with self._stage('retrieve') as data:
@@ -1072,11 +1088,15 @@ class _Run:
 # Command line: one search by hand, for development and the demo
 
 def _planner(name: str) -> Planner:
-    """The planner a command-line search uses; 'rule' is the deterministic baseline and 'model'
-    the configured AnthropicPlanner, which needs ANTHROPIC_API_KEY."""
+    """The planner a command-line search uses, so the run records the right one: 'rule' is the
+    deterministic baseline, 'none' the no-investigation baseline (its run also has no planner
+    turns, so it is never asked) and 'model' the configured AnthropicPlanner, which needs
+    ANTHROPIC_API_KEY."""
     if name == 'model':
         from app.planner import AnthropicPlanner, load_planner_config
         return AnthropicPlanner(load_planner_config())
+    if name == 'none':
+        return NoInvestigationPlanner()
     return RulePlanner()
 
 
