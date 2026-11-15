@@ -1393,6 +1393,17 @@ class TracerTests(RunCase):
             'planner': 5, 'search_candidates': 40, 'stage:verify': 2}})
         self.assertEqual(self.stored_totals('run-t'), (3, 1, Decimal('0.0002')))
 
+    def test_a_closed_run_refuses_a_note_that_adds_nothing(self):
+        self.storage.start_run('run-t', REQUEST, started_at=T0)
+        tracer = Tracer(self.storage, 'run-t')
+        tracer.note(external_calls=1, planner_turns=0, spend=Decimal('0'))
+        # The reservation was released unsent, then another process closed the run: the retry's
+        # reservation adds nothing to the stored totals but must still find the run closed.
+        self.storage.recover_interrupted_runs(T0 + RUN_LEASE + timedelta(seconds=1))
+        with self.assertRaisesRegex(ValueError, 'running run'):
+            tracer.note(external_calls=1, planner_turns=0, spend=Decimal('0'))
+        self.assertEqual(self.stored_totals('run-t'), (1, 0, Decimal('0')))
+
     def test_retries_leave_out_followed_redirect_hops(self):
         self.storage.start_run('run-t', REQUEST, started_at=T0)
         tracer = Tracer(self.storage, 'run-t')

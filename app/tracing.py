@@ -165,10 +165,11 @@ class Tracer:
         _check_usage(external_calls, planner_turns, spend)
         with self._lock:
             added = self._beyond_stored(external_calls, planner_turns, spend)
-            if any(added):
-                self.storage.note_usage(self.run_id, external_calls=added[0], planner_turns=added[1],
-                                        spend=added[2])
-                self._add_stored(added)
+            # Even when nothing grew (a reservation released unsent is not given back in storage),
+            # the call checks that the run is still running, so a closed run sends nothing more.
+            self.storage.note_usage(self.run_id, external_calls=added[0], planner_turns=added[1],
+                                    spend=added[2])
+            self._add_stored(added)
 
     def tool(self, name: str, result: ToolResult, *, source_id: str, arguments: dict,
              external_calls: int = 0) -> TraceRecord:
