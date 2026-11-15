@@ -591,8 +591,10 @@ def merge_policy_fact(offer: Offer, policy: PolicyDocument, fact: PolicyFact, fi
                       conflict_reason: str, only_if_unknown: bool = False) -> Offer:
     """One store-wide statement merged into a top-level offer fact, citing its policy page.
 
-    Unknown becomes known; an equal value adds evidence; a different value becomes a conflict
-    (or, with only_if_unknown, leaves the offer as it was). Applying a page twice changes nothing.
+    An unknown without evidence becomes known. An unknown that cites a store statement (the page
+    says both cash and card, say) stays unknown, citing both, with the conflict reason: a policy
+    cannot settle what the page left open. An equal value adds evidence; a different value becomes a
+    conflict. With only_if_unknown, only a bare unknown changes. Applying a page twice changes nothing.
     """
     if field_path not in ('payment_basis', 'arrival'):
         raise ValueError('Policy statements settle payment_basis or arrival')
@@ -603,12 +605,14 @@ def merge_policy_fact(offer: Offer, policy: PolicyDocument, fact: PolicyFact, fi
     current = data[field_path]
     new = value.model_dump(mode='json') if isinstance(value, Model) else value
     ids = [*current.get('evidence_ids', []), record.evidence_id]
-    if current['state'] == 'unknown':
+    if current['state'] == 'unknown' and not current.get('evidence_ids'):
         data[field_path] = {'state': 'known', 'value': new, 'evidence_ids': [record.evidence_id]}
     elif current['state'] == 'known' and current['value'] == new:
         data[field_path] = {**current, 'evidence_ids': ids}
     elif only_if_unknown:
         return offer
+    elif current['state'] == 'unknown':
+        data[field_path] = {'state': 'unknown', 'reason': conflict_reason, 'evidence_ids': ids}
     elif current['state'] == 'known':
         data[field_path] = {'state': 'conflict', 'alternatives': [current['value'], new],
                             'reason': conflict_reason, 'evidence_ids': ids}
@@ -812,8 +816,8 @@ class _OfferBuilder:
             # how a backorder without customer notification shows.
             if BACKORDER_CLASS.search(note) or (item.data.get('backorders_allowed') is True
                                                 and not IN_STOCK_CLASS.search(note)):
-                records.append(self.page_record('online_stock', 'variant',
-                                                f'variation {self.vid} on backorder', f'item{item.index}-backorder'))
+                text, tag = f'variation {self.vid} on backorder', f'item{item.index}-backorder'
+                records.append(self.page_record('online_stock', 'variant', text, tag))
         if self.record is not None and self.record[1].get('is_on_backorder') is True:
             records.append(self.api_record('online_stock', 'variant',
                                            json_pointer(self.record[0], 'is_on_backorder'), 'api-backorder'))

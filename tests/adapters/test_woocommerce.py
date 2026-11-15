@@ -12,8 +12,10 @@ from unittest import mock
 
 from app import adapters
 from app.adapters import beytech, class_cellulars, mojitech
+from app.adapters.base import PolicyFact
 from app.adapters.woocommerce import (
-    ERROR_REASONS, FIXED_REASONS, form_key, read_html, read_page, role, visible_text,
+    ERROR_REASONS, FIXED_REASONS, PAYMENT_CONFLICT, form_key, merge_policy_fact, read_html, read_page, role,
+    visible_text,
 )
 from app.contracts import Offer, ToolError
 from app.sources import FetchOutcome
@@ -441,6 +443,28 @@ class PolicyTests(ReaderTestCase):
         self.assertEqual((terms.state, terms.alternatives, terms.reason),
                          ('conflict', ['card', 'cash'], 'payment statements disagree'))
         self.assertEqual(terms.evidence_ids[0], 'synthetic-card-terms')
+
+    def test_a_policy_cannot_settle_what_the_page_left_open(self):
+        fetch = FakeFetch(routes('mojitech'))
+        offer = mojitech.ADAPTER.search_candidates(fetch, query()).offers[0]
+        page = offer.payment_basis  # the footer states cash and card, so the basis stays open
+        self.assertEqual((page.state, page.reason, len(page.evidence_ids)), (
+            'unknown', 'store accepts cash and card; price terms per method are not published', 1))
+        policy = mojitech.ADAPTER.fetch_policy(fetch, 'refund_returns').policies[0]
+        cash_only = PolicyFact('payment', {'methods': ['cash'], 'only': True}, 'We only accept cash')
+        policy = dataclasses.replace(policy, facts=(cash_only,))
+        after = merge_policy_fact(offer, policy, cash_only, 'payment_basis', 'cash',
+                                  conflict_reason=PAYMENT_CONFLICT)
+        terms = after.payment_basis
+        self.assertEqual((terms.state, terms.reason), ('unknown', 'payment statements disagree'))
+        self.assertEqual(terms.evidence_ids[0], page.evidence_ids[0])
+        self.assertEqual([e.excerpt for e in evidence(after, terms.evidence_ids)][1], 'We only accept cash')
+        again = merge_policy_fact(after, policy, cash_only, 'payment_basis', 'cash',
+                                  conflict_reason=PAYMENT_CONFLICT)
+        self.assertEqual(again, after)
+        unchanged = merge_policy_fact(offer, policy, cash_only, 'payment_basis', 'cash',
+                                      conflict_reason=PAYMENT_CONFLICT, only_if_unknown=True)
+        self.assertEqual(unchanged, offer)
 
 
 class ParsingTests(unittest.TestCase):
