@@ -173,9 +173,11 @@ coverage](source-coverage.md). Test fixtures are minimized from captured public 
 `app/identity.py` canonicalizes manufacturer, model and color with our own tables
 (`app/devices.py` with `MODEL_ALIASES` and `identity.COLOR_ALIASES`;
 'bleu' is Blue, 'iPhone 17 Air' is the iPhone Air; unmapped colors become title case) without
-changing any fact's state or evidence. A '+' attached to a model reads as Plus ('iPhone 16+' is
-the iPhone 16 Plus). A known model followed by a qualifier word ('Pro-Max', 'PM', 'Plus', 'Mini',
-'Ultra', a stray 'e') is not read as that model, so the model stays unknown. Storage sizes in a
+changing any fact's state or evidence. A '+' attached to a model reads as Plus ('iPhone 16+' and
+'iPhone 16+128GB' are the iPhone 16 Plus); a spaced '+' or one joining another item ('+AirPods',
+'+20W Adapter') is a bundle and leaves the model as it is. A known model followed by a qualifier
+word ('Pro-Max', 'PM', 'Plus', 'Mini', 'Ultra', a stray 'e') is not read as that model, so the
+model stays unknown. Storage sizes in a
 product name use 1 TB = 1024 GB, so a request for a 1 TB phone says `storage_gb` 1024; decimal
 sizes ('0.25TB') and digit-grouped sizes ('1,024GB') are not read. Duplicate offers are keyed by
 source, product and variant ID; a SKU is never a key, so variants sharing a SKU stay separate.
@@ -220,15 +222,18 @@ is exact Decimal; a conversion that needs rounding rounds up, so rounding cannot
 over-budget offer. Included VAT is not added twice. Promotion conditions use a small grammar
 (`min_subtotal:<CUR>:<amount>`, `city:<name>`, `payment:<cash|card>`); anything else stays
 unresolved. Conflicting shipping terms, expired quotes and any listed unknown charge keep the
-total unresolved. An expired device quote that repeats the offer price also ends that price
+total unresolved. A price fact has no expiry of its own, so an expired device quote that repeats
+the offer price and applies or might apply (only a failing condition rules it out) ends that price
 ('device quote has expired', gap `costs.device`), unless the price was observed after the quote
-ended, because a price fact has no expiry of its own.
+ended. A lapsed price is never replaced by a term for another amount; the device line stays open.
 
 Each cost kind is one charge per offer: its components restate it or are alternatives keyed by
 condition. A conditional term that adds nothing (included, not applicable or an additional zero)
 for a payment surcharge or other charge is a waiver: when its condition fails, the ordinary
 charge is unpublished, so the total stays unresolved (`published <kind> terms do not cover this
-order`). Only a positive surcharge whose condition fails adds zero. A reader that finds several
+order`). The exception is a waiver whose conditions include all of a set-aside positive
+surcharge's conditions: it can only waive that published surcharge, so it adds nothing. Only a
+positive surcharge whose condition fails adds zero. A reader that finds several
 mandatory fees must list them as one `other` component carrying their sum and every fee's
 evidence. No current reader lists an `other` charge. Separately
 listed nonzero `other` charges are never merged: equal amounts keep the total unresolved
