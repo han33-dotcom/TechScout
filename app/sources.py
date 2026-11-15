@@ -66,6 +66,9 @@ GLOBAL_UNICAST_V6 = ipaddress.ip_network('2000::/3')
 
 
 class Reservation(Protocol):
+    """A reserved call. It may also offer still_wanted() -> bool, asked just before sending:
+    False (the run was cancelled or closed meanwhile) drops the request unsent."""
+
     def commit(self, elapsed_seconds: float) -> None: ...
 
     def release(self) -> None: ...
@@ -452,6 +455,9 @@ class SourceGate:
             guard = _AttemptGuard(source_id, self._clock, start)
             address = self._checked_address(source_id, httpx2.URL(url).host)
             guard.check()
+            still_wanted = getattr(reservation, 'still_wanted', None)
+            if still_wanted is not None and not still_wanted():  # cancelled during the wait or lookup
+                raise _Refusal('BUDGET_EXHAUSTED', source_id, 'the run budget refused the call')
             self._limiter.mark_sent(slot, self._clock())
             return self._exchange(source_id, url, address, expect, endpoints, guard)
         except _Failure as stop:

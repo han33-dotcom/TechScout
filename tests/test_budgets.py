@@ -404,6 +404,27 @@ class GateProtocolTests(unittest.TestCase):
                 self.assertEqual(self.sent, [])
                 self.assertEqual(budget.refusals, {name: 1})
 
+    def test_a_cancel_during_a_wait_drops_the_waiting_request(self):
+        def gate_sleeping_into(event_or_close):
+            def sleep(seconds):  # the backoff or rate-limit wait, during which the buyer cancels
+                self.clock.advance(seconds)
+                event_or_close()
+            return SourceGate._for_tests(
+                self.registry, transport=httpx2.MockTransport(self.handle), resolver=lambda host, port: [PUBLIC],
+                clock=self.clock.monotonic, wall_clock=self.clock.now, sleep=sleep, limiter=SourceLimiter())
+
+        event = threading.Event()
+        cancelled = RunBudget('run-1', RunCaps(), self.clock.monotonic, cancel_signal=event.is_set)
+        closed = RunBudget('run-2', RunCaps(), self.clock.monotonic)
+        for name, budget, gate in (('cancelled', cancelled, gate_sleeping_into(event.set)),
+                                   ('closed', closed, gate_sleeping_into(closed.close))):
+            with self.subTest(name):
+                self.sent.clear()
+                self.script[API] = [503, 200]  # the retry waits out a one-second backoff
+                outcome = gate.fetch(budget, 'alpha', API, expect='json')
+                self.assertEqual([e.code for e in outcome.errors], ['NETWORK_ERROR', 'BUDGET_EXHAUSTED'])
+                self.assertEqual((self.sent, budget.calls_used(), budget.refusals), ([API], 1, {name: 1}))
+
     def test_the_final_phase_reserve_serves_the_gate(self):
         budget = RunBudget('run-1', RunCaps(external_calls=2, reserve_calls=1), self.clock.monotonic)
         self.assertEqual(self.fetch(budget).status, 'ok')

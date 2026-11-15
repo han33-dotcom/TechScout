@@ -175,6 +175,11 @@ class CallReservation:
     def __init__(self, budget: 'RunBudget', source_id: str):
         self._budget, self.source_id, self.settled = budget, source_id, False
 
+    def still_wanted(self) -> bool:
+        """Asked by the gate just before sending, after any wait: False once the run was
+        cancelled or closed, so a request that was only waiting is dropped unsent."""
+        return self._budget._still_open()
+
     def commit(self, elapsed_seconds: float) -> None:
         _check_seconds('elapsed_seconds', elapsed_seconds)
         self._budget._settle_call(self, float(elapsed_seconds))
@@ -418,6 +423,15 @@ class RunBudget:
     def _ended(self) -> str | None:
         return 'closed' if self._closed else 'cancelled' if self._cancelled else None
 
+    def _still_open(self) -> bool:
+        # Called without the lock, like the public methods: it polls the cancel signal first.
+        self._poll_signal()
+        with self._lock:
+            reason = self._ended()
+            if reason:
+                self._refuse(reason)
+            return reason is None
+
     def _refuse(self, reason: str) -> None:
         self._refusals[reason] = self._refusals.get(reason, 0) + 1
 
@@ -477,7 +491,8 @@ def run_search(request: ShoppingRequest, deps: RunDependencies, *, run_id: str |
     """Run one search and store its RunResult.
 
     cancel is a threading.Event or a callable returning True once the buyer cancels; it is
-    checked before every step and on every gate request. An unexpected exception ends the run as
+    checked before every step, when each gate request is reserved and again just before it is
+    sent, so a request still waiting out a backoff is dropped. An unexpected exception ends the run as
     'error' (traced, no recommendations). Exceptions before the run is stored (an unknown request
     type, a planner without a valid max_call_seconds, name or JSON config, a duplicate run ID, or a
     reader registered under another store's ID) are raised.
