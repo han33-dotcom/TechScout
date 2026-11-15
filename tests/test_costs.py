@@ -433,6 +433,11 @@ class BudgetTests(CostTestCase):
         self.assertEqual(Decimal('1100.00') + tiny.amount.amount, Decimal('1100.00'))  # the trap avoided
         self.assertVerified(calc(build_offer('1100.00', costs=[tiny, FREE_DELIVERY])),
                             '1100.000000000000000000000000000001', within=False)
+        # A conversion past 200 significant digits is rounded up: 1030.00 x (89500 + 1E-196) is just
+        # over 92185000 LBP, and rounding it down or to nearest would give exactly the budget.
+        over = rate('89500.' + '0' * 195 + '1')
+        self.assertVerified(calc(build_offer(), build_request(budget='92185000', currency='LBP'), fx=[over]),
+                            '1030.00', within=False)
 
     def test_absurd_amounts_stay_cheap_and_are_never_rounded_into_a_total(self):
         # Contract-valid but absurd: exact arithmetic must neither write out 10**18 digits (unbounded
@@ -447,7 +452,7 @@ class BudgetTests(CostTestCase):
         tiny = charge('tax', 'additional', '1E-999999999999999999')
         self.assertUnresolved(calc(build_offer(costs=[tiny, FREE_DELIVERY])),
                               'amounts cannot be totalled exactly')
-        # A conversion that overflows is rounded up, so it still cannot admit the offer.
+        # A conversion that overflows still cannot admit the offer.
         result = calc(build_offer(), build_request(budget='100000000', currency='LBP'),
                       fx=[rate('9E+999999999999999999')])
         self.assertEqual((result.status, result.within_budget), ('verified', False))
