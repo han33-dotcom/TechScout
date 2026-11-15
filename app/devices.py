@@ -30,8 +30,8 @@ _PLUS = re.compile(r'(?<=[0-9a-z])\+(?![0-9a-z])', re.IGNORECASE)
 # injected text) leave it alone, and 'e' before 'SIM' is the eSIM. A spaced '+' not followed by
 # a named item ('iPhone 16 +') cannot be read either.
 _QUALIFIER = re.compile(r'\s*\+(?!\s*[0-9a-z])|[\s\-\u2010-\u2015_(\[]*'
-                        r'(?:plus|pro|max|promax|pm|mini|ultra|air|se|e(?![\s\-\u2010-\u2015]*sim))(?![0-9a-z])',
-                        re.IGNORECASE)
+                        r'(?:plus|pro|max|promax|pm|mini|ultra|air|se|e(?![\s\-\u2010-\u2015]*sim))'
+                        r'(?![0-9a-z])', re.IGNORECASE)
 _MANUFACTURERS = [(m, _pattern(m)) for m in KNOWN_MANUFACTURERS]
 # A size followed by RAM is memory, not storage ('12GB RAM'). Digits after a decimal point or a
 # digit group separator are not a size ('0.25TB', '1,024GB'); a comma after a word still ends it

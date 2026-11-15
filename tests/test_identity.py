@@ -253,13 +253,14 @@ class ModelQualifierTests(unittest.TestCase):
     def test_a_qualifier_after_a_known_model_names_no_model_we_know(self):
         nb_hyphen = 'iPhone 17 Pro' + chr(0x2011) + 'Max'
         for text in ('iPhone 17 Pro-Max', nb_hyphen, 'iPhone 17 PM 256GB', 'iPhone 17 Plus', 'iPhone 17 Mini',
-                     'iPhone 17 Ultra', 'iPhone 17 (Pro)', 'iPhone 17 e', 'iPhone 17-Pro', 'iPhone 16 Pro-Max',
-                     'iPhone 17 SE', 'iPhone 17 Max', 'iPhone 16 +'):
+                     'iPhone 17 Ultra', 'iPhone 17 (Pro)', 'iPhone 17 e', 'iPhone 17-Pro',
+                     'iPhone 16 Pro-Max', 'iPhone 17 SE', 'iPhone 17 Max', 'iPhone 16 +'):
             with self.subTest(text=text):
                 self.assertIsNone(match_model(text))
                 self.assertIsNone(known_model(text))
-        for text, model in [('iPhone 17 Pro Max', 'iPhone 17 Pro Max'), ('iPhone 17 ProMax', 'iPhone 17 Pro Max'),
-                            ('iPhone 17e', 'iPhone 17e'), ('iPhone 16 Plus', 'iPhone 16 Plus'),
+        for text, model in [('iPhone 17 Pro Max', 'iPhone 17 Pro Max'),
+                            ('iPhone 17 ProMax', 'iPhone 17 Pro Max'), ('iPhone 17e', 'iPhone 17e'),
+                            ('iPhone 16 Plus', 'iPhone 16 Plus'),
                             ('Apple iPhone 17 | 256GB', 'iPhone 17'), ('iPhone 17 eSIM', 'iPhone 17'),
                             ('iPhone 17 e-SIM only', 'iPhone 17'), ('iPhone 17 Black', 'iPhone 17'),
                             ('Apple |  iPhone 17 \u2013 1 Sim \u2013 2  Years Warranty', 'iPhone 17'),
@@ -285,8 +286,8 @@ class SeparatorOnlyTextTests(unittest.TestCase):
         self.assertEqual(canonical_color('\x1c'), '\x1c')
         offer = make_offer(manufacturer='\x1f', model='\x1e', color='\x1c', region='\x1d')
         normalized = normalize_variant(offer)
-        self.assertEqual([getattr(normalized, name).value for name in ('manufacturer', 'model', 'color', 'region')],
-                         ['\x1f', '\x1e', '\x1c', '\x1d'])
+        values = [getattr(normalized, name).value for name in ('manufacturer', 'model', 'color', 'region')]
+        self.assertEqual(values, ['\x1f', '\x1e', '\x1c', '\x1d'])
         from app.eligibility import check_eligibility
         from tests.test_eligibility import make_request
         self.assertEqual(check_eligibility(make_request(), offer, normalized=normalized).outcome, 'fail')
@@ -327,7 +328,8 @@ class ModelAliasTests(unittest.TestCase):
                 self.assertEqual(match_model(text), 'iPhone Air')
         air = normalize_variant(make_offer('1', model='iPhone 17 Air', region='LB'))
         self.assertEqual(air.model.value, 'iPhone Air')
-        self.assertIs(same_device(air, normalize_variant(make_offer('2', model='iPhone Air', region='LB'))), True)
+        other = normalize_variant(make_offer('2', model='iPhone Air', region='LB'))
+        self.assertIs(same_device(air, other), True)
         self.assertIs(same_device(air, normalize_variant(make_offer('3', region='LB'))), False)  # iPhone 17
         # A store renaming one variant between the two spellings is not a disagreement.
         result = deduplicate([make_offer(model='iPhone Air'), make_offer(model='iPhone 17 Air', at=LATER)])
@@ -347,10 +349,10 @@ class PlusTests(unittest.TestCase):
 
     def test_a_plus_model_is_not_its_base_model(self):
         plus = normalize_variant(make_offer('1', model='iPhone 16+', region='LB'))
-        self.assertIs(same_device(plus, normalize_variant(make_offer('2', model='iPhone 16', region='LB'))),
-                      False)
-        self.assertIs(same_device(plus, normalize_variant(make_offer('3', model='iPhone 16 Plus', region='LB'))),
-                      True)
+        base = normalize_variant(make_offer('2', model='iPhone 16', region='LB'))
+        spelled = normalize_variant(make_offer('3', model='iPhone 16 Plus', region='LB'))
+        self.assertIs(same_device(plus, base), False)
+        self.assertIs(same_device(plus, spelled), True)
 
 
 class SameDeviceTests(unittest.TestCase):

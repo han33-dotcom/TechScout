@@ -49,7 +49,8 @@ class ArrivalWindowTests(unittest.TestCase):
                 self.assertEqual(window(observed, 2, 3, 'calendar'),
                                  (beirut_day(month, friday + 2)[0], beirut_day(month, friday + 4)[1]))
                 # The earliest reading of 'tomorrow' is already past, so it starts at the observation.
-                self.assertEqual(window(observed, 1, 1, 'calendar'), (observed, beirut_day(month, friday + 2)[1]))
+                self.assertEqual(window(observed, 1, 1, 'calendar'),
+                                 (observed, beirut_day(month, friday + 2)[1]))
 
     def test_a_same_day_claim_starts_at_the_observation(self):
         observed = utc(2026, 11, 16, 9)
