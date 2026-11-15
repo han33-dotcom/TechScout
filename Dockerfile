@@ -10,6 +10,7 @@ COPY alembic.ini ./
 COPY app ./app
 COPY migrations ./migrations
 COPY config ./config
+COPY examples ./examples
 COPY tests ./tests
 
 RUN useradd --create-home techscout \
