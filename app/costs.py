@@ -2,13 +2,14 @@
 
 Deterministic rules only. The device line is the offer's known price, which lapses with an
 applying device quote that repeats it unless the price was observed after that quote ended (a
-price fact has no expiry of its own). VAT always applies and
-delivery applies to a delivery request; neither can be settled as not_applicable, which needs no
-evidence. Payment surcharges and other listed charges count when they apply. Travel is never
-added: a pickup total is the store payable amount, travel excluded. Unknown charges stay unknown,
-never zero; one listed anywhere on the offer keeps the total open, since a Recommendation cannot
-carry it. Only a fully known total gets a budget check. Reasons and gaps use fixed wording plus
-contract values, never store text.
+price fact has no expiry of its own). VAT always applies and delivery applies to a delivery
+request; neither can be settled as not_applicable, which needs no evidence. Payment surcharges
+and other listed charges count when they apply. Travel is never added: a pickup total is the
+store payable amount, travel excluded. Buyer-supplied travel is not supported, because
+ShoppingRequest v1 has no field for it, so a store-listed travel charge is never added either.
+Unknown charges stay unknown, never zero; one listed anywhere on the offer keeps the total open,
+since a Recommendation cannot carry it. Only a fully known total gets a budget check. Reasons
+and gaps use fixed wording plus contract values, never store text.
 
 A kind's charge comes from its components that apply now: every condition holds and the quote
 has not expired. Components that agree count once; disagreeing ones are a conflict. The
