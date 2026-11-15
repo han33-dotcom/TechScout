@@ -82,12 +82,23 @@ def _check_arguments(arguments) -> None:
 
 
 def _retries(result: ToolResult) -> int:
-    """Gate attempts beyond the first, from the fetch entries a store reader reports."""
+    """Gate attempts that repeated a failed request, from the fetch entries a store reader reports.
+
+    The gate counts every request it makes as an attempt, a followed redirect hop included, and
+    adds each hop to the redirect chain (which starts with the requested URL); the attempts beyond
+    the chain's length are the retries.
+    """
     fetches = result.data.get('fetches')
     if not isinstance(fetches, list):
         return 0
-    attempts = [f.get('attempts') for f in fetches if isinstance(f, dict)]
-    return sum(a - 1 for a in attempts if type(a) is int and a > 1)
+    total = 0
+    for entry in fetches:
+        if not isinstance(entry, dict) or type(entry.get('attempts')) is not int:
+            continue
+        chain = entry.get('redirect_chain')
+        requested = len(chain) if isinstance(chain, list) and chain else 1
+        total += max(0, entry['attempts'] - requested)
+    return total
 
 
 class Tracer:

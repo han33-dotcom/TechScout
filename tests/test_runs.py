@@ -1079,6 +1079,35 @@ class RealGateTests(RunCase):
                          (1, {'alpha': 3, 'beta': 2, 'gamma': 2}))
         self.assertTruthful(result)
 
+    def test_a_followed_redirect_is_a_request_but_not_a_retry(self):
+        for target in ('socket.getaddrinfo', 'socket.create_connection', 'socket.socket.connect'):
+            patcher = mock.patch(target, side_effect=AssertionError(f'real network use: {target}'))
+            patcher.start()
+            self.addCleanup(patcher.stop)
+
+        def handle(request):
+            url = str(request.url)
+            if url == PAGE.format('alpha'):  # moved to another allowed endpoint of the same store
+                return httpx2.Response(301, stream=Body(b''), headers=[
+                    ('Location', FAQ.format('alpha')), ('Content-Length', '0')])
+            json_reply = '/wp-json/' in url
+            body = b'[]' if json_reply else b'<html>ok</html>'
+            return httpx2.Response(200, stream=Body(body), headers=[
+                ('Content-Type', 'application/json' if json_reply else 'text/html'),
+                ('Content-Length', str(len(body)))])
+
+        gate = SourceGate._for_tests(self.registry, transport=httpx2.MockTransport(handle),
+                                     resolver=lambda host, port: [PUBLIC], clock=self.clock.monotonic,
+                                     wall_clock=self.clock.now, sleep=self.clock.advance,
+                                     limiter=SourceLimiter())
+        result = self.search(gate=gate, assess=make_assess(required=()))
+        alpha = next(line for line in self.lines
+                     if line['name'] == 'search_candidates' and line['source_id'] == 'alpha')
+        self.assertEqual((alpha['external_calls'], alpha['retries']), (3, 0))
+        metrics = self.action('run-1', 'stage:results')['result']['data']['metrics']
+        self.assertEqual((metrics['external_calls'], metrics['retries']), (7, 0))
+        self.assertTruthful(result)
+
 
 class TracerTests(RunCase):
     def test_records_keep_seq_order_usage_and_metrics(self):
@@ -1117,6 +1146,22 @@ class TracerTests(RunCase):
         self.assertEqual(summary['duration_ms'], {'tools': 40, 'planner': 5, 'by_name': {
             'planner': 5, 'search_candidates': 40, 'stage:verify': 2}})
         self.assertEqual(self.stored_totals('run-t'), (3, 1, Decimal('0.0002')))
+
+    def test_retries_leave_out_followed_redirect_hops(self):
+        self.storage.start_run('run-t', REQUEST, started_at=T0)
+        tracer = Tracer(self.storage, 'run-t')
+        a, b, c = (f'https://alpha.example/{n}' for n in 'abc')
+        cases = {'one hop, no failure': ([{'attempts': 2, 'redirect_chain': [a, b]}], 0),
+                 'one hop, then one retry': ([{'attempts': 3, 'redirect_chain': [a, b]}], 1),
+                 'two hops': ([{'attempts': 3, 'redirect_chain': [a, b, c]}], 0),
+                 'a hop, then refused before sending': ([{'attempts': 1, 'redirect_chain': [a, b]}], 0),
+                 'one retry, no hop': ([{'attempts': 2, 'redirect_chain': [a]}], 1),
+                 'no chain reported': ([{'attempts': 2}], 1)}
+        for name, (fetches, retries) in cases.items():
+            with self.subTest(name), self.assertLogs('techscout.trace', 'INFO'):
+                tool = ToolResult(status='ok', data={'fetches': fetches}, duration_ms=1)
+                record = tracer.tool('search_candidates', tool, source_id='alpha', arguments={})
+                self.assertEqual(record.retries, retries)
 
     def test_arguments_never_hold_page_text(self):
         self.storage.start_run('run-t', REQUEST, started_at=T0)
