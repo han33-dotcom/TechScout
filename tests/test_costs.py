@@ -282,6 +282,31 @@ class ChargeTests(CostTestCase):
                               'published delivery terms do not cover this order', gap='costs.delivery',
                               subtotal=usd('1030.00'))
 
+    def test_a_waiver_that_does_not_apply_leaves_an_optional_charge_open(self):
+        # A term that adds nothing under a condition implies an ordinary charge outside it.
+        waivers = [charge('payment', 'additional', '0', conditions=['payment:cash'], tag='cash'),
+                   charge('payment', 'not_applicable', conditions=['payment:cash']),
+                   charge('payment', 'included', conditions=['payment:cash'], tag='cash-included'),
+                   charge('payment', 'additional', '0', conditions=['min_subtotal:USD:2000'], tag='big')]
+        for waiver in waivers:
+            with self.subTest(state=waiver.state, conditions=waiver.conditions):
+                self.assertUnresolved(calc(build_offer(costs=[TAX_INCLUDED, FREE_DELIVERY, waiver]),
+                                           build_request(payment='card')),
+                                      'published payment terms do not cover this order',
+                                      gap='costs.payment', subtotal=usd('1030.00'))
+        included = charge('other', 'included', conditions=['city:beirut'], tag='inc')
+        self.assertUnresolved(calc(build_offer(costs=[TAX_INCLUDED, FREE_DELIVERY, included], route=TYRE),
+                                   build_request(route=TYRE)),
+                              'published other terms do not cover this order', gap='costs.other',
+                              subtotal=usd('1030.00'))
+        # Where the waiver applies nothing is added, and a surcharge that does not apply adds nothing.
+        self.assertVerified(calc(build_offer(costs=[TAX_INCLUDED, FREE_DELIVERY, waivers[0]])), '1030.00')
+        card_fee = charge('payment', 'additional', '20.60', conditions=['payment:card'], tag='card')
+        self.assertVerified(calc(build_offer(costs=[TAX_INCLUDED, FREE_DELIVERY, card_fee])), '1030.00')
+        # A published ordinary charge settles it outside the waiver's condition.
+        self.assertVerified(calc(build_offer(costs=[TAX_INCLUDED, FREE_DELIVERY, waivers[0], card_fee]),
+                                 build_request(payment='card')), '1050.60')
+
     def test_unsupported_conditions_and_imports_stay_unresolved(self):
         reason = 'delivery promotion condition cannot be checked'
         conditions = ['customs:paid-by-buyer', 'import', 'country:AE', 'min_subtotal:usd:50',

@@ -11,8 +11,11 @@ contract values, never store text.
 A kind's charge comes from its components that apply now: every condition holds and the quote
 has not expired. Components that agree count once; disagreeing ones are a conflict. Components
 whose conditions fail are set aside; if nothing else applies, VAT or delivery has no published
-charge for this order, while an optional charge simply does not apply. A condition that cannot
-be checked leaves the charge unresolved, and so does an expired quote unless a current one exists.
+charge for this order, while an optional surcharge simply does not apply. A set-aside waiver (a
+term that adds nothing: included, not applicable or an additional zero) is the exception: outside
+its condition the ordinary charge applies but is not published, so the charge stays unresolved.
+A condition that cannot be checked leaves the charge unresolved, and so does an expired quote
+unless a current one exists.
 
 Condition grammar (every condition on a component must hold):
   min_subtotal:<CUR>:<amount>  the device price is in CUR and at least amount (min_subtotal:USD:50)
@@ -198,6 +201,11 @@ def _line(kind: str, components: list[CostComponent], *, required: bool, request
     if expired:
         return _Line(kind, reason=f'{kind} quote has expired', gap=field)
     if not required:
+        # A term that adds nothing under a condition waives an ordinary charge; set aside, it leaves
+        # that charge unpublished, so it stays unknown rather than becoming zero.
+        if any(c.state in ('included', 'not_applicable')
+               or (c.state == 'additional' and c.amount.amount == 0) for c in set_aside):
+            return _Line(kind, reason=f'published {kind} terms do not cover this order', gap=field)
         return _Line(kind, amount=Decimal(0))  # no published surcharge applies to this order
     if set_aside:  # we do not know the charge without the terms that were set aside
         return _Line(kind, reason=f'published {kind} terms do not cover this order', gap=field)
