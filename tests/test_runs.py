@@ -776,6 +776,29 @@ class LimitTests(RunCase):
         self.assertNotIn('planner', self.names())
 
 
+class ClockStepTests(RunCase):
+    def test_a_wall_clock_step_changes_neither_elapsed_time_nor_which_evidence_counts(self):
+        steps = {'forward an hour': timedelta(hours=1), 'back five seconds': -timedelta(seconds=5),
+                 'back an hour': -timedelta(hours=1)}
+        for name, step in steps.items():
+            with self.subTest(name):
+                run_id, stepped = 'run-' + name.replace(' ', '-'), []
+
+                def on_request(url, step=step, stepped=stepped):
+                    if url == API.format('beta') and not stepped:  # only the wall clock moves
+                        stepped.append(url)
+                        self.clock.wall += step
+
+                self.gate = FakeGate(self.clock, on_request=on_request)
+                started = self.clock.mono
+                result = self.search(assess=make_assess(required=()), run_id=run_id)
+                self.assertEqual((result.status, [r.offer.offer_id for r in result.recommendations]),
+                                 ('complete', ['beta:100:201', 'alpha:100:101']))
+                self.assertEqual(result.unresolved, [])
+                self.assertEqual(result.usage.elapsed_ms, round((self.clock.mono - started) * 1000))
+                self.assertEqual(self.storage.load_run(run_id), result)
+
+
 class PlannerTests(RunCase):
     def test_actions_outside_the_menu_count_a_turn_and_run_nothing(self):
         invalid = PlannerDecision(kind='invalid', reason='model returned two tool calls')

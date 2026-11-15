@@ -402,12 +402,12 @@ class RunBudget:
         with self._lock:
             return self._spent + self._held
 
-    def usage(self, wall_elapsed_ms: int | None = None) -> BudgetUsage:
+    def usage(self) -> BudgetUsage:
         """Totals so far, in USD. Calls and spend still reserved count as used: they may have been
-        sent or spent. Elapsed time is the run clock's unless the wall-clock span is given."""
+        sent or spent. Elapsed time is the run clock's, which the caps use."""
         with self._lock:
-            elapsed = _ms(self._clock() - self._start) if wall_elapsed_ms is None else wall_elapsed_ms
-            return BudgetUsage(elapsed_ms=elapsed, external_calls=self._calls, planner_turns=self._turns,
+            return BudgetUsage(elapsed_ms=_ms(self._clock() - self._start), external_calls=self._calls,
+                               planner_turns=self._turns,
                                spend=Money(amount=self._spent + self._held, currency=USD))
 
     def remaining(self) -> dict[str, int | str]:
@@ -573,15 +573,19 @@ class _Coverage:
 
 
 class _SourceFetch:
-    """A reader's Fetch: the gate bound to this run's budget and to the reader's own store."""
+    """A reader's Fetch: the gate bound to this run's budget and to the reader's own store. Each
+    reply it returns is noted (body hash, observed_at), so evidence can be matched to this run."""
 
-    def __init__(self, gate, budget: RunBudget, source_id: str):
-        self._gate, self._budget, self._source_id = gate, budget, source_id
+    def __init__(self, gate, budget: RunBudget, source_id: str, observed: set):
+        self._gate, self._budget, self._source_id, self._observed = gate, budget, source_id, observed
 
     def __call__(self, source_id: str, url: str, *, expect: str):
         if source_id != self._source_id:
             raise ValueError('A store reader may only fetch from its own store')
-        return self._gate.fetch(self._budget, source_id, url, expect=expect)
+        outcome = self._gate.fetch(self._budget, source_id, url, expect=expect)
+        if outcome.response_sha256 is not None and outcome.observed_at is not None:
+            self._observed.add((outcome.response_sha256, outcome.observed_at))
+        return outcome
 
 
 class _SpendView:
@@ -626,6 +630,7 @@ class _Run:
         self.policies: dict[str, list[PolicyDocument]] = {}
         self.attempted: set[tuple[str, str, str]] = set()  # (tool, store, target) tried this run
         self.stored_bodies: set[str] = set()
+        self.observed: set[tuple[str, datetime]] = set()  # (body hash, observed_at) of this run's replies
         self.saved: dict[str, Offer] = {}
         self.withheld: dict[str, list[str]] = {}
         self.history: list[dict] = []
@@ -732,7 +737,7 @@ class _Run:
         The caller clears self.tool once it has absorbed the results."""
         self.tool = {'tool': tool, 'source_id': source_id}
         before = self.budget.calls_used(source_id)
-        result = invoke(_SourceFetch(self.deps.gate, self.budget, source_id))
+        result = invoke(_SourceFetch(self.deps.gate, self.budget, source_id, self.observed))
         if not isinstance(result, AdapterResult):
             raise TypeError('Store readers return an AdapterResult')
         offers, policies, dropped = self._keep(source_id, result)
@@ -1005,14 +1010,16 @@ class _Run:
         return verified
 
     def _final_check(self, finalists: list[tuple[Offer, Assessment]]) -> list[tuple[Offer, Assessment]]:
-        """Re-assess the finalists on evidence observed during this run.
+        """Re-assess the finalists on evidence observed during this run: every record must cite a
+        reply this run's gate returned (its body hash and observation time), which a step of the
+        wall clock cannot fake or spoil.
 
         MVP 13 adds a live re-fetch of each finalist here, within the final-phase reserve, and
         drops or re-ranks the offers that changed.
         """
-        now, fresh = self._now(), []
+        fresh = []
         for offer, _ in finalists:
-            if all(self.started_at <= e.observed_at <= now for e in offer.evidence):
+            if all((e.response_sha256, e.observed_at) in self.observed for e in offer.evidence):
                 fresh.append(offer)
             else:
                 self.withheld[offer.offer_id] = [REASON_STALE]
@@ -1076,7 +1083,7 @@ class _Run:
             unresolved += [OfferIssue(offer_id=offer_id, reasons=[REASON_ERROR])
                            for offer_id in dict.fromkeys(o.offer_id for o in self.offers) if offer_id not in listed]
         finished_at = max(self._now(), verified_at)
-        usage = self.budget.usage(int((finished_at - self.started_at).total_seconds() * 1000))
+        usage = self.budget.usage()  # elapsed on the run clock the caps use, never the wall clock
         result = RunResult(
             run_id=self.run_id, request_id=self.request.request_id, status=status, stop_reason=stop,
             started_at=self.started_at, finished_at=finished_at, recommendations=recommendations,

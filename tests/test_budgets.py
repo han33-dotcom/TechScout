@@ -300,7 +300,8 @@ class TurnAndUsageTests(unittest.TestCase):
         self.clock.advance(2.5)
         self.assertEqual(budget.usage(), BudgetUsage(elapsed_ms=2500, external_calls=1, planner_turns=1,
                                                      spend={'amount': '0.0123', 'currency': 'USD'}))
-        self.assertEqual(budget.usage(wall_elapsed_ms=1234).elapsed_ms, 1234)
+        self.clock.wall += timedelta(hours=1)  # a wall-clock step never reaches the run's elapsed time
+        self.assertEqual(budget.usage().elapsed_ms, 2500)
 
     def test_remaining_shows_only_what_is_left_before_the_reserve(self):
         budget = RunBudget('run-1', RunCaps(), self.clock.monotonic)
