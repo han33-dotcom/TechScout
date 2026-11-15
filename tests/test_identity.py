@@ -347,6 +347,31 @@ class PlusTests(unittest.TestCase):
         self.assertEqual(spell_plus('iPhone 17 + AirPods'), 'iPhone 17 + AirPods')
         self.assertEqual(match_model('Apple iPhone 17 256GB + AirPods'), 'iPhone 17')
 
+    def test_a_plus_followed_directly_by_storage_still_names_the_plus_model(self):
+        self.assertEqual(spell_plus('iPhone 16+128GB'), 'iPhone 16 Plus 128GB')
+        for text in ('iPhone 16+128GB', 'iPhone 16+128 GB', 'Apple iPhone 16+1TB Black'):
+            with self.subTest(text=text):
+                self.assertEqual(match_model(text), 'iPhone 16 Plus')
+        for text in ('iPhone 17+256GB', 'iPhone 17+0.5TB'):  # no iPhone 17 Plus, and not the iPhone 17
+            with self.subTest(text=text):
+                self.assertIsNone(match_model(text))
+        # A '+' joining another item, even one starting with a digit, leaves the phone alone.
+        for text in ('iPhone 16+AirPods', 'iPhone 16+20W Adapter', 'iPhone 16+1 Year Warranty'):
+            with self.subTest(text=text):
+                self.assertEqual(match_model(text), 'iPhone 16')
+
+    def test_the_reader_reads_a_plus_attached_to_storage_as_the_plus_model(self):
+        # Captured Class Cellulars reply with only the product name changed.
+        offers = read('class_cellulars', renamed('class_cellulars', 'iPhone 16+128GB'))
+        self.assertTrue(offers)
+        for offer in offers:
+            self.assertEqual((offer.variant.model.state, offer.variant.model.value), ('known', 'iPhone 16 Plus'))
+        offers = read('class_cellulars', renamed('class_cellulars', 'iPhone 17+256GB'))
+        self.assertTrue(offers)
+        for offer in offers:
+            self.assertEqual((offer.variant.model.state, offer.variant.model.reason),
+                             ('unknown', 'product name does not name a known model'))
+
     def test_a_plus_model_is_not_its_base_model(self):
         plus = normalize_variant(make_offer('1', model='iPhone 16+', region='LB'))
         base = normalize_variant(make_offer('2', model='iPhone 16', region='LB'))

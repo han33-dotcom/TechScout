@@ -22,9 +22,12 @@ def _pattern(name: str) -> re.Pattern:
 _SPELLINGS = {**{m: m for m in KNOWN_MODELS}, **MODEL_ALIASES}
 # (spelling, canonical name, pattern), longest spelling first.
 _MODELS = sorted(((s, m, _pattern(s)) for s, m in _SPELLINGS.items()), key=lambda t: -len(t[0]))
-# A '+' written right after a model ('iPhone 16+', Samsung's 'Galaxy S25+') names the Plus model;
-# a spaced '+' ('iPhone 17 + AirPods') joins a bundle and is left alone.
-_PLUS = re.compile(r'(?<=[0-9a-z])\+(?![0-9a-z])', re.IGNORECASE)
+# A '+' written right after a model ('iPhone 16+', Samsung's 'Galaxy S25+') names the Plus model,
+# also when a storage size follows it directly ('iPhone 16+128GB'). A spaced '+' ('iPhone 17 +
+# AirPods') or one followed by another item ('iPhone 16+AirPods', 'iPhone 16+20W Adapter') joins
+# a bundle and is left alone.
+_PLUS = re.compile(r'(?<=[0-9a-z])\+(?:(?![0-9a-z])|(?=[0-9]{1,4}(?:[.,][0-9]+)?\s*(?:GB|TB)(?![0-9a-z])))',
+                   re.IGNORECASE)
 # A word right after a known model that makes it another phone: 'Pro-Max', 'Plus', 'PM', 'Mini', a
 # stray 'e' or a '(Pro)'. A fixed list, so other words after a model ('256GB', 'Black', even
 # injected text) leave it alone, and 'e' before 'SIM' is the eSIM. A spaced '+' not followed by
@@ -45,7 +48,7 @@ def spell_plus(text: str) -> str:
 
     Model names are compared word by word, and a bare '+' is punctuation that would drop out.
     """
-    return _PLUS.sub(' Plus', text)
+    return _PLUS.sub(lambda m: ' Plus ' if text[m.end():m.end() + 1].isdigit() else ' Plus', text)
 
 
 def find_model(text: str) -> tuple[str, str] | None:
