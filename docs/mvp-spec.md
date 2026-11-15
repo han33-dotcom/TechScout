@@ -263,7 +263,9 @@ address lookup is dropped unsent: the gate asks the reservation's `still_wanted(
 sending.
 
 Planner time counts against the time budget. Each planner declares `max_call_seconds`: 30 for
-the model planner (its call timeout), 0 for the two baselines. An action is offered only if that
+the model planner, 0 for the two baselines. The model planner holds its whole call to that time:
+a call still running then is abandoned and reported as 'planner call timed out', and its cost is
+committed as unknown, which ends the run partial with 'planner cost is unknown'. An action is offered only if that
 planner time plus the action's requests at 15 seconds each fit before the verification reserve,
 so a turn starts only when the planner call and an action both fit. When nothing fits for time,
 the run ends partial with 'time budget reached' before the turn is counted or paid for. With the
@@ -352,9 +354,9 @@ disabled for this run'. Called through `run_search` with planner
 turns left, it is asked only when an affordable action exists for an open gap. It then counts one
 turn and the run ends with 'the planner chose to stop'. Otherwise the run ends as any other run
 would, for example with 'no open evidence gaps remain'. Known limits: the model
-planner's 30-second call timeout is not the 15 seconds per call in issue #16, and the SDK applies
-it to each network step rather than the whole call, so a slow call can run longer and use part
-of the verification reserve. A permanent API error (such as HTTP 401) is retried every turn
+planner's 30-second call limit is not the 15 seconds per call in issue #16, and a call abandoned
+at that limit keeps a background thread until the SDK's own per-step timeout ends it (its reply is
+never read). A permanent API error (such as HTTP 401) is retried every turn
 until the turn cap, so the run reports 'planner turn cap reached'.
 
 ## Tool error codes
