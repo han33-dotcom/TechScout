@@ -6,7 +6,8 @@ readers are in `app/adapters/` (MVP 05); minimized copies of the replies are in
 API reply or variation form that no longer has the expected shape is reported as `INVALID_SCHEMA`,
 and so is a policy page in which the reader recognizes no statement (the read is `partial`). A
 product-page or product-name statement whose wording changes is simply not read, so its field
-stays unknown with a "not published" reason and the read is still `ok`; a Store API reply
+stays unknown with a fixed reason (usually "... is not published"; a product name that no longer
+names a known model gives "product name does not name a known model") and the read is still `ok`; a Store API reply
 without a currency code likewise leaves prices unknown ("currency is not declared").
 
 All three admitted stores run WooCommerce. One product read is two requests (Store API slug

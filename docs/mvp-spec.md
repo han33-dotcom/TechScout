@@ -216,7 +216,7 @@ end the store promised. A window that cannot start before the deadline fails.
 
 ### Costs (MVP 09)
 
-`calculate_cost(request, offer, fx=(), now=None)` in `app/costs.py` returns a verified total
+`calculate_cost(request, offer, *, fx=(), now=None)` in `app/costs.py` returns a verified total
 only when the price and every applying charge (VAT, delivery, payment surcharge, other) are
 settled; otherwise it returns the known subtotal, fixed reasons and evidence gaps. Arithmetic
 is exact Decimal; a conversion that needs rounding rounds up, so rounding cannot admit an
@@ -258,7 +258,8 @@ database write, or a planner that overruns its `max_call_seconds` (the model pla
 call at 30 seconds) can be closed by another process's recovery; it then stops on a storage error
 (see the README). The gate reserves every
 attempt, retries included, against the run budget, and each tool is offered only when its
-requests fit at the gate's full 15-second per-attempt timeout and within the store's per-run cap.
+requests fit at the 15 seconds the run budget reserves per attempt (the gate's 10-second deadline
+plus one 5-second phase) and within the store's per-run cap.
 A request reserved before a cancel but still waiting out a backoff, a rate-limit wait or its
 address lookup is dropped unsent: the gate asks the reservation's `still_wanted()` just before
 sending.
