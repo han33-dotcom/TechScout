@@ -175,6 +175,37 @@ class AdversarialTests(ReaderTestCase):
         self.assertEqual([e.json_pointer for e in evidence(agreeing, agreeing.online_stock.evidence_ids)],
                          ['/0/is_in_stock', None])
 
+    def test_a_backorder_is_never_in_stock(self):
+        backorder = '<p class="stock available-on-backorder">Available on backorder</p>\n'
+        cases = [  # (availability line, backorders allowed, API is_on_backorder) -> stock reason or True
+            (backorder, None, None, 'variation is on backorder'),
+            ('', True, None, 'variation is on backorder'),  # backorders without notification show no line
+            ('<p class="stock in-stock">60 in stock</p>\n', True, None, True),
+            (None, None, True, 'variation is on backorder'),
+        ]
+        for line, allowed, api, expected in cases:
+            with self.subTest(line=line, allowed=allowed, api=api):
+                page = fixture('class_cellulars/page.html')
+                entries = json.loads(form_json(page))
+                entry = next(e for e in entries if e['variation_id'] == 19116)
+                self.assertIs(entry['is_in_stock'], True)  # WooCommerce writes true for a backorder
+                if line is not None:
+                    entry['availability_html'] = line
+                if allowed is not None:
+                    entry['backorders_allowed'] = allowed
+                records = json.loads(fixture('class_cellulars/api.json'))
+                if api is not None:
+                    records[0]['is_on_backorder'] = api
+                _, result = self.search({CLASS_PAGE: with_form(page, entries),
+                                         CLASS_API: json.dumps(records).encode()})
+                stock = by_id(result)['19116'].online_stock
+                if expected is True:
+                    self.assertEqual((stock.state, stock.value), ('known', True))
+                else:
+                    self.assertEqual((stock.state, stock.reason), ('unknown', expected))
+                    self.assertIn('variation 19116 is_in_stock true',
+                                  [e.excerpt for e in evidence(by_id(result)['19116'], stock.evidence_ids)])
+
     def test_repeated_page_entries(self):
         _, result = self.search({CLASS_PAGE: 'adversarial/duplicate_variation.page.html'})
         offers = by_id(result)

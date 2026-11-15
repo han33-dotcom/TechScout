@@ -39,6 +39,9 @@ CONDITIONS = frozenset({'new', 'used', 'refurbished'})
 CURRENCY = re.compile(r'[A-Z]{3}')
 DIGITS = re.compile(r'[0-9]+')
 STORAGE_OPTION = re.compile(r'\s*([0-9]{1,4})\s*(GB|TB)\s*', re.IGNORECASE)
+# WooCommerce's classes on a variation's availability line.
+BACKORDER_CLASS = re.compile(r'(?<![\w-])available-on-backorder(?![\w-])')
+IN_STOCK_CLASS = re.compile(r'(?<![\w-])in-stock(?![\w-])')
 MAX_RAW_TEXT = 300  # characters kept per raw store string; raw attributes are informative only
 MAX_RAW_ITEMS = 20
 MAX_POLICY_DAYS = 60
@@ -66,6 +69,7 @@ PURCHASABLE_UNKNOWN = 'purchasability is not stated'
 PURCHASABLE_CONFLICT = 'store reports different purchasability for this variation'
 STOCK_UNKNOWN = 'stock is not stated'
 STOCK_CONFLICT = 'store reports different stock for this variation'
+STOCK_BACKORDER = 'variation is on backorder'
 MANUFACTURER_UNKNOWN = 'manufacturer is not published'
 MANUFACTURER_CONFLICT = 'product data names different manufacturers'
 MODEL_UNKNOWN = 'product name does not name a known model'
@@ -106,6 +110,7 @@ DELIVERY_FEE_UNKNOWN = 'delivery charge is not published'
 FIXED_REASONS = frozenset({
     NOT_ON_PAGE, PAGE_UNREAD, FORM_UNREAD, PRICE_NOT_NUMBER, PRICE_INVALID, PRICE_DECIMALS, PRICE_ZERO,
     NO_CURRENCY, PRICE_CONFLICT, PURCHASABLE_UNKNOWN, PURCHASABLE_CONFLICT, STOCK_UNKNOWN, STOCK_CONFLICT,
+    STOCK_BACKORDER,
     MANUFACTURER_UNKNOWN, MANUFACTURER_CONFLICT, MODEL_UNKNOWN, STORAGE_UNKNOWN, STORAGE_UNREADABLE,
     STORAGE_SEVERAL, STORAGE_CONFLICT, STORAGE_ANY, COLOR_UNKNOWN, COLOR_UNREADABLE, COLOR_CONFLICT,
     COLOR_ANY, SIM_UNKNOWN, SIM_NOT_STATED, SIM_UNRECOGNIZED, SIM_CONFLICT, SIM_ANY, REGION_UNKNOWN,
@@ -789,7 +794,27 @@ class _OfferBuilder:
                           PURCHASABLE_CONFLICT)
 
     def online_stock(self) -> dict:
-        return self.flags('online_stock', ('is_in_stock',), STOCK_UNKNOWN, STOCK_CONFLICT)
+        """WooCommerce's is_in_stock is also true for a variation on backorder, so a backorder
+        marker on a page entry or the API record keeps stock unknown; a backorder is never in stock."""
+        fact = self.flags('online_stock', ('is_in_stock',), STOCK_UNKNOWN, STOCK_CONFLICT)
+        if fact['state'] != 'known' or fact['value'] is not True:
+            return fact
+        records = []
+        for item in self.items:
+            note = item.data.get('availability_html')
+            note = note if isinstance(note, str) else ''
+            # WooCommerce's own backorder class; or backorders allowed with no in-stock line, which is
+            # how a backorder without customer notification shows.
+            if BACKORDER_CLASS.search(note) or (item.data.get('backorders_allowed') is True
+                                                and not IN_STOCK_CLASS.search(note)):
+                records.append(self.page_record('online_stock', 'variant', f'variation {self.vid} on backorder',
+                                                f'item{item.index}-backorder'))
+        if self.record is not None and self.record[1].get('is_on_backorder') is True:
+            records.append(self.api_record('online_stock', 'variant',
+                                           json_pointer(self.record[0], 'is_on_backorder'), 'api-backorder'))
+        if not records:
+            return fact
+        return self.unknown(STOCK_BACKORDER, [self.evidence[i] for i in fact['evidence_ids']] + records)
 
     def _named_entries(self, key: str) -> list[tuple[int, str]]:
         entries = self.api.record.get(key)
