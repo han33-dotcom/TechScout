@@ -17,13 +17,25 @@ def _pattern(name: str) -> re.Pattern:
 
 
 _MODELS = sorted(((m, _pattern(m)) for m in KNOWN_MODELS), key=lambda pair: -len(pair[0]))
+# A '+' written right after a model ('iPhone 16+', Samsung's 'Galaxy S25+') names the Plus model;
+# a spaced '+' ('iPhone 17 + AirPods') joins a bundle and is left alone.
+_PLUS = re.compile(r'(?<=[0-9a-z])\+(?![0-9a-z])', re.IGNORECASE)
 _MANUFACTURERS = [(m, _pattern(m)) for m in KNOWN_MANUFACTURERS]
 # A size followed by RAM is memory, not storage ('12GB RAM').
 _STORAGE = re.compile(r'(?<![0-9a-z])([0-9]{1,4})\s*(GB|TB)(?![0-9a-z])(?!\s*RAM)', re.IGNORECASE)
 
 
+def spell_plus(text: str) -> str:
+    """The text with a '+' attached to a name spelled 'Plus', so 'iPhone 16+' is 'iPhone 16 Plus'.
+
+    Model names are compared word by word, and a bare '+' is punctuation that would drop out.
+    """
+    return _PLUS.sub(' Plus', text)
+
+
 def match_model(text: str) -> str | None:
     """Our canonical model name for the longest known model in the text, or None."""
+    text = spell_plus(text)
     for name, pattern in _MODELS:
         if pattern.search(text):
             return name

@@ -21,7 +21,7 @@ import unicodedata
 
 from app.assessment import Check, Eligibility, EvidenceGap, Outcome, combine
 from app.contracts import BranchStock, Fact, Offer, ShoppingRequest
-from app.devices import canonical_manufacturer
+from app.devices import canonical_manufacturer, spell_plus
 from app.identity import NormalizedVariant, canonical_color, known_color, known_model, normalize_variant
 
 # Every offer gets these checks, in this order.
@@ -394,6 +394,8 @@ def _maker(text: str) -> str:
 
 
 def _model_name(text: str) -> str:
+    # '+' is punctuation to _name, so it is spelled out first: 'Galaxy S25+' is not 'Galaxy S25'.
+    text = spell_plus(text)
     return known_model(text) or ' '.join(text.split())
 
 

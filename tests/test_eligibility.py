@@ -490,6 +490,18 @@ class IdentityConstraintTests(unittest.TestCase):
                 self.assertEqual(judged(named(result)[name]), ('fail', reason))
                 self.assertEqual(result.outcome, 'fail')
 
+    def test_a_plus_model_is_never_its_base_model(self):
+        cases = [('iPhone 16+', 'iPhone 16', 'fail'), ('iPhone 16', 'iPhone 16+', 'fail'),
+                 ('iPhone 17+', 'iPhone 17', 'fail'), ('Galaxy S25+', 'Galaxy S25', 'fail'),
+                 ('Galaxy S25', 'Galaxy S25+', 'fail'), ('Galaxy S25+', 'Galaxy S25 Plus', 'pass'),
+                 ('iPhone 16 Plus', 'iPhone 16+', 'pass')]
+        for wanted, written, outcome in cases:
+            with self.subTest(wanted=wanted, written=written):
+                check = check_of(make_request(model=wanted), make_offer(model=written), 'model')
+                self.assertEqual(check.outcome, outcome)
+        self.assertEqual(check_of(make_request(model='iPhone 16 Plus'), make_offer(model='iPhone 16+'),
+                                  'model').reason, 'model is iPhone 16 Plus')
+
     def test_regions_compare_by_place(self):
         cases = [(['LB'], 'Lebanon', 'pass', 'region is allowed'),
                  (['Middle East'], 'middle-east', 'pass', 'region is allowed'),

@@ -11,6 +11,7 @@ from pathlib import Path
 import unittest
 
 from app.contracts import Offer
+from app.devices import match_model, spell_plus
 from app.identity import (
     COLOR_ALIASES, DedupResult, NormalizedVariant, canonical_color, deduplicate, known_color, known_model,
     normalize_variant, same_device,
@@ -229,6 +230,25 @@ class LinkHintTests(unittest.TestCase):
         # A store-wide policy page is not this listing's link.
         offer = make_offer(policy_at=LATER, page='https://seller.example/product/iphone-17/')
         self.assertEqual(normalize_variant(offer).warnings, [])
+
+
+class PlusTests(unittest.TestCase):
+    def test_a_plus_attached_to_a_model_names_the_plus_model(self):
+        self.assertEqual(spell_plus('Galaxy S25+'), 'Galaxy S25 Plus')
+        self.assertEqual(match_model('iPhone 16+'), 'iPhone 16 Plus')
+        self.assertEqual(known_model('iPhone 16+'), 'iPhone 16 Plus')
+        self.assertEqual(normalize_variant(make_offer(model='iPhone 16+')).model.value, 'iPhone 16 Plus')
+        self.assertIsNone(known_model('iPhone 17+'))  # no iPhone 17 Plus in our table, and not the iPhone 17
+        # A spaced '+' joins a bundle; it does not rename the phone.
+        self.assertEqual(spell_plus('iPhone 17 + AirPods'), 'iPhone 17 + AirPods')
+        self.assertEqual(match_model('Apple iPhone 17 256GB + AirPods'), 'iPhone 17')
+
+    def test_a_plus_model_is_not_its_base_model(self):
+        plus = normalize_variant(make_offer('1', model='iPhone 16+', region='LB'))
+        self.assertIs(same_device(plus, normalize_variant(make_offer('2', model='iPhone 16', region='LB'))),
+                      False)
+        self.assertIs(same_device(plus, normalize_variant(make_offer('3', model='iPhone 16 Plus', region='LB'))),
+                      True)
 
 
 class SameDeviceTests(unittest.TestCase):

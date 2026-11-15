@@ -14,7 +14,7 @@ from urllib.parse import parse_qsl, unquote, urlsplit
 from pydantic import Field
 
 from app.contracts import Fact, Model, Offer, PositiveInt, Sim, Text
-from app.devices import KNOWN_MANUFACTURERS, canonical_manufacturer, match_model
+from app.devices import KNOWN_MANUFACTURERS, canonical_manufacturer, match_model, spell_plus
 
 IDENTITY_FIELDS = ('manufacturer', 'model', 'storage_gb', 'color', 'sim', 'region')
 
@@ -135,8 +135,10 @@ def known_model(text: str) -> str | None:
     """Our model name when the text is exactly one known model, optionally after its maker's name.
 
     match_model finds a model anywhere in a product name; a model value must be that model alone,
-    since 'iPhone 17 Plus' contains 'iPhone 17' but would be another phone.
+    since 'iPhone 17 Plus' contains 'iPhone 17' but would be another phone. A '+' attached to the
+    model is spelled out first, so 'iPhone 16+' is 'iPhone 16 Plus' and 'iPhone 17+' is no model.
     """
+    text = spell_plus(text)
     name = match_model(text)
     if name is None or _squash(_MAKER.sub('', text, count=1)) != _squash(name):
         return None
