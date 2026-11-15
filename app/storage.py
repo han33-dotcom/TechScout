@@ -31,6 +31,10 @@ RUN_STATES = ('running', 'complete', 'partial', 'abstained', 'cancelled', 'error
 # ends well inside it (app.runs.RunCaps), so a run still live in another process, such as a
 # command-line search beside the web app, is never closed.
 RUN_LEASE = timedelta(minutes=10)
+# A run's time cap stays well inside the lease, so a request or planner call in flight at the cap,
+# a slow lookup or a slow database write never makes a live run look abandoned. Checked by
+# app.runs.RunCaps and by the evaluation config (app.planner.EvaluationCaps).
+MAX_RUN_SECONDS = RUN_LEASE.total_seconds() / 2
 INTERRUPTED = 'interrupted: the service stopped before this run finished'
 SHA256 = re.compile(r'^[0-9a-f]{64}$')
 

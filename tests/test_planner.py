@@ -624,6 +624,16 @@ class AnthropicPlannerTests(unittest.TestCase):
         self.assertEqual((budget.commits, budget.unknown, budget.open), ([None], True, 0))
         self.assertEqual(budget.spent, budget.asked[0])
 
+    def test_no_call_is_sent_when_setup_used_the_whole_call_time(self):
+        client = FakeClient(reply(call('act', action_id='A1', reason='read the FAQ')))
+        planner, budget = AnthropicPlanner(CONFIG, client=client), FakeBudget()
+        planner.max_call_seconds = 0.0  # the deadline has passed before the call could be sent
+        decision = planner.decide(state(), budget)
+        self.assertEqual((decision.kind, decision.reason),
+                         ('invalid', 'no time left for the planner call; no call made'))
+        self.assertEqual(client.calls, [])
+        self.assertEqual((budget.commits, budget.releases, budget.unknown, budget.open), ([], 1, False, 0))
+
     def test_a_call_still_running_at_max_call_seconds_is_abandoned_as_timed_out(self):
         """The SDK timeout bounds each network step only; decide() itself keeps to max_call_seconds."""
         release, started = threading.Event(), []

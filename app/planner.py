@@ -25,6 +25,7 @@ from pydantic import model_validator
 from app.assessment import EvidenceGap
 from app.contracts import Amount, Count, Model, Money, PositiveInt, ShoppingRequest, Text
 from app.devices import canonical_manufacturer, match_model
+from app.storage import MAX_RUN_SECONDS
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_CONFIG = ROOT / 'config' / 'evaluation.json'
@@ -212,7 +213,6 @@ class EvaluationCaps(Model):
         if (self.reserve_seconds >= self.seconds or self.reserve_calls >= self.external_calls
                 or self.reserve_spend_usd > self.spend_usd):
             raise ValueError('Each reserve must fit inside its cap')
-        from app.runs import MAX_RUN_SECONDS  # here, not at the top: app.runs imports this module
         if self.seconds > MAX_RUN_SECONDS:  # so a run always ends inside the recovery lease
             raise ValueError(f'A run may last at most {MAX_RUN_SECONDS:g} seconds')
         return self
@@ -475,8 +475,9 @@ def _bounded(create, request: dict, deadline: float):
     """create(**request) on a worker thread, waited for until the monotonic deadline at most.
 
     The SDK timeout bounds each network step, not the whole call, so the wait enforces the total.
-    A call still running at the deadline is abandoned (it ends on its own per-step timeout, and
-    its reply is never read) and _Overrun is raised. The call's own exception is raised here.
+    A call still running at the deadline is abandoned and _Overrun is raised: it keeps running on a
+    daemon thread until the SDK returns or the process exits, its reply is never read and nothing
+    it does reaches the budget. The call's own exception is raised here.
     """
     done, box = threading.Event(), {}
 
@@ -525,7 +526,9 @@ class AnthropicPlanner:
     timeout to each network step, so a degraded connection could otherwise run longer: the call runs
     on a worker thread, and once max_call_seconds have passed decide() abandons it and reports the
     call as timed out, with its cost committed as unknown, as for an SDK timeout. The abandoned call
-    ends on its own per-step timeout and its reply, if any, is never read.
+    keeps running on a daemon thread until the SDK returns or the process exits; its reply, if any,
+    is never read. If setup has already used the whole time, no call is sent and the reservation is
+    released.
     """
     name = 'anthropic-planner'
     max_call_seconds = CALL_TIMEOUT_S
@@ -606,6 +609,9 @@ class AnthropicPlanner:
         # client error).
         charge, billed = None, True
         try:
+            if deadline - time.monotonic() <= 0:  # setup used the whole call time: send nothing
+                billed = False
+                return PlannerDecision(kind='invalid', reason='no time left for the planner call; no call made')
             try:
                 endpoint = self._client.beta.messages if 'fallbacks' in request else self._client.messages
                 # A copy, so no client can change the stable prompt or tools of later turns.

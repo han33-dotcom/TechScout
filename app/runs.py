@@ -46,7 +46,7 @@ from app.planner import (
 )
 from app.source_registry import DEFAULT_REGISTRY, get_active_source
 from app.sources import CALL_TIMEOUT_S, SourceGate
-from app.storage import RUN_LEASE, Storage
+from app.storage import MAX_RUN_SECONDS, RUN_LEASE, Storage
 from app.tracing import Tracer
 
 log = logging.getLogger('techscout.runs')
@@ -59,9 +59,6 @@ POLICY_CALLS = 1
 # What a fresh product read can settle. It never shows branch stock, so pickup gaps get no re-read.
 OFFER_GAP_FIELDS = frozenset({'price', 'online_stock', 'purchasable'})
 MAX_RECOMMENDATIONS = 3
-# A run's time cap stays well inside the recovery lease, so a request or planner call in flight at
-# the cap, a slow lookup or a slow database write never makes a live run look abandoned.
-MAX_RUN_SECONDS = RUN_LEASE.total_seconds() / 2
 
 # Fixed stop reasons; RunResult.stop_reason is always one of these.
 STOP_NO_GAPS = 'no open evidence gaps remain'
