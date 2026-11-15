@@ -33,8 +33,11 @@ _QUALIFIER = re.compile(r'\s*\+(?!\s*[0-9a-z])|[\s\-\u2010-\u2015_(\[]*'
                         r'(?:plus|pro|max|promax|pm|mini|ultra|air|se|e(?![\s\-\u2010-\u2015]*sim))(?![0-9a-z])',
                         re.IGNORECASE)
 _MANUFACTURERS = [(m, _pattern(m)) for m in KNOWN_MANUFACTURERS]
-# A size followed by RAM is memory, not storage ('12GB RAM').
-_STORAGE = re.compile(r'(?<![0-9a-z])([0-9]{1,4})\s*(GB|TB)(?![0-9a-z])(?!\s*RAM)', re.IGNORECASE)
+# A size followed by RAM is memory, not storage ('12GB RAM'). Digits after a decimal point or a
+# digit group separator are not a size ('0.25TB', '1,024GB'); a comma after a word still ends it
+# ('Black,256GB').
+_STORAGE = re.compile(r'(?<![0-9a-z])(?<![0-9][.,])([0-9]{1,4})\s*(GB|TB)(?![0-9a-z])(?!\s*RAM)',
+                      re.IGNORECASE)
 
 
 def spell_plus(text: str) -> str:
@@ -76,5 +79,6 @@ def canonical_manufacturer(text: str) -> str | None:
 
 
 def storage_tokens(text: str) -> list[int]:
-    """Storage sizes in GB written in the text ('256GB', '1 TB'), in order."""
-    return [int(n) * (1024 if unit.upper() == 'TB' else 1) for n, unit in _STORAGE.findall(text)]
+    """Storage sizes in GB written in the text ('256GB', '1 TB' is 1024), in order; never 0."""
+    sizes = (int(n) * (1024 if unit.upper() == 'TB' else 1) for n, unit in _STORAGE.findall(text))
+    return [size for size in sizes if size]

@@ -11,7 +11,7 @@ from pathlib import Path
 import unittest
 
 from app.contracts import Offer
-from app.devices import match_model, spell_plus
+from app.devices import match_model, spell_plus, storage_tokens
 from app.identity import (
     COLOR_ALIASES, DedupResult, NormalizedVariant, canonical_color, deduplicate, known_color, known_model,
     normalize_variant, same_device,
@@ -275,6 +275,27 @@ class ModelQualifierTests(unittest.TestCase):
                 for offer in offers:
                     self.assertEqual((offer.variant.model.state, offer.variant.model.reason),
                                      ('unknown', 'product name does not name a known model'))
+
+
+class StorageTokenTests(unittest.TestCase):
+    def test_decimal_and_grouped_sizes_are_not_read_from_their_last_digits(self):
+        for text in ('iPhone 17 0.25TB', 'iPhone 17 2.0TB', 'iPhone 17 1.5 TB', 'iPhone 17 1,024GB',
+                     'iPhone 17 256.5GB', 'iPhone 17 0GB'):
+            with self.subTest(text=text):
+                self.assertEqual(storage_tokens(text), [])
+        for text, sizes in [('Apple iPhone 17 | 256GB', [256]), ('iPhone 17 1 TB', [1024]),
+                            ('Apple iPhone 17 Pro - Black,256GB', [256]),
+                            ('Galaxy S25 Ultra 12GB RAM 256GB', [256]), ('128GB or 2TB', [128, 2048])]:
+            with self.subTest(text=text):
+                self.assertEqual(storage_tokens(text), sizes)
+
+    def test_a_decimal_size_in_a_product_name_invents_no_storage(self):
+        # Mojitech reads storage from the product name alone; Class Cellulars from an option too.
+        [first, *_] = read('mojitech', renamed('mojitech', 'Apple iPhone 17 | 0.25TB'))
+        self.assertEqual(first.variant.storage_gb.state, 'unknown')
+        offers = read('class_cellulars', renamed('class_cellulars', 'iPhone 17 2.0TB'))
+        self.assertEqual([(o.variant.storage_gb.state, o.variant.storage_gb.value) for o in offers],
+                         [('known', 256)] * 4)
 
 
 class ModelAliasTests(unittest.TestCase):
