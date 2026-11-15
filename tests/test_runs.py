@@ -723,6 +723,22 @@ class LimitTests(RunCase):
         self.assertEqual((result.status, result.stop_reason), ('partial', runs.STOP_TIME))
         self.assertGreaterEqual(left[0], RunCaps().reserve_seconds)
 
+    def test_policies_are_offered_only_for_what_they_settle_on_this_route(self):
+        modes = []
+
+        def topics_for(mode):
+            modes.append(mode)
+            return {'faq': (), 'warranty': ('warranty.months',)}  # this route: the FAQ settles nothing
+
+        for store in self.stores.values():
+            store.policy_topics_for = topics_for
+        planner = ScriptedPlanner(STOP)
+        self.search(planner)
+        self.assertEqual(set(modes), {'delivery'})
+        for state in planner.states:
+            self.assertNotIn('fetch_policy', {a.tool for a in state.actions})
+        self.assertNotIn('fetch_policy', self.names())
+
     def test_a_chosen_action_that_no_longer_fits_is_not_run(self):
         self.stores['gamma'].on_search = lambda: self.clock.advance(69.0)  # retrieval ends at 72 s
         planner = ScriptedPlanner(self.slow_act(5.0))  # declares no call time, then takes 5 s

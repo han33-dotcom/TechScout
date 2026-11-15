@@ -94,7 +94,9 @@ class AdapterResult:
 class StoreAdapter(Protocol):
     source_id: str
     adapter_version: str
-    # Policy pages it can read, each with the offer field paths it may settle.
+    # Policy pages it can read, each with the offer field paths it may settle. A reader may also
+    # define policy_topics_for(mode) giving the paths for one route ('delivery' or 'pickup'); the
+    # run controller then uses that instead.
     policy_topics: dict[str, tuple[str, ...]]
 
     def search_candidates(self, fetch: Fetch, query: CandidateQuery) -> AdapterResult: ...

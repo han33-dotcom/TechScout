@@ -573,6 +573,16 @@ def _planner_record(planner) -> dict:
     return {'name': name, 'config': config}
 
 
+def _policy_topics(adapter, mode: str) -> dict[str, tuple[str, ...]]:
+    """The policy pages a store offers for this run's route, each with the paths it may settle.
+
+    A reader that knows some pages speak only to delivery orders (policy_topics_for) leaves those
+    paths out for pickup, so a pickup run never spends requests on a page that cannot settle them.
+    """
+    topics_for = getattr(adapter, 'policy_topics_for', None)
+    return topics_for(mode) if callable(topics_for) else adapter.policy_topics
+
+
 def _covers(settles: str, field_path: str) -> bool:
     """A policy settling 'warranty' covers a gap on 'warranty.months', and one settling
     'warranty.months' covers a gap on 'warranty'."""
@@ -977,7 +987,8 @@ class _Run:
             source_gaps = by_source.get(source_id, [])
             if not source_gaps:
                 continue
-            for policy_id, settles in sorted(self.deps.adapters[source_id].policy_topics.items()):
+            topics = _policy_topics(self.deps.adapters[source_id], self.query.fulfillment.mode)
+            for policy_id, settles in sorted(topics.items()):
                 if (('fetch_policy', source_id, policy_id) in self.attempted
                         or not _PLAIN.fullmatch(policy_id)):
                     continue
