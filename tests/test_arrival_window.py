@@ -27,6 +27,35 @@ def window(observed, low, high, unit='working'):
     return w.earliest, w.latest
 
 
+def beirut_day(month, day):
+    """The widest reading of one Beirut day in 2026: midnight at UTC+3 to the end of the day at UTC+2."""
+    return utc(2026, month, day) - timedelta(hours=3), end_of_day(2026, month, day)
+
+
+class ArrivalWindowTests(unittest.TestCase):
+    """The reader tests observe on a Saturday evening, where several miscounts give the same window."""
+
+    def test_one_working_day_from_each_day_of_the_week(self):
+        # Monday 9 to Sunday 15 November 2026, at 09:00 UTC; Saturday and Sunday are not working days.
+        for start, day in {9: 10, 10: 11, 11: 12, 12: 13, 13: 16, 14: 16, 15: 16}.items():
+            with self.subTest(start=start):
+                self.assertEqual(window(utc(2026, 11, start, 9), 1, 1), beirut_day(11, day))
+
+    def test_when_utc2_and_utc3_name_different_days_both_ends_widen(self):
+        # 21:30 UTC on a Friday is 23:30 on Friday at UTC+2 and 00:30 on Saturday at UTC+3.
+        for month, friday in ((11, 13), (7, 10)):
+            with self.subTest(month=month):
+                observed = utc(2026, month, friday, 21, 30)
+                self.assertEqual(window(observed, 2, 3, 'calendar'),
+                                 (beirut_day(month, friday + 2)[0], beirut_day(month, friday + 4)[1]))
+                # The earliest reading of 'tomorrow' is already past, so it starts at the observation.
+                self.assertEqual(window(observed, 1, 1, 'calendar'), (observed, beirut_day(month, friday + 2)[1]))
+
+    def test_a_same_day_claim_starts_at_the_observation(self):
+        observed = utc(2026, 11, 16, 9)
+        self.assertEqual(window(observed, 0, 3), (observed, beirut_day(11, 19)[1]))
+
+
 class HolidayTests(unittest.TestCase):
     def test_a_fixed_holiday_extends_the_latest_bound_of_a_working_day_window(self):
         # Wednesday 23 December 2026, 10:00 in Beirut, 'up to 3 working days': Friday 25 December is
