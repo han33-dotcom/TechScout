@@ -10,7 +10,9 @@ MVP 02 defines the shared [request, offer and evidence contracts](docs/mvp-spec.
 
 MVP 03 adds the backend foundation: a FastAPI application (`app/main.py`), Postgres storage with Alembic migrations (`app/storage.py`, `migrations/`), protected evidence snapshots, Docker Compose and CI.
 
-MVP 05–06 add store readers for the three sources (`app/adapters/`), with a [coverage matrix](docs/source-coverage.md) of what each store publishes. MVP 07–09 add the fixed rules: variant identity and deduplication (`app/identity.py`), buyer-constraint eligibility (`app/eligibility.py`) and evidence-bound totals (`app/costs.py`). MVP 11 adds run control with budgets and traces (`app/runs.py`, `app/tracing.py`) and MVP 12 the bounded planner (`app/planner.py`, `config/evaluation.json`). See [Shopping workflow](docs/mvp-spec.md#shopping-workflow-mvp-05-12). Indexed discovery (MVP 10), final re-verification (MVP 13) and the buyer interface are not built yet. No store currently states device condition, so today's searches end with candidates and open doubts rather than recommendations.
+MVP 04 adds the source gate (`app/sources.py`), which every store request goes through: GET only, to an allow-listed endpoint of an admitted source, within per-source limits and the run budget.
+
+MVP 05–06 add store readers for the three sources (`app/adapters/`), with a [coverage matrix](docs/source-coverage.md) of what each store publishes. MVP 07–09 add the fixed rules: variant identity and deduplication (`app/identity.py`), buyer-constraint eligibility (`app/eligibility.py`) and evidence-bound totals (`app/costs.py`). MVP 11 adds run control with budgets and traces (`app/runs.py`, `app/tracing.py`) and MVP 12 the bounded planner (`app/planner.py`, `config/evaluation.json`). See [Shopping workflow](docs/mvp-spec.md#shopping-workflow). Indexed discovery (MVP 10), final re-verification (MVP 13) and the buyer interface are not built yet: a search reads one configured iPhone 17 product per store. No store currently states device condition, so today's searches end with candidates and open doubts rather than recommendations.
 
 ## Run with Docker Compose (Postgres)
 
@@ -52,7 +54,9 @@ python -m app.runs search examples/request-iphone17-beirut.json --planner none  
 python -m app.runs search examples/request-iphone17-beirut.json --planner model # paid model planner
 ```
 
-The result prints as JSON; Ctrl+C cancels the run. The model planner needs `ANTHROPIC_API_KEY` in the environment and spends at most the run's spend cap (USD 1.00). The ordinary test suite never contacts a store.
+Each search first closes runs that a crash left `running`, once they started more than 10 minutes ago. The result prints as JSON; one Ctrl+C cancels the run. A run in which no store could be searched ends with status `error` and stop reason `no store could be searched`, and the command exits 1. If a run stops on a storage failure after it was stored (for example, another process closed it), the command prints `Run <id> stopped on an unexpected <Error> without storing its result (stored status: <status>)` instead of a result and exits 1. `--planner none` runs the no-investigation baseline (`no-investigation` in the stored run) and ends with `investigation is disabled for this run`.
+
+Runs use no exchange rates, so give the budget in USD, the price currency of every admitted store; with a budget in another currency, no offer can be verified. The model planner needs `ANTHROPIC_API_KEY` exported in the shell that runs the command (nothing reads it from `.env`, and Compose does not pass it to the container) and spends at most the run's spend cap (USD 1.00). The ordinary test suite never contacts a store.
 
 To run the storage tests against Postgres as well, point `TEST_DATABASE_URL` at a disposable database (the tests reset its schema). CI runs both SQLite and Postgres, plus a Docker build.
 
@@ -62,7 +66,7 @@ Six storage groups: sources, variants, offers, evidence (with raw-response snaps
 
 - **Money** is stored exactly: `NUMERIC` without fixed scale on Postgres, a decimal string elsewhere. Floats are rejected.
 - **Evidence** rows are immutable once stored and reference their raw response by SHA-256. Snapshots are written under `EVIDENCE_DIR` (owner-only permissions), verified against their hash on every read, and never served over HTTP.
-- **Runs** left `running` when the service stops are marked `partial` with an `interrupted` stop reason at the next startup. They are never resumed, so stale searches cannot silently continue. Recorded actions and budget usage are kept.
+- **Runs** left `running` when the service stops are marked `partial` with an `interrupted` stop reason. They are never resumed, so stale searches cannot silently continue. Recovery runs at web-app startup and at the start of each `python -m app.runs search`, and closes only runs that started more than 10 minutes ago (`RUN_LEASE` in `app/storage.py`): the web app and command-line searches share the database, so a younger run may still be live in another process. Recorded actions are kept. A recovered run's usage is its stored totals, which include requests and paid model calls in flight, because they are written before each is sent. Its `elapsed_ms` runs to its last recorded step, so it leaves out downtime and the step in flight at the crash; its `finished_at` is the time it was closed.
 
 Schema changes go through a new Alembic revision in `migrations/versions/`; a test checks that the migrated schema matches `app/storage.py`.
 
