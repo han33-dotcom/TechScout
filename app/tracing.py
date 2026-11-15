@@ -3,8 +3,10 @@
 Each record is one Storage.record_action call: the stored row keeps the step's arguments and
 result (tool results list their fetch attempts; planner turns their decision, tokens, cost and
 whether that cost was priced; the clarify stage the run's planner name and settings), and the
-step's external calls, planner turns and spend are added to the run's totals. Each record is
-also one JSON line, in a fixed shape with those per-step counts, on the 'techscout.trace' logger.
+step's external calls, planner turns and spend reach the run's totals. note() writes usage still
+in flight to those totals ahead of the record, so a record adds only what is not stored yet and
+the stored totals never fall behind what the run has reserved. Each record is also one JSON
+line, in a fixed shape with its per-step counts, on the 'techscout.trace' logger.
 Arguments hold identifiers, counters and the buyer's constraints only: page text, evidence
 excerpts and other store-written values never enter a trace.
 """
@@ -12,6 +14,7 @@ from dataclasses import dataclass
 from decimal import Decimal
 import json
 import logging
+import threading
 from typing import Literal
 
 from app.contracts import ToolError, ToolResult
@@ -81,6 +84,13 @@ def _check_arguments(arguments) -> None:
         raise ValueError('Trace arguments hold identifiers and counters, never page text')
 
 
+def _check_usage(external_calls, planner_turns, spend) -> None:
+    if any(type(n) is not int or n < 0 for n in (external_calls, planner_turns)):
+        raise ValueError('Usage counts are non-negative integers')
+    if not isinstance(spend, Decimal) or not spend.is_finite() or spend < 0:
+        raise ValueError('Spend is a finite, non-negative Decimal')
+
+
 def _retries(result: ToolResult) -> int:
     """Gate attempts that repeated a failed request, from the fetch entries a store reader reports.
 
@@ -110,6 +120,16 @@ class Tracer:
         self.status: str | None = None
         self.stop_reason: str | None = None
         self._log = logger or logging.getLogger(TRACE_LOGGER)
+        self._lock = threading.Lock()  # note() may come from the gate's threads
+        self._recorded = (0, 0, _ZERO)  # calls, turns and spend the records hold
+        self._stored = (0, 0, _ZERO)  # what this tracer has added to the run's stored totals
+
+    def _beyond_stored(self, calls: int, turns: int, spend: Decimal) -> tuple[int, int, Decimal]:
+        stored_calls, stored_turns, stored_spend = self._stored
+        return max(0, calls - stored_calls), max(0, turns - stored_turns), max(_ZERO, spend - stored_spend)
+
+    def _add_stored(self, added: tuple[int, int, Decimal]) -> None:
+        self._stored = tuple(stored + more for stored, more in zip(self._stored, added))
 
     def record(self, kind: Kind, name: str, arguments: dict, result: ToolResult, *,
                source_id: str | None = None, external_calls: int = 0, planner_turns: int = 0,
@@ -120,17 +140,35 @@ class Tracer:
         if not isinstance(result, ToolResult):
             raise TypeError('Trace records carry a ToolResult')
         _check_arguments(arguments)
-        seq = self.storage.record_action(self.run_id, name, arguments, result, external_calls=external_calls,
-                                         planner_turns=planner_turns, spend=spend)
-        record = TraceRecord(
-            run_id=self.run_id, seq=seq, kind=kind, name=name, status=result.status,
-            duration_ms=result.duration_ms, external_calls=external_calls,
-            error_codes=tuple(e.code for e in result.errors), evidence_count=len(result.evidence_ids),
-            tokens_in=tokens_in, tokens_out=tokens_out, spend=spend, planner_turns=planner_turns,
-            retries=_retries(result) if kind == 'tool' else 0, source_id=source_id)
-        self.records.append(record)
+        _check_usage(external_calls, planner_turns, spend)
+        with self._lock:
+            calls, turns, spent = self._recorded
+            recorded = (calls + external_calls, turns + planner_turns, spent + spend)
+            added = self._beyond_stored(*recorded)  # usage noted ahead is not added twice
+            seq = self.storage.record_action(self.run_id, name, arguments, result, external_calls=added[0],
+                                             planner_turns=added[1], spend=added[2])
+            self._recorded = recorded
+            self._add_stored(added)
+            record = TraceRecord(
+                run_id=self.run_id, seq=seq, kind=kind, name=name, status=result.status,
+                duration_ms=result.duration_ms, external_calls=external_calls,
+                error_codes=tuple(e.code for e in result.errors), evidence_count=len(result.evidence_ids),
+                tokens_in=tokens_in, tokens_out=tokens_out, spend=spend, planner_turns=planner_turns,
+                retries=_retries(result) if kind == 'tool' else 0, source_id=source_id)
+            self.records.append(record)
         self._log.info(record.line())
         return record
+
+    def note(self, *, external_calls: int, planner_turns: int, spend: Decimal) -> None:
+        """Raise the run's stored totals to at least these run totals, which count usage still in
+        flight, without a record. Raises, storing nothing, once the run is no longer running."""
+        _check_usage(external_calls, planner_turns, spend)
+        with self._lock:
+            added = self._beyond_stored(external_calls, planner_turns, spend)
+            if any(added):
+                self.storage.note_usage(self.run_id, external_calls=added[0], planner_turns=added[1],
+                                        spend=added[2])
+                self._add_stored(added)
 
     def tool(self, name: str, result: ToolResult, *, source_id: str, arguments: dict,
              external_calls: int = 0) -> TraceRecord:

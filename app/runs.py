@@ -222,16 +222,22 @@ class RunBudget:
     when nothing was sent. Before enter_final_phase() the verification reserves are held back,
     so they are never extra budget. Once cancelled or closed, every reservation and planner turn
     is refused. Thread-safe: the gate may reserve from several threads.
+
+    on_usage, if given, is called (without the lock) whenever the totals grow: after each granted
+    call reservation, spend reservation and planner turn, before anything is sent or spent, and
+    when a recorded cost exceeds its reservation. The run controller writes the totals to storage
+    there, so a crash never loses the usage in flight. If it raises, the reservation or turn it
+    was told about is given back and the error propagates.
     """
 
     def __init__(self, run_id: str, caps: RunCaps = RunCaps(), clock: Callable[[], float] = time.monotonic, *,
-                 cancel_signal: Callable[[], bool] | None = None):
+                 cancel_signal: Callable[[], bool] | None = None, on_usage: Callable[[], None] | None = None):
         if type(run_id) is not str or not run_id.strip():
             raise ValueError('A run budget needs a run ID')
         if not isinstance(caps, RunCaps):
             raise TypeError('caps must be RunCaps')
         self.run_id, self.caps = run_id, caps
-        self._clock, self._signal = clock, cancel_signal
+        self._clock, self._signal, self._on_usage = clock, cancel_signal, on_usage
         self._lock = threading.Lock()
         self._start = clock()
         self._final = self._cancelled = self._closed = False
@@ -262,7 +268,9 @@ class RunBudget:
                 return None
             self._calls += 1
             self._by_source[source_id] = self._by_source.get(source_id, 0) + 1
-            return CallReservation(self, source_id)
+            reservation = CallReservation(self, source_id)
+        self._grew(reservation.release)
+        return reservation
 
     def _settle_call(self, reservation: CallReservation, elapsed: float | None) -> None:
         with self._lock:
@@ -302,7 +310,9 @@ class RunBudget:
                 self._refuse(reason)
                 return None
             self._held += amount
-            return SpendReservation(self, amount)
+            reservation = SpendReservation(self, amount)
+        self._grew(reservation.release)
+        return reservation
 
     def _settle_spend(self, reservation: SpendReservation, actual: Decimal | None, *, spent: bool) -> None:
         with self._lock:
@@ -312,12 +322,15 @@ class RunBudget:
             self._held -= reservation.amount
             if not spent:
                 return
+            overran = actual is not None and actual > reservation.amount
             if actual is None:
                 self._spend_unknown = self._spend_blocked = True
                 actual = reservation.amount  # the most that is known; further spend stops
-            elif actual > reservation.amount:
+            elif overran:
                 self._spend_blocked = True  # recorded anyway, but the estimates can no longer be trusted
             self._spent += actual
+        if overran:
+            self._grew()
 
     def record_unreserved_spend(self, amount: Decimal | None) -> None:
         """Record spend reported without a reservation (None: an unknown cost). The caps could not
@@ -330,6 +343,8 @@ class RunBudget:
                 self._spend_unknown = True
             else:
                 self._spent += amount
+        if amount:
+            self._grew()
 
     # Turns, phases and the end of the run
 
@@ -342,7 +357,8 @@ class RunBudget:
                 self._refuse(reason)
                 return False
             self._turns += 1
-            return True
+        self._grew(self._uncount_turn)
+        return True
 
     def enter_final_phase(self) -> None:
         """The verification reserves become usable; the totals stay the caps."""
@@ -430,6 +446,21 @@ class RunBudget:
 
     def _ended(self) -> str | None:
         return 'closed' if self._closed else 'cancelled' if self._cancelled else None
+
+    def _grew(self, undo: Callable[[], None] | None = None) -> None:
+        # Called without the lock: the hook reads the totals.
+        if self._on_usage is None:
+            return
+        try:
+            self._on_usage()
+        except BaseException:
+            if undo is not None:
+                undo()
+            raise
+
+    def _uncount_turn(self) -> None:
+        with self._lock:
+            self._turns -= 1
 
     def _still_open(self) -> bool:
         # Called without the lock, like the public methods: it polls the cancel signal first.
@@ -613,8 +644,9 @@ class _Run:
 
     def __init__(self, request: ShoppingRequest, deps: RunDependencies, run_id: str, caps: RunCaps, cancel):
         self.request, self.deps, self.run_id, self.caps = request, deps, run_id, caps
-        self.budget = RunBudget(run_id, caps, deps.clock, cancel_signal=_cancel_signal(cancel))
         self.tracer = Tracer(deps.storage, run_id)
+        self.budget = RunBudget(run_id, caps, deps.clock, cancel_signal=_cancel_signal(cancel),
+                                on_usage=self._write_ahead)
         self.query = CandidateQuery.from_request(request)
         self.planner = deps.planner if deps.planner is not None else RulePlanner()
         # Charged against the time budget before every turn (see _menu).
@@ -1132,6 +1164,14 @@ class _Run:
 
     def _cancelled(self) -> bool:
         return self.budget.cancelled
+
+    def _write_ahead(self) -> None:
+        """Store the run's totals, counting what is reserved, before a request, paid call or planner
+        turn goes ahead (the budget's on_usage hook), so recovery after a crash never under-counts
+        the step in flight. A run another process has closed refuses it, so nothing more is sent."""
+        usage = self.budget.usage()
+        self.tracer.note(external_calls=usage.external_calls, planner_turns=usage.planner_turns,
+                         spend=usage.spend.amount)
 
     def _now(self) -> datetime:
         now = self.deps.wall_clock()

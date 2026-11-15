@@ -171,6 +171,14 @@ def _now():
     return datetime.now(timezone.utc)
 
 
+def _check_usage(external_calls, planner_turns, spend) -> None:
+    # Usage only grows; a negative value would also make recovery's BudgetUsage invalid.
+    if not isinstance(spend, Decimal) or not spend.is_finite() or spend < 0:
+        raise ValueError('Spend must be a finite, non-negative Decimal')
+    if any(type(n) is not int or n < 0 for n in (external_calls, planner_turns)):
+        raise ValueError('Budget counters must be non-negative integers')
+
+
 class SnapshotStore:
     """Hash-addressed raw responses. Readers must present the hash an evidence row cites."""
 
@@ -331,11 +339,7 @@ class Storage:
 
     def record_action(self, run_id, tool, arguments, result: ToolResult, external_calls=0,
                       planner_turns=0, spend: Decimal = Decimal('0')):
-        # Usage only grows; a negative value would also make recovery's BudgetUsage invalid.
-        if not isinstance(spend, Decimal) or not spend.is_finite() or spend < 0:
-            raise ValueError('Spend must be a finite, non-negative Decimal')
-        if any(type(n) is not int or n < 0 for n in (external_calls, planner_turns)):
-            raise ValueError('Budget counters must be non-negative integers')
+        _check_usage(external_calls, planner_turns, spend)
         with self.transaction() as db:
             run = db.execute(select(runs.c.status, runs.c.spend_amount)
                              .where(runs.c.run_id == run_id).with_for_update()).first()
@@ -354,6 +358,20 @@ class Storage:
                 spend_amount=run.spend_amount + spend))
             return seq
 
+    def note_usage(self, run_id, external_calls=0, planner_turns=0, spend: Decimal = Decimal('0')):
+        """Add usage still in flight (reserved before a request, paid call or planner turn, and in
+        no action yet) to a running run's totals, so recovery after a crash counts it."""
+        _check_usage(external_calls, planner_turns, spend)
+        with self.transaction() as db:
+            run = db.execute(select(runs.c.status, runs.c.spend_amount)
+                             .where(runs.c.run_id == run_id).with_for_update()).first()
+            if run is None or run.status != 'running':
+                raise ValueError('Usage can only be noted on a running run')
+            db.execute(update(runs).where(runs.c.run_id == run_id).values(
+                external_calls=runs.c.external_calls + external_calls,
+                planner_turns=runs.c.planner_turns + planner_turns,
+                spend_amount=run.spend_amount + spend))
+
     def list_actions(self, run_id):
         with self.engine.connect() as db:
             return [dict(r._mapping) for r in db.execute(
@@ -361,11 +379,16 @@ class Storage:
                 .where(actions.c.run_id == run_id).order_by(actions.c.seq))]
 
     def finish_run(self, result: RunResult):
+        """Close a running run with its result; its stored totals become the result's usage
+        (while it ran they could be ahead of it, counting usage still in flight)."""
+        usage = result.usage
         with self.transaction() as db:
             changed = db.execute(update(runs).where(
                 (runs.c.run_id == result.run_id) & (runs.c.status == 'running')).values(
                 status=result.status, stop_reason=result.stop_reason,
-                finished_at=result.finished_at, result=result.model_dump(mode='json'))).rowcount
+                finished_at=result.finished_at, result=result.model_dump(mode='json'),
+                external_calls=usage.external_calls, planner_turns=usage.planner_turns,
+                spend_amount=usage.spend.amount, spend_currency=usage.spend.currency)).rowcount
         if changed != 1:
             raise ValueError('Only a running run can be finished')
 

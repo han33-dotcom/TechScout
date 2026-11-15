@@ -17,10 +17,11 @@ from alembic.autogenerate import compare_metadata
 from alembic.config import Config
 from alembic.migration import MigrationContext
 from fastapi.testclient import TestClient
+from sqlalchemy import select
 
 from app import contracts as c
 from app.main import create_app
-from app.storage import Storage, load_fixtures, metadata
+from app.storage import Storage, load_fixtures, metadata, runs
 
 ROOT = Path(__file__).resolve().parent.parent
 EXAMPLE = json.loads((ROOT / 'tests' / 'fixtures' / 'contracts.json').read_text(encoding='utf-8'))
@@ -154,6 +155,28 @@ class StorageTests(unittest.TestCase):
             self.storage.record_action('run-1', 'search', {}, ok)
         with self.assertRaisesRegex(ValueError, 'running run'):
             self.storage.finish_run(result.model_copy(update={'status': 'abstained'}))
+
+    def test_usage_in_flight_is_noted_ahead_and_the_result_sets_the_final_totals(self):
+        request = c.ShoppingRequest.model_validate(EXAMPLE['request'])
+        self.storage.start_run('run-5', request, started_at=STARTED)
+        ok = c.ToolResult(status='ok', duration_ms=5)
+        self.storage.record_action('run-5', 'search', {}, ok, external_calls=1)
+        self.storage.note_usage('run-5', external_calls=2, planner_turns=1, spend=Decimal('0.30'))
+        for usage in [dict(spend=Decimal('-1.00')), dict(spend=0.1), dict(external_calls=-1)]:
+            with self.subTest(usage=usage), self.assertRaises(ValueError):
+                self.storage.note_usage('run-5', **usage)
+        result = c.RunResult(run_id='run-5', request_id=request.request_id, status='abstained',
+                             stop_reason='no qualifying offer', started_at=STARTED,
+                             finished_at=STARTED + timedelta(seconds=5),
+                             usage=dict(elapsed_ms=5000, external_calls=2, planner_turns=1,
+                                        spend={'amount': '0.12', 'currency': 'USD'}))
+        self.storage.finish_run(result)  # one reserved call was never sent; the paid call cost less
+        with self.storage.engine.connect() as db:
+            row = db.execute(select(runs.c.external_calls, runs.c.planner_turns, runs.c.spend_amount)
+                             .where(runs.c.run_id == 'run-5')).one()
+        self.assertEqual(tuple(row), (2, 1, Decimal('0.12')))
+        with self.assertRaisesRegex(ValueError, 'running run'):
+            self.storage.note_usage('run-5', external_calls=1)
 
     def test_invalid_usage_is_rejected_and_run_still_recovers(self):
         request = c.ShoppingRequest.model_validate(EXAMPLE['request'])

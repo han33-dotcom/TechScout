@@ -292,6 +292,34 @@ class TurnAndUsageTests(unittest.TestCase):
         self.assertEqual([budget.count_planner_turn() for _ in range(3)], [True, True, False])
         self.assertEqual((budget.turns_used(), budget.refusals), (2, {'turns': 1}))
 
+    def test_the_usage_hook_sees_each_reservation_before_it_is_used(self):
+        seen = []
+        budget = RunBudget('run-1', RunCaps(), self.clock.monotonic, on_usage=lambda: seen.append(budget.usage()))
+        call = budget.reserve_call('alpha', 15.0)
+        self.assertTrue(budget.count_planner_turn())
+        spend = budget.reserve_spend(Decimal('0.30'))
+        self.assertEqual([(u.external_calls, u.planner_turns, u.spend.amount) for u in seen],
+                         [(1, 0, 0), (1, 1, 0), (1, 1, Decimal('0.30'))])
+        call.commit(1.0)
+        spend.commit(Decimal('0.10'))  # settling within the reservation raises nothing
+        self.assertEqual(len(seen), 3)
+        budget.reserve_spend(Decimal('0.10')).commit(Decimal('0.20'))  # an overrun grows the totals
+        budget.record_unreserved_spend(Decimal('0.05'))
+        self.assertEqual([u.spend.amount for u in seen[3:]], [Decimal('0.20'), Decimal('0.30'), Decimal('0.35')])
+
+    def test_a_failing_usage_hook_gives_back_what_it_was_told_about(self):
+        def refuse():
+            raise ValueError('Usage can only be noted on a running run')
+
+        budget = RunBudget('run-1', RunCaps(), self.clock.monotonic, on_usage=refuse)
+        for name, step in (('call', lambda: budget.reserve_call('alpha', 15.0)),
+                           ('turn', budget.count_planner_turn),
+                           ('spend', lambda: budget.reserve_spend(Decimal('0.30')))):
+            with self.subTest(name), self.assertRaisesRegex(ValueError, 'running run'):
+                step()
+        usage = budget.usage()
+        self.assertEqual((usage.external_calls, usage.planner_turns, usage.spend.amount), (0, 0, Decimal('0')))
+
     def test_usage_reports_exact_totals(self):
         budget = RunBudget('run-1', RunCaps(), self.clock.monotonic)
         budget.reserve_call('alpha', 15.0).commit(1.0)

@@ -1088,6 +1088,39 @@ class CancellationAndFailureTests(RunCase):
         self.assertEqual(len(self.storage.list_actions('run-1')), 3)
         self.assertGreater(len(self.gate.requests), requests_before)
 
+    def test_a_crash_after_a_sent_request_keeps_that_call_in_recovered_usage(self):
+        def crash_after_send(url):
+            if url == API.format('gamma'):
+                raise Crash()
+
+        self.gate.on_request = crash_after_send
+        with self.assertRaises(Crash):
+            run_search(REQUEST, self.deps(), run_id='run-1')
+        self.assertEqual(len(self.gate.requests), 5)  # alpha's and beta's searches, then gamma's first request
+        self.assertEqual(self.stored_totals()[0], 5)  # written before the request was sent
+        self.storage.recover_interrupted_runs(T0 + timedelta(seconds=90))
+        self.assertEqual(self.storage.load_run('run-1').usage.external_calls, 5)
+
+    def test_a_crash_during_a_paid_planner_turn_keeps_its_turn_and_held_spend(self):
+        def paid_then_crash(state, budget):
+            self.assertIsNotNone(budget.reserve_spend(Decimal('0.30')))
+            raise Crash()  # the process dies while the model call is in flight
+
+        with self.assertRaises(Crash):
+            run_search(REQUEST, self.deps(ScriptedPlanner(paid_then_crash)), run_id='run-1')
+        self.storage.recover_interrupted_runs(T0 + timedelta(seconds=90))
+        usage = self.storage.load_run('run-1').usage
+        self.assertEqual((usage.external_calls, usage.planner_turns, usage.spend.amount), (6, 1, Decimal('0.30')))
+
+    def test_stored_totals_run_ahead_of_the_records_and_end_equal_to_the_result(self):
+        seen = []
+        self.gate.on_request = lambda url: seen.append((len(self.gate.requests), self.stored_totals()[0]))
+        result = self.search()
+        self.assertEqual(seen, [(n, n) for n in range(1, len(self.gate.requests) + 1)])
+        metrics = self.action('run-1', 'stage:results')['result']['data']['metrics']
+        self.assertEqual(metrics['external_calls'], result.usage.external_calls)  # each step's own count
+        self.assertTruthful(result)
+
     def test_a_store_reader_cannot_fetch_through_another_store(self):
         def borrow(fetch, wanted=None):
             return fetch('beta', API.format('beta'), expect='json')
