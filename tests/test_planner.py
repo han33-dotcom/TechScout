@@ -426,6 +426,8 @@ class AnthropicPlannerTests(unittest.TestCase):
         endpoint, sent = client.calls[0]
         self.assertEqual(endpoint, 'beta.messages')
         self.assertEqual((sent['model'], sent['max_tokens'], sent['timeout']), (MODEL, 4096, CALL_TIMEOUT_S))
+        # The run controller charges max_call_seconds per turn: never less than the call timeout sent.
+        self.assertGreaterEqual(AnthropicPlanner.max_call_seconds, sent['timeout'])
         self.assertEqual((sent['betas'], sent['fallbacks']), (['server-side-fallback-2026-07-01'], 'default'))
         self.assertEqual(sent['tool_choice'], {'type': 'auto', 'disable_parallel_tool_use': True})
         self.assertEqual(sent['thinking'], {'type': 'adaptive'})

@@ -29,6 +29,7 @@ from app.adapters.base import AdapterResult, PolicyDocument, PolicyFact, Snapsho
 from app.assessment import Assessment, Check, CostResult, Eligibility, EvidenceGap, combine
 from app.contracts import Money, Offer, ShoppingRequest, ToolError, ToolResult
 from app import planner as planner_module
+from app.planner import CALL_TIMEOUT_S as MODEL_TIMEOUT_S
 from app.planner import (
     AnthropicPlanner, NoInvestigationPlanner, PlannerDecision, PlannerUsage, RulePlanner, load_planner_config,
     request_constraints,
@@ -1007,8 +1008,13 @@ class ModelPlannerTests(RunCase):
         self.assertTruthful(result)
 
     def test_the_model_call_time_is_charged_before_each_turn(self):
-        seconds = AnthropicPlanner.max_call_seconds
-        latest_start = (RunCaps().seconds - RunCaps().reserve_seconds) - seconds - CALL_TIMEOUT_S
+        # Fixed values, not the attribute under test: each model call takes the timeout actually
+        # sent to the SDK, and under the default caps the latest turn start is
+        # 120 s - 30 s reserve - 30 s model call - 15 s one-request read.
+        seconds = MODEL_TIMEOUT_S
+        latest_start = 45.0
+        self.assertEqual((RunCaps().seconds, RunCaps().reserve_seconds, seconds, CALL_TIMEOUT_S),
+                         (120, 30, 30.0, 15.0))
         # Each model call takes its whole timeout. Retrieval (3 s of requests) ends at the latest
         # moment a turn and a one-request read still fit before the reserve.
         self.stores['gamma'].on_search = lambda: self.clock.advance(latest_start - 3.0)
