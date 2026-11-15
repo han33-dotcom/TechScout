@@ -95,8 +95,8 @@ Shared reader rules behind these values:
 
 "What it settles" is what the reader declares: `policy_topics` lists every path on any route,
 and `policy_topics_for(mode)` leaves out the delivery-only paths for a pickup offer. Run control
-still reads `policy_topics`, so a pickup run can still fetch the Class Cellulars FAQ or the
-Mojitech refund page and settle nothing. A page in which none of these
+asks a reader for `policy_topics_for(mode)` when it has one (otherwise `policy_topics`), so a
+pickup run is never offered the Class Cellulars FAQ or the Mojitech refund page. A page in which none of these
 statements is recognized gives `INVALID_SCHEMA` "policy page states nothing the reader recognizes".
 
 ## Mappings
