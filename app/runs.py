@@ -12,8 +12,9 @@ ends the run as partial. Planner time counts against the time budget: a turn sta
 the planner's longest call and an action both fit before the verification reserve, and the
 chosen action is checked again just before it runs. A run in which no store could be searched
 (every search failed, or none could run) is an 'error' run, never an ordinary abstention.
-'cancelled' and 'error' runs never carry recommendations, and a run interrupted by a crash is
-closed as partial on restart, never resumed.
+'cancelled' and 'error' runs never carry recommendations. A run interrupted by a crash is closed
+as partial, never resumed, by the next web-app start or command-line search once it is older
+than the recovery lease (app.storage).
 """
 import argparse
 from collections.abc import Callable, Mapping, Sequence
@@ -45,7 +46,7 @@ from app.planner import (
 )
 from app.source_registry import DEFAULT_REGISTRY, get_active_source
 from app.sources import CALL_TIMEOUT_S, SourceGate
-from app.storage import Storage
+from app.storage import RUN_LEASE, Storage
 from app.tracing import Tracer
 
 log = logging.getLogger('techscout.runs')
@@ -58,6 +59,9 @@ POLICY_CALLS = 1
 # What a fresh product read can settle. It never shows branch stock, so pickup gaps get no re-read.
 OFFER_GAP_FIELDS = frozenset({'price', 'online_stock', 'purchasable'})
 MAX_RECOMMENDATIONS = 3
+# A run's time cap stays well inside the recovery lease, so a request or planner call in flight at
+# the cap, a slow lookup or a slow database write never makes a live run look abandoned.
+MAX_RUN_SECONDS = RUN_LEASE.total_seconds() / 2
 
 # Fixed stop reasons; RunResult.stop_reason is always one of these.
 STOP_NO_GAPS = 'no open evidence gaps remain'
@@ -161,6 +165,8 @@ class RunCaps:
                 raise ValueError(f'{name} must be a finite, non-negative Decimal')
         if self.reserve_seconds >= self.seconds or self.reserve_calls >= self.external_calls:
             raise ValueError('The reserves must leave time and calls before the final phase')
+        if self.seconds > MAX_RUN_SECONDS:
+            raise ValueError(f'A run may last at most {MAX_RUN_SECONDS:g} seconds, well inside the recovery lease')
         if self.reserve_spend > self.spend:
             raise ValueError('The spend reserve is part of the spend cap')
 
@@ -534,7 +540,9 @@ def run_search(request: ShoppingRequest, deps: RunDependencies, *, run_id: str |
     sent, so a request still waiting out a backoff is dropped. An unexpected exception ends the run as
     'error' (traced, no recommendations). Exceptions before the run is stored (an unknown request
     type, a planner without a valid max_call_seconds, name or JSON config, a duplicate run ID, or a
-    reader registered under another store's ID) are raised.
+    reader registered under another store's ID) are raised. So is a storage failure after it is
+    stored, such as the run having been closed by another process; nothing more is sent, and the
+    run is left for recovery or already closed.
     """
     if not isinstance(request, ShoppingRequest):
         raise TypeError('run_search needs a ShoppingRequest')
@@ -1199,7 +1207,8 @@ def main(argv: Sequence[str] | None = None, *, dependencies: RunDependencies | N
     """python -m app.runs search REQUEST.json: run one search and print its RunResult as JSON.
 
     It reads the admitted stores' public pages through the gate (a few requests per store) and
-    stores the run, so apply the migrations first. Ctrl+C cancels the run; the result says so.
+    stores the run, so apply the migrations first. It first closes runs a crash left 'running'
+    longer than the recovery lease. Ctrl+C cancels the run; the result says so.
     """
     parser = argparse.ArgumentParser(prog='python -m app.runs')
     commands = parser.add_subparsers(dest='command', required=True)
@@ -1222,12 +1231,15 @@ def main(argv: Sequence[str] | None = None, *, dependencies: RunDependencies | N
     except (ImportError, ValueError) as exc:  # the SDK is missing or no credentials are configured
         print(f'Cannot set up the {args.planner} planner: {type(exc).__name__}', file=sys.stderr)
         return 2
-    cancel, outcome = threading.Event(), {}
+    cancel, outcome, run_id = threading.Event(), {}, new_run_id()
 
     def work():
         try:
-            outcome['result'] = run_search(request, deps, caps=caps, cancel=cancel)
-        except Exception as exc:  # raised before the run was stored
+            closed = deps.storage.recover_interrupted_runs()  # never a run that may still be live
+            if closed:
+                log.warning('Marked %d interrupted run(s) as partial: %s', len(closed), closed)
+            outcome['result'] = run_search(request, deps, run_id=run_id, caps=caps, cancel=cancel)
+        except Exception as exc:  # before the run was stored, or a storage failure after it
             outcome['error'] = exc
 
     worker = threading.Thread(target=work, name='techscout-run', daemon=True)
@@ -1239,7 +1251,16 @@ def main(argv: Sequence[str] | None = None, *, dependencies: RunDependencies | N
         cancel.set()  # the run stops before its next step; a request in flight ends within its timeout
         worker.join()
     if 'error' in outcome:
-        print(f'The run could not start: {type(outcome["error"]).__name__}', file=sys.stderr)
+        name = type(outcome['error']).__name__
+        try:
+            status = deps.storage.run_status(run_id)
+        except Exception:
+            status = 'unknown'
+        if status is None:
+            print(f'The run could not start: {name}', file=sys.stderr)
+        else:
+            print(f'Run {run_id} stopped on an unexpected {name} without storing its result '
+                  f'(stored status: {status})', file=sys.stderr)
         return 1
     result = outcome['result']
     print(result.model_dump_json(indent=2))

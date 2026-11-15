@@ -192,6 +192,40 @@ class EndToEndTests(unittest.TestCase):
         self.assertEqual({c['status'] for c in printed['source_coverage']}, {'error'})
         self.assertEqual(len(self.sent), 3)  # each store's product record, once
 
+    def test_the_search_command_first_closes_runs_a_crash_left_behind(self):
+        now = datetime.now(timezone.utc)
+        self.storage.start_run('crashed', request(), started_at=now - timedelta(days=1))
+        self.storage.start_run('live', request(), started_at=now - timedelta(seconds=5))  # another search
+        err = io.StringIO()
+        with (self.assertLogs('techscout.trace', 'INFO'), contextlib.redirect_stdout(io.StringIO()),
+              contextlib.redirect_stderr(err)):
+            code = runs.main(['search', str(ROOT / 'examples' / 'request-iphone17-beirut.json'),
+                              '--planner', 'none'], dependencies=self.deps())
+        self.assertEqual(code, 0)
+        self.assertEqual((self.storage.run_status('crashed'), self.storage.run_status('live')),
+                         ('partial', 'running'))
+
+    def test_the_search_command_reports_a_run_that_stopped_after_it_was_stored(self):
+        handle = self.handle
+
+        def close_the_run_on_the_third_request(http_request):
+            if len(self.sent) == 2:  # a recovery elsewhere closes the run while it is live
+                self.storage.recover_interrupted_runs(live_for=timedelta(0))
+            return handle(http_request)
+
+        self.handle = close_the_run_on_the_third_request
+        out, err = io.StringIO(), io.StringIO()
+        with (self.assertLogs('techscout.trace', 'INFO'), self.assertLogs('techscout.runs', 'ERROR'),
+              contextlib.redirect_stdout(out), contextlib.redirect_stderr(err)):
+            code = runs.main(['search', str(ROOT / 'examples' / 'request-iphone17-beirut.json')],
+                             dependencies=self.deps())
+        self.assertEqual((code, out.getvalue()), (1, ''))
+        message = err.getvalue().strip()
+        self.assertNotIn('could not start', message)
+        self.assertRegex(message, r'^Run run-[0-9a-f]{32} stopped on an unexpected ValueError without storing '
+                                  r'its result \(stored status: partial\)$')
+        self.assertEqual(len(self.sent), 3)  # the request in flight; nothing after the run was closed
+
     def test_the_search_command_rejects_an_unreadable_request(self):
         err = io.StringIO()
         with contextlib.redirect_stderr(err):

@@ -5,7 +5,7 @@ contract JSON, money stays Decimal, and raw responses live in a hash-addressed
 snapshot store that the web application never serves.
 """
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 import hashlib
 import json
@@ -27,6 +27,11 @@ ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_DATABASE_URL = f"sqlite:///{ROOT / 'techscout.db'}"
 DEFAULT_EVIDENCE_DIR = ROOT / 'var' / 'evidence'
 RUN_STATES = ('running', 'complete', 'partial', 'abstained', 'cancelled', 'error')
+# How long a run may stay 'running' before recovery treats it as abandoned. Every run's time cap
+# ends well inside it (app.runs.RunCaps), so a run still live in another process, such as a
+# command-line search beside the web app, is never closed.
+RUN_LEASE = timedelta(minutes=10)
+INTERRUPTED = 'interrupted: the service stopped before this run finished'
 SHA256 = re.compile(r'^[0-9a-f]{64}$')
 
 
@@ -402,24 +407,32 @@ class Storage:
             row = db.execute(select(runs.c.result).where(runs.c.run_id == run_id)).first()
         return None if row is None or row.result is None else RunResult.model_validate(row.result)
 
-    def recover_interrupted_runs(self, now=None) -> list[str]:
+    def recover_interrupted_runs(self, now=None, *, live_for: timedelta = RUN_LEASE) -> list[str]:
         """Close runs left 'running' by a crash as partial; never resume stale searches.
 
-        Assumes a single application process: every 'running' run is treated as orphaned.
-        Multiple workers or replicas need run ownership or a heartbeat first (MVP 11).
+        Only runs started more than live_for ago are closed: a younger run may still be live in
+        another process, since the web app and command-line searches share the database. The web
+        app calls this at startup and each command-line search before it starts. The usage is the
+        run's stored totals, which count requests and paid calls in flight (written before each
+        is sent); the elapsed time runs to the run's last recorded step, so downtime is never
+        counted, but the step in flight at the crash is left out of it.
         """
         now = now or _now()
         recovered = []
         with self.transaction() as db:
             stale = db.execute(select(runs).where(runs.c.status == 'running')).all()
             for run in stale:
+                if run.started_at >= now - live_for:
+                    continue  # may still be live in another process
                 finished = max(now, run.started_at)
+                last = db.execute(select(func.max(actions.c.recorded_at))
+                                  .where(actions.c.run_id == run.run_id)).scalar()
+                active_until = min(max(last or run.started_at, run.started_at), finished)
                 result = RunResult(
                     run_id=run.run_id, request_id=run.request_id, status='partial',
-                    stop_reason='interrupted: the service stopped before this run finished',
-                    started_at=run.started_at, finished_at=finished,
+                    stop_reason=INTERRUPTED, started_at=run.started_at, finished_at=finished,
                     usage=BudgetUsage(
-                        elapsed_ms=int((finished - run.started_at).total_seconds() * 1000),
+                        elapsed_ms=int((active_until - run.started_at).total_seconds() * 1000),
                         external_calls=run.external_calls, planner_turns=run.planner_turns,
                         spend=Money(amount=run.spend_amount, currency=run.spend_currency)))
                 db.execute(update(runs).where(

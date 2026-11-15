@@ -35,7 +35,7 @@ from app.planner import (
 )
 from app.runs import RunCaps, RunDependencies, run_search
 from app.sources import CALL_TIMEOUT_S, FetchOutcome, SourceGate, SourceLimiter
-from app.storage import Storage, actions as actions_table, metadata, runs as runs_table
+from app.storage import RUN_LEASE, Storage, actions as actions_table, metadata, runs as runs_table
 from app.tracing import Tracer
 
 try:
@@ -369,6 +369,9 @@ class RunCase(unittest.TestCase):
         metadata.create_all(self.storage.engine)
         self.addCleanup(self.storage.engine.dispose)
         self.clock = FakeClock()
+        storage_clock = mock.patch('app.storage._now', side_effect=lambda: self.clock.wall)
+        storage_clock.start()  # stored timestamps (such as when each step was recorded) follow the run clock
+        self.addCleanup(storage_clock.stop)
         self.gate = FakeGate(self.clock)
         self.stores = {
             'alpha': FakeStore('alpha', [('101', 'Black', '1000.00')]),
@@ -1072,11 +1075,15 @@ class CancellationAndFailureTests(RunCase):
         self.assertIsNone(leftover.reserve_call('alpha', 1.0))  # the dead run's budget is closed
         self.assertEqual(self.names(), ['stage:clarify', 'search_candidates', 'search_candidates'])
 
-        self.assertEqual(self.storage.recover_interrupted_runs(T0 + timedelta(seconds=90)), ['run-1'])
+        self.assertEqual(self.storage.recover_interrupted_runs(T0 + timedelta(seconds=90)), [])  # may be live
+        restarted = T0 + timedelta(hours=8)
+        self.assertEqual(self.storage.recover_interrupted_runs(restarted), ['run-1'])
         recovered = self.storage.load_run('run-1')
         self.assertEqual((recovered.status, recovered.recommendations, recovered.usage.external_calls),
                          ('partial', [], 4))
         self.assertIn('interrupted', recovered.stop_reason)
+        # Elapsed up to beta's search, the last recorded step, never the hours until the restart.
+        self.assertEqual((recovered.usage.elapsed_ms, recovered.finished_at), (2000, restarted))
         with self.assertRaisesRegex(ValueError, 'running run'):
             self.storage.record_action('run-1', 'fetch_policy', {}, ToolResult(status='ok', duration_ms=0))
 
@@ -1098,7 +1105,7 @@ class CancellationAndFailureTests(RunCase):
             run_search(REQUEST, self.deps(), run_id='run-1')
         self.assertEqual(len(self.gate.requests), 5)  # alpha's and beta's searches, then gamma's first request
         self.assertEqual(self.stored_totals()[0], 5)  # written before the request was sent
-        self.storage.recover_interrupted_runs(T0 + timedelta(seconds=90))
+        self.storage.recover_interrupted_runs(T0 + RUN_LEASE + timedelta(seconds=1))
         self.assertEqual(self.storage.load_run('run-1').usage.external_calls, 5)
 
     def test_a_crash_during_a_paid_planner_turn_keeps_its_turn_and_held_spend(self):
@@ -1108,9 +1115,33 @@ class CancellationAndFailureTests(RunCase):
 
         with self.assertRaises(Crash):
             run_search(REQUEST, self.deps(ScriptedPlanner(paid_then_crash)), run_id='run-1')
-        self.storage.recover_interrupted_runs(T0 + timedelta(seconds=90))
+        self.storage.recover_interrupted_runs(T0 + RUN_LEASE + timedelta(seconds=1))
         usage = self.storage.load_run('run-1').usage
         self.assertEqual((usage.external_calls, usage.planner_turns, usage.spend.amount), (6, 1, Decimal('0.30')))
+
+    def test_recovery_in_another_process_never_closes_a_live_run(self):
+        other = Storage(f"sqlite:///{self.tmp / 'runs.db'}", self.tmp / 'evidence')  # the web app starting
+        self.addCleanup(other.engine.dispose)
+        closed = []
+        self.gate.on_request = lambda url: (closed.extend(other.recover_interrupted_runs(self.clock.now()))
+                                            if url == API.format('beta') else None)
+        result = self.search()
+        self.assertEqual((closed, result.status), ([], 'complete'))
+        self.assertEqual(self.storage.load_run('run-1').usage.external_calls, len(self.gate.requests))
+        self.assertTruthful(result)
+
+    def test_a_run_closed_under_it_sends_nothing_more_and_raises(self):
+        def close(url):  # a run outliving the lease, closed by recovery in another process
+            if url == API.format('beta'):
+                self.storage.recover_interrupted_runs(self.clock.now(), live_for=timedelta(0))
+
+        self.gate.on_request = close
+        with self.assertLogs('techscout.runs', 'ERROR'), self.assertRaisesRegex(ValueError, 'running run'):
+            run_search(REQUEST, self.deps(), run_id='run-1')
+        # beta's first request was already in flight; its next one is never sent.
+        self.assertEqual(self.gate.requests, [API.format('alpha'), PAGE.format('alpha'), API.format('beta')])
+        self.assertEqual(self.storage.run_status('run-1'), 'partial')
+        self.assertIsNone(self.gate.budgets[-1].reserve_call('beta', 1.0))  # its budget is closed
 
     def test_stored_totals_run_ahead_of_the_records_and_end_equal_to_the_result(self):
         seen = []

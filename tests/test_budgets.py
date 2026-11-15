@@ -16,7 +16,7 @@ import httpx2
 
 from app import sources
 from app.contracts import BudgetUsage, Money
-from app.runs import RunBudget, RunCaps
+from app.runs import MAX_RUN_SECONDS, RunBudget, RunCaps
 from app.sources import SourceGate, SourceLimiter
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -76,6 +76,7 @@ class RunCapsTests(unittest.TestCase):
             'time reserve takes all the time': dict(reserve_seconds=120),
             'spend reserve over the cap': dict(reserve_spend=Decimal('1.01')),
             'no calls': dict(external_calls=0, reserve_calls=0),
+            'longer than the recovery lease allows': dict(seconds=MAX_RUN_SECONDS + 1),
         }
         for name, change in bad.items():
             with self.subTest(name), self.assertRaises(ValueError):
