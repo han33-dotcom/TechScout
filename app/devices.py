@@ -20,6 +20,13 @@ _MODELS = sorted(((m, _pattern(m)) for m in KNOWN_MODELS), key=lambda pair: -len
 # A '+' written right after a model ('iPhone 16+', Samsung's 'Galaxy S25+') names the Plus model;
 # a spaced '+' ('iPhone 17 + AirPods') joins a bundle and is left alone.
 _PLUS = re.compile(r'(?<=[0-9a-z])\+(?![0-9a-z])', re.IGNORECASE)
+# A word right after a known model that makes it another phone: 'Pro-Max', 'Plus', 'PM', 'Mini', a
+# stray 'e' or a '(Pro)'. A fixed list, so other words after a model ('256GB', 'Black', even
+# injected text) leave it alone, and 'e' before 'SIM' is the eSIM. A spaced '+' not followed by
+# a named item ('iPhone 16 +') cannot be read either.
+_QUALIFIER = re.compile(r'\s*\+(?!\s*[0-9a-z])|[\s\-\u2010-\u2015_(\[]*'
+                        r'(?:plus|pro|max|promax|pm|mini|ultra|air|se|e(?![\s\-\u2010-\u2015]*sim))(?![0-9a-z])',
+                        re.IGNORECASE)
 _MANUFACTURERS = [(m, _pattern(m)) for m in KNOWN_MANUFACTURERS]
 # A size followed by RAM is memory, not storage ('12GB RAM').
 _STORAGE = re.compile(r'(?<![0-9a-z])([0-9]{1,4})\s*(GB|TB)(?![0-9a-z])(?!\s*RAM)', re.IGNORECASE)
@@ -34,11 +41,16 @@ def spell_plus(text: str) -> str:
 
 
 def match_model(text: str) -> str | None:
-    """Our canonical model name for the longest known model in the text, or None."""
+    """Our canonical model name for the longest known model in the text, or None.
+
+    None too when a model qualifier follows the match ('iPhone 17 Pro-Max', 'iPhone 17 PM'): the
+    text then names a phone our table does not hold, not the shorter model it contains.
+    """
     text = spell_plus(text)
     for name, pattern in _MODELS:
-        if pattern.search(text):
-            return name
+        found = pattern.search(text)
+        if found:
+            return None if _QUALIFIER.match(text, found.end()) else name
     return None
 
 

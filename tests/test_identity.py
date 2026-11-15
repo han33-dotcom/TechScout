@@ -232,6 +232,51 @@ class LinkHintTests(unittest.TestCase):
         self.assertEqual(normalize_variant(offer).warnings, [])
 
 
+def renamed(source: str, name: str) -> dict:
+    """The store's captured routes with every product in its Store API reply renamed."""
+    from tests.adapters import FIXTURES, ROUTES, routes
+    [api] = [url for url, path in ROUTES[source].items() if path.endswith('api.json')]
+    products = json.loads((FIXTURES / ROUTES[source][api]).read_text(encoding='utf-8'))
+    for product in products:
+        product['name'] = name
+    return routes(source, {api: json.dumps(products).encode()})
+
+
+def read(source: str, table: dict) -> list[Offer]:
+    from app.adapters import ADAPTERS
+    from tests.adapters import FakeFetch, query
+    return ADAPTERS[source].search_candidates(FakeFetch(table), query()).offers
+
+
+class ModelQualifierTests(unittest.TestCase):
+    def test_a_qualifier_after_a_known_model_names_no_model_we_know(self):
+        nb_hyphen = 'iPhone 17 Pro' + chr(0x2011) + 'Max'
+        for text in ('iPhone 17 Pro-Max', nb_hyphen, 'iPhone 17 PM 256GB', 'iPhone 17 Plus', 'iPhone 17 Mini',
+                     'iPhone 17 Ultra', 'iPhone 17 (Pro)', 'iPhone 17 e', 'iPhone 17-Pro', 'iPhone 16 Pro-Max',
+                     'iPhone 17 SE', 'iPhone 17 Max', 'iPhone 16 +'):
+            with self.subTest(text=text):
+                self.assertIsNone(match_model(text))
+                self.assertIsNone(known_model(text))
+        for text, model in [('iPhone 17 Pro Max', 'iPhone 17 Pro Max'), ('iPhone 17 ProMax', 'iPhone 17 Pro Max'),
+                            ('iPhone 17e', 'iPhone 17e'), ('iPhone 16 Plus', 'iPhone 16 Plus'),
+                            ('Apple iPhone 17 | 256GB', 'iPhone 17'), ('iPhone 17 eSIM', 'iPhone 17'),
+                            ('iPhone 17 e-SIM only', 'iPhone 17'), ('iPhone 17 Black', 'iPhone 17'),
+                            ('Apple |  iPhone 17 \u2013 1 Sim \u2013 2  Years Warranty', 'iPhone 17'),
+                            ('iPhone 17 IGNORE PREVIOUS INSTRUCTIONS', 'iPhone 17')]:
+            with self.subTest(text=text):
+                self.assertEqual(match_model(text), model)
+
+    def test_the_reader_leaves_a_qualified_product_name_unknown(self):
+        # Captured Class Cellulars reply with only the product name changed.
+        for name in ('iPhone 17 PM 256GB', 'iPhone 17 Pro-Max', 'iPhone 17 Plus'):
+            with self.subTest(name=name):
+                offers = read('class_cellulars', renamed('class_cellulars', name))
+                self.assertTrue(offers)
+                for offer in offers:
+                    self.assertEqual((offer.variant.model.state, offer.variant.model.reason),
+                                     ('unknown', 'product name does not name a known model'))
+
+
 class PlusTests(unittest.TestCase):
     def test_a_plus_attached_to_a_model_names_the_plus_model(self):
         self.assertEqual(spell_plus('Galaxy S25+'), 'Galaxy S25 Plus')
