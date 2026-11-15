@@ -348,8 +348,10 @@ def _deadline(request: ShoppingRequest, offer: Offer) -> tuple[Check, Open]:
 
     estimate_ok: the whole window before the deadline passes, a window starting after it fails, and
     one that straddles it stays open. guaranteed: only a guaranteed window ending in time passes; an
-    estimate cannot satisfy it (open, or failed when even its earliest time is late), and a
-    guaranteed window that ends after the deadline fails, since the store promised no earlier time.
+    estimate cannot satisfy it (open, or failed when even its earliest time is late). A guaranteed
+    window that ends after the deadline stays open too: the readers widen latest to the later of
+    the UTC+2 and UTC+3 readings (an hour in summer, up to days for a late-evening observation),
+    so it is not the end the store promised.
     """
     deadline = request.deadline
     if deadline is None:
@@ -375,9 +377,6 @@ def _deadline(request: ShoppingRequest, offer: Offer) -> tuple[Check, Open]:
         promise = 'guaranteed' if window.basis == 'guaranteed' else 'expected'
         outcome = 'pass'
         reason = f'{noun} is {promise} by {_at(window.latest)}, before the deadline {_at(by)}'
-    elif deadline.basis == 'guaranteed':
-        outcome = 'fail'
-        reason = f'guaranteed {noun} window ends {_at(window.latest)}, after the deadline {_at(by)}'
     else:
         outcome = 'unresolved'
         reason = f'{noun} window ends {_at(window.latest)}, after the deadline {_at(by)}'

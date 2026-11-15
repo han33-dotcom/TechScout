@@ -249,13 +249,28 @@ class DeadlineTests(unittest.TestCase):
                          'delivery is guaranteed by 2026-11-21T09:00:00Z, before the deadline '
                          '2026-11-21T09:00:00Z')
 
-    def test_a_guarantee_that_ends_after_a_guaranteed_deadline_fails(self):
+    def test_a_guarantee_that_ends_after_a_guaranteed_deadline_stays_open(self):
+        # The readers widen a window's end, so a later end is not the end the store promised.
         request = make_request(deadline=deadline('guaranteed'))
         offer = make_offer(arrival=window(OBSERVED, SEVEN_DAYS + timedelta(days=1), 'guaranteed'))
         result = check_eligibility(request, offer)
         check = named(result)['deadline']
-        self.assertEqual((check.outcome, result.outcome, result.gaps), ('fail', 'fail', []))
-        self.assertTrue(check.reason.startswith('guaranteed delivery window ends 2026-11-22T09:00:00Z'))
+        self.assertEqual((check.outcome, result.outcome), ('unresolved', 'unresolved'))
+        self.assertTrue(check.reason.startswith('delivery window ends 2026-11-22T09:00:00Z'))
+        self.assertEqual(open_fields(result), [('arrival', 'delivery window extends past the deadline')])
+        # A guarantee that cannot even start in time still fails.
+        late = make_offer(arrival=window(SEVEN_DAYS + TICK, SEVEN_DAYS + timedelta(days=1), 'guaranteed'))
+        self.assertEqual(check_of(request, late, 'deadline').outcome, 'fail')
+
+    def test_a_guaranteed_end_of_day_meets_that_days_deadline_in_summer(self):
+        # Guaranteed for 14 July: the reader widens its end to 23:59:59 at UTC+2, an hour after
+        # midnight in Beirut (UTC+3), when the deadline falls. The guarantee is not a known miss.
+        from app.adapters.base import arrival_window
+        promise = arrival_window(utc(2026, 7, 13, 7), 1, 1, unit='calendar', basis='guaranteed')
+        by = datetime(2026, 7, 15, tzinfo=timezone(timedelta(hours=3)))
+        check = check_of(make_request(deadline=deadline('guaranteed', by)),
+                         make_offer(arrival=promise.model_dump()), 'deadline')
+        self.assertEqual(check.outcome, 'unresolved')
 
     def test_deadlines_compare_instants_whatever_the_offset(self):
         # The FAQ window ends at 23:59:59.999999 in Beirut (UTC+2) on 16 November.
