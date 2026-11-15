@@ -56,9 +56,10 @@ Beytech's JSON-LD names the brand "Electronics"; the reader does not use JSON-LD
 Shared reader rules behind these values:
 - `purchasable` and `online_stock` come from the page's variation entry and, for the one variation
   the Store API returns, from its record too; a disagreement is a conflict.
-- WooCommerce reports a variation on backorder as in stock. A backorder marker on the page (the
-  `available-on-backorder` class, or backorders allowed with no in-stock line) or the API's
-  `is_on_backorder` keeps `online_stock` unknown: "variation is on backorder".
+- WooCommerce reports a variation on backorder as in stock. The page's `available-on-backorder`
+  class or the API's `is_on_backorder` keeps `online_stock` unknown: "variation is on backorder".
+  Backorders allowed with no in-stock line only suggests a backorder (a theme may hide the line), so
+  it keeps stock unknown with "variation may be on backorder".
 - A Store API variation record, variation-list entry or option name that repeats with a different
   value is `INVALID_SCHEMA`; identical repeats are one statement.
 - A variation option named "Model" must name exactly a known model and agree with the product name,

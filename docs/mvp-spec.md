@@ -129,7 +129,8 @@ product, its declared minor unit and one variation record, and the product page'
 form gives every variation's price, stock and purchasability. A Store API variation record's
 price, `is_in_stock` and `is_purchasable` must agree with the page, or the fact is a conflict.
 A variation on backorder is never in stock online: `online_stock` stays unknown with 'variation
-is on backorder'. Each variation becomes one offer with variant-scoped evidence; a parent record
+is on backorder', or 'variation may be on backorder' when backorders are allowed and the page shows
+no in-stock line. Each variation becomes one offer with variant-scoped evidence; a parent record
 is never an offer. A variation option named Model must name exactly one known model and agree
 with the product name, or `variant.model` is unknown or a conflict.
 

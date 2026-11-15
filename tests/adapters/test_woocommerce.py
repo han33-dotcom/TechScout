@@ -318,12 +318,15 @@ class AdversarialTests(ReaderTestCase):
     def test_a_backorder_is_never_in_stock(self):
         backorder = '<p class="stock available-on-backorder">Available on backorder</p>\n'
         cases = [  # (availability line, backorders allowed, API is_on_backorder) -> stock reason or True
-            (backorder, None, None, 'variation is on backorder'),
-            ('', True, None, 'variation is on backorder'),  # backorders without notification show no line
-            ('<p class="stock in-stock">60 in stock</p>\n', True, None, True),
-            (None, None, True, 'variation is on backorder'),
+            (backorder, None, None, 'variation is on backorder',
+             'variation 19116 availability class available-on-backorder'),
+            # backorders without notification show no line, but a theme may hide it: only a doubt
+            ('', True, None, 'variation may be on backorder',
+             'variation 19116 backorders_allowed true, no in-stock line'),
+            ('<p class="stock in-stock">60 in stock</p>\n', True, None, True, None),
+            (None, None, True, 'variation is on backorder', None),
         ]
-        for line, allowed, api, expected in cases:
+        for line, allowed, api, expected, marker in cases:
             with self.subTest(line=line, allowed=allowed, api=api):
                 page = fixture('class_cellulars/page.html')
                 entries = json.loads(form_json(page))
@@ -343,8 +346,10 @@ class AdversarialTests(ReaderTestCase):
                     self.assertEqual((stock.state, stock.value), ('known', True))
                 else:
                     self.assertEqual((stock.state, stock.reason), ('unknown', expected))
-                    self.assertIn('variation 19116 is_in_stock true',
-                                  [e.excerpt for e in evidence(by_id(result)['19116'], stock.evidence_ids)])
+                    excerpts = [e.excerpt for e in evidence(by_id(result)['19116'], stock.evidence_ids)]
+                    self.assertIn('variation 19116 is_in_stock true', excerpts)
+                    if marker is not None:  # the record names the marker actually seen
+                        self.assertIn(marker, excerpts)
 
     def test_identity_disagreements_and_unreadable_options_stay_unresolved(self):
         def several_sizes(p):

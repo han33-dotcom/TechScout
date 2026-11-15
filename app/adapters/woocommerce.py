@@ -73,6 +73,7 @@ PURCHASABLE_CONFLICT = 'store reports different purchasability for this variatio
 STOCK_UNKNOWN = 'stock is not stated'
 STOCK_CONFLICT = 'store reports different stock for this variation'
 STOCK_BACKORDER = 'variation is on backorder'
+STOCK_MAYBE_BACKORDER = 'variation may be on backorder'
 MANUFACTURER_UNKNOWN = 'manufacturer is not published'
 MANUFACTURER_CONFLICT = 'product data names different manufacturers'
 MODEL_UNKNOWN = 'product name does not name a known model'
@@ -118,6 +119,7 @@ FIXED_REASONS = frozenset({
     NOT_ON_PAGE, PAGE_UNREAD, FORM_UNREAD, PRICE_NOT_NUMBER, PRICE_INVALID, PRICE_DECIMALS, PRICE_ZERO,
     NO_CURRENCY, PRICE_CONFLICT, PURCHASABLE_UNKNOWN, PURCHASABLE_CONFLICT, STOCK_UNKNOWN, STOCK_CONFLICT,
     STOCK_BACKORDER,
+    STOCK_MAYBE_BACKORDER,
     MANUFACTURER_UNKNOWN, MANUFACTURER_CONFLICT, MODEL_UNKNOWN, MODEL_ANY, MODEL_UNREADABLE, MODEL_CONFLICT,
     STORAGE_UNKNOWN, STORAGE_UNREADABLE,
     STORAGE_SEVERAL, STORAGE_CONFLICT, STORAGE_ANY, COLOR_UNKNOWN, COLOR_UNREADABLE, COLOR_CONFLICT,
@@ -610,7 +612,8 @@ def merge_policy_fact(offer: Offer, policy: PolicyDocument, fact: PolicyFact, fi
     An unknown without evidence becomes known. An unknown that cites a store statement (the page
     says both cash and card, say) stays unknown, citing both, with the conflict reason: a policy
     cannot settle what the page left open. An equal value adds evidence; a different value becomes a
-    conflict. With only_if_unknown, only a bare unknown changes. Applying a page twice changes nothing.
+    conflict. With only_if_unknown, a different value or a cited unknown leaves the offer as it was.
+    Applying a page twice changes nothing.
     """
     if field_path not in ('payment_basis', 'arrival'):
         raise ValueError('Policy statements settle payment_basis or arrival')
@@ -824,22 +827,29 @@ class _OfferBuilder:
         fact = self.flags('online_stock', ('is_in_stock',), STOCK_UNKNOWN, STOCK_CONFLICT)
         if fact['state'] != 'known' or fact['value'] is not True:
             return fact
-        records = []
+        records, stated = [], False
         for item in self.items:
             note = item.data.get('availability_html')
             note = note if isinstance(note, str) else ''
-            # WooCommerce's own backorder class; or backorders allowed with no in-stock line, which is
-            # how a backorder without customer notification shows.
-            if BACKORDER_CLASS.search(note) or (item.data.get('backorders_allowed') is True
-                                                and not IN_STOCK_CLASS.search(note)):
-                text, tag = f'variation {self.vid} on backorder', f'item{item.index}-backorder'
+            if BACKORDER_CLASS.search(note):  # WooCommerce's own backorder class: the store says so
+                text, tag = f'variation {self.vid} availability class available-on-backorder', \
+                    f'item{item.index}-backorder'
+                records.append(self.page_record('online_stock', 'variant', text, tag))
+                stated = True
+            elif item.data.get('backorders_allowed') is True and not IN_STOCK_CLASS.search(note):
+                # Backorders allowed with no in-stock line is how a backorder without customer
+                # notification shows, but a theme may also just hide the line: only a doubt.
+                text, tag = (f'variation {self.vid} backorders_allowed true, no in-stock line',
+                             f'item{item.index}-backorders-allowed')
                 records.append(self.page_record('online_stock', 'variant', text, tag))
         if self.record is not None and self.record[1].get('is_on_backorder') is True:
             records.append(self.api_record('online_stock', 'variant',
                                            json_pointer(self.record[0], 'is_on_backorder'), 'api-backorder'))
+            stated = True
         if not records:
             return fact
-        return self.unknown(STOCK_BACKORDER, [self.evidence[i] for i in fact['evidence_ids']] + records)
+        return self.unknown(STOCK_BACKORDER if stated else STOCK_MAYBE_BACKORDER,
+                            [self.evidence[i] for i in fact['evidence_ids']] + records)
 
     def _named_entries(self, key: str) -> list[tuple[int, str]]:
         entries = self.api.record.get(key)
