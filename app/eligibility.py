@@ -387,7 +387,8 @@ def _deadline(request: ShoppingRequest, offer: Offer) -> tuple[Check, Open]:
     window, by = arrival.value, deadline.arrive_by
     open_fields = []
     if window.earliest > by:
-        outcome, reason = 'fail', f'earliest {noun} {_at(window.earliest)} is after the deadline {_at(by)}'
+        late, due = _apart(window.earliest, by)
+        outcome, reason = 'fail', f'earliest {noun} {late} is after the deadline {due}'
     elif deadline.basis == 'guaranteed' and window.basis == 'estimate':
         outcome, reason = 'unresolved', f'a {noun} estimate cannot satisfy a guaranteed deadline'
         open_fields = [('arrival', f'{noun} guarantee is not published')]
@@ -397,7 +398,8 @@ def _deadline(request: ShoppingRequest, offer: Offer) -> tuple[Check, Open]:
         reason = f'{noun} is {promise} by {_at(window.latest)}, before the deadline {_at(by)}'
     else:
         outcome = 'unresolved'
-        reason = f'{noun} window ends {_at(window.latest)}, after the deadline {_at(by)}'
+        late, due = _apart(window.latest, by)
+        reason = f'{noun} window ends {late}, after the deadline {due}'
         open_fields = [('arrival', f'{noun} window extends past the deadline')]
     return _check('deadline', outcome, reason, ['arrival'], arrival.evidence_ids), open_fields
 
@@ -455,6 +457,14 @@ def _names_place(text: str, wanted: set[str]) -> bool | None:
 def _city(text: str) -> str:
     # The same comparison the cost engine uses for the route, so the two never disagree.
     return ' '.join(text.split()).casefold()
+
+
+def _apart(later: datetime, earlier: datetime) -> tuple[str, str]:
+    """Both instants for an 'after' reason, with microseconds when whole seconds would print one time."""
+    if _at(later) != _at(earlier):
+        return _at(later), _at(earlier)
+    exact = '%Y-%m-%dT%H:%M:%S.%fZ'
+    return later.astimezone(timezone.utc).strftime(exact), earlier.astimezone(timezone.utc).strftime(exact)
 
 
 def _at(moment: datetime) -> str:

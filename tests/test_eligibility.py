@@ -272,6 +272,16 @@ class DeadlineTests(unittest.TestCase):
                          make_offer(arrival=promise.model_dump()), 'deadline')
         self.assertEqual(check.outcome, 'unresolved')
 
+    def test_an_after_reason_never_prints_one_time_on_both_sides(self):
+        request = make_request(deadline=deadline('estimate_ok', FAQ_ESTIMATE['latest'] - TICK))
+        self.assertEqual(check_of(request, make_offer(), 'deadline').reason,
+                         'delivery window ends 2026-11-16T21:59:59.999999Z, after the deadline '
+                         '2026-11-16T21:59:59.999998Z')
+        late = make_offer(arrival=window(SEVEN_DAYS + TICK, SEVEN_DAYS + timedelta(days=1)))
+        self.assertEqual(check_of(make_request(), late, 'deadline').reason,
+                         'earliest delivery 2026-11-21T09:00:00.000001Z is after the deadline '
+                         '2026-11-21T09:00:00.000000Z')
+
     def test_deadlines_compare_instants_whatever_the_offset(self):
         # The FAQ window ends at 23:59:59.999999 in Beirut (UTC+2) on 16 November.
         in_time = datetime(2026, 11, 17, 0, 59, 59, 999999, tzinfo=timezone(timedelta(hours=3)))
