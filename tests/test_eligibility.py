@@ -456,8 +456,15 @@ class IdentityConstraintTests(unittest.TestCase):
         cases = [(['Blue'], 'bleu', 'pass', 'color Blue is allowed'),
                  (['noir'], 'Black', 'pass', 'color Black is allowed'),
                  (['BLACK', 'White'], 'black', 'pass', 'color Black is allowed'),
-                 # A plain Blue does not show which finish a store sells, so it is not Mist Blue.
-                 (['Mist Blue'], 'Blue', 'fail', 'color Blue is not in Mist Blue'),
+                 # A plain Blue does not show which finish a store sells: it may be Mist Blue or not.
+                 (['Mist Blue'], 'Blue', 'unresolved', 'color finish is not stated'),
+                 (['Sage'], 'Green', 'unresolved', 'color finish is not stated'),
+                 (['Sage', 'Black'], 'vert', 'unresolved', 'color finish is not stated'),
+                 (['Mist Blue', 'Blue'], 'Blue', 'pass', 'color Blue is allowed'),
+                 # A different family, or another finish in the family, is still another color.
+                 (['Sage'], 'Blue', 'fail', 'color Blue is not in Sage'),
+                 (['Mist Blue'], 'Deep Blue', 'fail', 'color Deep Blue is not in Mist Blue'),
+                 (['Teal'], 'Blue', 'fail', 'color Blue is not in Teal'),
                  # A color outside our table matches as written, and is never repeated in a reason.
                  (['Ultra Violet'], 'ultra-violet', 'pass', 'color is allowed'),
                  (['---'], '!!!', 'fail', 'color is not in ---')]
@@ -465,6 +472,22 @@ class IdentityConstraintTests(unittest.TestCase):
             with self.subTest(allowed=allowed, color=color):
                 check = check_of(make_request(allowed_colors=allowed), make_offer(color=color), 'color')
                 self.assertEqual(judged(check), (outcome, reason))
+
+    def test_a_requested_finish_against_a_stores_family_color_is_a_gap_not_a_fail(self):
+        result = check_eligibility(make_request(allowed_colors=['Mist Blue']), make_offer(color='Blue'))
+        self.assertEqual(result.outcome, 'unresolved')
+        self.assertEqual(open_fields(result), [('variant.color', 'color finish is not stated')])
+        # The captured stores write 'Blue' and 'Green' for the iPhone 17's Mist Blue and Sage.
+        from app.adapters import ADAPTERS
+        from tests.adapters import FakeFetch, query, routes
+        for source, variant, finish in (('class_cellulars', '19116', 'Mist Blue'),
+                                        ('beytech', '140008', 'Mist Blue'), ('beytech', '139979', 'Sage')):
+            with self.subTest(source=source, variant=variant):
+                offers = ADAPTERS[source].search_candidates(FakeFetch(routes(source)), query()).offers
+                [offer] = [o for o in offers if o.variant.variant_id == variant]
+                check = check_of(make_request(allowed_colors=[finish]), offer, 'color')
+                self.assertEqual(judged(check), ('unresolved', 'color finish is not stated'))
+                self.assertEqual(check.evidence_ids, offer.variant.color.evidence_ids)
 
     def test_a_white_link_does_not_satisfy_white_when_the_selected_variant_is_black(self):
         link = PAGE + '?attribute_pa_color=white'

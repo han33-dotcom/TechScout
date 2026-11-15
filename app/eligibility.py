@@ -22,7 +22,9 @@ import unicodedata
 from app.assessment import Check, Eligibility, EvidenceGap, Outcome, combine
 from app.contracts import BranchStock, Fact, Offer, ShoppingRequest
 from app.devices import canonical_manufacturer, spell_plus
-from app.identity import NormalizedVariant, canonical_color, known_color, known_model, normalize_variant
+from app.identity import (
+    COLOR_FAMILIES, NormalizedVariant, canonical_color, known_color, known_model, normalize_variant,
+)
 
 # Every offer gets these checks, in this order.
 CHECKS = ('fulfillment', 'condition', 'manufacturer', 'model', 'storage', 'color', 'sim', 'region',
@@ -34,6 +36,7 @@ _PLACES = {'lebanon': ('lb', 'lbn', 'lebanon', 'liban', 'lebanese republic')}
 PLACE_ALIASES = {alias: name for name, aliases in _PLACES.items() for alias in aliases}
 _IDENTITY = ('manufacturer', 'model', 'storage_gb', 'color', 'sim', 'region')
 _NO_BRANCH_STOCK = 'branch stock is not published'
+_NO_FINISH = 'color finish is not stated'
 
 # (offer field path, fixed reason) for each fact an unresolved check lacks.
 Open = list[tuple[str, str]]
@@ -198,6 +201,12 @@ def _color(request: ShoppingRequest, normalized: NormalizedVariant) -> tuple[Che
         name = known_color(value)
         return f'color {name} is not in {listed}' if name else f'color is not in {listed}'
 
+    # A store's plain 'Blue' may be the 'Mist Blue' asked for: the finish is missing, not different.
+    families = {_name(COLOR_FAMILIES[color]) for color in wanted if color in COLOR_FAMILIES}
+    fact = normalized.color
+    if fact.state == 'known' and _name(canonical_color(fact.value)) in families - keys:
+        return (_check('color', 'unresolved', _NO_FINISH, ['variant.color'], fact.evidence_ids),
+                [('variant.color', _NO_FINISH)])
     return _judge('color', normalized.color, 'variant.color',
                   ok=lambda value: _name(canonical_color(value)) in keys, passed=passed, failed=failed,
                   unknown='color is not stated', conflict='color observations conflict')

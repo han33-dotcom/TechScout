@@ -21,7 +21,8 @@ IDENTITY_FIELDS = ('manufacturer', 'model', 'storage_gb', 'color', 'sim', 'regio
 # Spellings (casefolded words, accents dropped) of each canonical color: generic names, the colors of
 # the phones in app.devices.KNOWN_MODELS, and French names Lebanese stores use ('bleu' at Mojitech).
 # 'Mist Blue' and 'Blue' stay distinct, as do 'Sage' and 'Green': a store's plain 'Blue' does not
-# show which finish it sells, so only a buyer's own choice of colors can treat them as one.
+# show which finish it sells. Eligibility leaves a requested finish unresolved, not failed, when a
+# store writes only its family (COLOR_FAMILIES).
 _COLORS = {
     'Black': ('black', 'noir', 'noire'),
     'White': ('white', 'blanc', 'blanche'),
@@ -52,6 +53,13 @@ _COLORS = {
     'Desert Titanium': ('desert titanium',),
 }
 COLOR_ALIASES = {alias: name for name, aliases in _COLORS.items() for alias in aliases}
+# The generic color family of each named finish, for finishes that belong to one family only. A
+# store writing the family ('Blue') may be selling the finish ('Mist Blue'); Teal and the Natural
+# and Desert Titanium finishes sit between families and have none.
+COLOR_FAMILIES = {'Mist Blue': 'Blue', 'Deep Blue': 'Blue', 'Sky Blue': 'Blue', 'Ultramarine': 'Blue',
+                  'Sage': 'Green', 'Lavender': 'Purple', 'Cosmic Orange': 'Orange', 'Light Gold': 'Gold',
+                  'Cloud White': 'White', 'White Titanium': 'White', 'Space Black': 'Black',
+                  'Black Titanium': 'Black'}
 
 
 def _phrase_index(aliases: dict[str, str]) -> dict[str, list[tuple[tuple[str, ...], str]]]:
