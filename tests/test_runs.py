@@ -1075,7 +1075,68 @@ class CancellationAndFailureTests(RunCase):
         self.assertEqual((result.status, result.stop_reason), ('error', runs.STOP_ERROR))
         self.assertEqual(self.gate.requests, [])
         failure = self.action('run-1', 'stage:results')['result']['data']['failure']
-        self.assertEqual(failure, {'stage': 'retrieve', 'error': 'ValueError'})
+        self.assertEqual(failure, {'stage': 'retrieve', 'error': 'ValueError', 'tool': 'search_candidates',
+                                   'source_id': 'alpha'})
+        self.assertEqual([(c.source_id, c.status, [e.code for e in c.errors]) for c in result.source_coverage],
+                         [('alpha', 'error', ['INVALID_SCHEMA']), ('beta', 'error', ['BUDGET_EXHAUSTED']),
+                          ('gamma', 'error', ['BUDGET_EXHAUSTED'])])
+        self.assertEqual(result.source_coverage[2].errors[0].message, 'gamma: not searched; the run stopped on an error')
+        self.assertTruthful(result)
+
+    def test_a_store_error_keeps_its_coverage_and_the_candidates_already_found(self):
+        def broken(fetch, wanted=None):
+            fetch('gamma', API.format('gamma'), expect='json')
+            raise KeyError(INJECTION)
+
+        self.stores['gamma']._read = broken
+        with self.assertLogs('techscout.runs', 'ERROR') as errors:
+            result = self.search(assess=make_assess(required=()))
+        self.assertEqual((result.status, result.stop_reason, result.recommendations),
+                         ('error', runs.STOP_ERROR, []))
+        self.assertEqual([(c.source_id, c.status, c.candidates_seen) for c in result.source_coverage],
+                         [('alpha', 'ok', 1), ('beta', 'ok', 1), ('gamma', 'error', 0)])
+        self.assertEqual(result.source_coverage[2].errors[0].message,
+                         'gamma: search_candidates stopped on an unexpected error')
+        # Offers found before the error were never assessed; they are listed, not dropped.
+        self.assertEqual([(i.offer_id, i.reasons) for i in result.unresolved],
+                         [('alpha:100:101', [runs.REASON_ERROR]), ('beta:100:201', [runs.REASON_ERROR])])
+        failure = self.action('run-1', 'stage:results')['result']['data']['failure']
+        self.assertEqual(failure, {'stage': 'retrieve', 'error': 'KeyError', 'tool': 'search_candidates',
+                                   'source_id': 'gamma'})
+        self.assertIn('KeyError during retrieve (search_candidates for gamma)', errors.output[0])
+        stored = json.dumps([a['result'] for a in self.storage.list_actions('run-1')])
+        self.assertNotIn('IGNORE PREVIOUS', ' '.join(errors.output) + json.dumps(self.lines) + stored
+                         + result.model_dump_json())
+        self.assertEqual(result.usage.external_calls, 5)
+        self.assertTruthful(result)
+
+    def test_a_store_error_during_investigation_marks_that_store_partial(self):
+        def broken(fetch, policy_id):
+            raise KeyError(INJECTION)
+
+        self.stores['alpha'].fetch_policy = broken
+        with self.assertLogs('techscout.runs', 'ERROR'):
+            result = self.search()
+        self.assertEqual(result.status, 'error')
+        alpha = result.source_coverage[0]
+        self.assertEqual((alpha.status, alpha.candidates_seen, [e.code for e in alpha.errors]),
+                         ('partial', 1, ['INVALID_SCHEMA']))
+        self.assertEqual(self.action('run-1', 'stage:results')['result']['data']['failure'],
+                         {'stage': 'investigate', 'error': 'KeyError', 'tool': 'fetch_policy', 'source_id': 'alpha'})
+        self.assertTruthful(result)
+
+    def test_an_error_in_the_rules_after_retrieval_lists_every_offer_found(self):
+        def broken(request, offers):
+            raise ValueError('rules failed')
+
+        with self.assertLogs('techscout.runs', 'ERROR'):
+            result = self.search(assess=broken)
+        self.assertEqual(result.status, 'error')
+        self.assertEqual(sorted((i.offer_id, i.reasons[0]) for i in result.unresolved),
+                         [(f'{s}:100:{n}', runs.REASON_ERROR) for s, n in zip(SOURCES, ('101', '201', '301'))])
+        self.assertEqual({c.status for c in result.source_coverage}, {'ok'})  # no store tool was running
+        self.assertEqual(self.action('run-1', 'stage:results')['result']['data']['failure'],
+                         {'stage': 'assess', 'error': 'ValueError'})
         self.assertTruthful(result)
 
     def test_an_unexpected_error_is_traced_and_withholds_recommendations(self):

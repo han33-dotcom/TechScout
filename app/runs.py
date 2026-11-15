@@ -92,6 +92,7 @@ _NOT_SEARCHED = {
     'calls': 'not searched; the run call budget has no room',
     'time': 'not searched; the run time budget has no room',
     'store': 'not searched; the store request cap has no room',
+    'error': 'not searched; the run stopped on an error',
 }
 # What may reach the planner: plain identifiers (the planner's own check) and short printable
 # reasons, never free text. A gap that fails is withheld, so it cannot spoil a whole turn's state;
@@ -632,6 +633,7 @@ class _Run:
         self.stop_reason: str | None = None  # why investigation ended
         self.withheld_gaps = 0  # open gaps last held back from the planner (_open_gaps)
         self.stage = 'clarify'
+        self.tool: dict[str, str] | None = None  # the store tool in progress, named in a failure record
         self.started_at: datetime | None = None
 
     def execute(self) -> RunResult:
@@ -716,6 +718,7 @@ class _Run:
                                                  errors=list(result.errors))
             seen[source_id] = len(offers)
             self._absorb(source_id, offers, policies)
+            self.tool = None
         data.update(candidates=seen, skipped=skipped)
 
     def _query_arguments(self) -> dict:
@@ -725,7 +728,9 @@ class _Run:
                 'branch_id': None if place.branch_id is None else place.branch_id[:60]}
 
     def _run_tool(self, source_id: str, tool: str, arguments: dict, invoke):
-        """Call one store reader through a fetch bound to its store, keep what it returned, trace it."""
+        """Call one store reader through a fetch bound to its store, keep what it returned, trace it.
+        The caller clears self.tool once it has absorbed the results."""
+        self.tool = {'tool': tool, 'source_id': source_id}
         before = self.budget.calls_used(source_id)
         result = invoke(_SourceFetch(self.deps.gate, self.budget, source_id))
         if not isinstance(result, AdapterResult):
@@ -896,6 +901,7 @@ class _Run:
             {'source_id': source_id, 'target': target, 'action_id': action.action_id, 'turn': turn}, invoke)
         self.coverage[source_id].errors.extend(result.errors)
         self._absorb(source_id, offers, policies)
+        self.tool = None  # a failure in the rules below is not the store tool's
         self._reassess()
         still_open = {gap.gap_id for gap in self._open_gaps()[0]}
         self.history.append({'turn': turn, 'tool': action.tool, 'source_id': source_id, 'target': target,
@@ -1065,6 +1071,10 @@ class _Run:
             elif assessment.decision != 'recommendable':
                 issues = rejected if assessment.decision == 'rejected' else unresolved
                 issues.append(OfferIssue(offer_id=offer.offer_id, reasons=assessment.reasons()))
+        if error is not None:  # offers found before the error that were never assessed
+            listed = {offer.offer_id for offer, _ in self.assessed}
+            unresolved += [OfferIssue(offer_id=offer_id, reasons=[REASON_ERROR])
+                           for offer_id in dict.fromkeys(o.offer_id for o in self.offers) if offer_id not in listed]
         finished_at = max(self._now(), verified_at)
         usage = self.budget.usage(int((finished_at - self.started_at).total_seconds() * 1000))
         result = RunResult(
@@ -1090,11 +1100,21 @@ class _Run:
         return result
 
     def _fail(self, exc: Exception) -> RunResult:
-        # Type and stage only: exception text can quote store data, so it stays out of the trace and
-        # the error log; the traceback goes to this logger's DEBUG level for developers.
-        log.error('Run %s stopped on an unexpected %s during %s', self.run_id, type(exc).__name__, self.stage)
+        # Type, stage and the store tool in progress (registry IDs) only: exception text can quote
+        # store data, so it stays out of the trace and the error log; the traceback goes to this
+        # logger's DEBUG level for developers.
+        name, tool = type(exc).__name__, self.tool
+        log.error('Run %s stopped on an unexpected %s during %s%s', self.run_id, name, self.stage,
+                  f" ({tool['tool']} for {tool['source_id']})" if tool else '')
         log.debug('Run %s failure details', self.run_id, exc_info=exc)
-        return self._finish(error=STOP_ERROR, failure={'stage': self.stage, 'error': type(exc).__name__})
+        if tool is not None:  # the store whose tool was running keeps a coverage entry saying so
+            source_id = tool['source_id']
+            entry = self.coverage.setdefault(source_id, _Coverage(source_id, search_failed=True))
+            entry.errors.append(ToolError(code='INVALID_SCHEMA', retryable=False, message=(
+                f"{source_id[:60]}: {tool['tool']} stopped on an unexpected error")))
+        for source_id in self.sources:  # stores the run never reached
+            self.coverage.setdefault(source_id, _Coverage.not_searched(source_id, 'error'))
+        return self._finish(error=STOP_ERROR, failure={'stage': self.stage, 'error': name, **(tool or {})})
 
     def _limit(self) -> str | None:
         """The first run limit that cut work short, including refusals the gate met inside a tool."""
