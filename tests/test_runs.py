@@ -1249,6 +1249,25 @@ class CancellationAndFailureTests(RunCase):
                          {'stage': 'assess', 'error': 'ValueError'})
         self.assertTruthful(result)
 
+    def test_an_error_in_the_rules_after_an_investigation_tool_blames_no_store(self):
+        calls, rules = [], make_assess()
+
+        def failing_on_reassessment(request, offers):
+            calls.append(1)
+            if len(calls) == 2:  # the reassessment after the first planner action
+                raise ValueError('rules failed')
+            return rules(request, offers)
+
+        with self.assertLogs('techscout.runs', 'ERROR'):
+            result = self.search(assess=failing_on_reassessment)
+        self.assertEqual(result.status, 'error')
+        self.assertIn('fetch_policy', self.names())  # an investigation tool ran and finished first
+        self.assertEqual({c.status for c in result.source_coverage}, {'ok'})  # no store tool was running
+        self.assertEqual([c.errors for c in result.source_coverage], [[], [], []])
+        self.assertEqual(self.action('run-1', 'stage:results')['result']['data']['failure'],
+                         {'stage': 'investigate', 'error': 'ValueError'})
+        self.assertTruthful(result)
+
     def test_an_unexpected_error_is_traced_and_withholds_recommendations(self):
         calls, rules = [], make_assess(required=())
 
