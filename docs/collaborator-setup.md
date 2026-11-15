@@ -134,8 +134,7 @@ commands, and two project-specific constraints. Explain who approves a PR and wh
 distinguishes Implemented from Done. Flag missing access rather than guessing.
 ```
 
-Expected: PR target `main`; checks match `AGENTS.md`; humans decide approval
-and verify task acceptance. Unknown mandatory costs stay unknown and online stock is distinct from selected-branch pickup stock.
+Expected: PR targets main or its declared stacked base. Checks match AGENTS.md. The author records acceptance evidence and can merge after required checks pass. Unknown mandatory costs stay unknown and online stock is distinct from selected-branch pickup stock.
 Self-reported compliance alone does not prove all future behavior; verify actual
 file access/source display where the tool supports it. A tool with no file access
 passes only the manual-context route, not an automatic-loading check.
