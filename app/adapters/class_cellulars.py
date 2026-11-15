@@ -43,16 +43,20 @@ _CASH_ONLY = re.compile(r'we\s+only\s+accept\s+cash\s+on\s+delivery\b', re.IGNOR
 _RETURNS = re.compile(r'request\s+a\s+return\s+within\s+([0-9]{1,2})\s+days?\b', re.IGNORECASE)
 
 
+def price_tax_claims(text: str) -> tuple[Claim, ...]:
+    """Read inclusion only from the target product's price block."""
+    return tuple(Claim(decimal_amount(m.group(1) + (m.group(2) or '')), m.group(0))
+                 for m in _PRICE_VAT.finditer(text))[:MAX_VAT_CLAIMS]
+
+
 def page_facts(text: str) -> PageFacts:
     """The product page's own statements; the free-shipping banner is site-wide."""
-    vat = tuple(Claim(decimal_amount(m.group(1) + (m.group(2) or '')), m.group(0))
-                for m in _PRICE_VAT.finditer(text))[:MAX_VAT_CLAIMS]
     estimate, warranty, banner = _ESTIMATE.search(text), _WARRANTY.search(text), _BANNER.search(text)
     arrival = None
     if estimate is not None and int(estimate.group(1)) <= int(estimate.group(2)):
         arrival = Claim((int(estimate.group(1)), int(estimate.group(2)), 'calendar'), estimate.group(0))
     return PageFacts(
-        tax_included=vat, arrival=arrival,
+        arrival=arrival,
         warranty=None if warranty is None else Claim(
             ('Genuine Warranty Center', int(warranty.group(1))), warranty.group(0)),
         delivery_fee=None if banner is None else Claim(
@@ -110,6 +114,7 @@ CONFIG = StoreConfig(
                          delivery_only=('payment_basis', 'arrival')),),
     sim_map=MappingProxyType({'nano sim / esim': 'physical+esim', 'esim': 'esim-only'}),
     page_facts=page_facts,
+    price_tax_claims=price_tax_claims,
     policy_effect=apply_faq,
     # The FAQ's store list, observed 2026-11-14.
     branches=(('mar-elias', 'Beirut'), ('abc-verdun', 'Beirut'), ('abc-achrafieh', 'Beirut'),

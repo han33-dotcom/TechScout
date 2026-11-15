@@ -58,6 +58,11 @@ BREAK_TAGS = frozenset({
     'table', 'tbody', 'td', 'tfoot', 'th', 'thead', 'tr', 'ul',
 })
 
+VOID_TAGS = frozenset({
+    'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source',
+    'track', 'wbr',
+})
+
 # Why a fact stays unknown or conflicting. Fixed wording only, so reasons are safe to show the planner.
 NOT_ON_PAGE = 'variation is not on the product page'
 PAGE_UNREAD = 'product page could not be read'
@@ -194,7 +199,6 @@ class Claim:
 @dataclass(frozen=True)
 class PageFacts:
     """What a product page says outside its variation form, as normalized claims."""
-    tax_included: tuple[Claim, ...] = ()  # value: the displayed Decimal amount the statement follows
     delivery_fee: Claim | None = None  # value: {'amount': Decimal, 'currency': str, 'conditions': tuple}
     arrival: Claim | None = None  # value: (min_days, max_days, 'calendar' or 'working')
     warranty: Claim | None = None  # value: (provider or None, months or None); provider from our table
@@ -206,6 +210,10 @@ WarrantyStatement = tuple[str | None, int | None]
 
 def no_page_facts(text: str) -> PageFacts:
     return PageFacts()
+
+
+def no_price_tax_claims(text: str) -> tuple[Claim, ...]:
+    return ()
 
 
 def no_statement(text: str) -> WarrantyStatement | None:
@@ -232,7 +240,8 @@ class StoreConfig:
     sim_map: Mapping[str, Sim | None] = field(default_factory=lambda: MappingProxyType({}))
     # Product-name phrase -> SIM type, or None for a phrase about the SIM whose type is not confirmed.
     name_sim: Mapping[str, Sim | None] = field(default_factory=lambda: MappingProxyType({}))
-    page_facts: Callable[[str], PageFacts] = no_page_facts  # reads the product page's visible text
+    page_facts: Callable[[str], PageFacts] = no_page_facts
+    price_tax_claims: Callable[[str], tuple[Claim, ...]] = no_price_tax_claims
     name_warranty: Callable[[str], WarrantyStatement | None] = no_statement  # reads the product name
     option_warranty: Callable[[str], WarrantyStatement | None] = no_statement  # reads a warranty option
     policy_effect: Callable[[Offer, PolicyDocument], Offer] = no_policy_effect  # what each page settles
@@ -324,6 +333,15 @@ def _unescaped(text: str) -> str:
     return ' '.join(html.unescape(text).split())
 
 
+@dataclass
+class _PriceSummary:
+    """Direct WooCommerce price blocks and variation form IDs within one summary element."""
+    product_ids: set[str] = field(default_factory=set)
+    prices: list[str] = field(default_factory=list)
+    open_tags: list[str] = field(default_factory=lambda: ['div'])
+    price_start: int | None = None
+
+
 class _PageParser(HTMLParser):
     """Visible text, variation forms and JSON-LD blocks, read with the standard library parser."""
 
@@ -334,6 +352,8 @@ class _PageParser(HTMLParser):
         self.forms: list[dict[str, str | None]] = []
         self.json_ld: list[str] = []
         self._ld: list[str] | None = None
+        self._summary: _PriceSummary | None = None
+        self._summaries: list[_PriceSummary] = []
 
     def handle_starttag(self, tag, attrs):
         values: dict[str, str | None] = {}
@@ -349,6 +369,20 @@ class _PageParser(HTMLParser):
             self.hidden.append(tag)
         elif tag in BREAK_TAGS:
             self.chunks.append(' ')
+        if self.hidden or tag in VOID_TAGS:
+            return
+        classes = (values.get('class') or '').split()
+        if self._summary is None:
+            if tag == 'div' and {'summary', 'entry-summary'}.issubset(classes):
+                self._summary = _PriceSummary()
+            return
+        summary = self._summary
+        if len(summary.open_tags) == 1:
+            if tag in ('p', 'div') and 'price' in classes:
+                summary.price_start = len(self.chunks)
+            if tag == 'form' and 'variations_form' in classes:
+                summary.product_ids.add((values.get('data-product_id') or '').strip())
+        summary.open_tags.append(tag)
 
     def handle_endtag(self, tag):
         if tag == 'script' and self._ld is not None:
@@ -359,6 +393,26 @@ class _PageParser(HTMLParser):
                 del self.hidden[len(self.hidden) - 1 - self.hidden[::-1].index(tag):]
         elif tag in BREAK_TAGS:
             self.chunks.append(' ')
+        summary = self._summary
+        if summary is None or self.hidden or tag in HIDDEN_TAGS or tag in VOID_TAGS:
+            return
+        if tag != summary.open_tags[-1]:
+            self._summary = None  # Unbalanced markup does not establish price scope.
+            return
+        summary.open_tags.pop()
+        if len(summary.open_tags) == 1 and summary.price_start is not None:
+            text = ''.join(self.chunks[summary.price_start:])
+            summary.prices.append(' '.join(text.split()))
+            summary.price_start = None
+        if not summary.open_tags:
+            self._summaries.append(summary)
+            self._summary = None
+
+    def product_price(self, product_id: str) -> str:
+        matches = [s.prices for s in self._summaries if s.product_ids == {product_id}]
+        if len(matches) == 1 and len(matches[0]) == 1:
+            return matches[0][0]
+        return ''
 
     def handle_data(self, data):
         if self._ld is not None:
@@ -550,6 +604,7 @@ class _Page:
     json_ld: tuple[str, ...]
     items: dict[str, list[_PageItem]] | None  # None when the variation data could not be read
     reason: str  # why items is None
+    product_price: str = ''
 
 
 def _form_items(forms: list[dict], product_id: str) -> dict[str, list[_PageItem]]:
@@ -589,11 +644,12 @@ def read_page(outcome: FetchOutcome, product_id: str) -> tuple[_Page, str | None
         parser = read_html(outcome.body)
     except AssertionError:
         return _Page(outcome, None, (), None, PAGE_UNREAD), PAGE_MARKUP
+    product_price = parser.product_price(product_id)
     try:
         items = _form_items(parser.forms, product_id)
     except _SchemaError as exc:
-        return _Page(outcome, parser.text, tuple(parser.json_ld), None, FORM_UNREAD), exc.reason
-    return _Page(outcome, parser.text, tuple(parser.json_ld), items, FORM_UNREAD), None
+        return _Page(outcome, parser.text, tuple(parser.json_ld), None, FORM_UNREAD, product_price), exc.reason
+    return _Page(outcome, parser.text, tuple(parser.json_ld), items, FORM_UNREAD, product_price), None
 
 
 def policy_window(observed_at: datetime, value: dict) -> ArrivalWindow | None:
@@ -646,9 +702,10 @@ class _OfferBuilder:
     """Builds one variation's offer for the query's route; every fact cites the reply it came from."""
 
     def __init__(self, adapter: 'WooCommerceAdapter', product: ProductEndpoints, api: _Api, page: _Page,
-                 facts: PageFacts | None, query: CandidateQuery, vid: str):
+                 facts: PageFacts | None, vat_claims: tuple[Claim, ...], query: CandidateQuery, vid: str):
         self.cfg, self.version, self.source_id = adapter.config, adapter.adapter_version, adapter.source_id
         self.product, self.api, self.page, self.facts, self.query = product, api, page, facts, query
+        self.vat_claims = vat_claims
         self.pid, self.vid = api.product_id, vid
         self.items = None if page.items is None else page.items.get(vid, [])
         self.option = api.options.get(vid)
@@ -1031,10 +1088,11 @@ class _OfferBuilder:
         """Included only when the page's VAT statement follows this variation's own price."""
         if self.facts is None:
             return {'kind': 'tax', 'state': 'unknown', 'reason': PAGE_UNREAD}
-        claims = self.facts.tax_included
+        claims = self.vat_claims
         if not claims:
             return {'kind': 'tax', 'state': 'unknown', 'reason': VAT_UNKNOWN}
-        amount = price['value']['amount'] if price['state'] == 'known' else None
+        usd_price = price['state'] == 'known' and price['value']['currency'] == 'USD'
+        amount = price['value']['amount'] if usd_price else None
         index = next((i for i, c in enumerate(claims) if amount is not None and c.value == amount), None)
         if index is None:
             return {'kind': 'tax', 'state': 'unknown', 'reason': VAT_UNBOUND}
@@ -1238,6 +1296,7 @@ class WooCommerceAdapter:
         if problem is not None:
             read.errors.append(self._error(problem))
         facts = None if page.text is None else self.config.page_facts(page.text)
+        vat_claims = self.config.price_tax_claims(page.product_price)
         ids = list(api.options)
         ids += [vid for vid in (page.items or {}) if vid not in api.options]
         read.listed, read.variation_ids = True, ids
@@ -1245,7 +1304,8 @@ class WooCommerceAdapter:
             if only is not None and vid != only:
                 continue
             try:
-                read.offers.append(_OfferBuilder(self, product, api, page, facts, query, vid).build())
+                builder = _OfferBuilder(self, product, api, page, facts, vat_claims, query, vid)
+                read.offers.append(builder.build())
             except ValidationError:
                 read.errors.append(self._error(OFFER_UNREADABLE))
         return read
