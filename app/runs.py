@@ -274,14 +274,15 @@ class RunBudget:
 
     def reserve_spend(self, amount: Decimal | None) -> SpendReservation | None:
         """Hold a conservative charge before a paid call. None (refused) when the amount is unknown,
-        it does not fit, an earlier cost overran or was unknown, or the run has ended."""
+        it does not fit, an earlier cost overran or was unknown, or the run has ended. A refusal
+        after an unknown cost is counted as 'spend_unknown', not as 'spend'."""
         if amount is not None:
             _check_spend(amount)
         self._poll_signal()
         with self._lock:
             _, _, limit = self._limits()
             reason = self._ended() or (
-                'spend_unknown' if amount is None
+                'spend_unknown' if amount is None or self._spend_unknown
                 else 'spend' if self._spend_blocked or self._spent + self._held + amount > limit else None)
             if reason:
                 self._refuse(reason)
@@ -787,12 +788,16 @@ class _Run:
                              max_turns=self.caps.planner_turns, remaining=self.budget.remaining(),
                              history=[dict(entry) for entry in self.history])
         spend_before, refusals_before = self.budget.spend_total(), self.budget.refusals
+        unknown_before = self.budget.spend_unknown
         started = self.deps.clock()
         decision = self.planner.decide(state, _SpendView(self.budget))
         duration = _ms(self.deps.clock() - started)
         if not isinstance(decision, PlannerDecision):
             raise TypeError('A planner returns a PlannerDecision')
         spend = self._charge(decision, spend_before)
+        # This turn's cost could not be known (committed as unknown, or reported in another
+        # currency): an unknown cost stops further spend, so investigation ends here.
+        unknown_cost = self.budget.spend_unknown and not unknown_before
         refusals = self.budget.refusals
         refused = next((r for r in ('spend_unknown', 'spend')
                         if refusals.get(r, 0) > refusals_before.get(r, 0)), None)
@@ -800,12 +805,17 @@ class _Run:
                   if decision.kind == 'act' else None)
         # Checked again now: a cancel, or a planner call that ran past its declared time, may have
         # left no room for the chosen action. An action that does not fit is not run at all.
-        not_run = None if action is None else self._blocked(action.calls, self._rooms()[action.source_id])
+        not_run = None if action is None else (
+            'spend_unknown' if unknown_cost else self._blocked(action.calls, self._rooms()[action.source_id]))
         self.tracer.planner_turn(
             decision, duration_ms=duration, spend=spend, action=action, not_run=not_run,
             rejected='action is not in the menu' if decision.kind == 'act' and action is None else None,
             arguments={'turn': turn, 'gaps': len(gaps), 'withheld_gaps': withheld,
                        'actions': [a.action_id for a in menu]})
+        if unknown_cost:  # whatever the planner decided
+            self._hit('spend_unknown')
+            self.stop_reason = STOP_SPEND_UNKNOWN
+            return False
         if action is None:
             if refused is not None:  # the planner could not pay for its model call
                 self._hit(refused)

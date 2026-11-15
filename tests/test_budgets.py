@@ -259,6 +259,8 @@ class SpendBudgetTests(unittest.TestCase):
         self.assertEqual(self.budget.spend_total(), Decimal('0.10'))
         self.assertTrue(self.budget.spend_unknown)
         self.assertIsNone(self.budget.reserve_spend(Decimal('0.01')))
+        # The refusal names the unknown cost, not a spend cap that was never reached.
+        self.assertEqual(self.budget.refusals, {'spend_unknown': 1})
 
     def test_unreserved_spend_is_recorded_and_stops_spend(self):
         self.budget.record_unreserved_spend(Decimal('0.05'))
@@ -266,6 +268,8 @@ class SpendBudgetTests(unittest.TestCase):
         self.assertIsNone(self.budget.reserve_spend(Decimal('0.01')))
         self.budget.record_unreserved_spend(None)
         self.assertTrue(self.budget.spend_unknown)
+        self.assertIsNone(self.budget.reserve_spend(Decimal('0.01')))
+        self.assertEqual(self.budget.refusals, {'spend': 1, 'spend_unknown': 1})
 
     def test_spend_is_exact_decimal_only(self):
         cases = [(TypeError, lambda: self.budget.reserve_spend(0.1)),

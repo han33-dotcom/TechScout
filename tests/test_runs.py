@@ -15,6 +15,7 @@ import json
 from pathlib import Path
 import tempfile
 import threading
+from types import SimpleNamespace
 import unittest
 from unittest import mock
 
@@ -27,7 +28,9 @@ from app.adapters.base import AdapterResult, PolicyDocument, PolicyFact, Snapsho
 from app.assessment import Assessment, Check, CostResult, Eligibility, EvidenceGap, combine
 from app.contracts import Money, Offer, ShoppingRequest, ToolError, ToolResult
 from app import planner as planner_module
-from app.planner import PlannerDecision, PlannerUsage, RulePlanner, request_constraints
+from app.planner import (
+    AnthropicPlanner, PlannerDecision, PlannerUsage, RulePlanner, load_planner_config, request_constraints,
+)
 from app.runs import RunCaps, RunDependencies, run_search
 from app.sources import CALL_TIMEOUT_S, FetchOutcome, SourceGate, SourceLimiter
 from app.storage import Storage, actions as actions_table, metadata, runs as runs_table
@@ -302,6 +305,51 @@ def pick(tool, source_id):
 
 STOP = PlannerDecision(kind='stop', reason='test stop')
 
+PLANNER_CONFIG = load_planner_config()
+CONFIGURED_MODEL = PLANNER_CONFIG['model']
+UNPRICED_MODEL = 'synthetic-unpriced-fallback'  # not in the configured price table
+
+
+class ModelClient:
+    """Shaped like the SDK client the model planner calls: scripted replies, never the network.
+
+    A reply may be an exception to raise; the last one repeats. Each call takes `seconds` on the
+    run clock."""
+
+    def __init__(self, clock, *replies, seconds=0.0):
+        self.clock, self.replies, self.calls, self.seconds = clock, list(replies), [], seconds
+        self.messages = SimpleNamespace(create=self.create)
+        self.beta = SimpleNamespace(messages=self.messages)
+
+    def create(self, **request):
+        self.calls.append(request)
+        self.clock.advance(self.seconds)
+        reply = self.replies.pop(0) if len(self.replies) > 1 else self.replies[0]
+        if isinstance(reply, BaseException):
+            raise reply
+        return reply
+
+
+def model_attempt(kind, model, input_tokens, output_tokens):
+    return SimpleNamespace(type=kind, model=model, input_tokens=input_tokens, output_tokens=output_tokens,
+                           cache_read_input_tokens=0, cache_creation_input_tokens=0)
+
+
+def model_reply(tool, *, model=CONFIGURED_MODEL, iterations=None, input_tokens=1200, output_tokens=150,
+                **arguments):
+    """A reply making one tool call, with its usage as the SDK reports it."""
+    call = SimpleNamespace(type='tool_use', id=f'toolu_{tool}', name=tool, input=arguments)
+    usage = SimpleNamespace(input_tokens=input_tokens, output_tokens=output_tokens, cache_read_input_tokens=0,
+                            cache_creation_input_tokens=0, iterations=iterations)
+    return SimpleNamespace(content=[call], stop_reason='tool_use', stop_details=None, model=model, usage=usage)
+
+
+def unpriced_reply(**arguments):
+    """An act reply served by a fallback model missing from the price table."""
+    iterations = [model_attempt('message', CONFIGURED_MODEL, 1000, 10),
+                  model_attempt('fallback_message', UNPRICED_MODEL, 1000, 90)]
+    return model_reply('act', model=UNPRICED_MODEL, iterations=iterations, output_tokens=90, **arguments)
+
 
 class RunCase(unittest.TestCase):
     def setUp(self):
@@ -343,6 +391,12 @@ class RunCase(unittest.TestCase):
 
     def names(self, run_id='run-1'):
         return [a['tool'] for a in self.storage.list_actions(run_id)]
+
+    def model_search(self, *replies, seconds=0.0, **options):
+        """A run whose planner is the real model planner over a scripted, offline client."""
+        client = ModelClient(self.clock, *replies, seconds=seconds)
+        result = self.search(AnthropicPlanner(PLANNER_CONFIG, client=client), **options)
+        return result, client
 
     def slow_act(self, seconds):
         """A planner step that takes `seconds` on the run clock, then acts on the first menu entry."""
@@ -717,6 +771,56 @@ class PlannerTests(RunCase):
         self.assertEqual(self.names().count('fetch_policy'), 1)
         self.assertEqual(result.usage.spend.amount, Decimal('0.05'))
         self.assertEqual((result.status, result.stop_reason), ('partial', runs.STOP_SPEND))
+        self.assertTruthful(result)
+
+    def test_a_turn_whose_cost_became_unknown_ends_the_run_as_partial(self):
+        def after_unknown_cost(decide):
+            def step(state, budget):
+                budget.reserve_spend(Decimal('0.10')).commit(None)
+                return decide(state)
+            return step
+
+        euros = PlannerUsage(model='test-model', input_tokens=10, output_tokens=10,
+                             cost=Money(amount=Decimal('0.05'), currency='EUR'))
+        cases = {
+            'stop': (after_unknown_cost(lambda state: STOP), Decimal('0.10')),
+            'act': (after_unknown_cost(lambda state: act(state.actions[0].action_id)), Decimal('0.10')),
+            'cost in another currency': (lambda state, budget: act(state.actions[0].action_id, euros), Decimal('0')),
+        }
+        for number, (name, (step, spend)) in enumerate(cases.items()):
+            run_id = f'run-{number}'
+            with self.subTest(name):
+                result = self.search(ScriptedPlanner(step), run_id=run_id)
+                # Whatever the planner decided, no tool runs after a cost that cannot be known.
+                self.assertEqual((result.status, result.stop_reason), ('partial', runs.STOP_SPEND_UNKNOWN))
+                self.assertNotIn('fetch_policy', self.names(run_id))
+                self.assertEqual(result.usage.spend.amount, spend)
+                record = self.action(run_id, 'planner')['result']['data']
+                self.assertEqual(record.get('not_run'), 'spend_unknown' if record['decision'] == 'act' else None)
+                budget = self.action(run_id, 'stage:results')['result']['data']['budget']
+                self.assertIs(budget['spend_unknown'], True)
+                self.assertTruthful(result, run_id)
+
+    def test_an_unpriced_model_reply_ends_the_run_as_partial(self):
+        result, client = self.model_search(unpriced_reply(action_id='A1', reason='read the FAQ'))
+        self.assertEqual(len(client.calls), 1)
+        self.assertEqual((result.status, result.stop_reason), ('partial', runs.STOP_SPEND_UNKNOWN))
+        self.assertNotIn('fetch_policy', self.names())
+        turn = self.action('run-1', 'planner')['result']['data']
+        self.assertEqual(turn['reason'], 'planner usage could not be priced')
+        # The kept reservation is the most that is known; the stop reason says the total is not exact.
+        self.assertEqual(result.usage.spend.amount, Decimal(turn['cost']))
+        self.assertGreater(result.usage.spend.amount, 0)
+        self.assertTruthful(result)
+
+    def test_an_unpriced_reply_after_a_verified_offer_still_ends_the_run_as_partial(self):
+        # alpha's FAQ is read first and its offer verified; beta's cheaper offer is still open.
+        result, client = self.model_search(model_reply('act', action_id='A1', reason='read the FAQ'),
+                                           unpriced_reply(action_id='A1', reason='read the FAQ'))
+        self.assertEqual(len(client.calls), 2)
+        self.assertEqual([r.offer.offer_id for r in result.recommendations], ['alpha:100:101'])
+        self.assertEqual([i.offer_id for i in result.unresolved], ['beta:100:201'])
+        self.assertEqual((result.status, result.stop_reason), ('partial', runs.STOP_SPEND_UNKNOWN))
         self.assertTruthful(result)
 
 
