@@ -109,6 +109,10 @@ result; a failed/cancelled run cannot masquerade as completed recommendations.
 This section covers MVP 05-09 and 11-12. Indexed discovery (MVP 10) and final live
 re-verification (MVP 13) are not implemented: there is no `app/retrieval.py`, offer index or
 refresh job, and the retrieve stage reads one configured iPhone 17 product per store instead.
+A request for another model in the device table (for example iPhone 17 Pro or iPhone Air) reads
+nothing: every store reports ok with 0 candidates, and the run abstains with 'no open evidence
+gaps remain' ('investigation is disabled for this run' with no planner turns). A model outside the
+table still reads the iPhone 17 products, which then fail or leave open the model check.
 
 One search runs as fixed stages in `app/runs.py`: clarify, retrieve, assess, investigate,
 verify and results. Code decides eligibility, cost, ranking and every limit; the planner
@@ -136,20 +140,23 @@ ID (see Run control).
 
 Zero prices, too many decimals, schema changes, missing prices and AJAX-only pages stay unknown
 or give `INVALID_SCHEMA`; they never become comparable offers. A Store API variation record,
-variation-list entry or option name repeated with a different value is `INVALID_SCHEMA`;
-identical repeats merge. For pickup, a reader lists only the store's configured branches in the
+an entry in the Store API variation list, or an option name repeated with a different value is
+`INVALID_SCHEMA`. On the product page, a variation-form entry repeated with a different value
+makes the differing fact a conflict. Identical repeats merge in both places. For pickup, a reader lists only the store's configured branches in the
 requested city (only the named one, when the request names a branch), each with unknown stock.
 Mojitech and Beytech have no configured branch, so their pickup gap is `pickup_stock`, not
 `pickup_stock.<branch_id>.stock`.
 
-Store-wide pages (Class FAQ, Mojitech returns, Beytech warranty and exchange) become policy
-facts that `apply_policy` binds to offers, keeping a conflict when a policy disagrees with the
+Store-wide pages for Class Cellulars (FAQ) and Mojitech (refund and returns) become policy facts
+that `apply_policy` binds to delivery offers, keeping a conflict when a policy disagrees with the
 product page. An unknown that the product page left open with a cited statement (it accepts
 cash and card, say) stays unknown, citing both, with the conflict reason. The Class FAQ and the
 Mojitech returns page speak to delivery orders only: they leave a pickup offer unchanged, and a
 pickup run is never offered them (`policy_topics_for`). A configured policy page in which the
 reader recognizes no statement is a partial read with `INVALID_SCHEMA` 'policy page states
-nothing the reader recognizes'.
+nothing the reader recognizes'. Beytech's warranty and exchange pages are read only when
+`fetch_policy` is called directly: they settle no offer field, so `apply_policy` leaves offers
+unchanged and a run never fetches them.
 
 Store text never reaches a reason: every reason is fixed wording. JSON replies are cited by JSON
 pointer, and page statements by their store text as the excerpt. Values the page holds as
@@ -164,7 +171,7 @@ coverage](source-coverage.md). Test fixtures are minimized from captured public 
 ### Variant identity (MVP 07)
 
 `app/identity.py` canonicalizes manufacturer, model and color with our own tables
-(`app/devices.py` with `MODEL_ALIASES`, `identity.COLOR_ALIASES` and `identity.COLOR_FAMILIES`;
+(`app/devices.py` with `MODEL_ALIASES` and `identity.COLOR_ALIASES`;
 'bleu' is Blue, 'iPhone 17 Air' is the iPhone Air; unmapped colors become title case) without
 changing any fact's state or evidence. A '+' attached to a model reads as Plus ('iPhone 16+' is
 the iPhone 16 Plus). A known model followed by a qualifier word ('Pro-Max', 'PM', 'Plus', 'Mini',
@@ -187,7 +194,8 @@ proves branch stock, and an arrival estimate never satisfies a guaranteed deadli
 
 Some known values stay unresolved because they do not show the answer. When the buyer names a
 finish ('Mist Blue', 'Sage') and the store states only its family ('Blue', 'Green'), the color
-gap is 'color finish is not stated'; other colors still fail. A warranty territory or region
+gap is 'color finish is not stated' (`identity.COLOR_FAMILIES` maps each finish to its family,
+for example Mist Blue to Blue); other colors still fail. A warranty territory or region
 that names the required place among other words ('Lebanon only', 'International (excluding
 Lebanon)') gives 'warranty territory is not recognized' or 'region is not recognized'; other
 place names still fail. 'Republic of Lebanon', 'لبنان' and 'الجمهورية اللبنانية' are spellings
@@ -220,8 +228,9 @@ Each cost kind is one charge per offer: its components restate it or are alterna
 condition. A conditional term that adds nothing (included, not applicable or an additional zero)
 for a payment surcharge or other charge is a waiver: when its condition fails, the ordinary
 charge is unpublished, so the total stays unresolved (`published <kind> terms do not cover this
-order`). Only a positive surcharge whose condition fails adds zero. A reader lists distinct
-mandatory fees as one `other` component carrying their sum and every fee's evidence. Separately
+order`). Only a positive surcharge whose condition fails adds zero. A reader that finds several
+mandatory fees must list them as one `other` component carrying their sum and every fee's
+evidence. No current reader lists an `other` charge. Separately
 listed nonzero `other` charges are never merged: equal amounts keep the total unresolved
 ('several other charges are listed separately'), unequal ones are 'conflicting other terms'.
 
@@ -235,8 +244,12 @@ directly.
 
 `run_search(request, deps)` runs one search within `RunCaps` (120 seconds, 40 external calls,
 6 planner turns, USD 1.00 variable spend; 30 seconds, 10 calls and USD 0.25 of those are held
-back for final verification and are never extra). `RunCaps.seconds` may be at most 300, half the
-recovery lease, so a live run is never taken for an abandoned one. The gate reserves every
+back for final verification and are never extra). Final live verification (MVP 13) is not built,
+so nothing uses the reserve yet: in practice, investigation gets 90 seconds, 30 calls and USD 0.75.
+`RunCaps.seconds` may be at most 300, half the recovery lease, so a run that keeps to its caps is
+not taken for an abandoned one. A run that stalls past 10 minutes in a planner call or an
+OS-bounded lookup can be closed by another process's recovery; it then stops on a storage error
+(see the README). The gate reserves every
 attempt, retries included, against the run budget, and each tool is offered only when its
 requests fit at the gate's full 15-second per-attempt timeout and within the store's per-run cap.
 A request reserved before a cancel but still waiting out a backoff, a rate-limit wait or its
@@ -260,8 +273,10 @@ as partial with 'planner cost is unknown', whatever the planner decided, and run
 action. The causes are a configured model without a price (no call is made), a reply that cannot
 be priced, a call that failed after it may have been billed (a timeout, a lost connection, an
 unreadable reply or an unexpected client error) and a cost reported in a currency other than
-USD. For a billed call the budget keeps the whole reservation as spent, so `RunResult.usage.spend` is then an upper bound; the stop reason
-and the results record's `budget.spend_unknown` mark it, because `BudgetUsage` has no such flag.
+USD. For a billed call the budget keeps the whole reservation as spent. The stop reason and the results
+record's `budget.spend_unknown` (`BudgetUsage` has no such flag) mark that `RunResult.usage.spend`
+is not exact: after a kept reservation it is an upper bound, and after a cost reported in
+another currency, that cost is not counted.
 Rate-limited calls and calls the API refused are released, and a later turn may call again.
 
 A run ends `error` with 'no store could be searched' when every store's search failed or none
@@ -272,11 +287,13 @@ investigation ends with 'open gaps could not be shown to the planner safely', an
 investigate stage records `withheld_gaps`. An unexpected error ends the run `error` but keeps
 coverage for every selected store: the store whose tool raised gets `INVALID_SCHEMA`
 `<store>: <tool> stopped on an unexpected error`, and stores never reached get `BUDGET_EXHAUSTED`
-`<store>: not searched; the run stopped on an error`. Offers found before the error are listed as
-unresolved with 'not verified: the run stopped on an error'. Cancellation and budget exhaustion
+`<store>: not searched; the run stopped on an error`. Offers that were recommendable or not yet assessed
+when the error happened are listed as unresolved with 'not verified: the run stopped on an
+error'. Offers already assessed keep their unresolved or rejected reasons. Cancellation and budget exhaustion
 stop further tools and keep truthful partial results.
 
-A crashed run is never resumed. It is closed as partial ('interrupted') by the next web-app start
+A crashed run is never resumed. It is closed as partial ('interrupted: the service stopped before this run
+finished') by the next web-app start
 or command-line search once it started more than 10 minutes ago (`RUN_LEASE`); younger runs may
 be live in another process and are left alone. A run's usage totals are written before each
 request, paid call and planner turn, so recovered usage counts what was in flight. Its elapsed
@@ -311,8 +328,10 @@ REQUEST.json` runs one search by hand (see the README).
 action that may settle the most open gaps, and `NoInvestigationPlanner`) and
 `AnthropicPlanner`, configured in `config/evaluation.json` (model, effort, prompt version,
 server-side fallbacks, pricing and caps). A planner has a non-empty `name`, a JSON `config`
-without credentials and a finite, non-negative `max_call_seconds`; `run_search` raises before
-storing the run if one is missing or invalid. The model sees only constraint values, gap field
+and a finite, non-negative `max_call_seconds`; `run_search` raises before storing the run if the
+name is missing or blank, the config is not a JSON mapping, or `max_call_seconds` is not finite
+and non-negative. Keeping credentials out of `config` is the planner's responsibility: the config
+is stored as given. The model sees only constraint values, gap field
 paths with fixed reasons, aliased offer IDs and the action menu, never seller text, URLs or
 free buyer text, and answers by choosing one menu action or stopping through a strict tool.
 Anything else is rejected and counted as a turn. Each call is stateless and is made only when
@@ -322,8 +341,11 @@ attempt's model has no price; only the cost is then unknown. Tests use a scripte
 test calls the API.
 
 The command line's `--planner none` runs `NoInvestigationPlanner` with no planner turns, so the
-run ends with 'investigation is disabled for this run'. Called through `run_search` with planner
-turns left, it counts one turn and ends with 'the planner chose to stop'. Known limits: the model
+run, unless it ends in error, is cancelled or hits a run limit, ends with 'investigation is
+disabled for this run'. Called through `run_search` with planner
+turns left, it is asked only when an affordable action exists for an open gap. It then counts one
+turn and the run ends with 'the planner chose to stop'. Otherwise the run ends as any other run
+would, for example with 'no open evidence gaps remain'. Known limits: the model
 planner's 30-second call timeout is not the 15 seconds per call in issue #16, and the SDK applies
 it to each network step rather than the whole call, so a slow call can run longer and use part
 of the verification reserve. A permanent API error (such as HTTP 401) is retried every turn
