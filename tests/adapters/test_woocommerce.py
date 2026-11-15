@@ -14,8 +14,8 @@ from app import adapters
 from app.adapters import beytech, class_cellulars, mojitech
 from app.adapters.base import PolicyFact
 from app.adapters.woocommerce import (
-    ERROR_REASONS, FIXED_REASONS, PAYMENT_CONFLICT, form_key, merge_policy_fact, read_html, read_page, role,
-    visible_text,
+    ERROR_REASONS, FIXED_REASONS, PAYMENT_CONFLICT, Claim, PageFacts, WooCommerceAdapter, _OfferBuilder,
+    form_key, merge_policy_fact, read_html, read_page, role, visible_text,
 )
 from app.contracts import Offer, ToolError
 from app.sources import FetchOutcome
@@ -54,6 +54,39 @@ def with_form(page: bytes, entries: list) -> bytes:
     end = page.index(b'"', start)
     escaped = html.escape(json.dumps(entries, separators=(',', ':')), quote=True).encode()
     return page[:start] + escaped + page[end:]
+
+
+def page_with(key, value, vid=19116):
+    """The Class Cellulars page with one variation entry's value changed."""
+    page = fixture('class_cellulars/page.html')
+    entries = json.loads(form_json(page))
+    entry = next(e for e in entries if e['variation_id'] == vid)
+    if key.startswith('attribute_'):
+        entry['attributes'][key] = value
+    else:
+        entry[key] = value
+    return with_form(page, entries)
+
+
+def api_with(change):
+    """The Class Cellulars API reply with its parent product changed in place by change()."""
+    records = json.loads(fixture('class_cellulars/api.json'))
+    change(records[1])
+    return json.dumps(records).encode()
+
+
+def condition(variation, slug, name):
+    return {'id': 0, 'name': 'Condition', 'taxonomy': 'pa_condition' if variation else None,
+            'has_variations': variation, 'terms': [{'id': 0, 'name': name, 'slug': slug}]}
+
+
+def condition_option(slug):
+    """A Condition variation attribute, with every variation set to slug."""
+    def change(parent):
+        parent['attributes'].append(condition(True, slug, slug))
+        for v in parent['variations']:
+            v['attributes'].append({'name': 'Condition', 'value': slug})
+    return change
 
 
 def repeated_record(records: list, differ: bool) -> list:
@@ -310,6 +343,89 @@ class AdversarialTests(ReaderTestCase):
                     self.assertEqual((stock.state, stock.reason), ('unknown', expected))
                     self.assertIn('variation 19116 is_in_stock true',
                                   [e.excerpt for e in evidence(by_id(result)['19116'], stock.evidence_ids)])
+
+    def test_identity_disagreements_and_unreadable_options_stay_unresolved(self):
+        def several_sizes(p):
+            p['name'] = 'iPhone 17 256GB / 512GB'
+            p['attributes'] = [a for a in p['attributes'] if a['name'] != 'storage-capacity']
+
+        def used_product_new_option(p):
+            condition_option('new')(p)
+            p['attributes'].append(condition(False, 'used', 'Used'))
+
+        storage, sim = 'attribute_pa_storage-capacity', 'attribute_pa_sim-type'
+        maker = {'id': 1, 'name': 'Samsung', 'slug': 'samsung'}
+        cases = [
+            ('storage_gb', {CLASS_API: api_with(lambda p: p.update(name='iPhone 17 128GB'))},
+             'conflict', 'storage option and product name disagree', [256, 128]),
+            ('storage_gb', {CLASS_PAGE: page_with(storage, '')},
+             'unknown', 'variation accepts any storage option', []),
+            ('storage_gb', {CLASS_PAGE: page_with(storage, '256')},
+             'unknown', 'storage option is not a recognized size', []),
+            ('storage_gb', {CLASS_API: api_with(several_sizes)},
+             'unknown', 'product name lists several storage sizes', []),
+            ('sim', {CLASS_PAGE: page_with(sim, 'esim')}, 'conflict',
+             'store reports different SIM types for this variation', ['esim-only', 'physical+esim']),
+            ('sim', {CLASS_PAGE: page_with(sim, 'dual-sim')}, 'unknown', 'SIM option is not recognized', []),
+            ('sim', {CLASS_PAGE: page_with(sim, '')}, 'unknown', 'variation accepts any SIM option', []),
+            ('color', {CLASS_PAGE: page_with('attribute_pa_color', 'black')},
+             'conflict', 'store reports different colors for this variation', ['Black', 'Blue']),
+            ('manufacturer', {CLASS_API: api_with(lambda p: p['tags'].append(maker))},
+             'conflict', 'product data names different manufacturers', ['Apple', 'Samsung']),
+            ('model', {CLASS_API: api_with(lambda p: p.update(name='Mystery Phone'))},
+             'unknown', 'product name does not name a known model', []),
+            ('condition', {CLASS_API: api_with(used_product_new_option)},
+             'conflict', 'store reports different conditions for this variation', ['new', 'used']),
+            ('condition', {CLASS_API: api_with(condition_option('open-box'))},
+             'unknown', 'condition option is not recognized', []),
+            ('condition', {CLASS_API: api_with(condition_option(''))},
+             'unknown', 'variation accepts any condition option', []),
+        ]
+        for name, overrides, state, reason, alternatives in cases:
+            with self.subTest(fact=name, reason=reason):
+                offer = by_id(self.search(overrides)[1])['19116']
+                fact = offer.condition if name == 'condition' else getattr(offer.variant, name)
+                self.assertEqual((fact.state, fact.reason, list(fact.alternatives)),
+                                 (state, reason, alternatives))
+        # A product-level statement covers every variation.
+        new = api_with(lambda p: p['attributes'].append(condition(False, 'new', 'New')))
+        stated = by_id(self.search({CLASS_API: new})[1])['19116']
+        self.assertEqual((stated.condition.state, stated.condition.value), ('known', 'new'))
+
+    def test_flag_disagreement_and_unreadable_prices(self):
+        page = fixture('class_cellulars/page.html')
+        entries = json.loads(form_json(page))
+        entries.append(dict(entries[0], is_in_stock=False, is_purchasable=False))  # 20648 again
+        offer = by_id(self.search({CLASS_PAGE: with_form(page, entries)})[1])['20648']
+        for fact, reason in ((offer.purchasable, 'store reports different purchasability for this variation'),
+                             (offer.online_stock, 'store reports different stock for this variation')):
+            self.assertEqual((fact.state, fact.reason, fact.alternatives),
+                             ('conflict', reason, [True, False]))
+        no_currency = api_with(lambda p: p['prices'].pop('currency_code'))
+        cases = [({CLASS_API: no_currency}, 'currency is not declared'),
+                 ({CLASS_PAGE: page_with('display_price', '1030', vid=20648)}, 'page price is not a number'),
+                 ({CLASS_PAGE: page_with('display_price', -1, vid=20648)},
+                  'page price is not a valid amount')]
+        for overrides, reason in cases:
+            with self.subTest(reason=reason):
+                offer = by_id(self.search(overrides)[1])['20648']
+                self.assertEqual((offer.price.state, offer.price.reason, offer.price.value),
+                                 ('unknown', reason, None))
+
+    def test_warranty_statements_that_disagree_are_a_conflict(self):
+        claim = Claim((None, 18), 'Warranty 18 months')  # a page claim against the name's 2 years
+        config = dataclasses.replace(beytech.CONFIG, page_facts=lambda text: PageFacts(warranty=claim))
+        result = WooCommerceAdapter(config).search_candidates(FakeFetch(routes('beytech')), query())
+        self.assertContract(result)
+        months = result.offers[0].warranty.months
+        self.assertEqual((months.state, months.reason, months.alternatives),
+                         ('conflict', 'warranty statements disagree', [18, 24]))
+
+    def test_a_variation_that_does_not_validate_is_reported_not_returned(self):
+        with mock.patch.object(_OfferBuilder, 'condition', return_value={'state': 'known'}):  # no value
+            _, result = self.search({})
+        self.assertEqual((result.tool_result.status, result.offers), ('error', ()))
+        self.assertEqual(result.tool_result.errors, [schema('a variation could not be read')] * 4)
 
     def test_repeated_page_entries(self):
         _, result = self.search({CLASS_PAGE: 'adversarial/duplicate_variation.page.html'})
