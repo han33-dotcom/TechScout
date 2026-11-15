@@ -5,14 +5,17 @@ minor units; the product page's 14-30 day estimate conflicts with the FAQ's deli
 """
 from datetime import datetime, timezone
 from decimal import Decimal
+from pathlib import Path
 import unittest
 
 from app.adapters.class_cellulars import ADAPTER
-from app.contracts import ArrivalWindow
+from app.contracts import ArrivalWindow, ShoppingRequest
+from app.costs import calculate_cost
 
 from . import (CLASS_API, CLASS_FAQ, CLASS_PAGE, FakeFetch, ReaderTestCase, by_id, evidence, fixture, query,
                routes)
 
+ROOT = Path(__file__).resolve().parents[2]
 VARIANTS = ['20648', '19116', '19117', '18398']
 UTC = timezone.utc
 ESTIMATE = 'Estimated delivery time 14-30 days'
@@ -112,7 +115,7 @@ class ClassCellularsTests(ReaderTestCase):
             ('product', '1,030.00 $ (Inc. VAT)'), ('product', 'JSON-LD offer valueAddedTaxIncluded true')])
         self.assertEqual((delivery.kind, delivery.state, delivery.amount.amount, delivery.amount.currency,
                           delivery.conditions),
-                         ('delivery', 'additional', Decimal('0'), 'USD', ['min_subtotal:USD:50']))
+                         ('delivery', 'additional', Decimal('0'), 'USD', ['min_subtotal:USD:50.01']))
         [banner] = evidence(offer, delivery.evidence_ids)
         self.assertEqual((banner.scope, banner.product_id, banner.excerpt),
                          ('source', None, 'Free Shipping On All Orders Over $50'))
@@ -124,6 +127,40 @@ class ClassCellularsTests(ReaderTestCase):
         self.assertEqual(warranty.territory.reason, 'warranty territory is not published')
         self.assertEqual((offer.payment_basis.state, offer.payment_basis.reason),
                          ('unknown', 'payment terms are not published on the product page'))
+
+    def test_free_shipping_threshold(self):
+        cases = [(b'Over $1,500', ['min_subtotal:USD:1500.01'], 'Over $1,500'),
+                 (b'Over $1,500.00', ['min_subtotal:USD:1500.01'], 'Over $1,500.00'),
+                 (b'Over $49.99', ['min_subtotal:USD:50.00'], 'Over $49.99'),
+                 (b'Over $1,50', None, None),  # a partial number is not read as $1
+                 (b'Over $50.505', None, None)]
+        for banner, conditions, excerpt in cases:
+            with self.subTest(banner=banner):
+                page = fixture('class_cellulars/page.html').replace(b'Over $50', banner)
+                _, result = self.search(table=routes('class_cellulars', {CLASS_PAGE: page}))
+                offer = by_id(result)['19117']
+                _, delivery = offer.costs
+                if conditions is None:
+                    self.assertEqual((delivery.state, delivery.reason),
+                                     ('unknown', 'delivery charge is not published'))
+                    continue
+                self.assertEqual((delivery.state, delivery.conditions), ('additional', conditions))
+                self.assertEqual([e.excerpt for e in evidence(offer, delivery.evidence_ids)],
+                                 [f'Free Shipping On All Orders {excerpt}'])  # the whole amount
+        example = ROOT / 'examples' / 'request-iphone17-beirut.json'
+        request = ShoppingRequest.model_validate_json(example.read_text(encoding='utf-8'))
+        # The offer is 1030.00: not over 1,500 or over 1,030, but over 1,029.99.
+        for banner, status in ((b'Over $1,500', 'unresolved'), (b'Over $1,030', 'unresolved'),
+                               (b'Over $1,029.99', 'verified')):
+            with self.subTest(cost=banner):
+                page = fixture('class_cellulars/page.html').replace(b'Over $50', banner)
+                _, result = self.search(table=routes('class_cellulars', {CLASS_PAGE: page}))
+                offer = by_id(result)['19117']
+                self.assertEqual(offer.price.value.amount, Decimal('1030.00'))
+                cost = calculate_cost(request, offer)
+                self.assertEqual(cost.status, status)
+                if status == 'unresolved':
+                    self.assertIn('published delivery terms do not cover this order', cost.reasons)
 
     def test_pickup_lists_configured_branches_with_unknown_stock_and_no_delivery_charge(self):
         beirut = [('mar-elias', 'Beirut'), ('abc-verdun', 'Beirut'), ('abc-achrafieh', 'Beirut')]

@@ -28,8 +28,13 @@ _ESTIMATE = re.compile(r'Estimated\s+delivery\s+time\s+([0-9]{1,3})\s*[-\u2013]\
                        re.IGNORECASE)
 _WARRANTY = re.compile(r'(?<![0-9])([0-9]{1,3})\s+months?\s+warranty\s+at\s+'
                        r'Genuine\s+Warranty\s+Cent(?:er|re)\b', re.IGNORECASE)
+# '$1,500' is written with thousands separators, as the store writes its prices. A number that goes
+# on ('$1,50', '$50.505') is not this pattern's, so the banner is not read rather than cut short.
 _BANNER = re.compile(r'Free\s+Shipping\s+On\s+All\s+Orders\s+Over\s+\$\s*'
-                     r'([0-9]{1,6}(?:\.[0-9]{1,2})?)(?![0-9])', re.IGNORECASE)
+                     r'((?:[0-9]{1,3}(?:,[0-9]{3})+|[0-9]{1,6})(?:\.[0-9]{1,2})?)(?![0-9]|[.,][0-9])',
+                     re.IGNORECASE)
+# min_subtotal means at least; in a two-decimal currency, over $50 is at least $50.01.
+_CENT = Decimal('0.01')
 _BEIRUT = re.compile(r'Within\s+Beirut\s*:\s*delivery\s+takes\s+([0-9]{1,2})\s+working\s+days?\b',
                      re.IGNORECASE)
 _OUTSIDE = re.compile(r'Outside\s+Beirut\s*:\s*delivery\s+takes\s+up\s+to\s+([0-9]{1,2})\s+working\s+days?\b',
@@ -52,7 +57,7 @@ def page_facts(text: str) -> PageFacts:
             ('Genuine Warranty Center', int(warranty.group(1))), warranty.group(0)),
         delivery_fee=None if banner is None else Claim(
             {'amount': Decimal('0'), 'currency': 'USD',
-             'conditions': (f'min_subtotal:USD:{decimal_amount(banner.group(1))}',)},
+             'conditions': (f'min_subtotal:USD:{decimal_amount(banner.group(1)) + _CENT}',)},
             banner.group(0), scope='source'))
 
 
