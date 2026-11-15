@@ -121,7 +121,7 @@ def canonical_color(name: str) -> str:
     known = known_color(name)
     if known is not None:
         return known
-    text = ' '.join(name.split())
+    text = _text(name)
     if not text:
         raise ValueError('A color name needs text')
     return text.title()
@@ -147,7 +147,9 @@ def known_model(text: str) -> str | None:
 
 
 def _text(value: str) -> str:
-    return ' '.join(value.split())
+    """Spacing collapsed. str.split() also breaks on U+001C to U+001F, which the contract's strip
+    keeps, so a valid value made only of them stays as written instead of renaming to nothing."""
+    return ' '.join(value.split()) or value.strip(' \t\n\r\f\v')
 
 
 def _manufacturer(value: str) -> str:

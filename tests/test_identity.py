@@ -277,6 +277,26 @@ class ModelQualifierTests(unittest.TestCase):
                                      ('unknown', 'product name does not name a known model'))
 
 
+class SeparatorOnlyTextTests(unittest.TestCase):
+    """The contract keeps U+001C to U+001F, which str.split() reads as spacing."""
+
+    def test_a_value_of_separators_alone_is_renamed_to_itself_not_to_nothing(self):
+        self.assertEqual(canonical_color('\x1c'), '\x1c')
+        offer = make_offer(manufacturer='\x1f', model='\x1e', color='\x1c', region='\x1d')
+        normalized = normalize_variant(offer)
+        self.assertEqual([getattr(normalized, name).value for name in ('manufacturer', 'model', 'color', 'region')],
+                         ['\x1f', '\x1e', '\x1c', '\x1d'])
+        from app.eligibility import check_eligibility
+        from tests.test_eligibility import make_request
+        self.assertEqual(check_eligibility(make_request(), offer, normalized=normalized).outcome, 'fail')
+
+    def test_repeated_records_with_a_separator_value_still_merge(self):
+        result = deduplicate([make_offer(color=('Black', '\x1c')), make_offer(color='Black', at=LATER)])
+        [kept] = result.offers
+        self.assertEqual((kept.variant.color.state, kept.variant.color.alternatives),
+                         ('conflict', ['Black', '\x1c']))
+
+
 class StorageTokenTests(unittest.TestCase):
     def test_decimal_and_grouped_sizes_are_not_read_from_their_last_digits(self):
         for text in ('iPhone 17 0.25TB', 'iPhone 17 2.0TB', 'iPhone 17 1.5 TB', 'iPhone 17 1,024GB',
