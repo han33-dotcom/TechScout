@@ -10,8 +10,10 @@ stopped it while an affordable action could still settle an open gap; a store's 
 request cap only removes actions from the menu. A planner turn whose cost became unknown also
 ends the run as partial. Planner time counts against the time budget: a turn starts only when
 the planner's longest call and an action both fit before the verification reserve, and the
-chosen action is checked again just before it runs. 'cancelled' and 'error' runs never carry
-recommendations, and a run interrupted by a crash is closed as partial on restart, never resumed.
+chosen action is checked again just before it runs. A run in which no store could be searched
+(every search failed, or none could run) is an 'error' run, never an ordinary abstention.
+'cancelled' and 'error' runs never carry recommendations, and a run interrupted by a crash is
+closed as partial on restart, never resumed.
 """
 import argparse
 from collections.abc import Callable, Mapping, Sequence
@@ -71,6 +73,7 @@ STOP_SPEND_UNKNOWN = 'planner cost is unknown'
 STOP_CANCELLED = 'run was cancelled'
 STOP_ERROR = 'run stopped on an unexpected error'
 STOP_NO_SOURCES = 'no admitted source has a reader'
+STOP_NO_STORE_READ = 'no store could be searched'
 PARTIAL_STOPS = frozenset({STOP_TURNS, STOP_CALLS, STOP_TIME, STOP_SPEND, STOP_SPEND_UNKNOWN})
 
 # Fixed reasons for offers held back from the shortlist.
@@ -1040,6 +1043,8 @@ class _Run:
             status, stop = 'cancelled', STOP_CANCELLED
         elif (limit := self._limit()) is not None:
             status, stop = 'partial', self.stop_reason if self.stop_reason in PARTIAL_STOPS else limit
+        elif not recommendations and self.coverage and all(c.search_failed for c in self.coverage.values()):
+            status, stop = 'error', STOP_NO_STORE_READ  # every store's search failed or could not run
         else:
             status, stop = 'complete' if recommendations else 'abstained', self.stop_reason or STOP_NO_GAPS
         shown = {r.offer.offer_id for r in recommendations}

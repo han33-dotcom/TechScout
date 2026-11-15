@@ -181,6 +181,17 @@ class EndToEndTests(unittest.TestCase):
         self.assertEqual(self.storage.load_run(printed['run_id']).model_dump(mode='json'), printed)
         self.assertEqual(len(self.sent), 6)
 
+    def test_the_search_command_fails_when_no_store_could_be_read(self):
+        self.files = {}  # every endpoint answers 404
+        out = io.StringIO()
+        with self.assertLogs('techscout.trace', 'INFO'), contextlib.redirect_stdout(out):
+            code = runs.main(['search', str(ROOT / 'examples' / 'request-iphone17-beirut.json')],
+                             dependencies=self.deps())
+        printed = json.loads(out.getvalue())
+        self.assertEqual((code, printed['status'], printed['stop_reason']), (1, 'error', runs.STOP_NO_STORE_READ))
+        self.assertEqual({c['status'] for c in printed['source_coverage']}, {'error'})
+        self.assertEqual(len(self.sent), 3)  # each store's product record, once
+
     def test_the_search_command_rejects_an_unreadable_request(self):
         err = io.StringIO()
         with contextlib.redirect_stderr(err):

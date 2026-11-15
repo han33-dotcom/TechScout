@@ -610,6 +610,41 @@ class CompleteRunTests(RunCase):
         self.assertEqual((result.status, result.stop_reason), ('complete', runs.STOP_NO_ACTION))
         self.assertEqual([i.offer_id for i in result.unresolved], ['alpha:100:101'])
 
+    def test_a_run_in_which_no_store_could_be_searched_is_an_error_run(self):
+        down = ToolError(code='NETWORK_ERROR', message='store answered 503', retryable=True)
+        for source_id in SOURCES:
+            self.gate.failures[API.format(source_id)] = down
+        result = self.search(assess=make_assess(required=()))
+        self.assertEqual((result.status, result.stop_reason, result.recommendations),
+                         ('error', runs.STOP_NO_STORE_READ, []))
+        self.assertEqual([(c.source_id, c.status) for c in result.source_coverage],
+                         [(s, 'error') for s in SOURCES])
+        self.assertEqual(self.storage.run_status('run-1'), 'error')
+        self.assertTruthful(result)
+
+        # Store request caps too small for any search: nothing was searched either.
+        self.gate.failures.clear()
+        self.write_registry(**{s: {'max_requests_per_run': 1} for s in SOURCES})
+        result = self.search(run_id='run-2')
+        self.assertEqual((result.status, result.stop_reason), ('error', runs.STOP_NO_STORE_READ))
+        self.assertEqual(self.gate.requests, [API.format(s) for s in SOURCES])  # only the first run's
+
+    def test_stores_that_answer_with_nothing_qualifying_still_abstain(self):
+        down = ToolError(code='NETWORK_ERROR', message='store answered 503', retryable=True)
+        self.stores = {s: FakeStore(s) for s in SOURCES}  # every store answers, none lists the phone
+        result = self.search(assess=make_assess(required=()))
+        self.assertEqual((result.status, result.stop_reason), ('abstained', runs.STOP_NO_GAPS))
+        self.assertEqual({c.status for c in result.source_coverage}, {'ok'})
+
+        # One store down is reported in its coverage; the others still decide the run.
+        self.stores = {'alpha': FakeStore('alpha', [('101', 'Black', '1000.00')]),
+                       'beta': FakeStore('beta'), 'gamma': FakeStore('gamma')}
+        self.gate.failures[API.format('beta')] = down
+        result = self.search(assess=make_assess(required=()), run_id='run-2')
+        self.assertEqual((result.status, result.stop_reason), ('complete', runs.STOP_NO_GAPS))
+        self.assertEqual([(c.source_id, c.status) for c in result.source_coverage],
+                         [('alpha', 'ok'), ('beta', 'error'), ('gamma', 'ok')])
+
     def test_no_admitted_store_with_a_reader_is_an_error_run(self):
         result = self.search(adapters={})
         self.assertEqual((result.status, result.stop_reason, result.recommendations),
