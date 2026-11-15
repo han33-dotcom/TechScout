@@ -4,12 +4,14 @@ The real SourceGate, store readers, fixed rules, run controller and RulePlanner 
 A scripted transport serves the minimized store fixtures for the admitted endpoints, a fake
 resolver and clock stand in for DNS and time, and any socket use fails the test.
 """
+import _thread
 import contextlib
 from datetime import datetime, timedelta, timezone
 import io
 import json
 from pathlib import Path
 import tempfile
+import time
 import unittest
 from unittest import mock
 
@@ -225,6 +227,35 @@ class EndToEndTests(unittest.TestCase):
         self.assertRegex(message, r'^Run run-[0-9a-f]{32} stopped on an unexpected ValueError without storing '
                                   r'its result \(stored status: partial\)$')
         self.assertEqual(len(self.sent), 3)  # the request in flight; nothing after the run was closed
+
+    def test_ctrl_c_during_the_search_command_cancels_the_run(self):
+        handle, budgets = self.handle, []
+
+        def ctrl_c_on_the_third_request(http_request):
+            if len(self.sent) == 2:
+                _thread.interrupt_main()  # as if Ctrl+C reached the command line's main thread
+                waited_until = time.monotonic() + 10
+                while not budgets[-1].cancelled and time.monotonic() < waited_until:
+                    time.sleep(0.01)
+            return handle(http_request)
+
+        self.handle = ctrl_c_on_the_third_request
+        deps = self.deps()
+        fetch = deps.gate.fetch
+
+        def recording_fetch(budget, *args, **kwargs):
+            budgets.append(budget)
+            return fetch(budget, *args, **kwargs)
+
+        deps.gate.fetch = recording_fetch
+        out = io.StringIO()
+        with self.assertLogs('techscout.trace', 'INFO'), contextlib.redirect_stdout(out):
+            code = runs.main(['search', str(ROOT / 'examples' / 'request-iphone17-beirut.json')],
+                             dependencies=deps)
+        printed = json.loads(out.getvalue())
+        self.assertEqual((code, printed['status'], printed['stop_reason']), (0, 'cancelled', runs.STOP_CANCELLED))
+        self.assertEqual(self.storage.run_status(printed['run_id']), 'cancelled')
+        self.assertEqual(len(self.sent), 3)  # the request in flight ends; nothing new starts
 
     def test_the_search_command_rejects_an_unreadable_request(self):
         err = io.StringIO()

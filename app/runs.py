@@ -1231,7 +1231,7 @@ def main(argv: Sequence[str] | None = None, *, dependencies: RunDependencies | N
     except (ImportError, ValueError) as exc:  # the SDK is missing or no credentials are configured
         print(f'Cannot set up the {args.planner} planner: {type(exc).__name__}', file=sys.stderr)
         return 2
-    cancel, outcome, run_id = threading.Event(), {}, new_run_id()
+    cancel, done, outcome, run_id = threading.Event(), threading.Event(), {}, new_run_id()
 
     def work():
         try:
@@ -1241,17 +1241,22 @@ def main(argv: Sequence[str] | None = None, *, dependencies: RunDependencies | N
             outcome['result'] = run_search(request, deps, run_id=run_id, caps=caps, cancel=cancel)
         except Exception as exc:  # before the run was stored, or a storage failure after it
             outcome['error'] = exc
+        finally:
+            done.set()
 
     worker = threading.Thread(target=work, name='techscout-run', daemon=True)
     worker.start()
+    # Wait on an Event, never Thread.join: on Python 3.11 a join interrupted by Ctrl+C can return
+    # while the worker still runs, which left the run behind without a result.
     try:
-        while worker.is_alive():
-            worker.join(0.2)
+        while not done.wait(0.2):
+            pass
     except KeyboardInterrupt:
-        cancel.set()  # the run stops before its next step; a request in flight ends within its timeout
-        worker.join()
-    if 'error' in outcome:
-        name = type(outcome['error']).__name__
+        cancel.set()  # the run stops before its next step or request; one already sent ends within its timeout
+        done.wait()
+    if 'result' not in outcome:
+        error = outcome.get('error')
+        name = type(error).__name__ if error is not None else 'interruption'
         try:
             status = deps.storage.run_status(run_id)
         except Exception:
