@@ -594,7 +594,8 @@ class AnthropicPlanner:
                             prompt_version=self._settings.prompt_version)
 
     def _usage(self, response, reserved: Decimal) -> PlannerUsage:
-        """Tokens and cost of every billed attempt, each priced by the model that ran it."""
+        """Tokens and cost of every billed attempt, each priced by the model that ran it. An
+        attempt without a price still counts its tokens; only its cost is unknown."""
         attempts = _attempts(response)
         priced = attempts is not None
         totals, cost, models = (0, 0, 0, 0), Decimal(0), []
@@ -602,11 +603,14 @@ class AnthropicPlanner:
             counts, price = _counts(usage), self._prices.get(model)
             if model:
                 models.append(model)
-            if counts is None or price is None:
+            if counts is None:
                 priced = False
                 continue
             totals = tuple(t + c for t, c in zip(totals, counts))
-            cost += _attempt_cost(price, counts)
+            if price is None:
+                priced = False
+            else:
+                cost += _attempt_cost(price, counts)
         return PlannerUsage(model=response.model, input_tokens=totals[0], output_tokens=totals[1],
                             cache_read_tokens=totals[2], cache_write_tokens=totals[3],
                             cost=Money(amount=cost if priced else reserved, currency='USD'), priced=priced,

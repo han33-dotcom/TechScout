@@ -559,6 +559,15 @@ class AnthropicPlannerTests(unittest.TestCase):
                 self.assertEqual((budget.commits, budget.unknown), ([None], True))
                 self.assertEqual(decision.usage.cost.amount, budget.spent)
                 self.assertEqual(budget.spent, budget.asked[0])
+        # Tokens of an attempt without a price are still counted: only its cost is unknown.
+        tokens = usage(iterations=unpriced['unpriced fallback model'])
+        decision, _, _ = self.decide(reply(call('act', action_id='A1', reason='r'), tokens=tokens))
+        self.assertEqual((decision.usage.input_tokens, decision.usage.output_tokens), (2000, 100))
+        single = usage(input_tokens=1500, output_tokens=200)
+        decision, _, _ = self.decide(reply(call('act', action_id='A1', reason='r'), model='claude-haiku-5-5',
+                                           tokens=single))
+        self.assertEqual((decision.usage.priced, decision.usage.input_tokens, decision.usage.output_tokens),
+                         (False, 1500, 200))
 
     def test_reservation_is_the_documented_upper_bound(self):
         _, client, budget = self.decide(reply(call('act', action_id='A1', reason='r')))
