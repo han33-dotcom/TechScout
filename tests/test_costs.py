@@ -390,6 +390,32 @@ class ChargeTests(CostTestCase):
         self.assertVerified(calc(build_offer(costs=[TAX_INCLUDED, FREE_DELIVERY, waivers[0], card_fee]),
                                  build_request(payment='card')), '1050.60')
 
+    def test_a_waiver_inside_a_set_aside_surcharge_only_waives_that_surcharge(self):
+        fee = charge('payment', 'additional', '25.00', conditions=['payment:card'], tag='fee')
+        nested = charge('payment', 'additional', '0', conditions=['payment:card', 'min_subtotal:USD:2000'],
+                        tag='nested')
+        included = charge('payment', 'included', conditions=['min_subtotal:USD:2000', 'payment:card'],
+                          tag='nested-included')
+        for waiver in (nested, included):
+            with self.subTest(state=waiver.state):
+                # Neither applies to a cash buyer, and the waiver says nothing about paying cash.
+                offer = build_offer(costs=[TAX_INCLUDED, FREE_DELIVERY, fee, waiver])
+                self.assertVerified(calc(offer, build_request(payment='cash')), '1030.00')
+                # A card buyer below the threshold pays the published fee.
+                self.assertVerified(calc(offer, build_request(payment='card')), '1055.00')
+        # A waiver that reaches beyond the surcharge's condition still implies an unpublished charge.
+        broad = charge('payment', 'additional', '0', conditions=['min_subtotal:USD:2000'], tag='broad')
+        self.assertUnresolved(calc(build_offer(costs=[TAX_INCLUDED, FREE_DELIVERY, fee, broad]),
+                                   build_request(payment='cash')),
+                              'published payment terms do not cover this order', gap='costs.payment',
+                              subtotal=usd('1030.00'))
+        # So does a waiver nested in a set-aside zero term, which publishes no surcharge.
+        free_card = charge('payment', 'additional', '0', conditions=['payment:card'], tag='free-card')
+        self.assertUnresolved(calc(build_offer(costs=[TAX_INCLUDED, FREE_DELIVERY, free_card, nested]),
+                                   build_request(payment='cash')),
+                              'published payment terms do not cover this order', gap='costs.payment',
+                              subtotal=usd('1030.00'))
+
     def test_unsupported_conditions_and_imports_stay_unresolved(self):
         reason = 'delivery promotion condition cannot be checked'
         conditions = ['customs:paid-by-buyer', 'import', 'country:AE', 'min_subtotal:usd:50',
