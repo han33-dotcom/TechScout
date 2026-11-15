@@ -469,8 +469,12 @@ def _options(raw) -> dict[str, tuple[int, dict[str, tuple[int, str]]]]:
             if not (isinstance(pair, dict) and isinstance(pair.get('name'), str)
                     and isinstance(pair.get('value'), str)):
                 raise _SchemaError(PRODUCT_FIELDS)
-            values.setdefault(_unescaped(pair['name']), (k, html.unescape(pair['value'])))
-        options.setdefault(vid, (j, values))
+            name, value = _unescaped(pair['name']), html.unescape(pair['value'])
+            if values.setdefault(name, (k, value))[1] != value:  # one name, two values
+                raise _SchemaError(PRODUCT_FIELDS)
+        earlier = options.setdefault(vid, (j, values))[1]
+        if {n: v for n, (_, v) in earlier.items()} != {n: v for n, (_, v) in values.items()}:
+            raise _SchemaError(PRODUCT_FIELDS)  # a variation listed twice must list the same options
     return options
 
 
@@ -509,7 +513,8 @@ def parse_api(outcome: FetchOutcome, key: str) -> _Api:
                 raise _SchemaError(VARIATION_FIELDS)
         except (_SchemaError, KeyError) as exc:
             raise _SchemaError(VARIATION_FIELDS) from exc
-        records.setdefault(vid, (i, record))
+        if records.setdefault(vid, (i, record))[1] != record:
+            raise _SchemaError(VARIATION_FIELDS)  # a variation returned twice must say the same
     return _Api(outcome, index, parent, product_id, _unescaped(parent['name']), minor, currency,
                 attributes, options, records)
 

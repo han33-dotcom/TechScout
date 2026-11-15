@@ -54,6 +54,30 @@ def with_form(page: bytes, entries: list) -> bytes:
     return page[:start] + escaped + page[end:]
 
 
+def repeated_record(records: list, differ: bool) -> list:
+    """The Class Cellulars reply with variation record 19116 returned twice."""
+    again = json.loads(json.dumps(records[0]))
+    if differ:
+        again['prices']['price'] = '110000'
+    return records + [again]
+
+
+def repeated_list_entry(records: list, differ: bool) -> list:
+    """The variation list naming 19116 twice."""
+    entry = json.loads(json.dumps(next(v for v in records[1]['variations'] if v['id'] == 19116)))
+    if differ:
+        entry['attributes'][1]['value'] = 'white'
+    records[1]['variations'].append(entry)
+    return records
+
+
+def repeated_option(records: list, differ: bool) -> list:
+    """19116's list entry naming its color twice (two attributes can share a display label)."""
+    entry = next(v for v in records[1]['variations'] if v['id'] == 19116)
+    entry['attributes'].append({'name': 'color', 'value': 'white' if differ else 'blue'})
+    return records
+
+
 class ContractTests(ReaderTestCase):
     def test_every_offer_validates_binds_evidence_and_cites_returned_snapshots(self):
         for source, adapter in adapters.ADAPTERS.items():
@@ -118,6 +142,12 @@ class AdversarialTests(ReaderTestCase):
                 node = node[key]
             node[path[-1]] = value
             cases.append((json.dumps(changed).encode(), message))
+        # A variation record, list entry or option name that repeats with a different value.
+        product_fields = 'product fields are not in the expected shape'
+        for repeat, message in ((repeated_record, 'variation record is not in the expected shape'),
+                                (repeated_list_entry, product_fields), (repeated_option, product_fields)):
+            cases.append((json.dumps(repeat(json.loads(fixture('class_cellulars/api.json')), True)).encode(),
+                          message))
         for body, message in cases:
             with self.subTest(message=message, body=body if isinstance(body, str) else body[:40]):
                 fetch, result = self.search({CLASS_API: body})
@@ -125,6 +155,15 @@ class AdversarialTests(ReaderTestCase):
                                  ('error', [schema(message)], ()))
                 self.assertEqual(fetch.urls(), [CLASS_API])  # no page request without a usable product
                 self.assertEqual(len(result.snapshots), 1)  # the body that arrived is still kept
+
+    def test_identical_api_repeats_are_one_statement(self):
+        for repeat in (repeated_record, repeated_list_entry, repeated_option):
+            with self.subTest(repeat=repeat.__name__):
+                body = json.dumps(repeat(json.loads(fixture('class_cellulars/api.json')), False)).encode()
+                _, result = self.search({CLASS_API: body})
+                self.assertEqual((result.tool_result.status, len(result.offers)), ('ok', 4))
+                offer = by_id(result)['19116']
+                self.assertEqual((offer.variant.color.value, offer.price.value.amount), ('Blue', Decimal('1030.00')))
 
     def test_ajax_only_variations_keep_identity_and_leave_prices_unknown(self):
         _, result = self.search({CLASS_PAGE: 'adversarial/ajax_only.page.html'})
