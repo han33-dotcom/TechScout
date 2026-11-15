@@ -490,6 +490,13 @@ class IdentityConstraintTests(unittest.TestCase):
                 self.assertEqual(judged(named(result)[name]), ('fail', reason))
                 self.assertEqual(result.outcome, 'fail')
 
+    def test_either_spelling_of_the_iphone_air_matches_the_other(self):
+        for wanted, written in (('iPhone Air', 'iPhone 17 Air'), ('iPhone 17 Air', 'iPhone Air')):
+            with self.subTest(wanted=wanted):
+                check = check_of(make_request(model=wanted), make_offer(model=written), 'model')
+                self.assertEqual(judged(check), ('pass', 'model is iPhone Air'))
+        self.assertEqual(check_of(make_request(model='iPhone Air'), make_offer(), 'model').outcome, 'fail')
+
     def test_a_plus_model_is_never_its_base_model(self):
         cases = [('iPhone 16+', 'iPhone 16', 'fail'), ('iPhone 16', 'iPhone 16+', 'fail'),
                  ('iPhone 17+', 'iPhone 17', 'fail'), ('Galaxy S25+', 'Galaxy S25', 'fail'),

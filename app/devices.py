@@ -6,9 +6,12 @@ import re
 
 KNOWN_MANUFACTURERS = ('Apple', 'Samsung', 'Google', 'Xiaomi', 'Huawei', 'Honor', 'OnePlus', 'Oppo',
                        'Nokia', 'Motorola')
-# Each model is matched as whole words, longest first, so 'iPhone 17 Pro' never reads as 'iPhone 17'.
-KNOWN_MODELS = ('iPhone 17 Pro Max', 'iPhone 17 Pro', 'iPhone 17e', 'iPhone 17 Air', 'iPhone Air', 'iPhone 17',
+# Each model is matched as whole words, longest spelling first, so 'iPhone 17 Pro' never reads as
+# 'iPhone 17'.
+KNOWN_MODELS = ('iPhone 17 Pro Max', 'iPhone 17 Pro', 'iPhone 17e', 'iPhone Air', 'iPhone 17',
                 'iPhone 16 Pro Max', 'iPhone 16 Pro', 'iPhone 16 Plus', 'iPhone 16e', 'iPhone 16')
+# Other spellings stores use for one of KNOWN_MODELS. Apple sells one Air, the 'iPhone Air'.
+MODEL_ALIASES = {'iPhone 17 Air': 'iPhone Air'}
 
 
 def _pattern(name: str) -> re.Pattern:
@@ -16,7 +19,9 @@ def _pattern(name: str) -> re.Pattern:
     return re.compile(r'(?<![0-9a-z])' + r'\s*'.join(words) + r'(?![0-9a-z])', re.IGNORECASE)
 
 
-_MODELS = sorted(((m, _pattern(m)) for m in KNOWN_MODELS), key=lambda pair: -len(pair[0]))
+_SPELLINGS = {**{m: m for m in KNOWN_MODELS}, **MODEL_ALIASES}
+# (spelling, canonical name, pattern), longest spelling first.
+_MODELS = sorted(((s, m, _pattern(s)) for s, m in _SPELLINGS.items()), key=lambda t: -len(t[0]))
 # A '+' written right after a model ('iPhone 16+', Samsung's 'Galaxy S25+') names the Plus model;
 # a spaced '+' ('iPhone 17 + AirPods') joins a bundle and is left alone.
 _PLUS = re.compile(r'(?<=[0-9a-z])\+(?![0-9a-z])', re.IGNORECASE)
@@ -40,18 +45,24 @@ def spell_plus(text: str) -> str:
     return _PLUS.sub(' Plus', text)
 
 
-def match_model(text: str) -> str | None:
-    """Our canonical model name for the longest known model in the text, or None.
+def find_model(text: str) -> tuple[str, str] | None:
+    """(spelling found, our canonical name) for the longest known model spelling in the text, or None.
 
     None too when a model qualifier follows the match ('iPhone 17 Pro-Max', 'iPhone 17 PM'): the
     text then names a phone our table does not hold, not the shorter model it contains.
     """
     text = spell_plus(text)
-    for name, pattern in _MODELS:
+    for spelling, name, pattern in _MODELS:
         found = pattern.search(text)
         if found:
-            return None if _QUALIFIER.match(text, found.end()) else name
+            return None if _QUALIFIER.match(text, found.end()) else (spelling, name)
     return None
+
+
+def match_model(text: str) -> str | None:
+    """Our canonical model name for the longest known model in the text, or None (see find_model)."""
+    found = find_model(text)
+    return found[1] if found else None
 
 
 def find_manufacturers(text: str) -> set[str]:

@@ -277,6 +277,21 @@ class ModelQualifierTests(unittest.TestCase):
                                      ('unknown', 'product name does not name a known model'))
 
 
+class ModelAliasTests(unittest.TestCase):
+    def test_both_spellings_of_the_iphone_air_are_one_model(self):
+        for text in ('iPhone 17 Air', 'Apple iPhone Air', 'iPhone Air', 'APPLE IPHONE 17 AIR'):
+            with self.subTest(text=text):
+                self.assertEqual(known_model(text), 'iPhone Air')
+                self.assertEqual(match_model(text), 'iPhone Air')
+        air = normalize_variant(make_offer('1', model='iPhone 17 Air', region='LB'))
+        self.assertEqual(air.model.value, 'iPhone Air')
+        self.assertIs(same_device(air, normalize_variant(make_offer('2', model='iPhone Air', region='LB'))), True)
+        self.assertIs(same_device(air, normalize_variant(make_offer('3', region='LB'))), False)  # iPhone 17
+        # A store renaming one variant between the two spellings is not a disagreement.
+        result = deduplicate([make_offer(model='iPhone Air'), make_offer(model='iPhone 17 Air', at=LATER)])
+        self.assertEqual(result.conflicts, [])
+
+
 class PlusTests(unittest.TestCase):
     def test_a_plus_attached_to_a_model_names_the_plus_model(self):
         self.assertEqual(spell_plus('Galaxy S25+'), 'Galaxy S25 Plus')

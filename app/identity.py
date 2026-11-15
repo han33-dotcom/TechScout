@@ -14,7 +14,7 @@ from urllib.parse import parse_qsl, unquote, urlsplit
 from pydantic import Field
 
 from app.contracts import Fact, Model, Offer, PositiveInt, Sim, Text
-from app.devices import KNOWN_MANUFACTURERS, canonical_manufacturer, match_model, spell_plus
+from app.devices import KNOWN_MANUFACTURERS, canonical_manufacturer, find_model, spell_plus
 
 IDENTITY_FIELDS = ('manufacturer', 'model', 'storage_gb', 'color', 'sim', 'region')
 
@@ -139,10 +139,11 @@ def known_model(text: str) -> str | None:
     model is spelled out first, so 'iPhone 16+' is 'iPhone 16 Plus' and 'iPhone 17+' is no model.
     """
     text = spell_plus(text)
-    name = match_model(text)
-    if name is None or _squash(_MAKER.sub('', text, count=1)) != _squash(name):
+    found = find_model(text)
+    # Compared with the spelling found, so the alias 'iPhone 17 Air' is the iPhone Air.
+    if found is None or _squash(_MAKER.sub('', text, count=1)) != _squash(found[0]):
         return None
-    return name
+    return found[1]
 
 
 def _text(value: str) -> str:
