@@ -85,6 +85,34 @@ metadata = MetaData(naming_convention={
     'ix': 'ix_%(table_name)s_%(column_0_name)s',
 })
 
+directory_entries = Table(
+    'directory_entries', metadata,
+    Column('retailer_id', Text, primary_key=True),
+    Column('updated_at', UtcDateTime, nullable=False),
+    Column('payload', JSON, nullable=False),
+)
+
+directory_categories = Table(
+    'directory_categories', metadata,
+    Column('retailer_id', ForeignKey('directory_entries.retailer_id', ondelete='CASCADE'), primary_key=True),
+    Column('category', String(20), primary_key=True),
+    Index('ix_directory_categories_category', 'category'),
+)
+
+directory_markets = Table(
+    'directory_markets', metadata,
+    Column('retailer_id', ForeignKey('directory_entries.retailer_id', ondelete='CASCADE'), primary_key=True),
+    Column('market', String(2), primary_key=True),
+    Index('ix_directory_markets_market', 'market'),
+)
+
+directory_aliases = Table(
+    'directory_aliases', metadata,
+    Column('retailer_id', ForeignKey('directory_entries.retailer_id', ondelete='CASCADE'), primary_key=True),
+    Column('alias', Text, primary_key=True),
+    Index('ix_directory_aliases_alias', 'alias'),
+)
+
 sources = Table(
     'sources', metadata,
     Column('id', String(100), primary_key=True),
