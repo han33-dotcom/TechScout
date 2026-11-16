@@ -197,6 +197,16 @@ corpus_resources = Table(
     Column('needs_processing', Boolean, nullable=False),
 )
 
+corpus_retirements = Table(
+    'corpus_retirements', metadata,
+    Column('id', Integer, primary_key=True),
+    Column('resource_id', ForeignKey('corpus_resources.resource_id', ondelete='CASCADE'), nullable=False),
+    Column('observed_at', UtcDateTime, nullable=False),
+    Column('status', String(16), nullable=False),
+    Column('evidence', JSON, nullable=False),
+    Index('ix_corpus_retirements_resource_time', 'resource_id', 'observed_at'),
+)
+
 corpus_documents = Table(
     'corpus_documents', metadata,
     Column('document_id', Integer, primary_key=True),

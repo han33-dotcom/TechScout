@@ -132,7 +132,8 @@ class Corpus:
         return state
 
     def ingest(self, capture: DocumentCapture,
-               extract: Callable[[DocumentCapture], Extraction]) -> IngestionResult:
+               extract: Callable[[DocumentCapture], Extraction], *,
+               revalidate_fields: tuple[str, ...] = ()) -> IngestionResult:
         """Persist a gated response using a deterministic local extractor."""
         if capture.visibility != 'public':
             raise ValueError('Private material cannot enter the shared corpus')
@@ -156,7 +157,7 @@ class Corpus:
             same_extractor = same_source and head.processing['extraction_version'] == recipe['extraction_version']
             if same_extractor and head.raw_sha256 == raw and head.relevant_sha256 != relevant:
                 raise ValueError('The same response needs a stable relevant-content fingerprint')
-            reuse = (same_extractor and not state.needs_processing and head.relevant_sha256 == relevant
+            reuse = (not revalidate_fields and same_extractor and not state.needs_processing and head.relevant_sha256 == relevant
                      and head.processing['chunk_version'] == recipe['chunk_version'])
             self.snapshots.put(capture.body)
             changed_at = state.content_changed_at if state is not None else None
@@ -188,8 +189,10 @@ class Corpus:
                     raise TypeError('Corpus extraction must return validated observations and passages')
                 extraction = Extraction.model_validate(extraction.model_dump(mode='json'))
                 self._validate_receipts(capture, extraction, raw)
+                if not set(revalidate_fields) <= {item.evidence[0].field_path for item in extraction.observations}:
+                    raise ValueError('Revalidation requires scoped extracted evidence for every named field')
                 previous = head.document_id if same_extractor else None
-                self._save_observations(db, document_id, previous, extraction)
+                self._save_observations(db, document_id, previous, extraction, revalidate_fields)
                 if previous is not None and head.processing['chunk_version'] != recipe['chunk_version']:
                     previous = None
                 self._save_passages(db, document_id, previous, extraction)
@@ -242,7 +245,7 @@ class Corpus:
                 raise ValueError('A corpus evidence ID is immutable within its source resource')
 
     @staticmethod
-    def _save_observations(db, document_id, previous, extraction):
+    def _save_observations(db, document_id, previous, extraction, revalidate_fields=()):
         prior = {row.field_key: row for row in _linked(
             db, previous, corpus_observations, corpus_document_observations)}
         for item in extraction.observations:
@@ -252,7 +255,9 @@ class Corpus:
             value['alternatives'] = sorted(value['alternatives'], key=_fingerprint)
             digest = _fingerprint(value)
             earlier = prior.get(key)
-            if earlier is not None and earlier.field_sha256 == digest:
+            if earlier is not None and earlier.field_sha256 == digest and not (
+                first.field_path in revalidate_fields and first.observed_at > earlier.observed_at
+            ):
                 item_id = earlier.observation_id
             else:
                 price = (Money.model_validate(item.fact.value)
@@ -305,13 +310,68 @@ class Corpus:
             state.last_modified if conditional else None,
         )
 
-    def record_failed_check(self, key: ResourceKey, checked_at: datetime) -> None:
+    def record_failed_check(self, key: ResourceKey, checked_at: datetime, *,
+                            status: Literal['failed', 'denied', 'absent'] = 'failed') -> None:
+        if status not in {'failed', 'denied', 'absent'}:
+            raise ValueError('Unsupported failed-check status')
         checked_at = _TIME.validate_python(checked_at)
         resource_id = _resource_id(key)
         with self._write() as db:
             self._source(db, key)
-            state = self._resource(db, resource_id, key, checked_at, 'failed')
-            self._save_check(db, resource_id, state, checked_at, 'failed')
+            state = self._resource(db, resource_id, key, checked_at, status)
+            self._save_check(db, resource_id, state, checked_at, status)
+
+    def record_retirement(self, capture: DocumentCapture, receipt: Evidence, *,
+                          status: Literal['removed', 'discontinued']) -> None:
+        """Record a supported removal, not an inference from a timeout/404.
+
+        The caller's source adapter must identify affirmative removal text. Its
+        captured excerpt and exact resource scope are retained for audit.
+        """
+        from app.corpus_contracts import PassageDraft
+        from app.storage import corpus_retirements
+        if status not in {'removed', 'discontinued'} or capture.visibility != 'public':
+            raise ValueError('Retirement requires a public supported removal')
+        if receipt.field_path != 'resource.availability' or any(
+            getattr(receipt, field) != getattr(capture.key, field)
+            for field in ('product_id', 'variant_id', 'branch_id', 'route_id')
+        ):
+            raise ValueError('Removal evidence must bind the exact resource')
+        self._validate_receipts(capture, Extraction(passages=(
+            PassageDraft(locator='removal', text=receipt.excerpt or '', evidence=receipt),
+        )), _digest(capture.body))
+        with self._write() as db:
+            self._source(db, capture.key, capture.final_url)
+            resource_id = _resource_id(capture.key)
+            state = self._resource(db, resource_id, capture.key, capture.checked_at, status)
+            db.execute(insert(corpus_retirements).values(
+                resource_id=resource_id, observed_at=receipt.observed_at, status=status,
+                evidence=receipt.model_dump(mode='json')))
+            self._save_check(db, resource_id, state, capture.checked_at, status)
+
+    def assessed_observations(self, key: ResourceKey, context, *, policy=None):
+        """Read the current resource's observations with mandatory reuse decisions."""
+        from app.freshness import FreshnessPolicy, assess_observation
+        from app.storage import corpus_retirements
+        with self.storage.engine.connect() as db:
+            resource_id = _resource_id(key)
+            state = self._state(db, resource_id)
+            head = _head(db, resource_id)
+            if state is None or head is None:
+                return ()
+            retired = db.execute(select(corpus_retirements)
+                .where(corpus_retirements.c.resource_id == resource_id)
+                .order_by(corpus_retirements.c.observed_at.desc()).limit(1)).first()
+            status = state.check_status
+            # A conditional response cannot reverse a documented retirement.
+            if retired and retired.observed_at >= head.observed_at:
+                status = retired.status
+            rows = _linked(db, head.document_id, corpus_observations, corpus_document_observations)
+            source = db.execute(select(sources.c.status).where(sources.c.id == key.source_id)).scalar_one()
+        return tuple((item, assess_observation(item, context,
+            policy=policy or FreshnessPolicy(), check_status=status,
+            superseded=source != 'active'))
+            for item in (FieldObservation.model_validate(row.payload) for row in rows))
 
     def record_not_modified(self, key: ResourceKey, previous: ResourceState, checked_at: datetime) -> bool:
         """Apply a 304 against the exact conditional URL and validators sent for the resource."""
