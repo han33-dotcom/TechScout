@@ -1,12 +1,10 @@
-import os
-
 from alembic import context
 from sqlalchemy import create_engine
 
-from app.storage import DEFAULT_DATABASE_URL, metadata
+from app.storage import configured_database_url, metadata
 
 url = (context.config.attributes.get('database_url')
-       or os.environ.get('DATABASE_URL', DEFAULT_DATABASE_URL))
+       or configured_database_url())
 
 if context.is_offline_mode():
     context.configure(url=url, target_metadata=metadata, literal_binds=True)

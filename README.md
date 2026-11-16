@@ -1,6 +1,6 @@
 # Tech Scout
 
-Exact-device shopping comparison for buyers in Lebanon. The planned MVP is one Python/FastAPI application, Postgres and a simple buyer interface; the backend foundation exists, the buyer interface is not built yet.
+Exact-device shopping comparison for buyers in Lebanon. FastAPI serves the local runtime and its React status page. The buyer interface is planned.
 
 ## Current implementation
 
@@ -14,19 +14,74 @@ MVP 04 adds the source gate (`app/sources.py`), which every store request goes t
 
 MVP 05–06 add store readers for the three sources (`app/adapters/`), with a [coverage matrix](docs/source-coverage.md) of what each store publishes. MVP 07–09 add the fixed rules: variant identity and deduplication (`app/identity.py`), buyer-constraint eligibility (`app/eligibility.py`) and evidence-bound totals (`app/costs.py`). MVP 11 adds run control with budgets and traces (`app/runs.py`, `app/tracing.py`) and MVP 12 the bounded planner (`app/planner.py`, `config/evaluation.json`). See [Shopping workflow](docs/mvp-spec.md#shopping-workflow). Indexed discovery (MVP 10), final re-verification (MVP 13) and the buyer interface are not built yet: a search reads one configured iPhone 17 product per store. A request for another model in the device table (for example iPhone 17 Pro or iPhone Air) reads nothing: every store reports `ok` with 0 candidates, and the run abstains with `no open evidence gaps remain` (`investigation is disabled for this run` with `--planner none`). A model outside the table still reads the iPhone 17 products, which then fail or leave open the model check. No store currently states device condition, so today's searches end with candidates and open doubts rather than recommendations.
 
-## Run with Docker Compose (Postgres)
+## Run with Docker Compose
 
-From a fresh checkout:
+Use Docker Compose v2 from a fresh checkout.
 
-```powershell
-Copy-Item .env.example .env          # then set POSTGRES_PASSWORD in .env
-docker compose up -d --build         # starts Postgres, runs migrations, serves on 127.0.0.1:8000
+~~~powershell
+Copy-Item .env.example .env
+# Set POSTGRES_PASSWORD in .env before starting. Keep provider keys blank for fixtures.
+docker compose up --build --wait
 docker compose exec app python -m app.storage load-fixtures
-curl http://127.0.0.1:8000/health    # {"status":"ok","database":"ok"}
-curl http://127.0.0.1:8000/sources   # active retailer sources
-```
+curl.exe http://127.0.0.1:8000/health
+curl.exe http://127.0.0.1:8000/sources
+docker compose exec db psql -U techscout -d techscout -c "SELECT '[1,2,3]'::vector <-> '[1,2,4]'::vector;"
+~~~
 
-If ports 5432 or 8000 are taken, set `DB_PORT`/`APP_PORT` in `.env` (and use that port in `DATABASE_URL` and the URLs above). The app container runs `alembic upgrade head` before starting. `docker compose down` stops the stack; add `-v` to delete the database and evidence volumes.
+On macOS or Linux use `cp .env.example .env` and `curl`. The distance query returns
+`1`. Adjust the database user and name in the query if you override the defaults.
+The API status page is at `http://127.0.0.1:8000/`. `/health` checks the database.
+`docker compose ps` shows the API, database and ingestion worker health. The worker
+checks its database connection and access to the evidence volume. Job execution
+arrives with the ingestion implementation.
+
+Compose publishes localhost-only ports. Set `APP_PORT` or `DB_PORT` in `.env` if
+the defaults are occupied. The pinned [pgvector image](https://github.com/pgvector/pgvector)
+runs PostgreSQL 17. A one-shot migration service enables `vector` before the API and
+worker start from the same application image. `docker compose down` preserves the
+database and evidence volumes.
+
+Keep OpenAI, Tavily and Firecrawl keys in the repository-root `.env` or backend
+environment. Compose passes them only to the API and worker at runtime. Keep them
+out of frontend env files, `VITE_` variables and backups. The status page, health
+checks and synthetic recovery fixture run without provider keys.
+
+### Back up and restore
+
+Use Python 3.11 and Docker Compose. Stop the API and worker and finish any host
+CLI writes before taking a paired PostgreSQL dump and evidence archive. Keep
+both files in a private directory outside version control.
+
+~~~powershell
+docker compose stop app worker
+python scripts/local_recovery.py backup var/backup
+docker compose up --wait
+~~~
+
+To recover, choose a fresh Compose project name and use unused `DB_PORT` and
+`APP_PORT` values, or stop the original stack first. Start only `db` before the
+restore, so the target has empty volumes. Use the trusted archive files created
+by the backup command.
+
+~~~powershell
+docker compose -p techscout-restored build app
+docker compose -p techscout-restored up --wait db
+python scripts/local_recovery.py restore var/backup --project techscout-restored
+docker compose -p techscout-restored up --wait
+docker compose -p techscout-restored ps
+~~~
+
+If restore fails after writing either volume, use a fresh project for the retry.
+The original data and archive are available throughout the recovery. For an
+existing `postgres:17-alpine` deployment, build the new app image and take the
+paired backup while the old database container is still running. Restore into
+a fresh pgvector project for the image transition. The migration service
+then upgrades the restored database from its existing Alembic revision.
+
+Run `python scripts/check_local_stack.py` to rehearse with two disposable Compose
+projects and synthetic records. It checks the bundled assets, health, fixtures,
+vector query, restart and clean restore. Restored data includes an exact Decimal
+price, hash-verified evidence and retained trace and usage for an interrupted run.
 
 ## Local development
 
@@ -46,6 +101,15 @@ python -m app.storage load-fixtures       # load config/sources.json and the syn
 uvicorn app.main:app --reload             # http://127.0.0.1:8000
 ```
 
+For frontend development, use Node 24 and run `npm --prefix frontend ci`
+then `npm --prefix frontend run dev`. Vite proxies `/health`, `/sources` and
+`/api` to the FastAPI origin at `http://127.0.0.1:8000` by default. Set
+`TECHSCOUT_API_ORIGIN` in the development shell if the API runs elsewhere.
+`npm --prefix frontend run build` type-checks and bundles the assets into
+`frontend/dist`. Restart the API to serve the built page and its assets under
+the API origin. The Docker build performs these steps and copies only the
+compiled assets into the Python runtime image.
+
 To run one search by hand, with the migrations applied (a few public requests per store, stored as a run with its trace):
 
 ```powershell
@@ -58,7 +122,7 @@ Each search first closes runs that a crash left `running`, once they started mor
 
 Runs use no exchange rates, so give the budget in USD, the price currency of every admitted store; with a budget in another currency, no offer can be verified. The model planner needs API credentials, such as `ANTHROPIC_API_KEY`, exported in the shell that runs the command (nothing reads it from `.env`, and Compose does not pass it to the container) and under the default caps spends at most USD 0.75 (the USD 1.00 spend cap less the USD 0.25 verification reserve, which nothing uses yet). The ordinary test suite never contacts a store.
 
-To run the storage tests against Postgres as well, point `TEST_DATABASE_URL` at a disposable database (the tests reset its schema). CI runs both SQLite and Postgres, plus a Docker build.
+To run the storage tests against Postgres as well, point `TEST_DATABASE_URL` at a disposable database (the tests reset its schema). CI runs both SQLite and Postgres, plus the Compose build and recovery rehearsal.
 
 ## Storage
 
