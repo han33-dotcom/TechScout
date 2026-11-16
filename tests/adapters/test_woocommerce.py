@@ -456,6 +456,36 @@ class AdversarialTests(ReaderTestCase):
         _, result = self.search({CLASS_PAGE: page})
         self.assertEqual(result.offers[0].costs[0].reason, 'VAT statements on the product page disagree')
 
+    def test_related_product_vat_does_not_apply_at_same_price(self):
+        original = fixture('class_cellulars/page.html')
+        start = original.index(b'<p class="price">')
+        end = original.index(b'</p>', start) + len(b'</p>')
+        price_block = original[start:end]
+        suffix = b'<small class="woocommerce-price-suffix">(Inc. VAT)</small>'
+        related = b'<aside class="related"><h2>Another product</h2>' + price_block + b'</aside>'
+        target = original.replace(suffix, b'')
+        for position in (b'</body>', b'<form class="variations_form'):
+            with self.subTest(position=position):
+                page = target.replace(position, related + position)
+                _, result = self.search({CLASS_PAGE: page})
+                for offer in result.offers:
+                    self.assertEqual(offer.price.value.amount, Decimal('1030.00'))
+                    self.assertEqual(offer.costs[0].state, 'unknown')
+                    self.assertEqual(offer.costs[0].evidence_ids, [])
+
+    def test_price_suffix_requires_summary_for_the_target_product(self):
+        target = fixture('class_cellulars/page.html')
+        start = target.index(b'<p class="price">')
+        end = target.index(b'</p>', start) + len(b'</p>')
+        price_block = target[start:end]
+        other_summary = (b'<div class="summary entry-summary">' + price_block
+                         + b'<form class="variations_form" data-product_id="53"></form></div>')
+        page = target[:start] + target[end:]
+        page = page.replace(b'</body>', other_summary + b'</body>')
+        _, result = self.search({CLASS_PAGE: page})
+        self.assertTrue(result.offers)
+        self.assertTrue(all(offer.costs[0].state == 'unknown' for offer in result.offers))
+
     def test_vat_statement_must_follow_this_price(self):
         # The suffix follows a price this product does not have, so it does not cover this offer.
         page = fixture('class_cellulars/page.html').replace(b'1,030.00&nbsp;', b'1,050.00&nbsp;')

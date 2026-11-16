@@ -415,6 +415,18 @@ class PickupStockTests(unittest.TestCase):
         self.assertEqual(judged(check), ('fail', 'pickup branch shows the variant out of stock'))
         self.assertEqual(result.outcome, 'fail')
 
+    def test_city_pickup_with_named_cost_route_requires_stock_at_that_branch(self):
+        request = make_request(fulfillment=CITY_PICKUP)
+        for selected_stock, expected in ((True, 'pass'), (False, 'fail'), (None, 'unresolved')):
+            with self.subTest(selected_stock=selected_stock):
+                offer = make_offer(route=PICKUP, branches=[
+                    ('achrafieh', 'Beirut', True), ('mar-elias', 'Beirut', selected_stock),
+                ])
+                check = check_of(request, offer, 'stock')
+                self.assertEqual(check.outcome, expected)
+                self.assertEqual(check.field_paths, ['pickup_stock.mar-elias.stock'])
+                self.assertEqual(check.evidence_ids, offer.pickup_stock[1].stock.evidence_ids)
+
     def test_a_city_pickup_accepts_any_branch_in_that_city(self):
         request = make_request(fulfillment=CITY_PICKUP)
 

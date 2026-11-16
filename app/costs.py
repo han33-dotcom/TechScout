@@ -94,8 +94,10 @@ def calculate_cost(request: ShoppingRequest, offer: Offer, *, fx: Sequence[FxRat
     now = _aware(now)
     rates = [FxRate.model_validate(r) for r in fx]
     route = request.fulfillment
+    same_route = _same_route(route, offer.fulfillment)
+    pickup_point = route.branch_id or (offer.fulfillment.branch_id if same_route else None) or route.city
     basis = (f'delivery to {route.city}' if route.mode == 'delivery'
-             else f'pickup at {route.branch_id or route.city}; travel excluded')
+             else f'pickup at {pickup_point}; travel excluded')
     excluded = _exclusions(offer)
     if excluded:
         return CostResult(offer_id=offer.offer_id, status='excluded', basis=basis, reasons=excluded)
@@ -129,7 +131,7 @@ def calculate_cost(request: ShoppingRequest, offer: Offer, *, fx: Sequence[FxRat
         lines.append(_line('delivery', listed['delivery'], required=True, **order))
     lines += [_line(kind, listed[kind], required=False, **order) for kind in _OPTIONAL]
 
-    reasons = [] if _same_route(route, offer.fulfillment) else [
+    reasons = [] if same_route else [
         'offer was read for a different fulfillment route']
     reasons += [line.reason for line in lines if line.reason]
     # A Recommendation can never carry an unknown cost (contracts.Recommendation), so an unknown
@@ -287,9 +289,10 @@ def _sum(amounts) -> Decimal | None:
 
 
 def _same_route(wanted: Fulfillment, read: Fulfillment) -> bool:
-    """The offer's costs were read for the buyer's route: same mode, city and pickup branch."""
-    return ((wanted.mode, _words(wanted.city), wanted.branch_id)
-            == (read.mode, _words(read.city), read.branch_id))
+    """The offer must cover the requested location and any explicit branch."""
+    return (wanted.mode == read.mode and wanted.country == read.country
+            and _words(wanted.city) == _words(read.city)
+            and wanted.branch_id in (None, read.branch_id))
 
 
 def _words(text: str) -> str:
