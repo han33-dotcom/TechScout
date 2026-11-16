@@ -17,7 +17,7 @@ import uuid
 
 from sqlalchemy import (
     JSON, CheckConstraint, Column, Date, DateTime, ForeignKey, Integer, MetaData, Numeric,
-    String, Table, Text, TypeDecorator, UniqueConstraint, create_engine, delete, func,
+    String, Table, Text, TypeDecorator, URL, UniqueConstraint, create_engine, delete, func,
     insert, select, update,
 )
 
@@ -222,9 +222,21 @@ class SnapshotStore:
         return content
 
 
+def configured_database_url() -> str | URL:
+    if url := os.environ.get('DATABASE_URL'):
+        return url
+    if host := os.environ.get('TECHSCOUT_DB_HOST'):
+        return URL.create('postgresql+psycopg', host=host,
+                          username=os.environ['POSTGRES_USER'],
+                          password=os.environ['POSTGRES_PASSWORD'],
+                          database=os.environ['POSTGRES_DB'],
+                          query={'connect_timeout': '5'})
+    return DEFAULT_DATABASE_URL
+
+
 class Storage:
     def __init__(self, database_url=None, evidence_dir=None):
-        url = database_url or os.environ.get('DATABASE_URL', DEFAULT_DATABASE_URL)
+        url = database_url or configured_database_url()
         self.engine = create_engine(url, future=True)
         self.snapshots = SnapshotStore(evidence_dir or os.environ.get('EVIDENCE_DIR', DEFAULT_EVIDENCE_DIR))
 

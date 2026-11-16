@@ -1,13 +1,16 @@
 """FastAPI application setup. Buyer workflow endpoints arrive with later MVP tasks."""
 from contextlib import asynccontextmanager
 import logging
+from pathlib import Path
 
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from app.storage import RUN_LEASE, Storage
 
 log = logging.getLogger('techscout')
+FRONTEND_DIST = Path(__file__).resolve().parent.parent / 'frontend' / 'dist'
 
 
 def create_app(storage: Storage | None = None) -> FastAPI:
@@ -37,6 +40,14 @@ def create_app(storage: Storage | None = None) -> FastAPI:
         # Operational summary only; evidence snapshots are never served over HTTP.
         return [{'id': s.id, 'name': s.name, 'origin': str(s.origin)}
                 for s in app.state.storage.list_sources(status='active')]
+
+    index = FRONTEND_DIST / 'index.html'
+    if index.is_file():
+        app.mount('/assets', StaticFiles(directory=FRONTEND_DIST / 'assets'), name='frontend-assets')
+
+        @app.get('/', include_in_schema=False)
+        def frontend():
+            return FileResponse(index, headers={'Cache-Control': 'no-cache'})
 
     return app
 
