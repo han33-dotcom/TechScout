@@ -3,8 +3,8 @@
 Use [docs/collaborator-setup.md](docs/collaborator-setup.md) for Windows/macOS setup,
 assistant instruction-loading checks and individual onboarding evidence.
 
-Use [docs/pr-policy-activation.md](docs/pr-policy-activation.md) for PR metadata,
-scoped exemptions and the owner checklist for required-check activation.
+The [full-product backlog](https://github.com/han33-dotcom/TechScout/issues/36)
+lists ready work and prerequisites. See the [team workflow](docs/team-workflow.md).
 
 ## Setup
 
@@ -30,27 +30,23 @@ Use the README for Postgres, migrations and fixture-loading checks.
 
 ## Branch and PR flow
 
-1. Start with a clean worktree, fetch origin and update `main` using `git pull --ff-only`.
-   Preserve uncommitted work before switching branches.
-2. Create a focused `feat/`, `fix/`, `docs/`, `ci/` or task branch.
-3. Read [AGENTS.md](AGENTS.md) and the linked task's acceptance criteria.
-4. Implement, run the offline suite and open a PR into `main`. Use conventional
-   commit messages such as `feat:`, `fix:` or `docs:`.
-5. Link the GitHub issue and document what changed, why, checks and limitations.
-6. A teammate reviews the latest PR; the author addresses accepted findings and
-   reruns checks. The human reviewer supplies the approval.
-7. Merge through GitHub after applicable checks and review requirements are satisfied.
+1. Assign yourself a ready, unassigned issue and read its acceptance criteria.
+2. Fetch origin, preserve local edits and create a focused branch from current main
+   or the declared stacked base.
+3. Read [AGENTS.md](AGENTS.md). Implement and run the relevant offline checks.
+4. Open a PR, link the issue, inspect the diff and record acceptance evidence and limits.
+5. The author merges through GitHub after the required checks pass on a current branch
+   and the acceptance criteria are demonstrated. Feedback from teammates is optional.
 
-Main requires one CODEOWNER approval, dismisses stale approvals and requires
-resolved review threads. The `test`, `build` and `pr-policy` checks are required
-from GitHub Actions. Follow the configured rules; do not bypass them.
+Main requires a PR and the GitHub Actions test and build checks. Update the branch when
+GitHub requires it and rerun checks. Main is protected against force pushes and deletion.
 
 ## Shared instructions and handoff
 
 [AGENTS.md](AGENTS.md) is the canonical agent policy.
 [CLAUDE.md](CLAUDE.md) imports it for Claude Code.
-[docs/team-workflow.md](docs/team-workflow.md) explains ownership, task states and
-review handoffs. Preserve the contracts in [docs/mvp-spec.md](docs/mvp-spec.md) and
+[docs/team-workflow.md](docs/team-workflow.md) explains task ownership and status.
+Preserve the contracts in [docs/mvp-spec.md](docs/mvp-spec.md) and
 the existing public-source assumptions in [docs/source-admission.md](docs/source-admission.md).
 
 After policy changes merge, update your local branch deliberately and restart or
@@ -64,6 +60,5 @@ Record durable design decisions in project documents or the linked GitHub issue.
 
 ## Completion
 
-Implemented means the required PRs have merged. Done means a human has verified the
-task acceptance criteria and recorded evidence. Before status synchronization is
-enabled, update the GitHub Project manually. Report failed or skipped checks honestly.
+The author records the merged PR and actual acceptance evidence on the issue,
+then closes it. Use issue state, assignee and a brief blocker note to track progress.
