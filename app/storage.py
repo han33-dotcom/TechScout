@@ -280,6 +280,21 @@ corpus_document_passages = Table(
            primary_key=True, index=True),
 )
 
+embedding_calls = Table(
+    'embedding_calls', metadata,
+    Column('call_id', String(32), primary_key=True),
+    Column('owner_id', Text, nullable=False, index=True),
+    Column('purpose', String(10), nullable=False),
+    Column('model', Text, nullable=False),
+    Column('index_version', Text, nullable=False),
+    Column('status', String(12), nullable=False),
+    Column('reserved_usd', ExactMoney, nullable=False),
+    Column('rate_usd_per_million', ExactMoney, nullable=False),
+    Column('tokens', Integer),
+    Column('actual_usd', ExactMoney),
+    Column('recorded_at', UtcDateTime, nullable=False),
+)
+
 corpus_embeddings = Table(
     'corpus_embeddings', metadata,
     Column('passage_id', ForeignKey('corpus_passages.passage_id', ondelete='CASCADE'), primary_key=True),
