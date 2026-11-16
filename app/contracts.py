@@ -9,6 +9,8 @@ from pydantic import (
     JsonValue, StrictBool, StrictInt, StringConstraints, model_validator,
 )
 
+from app.source_capabilities import EndpointCapability, validate_capability_scope
+
 
 Text = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, strict=True)]
 Currency = Annotated[str, StringConstraints(pattern=r'^[A-Z]{3}$', strict=True)]
@@ -162,7 +164,8 @@ class SourcePolicy(Contract):
     status: Literal['pending', 'active', 'paused', 'disabled', 'revoked', 'rejected']
     reviewed_at: date
     admission: SourceReview | None
-    allowed_endpoints: list[HttpsUrl]
+    allowed_endpoints: list[HttpsUrl] = Field(default_factory=list)
+    endpoint_capabilities: tuple[EndpointCapability, ...] = ()
     limits: SourceLimits
     allowed_methods: tuple[Literal['GET'], ...] = ('GET',)
     adapter_version: Text | None = None
@@ -176,8 +179,12 @@ class SourcePolicy(Contract):
                     != (self.origin.scheme, self.origin.host, self.origin.port)
                     or endpoint.fragment):
                 raise ValueError('Endpoint must belong to the configured origin')
+        validate_capability_scope(self.endpoint_capabilities, self.origin.host)
+        if self.endpoint_capabilities and self.origin.port != 443:
+            raise ValueError('Capabilities require the default HTTPS port')
         if self.status == 'active' and (
-            self.admission is None or not self.allowed_endpoints or not self.allowed_methods
+            self.admission is None or not (self.allowed_endpoints or self.endpoint_capabilities)
+            or not self.allowed_methods
             or any(v <= 0 for v in self.limits.model_dump().values())
         ):
             raise ValueError('Active sources need technical review, endpoints and positive limits')

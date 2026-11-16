@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "live_release": {
+    "admitted_source_ids": [
+      "alpha"
+    ]
+  },
+  "sources": [
+    {
+      "id": "alpha",
+      "name": "Synthetic catalog",
+      "origin": "https://alpha.example",
+      "status": "active",
+      "reviewed_at": "2026-10-12",
+      "admission": {
+        "basis": "Reviewed synthetic source",
+        "evidence": [
+          "https://alpha.example/catalog/laptops?page=1"
+        ],
+        "reviewed_at": "2026-10-12T14:49:10+00:00",
+        "scope": "Read-only product search, variants and listing discovery"
+      },
+      "allowed_endpoints": [
+        "https://alpha.example/wp-json/wc/store/v1/products?slug=phone-x"
+      ],
+      "endpoint_capabilities": [
+        {
+          "capability_id": "product-search",
+          "version": "1",
+          "host": "alpha.example",
+          "operation": "search",
+          "expect": "json",
+          "path": [
+            "api",
+            "products",
+            "search"
+          ],
+          "query": [
+            {
+              "name": "q",
+              "parameter": {
+                "kind": "search_text",
+                "max_length": 48
+              }
+            },
+            {
+              "name": "type",
+              "parameter": {
+                "kind": "choice",
+                "values": [
+                  "product"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "capability_id": "variant-details",
+          "version": "1",
+          "host": "alpha.example",
+          "operation": "variant",
+          "expect": "json",
+          "path": [
+            "api",
+            "products",
+            {
+              "kind": "token",
+              "max_length": 48
+            }
+          ],
+          "query": [
+            {
+              "name": "variant",
+              "parameter": {
+                "kind": "integer",
+                "minimum": 1,
+                "maximum": 999999999999
+              }
+            }
+          ]
+        },
+        {
+          "capability_id": "catalog-page",
+          "version": "1",
+          "host": "alpha.example",
+          "operation": "catalog",
+          "expect": "html",
+          "path": [
+            "catalog",
+            {
+              "kind": "choice",
+              "values": [
+                "phones",
+                "laptops"
+              ]
+            }
+          ],
+          "query": [
+            {
+              "name": "page",
+              "parameter": {
+                "kind": "integer",
+                "minimum": 1,
+                "maximum": 5
+              }
+            },
+            {
+              "name": "limit",
+              "parameter": {
+                "kind": "integer",
+                "minimum": 1,
+                "maximum": 20
+              },
+              "required": false
+            }
+          ]
+        },
+        {
+          "capability_id": "public-feed",
+          "version": "1",
+          "host": "alpha.example",
+          "operation": "feed",
+          "expect": "xml",
+          "path": [
+            "feeds",
+            "electronics.xml"
+          ]
+        },
+        {
+          "capability_id": "product-sitemap",
+          "version": "1",
+          "host": "alpha.example",
+          "operation": "sitemap",
+          "expect": "xml",
+          "path": [
+            "sitemaps",
+            "products.xml"
+          ],
+          "query": [
+            {
+              "name": "shard",
+              "parameter": {
+                "kind": "integer",
+                "minimum": 1,
+                "maximum": 4
+              }
+            }
+          ]
+        }
+      ],
+      "limits": {
+        "requests_per_minute": 6,
+        "concurrency": 1,
+        "max_requests_per_run": 5
+      }
+    }
+  ]
+}

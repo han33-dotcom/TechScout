@@ -1,10 +1,15 @@
-"""Source selection boundary. Network enforcement belongs to MVP 04."""
+"""Technical source selection. Network enforcement belongs to SourceGate."""
 import json
 from pathlib import Path
 from urllib.parse import urlsplit
 
+from pydantic import TypeAdapter
+
+from app.source_capabilities import EndpointCapability, validate_capability_scope
+
 
 DEFAULT_REGISTRY = Path(__file__).resolve().parents[1] / 'config/sources.json'
+_CAPABILITY_RULES = TypeAdapter(tuple[EndpointCapability, ...])
 
 
 def get_active_source(source_id: str, registry_path: Path | str = DEFAULT_REGISTRY) -> dict:
@@ -31,15 +36,20 @@ def get_active_source(source_id: str, registry_path: Path | str = DEFAULT_REGIST
         isinstance(e, str) and e.strip() for e in evidence
     ):
         raise PermissionError('Missing admission evidence')
-    endpoints = source.get('allowed_endpoints')
-    if not isinstance(endpoints, list) or not endpoints:
-        raise PermissionError('No admitted endpoints')
+    endpoints = source.get('allowed_endpoints', [])
+    rules = source.get('endpoint_capabilities', [])
     try:
+        if not isinstance(endpoints, list) or not isinstance(rules, list) or not (endpoints or rules):
+            raise ValueError('No admitted endpoints or capabilities')
         origin = urlsplit(source.get('origin', ''))
         if (origin.scheme != 'https' or not origin.hostname or origin.username is not None
                 or origin.password is not None or origin.path not in ('', '/')
                 or origin.query or origin.fragment):
             raise ValueError('Invalid origin')
+        if rules:
+            if origin.netloc != origin.hostname:
+                raise ValueError('Capabilities require a canonical origin on port 443')
+            validate_capability_scope(_CAPABILITY_RULES.validate_python(rules), origin.hostname)
         for endpoint in endpoints:
             parsed = urlsplit(endpoint)
             if parsed.scheme != 'https' or parsed.netloc != origin.netloc or parsed.fragment:

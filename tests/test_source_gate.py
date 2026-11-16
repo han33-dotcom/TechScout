@@ -491,7 +491,7 @@ class GateCase(unittest.TestCase):
         reads.pop(bound.arguments['source_id'], None)
         self.latest.reads = reads
         source = get_active_source(*args, **kwargs)
-        reads[source['id']] = list(source['allowed_endpoints'])
+        reads[source['id']] = list(source.get('allowed_endpoints', ()))
         return source
 
     def check_request(self, method, url, content, headers):
