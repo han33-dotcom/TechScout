@@ -1,0 +1,1292 @@
+{
+  "audit_schema_version": 1,
+  "date": "2026-11-16",
+  "directory_contract_version": 2,
+  "method": {
+    "direct_probe_count": 41,
+    "max_response_bytes": 4000000,
+    "timeout_seconds": 20,
+    "max_concurrent_hosts": 4,
+    "max_concurrent_per_host": 1,
+    "delay_between_same_host_detail_requests_seconds": 11,
+    "retries": 0,
+    "paid_provider_calls": 0,
+    "direct_probe_user_agent": "TechScout-SourceAudit/1.0 (bounded public research)",
+    "browser_research": "Separate web search/open checks; may be cached and do not establish direct-runtime reliability. Browser pages reviewed on 2026-11-16; individual direct attempts have UTC timestamps.",
+    "wide_inventory_timebox": "One 15-minute discovery sweep; stop after useful category/region leads and retain remaining leads unverified. Priority audit is independent."
+  },
+  "retailers": [
+    {
+      "retailer_id": "class_cellulars",
+      "priority_audit": true,
+      "identity_status": "retailer_owned_site",
+      "canonical_seller": "Class Cellulars",
+      "seller_note": "Site identity is not evidence of a particular product offer.",
+      "category_coverage": {
+        "phone": "catalog_observed",
+        "laptop": "catalog_observed",
+        "tablet": "catalog_observed",
+        "monitor": "not_established",
+        "audio": "catalog_observed"
+      },
+      "platform_hint": "woocommerce",
+      "entry_points": {
+        "catalog": [
+          "https://classcellulars.com/"
+        ],
+        "product": [
+          "https://classcellulars.com/product/iphone-17-pro/"
+        ],
+        "policy": [
+          "https://classcellulars.com/faq/"
+        ],
+        "identity": [
+          "https://classcellulars.com/"
+        ]
+      },
+      "discovered": true,
+      "retrieval_tested": true,
+      "qualifying_offer_status": "not_established",
+      "recommendation": "Retain existing reader; diagnose direct 403 before wider capabilities.",
+      "gaps": [
+        "FAQ supplies delivery estimates and conditional returns; selected-variant SIM/region, condition and branch stock remain gaps."
+      ],
+      "policy_findings": [
+        {
+          "url": "https://classcellulars.com/faq/",
+          "checked_date": "2026-11-16",
+          "summary": "FAQ describes conditional returns, cash-on-delivery and delivery estimates. No branch-stock evidence."
+        }
+      ],
+      "observation_ids": [
+        "direct-01",
+        "direct-13",
+        "direct-14",
+        "direct-36"
+      ]
+    },
+    {
+      "retailer_id": "mojitech",
+      "priority_audit": true,
+      "identity_status": "retailer_owned_site",
+      "canonical_seller": "Mojitech",
+      "seller_note": "Site identity is not evidence of a particular product offer.",
+      "category_coverage": {
+        "phone": "catalog_observed",
+        "laptop": "catalog_observed",
+        "tablet": "catalog_observed",
+        "monitor": "catalog_observed",
+        "audio": "catalog_observed"
+      },
+      "platform_hint": "woocommerce",
+      "entry_points": {
+        "catalog": [
+          "https://mojitech.net/"
+        ],
+        "product": [
+          "https://mojitech.net/shop/brands/lenovo-brands/lenovo-ideapad-1-p1-laptop-core-i5-512gb-touch/"
+        ],
+        "policy": [
+          "https://mojitech.net/refund_returns/"
+        ],
+        "identity": [
+          "https://mojitech.net/"
+        ]
+      },
+      "discovered": true,
+      "retrieval_tested": true,
+      "qualifying_offer_status": "not_established",
+      "recommendation": "Retain reader and expand laptop configuration extraction after direct access recovery.",
+      "gaps": [
+        "Direct homepage, product, policy and API returned 403; browser product yielded no content and policy timed out. Homepage mixes priced and inquiry-only listings. Do not carry old zero-price findings forward as current catalog-wide facts."
+      ],
+      "policy_findings": [
+        {
+          "url": "https://mojitech.net/refund_returns/",
+          "checked_date": "2026-11-16",
+          "summary": "Policy content unavailable in this check: direct 403 and browser timeout. Terms remain unknown."
+        }
+      ],
+      "observation_ids": [
+        "direct-02",
+        "direct-15",
+        "direct-16",
+        "direct-37"
+      ]
+    },
+    {
+      "retailer_id": "beytech",
+      "priority_audit": true,
+      "identity_status": "retailer_owned_site",
+      "canonical_seller": "Beytech",
+      "seller_note": "Site identity is not evidence of a particular product offer.",
+      "category_coverage": {
+        "phone": "catalog_observed",
+        "laptop": "catalog_observed",
+        "tablet": "catalog_observed",
+        "monitor": "catalog_observed",
+        "audio": "catalog_observed"
+      },
+      "platform_hint": "woocommerce",
+      "entry_points": {
+        "catalog": [
+          "https://beytech.com.lb/"
+        ],
+        "product": [
+          "https://beytech.com.lb/product/apple-iphone-17-1-sim-2-years-warranty/"
+        ],
+        "policy": [
+          "https://beytech.com.lb/warranty-terms-conditions/"
+        ],
+        "identity": [
+          "https://beytech.com.lb/"
+        ]
+      },
+      "discovered": true,
+      "retrieval_tested": true,
+      "qualifying_offer_status": "not_established",
+      "recommendation": "First shared WooCommerce expansion candidate: product, policy and Store API returned 200.",
+      "gaps": [
+        "Selected iPhone title leaves SIM meaning unresolved; warranty duration does not establish provider, territory, condition, branch stock or delivered total."
+      ],
+      "policy_findings": [
+        {
+          "url": "https://beytech.com.lb/warranty-terms-conditions/",
+          "checked_date": "2026-11-16",
+          "summary": "Warranty route available; selected-product warranty applicability/provider and territory require further evidence."
+        }
+      ],
+      "observation_ids": [
+        "direct-03",
+        "direct-17",
+        "direct-18",
+        "direct-38"
+      ]
+    },
+    {
+      "retailer_id": "pcandparts",
+      "priority_audit": true,
+      "identity_status": "retailer_owned_site",
+      "canonical_seller": "PC and Parts",
+      "seller_note": "Site identity is not evidence of a particular product offer.",
+      "category_coverage": {
+        "phone": "catalog_observed",
+        "laptop": "catalog_observed",
+        "tablet": "catalog_observed",
+        "monitor": "catalog_observed",
+        "audio": "catalog_observed"
+      },
+      "platform_hint": "woocommerce",
+      "entry_points": {
+        "catalog": [
+          "https://pcandparts.com/"
+        ],
+        "product": [
+          "https://pcandparts.com/product/hp-omnibook-x-flip-16-as0023dx-ultra-7-16gb-1tb-ssd-16-touch-win11-tax-included/"
+        ],
+        "policy": [
+          "https://pcandparts.com/shipping-options/"
+        ],
+        "identity": [
+          "https://pcandparts.com/"
+        ]
+      },
+      "discovered": true,
+      "retrieval_tested": true,
+      "qualifying_offer_status": "not_established",
+      "recommendation": "Prioritize laptop/monitor overlap; browser pages readable but direct samples returned 403.",
+      "gaps": [
+        "Shipping varies by zone and weight with possible fuel/volumetric surcharges. Tax-included wording is item-specific; pickup appointment is not reserved stock."
+      ],
+      "policy_findings": [
+        {
+          "url": "https://pcandparts.com/shipping-options/",
+          "checked_date": "2026-11-16",
+          "summary": "Shipping varies by location and weight; possible fuel and volumetric surcharges. Pickup appointment required."
+        }
+      ],
+      "observation_ids": [
+        "direct-04",
+        "direct-19",
+        "direct-20"
+      ]
+    },
+    {
+      "retailer_id": "ayoub_computers",
+      "priority_audit": true,
+      "identity_status": "retailer_owned_site",
+      "canonical_seller": null,
+      "seller_note": "Resolve the selling merchant and fulfiller on each listing.",
+      "category_coverage": {
+        "phone": "not_established",
+        "laptop": "catalog_observed",
+        "tablet": "catalog_observed",
+        "monitor": "catalog_observed",
+        "audio": "catalog_observed"
+      },
+      "platform_hint": "bigcommerce",
+      "entry_points": {
+        "catalog": [
+          "https://ayoubcomputers.com/",
+          "https://ayoubcomputers.com/laptops/"
+        ],
+        "product": [
+          "https://ayoubcomputers.com/acer-aspire-5-a515-58p-53sd-15-6-laptop-intel-core-i5-1335u-ram-8gb-ssd-256gb-intel-iris-xe-nx-khjem-007/"
+        ],
+        "policy": [
+          "https://ayoubcomputers.com/quick-delivery-guide/"
+        ],
+        "identity": [
+          "https://ayoubcomputers.com/"
+        ]
+      },
+      "discovered": true,
+      "retrieval_tested": true,
+      "qualifying_offer_status": "not_established",
+      "recommendation": "High-value breadth; catalog HTML lacked product cards. Search located an Acer product with explicit specifications and marketplace terms; sample stock unavailable.",
+      "gaps": [
+        "Delivery guide includes partners and marketplace vendors. Seller/fulfiller must be identified per listing. Footer excludes VAT; catalog success does not settle variant identity or price."
+      ],
+      "policy_findings": [
+        {
+          "url": "https://ayoubcomputers.com/quick-delivery-guide/",
+          "checked_date": "2026-11-16",
+          "summary": "Delivery guide covers Ayoub, partners and marketplace vendors; merchant/fulfiller must be bound per offer."
+        }
+      ],
+      "observation_ids": [
+        "direct-05",
+        "direct-21",
+        "direct-22",
+        "direct-41"
+      ]
+    },
+    {
+      "retailer_id": "amhaz_official_candidate",
+      "priority_audit": true,
+      "identity_status": "unresolved_user_intent",
+      "canonical_seller": null,
+      "seller_note": "Site identity is not evidence of a particular product offer.",
+      "category_coverage": {
+        "phone": "catalog_observed",
+        "laptop": "not_established",
+        "tablet": "catalog_observed",
+        "monitor": "not_established",
+        "audio": "catalog_observed"
+      },
+      "platform_hint": "custom",
+      "entry_points": {
+        "catalog": [
+          "https://amhazofficial.com/"
+        ],
+        "product": [
+          "https://amhazofficial.com/product/1018"
+        ],
+        "policy": [],
+        "identity": [
+          "https://amhazofficial.com/",
+          "https://amhazofficial.com/contact"
+        ]
+      },
+      "discovered": true,
+      "retrieval_tested": true,
+      "qualifying_offer_status": "not_established",
+      "recommendation": "Keep identity unresolved; investigate scoped HTML/product extraction only after identity resolution.",
+      "gaps": [
+        "Site identifies Amhaz Official in Saint Therese, Hadath. No evidence links it to Amhaz Original or establishes it as the user-intended Amhaz. Sample product is out of stock and availability needs checking; policy links are placeholders."
+      ],
+      "policy_findings": [],
+      "observation_ids": [
+        "direct-06",
+        "direct-23",
+        "direct-24"
+      ]
+    },
+    {
+      "retailer_id": "abed_tahan",
+      "priority_audit": true,
+      "identity_status": "retailer_owned_site",
+      "canonical_seller": "Abed Tahan",
+      "seller_note": "Site identity is not evidence of a particular product offer.",
+      "category_coverage": {
+        "phone": "catalog_observed",
+        "laptop": "catalog_observed",
+        "tablet": "catalog_observed",
+        "monitor": "catalog_observed",
+        "audio": "catalog_observed"
+      },
+      "platform_hint": "shopify",
+      "entry_points": {
+        "catalog": [
+          "https://abedtahan.com/"
+        ],
+        "product": [
+          "https://abedtahan.com/products/lenovo-v15-core-i3-13gen-8gb-256gb-ssd-15-7"
+        ],
+        "policy": [
+          "https://abedtahan.com/policies/shipping-policy"
+        ],
+        "identity": [
+          "https://abedtahan.com/"
+        ]
+      },
+      "discovered": true,
+      "retrieval_tested": true,
+      "qualifying_offer_status": "not_established",
+      "recommendation": "Shared Shopify extraction candidate; homepage/policy 200, selected product 429. Honor backoff.",
+      "gaps": [
+        "Delivery policy page retrieved; exact selected-item fee, taxes, stock and warranty applicability remain unverified. Do not use similarly named external domains as aliases."
+      ],
+      "policy_findings": [
+        {
+          "url": "https://abedtahan.com/policies/shipping-policy",
+          "checked_date": "2026-11-16",
+          "summary": "Policy route retrieved directly; no selected-item fee or deadline extracted."
+        }
+      ],
+      "observation_ids": [
+        "direct-07",
+        "direct-25",
+        "direct-26"
+      ]
+    },
+    {
+      "retailer_id": "macrotronics",
+      "priority_audit": true,
+      "identity_status": "retailer_owned_site",
+      "canonical_seller": "Macrotronics",
+      "seller_note": "Site identity is not evidence of a particular product offer.",
+      "category_coverage": {
+        "phone": "not_established",
+        "laptop": "catalog_observed",
+        "tablet": "catalog_observed",
+        "monitor": "catalog_observed",
+        "audio": "catalog_observed"
+      },
+      "platform_hint": "shopify",
+      "entry_points": {
+        "catalog": [
+          "https://www.macrotronics.net/"
+        ],
+        "product": [
+          "https://www.macrotronics.net/products/lenovo-ideapad-1-15iru7-1s83b40008us-core-i5-1335u-15-6-inch-full-hd-laptop-1-year"
+        ],
+        "policy": [
+          "https://www.macrotronics.net/pages/shipping-and-delivery-policy"
+        ],
+        "identity": [
+          "https://www.macrotronics.net/"
+        ]
+      },
+      "discovered": true,
+      "retrieval_tested": true,
+      "qualifying_offer_status": "not_established",
+      "recommendation": "Prioritize laptop/monitor comparison through shared Shopify profile; sample product 429.",
+      "gaps": [
+        "Shipping depends on weight, size, method and destination; checkout calculation is not a known fee. Homepage tax wording needs binding to selected variant. Renewed items must stay distinct."
+      ],
+      "policy_findings": [
+        {
+          "url": "https://www.macrotronics.net/pages/shipping-and-delivery-policy",
+          "checked_date": "2026-11-16",
+          "summary": "Delivery charges depend on weight, dimensions, method and destination and are calculated at checkout."
+        }
+      ],
+      "observation_ids": [
+        "direct-08",
+        "direct-27",
+        "direct-28"
+      ]
+    },
+    {
+      "retailer_id": "souq_961",
+      "priority_audit": true,
+      "identity_status": "retailer_owned_site",
+      "canonical_seller": "961Souq",
+      "seller_note": "Site identity is not evidence of a particular product offer.",
+      "category_coverage": {
+        "phone": "catalog_observed",
+        "laptop": "catalog_observed",
+        "tablet": "catalog_observed",
+        "monitor": "catalog_observed",
+        "audio": "catalog_observed"
+      },
+      "platform_hint": "shopify_headless",
+      "entry_points": {
+        "catalog": [
+          "https://961souq.com/"
+        ],
+        "product": [
+          "https://961souq.com/products/aoc-24b36h3-monitor"
+        ],
+        "policy": [
+          "https://961souq.com/policies/shipping-policy"
+        ],
+        "identity": [
+          "https://961souq.com/"
+        ]
+      },
+      "discovered": true,
+      "retrieval_tested": true,
+      "qualifying_offer_status": "not_established",
+      "recommendation": "Shared structured data with headless HTML handling; product and policy 200.",
+      "gaps": [
+        "Homepage marked sample monitor sold out while product structured data reported InStock. Reconcile the selected variant; no qualifying-stock claim. Route-specific shipping, warranty and condition still need extraction."
+      ],
+      "policy_findings": [
+        {
+          "url": "https://961souq.com/policies/shipping-policy",
+          "checked_date": "2026-11-16",
+          "summary": "Shipping policy route retrieved directly; no selected-item fee or guaranteed deadline established."
+        }
+      ],
+      "observation_ids": [
+        "direct-09",
+        "direct-29",
+        "direct-30"
+      ]
+    },
+    {
+      "retailer_id": "hicart",
+      "priority_audit": true,
+      "identity_status": "retailer_owned_site",
+      "canonical_seller": null,
+      "seller_note": "Resolve the selling merchant and fulfiller on each listing.",
+      "category_coverage": {
+        "phone": "catalog_observed",
+        "laptop": "not_established",
+        "tablet": "not_established",
+        "monitor": "not_established",
+        "audio": "catalog_observed"
+      },
+      "platform_hint": "shopify_marketplace",
+      "entry_points": {
+        "catalog": [
+          "https://www.hicart.com/"
+        ],
+        "product": [
+          "https://www.hicart.com/products/apple-iphone-18-pro-256gb-non-active-online-exclusive-available-in-black-silver-glacier-and-burgundy"
+        ],
+        "policy": [
+          "https://www.hicart.com/pages/warranty",
+          "https://www.hicart.com/pages/terms-conditions"
+        ],
+        "identity": [
+          "https://www.hicart.com/"
+        ]
+      },
+      "discovered": true,
+      "retrieval_tested": true,
+      "qualifying_offer_status": "not_established",
+      "recommendation": "Defer qualification until marketplace seller extraction is implemented; product 429.",
+      "gaps": [
+        "Terms identify independent sellers; warranty is supplier-covered only where the listing says so. Actual seller for sampled listing is unknown. Brand/vendor labels must not be treated as merchant identity."
+      ],
+      "policy_findings": [
+        {
+          "url": "https://www.hicart.com/pages/warranty",
+          "checked_date": "2026-11-16",
+          "summary": "Independent marketplace sellers; warranties are supplier-covered only when the listing states coverage."
+        },
+        {
+          "url": "https://www.hicart.com/pages/terms-conditions",
+          "checked_date": "2026-11-16",
+          "summary": "Independent marketplace sellers; warranties are supplier-covered only when the listing states coverage."
+        }
+      ],
+      "observation_ids": [
+        "direct-10",
+        "direct-31",
+        "direct-32"
+      ]
+    },
+    {
+      "retailer_id": "istyle_lebanon",
+      "priority_audit": true,
+      "identity_status": "retailer_owned_site",
+      "canonical_seller": "iSTYLE Lebanon",
+      "seller_note": "Site identity is not evidence of a particular product offer.",
+      "category_coverage": {
+        "phone": "catalog_observed",
+        "laptop": "catalog_observed",
+        "tablet": "catalog_observed",
+        "monitor": "not_established",
+        "audio": "catalog_observed"
+      },
+      "platform_hint": "shopify",
+      "entry_points": {
+        "catalog": [
+          "https://istyle.com.lb/",
+          "https://istyle.com.lb/collections/big-sale"
+        ],
+        "product": [
+          "https://istyle.com.lb/products/iphone-air-mg2y4af-a"
+        ],
+        "policy": [
+          "https://istyle.com.lb/pages/store-policy"
+        ],
+        "identity": [
+          "https://istyle.com.lb/"
+        ]
+      },
+      "discovered": true,
+      "retrieval_tested": true,
+      "qualifying_offer_status": "not_established",
+      "recommendation": "Shared Shopify profile; product and store policy 200, sale catalog 429.",
+      "gaps": [
+        "Store policy describes conditional exchange and DOA handling. Store picker is not branch stock. Model/part number, region, SIM, delivery cost and selected pickup stock need explicit evidence."
+      ],
+      "policy_findings": [
+        {
+          "url": "https://istyle.com.lb/pages/store-policy",
+          "checked_date": "2026-11-16",
+          "summary": "Store policy describes conditional exchange and DOA inspection; not selected-branch stock evidence."
+        }
+      ],
+      "observation_ids": [
+        "direct-11",
+        "direct-33",
+        "direct-34",
+        "direct-40"
+      ]
+    },
+    {
+      "retailer_id": "expert_zone",
+      "priority_audit": true,
+      "identity_status": "retailer_owned_site",
+      "canonical_seller": "Expert-Zone",
+      "seller_note": "Site identity is not evidence of a particular product offer.",
+      "category_coverage": {
+        "phone": "not_established",
+        "laptop": "catalog_observed",
+        "tablet": "not_established",
+        "monitor": "catalog_observed",
+        "audio": "catalog_observed"
+      },
+      "platform_hint": "woocommerce",
+      "entry_points": {
+        "catalog": [
+          "https://ezonelb.com/"
+        ],
+        "product": [
+          "https://ezonelb.com/product/legion-23-8-inch-fhd-240hz-ips-gaming-monitor-0-5ms-hdr10-pivot/"
+        ],
+        "policy": [
+          "https://ezonelb.com/return-warranty-policy/"
+        ],
+        "identity": [
+          "https://ezonelb.com/"
+        ]
+      },
+      "discovered": true,
+      "retrieval_tested": true,
+      "qualifying_offer_status": "not_established",
+      "recommendation": "Prioritize shared WooCommerce extraction for monitor and laptop diversity; sample monitor/policy 200.",
+      "gaps": [
+        "Warranty duration varies by item. Used/refurbished and new catalog sections must stay separate; branch addresses do not prove stock. Tax and shipping totals remain unverified."
+      ],
+      "policy_findings": [
+        {
+          "url": "https://ezonelb.com/return-warranty-policy/",
+          "checked_date": "2026-11-16",
+          "summary": "Manufacturing-defect warranty only; duration differs by item and is not supplied generically."
+        }
+      ],
+      "observation_ids": [
+        "direct-12",
+        "direct-35",
+        "direct-39"
+      ]
+    },
+    {
+      "retailer_id": "technodel",
+      "priority_audit": false,
+      "identity_status": "retailer_page",
+      "canonical_seller": "Technodel",
+      "category_coverage": {
+        "phone": "catalog_observed",
+        "laptop": "catalog_observed",
+        "tablet": "catalog_observed",
+        "monitor": "catalog_observed",
+        "audio": "catalog_observed"
+      },
+      "entry_points": {
+        "catalog": [
+          "https://technodel.net/"
+        ],
+        "product": [],
+        "policy": [],
+        "identity": [
+          "https://technodel.net/"
+        ]
+      },
+      "discovered": true,
+      "retrieval_tested": false,
+      "qualifying_offer_status": "not_established",
+      "recommendation": "New phone/laptop alternatives and regional branches.",
+      "gaps": [
+        "Priority audit not performed."
+      ],
+      "policy_findings": [],
+      "observation_ids": []
+    },
+    {
+      "retailer_id": "istore_plus",
+      "priority_audit": false,
+      "identity_status": "retailer_page",
+      "canonical_seller": "iStore Plus",
+      "category_coverage": {
+        "phone": "catalog_observed",
+        "laptop": "not_established",
+        "tablet": "catalog_observed",
+        "monitor": "not_established",
+        "audio": "catalog_observed"
+      },
+      "entry_points": {
+        "catalog": [
+          "https://istoreplus.me/"
+        ],
+        "product": [],
+        "policy": [],
+        "identity": [
+          "https://istoreplus.me/"
+        ]
+      },
+      "discovered": true,
+      "retrieval_tested": false,
+      "qualifying_offer_status": "not_established",
+      "recommendation": "Audio and brand diversity; distinct from iSTYLE.",
+      "gaps": [
+        "Priority audit not performed."
+      ],
+      "policy_findings": [],
+      "observation_ids": []
+    },
+    {
+      "retailer_id": "tech_zone",
+      "priority_audit": false,
+      "identity_status": "retailer_search_result",
+      "canonical_seller": null,
+      "category_coverage": {
+        "phone": "not_established",
+        "laptop": "not_established",
+        "tablet": "not_established",
+        "monitor": "not_established",
+        "audio": "not_established"
+      },
+      "entry_points": {
+        "catalog": [
+          "https://techzone.com.lb/"
+        ],
+        "product": [],
+        "policy": [],
+        "identity": [
+          "https://techzone.com.lb/"
+        ]
+      },
+      "discovered": true,
+      "retrieval_tested": false,
+      "qualifying_offer_status": "not_established",
+      "recommendation": "Retailer-owned search result identifies Beirut; browser homepage timed out. Category coverage awaits verification.",
+      "gaps": [
+        "Priority audit not performed."
+      ],
+      "policy_findings": [],
+      "observation_ids": []
+    },
+    {
+      "retailer_id": "kaystore",
+      "priority_audit": false,
+      "identity_status": "retailer_page",
+      "canonical_seller": "KAYSTORE",
+      "category_coverage": {
+        "phone": "not_established",
+        "laptop": "not_established",
+        "tablet": "not_established",
+        "monitor": "not_established",
+        "audio": "not_established"
+      },
+      "entry_points": {
+        "catalog": [
+          "https://kaystore.com/"
+        ],
+        "product": [],
+        "policy": [],
+        "identity": [
+          "https://kaystore.com/"
+        ]
+      },
+      "discovered": true,
+      "retrieval_tested": false,
+      "qualifying_offer_status": "not_established",
+      "recommendation": "Electronics navigation observed; verify five-category product coverage rather than appliance counts.",
+      "gaps": [
+        "Priority audit not performed."
+      ],
+      "policy_findings": [],
+      "observation_ids": []
+    },
+    {
+      "retailer_id": "microcity",
+      "priority_audit": false,
+      "identity_status": "retailer_page",
+      "canonical_seller": null,
+      "category_coverage": {
+        "phone": "not_established",
+        "laptop": "catalog_observed",
+        "tablet": "catalog_observed",
+        "monitor": "catalog_observed",
+        "audio": "catalog_observed"
+      },
+      "entry_points": {
+        "catalog": [
+          "https://www.gomicrocity.com/"
+        ],
+        "product": [],
+        "policy": [],
+        "identity": [
+          "https://www.gomicrocity.com/"
+        ]
+      },
+      "discovered": true,
+      "retrieval_tested": false,
+      "qualifying_offer_status": "not_established",
+      "recommendation": "Category navigation and marketplace link observed; resolve seller per offer.",
+      "gaps": [
+        "Priority audit not performed."
+      ],
+      "policy_findings": [],
+      "observation_ids": []
+    },
+    {
+      "retailer_id": "gcs",
+      "priority_audit": false,
+      "identity_status": "distributor_lead",
+      "canonical_seller": null,
+      "category_coverage": {
+        "phone": "not_established",
+        "laptop": "not_established",
+        "tablet": "not_established",
+        "monitor": "not_established",
+        "audio": "not_established"
+      },
+      "entry_points": {
+        "catalog": [
+          "https://gcslb.com/"
+        ],
+        "product": [],
+        "policy": [],
+        "identity": [
+          "https://www.meit.biz/resellers/"
+        ]
+      },
+      "discovered": true,
+      "retrieval_tested": false,
+      "qualifying_offer_status": "not_established",
+      "recommendation": "MEIT reseller directory lead; retailer identity/category verification remains open; browser unavailable.",
+      "gaps": [
+        "Priority audit not performed."
+      ],
+      "policy_findings": [],
+      "observation_ids": []
+    },
+    {
+      "retailer_id": "m2",
+      "priority_audit": false,
+      "identity_status": "distributor_lead",
+      "canonical_seller": null,
+      "category_coverage": {
+        "phone": "not_established",
+        "laptop": "not_established",
+        "tablet": "not_established",
+        "monitor": "not_established",
+        "audio": "not_established"
+      },
+      "entry_points": {
+        "catalog": [
+          "https://www.m2.com.lb/"
+        ],
+        "product": [],
+        "policy": [],
+        "identity": [
+          "https://www.meit.biz/resellers/"
+        ]
+      },
+      "discovered": true,
+      "retrieval_tested": false,
+      "qualifying_offer_status": "not_established",
+      "recommendation": "MEIT reseller directory lead; browser 403; retailer verification remains open.",
+      "gaps": [
+        "Priority audit not performed."
+      ],
+      "policy_findings": [],
+      "observation_ids": []
+    },
+    {
+      "retailer_id": "qabass",
+      "priority_audit": false,
+      "identity_status": "distributor_lead",
+      "canonical_seller": null,
+      "category_coverage": {
+        "phone": "not_established",
+        "laptop": "not_established",
+        "tablet": "not_established",
+        "monitor": "not_established",
+        "audio": "not_established"
+      },
+      "entry_points": {
+        "catalog": [
+          "https://qabass.computer/"
+        ],
+        "product": [],
+        "policy": [],
+        "identity": [
+          "https://www.meit.biz/resellers/"
+        ]
+      },
+      "discovered": true,
+      "retrieval_tested": false,
+      "qualifying_offer_status": "not_established",
+      "recommendation": "MEIT directory Tripoli lead; not fetched; prioritize geographic diversity only after identity verification.",
+      "gaps": [
+        "Priority audit not performed."
+      ],
+      "policy_findings": [],
+      "observation_ids": []
+    }
+  ],
+  "observations": [
+    {
+      "url": "https://classcellulars.com/",
+      "checked_at": "2026-11-16T18:51:19.009550+00:00",
+      "error": "HTTP Error 403: Forbidden",
+      "observation_id": "direct-01",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://mojitech.net/",
+      "checked_at": "2026-11-16T18:51:19.017612+00:00",
+      "error": "HTTP Error 403: Forbidden",
+      "observation_id": "direct-02",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://beytech.com.lb/",
+      "checked_at": "2026-11-16T18:51:19.017612+00:00",
+      "status": 200,
+      "final_url": "https://beytech.com.lb/",
+      "bytes": 573555,
+      "sha256": "63f0161fb8cb0ff9510d90f3fdce166c982b93f3fc02c2759ed65d4276a331ee",
+      "content_type": "text/html; charset=UTF-8",
+      "observation_id": "direct-03",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://pcandparts.com/",
+      "checked_at": "2026-11-16T18:51:19.017612+00:00",
+      "error": "HTTP Error 403: Forbidden",
+      "observation_id": "direct-04",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://ayoubcomputers.com/",
+      "checked_at": "2026-11-16T18:51:20.104275+00:00",
+      "status": 200,
+      "final_url": "https://ayoubcomputers.com/",
+      "bytes": 3719727,
+      "sha256": "8f4b97ddf6f3902d049edbfa7f8c20458a12a345a1c51b7f43b7500f5e4ea54c",
+      "content_type": "text/html; charset=UTF-8",
+      "observation_id": "direct-05",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://amhazofficial.com/",
+      "checked_at": "2026-11-16T18:51:20.207664+00:00",
+      "status": 200,
+      "final_url": "https://amhazofficial.com/",
+      "bytes": 84649,
+      "sha256": "c82527a774ced1745a422983b2b7e7b44a0ac74ea9e85c427e6014a6d5676801",
+      "content_type": "text/html; charset=utf-8",
+      "observation_id": "direct-06",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://abedtahan.com/",
+      "checked_at": "2026-11-16T18:51:20.280488+00:00",
+      "status": 200,
+      "final_url": "https://abedtahan.com/",
+      "bytes": 3076427,
+      "sha256": "5f9eb81fc44e87fde15f4f4f8eea290ddbb9b352206763fdaddd2578a94639af",
+      "content_type": "text/html; charset=utf-8",
+      "observation_id": "direct-07",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://www.macrotronics.net/",
+      "checked_at": "2026-11-16T18:51:20.830374+00:00",
+      "status": 200,
+      "final_url": "https://www.macrotronics.net/",
+      "bytes": 574623,
+      "sha256": "ead0957232d4743fcad6f78eac37fa829300aae4800129bb0b3825d4d369b7fc",
+      "content_type": "text/html; charset=utf-8",
+      "observation_id": "direct-08",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://961souq.com/",
+      "checked_at": "2026-11-16T18:51:22.343809+00:00",
+      "status": 200,
+      "final_url": "https://961souq.com/",
+      "bytes": 480935,
+      "sha256": "e250ac6d9060048a41e65cd321ab779e1509b7a16f4f4adc82e5f5f013f95c2b",
+      "content_type": "text/html",
+      "observation_id": "direct-09",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://www.hicart.com/",
+      "checked_at": "2026-11-16T18:51:23.158734+00:00",
+      "status": 200,
+      "final_url": "https://www.hicart.com/",
+      "bytes": 1061160,
+      "sha256": "c8bada8281368efd7b39687865e8554462bd879799ea20353149456e6c7334fa",
+      "content_type": "text/html; charset=utf-8",
+      "observation_id": "direct-10",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://istyle.com.lb/",
+      "checked_at": "2026-11-16T18:51:23.427283+00:00",
+      "status": 200,
+      "final_url": "https://istyle.com.lb/",
+      "bytes": 564161,
+      "sha256": "7743d67c26ebe34ecdfbdb001b335ce80ab6773564a693e2db51a571201d5902",
+      "content_type": "text/html; charset=utf-8",
+      "observation_id": "direct-11",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://ezonelb.com/",
+      "checked_at": "2026-11-16T18:51:23.850361+00:00",
+      "status": 200,
+      "final_url": "https://ezonelb.com/",
+      "bytes": 3342326,
+      "sha256": "e048e7fe428892bc53cd63c685862cd9deb053d1902a4d82b666c4e09921e67d",
+      "content_type": "text/html; charset=UTF-8",
+      "observation_id": "direct-12",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://classcellulars.com/product/iphone-17-pro/",
+      "checked_at": "2026-11-16T18:52:32.188682+00:00",
+      "error": "HTTP Error 403: Forbidden",
+      "observation_id": "direct-13",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://classcellulars.com/faq/",
+      "checked_at": "2026-11-16T18:52:44.475327+00:00",
+      "error": "HTTP Error 403: Forbidden",
+      "observation_id": "direct-14",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://mojitech.net/shop/brands/lenovo-brands/lenovo-ideapad-1-p1-laptop-core-i5-512gb-touch/",
+      "checked_at": "2026-11-16T18:52:32.192657+00:00",
+      "error": "HTTP Error 403: Forbidden",
+      "observation_id": "direct-15",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://mojitech.net/refund_returns/",
+      "checked_at": "2026-11-16T18:52:45.302055+00:00",
+      "error": "HTTP Error 403: Forbidden",
+      "observation_id": "direct-16",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://beytech.com.lb/product/apple-iphone-17-1-sim-2-years-warranty/",
+      "checked_at": "2026-11-16T18:52:32.192657+00:00",
+      "status": 200,
+      "final_url": "https://beytech.com.lb/product/apple-iphone-17-1-sim-2-years-warranty/",
+      "bytes": 662627,
+      "sha256": "29d469427feb8387cfed41f80bbcd05db9b26c4aebd0d9535a14ca3da3a84e9b",
+      "content_type": "text/html; charset=UTF-8",
+      "observation_id": "direct-17",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://beytech.com.lb/warranty-terms-conditions/",
+      "checked_at": "2026-11-16T18:52:46.609123+00:00",
+      "status": 200,
+      "final_url": "https://beytech.com.lb/warranty-terms-conditions/",
+      "bytes": 386524,
+      "sha256": "e60048702cf0738874c059a866a3b553586aa5f80b117a1571374f3705bbee2b",
+      "content_type": "text/html; charset=UTF-8",
+      "observation_id": "direct-18",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://pcandparts.com/product/hp-omnibook-x-flip-16-as0023dx-ultra-7-16gb-1tb-ssd-16-touch-win11-tax-included/",
+      "checked_at": "2026-11-16T18:52:32.192657+00:00",
+      "error": "HTTP Error 403: Forbidden",
+      "observation_id": "direct-19",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://pcandparts.com/shipping-options/",
+      "checked_at": "2026-11-16T18:52:44.720954+00:00",
+      "error": "HTTP Error 403: Forbidden",
+      "observation_id": "direct-20",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://ayoubcomputers.com/laptops/",
+      "checked_at": "2026-11-16T18:52:45.403264+00:00",
+      "status": 200,
+      "final_url": "https://ayoubcomputers.com/laptops/",
+      "bytes": 2488464,
+      "sha256": "38e172db35f60eb25eb1c9cb3eafab01bb816a9c822607d4d2a33f377136019b",
+      "content_type": "text/html; charset=UTF-8",
+      "observation_id": "direct-21",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://ayoubcomputers.com/quick-delivery-guide/",
+      "checked_at": "2026-11-16T18:52:59.320256+00:00",
+      "status": 200,
+      "final_url": "https://ayoubcomputers.com/quick-delivery-guide/",
+      "bytes": 2489461,
+      "sha256": "c43c2128b6de3d6f9fdb54b32e9b0846da1840ee0e231c2b82fcf28eed1ff546",
+      "content_type": "text/html; charset=UTF-8",
+      "observation_id": "direct-22",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://amhazofficial.com/product/1018",
+      "checked_at": "2026-11-16T18:52:45.800557+00:00",
+      "status": 200,
+      "final_url": "https://amhazofficial.com/product/1018",
+      "bytes": 44212,
+      "sha256": "8066706198f44345ff5e75cb551b6803cf73598a8bf890f97a7bbb5df9ca6b4a",
+      "content_type": "text/html; charset=utf-8",
+      "observation_id": "direct-23",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://amhazofficial.com/contact",
+      "checked_at": "2026-11-16T18:52:58.697987+00:00",
+      "status": 200,
+      "final_url": "https://amhazofficial.com/contact",
+      "bytes": 25549,
+      "sha256": "0f4d3d2d84d47622f0a7db59e0ad65d47c68f42a8b2033f926da54fe1be707c0",
+      "content_type": "text/html; charset=utf-8",
+      "observation_id": "direct-24",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://abedtahan.com/products/lenovo-v15-core-i3-13gen-8gb-256gb-ssd-15-7",
+      "checked_at": "2026-11-16T18:52:46.970442+00:00",
+      "error": "HTTP Error 429: Too Many Requests",
+      "observation_id": "direct-25",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://abedtahan.com/policies/shipping-policy",
+      "checked_at": "2026-11-16T18:52:58.863517+00:00",
+      "status": 200,
+      "final_url": "https://abedtahan.com/policies/shipping-policy",
+      "bytes": 1333817,
+      "sha256": "192e53d78cc32177de9ec77029517b3554ea191bd9941991aa82c82034f4e858",
+      "content_type": "text/html; charset=utf-8",
+      "observation_id": "direct-26",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://www.macrotronics.net/products/lenovo-ideapad-1-15iru7-1s83b40008us-core-i5-1335u-15-6-inch-full-hd-laptop-1-year",
+      "checked_at": "2026-11-16T18:52:47.981470+00:00",
+      "error": "HTTP Error 429: Too Many Requests",
+      "observation_id": "direct-27",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://www.macrotronics.net/pages/shipping-and-delivery-policy",
+      "checked_at": "2026-11-16T18:52:59.747070+00:00",
+      "status": 200,
+      "final_url": "https://www.macrotronics.net/pages/shipping-and-delivery-policy",
+      "bytes": 252776,
+      "sha256": "c9408ad05c3aec9349040c022b2e32123f7b249696404dc4a9606b8668d63a56",
+      "content_type": "text/html; charset=utf-8",
+      "observation_id": "direct-28",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://961souq.com/products/aoc-24b36h3-monitor",
+      "checked_at": "2026-11-16T18:52:59.611775+00:00",
+      "status": 200,
+      "final_url": "https://961souq.com/products/aoc-24b36h3-monitor",
+      "bytes": 410328,
+      "sha256": "8ab44f7dca0e9947fd5f0fc611453040b96661baafc8c1fbd0b6fde473c6da42",
+      "content_type": "text/html",
+      "observation_id": "direct-29",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://961souq.com/policies/shipping-policy",
+      "checked_at": "2026-11-16T18:53:12.628266+00:00",
+      "status": 200,
+      "final_url": "https://961souq.com/policies/shipping-policy",
+      "bytes": 357067,
+      "sha256": "9c7b7d62c075625114d7deabba5a5f79c1ccf7a25047a81704afa776aeb1c75c",
+      "content_type": "text/html",
+      "observation_id": "direct-30",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://www.hicart.com/products/apple-iphone-18-pro-256gb-non-active-online-exclusive-available-in-black-silver-glacier-and-burgundy",
+      "checked_at": "2026-11-16T18:53:00.240526+00:00",
+      "error": "HTTP Error 429: Too Many Requests",
+      "observation_id": "direct-31",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://www.hicart.com/pages/warranty",
+      "checked_at": "2026-11-16T18:53:12.109970+00:00",
+      "status": 200,
+      "final_url": "https://www.hicart.com/pages/warranty",
+      "bytes": 743880,
+      "sha256": "765ec416c19444ce4857131b5ab70c5be44cdfb802e1dd9467f0aa1fb7d435f2",
+      "content_type": "text/html; charset=utf-8",
+      "observation_id": "direct-32",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://istyle.com.lb/collections/big-sale",
+      "checked_at": "2026-11-16T18:53:00.928618+00:00",
+      "error": "HTTP Error 429: Too Many Requests",
+      "observation_id": "direct-33",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://istyle.com.lb/pages/store-policy",
+      "checked_at": "2026-11-16T18:53:12.818343+00:00",
+      "status": 200,
+      "final_url": "https://istyle.com.lb/pages/store-policy",
+      "bytes": 365896,
+      "sha256": "2fa32077b42bf8073e1d7db68a3626a17f0394c02a7d1ea4478210967b993330",
+      "content_type": "text/html; charset=utf-8",
+      "observation_id": "direct-34",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://ezonelb.com/product/legion-23-8-inch-fhd-240hz-ips-gaming-monitor-0-5ms-hdr10-pivot/",
+      "checked_at": "2026-11-16T18:53:01.891602+00:00",
+      "status": 200,
+      "final_url": "https://ezonelb.com/product/legion-23-8-inch-fhd-240hz-ips-gaming-monitor-0-5ms-hdr10-pivot/",
+      "bytes": 610021,
+      "sha256": "a11dc499091269020d55811c0ec4199a8a22bd9acf61b25636b35eff2467943b",
+      "content_type": "text/html; charset=UTF-8",
+      "observation_id": "direct-35",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://classcellulars.com/wp-json/wc/store/v1/products?slug=iphone-17",
+      "checked_at": "2026-11-16T18:54:07.918585+00:00",
+      "error": "HTTP Error 403: Forbidden",
+      "observation_id": "direct-36",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://mojitech.net/wp-json/wc/store/v1/products?slug=apple-iphone-17-256gb",
+      "checked_at": "2026-11-16T18:54:07.918585+00:00",
+      "error": "HTTP Error 403: Forbidden",
+      "observation_id": "direct-37",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://beytech.com.lb/wp-json/wc/store/v1/products?slug=apple-iphone-17-1-sim-2-years-warranty",
+      "checked_at": "2026-11-16T18:54:07.918585+00:00",
+      "status": 200,
+      "final_url": "https://beytech.com.lb/wp-json/wc/store/v1/products?slug=apple-iphone-17-1-sim-2-years-warranty",
+      "bytes": 29640,
+      "sha256": "cd83e32d1581153c3c22f8145fd8b4773d45869346fa365c14273a69e649fac9",
+      "content_type": "application/json; charset=UTF-8",
+      "observation_id": "direct-38",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://ezonelb.com/return-warranty-policy/",
+      "checked_at": "2026-11-16T18:54:07.918585+00:00",
+      "status": 200,
+      "final_url": "https://ezonelb.com/return-warranty-policy/",
+      "bytes": 411606,
+      "sha256": "eb93f5a81e63ae8a8e198ff59d9c3d176c93f7f6b74ca231f26884d8e5d21421",
+      "content_type": "text/html; charset=UTF-8",
+      "observation_id": "direct-39",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://istyle.com.lb/products/iphone-air-mg2y4af-a",
+      "checked_at": "2026-11-16T18:54:09.110433+00:00",
+      "status": 200,
+      "final_url": "https://istyle.com.lb/products/iphone-air-mg2y4af-a",
+      "bytes": 718095,
+      "sha256": "014dd3ce4c5dfde8d2ec48af939e130317e7533baf7fd29dcd5d83205b0a3700",
+      "content_type": "text/html; charset=utf-8",
+      "observation_id": "direct-40",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    },
+    {
+      "url": "https://ayoubcomputers.com/acer-aspire-5-a515-58p-53sd-15-6-laptop-intel-core-i5-1335u-ram-8gb-ssd-256gb-intel-iris-xe-nx-khjem-007/",
+      "checked_at": "2026-11-16T18:57:21.713326+00:00",
+      "status": 200,
+      "final_url": "https://ayoubcomputers.com/acer-aspire-5-a515-58p-53sd-15-6-laptop-intel-core-i5-1335u-ram-8gb-ssd-256gb-intel-iris-xe-nx-khjem-007/",
+      "bytes": 2513890,
+      "sha256": "69d1282c0bd76b3139f3b38fb41b303157a0a0dcdef196e291c3e79fad0c200c",
+      "content_type": "text/html; charset=UTF-8",
+      "observation_id": "direct-41",
+      "method": "direct_https_get",
+      "response_body_retained_in_repository": false
+    }
+  ]
+}

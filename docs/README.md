@@ -12,6 +12,6 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 - [Full-product contracts v2](full-product-contracts.md) and [MVP contract v1](mvp-spec.md)
 - [pr policy activation](pr-policy-activation.md)
 - [retailer access requests](retailer-access-requests.md)
-- [source coverage](source-coverage.md)
+- [source coverage](source-coverage.md) and [Lebanese retailer audit / seeds](retailer-audit-2026-11-16.md)
 - [source admission](source-admission.md)
 - [team workflow](team-workflow.md)
