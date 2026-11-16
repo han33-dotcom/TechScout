@@ -1,0 +1,24 @@
+{
+  "profile_version": 1,
+  "validation": "offline synthetic fixtures only; not live retailer activation or qualifying-offer evidence",
+  "sources": [
+    {
+      "source_id": "pcandparts",
+      "origin": "https://pcandparts.com",
+      "platform_hint": "woocommerce",
+      "method": "schema.org Product/Offer with exact SKU binding",
+      "tested_fields": ["variant", "price", "stock", "condition", "ram_gb", "storage_gb", "policy text"],
+      "fixture": "tests/fixtures/shared-extraction/pcandparts.html",
+      "gaps": ["Live metadata SKU/configuration mapping unvalidated", "Direct audit requests returned 403", "Item-specific taxes", "Shipping surcharges and zone/weight quote", "Selected-branch stock", "Purchasability and guaranteed deadline"]
+    },
+    {
+      "source_id": "abed_tahan",
+      "origin": "https://abedtahan.com",
+      "platform_hint": "shopify",
+      "method": "schema.org graph Product/Offer with exact SKU binding",
+      "tested_fields": ["variant", "price", "stock", "condition", "ram_gb", "storage_gb", "policy text"],
+      "fixture": "tests/fixtures/shared-extraction/abed_tahan.html",
+      "gaps": ["Live metadata SKU/configuration mapping unvalidated", "Variant-specific delivery availability", "Item-specific fees", "Selected-branch stock", "Purchasability and guaranteed deadline"]
+    }
+  ]
+}

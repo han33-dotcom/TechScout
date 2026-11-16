@@ -407,6 +407,15 @@ class SourceGate:
         except _Stop as exc:
             raise ValueError('Source is not admitted') from exc
 
+    def check_provider_target(self, source_id, url, *, expect, capability=None):
+        """Managed provider preflight: source scope plus public destination DNS."""
+        limits = self.check_scope(source_id,url,expect=expect,capability=capability)
+        try:
+            self._checked_address(source_id,httpx2.URL(url).host)
+        except _Stop as exc:
+            raise ValueError('Managed target is not a public destination') from exc
+        return limits
+
     def fetch(self, budget: RunBudget, source_id: str, url: str, *, expect: Expect,
               capability: CapabilityRef | None = None) -> FetchOutcome:
         """GET an exact endpoint or the scope named by a current capability reference."""
