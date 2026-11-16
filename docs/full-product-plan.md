@@ -313,15 +313,24 @@ The following initial stack is confirmed, with a USD 500 total development/evalu
 | Reasoning and agent roles | Direct OpenAI with GPT-6.1 Sol (model ID: gpt-6.1-sol). Verify access from the project account during setup. | Orchestration, focused research, evaluation, and final writing |
 | Structured and searchable evidence | PostgreSQL, full-text search, and pgvector | Exact facts and relationships alongside searchable source passages |
 | Embeddings | OpenAI `text-embedding-3-small` | Index changed passages and embed semantic retrieval queries |
-| External discovery | Tavily Search | Find missing products, evidence, and sellers beyond the stored catalog |
+| External discovery | Tavily Search API | Find missing products, evidence, and sellers beyond the stored catalog |
 | Primary page retrieval | Direct retailer integrations through the source gate | Fetch known pages and preserve variant-specific source evidence |
-| Managed retrieval fallback | Firecrawl | Retrieve supported pages when direct retrieval is insufficient |
+| Managed retrieval fallback | Firecrawl Scrape API | Retrieve supported pages when direct retrieval is insufficient |
 
 Firecrawl calls go through a controlled provider adapter with validated target scope, response/provenance checks, and shared budget accounting. Third-party retrieval does not inherit the direct client's DNS/redirect guarantees automatically; document and enforce the corresponding provider boundary. Request fresh content for finalist checks and inspect the returned page/variant state rather than assuming a successful provider response proves freshness. Tavily results remain discovery leads until validated. Additional standalone browser infrastructure is not selected; add it only if a required source demonstrates a concrete need.
 
 Evaluate the selected stack on first-time research and reuse-heavy requests, and measure search yield for Lebanese and international offers. Optional comparisons with Sonnet, Voyage, or SerpApi may inform later substitutions; they do not block starting with the chosen services. Score keyword-only versus hybrid retrieval before claiming a benefit from vectors.
 
 Account for model tokens, discovery, fresh retrieval, extraction, embedding/re-indexing, database/storage, and background refresh. Reuse is expected to avoid repeated work, but there is no fixed savings claim until measured. The previous token/call examples are illustrative workloads, not forecasts for this architecture.
+
+### Search and retrieval API decision
+
+Use Tavily Search and Firecrawl Scrape through direct backend API adapters. Tavily supplies discovery leads. Fetch retailer pages directly through the source gate first and use Firecrawl as the managed fallback for approved URLs.
+
+- **Tavily Search.** Use structured result rows, relevance scores, request IDs, and reported credit usage. The published MCP formatter kept the request ID and represented results as text, omitting score and usage fields. In the offline fixture, a snippet containing a line beginning with URL: could be mistaken for a separate result by a simple text parser. [Search API](https://docs.tavily.com/documentation/api-reference/endpoint/search) · [MCP formatter inspected](https://github.com/tavily-ai/tavily-mcp/blob/70d4d47f9b96539ca143c940bd3562578923d56f/src/format-results.ts#L36) · [Discovery task #57](https://github.com/han33-dotcom/TechScout/issues/57)
+- **Firecrawl Scrape.** Hosted MCP discovery confirmed structured output and cache controls including maxAge and storeInCache. Offline fixtures showed that either transport can pass page metadata to the same checks for cache hits, missing provenance, and a retailer 403. The direct API fits the existing HTTP client and simplifies error tracing. For finalists, use maxAge of zero and validate the returned URL, page status, exact variant, price, and stock. [Scrape API](https://docs.firecrawl.dev/api-reference/endpoint/scrape) · [MCP scrape implementation inspected](https://github.com/firecrawl/firecrawl-mcp-server/blob/a3d0fbe920d800c257f118a487b87773ff5c1320/src/server.ts#L1772) · [Retrieval task #58](https://github.com/han33-dotcom/TechScout/issues/58)
+
+The comparison exercised seven paired offline cases. Public Firecrawl probes returned access errors. Verify authenticated error handling and live retailer retrieval during integration. The controller authorizes, meters, and traces both providers.
 
 ### Provider setup
 
