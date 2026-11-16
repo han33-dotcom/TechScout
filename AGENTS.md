@@ -1,45 +1,40 @@
 # TechScout agent instructions
 
-Policy version: 2. This is the canonical policy for coding and review agents.
-Read [CONTRIBUTING.md](CONTRIBUTING.md) and the relevant project documents.
-Follow applicable nested instructions if they are added later.
+Policy version 3. This is the canonical policy for coding and review agents.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) and the applicable task and repository instructions.
 
 ## Project and architecture
 
-TechScout compares exact-device shopping offers for buyers in Lebanon. The current
-main branch implements shopping/evidence contracts, the source registry and the
-backend foundation (FastAPI app, Postgres storage, migrations); do not describe the
-planned retrieval or shopping flow as implemented.
-- MVP and shared contracts: [docs/mvp-spec.md](docs/mvp-spec.md).
-- Source policy: [docs/source-admission.md](docs/source-admission.md).
-- Contract implementation: `app/contracts.py`; source selection: `app/source_registry.py`.
-- Persistence and app setup: `app/storage.py`, `app/main.py`, `migrations/`; startup in the README.
-- Team workflow and rollout: [docs/team-workflow.md](docs/team-workflow.md).
+TechScout compares electronics for buyers in Lebanon. The full-product scope covers phones,
+laptops, tablets, monitors, and headphones and earbuds. Buyers can search by model or product
+link or describe their needs. Lebanon and new condition are defaults. International offers
+and other conditions require explicit opt-in. Buying takes place on the retailer's site.
 
-Documentation index: [docs/README.md](docs/README.md). General references and meeting
-notes live in the project Wiki after publication. Consult relevant Wiki decisions
-when a task depends on them; summarize code-affecting decisions in reviewed docs.
+The [full-product backlog](https://github.com/han33-dotcom/TechScout/issues/36) defines
+implementation work and dependencies. The [v1 specification](docs/mvp-spec.md) documents
+the existing contract. The [documentation index](docs/README.md) links source and team policy.
 
 ## Starting work
 
-1. Read the linked task, acceptance criteria, owner and human reviewer.
-2. Check repository, branch, working-tree changes and current instructions.
-3. Use a focused work branch from `main`; open implementation PRs into `main`.
-   Do not push directly to `main` or overwrite another collaborator's branch.
-4. Check open PRs before changing shared contracts or introducing infrastructure.
-5. Identify missing context/access rather than inventing requirements or task IDs.
-   Keep unrelated refactoring and dependencies out of a focused task.
+1. Read the issue, prerequisites, acceptance criteria and related PRs. Claim a ready,
+   unassigned issue by assigning yourself. Each task has one active writer.
+2. Check the repository, current branch and worktree. Preserve existing changes.
+3. Branch from current main or the declared stacked base. Open a focused PR. Never push
+   directly to main or overwrite a collaborator's branch.
+4. Check shared interfaces and overlapping work before editing. Record blockers and
+   integration needs on the issue.
 
 ## Product and evidence rules
 
-- Preserve the explicit buyer constraints and current new-smartphone MVP scope.
-  Do not silently expand to checkout, seller messaging, accounts or used devices.
+- Preserve explicit buyer constraints. Approximate budgets are preferences. Treat an explicit
+  maximum as a hard ceiling. Exclude checkout, seller messaging and retailer-account creation.
 - Use Decimal money and the documented serialized contracts. Unknown mandatory
   charges stay unknown, never zero; conflicts cannot masquerade as known facts.
 - Bind evidence to the actual field, product/variant and branch where required.
   Online stock does not prove selected-branch pickup stock; observation is not reservation.
 - An arrival estimate does not satisfy a guaranteed deadline. Keep timestamps aware
-  and preserve UTC normalization and verification within the run.
+  and preserve UTC normalization. Main recommendations require price and stock checks within
+  the current run. Keep provisional candidates and uncertain alternatives visibly separate.
 - Preserve source registry technical review, endpoint scope and positive workload
   limits. The existing project assumption permits public-data retrieval without
   retailer permission emails; do not introduce a permission-first gate.
@@ -63,22 +58,15 @@ preserve those database and build checks. A passing test suite alone does not pr
 
 ## Handoff and Definition of Done
 
-- Link the same-repository GitHub issue URL (Task ID is optional and uses its issue number), in the PR description.
-  Explain the change, validation and limitations. Explain workflow-only changes
-  explicitly when they have no implementation task.
-- Use Related to #NUMBER, not automatic issue-closing keywords. Keep issues open
-  until a teammate records acceptance; Project Status and issue closure are distinct.
-- Record lasting decisions in repository documentation or the linked task, not only
-  in a private assistant conversation.
-- Reviews inspect the current PR head and applicable acceptance criteria. Put actionable
-  findings on GitHub with file/line references, evidence and impact.
-- The author addresses accepted findings and reruns checks. Keep one writer per branch.
-- A human teammate decides approval. Agents do not approve on someone's behalf,
-  merge automatically or dismiss unresolved findings.
-- Implemented means required implementation PRs merged into `main`. Done requires
-  a human to verify acceptance criteria, including deployment/demo work where applicable.
-- Do not claim AI review, Slack notification or Project synchronization happened unless
-  their actual results are available. See the rollout status in the team guide.
+- Link the GitHub issue in the PR and record the change, test results, demonstrated
+  acceptance criteria and limitations. Record lasting design decisions in the repo or issue.
+- Inspect the current diff and fix material defects. Review is optional. Put any actionable
+  findings on the PR with evidence, impact and a file or line reference.
+- The author can merge through GitHub when required CI checks pass on a current branch
+  and the task's acceptance evidence is recorded. The author closes the issue after merge
+  and verification. If work remains, record it on the issue.
+- Report whether code is proposed or merged and whether required acceptance scenarios
+  have been demonstrated.
 
 ## Code Review Rules
 

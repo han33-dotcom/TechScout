@@ -1,16 +1,15 @@
-Project: TechScout
-Task URL:
-<!-- Paste https://github.com/han33-dotcom/TechScout/issues/NUMBER. Optional Task ID: TECH-NUMBER. -->
+## Task
 
-## What & why
-<!-- Explain the change and acceptance criteria. -->
+<!-- Link the GitHub issue and any stacked base PR. -->
 
-## How tested
-<!-- Record actual commands, results, skips and unavailable checks. -->
-- [ ] Offline unittest suite run
-- [ ] Shared contracts and evidence fixtures checked where affected
+## Changes
 
-## Risks / limitations
-<!-- Record unresolved facts, compatibility changes and unavailable validation. -->
+<!-- Describe the user-visible or operational change. -->
 
-<!-- Use Related to #NUMBER; close tasks only after human acceptance, not automatically on merge. -->
+## Verification
+
+<!-- Record commands, results and evidence for the acceptance criteria. -->
+
+## Limitations
+
+<!-- Record outstanding criteria, known gaps or validation you could not run. -->
