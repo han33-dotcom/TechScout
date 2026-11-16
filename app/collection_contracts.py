@@ -6,15 +6,11 @@ from pydantic import Field, StringConstraints, model_validator
 
 from app.contracts import Amount, Count, HttpsUrl, Model, PositiveInt, Text, UtcTime
 from app.contracts_v2 import Category, Contract, Country, Evidence
+from app.source_capabilities import CapabilityRef
 
 ContentKind = Literal['listing', 'specification', 'review', 'policy']
 JobKind = Literal['bootstrap', 'refresh', 'discovery']
 Digest = Annotated[str, StringConstraints(strict=True, pattern=r'^[0-9a-f]{64}$')]
-
-
-class CapabilityRef(Model):
-    capability_id: Text
-    version: Text
 
 
 class RetailerDirectoryEntry(Contract):

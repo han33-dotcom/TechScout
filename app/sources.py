@@ -12,18 +12,19 @@ import hashlib
 import ipaddress
 import json
 from pathlib import Path
-import re
 import socket
 import ssl
 import threading
 import time
-from typing import Literal, NamedTuple, Protocol, runtime_checkable
+from typing import NamedTuple, Protocol, runtime_checkable
 import zlib
 
 import httpcore2
 import httpx2
 
 from app.contracts import SourceLimits, SourcePolicy, ToolError, ToolResult
+from app.source_capabilities import ACTION_PATH_DENYLIST as ACTION_PATH_DENYLIST
+from app.source_capabilities import CapabilityRef, Expect, safe_endpoint
 from app.source_registry import DEFAULT_REGISTRY, get_active_source
 
 MAX_RESPONSE_BYTES = 2 * 1024 * 1024
@@ -41,20 +42,16 @@ RUN_COUNT_TTL_S = 3600.0
 USER_AGENT = 'TechScout/0.1 (+https://github.com/han33-dotcom/TechScout)'
 ACCEPT_ENCODING = 'gzip'
 HEADERS = {'Accept-Encoding': ACCEPT_ENCODING, 'User-Agent': USER_AGENT}
-Expect = Literal['json', 'html']
-ACCEPT: dict[Expect, str] = {'json': 'application/json', 'html': 'text/html'}
+ACCEPT: dict[Expect, tuple[str, ...]] = {
+    'json': ('application/json',),
+    'html': ('text/html',),
+    'xml': ('application/xml', 'text/xml', 'application/rss+xml', 'application/atom+xml'),
+}
 CONTENT_ENCODINGS = frozenset({'identity', 'gzip'})
 MAX_GZIP_LAYERS = 2
 INFLATE_STEP_BYTES = 65536
 REDIRECTS = frozenset({301, 302, 303, 307, 308})
 TRANSIENT_STATUSES = frozenset({502, 503, 504})
-# Words anywhere in the path or query that reach carts, accounts or forms, which change state
-# even over GET (query routes such as ?rest_route=/wc/store/v1/cart), and WordPress's _method,
-# which makes a REST GET act as another method.
-ACTION_PATH_DENYLIST = frozenset({
-    'cart', 'checkout', 'checkouts', 'my-account', 'account', 'login', 'register', 'wp-login.php',
-    'wp-admin', 'xmlrpc.php', 'add-to-cart', 'batch', 'contact-form-7', 'wc-ajax', 'wc-api', '_method',
-})
 # Fixed table, never ipaddress's is_* flags, which change between Python patch releases.
 BLOCKED_NETWORKS = tuple(ipaddress.ip_network(n) for n in (
     '0.0.0.0/8', '10.0.0.0/8', '100.64.0.0/10', '127.0.0.0/8', '169.254.0.0/16', '172.16.0.0/12',
@@ -396,19 +393,22 @@ class SourceGate:
         """Requests counted against the store's per-run cap, for the run controller (MVP 11)."""
         return self._limiter.used(run_id, source_id)
 
-    def fetch(self, budget: RunBudget, source_id: str, url: str, *, expect: Expect) -> FetchOutcome:
-        """GET one allowed endpoint; expect is 'json' or 'html'. The gate is the only retry loop."""
+    def fetch(self, budget: RunBudget, source_id: str, url: str, *, expect: Expect,
+              capability: CapabilityRef | None = None) -> FetchOutcome:
+        """GET an exact endpoint or the scope named by a current capability reference."""
         if not isinstance(budget, RunBudget):
             raise TypeError('fetch needs the run budget handle')
         if type(source_id) is not str or type(url) is not str:  # a str subclass can fake equality
             raise TypeError('source_id and url must be plain strings')
-        if expect not in ACCEPT:
-            raise ValueError("expect must be 'json' or 'html'")
+        if capability is not None and type(capability) is not CapabilityRef:
+            raise TypeError('capability must be a CapabilityRef')
+        if expect not in ACCEPT or (expect == 'xml' and capability is None):
+            raise ValueError("expect must be 'json' or 'html', or 'xml' with a capability")
         started = self._clock()
         chain, attempts, retries, wait, failure = [url], 0, 0, 0.0, None
         while True:
             try:
-                reply = self._attempt(budget, source_id, chain[-1], expect, wait)
+                reply = self._attempt(budget, source_id, chain[-1], expect, wait, capability)
             except _Refusal as stop:
                 errors = [stop.error] if failure is None else [failure, stop.error]
                 break
@@ -438,8 +438,8 @@ class SourceGate:
         return FetchOutcome(source_id, url, tuple(chain), attempts, self._duration_ms(started), tuple(errors))
 
     def _attempt(self, budget: RunBudget, source_id: str, url: str, expect: Expect,
-                 wait: float) -> str | _Reply:
-        endpoints, limits = self._allowed(source_id, url)
+                 wait: float, capability: CapabilityRef | None) -> str | _Reply:
+        allowed, limits = self._allowed(source_id, url, expect, capability)
         slot = self._limiter.acquire(budget.run_id, source_id, limits, self._clock(), wait)
         reservation, start = None, None
         try:
@@ -449,7 +449,7 @@ class SourceGate:
             if slot.wait:
                 self._sleep(slot.wait)
             if slot.wait or slot.queued:  # the store may have been switched off, paused or limited meanwhile
-                endpoints, limits = self._allowed(source_id, url)
+                allowed, limits = self._allowed(source_id, url, expect, capability)
             self._limiter.recheck(slot, limits, self._clock())  # a stall without a wait counts too
             start = self._clock()
             guard = _AttemptGuard(source_id, self._clock, start)
@@ -459,7 +459,7 @@ class SourceGate:
             if still_wanted is not None and not still_wanted():  # cancelled during the wait or lookup
                 raise _Refusal('BUDGET_EXHAUSTED', source_id, 'the run budget refused the call')
             self._limiter.mark_sent(slot, self._clock())
-            return self._exchange(source_id, url, address, expect, endpoints, guard)
+            return self._exchange(source_id, url, address, expect, allowed, guard)
         except _Failure as stop:
             if (stop.retry_after or 0.0) > self._limiter.max_wait_s:  # before a queued request wakes
                 self._limiter.cool_down(source_id, self._clock(), stop.retry_after)
@@ -474,13 +474,24 @@ class SourceGate:
             finally:
                 self._limiter.release(slot)  # also when the budget raises, or the store stays locked
 
-    def _allowed(self, source_id: str, url: str) -> tuple[list[str], SourceLimits]:
-        endpoints, limits = self._admitted(source_id)
-        if url not in endpoints:
+    def _allowed(self, source_id: str, url: str, expect: Expect,
+                 capability: CapabilityRef | None) -> tuple[Callable[[str], bool], SourceLimits]:
+        endpoints, policy = self._admitted(source_id)
+        if capability is None:
+            allowed = endpoints.__contains__
+        else:
+            rule = next((rule for rule in policy.endpoint_capabilities
+                         if rule.capability_id == capability.capability_id
+                         and rule.version == capability.version and rule.expect == expect), None)
+            if rule is None:
+                raise _Refusal('BLOCKED', source_id, 'capability or response format is not configured',
+                               token='blocked:url')
+            allowed = rule.matches
+        if not allowed(url):
             raise _Refusal('BLOCKED', source_id, 'not an allowed endpoint', token='blocked:url')
-        return endpoints, limits
+        return allowed, policy.limits
 
-    def _admitted(self, source_id: str) -> tuple[list[str], SourceLimits]:
+    def _admitted(self, source_id: str) -> tuple[list[str], SourcePolicy]:
         """Re-read the registry each attempt; an unselected or unsafe entry disables the source."""
         try:
             entry = get_active_source(source_id, self._registry_path)
@@ -490,16 +501,15 @@ class SourceGate:
             unchanged = (all(isinstance(s, dict) for s in entries)
                          and [s for s in entries if s.get('id') == source_id] == [entry])
             selected = registry['live_release']['admitted_source_ids']
-            limits = SourcePolicy.model_validate(entry).limits
-            # Every endpoint (at least one) shares the origin's host, so checking them covers it.
+            policy = SourcePolicy.model_validate(entry)
             host = httpx2.URL(entry['origin']).host
-            endpoints = entry['allowed_endpoints']
+            endpoints = entry.get('allowed_endpoints', [])
             if not (unchanged and isinstance(selected, list) and source_id in selected
-                    and all(_safe_url(u, host) for u in endpoints)):
+                    and all(safe_endpoint(u, host) for u in endpoints)):
                 raise ValueError('Source is not selected or not safely configured')
         except (OSError, ValueError, LookupError, TypeError, httpx2.InvalidURL) as exc:
             raise _Refusal('SOURCE_DISABLED', source_id, 'source is not admitted') from exc
-        return endpoints, limits
+        return endpoints, policy
 
     def _checked_address(self, source_id: str, host: str) -> str:
         try:
@@ -529,31 +539,31 @@ class SourceGate:
             network_backend=_PinnedBackend(self._backend, address, guard))
         return transport
 
-    def _exchange(self, source_id: str, url: str, address: str, expect: Expect, endpoints: list[str],
-                  guard: _AttemptGuard) -> str | _Reply:
+    def _exchange(self, source_id: str, url: str, address: str, expect: Expect,
+                  allowed: Callable[[str], bool], guard: _AttemptGuard) -> str | _Reply:
         # Straight to the transport: a client object would add a cookie jar and parse Location
         # headers itself (raising on some) even when it does not follow redirects.
-        request = httpx2.Request('GET', url, headers={**HEADERS, 'Accept': ACCEPT[expect]},
+        request = httpx2.Request('GET', url, headers={**HEADERS, 'Accept': ', '.join(ACCEPT[expect])},
                                  extensions={'timeout': httpx2.Timeout(PHASE_TIMEOUT_S).as_dict()})
         with self._build_transport(address, guard) as transport:
             try:
                 response = transport.handle_request(request)
                 try:
-                    return self._reply(source_id, url, response, expect, endpoints, guard)
+                    return self._reply(source_id, url, response, expect, allowed, guard)
                 finally:
                     response.close()
             except httpx2.HTTPError as exc:
                 raise _transport_failure(source_id, exc) from exc
 
     def _reply(self, source_id: str, url: str, response: httpx2.Response, expect: Expect,
-               endpoints: list[str], guard: _AttemptGuard) -> str | _Reply:
+               allowed: Callable[[str], bool], guard: _AttemptGuard) -> str | _Reply:
         status = response.status_code
         if status in REDIRECTS:
             try:
                 target = str(httpx2.URL(url).join(response.headers['location']))
             except (KeyError, httpx2.InvalidURL):
                 target = None
-            if target not in endpoints:
+            if target is None or not allowed(target):
                 raise _Failure('BLOCKED', source_id, 'redirect is not to an allowed endpoint',
                                token='blocked:redirect')
             return target
@@ -581,14 +591,14 @@ class SourceGate:
         if declared is None and not chunked:
             # A reply ended only by closing the connection looks complete when it is cut off.
             raise _Failure('INVALID_SCHEMA', source_id, 'reply has no length framing')
-        content_type = response.headers.get('content-type', '')
-        if content_type.split(';')[0].strip().lower() != ACCEPT[expect]:
-            raise _Failure('INVALID_SCHEMA', source_id, f'content type is not {ACCEPT[expect]}')
+        content_type = response.headers.get('content-type', '').split(';')[0].strip().lower()
+        if content_type not in ACCEPT[expect]:
+            raise _Failure('INVALID_SCHEMA', source_id, f'content type is not {", ".join(ACCEPT[expect])}')
         body = self._read_body(source_id, response, layers, declared, guard)
         if not body or (expect == 'json' and not _strict_json(body)):
             raise _Failure('INVALID_SCHEMA', source_id, f'empty or malformed {expect} body')
         # The checked media type only: the header's parameters are store text the planner would see.
-        return _Reply(ACCEPT[expect], ', '.join(encodings) or None, body, self._observed_now())
+        return _Reply(content_type, ', '.join(encodings) or None, body, self._observed_now())
 
     def _read_body(self, source_id: str, response: httpx2.Response, layers: int, declared: int | None,
                    guard: _AttemptGuard) -> bytes:
@@ -625,21 +635,6 @@ class SourceGate:
 
     def _duration_ms(self, started: float) -> int:
         return max(0, round((self._clock() - started) * 1000))
-
-
-def _safe_url(url: str, host: str) -> bool:
-    """Canonical HTTPS on the origin's named host: nothing two parsers could read differently."""
-    parsed = httpx2.URL(url)
-    labels = host.split('.')
-    # Every word of the path and query, so '+', '[]' or a path-style query key cannot hide one;
-    # PHP reads '.' in a parameter name as '_', so each word is also checked in that form.
-    words = set(re.findall(r'[a-z0-9._-]+', parsed.raw_path.decode('ascii').lower()))
-    words |= {word.replace('.', '_') for word in words}
-    return (str(parsed) == url and parsed.scheme == 'https' and parsed.host == host
-            and parsed.port is None and not parsed.userinfo and not parsed.fragment and '%' not in url
-            and len(labels) > 1 and all(labels) and labels[-1] != 'localhost'
-            and not re.fullmatch(r'\d+|0x[0-9a-f]*', labels[-1], re.IGNORECASE)
-            and not words & ACTION_PATH_DENYLIST)
 
 
 def _inflate(inflater, pieces: Iterator[bytes]) -> Iterator[bytes]:
