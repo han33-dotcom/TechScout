@@ -5,3 +5,5 @@ SQLAlchemy==2.1.4
 alembic==1.20.0
 psycopg[binary]==3.3.6
 httpx2==2.13.1
+httpcore2==2.13.1
+truststore==0.10.5
