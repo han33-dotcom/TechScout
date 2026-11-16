@@ -518,5 +518,192 @@ class CapturedStoreTests(unittest.TestCase):
                 self.assertEqual([normalize_variant(o).warnings for o in result.offers], [[]] * count)
 
 
+class FullProductIdentityTests(unittest.TestCase):
+    def test_phone_and_laptop_acceptance_recipes(self):
+        from tests.identity_v2 import RECIPES, offer
+        from app.identity import compare_offers, variant_identity_key
+        for case in RECIPES['cases']:
+            with self.subTest(case=case['name']):
+                left = offer(case['category'], 'left')
+                right = offer(case['category'], 'right', case['changes'])
+                result = compare_offers(left, right)
+                self.assertEqual(result.hardware.outcome, case['outcome'])
+                self.assertEqual(result.differing_terms, tuple(case.get('differing_terms', ())))
+                self.assertEqual(result.unresolved_terms, tuple(case.get('unresolved_terms', ())))
+                self.assertEqual(result.terms_outcome,
+                                 'different' if result.differing_terms else
+                                 'unresolved' if result.unresolved_terms else 'matching')
+                self.assertEqual(result.hardware.outcome, compare_offers(right, left).hardware.outcome)
+                # Decisive conclusions cite actual receipts, never invented identity IDs.
+                evidence = {e.evidence_id for o in (left, right) for e in o.evidence}
+                self.assertTrue(set(result.hardware.evidence_ids) <= evidence)
+                if case['outcome'] == 'confirmed_equivalent':
+                    self.assertEqual(variant_identity_key(left), variant_identity_key(right))
+                elif case['outcome'] == 'different_configuration':
+                    self.assertNotEqual(variant_identity_key(left), variant_identity_key(right))
+                else:
+                    self.assertIsNone(variant_identity_key(right))
+
+    def test_unknown_configuration_fields_never_match_each_other(self):
+        from tests.identity_v2 import offer
+        from app.identity import compare_offers, group_variants, variant_identity_key, _LAPTOP_FIELDS
+        for path in ('color', 'specs.sim', 'specs.region', 'specs.storage_gb',
+                     *('specs.' + name for name in _LAPTOP_FIELDS)):
+            category = 'phone' if path in ('color', 'specs.sim', 'specs.region', 'specs.storage_gb') else 'laptop'
+            with self.subTest(path=path):
+                missing = {'state': 'unknown', 'reason': 'not provided'}
+                left = offer(category, 'left', {path: missing})
+                right = offer(category, 'right', {path: missing})
+                self.assertEqual(compare_offers(left, right).hardware.outcome, 'unresolved')
+                self.assertIsNone(variant_identity_key(left))
+                self.assertEqual(len(group_variants([left, right])), 2)
+
+    def test_grouping_deduplicates_hardware_but_preserves_sellers_and_terms(self):
+        from tests.identity_v2 import offer
+        from app.identity import group_variants, seller_offer_key
+        left = offer()
+        right = offer(offer_id='right', changes={'warranty.months': 24, 'activation': 'activated'})
+        other = offer(offer_id='other', changes={'specs.sim': 'esim-only'})
+        before = [o.model_dump_json() for o in (left, right, other)]
+        groups = group_variants([left, right, other, left])
+        self.assertEqual([g.offers for g in groups], [(left, right), (other,)])
+        self.assertNotEqual(seller_offer_key(left), seller_offer_key(right))
+        self.assertEqual(left.source_variant_id, right.source_variant_id)  # deliberately shared SKU
+        self.assertEqual(before, [o.model_dump_json() for o in (left, right, other)])
+        self.assertEqual(groups[0].offers[1].warranty.months.value, 24)
+        self.assertEqual(groups[0].offers[1].activation.value, 'activated')
+
+    def test_merchant_fulfiller_and_route_are_part_of_offer_identity(self):
+        from tests.identity_v2 import offer
+        from app.identity import seller_offer_key
+        from app.contracts_v2 import Offer as OfferV2
+        left = offer()
+        for section, key, value in (('seller', 'seller_id', 'another-merchant'),
+                                    ('route', 'route_id', 'another-route'),
+                                    (None, 'fulfiller_id', 'another-fulfiller')):
+            data = left.model_dump(mode='json')
+            target = data[section] if section else data
+            target[key] = value
+            right = OfferV2.model_validate(data)
+            self.assertNotEqual(seller_offer_key(left), seller_offer_key(right))
+
+    def test_existing_canonical_id_cannot_override_different_hardware(self):
+        from tests.identity_v2 import offer
+        from app.identity import compare_offers, group_variants
+        left = offer()
+        right = offer(offer_id='right', changes={'specs.storage_gb': 512})
+        right = right.model_copy(update={'variant': right.variant.model_copy(
+            update={'variant_id': left.variant.variant_id})})
+        comparison = compare_offers(left, right)
+        self.assertEqual(comparison.hardware.outcome, 'unresolved')
+        self.assertIn('storage_gb', comparison.differing_identity_fields)
+        self.assertIn('canonical_variant_id_collision', comparison.unresolved_identity_fields)
+        self.assertEqual(len(group_variants([left, right])), 2)
+
+    def test_missing_product_evidence_is_unresolved_and_cannot_group(self):
+        from tests.identity_v2 import offer
+        from app.identity import compare_offers, group_variants
+        left, right = offer(), offer(offer_id='right')
+        right = right.model_copy(update={'evidence': tuple(e for e in right.evidence
+                                 if e.field_path != 'variant.product.model')})
+        self.assertIn('model', compare_offers(left, right).unresolved_identity_fields)
+        self.assertEqual(len(group_variants([left, right])), 2)
+
+    def test_typographic_aliases_preserve_component_numbers_and_suffixes(self):
+        from tests.identity_v2 import offer
+        from app.identity import compare_offers
+        pairs = [
+            ('Intel Core i7-1355U', 'Intel Core i7-1355H', 'different_configuration'),
+            ('Intel Core i7-1355U', 'intel core i7 – 1355u', 'confirmed_equivalent'),
+            ('Example 2.4', 'Example 24', 'different_configuration'),
+            ('RTX 4060', 'RTX 4060 Ti', 'different_configuration'),
+        ]
+        for a, b, outcome in pairs:
+            with self.subTest(a=a, b=b):
+                left = offer('laptop', 'left', {'specs.cpu': a})
+                right = offer('laptop', 'right', {'specs.cpu': b})
+                self.assertEqual(compare_offers(left, right).hardware.outcome, outcome)
+
+    def test_new_phone_model_vocabulary_rejects_substring_collisions(self):
+        for text, expected in [
+            ('Samsung Galaxy S25+ 256GB', 'Galaxy S25 Plus'),
+            ('Galaxy S25 Ultra 256GB', 'Galaxy S25 Ultra'),
+            ('Galaxy S250 256GB', None), ('Galaxy S25 FE', None),
+            ('Google Pixel 9 Pro XL 128GB', 'Pixel 9 Pro XL'),
+            ('Pixel 9a', 'Pixel 9a'), ('Pixel 9abc', None),
+            ('Pixel 9 Pro XL Max', None),
+        ]:
+            with self.subTest(text=text):
+                self.assertEqual(match_model(text), expected)
+
+    def test_decimal_context_does_not_collapse_display_identity(self):
+        from decimal import localcontext
+        from tests.identity_v2 import offer
+        from app.identity import compare_offers, variant_identity_key
+        left = offer('laptop', 'left', {'specs.display_inches': '14.1'})
+        right = offer('laptop', 'right', {'specs.display_inches': '14.2'})
+        with localcontext() as context:
+            context.prec = 1
+            self.assertNotEqual(variant_identity_key(left), variant_identity_key(right))
+            self.assertEqual(compare_offers(left, right).hardware.outcome, 'different_configuration')
+
+    def test_missing_manufacturer_and_model_receipts_cannot_be_borrowed(self):
+        from tests.identity_v2 import offer
+        from app.identity import compare_offers
+        left, right = offer(), offer(offer_id='right')
+        data = right.model_dump(mode='json')
+        for receipt in data['evidence']:
+            if receipt['field_path'].startswith('variant.product.'):
+                receipt.update(scope='source', product_id=None, variant_id=None)
+        from app.contracts_v2 import Offer as OfferV2
+        result = compare_offers(left, OfferV2.model_validate(data))
+        self.assertEqual(result.hardware.outcome, 'unresolved')
+        self.assertIn('model', result.unresolved_identity_fields)
+        self.assertIn('manufacturer', result.unresolved_identity_fields)
+
+    def test_repeated_offer_conflicts_are_not_silently_discarded(self):
+        from tests.identity_v2 import offer
+        from app.identity import group_variants, compare_offers
+        left = offer()
+        changed = offer(changes={'condition': 'used'})
+        with self.assertRaisesRegex(ValueError, 'Conflicting observations'):
+            group_variants([left, changed])
+        with self.assertRaisesRegex(ValueError, 'distinct'):
+            compare_offers(left, changed)
+
+    def test_display_fields_roundtrip_and_are_available_to_corpus_validation(self):
+        from tests.identity_v2 import offer
+        from app.contracts_v2 import Offer as OfferV2
+        from app.corpus_contracts import FieldObservation
+        left = offer('laptop')
+        self.assertEqual(OfferV2.model_validate_json(left.model_dump_json()), left)
+        for field in ('display_width_px', 'display_height_px', 'display_refresh_hz',
+                      'display_panel', 'display_touchscreen'):
+            fact = getattr(left.variant.specs, field)
+            receipt = next(e for e in left.evidence if e.field_path == 'variant.specs.' + field)
+            observation = FieldObservation.model_validate({
+                'fact': fact.model_dump(mode='json'), 'evidence': [receipt.model_dump(mode='json')],
+            })
+            self.assertEqual(observation.fact.value, fact.value)
+        legacy = json.loads((ROOT / 'tests/fixtures/v2/offers.json').read_text())['laptop_provisional']
+        old = OfferV2.model_validate(legacy)
+        self.assertIsNone(old.variant.specs.display_panel)
+        # Wrong types must not turn into known display facts.
+        from pydantic import ValidationError
+        for field, value in [('display_width_px', 0), ('display_refresh_hz', True),
+                             ('display_touchscreen', 'false'), ('display_inches', 14.5)]:
+            with self.subTest(field=field), self.assertRaises(ValidationError):
+                offer('laptop', changes={'specs.' + field: value})
+
+    def test_unsupported_categories_are_not_claimed_equivalent(self):
+        from app.contracts_v2 import Offer as OfferV2
+        from app.identity import compare_offers, group_variants
+        data = json.loads((ROOT / 'tests/fixtures/v2/offers.json').read_text())
+        left = OfferV2.model_validate(data['tablet'])
+        right = left.model_copy(update={'offer_id': 'other-tablet'})
+        self.assertEqual(compare_offers(left, right).hardware.outcome, 'unresolved')
+        self.assertEqual(len(group_variants([left, right])), 2)
+
+
 if __name__ == '__main__':
     unittest.main()

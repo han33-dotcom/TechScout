@@ -7,14 +7,19 @@ link that names another color adds a warning with fixed wording and leaves the c
 """
 from collections.abc import Sequence
 from datetime import datetime, timezone
+from decimal import Decimal
+import hashlib
+import json
 import re
 import unicodedata
+from typing import Literal
 from urllib.parse import parse_qsl, unquote, urlsplit
 
 from pydantic import Field
 
 from app.contracts import Fact, Model, Offer, PositiveInt, Sim, Text
 from app.devices import KNOWN_MANUFACTURERS, canonical_manufacturer, find_model, spell_plus
+from app import contracts_v2 as v2
 
 IDENTITY_FIELDS = ('manufacturer', 'model', 'storage_gb', 'color', 'sim', 'region')
 
@@ -350,3 +355,201 @@ def deduplicate(offers: Sequence[Offer]) -> DedupResult:
         else:
             result.append(offer)
     return DedupResult(offers=result, merged=merged, conflicts=conflicts)
+
+
+# Full-product identity operates on v2 offers. The v1 reader/eligibility path above stays intact.
+# These fields define the supported comparison profile, not every possible physical property.
+_PHONE_FIELDS = ('storage_gb', 'sim', 'region')
+_LAPTOP_FIELDS = (
+    'cpu', 'gpu', 'ram_gb', 'storage_gb', 'operating_system', 'display_inches',
+    'display_width_px', 'display_height_px', 'display_refresh_hz', 'display_panel',
+    'display_touchscreen',
+)
+
+
+class OfferComparison(Model):
+    hardware: v2.MatchAssessment
+    differing_identity_fields: tuple[Text, ...] = ()
+    unresolved_identity_fields: tuple[Text, ...] = ()
+    # Applies only to the enumerated terms, never prices, fulfillment or complete purchases.
+    terms_outcome: Literal['matching', 'different', 'unresolved']
+    differing_terms: tuple[Text, ...] = ()
+    unresolved_terms: tuple[Text, ...] = ()
+
+
+class VariantGroup(Model):
+    identity_key: Text | None
+    offers: tuple[v2.Offer, ...]
+
+
+def _identity_text(value: str) -> str:
+    # Preserve punctuation, suffixes and token boundaries: 1355U != 1355H, 2.4 != 24,
+    # S25+ != S25. Only typographic dashes and whitespace/case are normalized.
+    text = unicodedata.normalize('NFKC', value).casefold()
+    text = re.sub(r'[\u2010-\u2015]', '-', text)
+    text = re.sub(r'\s*-\s*', '-', text)
+    return ' '.join(text.split())
+
+
+def _identity_value(path: str, value):
+    if not isinstance(value, str):
+        return value
+    if path == 'manufacturer':
+        aliases = {'hewlett-packard': 'hp', 'hewlett packard': 'hp',
+                   'asus': 'asus', 'asustek': 'asus'}
+        return aliases.get(_identity_text(value), _identity_text(value)) or None
+    if path == 'model':
+        # Exact aliases only; laptop/future model strings do not need an enumerated catalog.
+        return _identity_text(known_model(value) or spell_plus(value)) or None
+    if path == 'color':
+        return _identity_text(canonical_color(value)) or None
+    if path == 'region':
+        return {'lebanon': 'lb', 'united states': 'us', 'united arab emirates': 'ae'}.get(
+            _identity_text(value), _identity_text(value)) or None
+    return _identity_text(value) or None
+
+
+def _identity_facts(offer: v2.Offer) -> dict[str, tuple[object | None, tuple[str, ...]]]:
+    """Known normalized values with their own source evidence; missing is never a wildcard."""
+    variant = offer.variant
+    facts = {}
+    for name in ('manufacturer', 'model'):
+        ids = tuple(e.evidence_id for e in offer.evidence
+                    if e.field_path == 'variant.product.' + name
+                    and e.scope in ('product', 'variant')
+                    and e.product_id == offer.source_product_id
+                    and (e.scope != 'variant' or e.variant_id == offer.source_variant_id))
+        facts[name] = (_identity_value(name, getattr(variant.product, name)) if ids else None, ids)
+    names = _PHONE_FIELDS if variant.product.category == 'phone' else _LAPTOP_FIELDS
+    if variant.product.category not in ('phone', 'laptop'):
+        return facts
+    for name in (*names, 'color'):
+        fact = variant.color if name == 'color' else getattr(variant.specs, name)
+        facts[name] = ((_identity_value(name, fact.value), tuple(fact.evidence_ids))
+                       if fact is not None and fact.state == 'known' else (None, ()))
+    return facts
+
+
+def _terms(offer: v2.Offer) -> dict[str, Fact | None]:
+    terms = {'condition': offer.condition, 'payment': offer.payment}
+    if offer.variant.product.category == 'phone' or offer.activation is not None:
+        terms['activation'] = offer.activation
+    for name in ('provider', 'months', 'territory'):
+        terms['warranty.' + name] = getattr(offer.warranty, name) if offer.warranty else None
+    return terms
+
+
+def compare_offers(left: v2.Offer, right: v2.Offer) -> OfferComparison:
+    """Compare evidenced phone/laptop hardware, separately exposing purchase-term differences.
+
+    A decisive known difference wins over other unknowns. Unsupported categories and absent
+    evidence remain unresolved. Never rewrite source/canonical IDs or lend facts across sellers.
+    """
+    if left.offer_id == right.offer_id:
+        raise ValueError('Compare distinct offer observations')
+    a, b = _identity_facts(left), _identity_facts(right)
+    category_a, category_b = left.variant.product.category, right.variant.product.category
+    differing, unresolved, evidence = [], [], []
+    if category_a != category_b:
+        # Category metadata has no field-bound Fact in v2; do not invent evidence for it.
+        unresolved.append('category')
+    elif category_a not in ('phone', 'laptop'):
+        unresolved.append('unsupported_category')
+    else:
+        for name in a:
+            av, ae = a[name]
+            bv, be = b[name]
+            if av is None or bv is None:
+                unresolved.append(name)
+            elif av != bv:
+                differing.append(name)
+                evidence.extend((*ae, *be))
+        if not differing and not unresolved:
+            evidence = [eid for pairs in (a, b) for _, ids in pairs.values() for eid in ids]
+    outcome = ('different_configuration' if differing else
+               'unresolved' if unresolved else 'confirmed_equivalent')
+    if differing and left.variant.variant_id == right.variant.variant_id:
+        # A reused canonical ID cannot override conflicting hardware. Keep the conflict visible;
+        # the existing MatchAssessment wire contract forbids different configurations with one ID.
+        outcome = 'unresolved'
+        unresolved.append('canonical_variant_id_collision')
+    reasons = tuple([*('identity field differs: ' + name for name in differing),
+                     *('identity field unresolved: ' + name for name in unresolved)]
+                    or ['All supported hardware identity fields agree with source evidence'])
+    ta, tb = _terms(left), _terms(right)
+    term_differences, term_unknowns = [], []
+    for name in dict.fromkeys((*ta, *tb)):
+        x, y = ta.get(name), tb.get(name)
+        if x is None or y is None or x.state != 'known' or y.state != 'known':
+            term_unknowns.append(name)
+        elif x.value != y.value:
+            term_differences.append(name)
+    return OfferComparison(
+        hardware=v2.MatchAssessment(
+            left_offer_id=left.offer_id, right_offer_id=right.offer_id,
+            left_variant_id=left.variant.variant_id, right_variant_id=right.variant.variant_id,
+            outcome=outcome, reasons=reasons, evidence_ids=tuple(dict.fromkeys(evidence))),
+        differing_identity_fields=tuple(differing), unresolved_identity_fields=tuple(unresolved),
+        terms_outcome='different' if term_differences else 'unresolved' if term_unknowns else 'matching',
+        differing_terms=tuple(term_differences), unresolved_terms=tuple(term_unknowns),
+    )
+
+
+def variant_identity_key(offer: v2.Offer) -> str | None:
+    """Versioned cross-seller hardware key only for a fully evidenced supported configuration."""
+    if offer.variant.product.category not in ('phone', 'laptop'):
+        return None
+    facts = _identity_facts(offer)
+    if any(value is None for value, _ in facts.values()):
+        return None
+    values = {name: _decimal_identity(value) if isinstance(value, Decimal) else value
+              for name, (value, _) in facts.items()}
+    payload = json.dumps([offer.variant.product.category, values], sort_keys=True,
+                         ensure_ascii=True, separators=(',', ':'))
+    return 'hardware-v1:' + hashlib.sha256(payload.encode('utf-8')).hexdigest()
+
+
+def _decimal_identity(value: Decimal) -> tuple:
+    # Decimal.normalize() rounds in the caller's decimal context. A hardware key must not
+    # collapse distinct exact values, even when that context has low precision.
+    sign, digits, exponent = value.as_tuple()
+    digits = list(digits)
+    while len(digits) > 1 and digits[-1] == 0:
+        digits.pop()
+        exponent += 1
+    return sign, digits, exponent
+
+
+def seller_offer_key(offer: v2.Offer) -> tuple[str | None, ...]:
+    """A source-local listing identity includes its merchant, fulfiller and purchase route."""
+    return (offer.retailer_id, offer.source_id, offer.seller.seller_id, offer.fulfiller_id,
+            offer.source_product_id, offer.source_variant_id, offer.route.kind, offer.route.route_id)
+
+
+def group_variants(offers: Sequence[v2.Offer]) -> tuple[VariantGroup, ...]:
+    """Deduplicate hardware groups while preserving every seller offer and its evidence.
+
+    Unknown configurations stay separate even when a source SKU or canonical variant ID agrees.
+    Repeated identical payloads are idempotent. Conflicting payloads for a global offer ID must
+    be resolved by the caller rather than silently selecting one by an unrelated policy timestamp.
+    """
+    groups: list[list[v2.Offer]] = []
+    keys: list[str | None] = []
+    positions: dict[str, int] = {}
+    seen: dict[str, v2.Offer] = {}
+    for offer in offers:
+        if offer.offer_id in seen:
+            if seen[offer.offer_id] != offer:
+                raise ValueError('Conflicting observations share an offer ID')
+            continue
+        seen[offer.offer_id] = offer
+        key = variant_identity_key(offer)
+        if key is not None and key in positions:
+            groups[positions[key]].append(offer)
+        else:
+            if key is not None:
+                positions[key] = len(groups)
+            keys.append(key)
+            groups.append([offer])
+    return tuple(VariantGroup(identity_key=key, offers=tuple(items))
+                 for key, items in zip(keys, groups))

@@ -1,0 +1,326 @@
+{
+  "description": "Synthetic source-observation recipes used by tests.identity_v2. No retailer claims. Each known field gets a separate variant-scoped evidence receipt; absent/unknown fields retain uncertainty.",
+  "phone": {
+    "manufacturer": "Samsung",
+    "model": "Galaxy S25",
+    "color": "Black",
+    "specs": {
+      "storage_gb": 256,
+      "sim": "physical+esim",
+      "region": "LB"
+    }
+  },
+  "laptop": {
+    "manufacturer": "Lenovo",
+    "model": "ThinkPad T14 Gen 5",
+    "color": "Black",
+    "specs": {
+      "cpu": "Intel Core Ultra 5 125U",
+      "gpu": "Intel Graphics",
+      "ram_gb": 16,
+      "storage_gb": 512,
+      "operating_system": "Windows 11 Pro",
+      "display_inches": "14.0",
+      "display_width_px": 1920,
+      "display_height_px": 1200,
+      "display_refresh_hz": 60,
+      "display_panel": "IPS",
+      "display_touchscreen": false
+    }
+  },
+  "cases": [
+    {
+      "name": "phone spelling",
+      "category": "phone",
+      "changes": {
+        "manufacturer": "samsung",
+        "model": "galaxy s25",
+        "color": "noir",
+        "specs.region": "Lebanon"
+      },
+      "outcome": "confirmed_equivalent"
+    },
+    {
+      "name": "phone Plus suffix",
+      "category": "phone",
+      "changes": {
+        "model": "Galaxy S25+"
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "phone numeric substring",
+      "category": "phone",
+      "changes": {
+        "model": "Galaxy S250"
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "phone region",
+      "category": "phone",
+      "changes": {
+        "specs.region": "US"
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "phone regional grouping unsafe",
+      "category": "phone",
+      "changes": {
+        "specs.region": "Middle East"
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "phone SIM",
+      "category": "phone",
+      "changes": {
+        "specs.sim": "esim-only"
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "phone storage",
+      "category": "phone",
+      "changes": {
+        "specs.storage_gb": 512
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "phone unknown SIM",
+      "category": "phone",
+      "changes": {
+        "specs.sim": {
+          "state": "unknown",
+          "reason": "not published"
+        }
+      },
+      "outcome": "unresolved"
+    },
+    {
+      "name": "phone conflicting region",
+      "category": "phone",
+      "changes": {
+        "specs.region": {
+          "state": "conflict",
+          "alternatives": [
+            "LB",
+            "US"
+          ],
+          "reason": "sources disagree"
+        }
+      },
+      "outcome": "unresolved"
+    },
+    {
+      "name": "phone activated",
+      "category": "phone",
+      "changes": {
+        "activation": "activated"
+      },
+      "outcome": "confirmed_equivalent",
+      "differing_terms": [
+        "activation"
+      ]
+    },
+    {
+      "name": "phone used",
+      "category": "phone",
+      "changes": {
+        "condition": "used"
+      },
+      "outcome": "confirmed_equivalent",
+      "differing_terms": [
+        "condition"
+      ]
+    },
+    {
+      "name": "phone warranty provider",
+      "category": "phone",
+      "changes": {
+        "warranty.provider": "Other Service"
+      },
+      "outcome": "confirmed_equivalent",
+      "differing_terms": [
+        "warranty.provider"
+      ]
+    },
+    {
+      "name": "phone warranty duration",
+      "category": "phone",
+      "changes": {
+        "warranty.months": 24
+      },
+      "outcome": "confirmed_equivalent",
+      "differing_terms": [
+        "warranty.months"
+      ]
+    },
+    {
+      "name": "phone warranty territory",
+      "category": "phone",
+      "changes": {
+        "warranty.territory": "US"
+      },
+      "outcome": "confirmed_equivalent",
+      "differing_terms": [
+        "warranty.territory"
+      ]
+    },
+    {
+      "name": "phone unknown activation",
+      "category": "phone",
+      "changes": {
+        "activation": null
+      },
+      "outcome": "confirmed_equivalent",
+      "unresolved_terms": [
+        "activation"
+      ]
+    },
+    {
+      "name": "phone warranty description ambiguity",
+      "category": "phone",
+      "changes": {
+        "warranty.provider": {
+          "state": "unknown",
+          "reason": "TECH+ description does not identify a provider"
+        }
+      },
+      "outcome": "confirmed_equivalent",
+      "unresolved_terms": [
+        "warranty.provider"
+      ]
+    },
+    {
+      "name": "laptop equivalent spelling",
+      "category": "laptop",
+      "changes": {
+        "manufacturer": "LENOVO",
+        "model": "thinkpad t14 gen 5",
+        "specs.cpu": "intel core ultra 5 125u",
+        "specs.display_inches": "14"
+      },
+      "outcome": "confirmed_equivalent"
+    },
+    {
+      "name": "laptop generation",
+      "category": "laptop",
+      "changes": {
+        "model": "ThinkPad T14 Gen 5s"
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "laptop CPU suffix",
+      "category": "laptop",
+      "changes": {
+        "specs.cpu": "Intel Core Ultra 5 125H"
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "laptop GPU",
+      "category": "laptop",
+      "changes": {
+        "specs.gpu": "NVIDIA RTX 4060 Laptop GPU"
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "laptop RAM",
+      "category": "laptop",
+      "changes": {
+        "specs.ram_gb": 32
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "laptop storage",
+      "category": "laptop",
+      "changes": {
+        "specs.storage_gb": 1024
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "laptop display size",
+      "category": "laptop",
+      "changes": {
+        "specs.display_inches": "14.5"
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "laptop display resolution",
+      "category": "laptop",
+      "changes": {
+        "specs.display_width_px": 2560,
+        "specs.display_height_px": 1600
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "laptop refresh rate",
+      "category": "laptop",
+      "changes": {
+        "specs.display_refresh_hz": 120
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "laptop panel",
+      "category": "laptop",
+      "changes": {
+        "specs.display_panel": "OLED"
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "laptop touchscreen",
+      "category": "laptop",
+      "changes": {
+        "specs.display_touchscreen": true
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "laptop OS",
+      "category": "laptop",
+      "changes": {
+        "specs.operating_system": "Windows 11 Home"
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "laptop absent GPU",
+      "category": "laptop",
+      "changes": {
+        "specs.gpu": null
+      },
+      "outcome": "unresolved"
+    },
+    {
+      "name": "laptop unknown display",
+      "category": "laptop",
+      "changes": {
+        "specs.display_panel": {
+          "state": "unknown",
+          "reason": "panel type not published"
+        }
+      },
+      "outcome": "unresolved"
+    },
+    {
+      "name": "known difference despite unknown",
+      "category": "laptop",
+      "changes": {
+        "specs.ram_gb": 32,
+        "specs.gpu": null
+      },
+      "outcome": "different_configuration"
+    }
+  ]
+}
