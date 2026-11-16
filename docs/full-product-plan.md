@@ -2,7 +2,7 @@
 
 Approved delivery plan. Implementation status updated 16 November 2026.
 
-Build one Path A submission that compares electronics offers in Lebanon and international markets, explains how they meet the buyer's needs, and distinguishes verified payable totals from incomplete or estimated landed costs. Section 9 sets out a provisional fourteen-day sequence. Calendar dates depend on the course deadline and team availability.
+Build one Path A submission that compares electronics offers in Lebanon and international markets, explains how they meet the buyer's needs, and distinguishes verified payable totals from incomplete or estimated landed costs. The submission deadline is Saturday, December 5, 2026. Section 9 lists the target checkpoints leading to submission.
 
 The [GitHub backlog](https://github.com/han33-dotcom/TechScout/issues/36) contains the 53 delivery tasks, their prerequisites and the crosswalk from the earlier MVP issues. Use GitHub issue state and assignees to see live progress.
 
@@ -302,7 +302,7 @@ The following initial stack is confirmed, with a USD 500 total development/evalu
 
 | Layer | Selected implementation | Use |
 |---|---|---|
-| Reasoning and agent roles | Direct OpenAI, selected model GPT-6.1 Sol. Verify the account-specific API model ID and capabilities during setup. | Orchestration, focused research, evaluation, and final writing |
+| Reasoning and agent roles | Direct OpenAI with GPT-6.1 Sol (model ID: gpt-6.1-sol). Verify access from the project account during setup. | Orchestration, focused research, evaluation, and final writing |
 | Structured and searchable evidence | PostgreSQL, full-text search, and pgvector | Exact facts and relationships alongside searchable source passages |
 | Embeddings | OpenAI `text-embedding-3-small` | Index changed passages and embed semantic retrieval queries |
 | External discovery | Tavily Search | Find missing products, evidence, and sellers beyond the stored catalog |
@@ -314,6 +314,12 @@ Firecrawl calls go through a controlled provider adapter with validated target s
 Evaluate the selected stack on first-time research and reuse-heavy requests, and measure search yield for Lebanese and international offers. Optional comparisons with Sonnet, Voyage, or SerpApi may inform later substitutions; they do not block starting with the chosen services. Score keyword-only versus hybrid retrieval before claiming a benefit from vectors.
 
 Account for model tokens, discovery, fresh retrieval, extraction, embedding/re-indexing, database/storage, and background refresh. Reuse is expected to avoid repeated work, but there is no fixed savings claim until measured. The previous token/call examples are illustrative workloads, not forecasts for this architecture.
+
+### Provider setup
+
+Provider accounts for TechScout still need configuration. Set up a project on the OpenAI API platform for GPT-6.1 Sol and embeddings. OpenAI manages ChatGPT and API billing separately. The OpenAI model catalog lists gpt-6.1-sol, with function calling and structured outputs on the Responses API. Check project access and applicable API credits or billing during setup. [OpenAI API quickstart](https://developers.openai.com/api/docs/quickstart) · [GPT-6.1 Sol model documentation](https://developers.openai.com/api/docs/models/gpt-6.1-sol) · [OpenAI billing](https://help.openai.com/en/articles/9039756-managing-billing-for-chatgpt-and-the-api-platform)
+
+Create backend API credentials for Tavily Search and the Firecrawl retrieval fallback. Store the keys in local backend configuration. Run a bounded credential and capability smoke test after account and budget configuration. Use fixture clients for implementation and routine tests. [Tavily setup](https://docs.tavily.com/) · [Firecrawl setup](https://docs.firecrawl.dev/introduction)
 
 ## 4. Data model and API contracts
 
@@ -511,23 +517,23 @@ The [GitHub backlog](https://github.com/han33-dotcom/TechScout/issues/36) tracks
 
 Establish shared interfaces and fixtures early: `search_candidates`, `retrieve_evidence`, `assess_freshness`, `persist_observations`, `fetch_offer`, `fetch_policy`, `normalize_variant`, `check_eligibility`, `calculate_cost`, `verify_finalists`, and agent/run envelopes. The backlog must identify actual prerequisite edges, avoiding both a single serial queue and the claim that all tasks are independent. Keep the first complete live search and subsequent integration milestones explicit so completing isolated modules does not substitute for a working application.
 
-## 9. Fourteen-day delivery schedule
+## 9. Delivery schedule
 
-Use these relative milestones to plan around the official deadline and team availability. The first workflow and shopping-stack integration steps are complete. Size the remaining work and reserve evaluation, report, and rehearsal time before committing to dates.
+Saturday, December 5, 2026 is the submission deadline. The checkpoints below are internal targets. Record the submission cutoff time and live-demo slot when announced.
 
 These are integration checkpoints within one full-product build, not separate product releases.
 
-| Days | Parallel work and integration outcome |
+| Target dates | Parallel work and integration outcome |
 |---|---|
-| 1 | Confirm provider and local setup, then start shared contracts and fixtures, source audits, and evaluation protocol work. |
-| 2-3 | Claim ready tasks to extend the existing adapters, identity, eligibility/cost and bounded execution rather than rebuilding them; add discovery and durable corpus ingestion; and form, session/API shell, agent wiring and local retrieval. Integrate one real search from browser to evidence-backed result, then demonstrate reuse with live finalist refresh by end of Day 3 |
-| 4-5 | Claim ready tasks for remaining domestic/international sources and ingestion; category rules, totals, route states, freshness/index/retention controls and shared budgets; and hybrid retrieval, evaluator/writer, clarification, progress, comparisons and refinement. Demonstrate agentic RAG across multiple categories and both domestic/international result states |
-| 6-7 | Integrate live finalist verification, changed-offer recovery, cancellation, ownership/security controls, evidence views, history/export, and operator metrics. Complete one full demo including a failure case; gather buyer feedback |
-| 8-9 | Close measured coverage gaps; fix integration and usability failures; calibrate budgets; finalize failure matrix/threat model; reproduce setup; freeze code/model/prompts/rules for evaluation |
-| 10-11 | Run held-out comparisons and controlled benchmark subset; independently verify decisive facts; compute validity, success, savings, latency, and cost; draft report figures while runs execute |
-| 12 | Fix critical failures, rerun affected cases transparently, finish report/API/architecture docs and poster; keep original frozen-run results separate from revised-system results |
-| 13 | Fresh-machine or clean-environment reproduction; live-demo rehearsal; edge-case questions; package traces, result data, fixtures, and release artifact |
-| 14 | Submission buffer and final delivery; only essential fixes |
+| Nov 16–18 | Confirm provider and local setup, then start shared contracts and fixtures, source audits, and evaluation protocol work. |
+| Nov 19–22 | Claim ready tasks to extend the existing adapters, identity, eligibility/cost and bounded execution rather than rebuilding them; add discovery and durable corpus ingestion; and form, session/API shell, agent wiring and local retrieval. Integrate one real search from browser to evidence-backed result, then demonstrate reuse with live finalist refresh by the end of this checkpoint |
+| Nov 23–25 | Claim ready tasks for remaining domestic/international sources and ingestion; category rules, totals, route states, freshness/index/retention controls and shared budgets; and hybrid retrieval, evaluator/writer, clarification, progress, comparisons and refinement. Demonstrate agentic RAG across multiple categories and both domestic/international result states |
+| Nov 26–28 | Integrate live finalist verification, changed-offer recovery, cancellation, ownership/security controls, evidence views, history/export, and operator metrics. Complete one full demo including a failure case; gather buyer feedback |
+| Nov 29–30 | Close measured coverage gaps; fix integration and usability failures; calibrate budgets; finalize failure matrix/threat model; reproduce setup; freeze code/model/prompts/rules for evaluation |
+| Dec 1–2 | Run held-out comparisons and controlled benchmark subset; independently verify decisive facts; compute validity, success, savings, latency, and cost; draft report figures while runs execute |
+| Dec 3 | Fix critical failures, rerun affected cases transparently, finish report/API/architecture docs and poster; keep original frozen-run results separate from revised-system results |
+| Dec 4 | Fresh-machine or clean-environment reproduction; live-demo rehearsal; edge-case questions; package traces, result data, fixtures, and release artifact |
+| Dec 5 | Submission buffer and final delivery; only essential fixes |
 
 If the first integrated live path is late, stop adding tooling and cosmetic features and finish integration. If a source cannot supply a required fact, preserve an unresolved result and document coverage rather than spending the sprint inventing completeness. Protect evaluation/report/demo time. Any change to the confirmed broad scope must be discussed explicitly; it must not be hidden by presenting fixture-only categories as working coverage.
 
@@ -600,7 +606,7 @@ Local developer databases are independent unless deliberately shared. Use versio
 
 Default access is through localhost on the host computer. Access from other devices on the same network is optional and requires deliberate application binding, firewall configuration, and appropriate session/access controls; do not expose the database. External access through a tunnel or cloud host is optional and is not configured by this plan. Keep API keys in backend configuration and out of the browser and repository. Coordinate the shared spending ledger across independent local installations so each teammate does not treat the project allowance as their own budget.
 
-Rehearse the complete live flow on the actual demonstration computer and network early. Live model calls, web search, and retailer refreshes still require internet. Maintain a visibly labelled fixture demonstration for internet/provider failures; local deployment does not make live research an offline feature. Confirm the primary and recovery laptops, available resources, and demonstration operator during team scheduling.
+Rehearse the complete live flow on the actual demonstration computer and network early. Live model calls, web search, and retailer refreshes still require internet. Maintain a visibly labelled fixture demonstration for internet/provider failures; local deployment does not make live research an offline feature. Use Hassan’s computer as the primary demo machine and Ahmad Karnib’s as the recovery machine. Verify setup and backup restore on both before the rehearsal.
 
 ## 12. Decisions and delivery inputs
 
@@ -612,7 +618,7 @@ Rehearse the complete live flow on the actual demonstration computer and network
 
 **Confirmed frontend:** React + TypeScript + Vite with typed FastAPI API integration, reusable components and revision-aware state. No Streamlit. The compiled frontend is served with the application; Node is build/development tooling, not a required additional production application server.
 
-**Calendar:** fit the integration, evaluation and submission milestones to the official deadline and available team time.
+**Calendar:** deliver by Saturday, December 5, 2026. Reserve the December 4 rehearsal and December 5 submission buffer.
 
 **Confirmed upfront collection:** maintain a persistent retailer directory, ingest relevant listings/specifications/policies before buyer queries, and incrementally refresh/discover through bounded background jobs. Runtime research uses and enriches the same corpus; final recommendations still require current-run verification. Delivery tasks: #86, #87 and #88.
 
@@ -638,7 +644,7 @@ Rehearse the complete live flow on the actual demonstration computer and network
 
 **Operational configuration still needed:** per-buyer-run call/spend calibration settings, provider service tiers and account access, retention periods, and source-specific tuning. Initial collection is capped at $50 including $15 international; daily maintenance at $3 including $1 international, within the shared $500 total. Collection workload limits and initial refresh priorities are confirmed above; allocate remaining development/evaluation spend using measured costs. Local deployment is confirmed; optional cloud hosting is not a blocker. Freshness defaults are confirmed; later source-specific tuning should follow measured behavior. No subscriptions have been purchased or paid runs started by this plan.
 
-**Delivery inputs:** confirm the official submission and live-demo dates, team availability, and the primary and recovery demo machines. Confirm who can configure the direct OpenAI, Tavily, and Firecrawl accounts, and validate model capabilities and spending limits before paid execution. Track the proposal's Moodle verification under [release task #85](https://github.com/han33-dotcom/TechScout/issues/85).
+**Delivery follow-up:** confirm the submission cutoff time and live-demo slot. Configure the OpenAI, Tavily, and Firecrawl accounts and verify project access before paid execution. Track the proposal's Moodle verification and rehearsal on both demo machines under [release task #85](https://github.com/han33-dotcom/TechScout/issues/85).
 
 The largest risks are breadth of live retailer coverage, missing international charges, multi-agent latency/cost and duplicated work, a late first integration, and evaluation workload. Keep task scopes focused and agent counts adaptive, and measure the extra coordination against the single-agent configuration. A smaller number of technically usable sources can still support a complete product experience, provided supported coverage is explicit. More feature names or a larger store list do not substitute for retrieved, verified results.
 
