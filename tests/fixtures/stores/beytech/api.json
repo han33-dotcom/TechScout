@@ -1,0 +1,202 @@
+[
+ {
+  "id": 140008,
+  "name": "Apple |  iPhone 17 &#8211;  1 Sim &#8211; 2  Years Warranty",
+  "slug": "apple-iphone-17-1-sim-2-years-warranty",
+  "parent": 139968,
+  "type": "variation",
+  "variation": "M Size: 256 GB, Color: Blue",
+  "permalink": "https://beytech.com.lb/product/apple-iphone-17-1-sim-2-years-warranty/?attribute_m-size=256+GB&attribute_pa_color=blue",
+  "sku": "Apple | iPhone 17 Blue",
+  "prices": {
+   "price": "107900",
+   "regular_price": "107900",
+   "sale_price": "107900",
+   "price_range": null,
+   "currency_code": "USD",
+   "currency_symbol": "USD",
+   "currency_minor_unit": 2,
+   "currency_decimal_separator": ".",
+   "currency_thousand_separator": ",",
+   "currency_prefix": "USD",
+   "currency_suffix": ""
+  },
+  "is_purchasable": true,
+  "is_in_stock": true,
+  "attributes": [],
+  "variations": [],
+  "tags": [],
+  "categories": [],
+  "brands": []
+ },
+ {
+  "id": 139968,
+  "name": "Apple |  iPhone 17 &#8211;  1 Sim &#8211; 2  Years Warranty",
+  "slug": "apple-iphone-17-1-sim-2-years-warranty",
+  "parent": 0,
+  "type": "variable",
+  "variation": "",
+  "permalink": "https://beytech.com.lb/product/apple-iphone-17-1-sim-2-years-warranty/",
+  "sku": "Apple | iPhone 17",
+  "prices": {
+   "price": "107900",
+   "regular_price": "107900",
+   "sale_price": "107900",
+   "price_range": null,
+   "currency_code": "USD",
+   "currency_symbol": "USD",
+   "currency_minor_unit": 2,
+   "currency_decimal_separator": ".",
+   "currency_thousand_separator": ",",
+   "currency_prefix": "USD",
+   "currency_suffix": ""
+  },
+  "is_purchasable": true,
+  "is_in_stock": true,
+  "attributes": [
+   {
+    "id": 0,
+    "name": "M Size",
+    "taxonomy": null,
+    "has_variations": true,
+    "terms": [
+     {
+      "id": 0,
+      "name": "256 GB",
+      "slug": "256 GB"
+     }
+    ]
+   },
+   {
+    "id": 5,
+    "name": "Color",
+    "taxonomy": "pa_color",
+    "has_variations": true,
+    "terms": [
+     {
+      "id": 190,
+      "name": "Black",
+      "slug": "black"
+     },
+     {
+      "id": 453,
+      "name": "Blue",
+      "slug": "blue"
+     },
+     {
+      "id": 3163,
+      "name": "Green",
+      "slug": "green"
+     },
+     {
+      "id": 5285,
+      "name": "Lavender",
+      "slug": "lavender"
+     }
+    ]
+   },
+   {
+    "id": 1,
+    "name": "Brand",
+    "taxonomy": "pa_brand",
+    "has_variations": false,
+    "terms": [
+     {
+      "id": 1619,
+      "name": "Apple",
+      "slug": "apple"
+     }
+    ]
+   }
+  ],
+  "variations": [
+   {
+    "id": 139978,
+    "attributes": [
+     {
+      "name": "M Size",
+      "value": "256 GB"
+     },
+     {
+      "name": "Color",
+      "value": "black"
+     }
+    ]
+   },
+   {
+    "id": 139979,
+    "attributes": [
+     {
+      "name": "M Size",
+      "value": "256 GB"
+     },
+     {
+      "name": "Color",
+      "value": "green"
+     }
+    ]
+   },
+   {
+    "id": 139980,
+    "attributes": [
+     {
+      "name": "M Size",
+      "value": "256 GB"
+     },
+     {
+      "name": "Color",
+      "value": "lavender"
+     }
+    ]
+   },
+   {
+    "id": 140008,
+    "attributes": [
+     {
+      "name": "M Size",
+      "value": "256 GB"
+     },
+     {
+      "name": "Color",
+      "value": "blue"
+     }
+    ]
+   }
+  ],
+  "tags": [
+   {
+    "id": 1616,
+    "name": "Apple",
+    "slug": "apple"
+   },
+   {
+    "id": 6149,
+    "name": "iPhone 17",
+    "slug": "iphone-17"
+   },
+   {
+    "id": 3250,
+    "name": "Mobiles",
+    "slug": "mobiles"
+   }
+  ],
+  "categories": [
+   {
+    "id": 707,
+    "name": "Electronics",
+    "slug": "electronics"
+   },
+   {
+    "id": 3216,
+    "name": "Mobiles",
+    "slug": "mobiles"
+   },
+   {
+    "id": 79,
+    "name": "Mobiles &amp; Tablets",
+    "slug": "mobiles-tablets"
+   }
+  ],
+  "brands": []
+ }
+]

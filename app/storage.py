@@ -5,7 +5,7 @@ contract JSON, money stays Decimal, and raw responses live in a hash-addressed
 snapshot store that the web application never serves.
 """
 from contextlib import contextmanager
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 import hashlib
 import json
@@ -27,6 +27,15 @@ ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_DATABASE_URL = f"sqlite:///{ROOT / 'techscout.db'}"
 DEFAULT_EVIDENCE_DIR = ROOT / 'var' / 'evidence'
 RUN_STATES = ('running', 'complete', 'partial', 'abstained', 'cancelled', 'error')
+# How long a run may stay 'running' before recovery treats it as abandoned. Every run's time cap
+# ends well inside it (app.runs.RunCaps), so a run still live in another process, such as a
+# command-line search beside the web app, is never closed.
+RUN_LEASE = timedelta(minutes=10)
+# A run's time cap stays well inside the lease, so a request or planner call in flight at the cap,
+# a slow lookup or a slow database write never makes a live run look abandoned. Checked by
+# app.runs.RunCaps and by the evaluation config (app.planner.EvaluationCaps).
+MAX_RUN_SECONDS = RUN_LEASE.total_seconds() / 2
+INTERRUPTED = 'interrupted: the service stopped before this run finished'
 SHA256 = re.compile(r'^[0-9a-f]{64}$')
 
 
@@ -169,6 +178,14 @@ actions = Table(
 
 def _now():
     return datetime.now(timezone.utc)
+
+
+def _check_usage(external_calls, planner_turns, spend) -> None:
+    # Usage only grows; a negative value would also make recovery's BudgetUsage invalid.
+    if not isinstance(spend, Decimal) or not spend.is_finite() or spend < 0:
+        raise ValueError('Spend must be a finite, non-negative Decimal')
+    if any(type(n) is not int or n < 0 for n in (external_calls, planner_turns)):
+        raise ValueError('Budget counters must be non-negative integers')
 
 
 class SnapshotStore:
@@ -331,11 +348,7 @@ class Storage:
 
     def record_action(self, run_id, tool, arguments, result: ToolResult, external_calls=0,
                       planner_turns=0, spend: Decimal = Decimal('0')):
-        # Usage only grows; a negative value would also make recovery's BudgetUsage invalid.
-        if not isinstance(spend, Decimal) or not spend.is_finite() or spend < 0:
-            raise ValueError('Spend must be a finite, non-negative Decimal')
-        if any(type(n) is not int or n < 0 for n in (external_calls, planner_turns)):
-            raise ValueError('Budget counters must be non-negative integers')
+        _check_usage(external_calls, planner_turns, spend)
         with self.transaction() as db:
             run = db.execute(select(runs.c.status, runs.c.spend_amount)
                              .where(runs.c.run_id == run_id).with_for_update()).first()
@@ -354,6 +367,20 @@ class Storage:
                 spend_amount=run.spend_amount + spend))
             return seq
 
+    def note_usage(self, run_id, external_calls=0, planner_turns=0, spend: Decimal = Decimal('0')):
+        """Add usage still in flight (reserved before a request, paid call or planner turn, and in
+        no action yet) to a running run's totals, so recovery after a crash counts it."""
+        _check_usage(external_calls, planner_turns, spend)
+        with self.transaction() as db:
+            run = db.execute(select(runs.c.status, runs.c.spend_amount)
+                             .where(runs.c.run_id == run_id).with_for_update()).first()
+            if run is None or run.status != 'running':
+                raise ValueError('Usage can only be noted on a running run')
+            db.execute(update(runs).where(runs.c.run_id == run_id).values(
+                external_calls=runs.c.external_calls + external_calls,
+                planner_turns=runs.c.planner_turns + planner_turns,
+                spend_amount=run.spend_amount + spend))
+
     def list_actions(self, run_id):
         with self.engine.connect() as db:
             return [dict(r._mapping) for r in db.execute(
@@ -361,11 +388,16 @@ class Storage:
                 .where(actions.c.run_id == run_id).order_by(actions.c.seq))]
 
     def finish_run(self, result: RunResult):
+        """Close a running run with its result; its stored totals become the result's usage
+        (while it ran they could be ahead of it, counting usage still in flight)."""
+        usage = result.usage
         with self.transaction() as db:
             changed = db.execute(update(runs).where(
                 (runs.c.run_id == result.run_id) & (runs.c.status == 'running')).values(
                 status=result.status, stop_reason=result.stop_reason,
-                finished_at=result.finished_at, result=result.model_dump(mode='json'))).rowcount
+                finished_at=result.finished_at, result=result.model_dump(mode='json'),
+                external_calls=usage.external_calls, planner_turns=usage.planner_turns,
+                spend_amount=usage.spend.amount, spend_currency=usage.spend.currency)).rowcount
         if changed != 1:
             raise ValueError('Only a running run can be finished')
 
@@ -379,24 +411,32 @@ class Storage:
             row = db.execute(select(runs.c.result).where(runs.c.run_id == run_id)).first()
         return None if row is None or row.result is None else RunResult.model_validate(row.result)
 
-    def recover_interrupted_runs(self, now=None) -> list[str]:
+    def recover_interrupted_runs(self, now=None, *, live_for: timedelta = RUN_LEASE) -> list[str]:
         """Close runs left 'running' by a crash as partial; never resume stale searches.
 
-        Assumes a single application process: every 'running' run is treated as orphaned.
-        Multiple workers or replicas need run ownership or a heartbeat first (MVP 11).
+        Only runs started more than live_for ago are closed: a younger run may still be live in
+        another process, since the web app and command-line searches share the database. The web
+        app calls this at startup and each command-line search before it starts. The usage is the
+        run's stored totals, which count requests and paid calls in flight (written before each
+        is sent); the elapsed time runs to the run's last recorded step, so downtime is never
+        counted, but the step in flight at the crash is left out of it.
         """
         now = now or _now()
         recovered = []
         with self.transaction() as db:
             stale = db.execute(select(runs).where(runs.c.status == 'running')).all()
             for run in stale:
+                if run.started_at >= now - live_for:
+                    continue  # may still be live in another process
                 finished = max(now, run.started_at)
+                last = db.execute(select(func.max(actions.c.recorded_at))
+                                  .where(actions.c.run_id == run.run_id)).scalar()
+                active_until = min(max(last or run.started_at, run.started_at), finished)
                 result = RunResult(
                     run_id=run.run_id, request_id=run.request_id, status='partial',
-                    stop_reason='interrupted: the service stopped before this run finished',
-                    started_at=run.started_at, finished_at=finished,
+                    stop_reason=INTERRUPTED, started_at=run.started_at, finished_at=finished,
                     usage=BudgetUsage(
-                        elapsed_ms=int((finished - run.started_at).total_seconds() * 1000),
+                        elapsed_ms=int((active_until - run.started_at).total_seconds() * 1000),
                         external_calls=run.external_calls, planner_turns=run.planner_turns,
                         spend=Money(amount=run.spend_amount, currency=run.spend_currency)))
                 db.execute(update(runs).where(

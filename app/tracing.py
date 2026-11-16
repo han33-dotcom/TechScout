@@ -1,0 +1,247 @@
+"""Run traces (MVP 11): every tool call, planner turn and stage of a run, in order.
+
+Each record is one Storage.record_action call: the stored row keeps the step's arguments and
+result (tool results list their fetch attempts; planner turns their decision, tokens, cost and
+whether that cost was priced; the clarify stage the run's planner name and settings), and the
+step's external calls, planner turns and spend reach the run's totals. note() writes usage still
+in flight to those totals ahead of the record, so a record adds only what is not stored yet and
+the stored totals never fall behind what the run has reserved. Each record is also one JSON
+line, in a fixed shape with its per-step counts, on the 'techscout.trace' logger.
+Arguments hold identifiers, counters and the buyer's constraints only: page text, evidence
+excerpts and other store-written values never enter a trace.
+"""
+from dataclasses import dataclass
+from decimal import Decimal
+import json
+import logging
+import threading
+from typing import Literal
+
+from app.contracts import ToolError, ToolResult
+from app.planner import PlannerAction, PlannerDecision
+
+TRACE_LOGGER = 'techscout.trace'
+MAX_ARGUMENT_TEXT = 200  # identifiers and constraints are short; page text is not
+MAX_ARGUMENTS_JSON = 4000
+MAX_REASON = 300  # the planner's own short reason, kept for evaluation
+Kind = Literal['tool', 'planner', 'stage']
+_KINDS = ('tool', 'planner', 'stage')
+_ZERO = Decimal('0')
+
+
+@dataclass(frozen=True)
+class TraceRecord:
+    """One recorded step; the usage counts are what this step added to the run."""
+    run_id: str
+    seq: int
+    kind: Kind
+    name: str
+    status: str
+    duration_ms: int
+    external_calls: int
+    error_codes: tuple[str, ...]
+    evidence_count: int
+    tokens_in: int
+    tokens_out: int
+    spend: Decimal
+    planner_turns: int = 0
+    retries: int = 0
+    source_id: str | None = None
+
+    def line(self) -> str:
+        """The record as one JSON log line, in a fixed shape."""
+        return json.dumps({
+            'run_id': self.run_id, 'seq': self.seq, 'kind': self.kind, 'name': self.name,
+            'status': self.status, 'duration_ms': self.duration_ms, 'external_calls': self.external_calls,
+            'retries': self.retries, 'error_codes': list(self.error_codes),
+            'evidence_count': self.evidence_count, 'tokens_in': self.tokens_in, 'tokens_out': self.tokens_out,
+            'spend': str(self.spend), 'source_id': self.source_id,
+        }, sort_keys=True, separators=(',', ':'))
+
+
+def _check_arguments(arguments) -> None:
+    """Identifiers and counters only: a long string means page text slipped in."""
+    def walk(value):
+        if isinstance(value, str):
+            if len(value) > MAX_ARGUMENT_TEXT:
+                raise ValueError('Trace arguments hold identifiers and counters, never page text')
+        elif isinstance(value, dict):
+            for key, item in value.items():
+                if not isinstance(key, str):
+                    raise TypeError('Trace argument keys are strings')
+                walk(key)
+                walk(item)
+        elif isinstance(value, (list, tuple)):
+            for item in value:
+                walk(item)
+        elif value is not None and not isinstance(value, (bool, int)):
+            raise TypeError(f'Trace arguments cannot hold {type(value).__name__}')
+
+    if not isinstance(arguments, dict):
+        raise TypeError('Trace arguments are a JSON object')
+    walk(arguments)
+    if len(json.dumps(arguments)) > MAX_ARGUMENTS_JSON:
+        raise ValueError('Trace arguments hold identifiers and counters, never page text')
+
+
+def _check_usage(external_calls, planner_turns, spend) -> None:
+    if any(type(n) is not int or n < 0 for n in (external_calls, planner_turns)):
+        raise ValueError('Usage counts are non-negative integers')
+    if not isinstance(spend, Decimal) or not spend.is_finite() or spend < 0:
+        raise ValueError('Spend is a finite, non-negative Decimal')
+
+
+def _retries(result: ToolResult) -> int:
+    """Gate attempts that repeated a failed request, from the fetch entries a store reader reports.
+
+    The gate counts every request it makes as an attempt, a followed redirect hop included, and
+    adds each hop to the redirect chain (which starts with the requested URL); the attempts beyond
+    the chain's length are the retries.
+    """
+    fetches = result.data.get('fetches')
+    if not isinstance(fetches, list):
+        return 0
+    total = 0
+    for entry in fetches:
+        if not isinstance(entry, dict) or type(entry.get('attempts')) is not int:
+            continue
+        chain = entry.get('redirect_chain')
+        requested = len(chain) if isinstance(chain, list) and chain else 1
+        total += max(0, entry['attempts'] - requested)
+    return total
+
+
+class Tracer:
+    """Writes one run's trace, in order; summary() turns it into the run's metrics."""
+
+    def __init__(self, storage, run_id: str, *, logger: logging.Logger | None = None):
+        self.storage, self.run_id = storage, run_id
+        self.records: list[TraceRecord] = []
+        self.status: str | None = None
+        self.stop_reason: str | None = None
+        self._log = logger or logging.getLogger(TRACE_LOGGER)
+        self._lock = threading.Lock()  # note() may come from the gate's threads
+        self._recorded = (0, 0, _ZERO)  # calls, turns and spend the records hold
+        self._stored = (0, 0, _ZERO)  # what this tracer has added to the run's stored totals
+
+    def _beyond_stored(self, calls: int, turns: int, spend: Decimal) -> tuple[int, int, Decimal]:
+        stored_calls, stored_turns, stored_spend = self._stored
+        return max(0, calls - stored_calls), max(0, turns - stored_turns), max(_ZERO, spend - stored_spend)
+
+    def _add_stored(self, added: tuple[int, int, Decimal]) -> None:
+        self._stored = tuple(stored + more for stored, more in zip(self._stored, added))
+
+    def record(self, kind: Kind, name: str, arguments: dict, result: ToolResult, *,
+               source_id: str | None = None, external_calls: int = 0, planner_turns: int = 0,
+               spend: Decimal = _ZERO, tokens_in: int = 0, tokens_out: int = 0) -> TraceRecord:
+        """Store one step (storage assigns its seq), then log it."""
+        if kind not in _KINDS:
+            raise ValueError(f'Trace records are one of {_KINDS}')
+        if not isinstance(result, ToolResult):
+            raise TypeError('Trace records carry a ToolResult')
+        _check_arguments(arguments)
+        _check_usage(external_calls, planner_turns, spend)
+        with self._lock:
+            calls, turns, spent = self._recorded
+            recorded = (calls + external_calls, turns + planner_turns, spent + spend)
+            added = self._beyond_stored(*recorded)  # usage noted ahead is not added twice
+            seq = self.storage.record_action(self.run_id, name, arguments, result, external_calls=added[0],
+                                             planner_turns=added[1], spend=added[2])
+            self._recorded = recorded
+            self._add_stored(added)
+            record = TraceRecord(
+                run_id=self.run_id, seq=seq, kind=kind, name=name, status=result.status,
+                duration_ms=result.duration_ms, external_calls=external_calls,
+                error_codes=tuple(e.code for e in result.errors), evidence_count=len(result.evidence_ids),
+                tokens_in=tokens_in, tokens_out=tokens_out, spend=spend, planner_turns=planner_turns,
+                retries=_retries(result) if kind == 'tool' else 0, source_id=source_id)
+            self.records.append(record)
+        self._log.info(record.line())
+        return record
+
+    def note(self, *, external_calls: int, planner_turns: int, spend: Decimal) -> None:
+        """Raise the run's stored totals to at least these run totals, which count usage still in
+        flight, without a record. Raises, storing nothing, once the run is no longer running."""
+        _check_usage(external_calls, planner_turns, spend)
+        with self._lock:
+            added = self._beyond_stored(external_calls, planner_turns, spend)
+            # Even when nothing grew (a reservation released unsent is not given back in storage),
+            # the call checks that the run is still running, so a closed run sends nothing more.
+            self.storage.note_usage(self.run_id, external_calls=added[0], planner_turns=added[1],
+                                    spend=added[2])
+            self._add_stored(added)
+
+    def tool(self, name: str, result: ToolResult, *, source_id: str, arguments: dict,
+             external_calls: int = 0) -> TraceRecord:
+        """One store reader call, named after its function, with the gate requests it used."""
+        return self.record('tool', name, arguments, result, source_id=source_id,
+                           external_calls=external_calls)
+
+    def planner_turn(self, decision: PlannerDecision, *, arguments: dict, duration_ms: int,
+                     spend: Decimal = _ZERO, rejected: str | None = None,
+                     action: PlannerAction | None = None, not_run: str | None = None) -> TraceRecord:
+        """One counted planner turn. `rejected` is the controller's fixed reason for refusing the
+        decision; refused and invalid decisions are recorded as malformed replies. `not_run` is the
+        controller's fixed code for why a valid chosen action was not started (such as 'cancelled'
+        or 'time')."""
+        info = {'decision': decision.kind, 'reason': decision.reason[:MAX_REASON]}
+        if action is not None:
+            info.update(action_id=action.action_id, tool=action.tool, source_id=action.source_id,
+                        target=action.target)
+        if not_run is not None:
+            info['not_run'] = not_run
+        usage = decision.usage
+        if usage is not None:
+            # priced=False: the cost is the reservation kept in its place, an upper bound.
+            info.update(model=usage.model[:100], input_tokens=usage.input_tokens,
+                        output_tokens=usage.output_tokens, cache_read_tokens=usage.cache_read_tokens,
+                        cache_write_tokens=usage.cache_write_tokens, cost=str(usage.cost.amount),
+                        currency=usage.cost.currency, priced=usage.priced,
+                        prompt_version=None if usage.prompt_version is None else usage.prompt_version[:100],
+                        attempt_models=[m[:100] for m in usage.attempt_models])
+        problem = rejected or ('the planner returned an invalid decision' if decision.kind == 'invalid'
+                               else None)
+        errors = ([ToolError(code='INVALID_SCHEMA', message=f'planner: {problem}', retryable=False)]
+                  if problem else [])
+        result = ToolResult(status='error' if errors else 'ok', data=info, errors=errors,
+                            duration_ms=duration_ms)
+        return self.record('planner', 'planner', arguments, result, planner_turns=1, spend=spend,
+                           tokens_in=usage.input_tokens if usage else 0,
+                           tokens_out=usage.output_tokens if usage else 0)
+
+    def stage(self, name: str, *, duration_ms: int = 0, data: dict | None = None, external_calls: int = 0,
+              planner_turns: int = 0, spend: Decimal = _ZERO) -> TraceRecord:
+        """The end of one run stage, with its counts."""
+        result = ToolResult(status='ok', data=data or {}, duration_ms=duration_ms)
+        return self.record('stage', f'stage:{name}', {}, result, external_calls=external_calls,
+                           planner_turns=planner_turns, spend=spend)
+
+    def finish(self, status: str, stop_reason: str) -> None:
+        self.status, self.stop_reason = status, stop_reason
+
+    def summary(self) -> dict:
+        """Run metrics: calls per source, errors per code, retries, tokens, spend and durations."""
+        calls, errors, durations = {}, {}, {}
+        for r in self.records:
+            if r.source_id is not None and r.external_calls:
+                calls[r.source_id] = calls.get(r.source_id, 0) + r.external_calls
+            for code in r.error_codes:
+                errors[code] = errors.get(code, 0) + 1
+            durations[r.name] = durations.get(r.name, 0) + r.duration_ms
+        tools = [r for r in self.records if r.kind == 'tool']
+        return {
+            'run_id': self.run_id, 'status': self.status, 'stop_reason': self.stop_reason,
+            'records': len(self.records), 'tool_calls': len(tools),
+            'tool_errors': sum(1 for r in tools if r.status != 'ok'),
+            'planner_turns': sum(r.planner_turns for r in self.records),
+            'external_calls': sum(r.external_calls for r in self.records),
+            'retries': sum(r.retries for r in self.records),
+            'calls_per_source': dict(sorted(calls.items())),
+            'errors_per_code': dict(sorted(errors.items())),
+            'tokens': {'input': sum(r.tokens_in for r in self.records),
+                       'output': sum(r.tokens_out for r in self.records)},
+            'spend': {'amount': str(sum((r.spend for r in self.records), _ZERO)), 'currency': 'USD'},
+            'duration_ms': {'tools': sum(r.duration_ms for r in tools),
+                            'planner': sum(r.duration_ms for r in self.records if r.kind == 'planner'),
+                            'by_name': dict(sorted(durations.items()))},
+        }

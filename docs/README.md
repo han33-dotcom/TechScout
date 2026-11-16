@@ -10,5 +10,6 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 - [mvp spec](mvp-spec.md)
 - [pr policy activation](pr-policy-activation.md)
 - [retailer access requests](retailer-access-requests.md)
+- [source coverage](source-coverage.md)
 - [source admission](source-admission.md)
 - [team workflow](team-workflow.md)

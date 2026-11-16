@@ -5,7 +5,7 @@ import logging
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
-from app.storage import Storage
+from app.storage import RUN_LEASE, Storage
 
 log = logging.getLogger('techscout')
 
@@ -14,7 +14,8 @@ def create_app(storage: Storage | None = None) -> FastAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         app.state.storage = storage or Storage()
-        recovered = app.state.storage.recover_interrupted_runs()
+        # Only runs older than the lease: a command-line search may be running on the same database.
+        recovered = app.state.storage.recover_interrupted_runs(live_for=RUN_LEASE)
         if recovered:
             log.warning('Marked %d interrupted run(s) as partial: %s', len(recovered), recovered)
         yield

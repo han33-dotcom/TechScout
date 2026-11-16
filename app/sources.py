@@ -35,8 +35,8 @@ CALL_TIMEOUT_S = SOFT_DEADLINE_S + PHASE_TIMEOUT_S
 MAX_WAIT_S = 10.0
 BACKOFF_S = (1.0, 2.0)
 WINDOW_S = 60.0
-# A run that asks no store for this long is treated as ended. The 120-second run cap MVP 11
-# plans is far below it; until that cap is enforced, a run that pauses this long starts afresh.
+# A run that asks no store for this long is treated as ended. It is far above the 120-second run
+# cap the run budget (MVP 11) enforces, and a finished run's budget refuses every request.
 RUN_COUNT_TTL_S = 3600.0
 USER_AGENT = 'TechScout/0.1 (+https://github.com/han33-dotcom/TechScout)'
 ACCEPT_ENCODING = 'gzip'
@@ -66,6 +66,9 @@ GLOBAL_UNICAST_V6 = ipaddress.ip_network('2000::/3')
 
 
 class Reservation(Protocol):
+    """A reserved call. It may also offer still_wanted() -> bool, asked just before sending:
+    False (the run was cancelled or closed meanwhile) drops the request unsent."""
+
     def commit(self, elapsed_seconds: float) -> None: ...
 
     def release(self) -> None: ...
@@ -452,6 +455,9 @@ class SourceGate:
             guard = _AttemptGuard(source_id, self._clock, start)
             address = self._checked_address(source_id, httpx2.URL(url).host)
             guard.check()
+            still_wanted = getattr(reservation, 'still_wanted', None)
+            if still_wanted is not None and not still_wanted():  # cancelled during the wait or lookup
+                raise _Refusal('BUDGET_EXHAUSTED', source_id, 'the run budget refused the call')
             self._limiter.mark_sent(slot, self._clock())
             return self._exchange(source_id, url, address, expect, endpoints, guard)
         except _Failure as stop:

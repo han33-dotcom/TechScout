@@ -1,0 +1,54 @@
+{
+  "synthetic": true,
+  "note": "Fictional offer (MVP 07): the store links name White, but the selected variant's own facts say Black. Not real retailer data; a stand-in for the White-URL/Black-product case captured during source selection, which is not in this repository (see README.md).",
+  "offer": {
+    "schema_version": 1,
+    "offer_id": "seller-1:parent-1:variant-black",
+    "source_id": "seller-1",
+    "seller_id": "seller-1",
+    "variant": {
+      "source_id": "seller-1", "product_id": "parent-1", "variant_id": "variant-black",
+      "manufacturer": {"state": "known", "value": "Apple", "evidence_ids": ["ev-manufacturer"]},
+      "model": {"state": "known", "value": "iPhone 17", "evidence_ids": ["ev-model"]},
+      "storage_gb": {"state": "known", "value": 256, "evidence_ids": ["ev-storage"]},
+      "color": {"state": "known", "value": "Black", "evidence_ids": ["ev-color"]},
+      "sim": {"state": "known", "value": "physical+esim", "evidence_ids": ["ev-sim"]},
+      "region": {"state": "unknown", "reason": "region is not published"},
+      "raw_attributes": {
+        "name": "iPhone 17",
+        "sku": "SYN-IPHONE17-256",
+        "permalink": "https://seller.example/product/iphone-17-white/?attribute_pa_color=white&attribute_pa_storage-capacity=256gb",
+        "attribute_pa_color": "black"
+      }
+    },
+    "price": {"state": "known", "value": {"amount": "1030.00", "currency": "USD"}, "evidence_ids": ["ev-price"]},
+    "payment_basis": {"state": "unknown", "reason": "payment terms are not published on the product page"},
+    "raw_price": "103000",
+    "price_fractional_digits": 2,
+    "condition": {"state": "unknown", "reason": "condition is not published"},
+    "purchasable": {"state": "known", "value": true, "evidence_ids": ["ev-purchasable"]},
+    "online_stock": {"state": "known", "value": true, "evidence_ids": ["ev-online-stock"]},
+    "pickup_stock": [],
+    "warranty": {
+      "provider": {"state": "unknown", "reason": "warranty provider is not published"},
+      "months": {"state": "unknown", "reason": "warranty duration is not published"},
+      "territory": {"state": "unknown", "reason": "warranty territory is not published"}
+    },
+    "fulfillment": {"mode": "delivery", "country": "LB", "city": "Beirut"},
+    "arrival": {"state": "unknown", "reason": "delivery time is not published"},
+    "costs": [
+      {"kind": "tax", "state": "unknown", "reason": "VAT treatment is not published"},
+      {"kind": "delivery", "state": "unknown", "reason": "delivery charge is not published"}
+    ],
+    "evidence": [
+      {"evidence_id": "ev-manufacturer", "source_id": "seller-1", "product_id": "parent-1", "scope": "product", "field_path": "variant.manufacturer", "origin_url": "https://seller.example/wp-json/wc/store/v1/products?slug=iphone-17-white", "final_url": "https://seller.example/wp-json/wc/store/v1/products?slug=iphone-17-white", "observed_at": "2026-11-14T09:00:00Z", "response_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "adapter_version": "synthetic/1", "json_pointer": "/1/brands/0/name"},
+      {"evidence_id": "ev-model", "source_id": "seller-1", "product_id": "parent-1", "scope": "product", "field_path": "variant.model", "origin_url": "https://seller.example/wp-json/wc/store/v1/products?slug=iphone-17-white", "final_url": "https://seller.example/wp-json/wc/store/v1/products?slug=iphone-17-white", "observed_at": "2026-11-14T09:00:00Z", "response_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "adapter_version": "synthetic/1", "json_pointer": "/1/name"},
+      {"evidence_id": "ev-storage", "source_id": "seller-1", "product_id": "parent-1", "variant_id": "variant-black", "scope": "variant", "field_path": "variant.storage_gb", "origin_url": "https://seller.example/product/iphone-17-white/", "final_url": "https://seller.example/product/iphone-17-white/", "observed_at": "2026-11-14T09:00:01Z", "response_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "adapter_version": "synthetic/1", "excerpt": "variation variant-black attribute_pa_storage-capacity 256gb"},
+      {"evidence_id": "ev-color", "source_id": "seller-1", "product_id": "parent-1", "variant_id": "variant-black", "scope": "variant", "field_path": "variant.color", "origin_url": "https://seller.example/product/iphone-17-white/", "final_url": "https://seller.example/product/iphone-17-white/", "observed_at": "2026-11-14T09:00:01Z", "response_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "adapter_version": "synthetic/1", "excerpt": "variation variant-black attribute_pa_color black"},
+      {"evidence_id": "ev-sim", "source_id": "seller-1", "product_id": "parent-1", "variant_id": "variant-black", "scope": "variant", "field_path": "variant.sim", "origin_url": "https://seller.example/product/iphone-17-white/", "final_url": "https://seller.example/product/iphone-17-white/", "observed_at": "2026-11-14T09:00:01Z", "response_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "adapter_version": "synthetic/1", "excerpt": "variation variant-black attribute_pa_sim-type nano-sim-esim"},
+      {"evidence_id": "ev-price", "source_id": "seller-1", "product_id": "parent-1", "variant_id": "variant-black", "scope": "variant", "field_path": "price", "origin_url": "https://seller.example/product/iphone-17-white/", "final_url": "https://seller.example/product/iphone-17-white/", "observed_at": "2026-11-14T09:00:01Z", "response_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "adapter_version": "synthetic/1", "excerpt": "variation variant-black display_price 1030"},
+      {"evidence_id": "ev-purchasable", "source_id": "seller-1", "product_id": "parent-1", "variant_id": "variant-black", "scope": "variant", "field_path": "purchasable", "origin_url": "https://seller.example/product/iphone-17-white/", "final_url": "https://seller.example/product/iphone-17-white/", "observed_at": "2026-11-14T09:00:01Z", "response_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "adapter_version": "synthetic/1", "excerpt": "variation variant-black is_purchasable true variation_is_active true"},
+      {"evidence_id": "ev-online-stock", "source_id": "seller-1", "product_id": "parent-1", "variant_id": "variant-black", "scope": "variant", "field_path": "online_stock", "origin_url": "https://seller.example/product/iphone-17-white/", "final_url": "https://seller.example/product/iphone-17-white/", "observed_at": "2026-11-14T09:00:01Z", "response_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "adapter_version": "synthetic/1", "excerpt": "variation variant-black is_in_stock true"}
+    ]
+  }
+}
