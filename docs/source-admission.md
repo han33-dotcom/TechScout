@@ -69,6 +69,15 @@ and known action routes are rejected. Existing `allowed_endpoints` still work fo
 calls without a capability reference. Live retailer registrations retain their reviewed
 exact endpoints pending separate validation of broader routes.
 
+## Planned automatic retailer onboarding
+
+The [full-product plan](full-product-plan.md#53-automatic-retailer-onboarding-confirmed)
+adds an agent that proposes and tests narrow technical capabilities for newly
+discovered shops. It uses a restricted probe through the source gate. Backend
+validation activates passing capabilities and records the evidence. Teammates
+handle unresolved validation failures, such as shops that need a custom parser.
+The active technical registry continues to control ordinary fetches.
+
 ## Remaining candidates
 
 Nine candidates are recorded in total. Abed Tahan, iSTYLE, Tech Zone, iStore Plus, KAYSTORE and Ayoub remain outside the initial three-source set pending technical work only. They are **not blocked on permission**. Their known data gaps—unpriced offers, variant identity, tax/fees or branch stock—can be addressed when expanding coverage.
