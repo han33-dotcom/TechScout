@@ -206,6 +206,11 @@ class LaptopSpecs(Model):
     gpu: Fact[Text] | None = None
     operating_system: Fact[Text] | None = None
     display_inches: Fact[Annotated[Amount, Field(gt=0)]] | None = None
+    display_width_px: Fact[PositiveInt] | None = None
+    display_height_px: Fact[PositiveInt] | None = None
+    display_refresh_hz: Fact[PositiveInt] | None = None
+    display_panel: Fact[Text] | None = None
+    display_touchscreen: Fact[StrictBool] | None = None
 
 
 class TabletSpecs(Model):

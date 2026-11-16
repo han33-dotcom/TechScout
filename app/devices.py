@@ -5,11 +5,14 @@ Only our own tables live here, so names matched against them are safe to use in 
 import re
 
 KNOWN_MANUFACTURERS = ('Apple', 'Samsung', 'Google', 'Xiaomi', 'Huawei', 'Honor', 'OnePlus', 'Oppo',
-                       'Nokia', 'Motorola')
+                       'Nokia', 'Motorola', 'Lenovo', 'HP', 'Dell', 'Asus', 'Acer', 'MSI', 'Microsoft')
 # Each model is matched as whole words, longest spelling first, so 'iPhone 17 Pro' never reads as
 # 'iPhone 17'.
 KNOWN_MODELS = ('iPhone 17 Pro Max', 'iPhone 17 Pro', 'iPhone 17e', 'iPhone Air', 'iPhone 17',
-                'iPhone 16 Pro Max', 'iPhone 16 Pro', 'iPhone 16 Plus', 'iPhone 16e', 'iPhone 16')
+                'iPhone 16 Pro Max', 'iPhone 16 Pro', 'iPhone 16 Plus', 'iPhone 16e', 'iPhone 16',
+                'Galaxy S25 Ultra', 'Galaxy S25 Plus', 'Galaxy S25',
+                'Galaxy S24 Ultra', 'Galaxy S24 Plus', 'Galaxy S24',
+                'Pixel 9 Pro XL', 'Pixel 9 Pro', 'Pixel 9', 'Pixel 9a')
 # Other spellings stores use for one of KNOWN_MODELS. Apple sells one Air, the 'iPhone Air'.
 MODEL_ALIASES = {'iPhone 17 Air': 'iPhone Air'}
 
@@ -33,7 +36,7 @@ _PLUS = re.compile(r'(?<=[0-9a-z])\+(?:(?![0-9a-z])|(?=[0-9]{1,4}(?:[.,][0-9]+)?
 # injected text) leave it alone, and 'e' before 'SIM' is the eSIM. A spaced '+' not followed by
 # a named item ('iPhone 16 +') cannot be read either.
 _QUALIFIER = re.compile(r'\s*\+(?!\s*[0-9a-z])|[\s\-\u2010-\u2015_(\[]*'
-                        r'(?:plus|pro|max|promax|pm|mini|ultra|air|se|e(?![\s\-\u2010-\u2015]*sim))'
+                        r'(?:plus|pro|max|promax|pm|mini|ultra|air|se|xl|fe|e(?![\s\-\u2010-\u2015]*sim))'
                         r'(?![0-9a-z])', re.IGNORECASE)
 _MANUFACTURERS = [(m, _pattern(m)) for m in KNOWN_MANUFACTURERS]
 # A size followed by RAM is memory, not storage ('12GB RAM'). Digits after a decimal point or a

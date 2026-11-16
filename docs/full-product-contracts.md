@@ -139,3 +139,84 @@ physical PostgreSQL relationships and versioned readers in storage. A later data
 write new v2 records beside historical v1 records and preserve source receipts, timestamps and
 native IDs. Keep legacy results readable as historical v1 results. Any unresolved field or
 unconfirmed route requires current verification before promotion into a v2 result.
+
+
+## Phone and laptop identity module
+
+Implemented for [#42](https://github.com/han33-dotcom/TechScout/issues/42) in
+`app.identity`. The legacy v1 `normalize_variant`, `same_device` and
+`deduplicate` APIs remain available to the existing shopping flow.
+The v2 functions consume validated, source-backed structured offers:
+
+~~~python
+from app.identity import compare_offers, group_variants, seller_offer_key
+
+comparison = compare_offers(left_offer, right_offer)
+# comparison.hardware is the existing v2 MatchAssessment
+# inspect differing/unresolved identity fields AND the separate terms outcome
+groups = group_variants(candidate_offers)
+~~~
+
+`compare_offers` distinguishes confirmed hardware equivalence, known configuration
+differences and unresolved identity. Phone identity requires manufacturer, model,
+color, storage, SIM and region. Laptop identity requires manufacturer, model, color,
+CPU, GPU, RAM, storage, OS, screen size, resolution, refresh rate, panel and touch.
+A known difference remains visible beside missing facts. Missing/unknown/conflicting
+fields are never wildcards; even two identical unknowns cannot confirm equivalence.
+Manufacturer and model require product/variant-scoped evidence at
+`variant.product.manufacturer` and `variant.product.model`; store-wide text does
+not supply either. Other fields retain the ordinary v2 field-bound receipts.
+
+Text matching is exact after case/whitespace and typographic-dash normalization,
+with narrow explicit manufacturer, model, color and country aliases. It preserves
+model/component suffixes, punctuation and numeric boundaries. Arbitrary structured
+phone/laptop model identifiers can be compared without extending a model catalog.
+The legacy free-text vocabulary now also recognizes selected Galaxy S24/S25 and
+Pixel 9 models, with longest-match and suffix guards. This is not general free-text
+specification extraction, multilingual entity resolution, or a complete model list.
+Extractors must mark incomplete configurations unknown rather than call a generic
+CPU family, product line or a guessed default an exact specification.
+
+`terms_outcome` separately reports matching/different/unresolved condition,
+activation (required for phones), payment and warranty provider/months/territory.
+Warranty changes do not create a different device. Activation and condition stay
+on each offer. Matching terms cover only these fields, **not equivalent purchases**:
+price, delivery, taxes, stock, route eligibility and deadlines still need the cost
+and eligibility modules. Return both hardware and term findings to downstream
+callers rather than treating the hardware outcome as a purchase recommendation.
+
+`group_variants` gives fully evidenced equal hardware one `hardware-v1:` key
+while retaining each complete seller offer and its evidence/timestamps. Key
+generation is independent of the ambient Decimal precision. Unknown hardware
+stays in separate groups. This groups variants, not offers: merchant, fulfiller,
+native listing/variant IDs and route remain distinct in `seller_offer_key`.
+A shared SKU is never cross-store identity. Identical repeated offer payloads
+are idempotent; conflicting payloads with one global offer ID raise instead of
+silently losing an observation. A canonical variant ID reused for conflicting
+hardware produces an unresolved assessment with the differing fields exposed;
+the grouping keys still keep those hardware configurations apart.
+
+### v2 schema revision: 2026-11-16 display identity
+
+Five optional fields were added to `LaptopSpecs`:
+`display_width_px`, `display_height_px`, `display_refresh_hz`,
+`display_panel` and `display_touchscreen`. They use the existing
+known/unknown/conflict Fact format with selected-variant evidence.
+Old v2 records still load and leave these fields absent; absence cannot establish
+an equivalent display. Width/height and refresh must be positive integers,
+touchscreen is a strict boolean, and size retains exact decimal serialization.
+
+The wire major remains 2 because existing records retain their meaning; this is
+an additive schema revision, not a v1 migration. Regenerate the schema bundle
+when upgrading API/worker consumers. Old strict decoders that reject extra fields
+must be upgraded before they receive the new fields. The Python schema export
+and corpus FieldObservation validators derive these fields from LaptopSpecs;
+no relational migration is needed for the JSON projections. The UI/API consumers
+under later tasks should use this revision when they expose laptop comparisons.
+
+[Identity recipes](../tests/fixtures/identity/full-product.json) and
+`tests.identity_v2.offer` build synthetic, evidence-bound v2 offers. They cover
+31 positive/adversarial cases, including SIM/region/activation/condition/warranty
+traps and laptop CPU/GPU/memory/storage/display differences. Additional tests
+exercise missing fields, receipt scope, seller/SKU/route separation, exact Decimal
+keys, canonical-ID collisions and schema/corpus compatibility. All run offline.
