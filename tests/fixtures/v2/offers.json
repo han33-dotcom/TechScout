@@ -1,0 +1,1560 @@
+{
+  "phone_pickup": {
+    "schema_version": 2,
+    "offer_id": "phone-one",
+    "retailer_id": "retailer-phone-one",
+    "source_id": "source-phone-one",
+    "source_product_id": "listing-phone-one",
+    "source_variant_id": "sku-phone-one",
+    "seller": {
+      "seller_id": "phone-one",
+      "name": "Phone-One",
+      "market": "LB"
+    },
+    "listing_url": "https://phone-one.example/phone-one",
+    "variant": {
+      "schema_version": 2,
+      "variant_id": "phone-256-lb",
+      "product": {
+        "product_id": "product-phone",
+        "category": "phone",
+        "manufacturer": "Example",
+        "model": "Scout Phone"
+      },
+      "specs": {
+        "category": "phone",
+        "storage_gb": {
+          "state": "known",
+          "value": 256,
+          "evidence_ids": [
+            "phone-one:variant.specs.storage_gb"
+          ]
+        },
+        "sim": {
+          "state": "known",
+          "value": "physical+esim",
+          "evidence_ids": [
+            "phone-one:variant.specs.sim"
+          ]
+        },
+        "region": {
+          "state": "known",
+          "value": "LB",
+          "evidence_ids": [
+            "phone-one:variant.specs.region"
+          ]
+        }
+      }
+    },
+    "route": {
+      "kind": "pickup",
+      "destination": {
+        "country": "LB",
+        "city": "Beirut"
+      },
+      "branch_id": "beirut-main",
+      "route_id": "route-phone-one"
+    },
+    "price": {
+      "state": "known",
+      "value": {
+        "amount": "900",
+        "currency": "USD"
+      },
+      "evidence_ids": [
+        "phone-one:price"
+      ]
+    },
+    "stock": {
+      "state": "known",
+      "value": true,
+      "evidence_ids": [
+        "phone-one:stock"
+      ]
+    },
+    "purchasable": {
+      "state": "known",
+      "value": true,
+      "evidence_ids": [
+        "phone-one:purchasable"
+      ]
+    },
+    "condition": {
+      "state": "known",
+      "value": "new",
+      "evidence_ids": [
+        "phone-one:condition"
+      ]
+    },
+    "activation": {
+      "state": "known",
+      "value": "unactivated",
+      "evidence_ids": [
+        "phone-one:activation"
+      ]
+    },
+    "warranty": {
+      "provider": {
+        "state": "known",
+        "value": "Example Service",
+        "evidence_ids": [
+          "phone-one:warranty.provider"
+        ]
+      },
+      "months": {
+        "state": "known",
+        "value": 12,
+        "evidence_ids": [
+          "phone-one:warranty.months"
+        ]
+      },
+      "territory": {
+        "state": "known",
+        "value": "LB",
+        "evidence_ids": [
+          "phone-one:warranty.territory"
+        ]
+      }
+    },
+    "costs": [
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "tax",
+        "state": "included",
+        "evidence_ids": [
+          "phone-one:costs.order.tax"
+        ]
+      }
+    ],
+    "evidence": [
+      {"schema_version": 2, "evidence_id": "phone-one:variant.specs.storage_gb", "source_id": "source-phone-one", "product_id": "listing-phone-one", "variant_id": "sku-phone-one", "scope": "variant", "field_path": "variant.specs.storage_gb", "origin_url": "https://phone-one.example/phone-one", "final_url": "https://phone-one.example/phone-one", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.storage_gb", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-one:variant.specs.sim", "source_id": "source-phone-one", "product_id": "listing-phone-one", "variant_id": "sku-phone-one", "scope": "variant", "field_path": "variant.specs.sim", "origin_url": "https://phone-one.example/phone-one", "final_url": "https://phone-one.example/phone-one", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.sim", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-one:variant.specs.region", "source_id": "source-phone-one", "product_id": "listing-phone-one", "variant_id": "sku-phone-one", "scope": "variant", "field_path": "variant.specs.region", "origin_url": "https://phone-one.example/phone-one", "final_url": "https://phone-one.example/phone-one", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.region", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-one:price", "source_id": "source-phone-one", "product_id": "listing-phone-one", "variant_id": "sku-phone-one", "scope": "variant", "field_path": "price", "origin_url": "https://phone-one.example/phone-one", "final_url": "https://phone-one.example/phone-one", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for price", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-one:stock", "source_id": "source-phone-one", "product_id": "listing-phone-one", "variant_id": "sku-phone-one", "scope": "branch", "field_path": "stock", "origin_url": "https://phone-one.example/phone-one", "final_url": "https://phone-one.example/phone-one", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for stock", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "branch_id": "beirut-main"},
+      {"schema_version": 2, "evidence_id": "phone-one:purchasable", "source_id": "source-phone-one", "product_id": "listing-phone-one", "variant_id": "sku-phone-one", "scope": "variant", "field_path": "purchasable", "origin_url": "https://phone-one.example/phone-one", "final_url": "https://phone-one.example/phone-one", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for purchasable", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-one:condition", "source_id": "source-phone-one", "product_id": "listing-phone-one", "variant_id": "sku-phone-one", "scope": "variant", "field_path": "condition", "origin_url": "https://phone-one.example/phone-one", "final_url": "https://phone-one.example/phone-one", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for condition", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-one:activation", "source_id": "source-phone-one", "product_id": "listing-phone-one", "variant_id": "sku-phone-one", "scope": "variant", "field_path": "activation", "origin_url": "https://phone-one.example/phone-one", "final_url": "https://phone-one.example/phone-one", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for activation", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-one:warranty.provider", "source_id": "source-phone-one", "product_id": "listing-phone-one", "variant_id": "sku-phone-one", "scope": "variant", "field_path": "warranty.provider", "origin_url": "https://phone-one.example/phone-one", "final_url": "https://phone-one.example/phone-one", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for warranty.provider", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-one:warranty.months", "source_id": "source-phone-one", "product_id": "listing-phone-one", "variant_id": "sku-phone-one", "scope": "variant", "field_path": "warranty.months", "origin_url": "https://phone-one.example/phone-one", "final_url": "https://phone-one.example/phone-one", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for warranty.months", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-one:warranty.territory", "source_id": "source-phone-one", "product_id": "listing-phone-one", "variant_id": "sku-phone-one", "scope": "variant", "field_path": "warranty.territory", "origin_url": "https://phone-one.example/phone-one", "final_url": "https://phone-one.example/phone-one", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for warranty.territory", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-one:costs.order.tax", "source_id": "source-phone-one", "product_id": "listing-phone-one", "variant_id": "sku-phone-one", "scope": "route", "field_path": "costs.order.tax", "origin_url": "https://phone-one.example/phone-one", "final_url": "https://phone-one.example/phone-one", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.order.tax", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-phone-one"}
+    ]
+  },
+  "phone_equivalent": {
+    "schema_version": 2,
+    "offer_id": "phone-two",
+    "retailer_id": "retailer-phone-two",
+    "source_id": "source-phone-two",
+    "source_product_id": "listing-phone-two",
+    "source_variant_id": "sku-phone-two",
+    "seller": {
+      "seller_id": "phone-two",
+      "name": "Phone-Two",
+      "market": "LB"
+    },
+    "listing_url": "https://phone-two.example/phone-two",
+    "variant": {
+      "schema_version": 2,
+      "variant_id": "phone-256-lb",
+      "product": {
+        "product_id": "product-phone",
+        "category": "phone",
+        "manufacturer": "Example",
+        "model": "Scout Phone"
+      },
+      "specs": {
+        "category": "phone",
+        "storage_gb": {
+          "state": "known",
+          "value": 256,
+          "evidence_ids": [
+            "phone-two:variant.specs.storage_gb"
+          ]
+        },
+        "sim": {
+          "state": "known",
+          "value": "physical+esim",
+          "evidence_ids": [
+            "phone-two:variant.specs.sim"
+          ]
+        },
+        "region": {
+          "state": "known",
+          "value": "LB",
+          "evidence_ids": [
+            "phone-two:variant.specs.region"
+          ]
+        }
+      }
+    },
+    "route": {
+      "kind": "direct",
+      "origin_country": "LB",
+      "destination": {
+        "country": "LB",
+        "city": "Beirut"
+      },
+      "route_id": "route-phone-two",
+      "item_eligible": {
+        "state": "known",
+        "value": true,
+        "evidence_ids": [
+          "phone-two:route.item_eligible"
+        ]
+      }
+    },
+    "price": {
+      "state": "known",
+      "value": {
+        "amount": "900",
+        "currency": "USD"
+      },
+      "evidence_ids": [
+        "phone-two:price"
+      ]
+    },
+    "stock": {
+      "state": "known",
+      "value": true,
+      "evidence_ids": [
+        "phone-two:stock"
+      ]
+    },
+    "purchasable": {
+      "state": "known",
+      "value": true,
+      "evidence_ids": [
+        "phone-two:purchasable"
+      ]
+    },
+    "condition": {
+      "state": "known",
+      "value": "used",
+      "evidence_ids": [
+        "phone-two:condition"
+      ]
+    },
+    "activation": {
+      "state": "known",
+      "value": "activated",
+      "evidence_ids": [
+        "phone-two:activation"
+      ]
+    },
+    "warranty": {
+      "provider": {
+        "state": "known",
+        "value": "Example Service",
+        "evidence_ids": [
+          "phone-two:warranty.provider"
+        ]
+      },
+      "months": {
+        "state": "known",
+        "value": 3,
+        "evidence_ids": [
+          "phone-two:warranty.months"
+        ]
+      },
+      "territory": {
+        "state": "known",
+        "value": "LB",
+        "evidence_ids": [
+          "phone-two:warranty.territory"
+        ]
+      }
+    },
+    "costs": [
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "tax",
+        "state": "included",
+        "evidence_ids": [
+          "phone-two:costs.order.tax"
+        ]
+      },
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "shipping",
+        "state": "additional",
+        "evidence_ids": [
+          "phone-two:costs.order.shipping"
+        ],
+        "amount": {
+          "amount": "10",
+          "currency": "USD"
+        }
+      }
+    ],
+    "evidence": [
+      {"schema_version": 2, "evidence_id": "phone-two:route.item_eligible", "source_id": "source-phone-two", "product_id": "listing-phone-two", "variant_id": "sku-phone-two", "scope": "route", "field_path": "route.item_eligible", "origin_url": "https://phone-two.example/phone-two", "final_url": "https://phone-two.example/phone-two", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for route.item_eligible", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-phone-two"},
+      {"schema_version": 2, "evidence_id": "phone-two:variant.specs.storage_gb", "source_id": "source-phone-two", "product_id": "listing-phone-two", "variant_id": "sku-phone-two", "scope": "variant", "field_path": "variant.specs.storage_gb", "origin_url": "https://phone-two.example/phone-two", "final_url": "https://phone-two.example/phone-two", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.storage_gb", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-two:variant.specs.sim", "source_id": "source-phone-two", "product_id": "listing-phone-two", "variant_id": "sku-phone-two", "scope": "variant", "field_path": "variant.specs.sim", "origin_url": "https://phone-two.example/phone-two", "final_url": "https://phone-two.example/phone-two", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.sim", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-two:variant.specs.region", "source_id": "source-phone-two", "product_id": "listing-phone-two", "variant_id": "sku-phone-two", "scope": "variant", "field_path": "variant.specs.region", "origin_url": "https://phone-two.example/phone-two", "final_url": "https://phone-two.example/phone-two", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.region", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-two:price", "source_id": "source-phone-two", "product_id": "listing-phone-two", "variant_id": "sku-phone-two", "scope": "variant", "field_path": "price", "origin_url": "https://phone-two.example/phone-two", "final_url": "https://phone-two.example/phone-two", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for price", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-two:stock", "source_id": "source-phone-two", "product_id": "listing-phone-two", "variant_id": "sku-phone-two", "scope": "variant", "field_path": "stock", "origin_url": "https://phone-two.example/phone-two", "final_url": "https://phone-two.example/phone-two", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for stock", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-two:purchasable", "source_id": "source-phone-two", "product_id": "listing-phone-two", "variant_id": "sku-phone-two", "scope": "variant", "field_path": "purchasable", "origin_url": "https://phone-two.example/phone-two", "final_url": "https://phone-two.example/phone-two", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for purchasable", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-two:condition", "source_id": "source-phone-two", "product_id": "listing-phone-two", "variant_id": "sku-phone-two", "scope": "variant", "field_path": "condition", "origin_url": "https://phone-two.example/phone-two", "final_url": "https://phone-two.example/phone-two", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for condition", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-two:activation", "source_id": "source-phone-two", "product_id": "listing-phone-two", "variant_id": "sku-phone-two", "scope": "variant", "field_path": "activation", "origin_url": "https://phone-two.example/phone-two", "final_url": "https://phone-two.example/phone-two", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for activation", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-two:warranty.provider", "source_id": "source-phone-two", "product_id": "listing-phone-two", "variant_id": "sku-phone-two", "scope": "variant", "field_path": "warranty.provider", "origin_url": "https://phone-two.example/phone-two", "final_url": "https://phone-two.example/phone-two", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for warranty.provider", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-two:warranty.months", "source_id": "source-phone-two", "product_id": "listing-phone-two", "variant_id": "sku-phone-two", "scope": "variant", "field_path": "warranty.months", "origin_url": "https://phone-two.example/phone-two", "final_url": "https://phone-two.example/phone-two", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for warranty.months", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-two:warranty.territory", "source_id": "source-phone-two", "product_id": "listing-phone-two", "variant_id": "sku-phone-two", "scope": "variant", "field_path": "warranty.territory", "origin_url": "https://phone-two.example/phone-two", "final_url": "https://phone-two.example/phone-two", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for warranty.territory", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-two:costs.order.tax", "source_id": "source-phone-two", "product_id": "listing-phone-two", "variant_id": "sku-phone-two", "scope": "route", "field_path": "costs.order.tax", "origin_url": "https://phone-two.example/phone-two", "final_url": "https://phone-two.example/phone-two", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.order.tax", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-phone-two"},
+      {"schema_version": 2, "evidence_id": "phone-two:costs.order.shipping", "source_id": "source-phone-two", "product_id": "listing-phone-two", "variant_id": "sku-phone-two", "scope": "route", "field_path": "costs.order.shipping", "origin_url": "https://phone-two.example/phone-two", "final_url": "https://phone-two.example/phone-two", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.order.shipping", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-phone-two"}
+    ]
+  },
+  "phone_different": {
+    "schema_version": 2,
+    "offer_id": "phone-three",
+    "retailer_id": "retailer-phone-three",
+    "source_id": "source-phone-three",
+    "source_product_id": "listing-phone-three",
+    "source_variant_id": "sku-phone-three",
+    "seller": {
+      "seller_id": "phone-three",
+      "name": "Phone-Three",
+      "market": "LB"
+    },
+    "listing_url": "https://phone-three.example/phone-three",
+    "variant": {
+      "schema_version": 2,
+      "variant_id": "phone-128-lb",
+      "product": {
+        "product_id": "product-phone",
+        "category": "phone",
+        "manufacturer": "Example",
+        "model": "Scout Phone"
+      },
+      "specs": {
+        "category": "phone",
+        "storage_gb": {
+          "state": "known",
+          "value": 128,
+          "evidence_ids": [
+            "phone-three:variant.specs.storage_gb"
+          ]
+        },
+        "sim": {
+          "state": "known",
+          "value": "physical+esim",
+          "evidence_ids": [
+            "phone-three:variant.specs.sim"
+          ]
+        },
+        "region": {
+          "state": "known",
+          "value": "LB",
+          "evidence_ids": [
+            "phone-three:variant.specs.region"
+          ]
+        }
+      }
+    },
+    "route": {
+      "kind": "direct",
+      "origin_country": "LB",
+      "destination": {
+        "country": "LB",
+        "city": "Beirut"
+      },
+      "route_id": "route-phone-three",
+      "item_eligible": {
+        "state": "known",
+        "value": true,
+        "evidence_ids": [
+          "phone-three:route.item_eligible"
+        ]
+      }
+    },
+    "price": {
+      "state": "known",
+      "value": {
+        "amount": "900",
+        "currency": "USD"
+      },
+      "evidence_ids": [
+        "phone-three:price"
+      ]
+    },
+    "stock": {
+      "state": "known",
+      "value": true,
+      "evidence_ids": [
+        "phone-three:stock"
+      ]
+    },
+    "purchasable": {
+      "state": "known",
+      "value": true,
+      "evidence_ids": [
+        "phone-three:purchasable"
+      ]
+    },
+    "condition": {
+      "state": "known",
+      "value": "new",
+      "evidence_ids": [
+        "phone-three:condition"
+      ]
+    },
+    "costs": [
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "tax",
+        "state": "included",
+        "evidence_ids": [
+          "phone-three:costs.order.tax"
+        ]
+      },
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "shipping",
+        "state": "additional",
+        "evidence_ids": [
+          "phone-three:costs.order.shipping"
+        ],
+        "amount": {
+          "amount": "10",
+          "currency": "USD"
+        }
+      }
+    ],
+    "evidence": [
+      {"schema_version": 2, "evidence_id": "phone-three:route.item_eligible", "source_id": "source-phone-three", "product_id": "listing-phone-three", "variant_id": "sku-phone-three", "scope": "route", "field_path": "route.item_eligible", "origin_url": "https://phone-three.example/phone-three", "final_url": "https://phone-three.example/phone-three", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for route.item_eligible", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-phone-three"},
+      {"schema_version": 2, "evidence_id": "phone-three:variant.specs.storage_gb", "source_id": "source-phone-three", "product_id": "listing-phone-three", "variant_id": "sku-phone-three", "scope": "variant", "field_path": "variant.specs.storage_gb", "origin_url": "https://phone-three.example/phone-three", "final_url": "https://phone-three.example/phone-three", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.storage_gb", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-three:variant.specs.sim", "source_id": "source-phone-three", "product_id": "listing-phone-three", "variant_id": "sku-phone-three", "scope": "variant", "field_path": "variant.specs.sim", "origin_url": "https://phone-three.example/phone-three", "final_url": "https://phone-three.example/phone-three", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.sim", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-three:variant.specs.region", "source_id": "source-phone-three", "product_id": "listing-phone-three", "variant_id": "sku-phone-three", "scope": "variant", "field_path": "variant.specs.region", "origin_url": "https://phone-three.example/phone-three", "final_url": "https://phone-three.example/phone-three", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.region", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-three:price", "source_id": "source-phone-three", "product_id": "listing-phone-three", "variant_id": "sku-phone-three", "scope": "variant", "field_path": "price", "origin_url": "https://phone-three.example/phone-three", "final_url": "https://phone-three.example/phone-three", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for price", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-three:stock", "source_id": "source-phone-three", "product_id": "listing-phone-three", "variant_id": "sku-phone-three", "scope": "variant", "field_path": "stock", "origin_url": "https://phone-three.example/phone-three", "final_url": "https://phone-three.example/phone-three", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for stock", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-three:purchasable", "source_id": "source-phone-three", "product_id": "listing-phone-three", "variant_id": "sku-phone-three", "scope": "variant", "field_path": "purchasable", "origin_url": "https://phone-three.example/phone-three", "final_url": "https://phone-three.example/phone-three", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for purchasable", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-three:condition", "source_id": "source-phone-three", "product_id": "listing-phone-three", "variant_id": "sku-phone-three", "scope": "variant", "field_path": "condition", "origin_url": "https://phone-three.example/phone-three", "final_url": "https://phone-three.example/phone-three", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for condition", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-three:costs.order.tax", "source_id": "source-phone-three", "product_id": "listing-phone-three", "variant_id": "sku-phone-three", "scope": "route", "field_path": "costs.order.tax", "origin_url": "https://phone-three.example/phone-three", "final_url": "https://phone-three.example/phone-three", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.order.tax", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-phone-three"},
+      {"schema_version": 2, "evidence_id": "phone-three:costs.order.shipping", "source_id": "source-phone-three", "product_id": "listing-phone-three", "variant_id": "sku-phone-three", "scope": "route", "field_path": "costs.order.shipping", "origin_url": "https://phone-three.example/phone-three", "final_url": "https://phone-three.example/phone-three", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.order.shipping", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-phone-three"}
+    ]
+  },
+  "phone_unresolved": {
+    "schema_version": 2,
+    "offer_id": "phone-four",
+    "retailer_id": "retailer-phone-four",
+    "source_id": "source-phone-four",
+    "source_product_id": "listing-phone-four",
+    "source_variant_id": "sku-phone-four",
+    "seller": {
+      "seller_id": "phone-four",
+      "name": "Phone-Four",
+      "market": "LB"
+    },
+    "listing_url": "https://phone-four.example/phone-four",
+    "variant": {
+      "schema_version": 2,
+      "variant_id": "phone-unconfirmed",
+      "product": {
+        "product_id": "product-phone",
+        "category": "phone",
+        "manufacturer": "Example",
+        "model": "Scout Phone"
+      },
+      "specs": {
+        "category": "phone",
+        "storage_gb": {
+          "state": "known",
+          "value": 256,
+          "evidence_ids": [
+            "phone-four:variant.specs.storage_gb"
+          ]
+        },
+        "sim": {
+          "state": "unknown",
+          "reason": "Source does not publish this field"
+        },
+        "region": {
+          "state": "known",
+          "value": "LB",
+          "evidence_ids": [
+            "phone-four:variant.specs.region"
+          ]
+        }
+      }
+    },
+    "route": {
+      "kind": "direct",
+      "origin_country": "LB",
+      "destination": {
+        "country": "LB",
+        "city": "Beirut"
+      },
+      "route_id": "route-phone-four",
+      "item_eligible": {
+        "state": "known",
+        "value": true,
+        "evidence_ids": [
+          "phone-four:route.item_eligible"
+        ]
+      }
+    },
+    "price": {
+      "state": "known",
+      "value": {
+        "amount": "900",
+        "currency": "USD"
+      },
+      "evidence_ids": [
+        "phone-four:price"
+      ]
+    },
+    "stock": {
+      "state": "known",
+      "value": true,
+      "evidence_ids": [
+        "phone-four:stock"
+      ]
+    },
+    "purchasable": {
+      "state": "known",
+      "value": true,
+      "evidence_ids": [
+        "phone-four:purchasable"
+      ]
+    },
+    "condition": {
+      "state": "known",
+      "value": "new",
+      "evidence_ids": [
+        "phone-four:condition"
+      ]
+    },
+    "costs": [
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "tax",
+        "state": "included",
+        "evidence_ids": [
+          "phone-four:costs.order.tax"
+        ]
+      },
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "shipping",
+        "state": "additional",
+        "evidence_ids": [
+          "phone-four:costs.order.shipping"
+        ],
+        "amount": {
+          "amount": "10",
+          "currency": "USD"
+        }
+      }
+    ],
+    "evidence": [
+      {"schema_version": 2, "evidence_id": "phone-four:route.item_eligible", "source_id": "source-phone-four", "product_id": "listing-phone-four", "variant_id": "sku-phone-four", "scope": "route", "field_path": "route.item_eligible", "origin_url": "https://phone-four.example/phone-four", "final_url": "https://phone-four.example/phone-four", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for route.item_eligible", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-phone-four"},
+      {"schema_version": 2, "evidence_id": "phone-four:variant.specs.storage_gb", "source_id": "source-phone-four", "product_id": "listing-phone-four", "variant_id": "sku-phone-four", "scope": "variant", "field_path": "variant.specs.storage_gb", "origin_url": "https://phone-four.example/phone-four", "final_url": "https://phone-four.example/phone-four", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.storage_gb", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-four:variant.specs.region", "source_id": "source-phone-four", "product_id": "listing-phone-four", "variant_id": "sku-phone-four", "scope": "variant", "field_path": "variant.specs.region", "origin_url": "https://phone-four.example/phone-four", "final_url": "https://phone-four.example/phone-four", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.region", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-four:price", "source_id": "source-phone-four", "product_id": "listing-phone-four", "variant_id": "sku-phone-four", "scope": "variant", "field_path": "price", "origin_url": "https://phone-four.example/phone-four", "final_url": "https://phone-four.example/phone-four", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for price", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-four:stock", "source_id": "source-phone-four", "product_id": "listing-phone-four", "variant_id": "sku-phone-four", "scope": "variant", "field_path": "stock", "origin_url": "https://phone-four.example/phone-four", "final_url": "https://phone-four.example/phone-four", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for stock", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-four:purchasable", "source_id": "source-phone-four", "product_id": "listing-phone-four", "variant_id": "sku-phone-four", "scope": "variant", "field_path": "purchasable", "origin_url": "https://phone-four.example/phone-four", "final_url": "https://phone-four.example/phone-four", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for purchasable", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-four:condition", "source_id": "source-phone-four", "product_id": "listing-phone-four", "variant_id": "sku-phone-four", "scope": "variant", "field_path": "condition", "origin_url": "https://phone-four.example/phone-four", "final_url": "https://phone-four.example/phone-four", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for condition", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "phone-four:costs.order.tax", "source_id": "source-phone-four", "product_id": "listing-phone-four", "variant_id": "sku-phone-four", "scope": "route", "field_path": "costs.order.tax", "origin_url": "https://phone-four.example/phone-four", "final_url": "https://phone-four.example/phone-four", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.order.tax", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-phone-four"},
+      {"schema_version": 2, "evidence_id": "phone-four:costs.order.shipping", "source_id": "source-phone-four", "product_id": "listing-phone-four", "variant_id": "sku-phone-four", "scope": "route", "field_path": "costs.order.shipping", "origin_url": "https://phone-four.example/phone-four", "final_url": "https://phone-four.example/phone-four", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.order.shipping", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-phone-four"}
+    ]
+  },
+  "laptop_provisional": {
+    "schema_version": 2,
+    "offer_id": "book-other",
+    "retailer_id": "retailer-book-other",
+    "source_id": "source-book-other",
+    "source_product_id": "listing-book-other",
+    "source_variant_id": "sku-book-other",
+    "seller": {
+      "seller_id": "book-other",
+      "name": "Book-Other",
+      "market": "LB"
+    },
+    "listing_url": "https://book-other.example/book-other",
+    "variant": {
+      "schema_version": 2,
+      "variant_id": "book-u7-16-512",
+      "product": {
+        "product_id": "product-laptop",
+        "category": "laptop",
+        "manufacturer": "Example",
+        "model": "Scout Book"
+      },
+      "specs": {
+        "category": "laptop",
+        "cpu": {
+          "state": "known",
+          "value": "Example U7",
+          "evidence_ids": [
+            "book-other:variant.specs.cpu"
+          ]
+        },
+        "ram_gb": {
+          "state": "known",
+          "value": 16,
+          "evidence_ids": [
+            "book-other:variant.specs.ram_gb"
+          ]
+        },
+        "storage_gb": {
+          "state": "known",
+          "value": 512,
+          "evidence_ids": [
+            "book-other:variant.specs.storage_gb"
+          ]
+        }
+      }
+    },
+    "route": {
+      "kind": "direct",
+      "origin_country": "LB",
+      "destination": {
+        "country": "LB",
+        "city": "Beirut"
+      },
+      "route_id": "route-book-other",
+      "item_eligible": {
+        "state": "known",
+        "value": true,
+        "evidence_ids": [
+          "book-other:route.item_eligible"
+        ]
+      }
+    },
+    "price": {
+      "state": "known",
+      "value": {
+        "amount": "890",
+        "currency": "USD"
+      },
+      "evidence_ids": [
+        "book-other:price"
+      ]
+    },
+    "stock": {
+      "state": "known",
+      "value": true,
+      "evidence_ids": [
+        "book-other:stock"
+      ]
+    },
+    "purchasable": {
+      "state": "known",
+      "value": true,
+      "evidence_ids": [
+        "book-other:purchasable"
+      ]
+    },
+    "condition": {
+      "state": "known",
+      "value": "new",
+      "evidence_ids": [
+        "book-other:condition"
+      ]
+    },
+    "costs": [
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "tax",
+        "state": "included",
+        "evidence_ids": [
+          "book-other:costs.order.tax"
+        ]
+      },
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "shipping",
+        "state": "additional",
+        "evidence_ids": [
+          "book-other:costs.order.shipping"
+        ],
+        "amount": {
+          "amount": "10",
+          "currency": "USD"
+        }
+      }
+    ],
+    "evidence": [
+      {"schema_version": 2, "evidence_id": "book-other:route.item_eligible", "source_id": "source-book-other", "product_id": "listing-book-other", "variant_id": "sku-book-other", "scope": "route", "field_path": "route.item_eligible", "origin_url": "https://book-other.example/book-other", "final_url": "https://book-other.example/book-other", "observed_at": "2026-11-15T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for route.item_eligible", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-book-other"},
+      {"schema_version": 2, "evidence_id": "book-other:variant.specs.cpu", "source_id": "source-book-other", "product_id": "listing-book-other", "variant_id": "sku-book-other", "scope": "variant", "field_path": "variant.specs.cpu", "origin_url": "https://book-other.example/book-other", "final_url": "https://book-other.example/book-other", "observed_at": "2026-11-15T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.cpu", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "book-other:variant.specs.ram_gb", "source_id": "source-book-other", "product_id": "listing-book-other", "variant_id": "sku-book-other", "scope": "variant", "field_path": "variant.specs.ram_gb", "origin_url": "https://book-other.example/book-other", "final_url": "https://book-other.example/book-other", "observed_at": "2026-11-15T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.ram_gb", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "book-other:variant.specs.storage_gb", "source_id": "source-book-other", "product_id": "listing-book-other", "variant_id": "sku-book-other", "scope": "variant", "field_path": "variant.specs.storage_gb", "origin_url": "https://book-other.example/book-other", "final_url": "https://book-other.example/book-other", "observed_at": "2026-11-15T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.storage_gb", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "book-other:price", "source_id": "source-book-other", "product_id": "listing-book-other", "variant_id": "sku-book-other", "scope": "variant", "field_path": "price", "origin_url": "https://book-other.example/book-other", "final_url": "https://book-other.example/book-other", "observed_at": "2026-11-15T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for price", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "book-other:stock", "source_id": "source-book-other", "product_id": "listing-book-other", "variant_id": "sku-book-other", "scope": "variant", "field_path": "stock", "origin_url": "https://book-other.example/book-other", "final_url": "https://book-other.example/book-other", "observed_at": "2026-11-15T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for stock", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "book-other:purchasable", "source_id": "source-book-other", "product_id": "listing-book-other", "variant_id": "sku-book-other", "scope": "variant", "field_path": "purchasable", "origin_url": "https://book-other.example/book-other", "final_url": "https://book-other.example/book-other", "observed_at": "2026-11-15T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for purchasable", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "book-other:condition", "source_id": "source-book-other", "product_id": "listing-book-other", "variant_id": "sku-book-other", "scope": "variant", "field_path": "condition", "origin_url": "https://book-other.example/book-other", "final_url": "https://book-other.example/book-other", "observed_at": "2026-11-15T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for condition", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "book-other:costs.order.tax", "source_id": "source-book-other", "product_id": "listing-book-other", "variant_id": "sku-book-other", "scope": "route", "field_path": "costs.order.tax", "origin_url": "https://book-other.example/book-other", "final_url": "https://book-other.example/book-other", "observed_at": "2026-11-15T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.order.tax", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-book-other"},
+      {"schema_version": 2, "evidence_id": "book-other:costs.order.shipping", "source_id": "source-book-other", "product_id": "listing-book-other", "variant_id": "sku-book-other", "scope": "route", "field_path": "costs.order.shipping", "origin_url": "https://book-other.example/book-other", "final_url": "https://book-other.example/book-other", "observed_at": "2026-11-15T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.order.shipping", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-book-other"}
+    ]
+  },
+  "laptop_verified": {
+    "schema_version": 2,
+    "offer_id": "book-local",
+    "retailer_id": "retailer-book-local",
+    "source_id": "source-book-local",
+    "source_product_id": "listing-book-local",
+    "source_variant_id": "sku-book-local",
+    "seller": {
+      "seller_id": "book-local",
+      "name": "Book-Local",
+      "market": "LB"
+    },
+    "listing_url": "https://book-local.example/book-local",
+    "variant": {
+      "schema_version": 2,
+      "variant_id": "book-u7-16-512",
+      "product": {
+        "product_id": "product-laptop",
+        "category": "laptop",
+        "manufacturer": "Example",
+        "model": "Scout Book"
+      },
+      "specs": {
+        "category": "laptop",
+        "cpu": {
+          "state": "known",
+          "value": "Example U7",
+          "evidence_ids": [
+            "book-local:variant.specs.cpu"
+          ]
+        },
+        "ram_gb": {
+          "state": "known",
+          "value": 16,
+          "evidence_ids": [
+            "book-local:variant.specs.ram_gb"
+          ]
+        },
+        "storage_gb": {
+          "state": "known",
+          "value": 512,
+          "evidence_ids": [
+            "book-local:variant.specs.storage_gb"
+          ]
+        }
+      }
+    },
+    "route": {
+      "kind": "direct",
+      "origin_country": "LB",
+      "destination": {
+        "country": "LB",
+        "city": "Beirut"
+      },
+      "route_id": "route-book-local",
+      "item_eligible": {
+        "state": "known",
+        "value": true,
+        "evidence_ids": [
+          "book-local:route.item_eligible"
+        ]
+      }
+    },
+    "price": {
+      "state": "known",
+      "value": {
+        "amount": "920",
+        "currency": "USD"
+      },
+      "evidence_ids": [
+        "book-local:price"
+      ]
+    },
+    "stock": {
+      "state": "known",
+      "value": true,
+      "evidence_ids": [
+        "book-local:stock"
+      ]
+    },
+    "purchasable": {
+      "state": "known",
+      "value": true,
+      "evidence_ids": [
+        "book-local:purchasable"
+      ]
+    },
+    "condition": {
+      "state": "known",
+      "value": "new",
+      "evidence_ids": [
+        "book-local:condition"
+      ]
+    },
+    "costs": [
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "tax",
+        "state": "included",
+        "evidence_ids": [
+          "book-local:costs.order.tax"
+        ]
+      },
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "shipping",
+        "state": "additional",
+        "evidence_ids": [
+          "book-local:costs.order.shipping"
+        ],
+        "amount": {
+          "amount": "10",
+          "currency": "USD"
+        }
+      }
+    ],
+    "evidence": [
+      {"schema_version": 2, "evidence_id": "book-local:route.item_eligible", "source_id": "source-book-local", "product_id": "listing-book-local", "variant_id": "sku-book-local", "scope": "route", "field_path": "route.item_eligible", "origin_url": "https://book-local.example/book-local", "final_url": "https://book-local.example/book-local", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for route.item_eligible", "origin": "runtime", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-book-local", "run": {"run_id": "run-new", "run_revision": 1, "request_id": "needs-1", "request_revision": 2}},
+      {"schema_version": 2, "evidence_id": "book-local:variant.specs.cpu", "source_id": "source-book-local", "product_id": "listing-book-local", "variant_id": "sku-book-local", "scope": "variant", "field_path": "variant.specs.cpu", "origin_url": "https://book-local.example/book-local", "final_url": "https://book-local.example/book-local", "observed_at": "2026-11-15T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.cpu", "origin": "maintenance", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "book-local:variant.specs.ram_gb", "source_id": "source-book-local", "product_id": "listing-book-local", "variant_id": "sku-book-local", "scope": "variant", "field_path": "variant.specs.ram_gb", "origin_url": "https://book-local.example/book-local", "final_url": "https://book-local.example/book-local", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.ram_gb", "origin": "runtime", "corpus_version": "corpus-1", "index_version": "index-1", "run": {"run_id": "run-new", "run_revision": 1, "request_id": "needs-1", "request_revision": 2}},
+      {"schema_version": 2, "evidence_id": "book-local:variant.specs.storage_gb", "source_id": "source-book-local", "product_id": "listing-book-local", "variant_id": "sku-book-local", "scope": "variant", "field_path": "variant.specs.storage_gb", "origin_url": "https://book-local.example/book-local", "final_url": "https://book-local.example/book-local", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.storage_gb", "origin": "runtime", "corpus_version": "corpus-1", "index_version": "index-1", "run": {"run_id": "run-new", "run_revision": 1, "request_id": "needs-1", "request_revision": 2}},
+      {"schema_version": 2, "evidence_id": "book-local:price", "source_id": "source-book-local", "product_id": "listing-book-local", "variant_id": "sku-book-local", "scope": "variant", "field_path": "price", "origin_url": "https://book-local.example/book-local", "final_url": "https://book-local.example/book-local", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for price", "origin": "runtime", "corpus_version": "corpus-1", "index_version": "index-1", "run": {"run_id": "run-new", "run_revision": 1, "request_id": "needs-1", "request_revision": 2}},
+      {"schema_version": 2, "evidence_id": "book-local:stock", "source_id": "source-book-local", "product_id": "listing-book-local", "variant_id": "sku-book-local", "scope": "variant", "field_path": "stock", "origin_url": "https://book-local.example/book-local", "final_url": "https://book-local.example/book-local", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for stock", "origin": "runtime", "corpus_version": "corpus-1", "index_version": "index-1", "run": {"run_id": "run-new", "run_revision": 1, "request_id": "needs-1", "request_revision": 2}},
+      {"schema_version": 2, "evidence_id": "book-local:purchasable", "source_id": "source-book-local", "product_id": "listing-book-local", "variant_id": "sku-book-local", "scope": "variant", "field_path": "purchasable", "origin_url": "https://book-local.example/book-local", "final_url": "https://book-local.example/book-local", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for purchasable", "origin": "runtime", "corpus_version": "corpus-1", "index_version": "index-1", "run": {"run_id": "run-new", "run_revision": 1, "request_id": "needs-1", "request_revision": 2}},
+      {"schema_version": 2, "evidence_id": "book-local:condition", "source_id": "source-book-local", "product_id": "listing-book-local", "variant_id": "sku-book-local", "scope": "variant", "field_path": "condition", "origin_url": "https://book-local.example/book-local", "final_url": "https://book-local.example/book-local", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for condition", "origin": "runtime", "corpus_version": "corpus-1", "index_version": "index-1", "run": {"run_id": "run-new", "run_revision": 1, "request_id": "needs-1", "request_revision": 2}},
+      {"schema_version": 2, "evidence_id": "book-local:costs.order.tax", "source_id": "source-book-local", "product_id": "listing-book-local", "variant_id": "sku-book-local", "scope": "route", "field_path": "costs.order.tax", "origin_url": "https://book-local.example/book-local", "final_url": "https://book-local.example/book-local", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.order.tax", "origin": "runtime", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-book-local", "run": {"run_id": "run-new", "run_revision": 1, "request_id": "needs-1", "request_revision": 2}},
+      {"schema_version": 2, "evidence_id": "book-local:costs.order.shipping", "source_id": "source-book-local", "product_id": "listing-book-local", "variant_id": "sku-book-local", "scope": "route", "field_path": "costs.order.shipping", "origin_url": "https://book-local.example/book-local", "final_url": "https://book-local.example/book-local", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.order.shipping", "origin": "runtime", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-book-local", "run": {"run_id": "run-new", "run_revision": 1, "request_id": "needs-1", "request_revision": 2}}
+    ]
+  },
+  "laptop_forwarded": {
+    "schema_version": 2,
+    "offer_id": "book-forward",
+    "retailer_id": "retailer-book-forward",
+    "source_id": "source-book-forward",
+    "source_product_id": "listing-book-forward",
+    "source_variant_id": "sku-book-forward",
+    "seller": {
+      "seller_id": "book-forward",
+      "name": "Book-Forward",
+      "market": "US"
+    },
+    "listing_url": "https://book-forward.example/book-forward",
+    "variant": {
+      "schema_version": 2,
+      "variant_id": "book-u7-16-512",
+      "product": {
+        "product_id": "product-laptop",
+        "category": "laptop",
+        "manufacturer": "Example",
+        "model": "Scout Book"
+      },
+      "specs": {
+        "category": "laptop",
+        "cpu": {
+          "state": "known",
+          "value": "Example U7",
+          "evidence_ids": [
+            "book-forward:variant.specs.cpu"
+          ]
+        },
+        "ram_gb": {
+          "state": "known",
+          "value": 16,
+          "evidence_ids": [
+            "book-forward:variant.specs.ram_gb"
+          ]
+        },
+        "storage_gb": {
+          "state": "known",
+          "value": 512,
+          "evidence_ids": [
+            "book-forward:variant.specs.storage_gb"
+          ]
+        }
+      }
+    },
+    "route": {
+      "kind": "forwarded",
+      "forwarder_id": "example-forwarder",
+      "retailer_leg": {
+        "origin": {
+          "country": "US"
+        },
+        "destination": {
+          "country": "US",
+          "city": "Wilmington"
+        },
+        "item_eligible": {
+          "state": "known",
+          "value": true,
+          "evidence_ids": [
+            "book-forward:route.retailer_leg.item_eligible"
+          ]
+        }
+      },
+      "forwarding_leg": {
+        "origin": {
+          "country": "US",
+          "city": "Wilmington"
+        },
+        "destination": {
+          "country": "LB",
+          "city": "Beirut"
+        },
+        "item_eligible": {
+          "state": "known",
+          "value": true,
+          "evidence_ids": [
+            "book-forward:route.forwarding_leg.item_eligible"
+          ]
+        }
+      },
+      "package": {
+        "weight_g": 2400
+      },
+      "route_id": "route-book-forward"
+    },
+    "price": {
+      "state": "known",
+      "value": {
+        "amount": "900",
+        "currency": "USD"
+      },
+      "evidence_ids": [
+        "book-forward:price"
+      ]
+    },
+    "stock": {
+      "state": "known",
+      "value": true,
+      "evidence_ids": [
+        "book-forward:stock"
+      ]
+    },
+    "purchasable": {
+      "state": "known",
+      "value": true,
+      "evidence_ids": [
+        "book-forward:purchasable"
+      ]
+    },
+    "condition": {
+      "state": "known",
+      "value": "new",
+      "evidence_ids": [
+        "book-forward:condition"
+      ]
+    },
+    "costs": [
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "tax",
+        "state": "unknown",
+        "reason": "No applicable published amount"
+      },
+      {
+        "schema_version": 2,
+        "leg": "retailer",
+        "kind": "shipping",
+        "state": "included",
+        "evidence_ids": [
+          "book-forward:costs.retailer.shipping"
+        ]
+      },
+      {
+        "schema_version": 2,
+        "leg": "forwarding",
+        "kind": "shipping",
+        "state": "additional",
+        "evidence_ids": [
+          "book-forward:costs.forwarding.shipping"
+        ],
+        "amount": {
+          "amount": "40",
+          "currency": "USD"
+        }
+      },
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "duty",
+        "state": "unknown",
+        "reason": "No applicable published amount"
+      },
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "customs_handling",
+        "state": "unknown",
+        "reason": "No applicable published amount"
+      }
+    ],
+    "evidence": [
+      {"schema_version": 2, "evidence_id": "book-forward:route.retailer_leg.item_eligible", "source_id": "source-book-forward", "product_id": "listing-book-forward", "variant_id": "sku-book-forward", "scope": "route", "field_path": "route.retailer_leg.item_eligible", "origin_url": "https://book-forward.example/book-forward", "final_url": "https://book-forward.example/book-forward", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for route.retailer_leg.item_eligible", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-book-forward"},
+      {"schema_version": 2, "evidence_id": "book-forward:route.forwarding_leg.item_eligible", "source_id": "source-book-forward", "product_id": "listing-book-forward", "variant_id": "sku-book-forward", "scope": "route", "field_path": "route.forwarding_leg.item_eligible", "origin_url": "https://book-forward.example/book-forward", "final_url": "https://book-forward.example/book-forward", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for route.forwarding_leg.item_eligible", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-book-forward"},
+      {"schema_version": 2, "evidence_id": "book-forward:variant.specs.cpu", "source_id": "source-book-forward", "product_id": "listing-book-forward", "variant_id": "sku-book-forward", "scope": "variant", "field_path": "variant.specs.cpu", "origin_url": "https://book-forward.example/book-forward", "final_url": "https://book-forward.example/book-forward", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.cpu", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "book-forward:variant.specs.ram_gb", "source_id": "source-book-forward", "product_id": "listing-book-forward", "variant_id": "sku-book-forward", "scope": "variant", "field_path": "variant.specs.ram_gb", "origin_url": "https://book-forward.example/book-forward", "final_url": "https://book-forward.example/book-forward", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.ram_gb", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "book-forward:variant.specs.storage_gb", "source_id": "source-book-forward", "product_id": "listing-book-forward", "variant_id": "sku-book-forward", "scope": "variant", "field_path": "variant.specs.storage_gb", "origin_url": "https://book-forward.example/book-forward", "final_url": "https://book-forward.example/book-forward", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.storage_gb", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "book-forward:price", "source_id": "source-book-forward", "product_id": "listing-book-forward", "variant_id": "sku-book-forward", "scope": "variant", "field_path": "price", "origin_url": "https://book-forward.example/book-forward", "final_url": "https://book-forward.example/book-forward", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for price", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "book-forward:stock", "source_id": "source-book-forward", "product_id": "listing-book-forward", "variant_id": "sku-book-forward", "scope": "variant", "field_path": "stock", "origin_url": "https://book-forward.example/book-forward", "final_url": "https://book-forward.example/book-forward", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for stock", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "book-forward:purchasable", "source_id": "source-book-forward", "product_id": "listing-book-forward", "variant_id": "sku-book-forward", "scope": "variant", "field_path": "purchasable", "origin_url": "https://book-forward.example/book-forward", "final_url": "https://book-forward.example/book-forward", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for purchasable", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "book-forward:condition", "source_id": "source-book-forward", "product_id": "listing-book-forward", "variant_id": "sku-book-forward", "scope": "variant", "field_path": "condition", "origin_url": "https://book-forward.example/book-forward", "final_url": "https://book-forward.example/book-forward", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for condition", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "book-forward:costs.retailer.shipping", "source_id": "source-book-forward", "product_id": "listing-book-forward", "variant_id": "sku-book-forward", "scope": "route", "field_path": "costs.retailer.shipping", "origin_url": "https://book-forward.example/book-forward", "final_url": "https://book-forward.example/book-forward", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.retailer.shipping", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-book-forward"},
+      {"schema_version": 2, "evidence_id": "book-forward:costs.forwarding.shipping", "source_id": "source-book-forward", "product_id": "listing-book-forward", "variant_id": "sku-book-forward", "scope": "route", "field_path": "costs.forwarding.shipping", "origin_url": "https://book-forward.example/book-forward", "final_url": "https://book-forward.example/book-forward", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.forwarding.shipping", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-book-forward"}
+    ]
+  },
+  "laptop_direct_import": {
+    "schema_version": 2,
+    "offer_id": "book-direct",
+    "retailer_id": "retailer-book-direct",
+    "source_id": "source-book-direct",
+    "source_product_id": "listing-book-direct",
+    "source_variant_id": "sku-book-direct",
+    "seller": {
+      "seller_id": "book-direct",
+      "name": "Book-Direct",
+      "market": "AE"
+    },
+    "listing_url": "https://book-direct.example/book-direct",
+    "variant": {
+      "schema_version": 2,
+      "variant_id": "book-u7-16-512",
+      "product": {
+        "product_id": "product-laptop",
+        "category": "laptop",
+        "manufacturer": "Example",
+        "model": "Scout Book"
+      },
+      "specs": {
+        "category": "laptop",
+        "cpu": {
+          "state": "known",
+          "value": "Example U7",
+          "evidence_ids": [
+            "book-direct:variant.specs.cpu"
+          ]
+        },
+        "ram_gb": {
+          "state": "known",
+          "value": 16,
+          "evidence_ids": [
+            "book-direct:variant.specs.ram_gb"
+          ]
+        },
+        "storage_gb": {
+          "state": "known",
+          "value": 512,
+          "evidence_ids": [
+            "book-direct:variant.specs.storage_gb"
+          ]
+        }
+      }
+    },
+    "route": {
+      "kind": "direct",
+      "origin_country": "AE",
+      "destination": {
+        "country": "LB",
+        "city": "Beirut"
+      },
+      "route_id": "route-book-direct",
+      "item_eligible": {
+        "state": "known",
+        "value": true,
+        "evidence_ids": [
+          "book-direct:route.item_eligible"
+        ]
+      }
+    },
+    "price": {
+      "state": "known",
+      "value": {
+        "amount": "940",
+        "currency": "USD"
+      },
+      "evidence_ids": [
+        "book-direct:price"
+      ]
+    },
+    "stock": {
+      "state": "known",
+      "value": true,
+      "evidence_ids": [
+        "book-direct:stock"
+      ]
+    },
+    "purchasable": {
+      "state": "known",
+      "value": true,
+      "evidence_ids": [
+        "book-direct:purchasable"
+      ]
+    },
+    "condition": {
+      "state": "known",
+      "value": "new",
+      "evidence_ids": [
+        "book-direct:condition"
+      ]
+    },
+    "costs": [
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "tax",
+        "state": "included",
+        "evidence_ids": [
+          "book-direct:costs.order.tax"
+        ]
+      },
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "shipping",
+        "state": "additional",
+        "evidence_ids": [
+          "book-direct:costs.order.shipping"
+        ],
+        "amount": {
+          "amount": "10",
+          "currency": "USD"
+        }
+      },
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "duty",
+        "state": "included",
+        "evidence_ids": [
+          "book-direct:costs.order.duty"
+        ]
+      },
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "customs_handling",
+        "state": "included",
+        "evidence_ids": [
+          "book-direct:costs.order.customs_handling"
+        ]
+      }
+    ],
+    "evidence": [
+      {"schema_version": 2, "evidence_id": "book-direct:route.item_eligible", "source_id": "source-book-direct", "product_id": "listing-book-direct", "variant_id": "sku-book-direct", "scope": "route", "field_path": "route.item_eligible", "origin_url": "https://book-direct.example/book-direct", "final_url": "https://book-direct.example/book-direct", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for route.item_eligible", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-book-direct"},
+      {"schema_version": 2, "evidence_id": "book-direct:variant.specs.cpu", "source_id": "source-book-direct", "product_id": "listing-book-direct", "variant_id": "sku-book-direct", "scope": "variant", "field_path": "variant.specs.cpu", "origin_url": "https://book-direct.example/book-direct", "final_url": "https://book-direct.example/book-direct", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.cpu", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "book-direct:variant.specs.ram_gb", "source_id": "source-book-direct", "product_id": "listing-book-direct", "variant_id": "sku-book-direct", "scope": "variant", "field_path": "variant.specs.ram_gb", "origin_url": "https://book-direct.example/book-direct", "final_url": "https://book-direct.example/book-direct", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.ram_gb", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "book-direct:variant.specs.storage_gb", "source_id": "source-book-direct", "product_id": "listing-book-direct", "variant_id": "sku-book-direct", "scope": "variant", "field_path": "variant.specs.storage_gb", "origin_url": "https://book-direct.example/book-direct", "final_url": "https://book-direct.example/book-direct", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.storage_gb", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "book-direct:price", "source_id": "source-book-direct", "product_id": "listing-book-direct", "variant_id": "sku-book-direct", "scope": "variant", "field_path": "price", "origin_url": "https://book-direct.example/book-direct", "final_url": "https://book-direct.example/book-direct", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for price", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "book-direct:stock", "source_id": "source-book-direct", "product_id": "listing-book-direct", "variant_id": "sku-book-direct", "scope": "variant", "field_path": "stock", "origin_url": "https://book-direct.example/book-direct", "final_url": "https://book-direct.example/book-direct", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for stock", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "book-direct:purchasable", "source_id": "source-book-direct", "product_id": "listing-book-direct", "variant_id": "sku-book-direct", "scope": "variant", "field_path": "purchasable", "origin_url": "https://book-direct.example/book-direct", "final_url": "https://book-direct.example/book-direct", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for purchasable", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "book-direct:condition", "source_id": "source-book-direct", "product_id": "listing-book-direct", "variant_id": "sku-book-direct", "scope": "variant", "field_path": "condition", "origin_url": "https://book-direct.example/book-direct", "final_url": "https://book-direct.example/book-direct", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for condition", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "book-direct:costs.order.tax", "source_id": "source-book-direct", "product_id": "listing-book-direct", "variant_id": "sku-book-direct", "scope": "route", "field_path": "costs.order.tax", "origin_url": "https://book-direct.example/book-direct", "final_url": "https://book-direct.example/book-direct", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.order.tax", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-book-direct"},
+      {"schema_version": 2, "evidence_id": "book-direct:costs.order.shipping", "source_id": "source-book-direct", "product_id": "listing-book-direct", "variant_id": "sku-book-direct", "scope": "route", "field_path": "costs.order.shipping", "origin_url": "https://book-direct.example/book-direct", "final_url": "https://book-direct.example/book-direct", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.order.shipping", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-book-direct"},
+      {"schema_version": 2, "evidence_id": "book-direct:costs.order.duty", "source_id": "source-book-direct", "product_id": "listing-book-direct", "variant_id": "sku-book-direct", "scope": "route", "field_path": "costs.order.duty", "origin_url": "https://book-direct.example/book-direct", "final_url": "https://book-direct.example/book-direct", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.order.duty", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-book-direct"},
+      {"schema_version": 2, "evidence_id": "book-direct:costs.order.customs_handling", "source_id": "source-book-direct", "product_id": "listing-book-direct", "variant_id": "sku-book-direct", "scope": "route", "field_path": "costs.order.customs_handling", "origin_url": "https://book-direct.example/book-direct", "final_url": "https://book-direct.example/book-direct", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.order.customs_handling", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-book-direct"}
+    ]
+  },
+  "tablet": {
+    "schema_version": 2,
+    "offer_id": "tablet",
+    "retailer_id": "retailer-tablet",
+    "source_id": "source-tablet",
+    "source_product_id": "listing-tablet",
+    "source_variant_id": "sku-tablet",
+    "seller": {
+      "seller_id": "tablet",
+      "name": "Tablet",
+      "market": "LB"
+    },
+    "listing_url": "https://tablet.example/tablet",
+    "variant": {
+      "schema_version": 2,
+      "variant_id": "tablet",
+      "product": {
+        "product_id": "product-tablet",
+        "category": "tablet",
+        "manufacturer": "Example",
+        "model": "Scout Tab"
+      },
+      "specs": {
+        "category": "tablet",
+        "storage_gb": {
+          "state": "known",
+          "value": 128,
+          "evidence_ids": [
+            "tablet:variant.specs.storage_gb"
+          ]
+        },
+        "connectivity": {
+          "state": "known",
+          "value": "wifi",
+          "evidence_ids": [
+            "tablet:variant.specs.connectivity"
+          ]
+        },
+        "stylus_support": {
+          "state": "known",
+          "value": true,
+          "evidence_ids": [
+            "tablet:variant.specs.stylus_support"
+          ]
+        }
+      }
+    },
+    "route": {
+      "kind": "direct",
+      "origin_country": "LB",
+      "destination": {
+        "country": "LB",
+        "city": "Beirut"
+      },
+      "route_id": "route-tablet",
+      "item_eligible": {
+        "state": "known",
+        "value": true,
+        "evidence_ids": [
+          "tablet:route.item_eligible"
+        ]
+      }
+    },
+    "price": {
+      "state": "known",
+      "value": {
+        "amount": "250",
+        "currency": "USD"
+      },
+      "evidence_ids": [
+        "tablet:price"
+      ]
+    },
+    "stock": {
+      "state": "known",
+      "value": true,
+      "evidence_ids": [
+        "tablet:stock"
+      ]
+    },
+    "purchasable": {
+      "state": "known",
+      "value": true,
+      "evidence_ids": [
+        "tablet:purchasable"
+      ]
+    },
+    "condition": {
+      "state": "known",
+      "value": "new",
+      "evidence_ids": [
+        "tablet:condition"
+      ]
+    },
+    "costs": [
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "tax",
+        "state": "included",
+        "evidence_ids": [
+          "tablet:costs.order.tax"
+        ]
+      },
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "shipping",
+        "state": "additional",
+        "evidence_ids": [
+          "tablet:costs.order.shipping"
+        ],
+        "amount": {
+          "amount": "10",
+          "currency": "USD"
+        }
+      }
+    ],
+    "evidence": [
+      {"schema_version": 2, "evidence_id": "tablet:route.item_eligible", "source_id": "source-tablet", "product_id": "listing-tablet", "variant_id": "sku-tablet", "scope": "route", "field_path": "route.item_eligible", "origin_url": "https://tablet.example/tablet", "final_url": "https://tablet.example/tablet", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for route.item_eligible", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-tablet"},
+      {"schema_version": 2, "evidence_id": "tablet:variant.specs.storage_gb", "source_id": "source-tablet", "product_id": "listing-tablet", "variant_id": "sku-tablet", "scope": "variant", "field_path": "variant.specs.storage_gb", "origin_url": "https://tablet.example/tablet", "final_url": "https://tablet.example/tablet", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.storage_gb", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "tablet:variant.specs.connectivity", "source_id": "source-tablet", "product_id": "listing-tablet", "variant_id": "sku-tablet", "scope": "variant", "field_path": "variant.specs.connectivity", "origin_url": "https://tablet.example/tablet", "final_url": "https://tablet.example/tablet", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.connectivity", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "tablet:variant.specs.stylus_support", "source_id": "source-tablet", "product_id": "listing-tablet", "variant_id": "sku-tablet", "scope": "variant", "field_path": "variant.specs.stylus_support", "origin_url": "https://tablet.example/tablet", "final_url": "https://tablet.example/tablet", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.stylus_support", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "tablet:price", "source_id": "source-tablet", "product_id": "listing-tablet", "variant_id": "sku-tablet", "scope": "variant", "field_path": "price", "origin_url": "https://tablet.example/tablet", "final_url": "https://tablet.example/tablet", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for price", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "tablet:stock", "source_id": "source-tablet", "product_id": "listing-tablet", "variant_id": "sku-tablet", "scope": "variant", "field_path": "stock", "origin_url": "https://tablet.example/tablet", "final_url": "https://tablet.example/tablet", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for stock", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "tablet:purchasable", "source_id": "source-tablet", "product_id": "listing-tablet", "variant_id": "sku-tablet", "scope": "variant", "field_path": "purchasable", "origin_url": "https://tablet.example/tablet", "final_url": "https://tablet.example/tablet", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for purchasable", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "tablet:condition", "source_id": "source-tablet", "product_id": "listing-tablet", "variant_id": "sku-tablet", "scope": "variant", "field_path": "condition", "origin_url": "https://tablet.example/tablet", "final_url": "https://tablet.example/tablet", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for condition", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "tablet:costs.order.tax", "source_id": "source-tablet", "product_id": "listing-tablet", "variant_id": "sku-tablet", "scope": "route", "field_path": "costs.order.tax", "origin_url": "https://tablet.example/tablet", "final_url": "https://tablet.example/tablet", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.order.tax", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-tablet"},
+      {"schema_version": 2, "evidence_id": "tablet:costs.order.shipping", "source_id": "source-tablet", "product_id": "listing-tablet", "variant_id": "sku-tablet", "scope": "route", "field_path": "costs.order.shipping", "origin_url": "https://tablet.example/tablet", "final_url": "https://tablet.example/tablet", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.order.shipping", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-tablet"}
+    ]
+  },
+  "monitor": {
+    "schema_version": 2,
+    "offer_id": "monitor",
+    "retailer_id": "retailer-monitor",
+    "source_id": "source-monitor",
+    "source_product_id": "listing-monitor",
+    "source_variant_id": "sku-monitor",
+    "seller": {
+      "seller_id": "monitor",
+      "name": "Monitor",
+      "market": "LB"
+    },
+    "listing_url": "https://monitor.example/monitor",
+    "variant": {
+      "schema_version": 2,
+      "variant_id": "monitor",
+      "product": {
+        "product_id": "product-monitor",
+        "category": "monitor",
+        "manufacturer": "Example",
+        "model": "Scout Display"
+      },
+      "specs": {
+        "category": "monitor",
+        "width_px": {
+          "state": "known",
+          "value": 2560,
+          "evidence_ids": [
+            "monitor:variant.specs.width_px"
+          ]
+        },
+        "height_px": {
+          "state": "known",
+          "value": 1440,
+          "evidence_ids": [
+            "monitor:variant.specs.height_px"
+          ]
+        },
+        "refresh_hz": {
+          "state": "known",
+          "value": 144,
+          "evidence_ids": [
+            "monitor:variant.specs.refresh_hz"
+          ]
+        },
+        "diagonal_inches": {
+          "state": "known",
+          "value": "27.0",
+          "evidence_ids": [
+            "monitor:variant.specs.diagonal_inches"
+          ]
+        }
+      }
+    },
+    "route": {
+      "kind": "direct",
+      "origin_country": "LB",
+      "destination": {
+        "country": "LB",
+        "city": "Beirut"
+      },
+      "route_id": "route-monitor",
+      "item_eligible": {
+        "state": "known",
+        "value": true,
+        "evidence_ids": [
+          "monitor:route.item_eligible"
+        ]
+      }
+    },
+    "price": {
+      "state": "known",
+      "value": {
+        "amount": "320",
+        "currency": "USD"
+      },
+      "evidence_ids": [
+        "monitor:price"
+      ]
+    },
+    "stock": {
+      "state": "known",
+      "value": true,
+      "evidence_ids": [
+        "monitor:stock"
+      ]
+    },
+    "purchasable": {
+      "state": "known",
+      "value": true,
+      "evidence_ids": [
+        "monitor:purchasable"
+      ]
+    },
+    "condition": {
+      "state": "known",
+      "value": "new",
+      "evidence_ids": [
+        "monitor:condition"
+      ]
+    },
+    "costs": [
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "tax",
+        "state": "included",
+        "evidence_ids": [
+          "monitor:costs.order.tax"
+        ]
+      },
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "shipping",
+        "state": "additional",
+        "evidence_ids": [
+          "monitor:costs.order.shipping"
+        ],
+        "amount": {
+          "amount": "10",
+          "currency": "USD"
+        }
+      }
+    ],
+    "evidence": [
+      {"schema_version": 2, "evidence_id": "monitor:route.item_eligible", "source_id": "source-monitor", "product_id": "listing-monitor", "variant_id": "sku-monitor", "scope": "route", "field_path": "route.item_eligible", "origin_url": "https://monitor.example/monitor", "final_url": "https://monitor.example/monitor", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for route.item_eligible", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-monitor"},
+      {"schema_version": 2, "evidence_id": "monitor:variant.specs.width_px", "source_id": "source-monitor", "product_id": "listing-monitor", "variant_id": "sku-monitor", "scope": "variant", "field_path": "variant.specs.width_px", "origin_url": "https://monitor.example/monitor", "final_url": "https://monitor.example/monitor", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.width_px", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "monitor:variant.specs.height_px", "source_id": "source-monitor", "product_id": "listing-monitor", "variant_id": "sku-monitor", "scope": "variant", "field_path": "variant.specs.height_px", "origin_url": "https://monitor.example/monitor", "final_url": "https://monitor.example/monitor", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.height_px", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "monitor:variant.specs.refresh_hz", "source_id": "source-monitor", "product_id": "listing-monitor", "variant_id": "sku-monitor", "scope": "variant", "field_path": "variant.specs.refresh_hz", "origin_url": "https://monitor.example/monitor", "final_url": "https://monitor.example/monitor", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.refresh_hz", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "monitor:variant.specs.diagonal_inches", "source_id": "source-monitor", "product_id": "listing-monitor", "variant_id": "sku-monitor", "scope": "variant", "field_path": "variant.specs.diagonal_inches", "origin_url": "https://monitor.example/monitor", "final_url": "https://monitor.example/monitor", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.diagonal_inches", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "monitor:price", "source_id": "source-monitor", "product_id": "listing-monitor", "variant_id": "sku-monitor", "scope": "variant", "field_path": "price", "origin_url": "https://monitor.example/monitor", "final_url": "https://monitor.example/monitor", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for price", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "monitor:stock", "source_id": "source-monitor", "product_id": "listing-monitor", "variant_id": "sku-monitor", "scope": "variant", "field_path": "stock", "origin_url": "https://monitor.example/monitor", "final_url": "https://monitor.example/monitor", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for stock", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "monitor:purchasable", "source_id": "source-monitor", "product_id": "listing-monitor", "variant_id": "sku-monitor", "scope": "variant", "field_path": "purchasable", "origin_url": "https://monitor.example/monitor", "final_url": "https://monitor.example/monitor", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for purchasable", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "monitor:condition", "source_id": "source-monitor", "product_id": "listing-monitor", "variant_id": "sku-monitor", "scope": "variant", "field_path": "condition", "origin_url": "https://monitor.example/monitor", "final_url": "https://monitor.example/monitor", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for condition", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "monitor:costs.order.tax", "source_id": "source-monitor", "product_id": "listing-monitor", "variant_id": "sku-monitor", "scope": "route", "field_path": "costs.order.tax", "origin_url": "https://monitor.example/monitor", "final_url": "https://monitor.example/monitor", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.order.tax", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-monitor"},
+      {"schema_version": 2, "evidence_id": "monitor:costs.order.shipping", "source_id": "source-monitor", "product_id": "listing-monitor", "variant_id": "sku-monitor", "scope": "route", "field_path": "costs.order.shipping", "origin_url": "https://monitor.example/monitor", "final_url": "https://monitor.example/monitor", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.order.shipping", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-monitor"}
+    ]
+  },
+  "audio": {
+    "schema_version": 2,
+    "offer_id": "audio",
+    "retailer_id": "retailer-audio",
+    "source_id": "source-audio",
+    "source_product_id": "listing-audio",
+    "source_variant_id": "sku-audio",
+    "seller": {
+      "seller_id": "audio",
+      "name": "Audio",
+      "market": "LB"
+    },
+    "listing_url": "https://audio.example/audio",
+    "variant": {
+      "schema_version": 2,
+      "variant_id": "audio",
+      "product": {
+        "product_id": "product-audio",
+        "category": "audio",
+        "manufacturer": "Example",
+        "model": "Scout Buds"
+      },
+      "specs": {
+        "category": "audio",
+        "form_factor": {
+          "state": "known",
+          "value": "earbuds",
+          "evidence_ids": [
+            "audio:variant.specs.form_factor"
+          ]
+        },
+        "connectivity": {
+          "state": "known",
+          "value": "wireless",
+          "evidence_ids": [
+            "audio:variant.specs.connectivity"
+          ]
+        },
+        "active_noise_cancellation": {
+          "state": "known",
+          "value": true,
+          "evidence_ids": [
+            "audio:variant.specs.active_noise_cancellation"
+          ]
+        }
+      }
+    },
+    "route": {
+      "kind": "direct",
+      "origin_country": "LB",
+      "destination": {
+        "country": "LB",
+        "city": "Beirut"
+      },
+      "route_id": "route-audio",
+      "item_eligible": {
+        "state": "known",
+        "value": true,
+        "evidence_ids": [
+          "audio:route.item_eligible"
+        ]
+      }
+    },
+    "price": {
+      "state": "known",
+      "value": {
+        "amount": "100",
+        "currency": "USD"
+      },
+      "evidence_ids": [
+        "audio:price"
+      ]
+    },
+    "stock": {
+      "state": "known",
+      "value": true,
+      "evidence_ids": [
+        "audio:stock"
+      ]
+    },
+    "purchasable": {
+      "state": "known",
+      "value": true,
+      "evidence_ids": [
+        "audio:purchasable"
+      ]
+    },
+    "condition": {
+      "state": "known",
+      "value": "new",
+      "evidence_ids": [
+        "audio:condition"
+      ]
+    },
+    "costs": [
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "tax",
+        "state": "included",
+        "evidence_ids": [
+          "audio:costs.order.tax"
+        ]
+      },
+      {
+        "schema_version": 2,
+        "leg": "order",
+        "kind": "shipping",
+        "state": "additional",
+        "evidence_ids": [
+          "audio:costs.order.shipping"
+        ],
+        "amount": {
+          "amount": "10",
+          "currency": "USD"
+        }
+      }
+    ],
+    "evidence": [
+      {"schema_version": 2, "evidence_id": "audio:route.item_eligible", "source_id": "source-audio", "product_id": "listing-audio", "variant_id": "sku-audio", "scope": "route", "field_path": "route.item_eligible", "origin_url": "https://audio.example/audio", "final_url": "https://audio.example/audio", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for route.item_eligible", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-audio"},
+      {"schema_version": 2, "evidence_id": "audio:variant.specs.form_factor", "source_id": "source-audio", "product_id": "listing-audio", "variant_id": "sku-audio", "scope": "variant", "field_path": "variant.specs.form_factor", "origin_url": "https://audio.example/audio", "final_url": "https://audio.example/audio", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.form_factor", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "audio:variant.specs.connectivity", "source_id": "source-audio", "product_id": "listing-audio", "variant_id": "sku-audio", "scope": "variant", "field_path": "variant.specs.connectivity", "origin_url": "https://audio.example/audio", "final_url": "https://audio.example/audio", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.connectivity", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "audio:variant.specs.active_noise_cancellation", "source_id": "source-audio", "product_id": "listing-audio", "variant_id": "sku-audio", "scope": "variant", "field_path": "variant.specs.active_noise_cancellation", "origin_url": "https://audio.example/audio", "final_url": "https://audio.example/audio", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for variant.specs.active_noise_cancellation", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "audio:price", "source_id": "source-audio", "product_id": "listing-audio", "variant_id": "sku-audio", "scope": "variant", "field_path": "price", "origin_url": "https://audio.example/audio", "final_url": "https://audio.example/audio", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for price", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "audio:stock", "source_id": "source-audio", "product_id": "listing-audio", "variant_id": "sku-audio", "scope": "variant", "field_path": "stock", "origin_url": "https://audio.example/audio", "final_url": "https://audio.example/audio", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for stock", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "audio:purchasable", "source_id": "source-audio", "product_id": "listing-audio", "variant_id": "sku-audio", "scope": "variant", "field_path": "purchasable", "origin_url": "https://audio.example/audio", "final_url": "https://audio.example/audio", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for purchasable", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "audio:condition", "source_id": "source-audio", "product_id": "listing-audio", "variant_id": "sku-audio", "scope": "variant", "field_path": "condition", "origin_url": "https://audio.example/audio", "final_url": "https://audio.example/audio", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for condition", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1"},
+      {"schema_version": 2, "evidence_id": "audio:costs.order.tax", "source_id": "source-audio", "product_id": "listing-audio", "variant_id": "sku-audio", "scope": "route", "field_path": "costs.order.tax", "origin_url": "https://audio.example/audio", "final_url": "https://audio.example/audio", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.order.tax", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-audio"},
+      {"schema_version": 2, "evidence_id": "audio:costs.order.shipping", "source_id": "source-audio", "product_id": "listing-audio", "variant_id": "sku-audio", "scope": "route", "field_path": "costs.order.shipping", "origin_url": "https://audio.example/audio", "final_url": "https://audio.example/audio", "observed_at": "2026-11-16T12:00:30Z", "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "adapter_version": "example-v1", "excerpt": "Synthetic observation for costs.order.shipping", "origin": "bootstrap", "corpus_version": "corpus-1", "index_version": "index-1", "route_id": "route-audio"}
+    ]
+  }
+}

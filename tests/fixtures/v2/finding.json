@@ -1,0 +1,32 @@
+{
+  "schema_version": 2,
+  "finding_id": "finding-1",
+  "task_id": "research-1",
+  "run": {
+    "run_id": "run-new",
+    "run_revision": 1,
+    "request_id": "needs-1",
+    "request_revision": 2
+  },
+  "role": "researcher",
+  "claims": [
+    {
+      "target": "offer",
+      "target_id": "book-local",
+      "field_path": "price",
+      "fact": {
+        "state": "known",
+        "value": {
+          "amount": "920",
+          "currency": "USD"
+        },
+        "evidence_ids": [
+          "book-local:price"
+        ]
+      }
+    }
+  ],
+  "gaps": [
+    "Battery runtime needs independent evidence"
+  ]
+}

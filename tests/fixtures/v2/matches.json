@@ -1,0 +1,47 @@
+[
+  {
+    "schema_version": 2,
+    "left_variant_id": "phone-256-lb",
+    "right_variant_id": "phone-256-lb",
+    "outcome": "confirmed_equivalent",
+    "reasons": [
+      "Same hardware configuration, with different seller terms"
+    ],
+    "evidence_ids": [
+      "phone-one:variant.specs.storage_gb",
+      "phone-two:variant.specs.storage_gb"
+    ],
+    "left_offer_id": "phone-one",
+    "right_offer_id": "phone-two"
+  },
+  {
+    "schema_version": 2,
+    "left_variant_id": "phone-256-lb",
+    "right_variant_id": "phone-128-lb",
+    "outcome": "different_configuration",
+    "reasons": [
+      "Different storage capacity"
+    ],
+    "evidence_ids": [
+      "phone-one:variant.specs.storage_gb",
+      "phone-three:variant.specs.storage_gb"
+    ],
+    "left_offer_id": "phone-one",
+    "right_offer_id": "phone-three"
+  },
+  {
+    "schema_version": 2,
+    "left_variant_id": "phone-256-lb",
+    "right_variant_id": "phone-unconfirmed",
+    "outcome": "unresolved",
+    "reasons": [
+      "SIM configuration is unknown"
+    ],
+    "evidence_ids": [
+      "phone-one:variant.specs.storage_gb",
+      "phone-four:variant.specs.storage_gb"
+    ],
+    "left_offer_id": "phone-one",
+    "right_offer_id": "phone-four"
+  }
+]
