@@ -1,6 +1,7 @@
 """Version 1 data contracts. Retrieval, eligibility and ranking are separate tasks."""
 from datetime import date, datetime, timezone
 from decimal import Decimal, InvalidOperation
+import re
 from typing import Annotated, Generic, Literal, TypeVar
 
 from pydantic import (
@@ -340,11 +341,27 @@ class Offer(Contract):
         return self
 
 
+# Gate refusals and permanent HTTP statuses: a documented prefix, then a space or the end.
+_REFUSAL_PREFIXES = {
+    'BLOCKED': re.compile(r'blocked:(url|method|dns|redirect|size|encoding)( |\Z)'),
+    'HTTP_ERROR': re.compile(r'http:[0-9]{3}( |\Z)'),
+}
+
+
 class ToolError(Model):
     code: Literal['TIMEOUT', 'RATE_LIMIT', 'SOURCE_DISABLED', 'INVALID_SCHEMA',
-                  'FIELD_CONFLICT', 'NO_PRICE', 'NETWORK_ERROR', 'BUDGET_EXHAUSTED']
+                  'FIELD_CONFLICT', 'NO_PRICE', 'NETWORK_ERROR', 'BUDGET_EXHAUSTED',
+                  'BLOCKED', 'HTTP_ERROR']
     message: Text
     retryable: StrictBool
+
+    @model_validator(mode='after')
+    def documented_refusal(self):
+        prefix = _REFUSAL_PREFIXES.get(self.code)
+        if prefix is not None and (self.retryable or not prefix.match(self.message)):
+            raise ValueError(f'{self.code} errors need their documented message prefix '
+                             'and cannot be retryable')
+        return self
 
 
 class ToolResult(Contract):

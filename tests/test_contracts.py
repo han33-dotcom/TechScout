@@ -169,6 +169,51 @@ class ContractTests(unittest.TestCase):
         result = c.ToolResult(status='partial', data={'offers': []}, errors=[error], duration_ms=10)
         self.assertEqual(result.errors[0].code, 'TIMEOUT')
 
+    def test_gate_refusals_have_their_own_codes(self):
+        for code, message in (('BLOCKED', 'blocked:redirect to a private address'),
+                              ('HTTP_ERROR', 'http:404 product page not found')):
+            error = dict(code=code, message=message, retryable=False)
+            result = c.ToolResult(status='error', errors=[error], duration_ms=3)
+            restored = c.ToolResult.model_validate_json(result.model_dump_json())
+            self.assertEqual((restored.schema_version, restored.errors[0].code), (1, code))
+        with self.assertRaises(ValidationError):
+            c.ToolError(code='FORBIDDEN', message='not a listed code', retryable=False)
+
+    def test_gate_refusals_need_their_documented_prefix_and_are_never_retryable(self):
+        valid = [('BLOCKED', f'blocked:{reason} seller-1: refused')
+                 for reason in ('url', 'method', 'dns', 'redirect', 'size', 'encoding')]
+        valid += [('BLOCKED', 'blocked:size'), ('HTTP_ERROR', 'http:404'),
+                  ('HTTP_ERROR', 'http:500 seller-1: permanent HTTP status')]
+        for code, message in valid:
+            with self.subTest(code=code, message=message):
+                self.assertEqual(c.ToolError(code=code, message=message, retryable=False).message,
+                                 message)
+        malformed = [('BLOCKED', 'seller-1: not an allowed endpoint', False),
+                     ('BLOCKED', 'refused blocked:url', False),
+                     ('BLOCKED', 'Blocked:url seller-1', False),
+                     ('BLOCKED', 'blocked:proxy seller-1', False),
+                     ('BLOCKED', 'blocked:urlx seller-1', False),
+                     ('BLOCKED', 'blocked:url:seller-1', False),
+                     ('BLOCKED', 'blocked:url seller-1', True),
+                     ('BLOCKED', 'http:404', True),
+                     ('BLOCKED', 'http:404 seller-1', False),
+                     ('HTTP_ERROR', 'blocked:url seller-1', False),
+                     ('HTTP_ERROR', 'http:4040 seller-1', False),
+                     ('HTTP_ERROR', 'http:40', False),
+                     ('HTTP_ERROR', 'http:abc', False),
+                     ('HTTP_ERROR', 'http:\u0664\u0660\u0664', False),
+                     ('HTTP_ERROR', 'http:404 seller-1', True)]
+        for code, message, retryable in malformed:
+            with self.subTest(code=code, message=message, retryable=retryable):
+                with self.assertRaises(ValidationError):
+                    c.ToolError(code=code, message=message, retryable=retryable)
+        stored = dict(status='error', duration_ms=3,
+                      errors=[dict(code='BLOCKED', message='http:404', retryable=True)])
+        with self.assertRaises(ValidationError):
+            c.ToolResult.model_validate_json(json.dumps(stored))
+        other = c.ToolError(code='NETWORK_ERROR', message='seller-1: store answered 502', retryable=True)
+        self.assertTrue(other.retryable)
+
     def test_run_abstention_and_verification_time_are_explicit(self):
         item = dict(run_id='run-1', request_id='request-1', status='abstained',
                     stop_reason='No qualifying offers', started_at='2026-10-12T13:59:00Z',
