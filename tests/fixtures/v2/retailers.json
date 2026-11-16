@@ -1,0 +1,39 @@
+[
+  {
+    "schema_version": 2,
+    "retailer_id": "retailer-book-other",
+    "name": "Book-Other",
+    "origin": "https://book-other.example/",
+    "markets": [
+      "LB"
+    ],
+    "categories": [
+      "laptop",
+      "phone"
+    ],
+    "discovery_status": "audited",
+    "capability": {
+      "capability_id": "cap-book-other",
+      "version": "1"
+    },
+    "last_checked_at": "2026-11-15T12:00:30Z",
+    "retrieval_method": "direct",
+    "policy_evidence_ids": [
+      "book-other:costs.order.tax"
+    ]
+  },
+  {
+    "schema_version": 2,
+    "retailer_id": "retailer-import-lead",
+    "name": "Import-Lead",
+    "origin": "https://import-lead.example/",
+    "markets": [
+      "AE"
+    ],
+    "categories": [
+      "laptop",
+      "phone"
+    ],
+    "discovery_status": "discovered"
+  }
+]

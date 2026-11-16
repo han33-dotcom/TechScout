@@ -1,5 +1,7 @@
 # Tech Scout MVP contract v1
 
+Existing stores, CLI runs and stored records use this version. New consumers can use the [full-product v2 contracts](full-product-contracts.md). Both versions have explicit validation entry points.
+
 Task 2 defines the shared data format; the shopping workflow built on it is described
 under [Shopping workflow](#shopping-workflow). The first workflow is exact **new smartphones in Lebanon**, with
 pickup or domestic delivery. Wider electronics and international comparison remain

@@ -9,7 +9,7 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 ## Documents
 
 - [collaborator setup](collaborator-setup.md)
-- [mvp spec](mvp-spec.md)
+- [Full-product contracts v2](full-product-contracts.md) and [MVP contract v1](mvp-spec.md)
 - [pr policy activation](pr-policy-activation.md)
 - [retailer access requests](retailer-access-requests.md)
 - [source coverage](source-coverage.md)

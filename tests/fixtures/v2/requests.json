@@ -1,0 +1,142 @@
+{
+  "exact_model": {
+    "schema_version": 2,
+    "request_id": "exact-1",
+    "intent": {
+      "kind": "exact_model",
+      "manufacturer": "Example",
+      "model": "Scout Phone"
+    },
+    "requirements": {
+      "category": "phone",
+      "storage_gb": 256
+    }
+  },
+  "product_link": {
+    "schema_version": 2,
+    "request_id": "link-1",
+    "intent": {
+      "kind": "product_link",
+      "url": "https://retailer.example/laptop"
+    },
+    "requirements": {
+      "category": "laptop"
+    }
+  },
+  "needs": {
+    "schema_version": 2,
+    "request_id": "needs-1",
+    "intent": {
+      "kind": "needs",
+      "description": "Engineering laptop delivered to Beirut with good battery life",
+      "required_software": [
+        "CAD"
+      ]
+    },
+    "requirements": {
+      "category": "laptop",
+      "min_ram_gb": 16
+    },
+    "budget": {
+      "target": {
+        "amount": "900",
+        "currency": "USD"
+      }
+    },
+    "preferences": [
+      "battery",
+      "portability"
+    ],
+    "fulfillment": {
+      "mode": "delivery",
+      "destination": {
+        "country": "LB",
+        "city": "Beirut"
+      }
+    }
+  },
+  "refined": {
+    "schema_version": 2,
+    "request_id": "needs-1",
+    "intent": {
+      "kind": "needs",
+      "description": "Engineering laptop delivered to Beirut with good battery life",
+      "required_software": [
+        "CAD"
+      ]
+    },
+    "requirements": {
+      "category": "laptop",
+      "min_ram_gb": 16
+    },
+    "budget": {
+      "target": {
+        "amount": "900",
+        "currency": "USD"
+      },
+      "maximum": {
+        "amount": "950",
+        "currency": "USD"
+      }
+    },
+    "preferences": [
+      "battery"
+    ],
+    "fulfillment": {
+      "mode": "delivery",
+      "destination": {
+        "country": "LB",
+        "city": "Beirut"
+      }
+    },
+    "revision": 2,
+    "market_scope": {
+      "include_international": true,
+      "international_markets": [
+        "US",
+        "AE"
+      ]
+    }
+  },
+  "tablet": {
+    "schema_version": 2,
+    "request_id": "tablet-1",
+    "intent": {
+      "kind": "needs",
+      "description": "Tablet for taking notes"
+    },
+    "requirements": {
+      "category": "tablet",
+      "stylus_support": true
+    }
+  },
+  "monitor": {
+    "schema_version": 2,
+    "request_id": "monitor-1",
+    "intent": {
+      "kind": "needs",
+      "description": "High refresh work display"
+    },
+    "requirements": {
+      "category": "monitor",
+      "min_refresh_hz": 120
+    }
+  },
+  "audio": {
+    "schema_version": 2,
+    "request_id": "audio-1",
+    "intent": {
+      "kind": "needs",
+      "description": "Earbuds for travel"
+    },
+    "requirements": {
+      "category": "audio",
+      "form_factor": "earbuds",
+      "active_noise_cancellation": true
+    },
+    "allowed_conditions": [
+      "new",
+      "refurbished"
+    ]
+  }
+}

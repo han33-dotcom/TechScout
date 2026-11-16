@@ -1,4 +1,4 @@
-"""Version 1 data contracts. Retrieval, eligibility and ranking are separate tasks."""
+"""Version 1 shopping contracts. Full-product payloads live in app.contracts_v2."""
 from datetime import date, datetime, timezone
 from decimal import Decimal, InvalidOperation
 import re
@@ -42,7 +42,7 @@ def _https(value: AnyHttpUrl) -> AnyHttpUrl:
     return value
 
 
-Amount = Annotated[Decimal, BeforeValidator(_decimal), Field(ge=0)]
+Amount = Annotated[Decimal, BeforeValidator(_decimal, json_schema_input_type=str | int), Field(ge=0)]
 UtcTime = Annotated[datetime, AfterValidator(_utc)]
 HttpsUrl = Annotated[AnyHttpUrl, AfterValidator(_https)]
 
