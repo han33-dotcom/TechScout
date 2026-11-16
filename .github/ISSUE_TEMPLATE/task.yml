@@ -1,5 +1,5 @@
 name: Team task
-description: Scoped work with acceptance criteria and a human reviewer
+description: Scoped work with acceptance criteria and dependencies
 title: "[Task] "
 body:
   - type: textarea
@@ -23,15 +23,10 @@ body:
       options: [High, Medium, Low]
       default: 1
   - type: input
-    id: reviewer
-    attributes:
-      label: Human reviewer
-      description: A teammate other than the implementer; use their GitHub handle.
-  - type: input
     id: due
     attributes:
       label: Due date
-      description: Optional YYYY-MM-DD; set the Project Due date field as well.
+      description: Optional YYYY-MM-DD.
   - type: textarea
     id: dependencies
     attributes:
@@ -41,4 +36,4 @@ body:
     id: evidence
     attributes:
       label: Completion evidence
-      description: Record tests, review and acceptance evidence. Merge means Implemented; a teammate records Done and then closes the issue.
+      description: Record passing checks, demonstrated criteria and the merged PR before the author closes the issue.
