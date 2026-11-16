@@ -85,6 +85,47 @@ versioned capability reference resolved at dispatch through the source gate. Col
 live jobs share v2 evidence fields, while bootstrap and maintenance evidence carry their
 separate origin and corpus/index versions. Preserve the original observation time on reuse.
 
+## Shared public evidence storage
+
+`app.corpus.Corpus` is the common persistence entry point for bootstrap, maintenance,
+and public runtime findings. Pass `DocumentCapture` with the original gated response
+bytes, the deterministic relevant-content representation, the source observation and check
+times, the processing versions, and any resource-scoped HTTP validators. The resource key
+includes the requested URL, representation, and known product, variant, branch, or route
+context. Document versions record the actual final URL. Save technical source policy before
+ingesting its captures.
+
+Provide a local extractor that returns typed `FieldObservation` and `PassageDraft`
+records. Structured facts use the v2 field validators, and supported policy fields use
+text. Observations and passages cite matching v2 evidence with excerpts present in the
+original UTF-8 response. Private captures and buyer-run receipts are refused. Pass only
+public source material to the corpus. Buyer requests and run history stay in their existing
+storage. The extractor must do local parsing only because writes hold a database lock.
+
+Repeated identical responses reuse the document. Changes to raw bytes that leave relevant
+content and the extraction recipe unchanged keep the existing observations and passages.
+Changed fields create observations while preserving their history. A price-only change can
+reuse a specification passage, and `pending_embeddings` checks whether that passage already
+has an embedding for the document's model, dimensions, and index version. PostgreSQL uses
+a simple-config full-text GIN index and a cosine HNSW index for 1,536-dimensional embeddings.
+Other dimensions retain their embedding metadata for retrieval.
+
+Use `state` for the current document and its conditional URL and validators. A caller passes
+the exact state used for its conditional request to `record_not_modified`. A successful 304
+updates validation time without changing fact-observation time. `record_failed_check` only
+advances check metadata. A validated late result cannot replace a newer document. Client-side
+conditional requests, job scheduling, freshness rules, and retrieval queries are downstream
+work.
+
+`Corpus.prune(now=..., policy=RetentionPolicy(...))` is an explicit maintenance operation.
+Its defaults keep raw responses for seven days and retained excerpts, observations, and
+passages for 90 days. Pass different durations to configure retention, or use
+`delete_resource` to remove a specific resource. Losing a supporting document removes its
+observations and passages from newer versions too, including linked embeddings. The next
+full capture can rebuild those links. Raw files are removed once no retained corpus document
+references them. This corpus uses a separate hash-addressed namespace in the existing evidence
+volume. The same volume-level backup covers both namespaces. No scheduled pruning is enabled.
+
 ## Compatibility and rollout
 
 The [v1 model](mvp-spec.md), CLI, API and storage loaders keep reading existing records.

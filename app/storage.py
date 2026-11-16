@@ -15,10 +15,11 @@ import re
 import sys
 import uuid
 
+from pgvector.sqlalchemy import VECTOR
 from sqlalchemy import (
-    JSON, CheckConstraint, Column, Date, DateTime, ForeignKey, Integer, MetaData, Numeric,
+    JSON, Boolean, CheckConstraint, Column, Date, DateTime, ForeignKey, Index, Integer, MetaData, Numeric,
     String, Table, Text, TypeDecorator, URL, UniqueConstraint, create_engine, delete, func,
-    insert, select, update,
+    event, insert, literal_column, select, update,
 )
 
 from app.contracts import BudgetUsage, Money, Offer, RunResult, ShoppingRequest, SourcePolicy, ToolResult
@@ -176,6 +177,121 @@ actions = Table(
 )
 
 
+# Shared public corpus. Legacy buyer snapshots have their own namespace and retention.
+corpus_guard = Table(
+    'corpus_guard', metadata,
+    Column('id', Integer, primary_key=True, autoincrement=False),
+)
+
+corpus_resources = Table(
+    'corpus_resources', metadata,
+    Column('resource_id', String(64), primary_key=True),
+    Column('source_id', ForeignKey('sources.id'), nullable=False, index=True),
+    Column('resource_key', JSON, nullable=False),
+    Column('checked_at', UtcDateTime, nullable=False),
+    Column('check_status', String(16), nullable=False),
+    Column('validated_at', UtcDateTime),
+    Column('content_changed_at', UtcDateTime),
+    Column('etag', Text),
+    Column('last_modified', Text),
+    Column('needs_processing', Boolean, nullable=False),
+)
+
+corpus_documents = Table(
+    'corpus_documents', metadata,
+    Column('document_id', Integer, primary_key=True),
+    Column('resource_id', ForeignKey('corpus_resources.resource_id', ondelete='CASCADE'), nullable=False),
+    Column('final_url', Text, nullable=False),
+    Column('observed_at', UtcDateTime, nullable=False, index=True),
+    Column('raw_sha256', String(64), nullable=False),
+    Column('snapshot_sha256', String(64), index=True),
+    Column('snapshot_observed_at', UtcDateTime),
+    Column('relevant_sha256', String(64), nullable=False),
+    Column('origin', String(16), nullable=False),
+    Column('processing', JSON, nullable=False),
+    Index('ix_corpus_documents_resource_version', 'resource_id', 'document_id'),
+    sqlite_autoincrement=True,
+)
+
+corpus_receipts = Table(
+    'corpus_receipts', metadata,
+    Column('evidence_id', Text, primary_key=True),
+    Column('source_document_id', ForeignKey('corpus_documents.document_id', ondelete='CASCADE'),
+           nullable=False, index=True),
+    Column('payload', JSON, nullable=False),
+)
+
+corpus_observations = Table(
+    'corpus_observations', metadata,
+    Column('observation_id', Integer, primary_key=True),
+    Column('source_document_id', ForeignKey('corpus_documents.document_id', ondelete='CASCADE'),
+           nullable=False, index=True),
+    Column('field_key', String(64), nullable=False),
+    Column('scope', String(20), nullable=False),
+    Column('product_id', Text),
+    Column('variant_id', Text),
+    Column('branch_id', Text),
+    Column('route_id', Text),
+    Column('field_path', Text, nullable=False),
+    Column('observed_at', UtcDateTime, nullable=False),
+    Column('fact_state', String(12), nullable=False),
+    Column('fact_value', JSON),
+    Column('price_amount', ExactMoney),
+    Column('price_currency', String(3)),
+    Column('field_sha256', String(64), nullable=False),
+    Column('payload', JSON, nullable=False),
+    Index('ix_corpus_observations_product_field', 'product_id', 'variant_id', 'field_path'),
+    sqlite_autoincrement=True,
+)
+
+corpus_passages = Table(
+    'corpus_passages', metadata,
+    Column('passage_id', Integer, primary_key=True),
+    Column('source_document_id', ForeignKey('corpus_documents.document_id', ondelete='CASCADE'),
+           nullable=False, index=True),
+    Column('passage_key', String(64), nullable=False),
+    Column('passage_sha256', String(64), nullable=False),
+    Column('text', Text, nullable=False),
+    Column('payload', JSON, nullable=False),
+    sqlite_autoincrement=True,
+)
+
+corpus_document_observations = Table(
+    'corpus_document_observations', metadata,
+    Column('document_id', ForeignKey('corpus_documents.document_id', ondelete='CASCADE'), primary_key=True),
+    Column('observation_id', ForeignKey('corpus_observations.observation_id', ondelete='CASCADE'),
+           primary_key=True, index=True),
+)
+
+corpus_document_passages = Table(
+    'corpus_document_passages', metadata,
+    Column('document_id', ForeignKey('corpus_documents.document_id', ondelete='CASCADE'), primary_key=True),
+    Column('passage_id', ForeignKey('corpus_passages.passage_id', ondelete='CASCADE'),
+           primary_key=True, index=True),
+)
+
+corpus_embeddings = Table(
+    'corpus_embeddings', metadata,
+    Column('passage_id', ForeignKey('corpus_passages.passage_id', ondelete='CASCADE'), primary_key=True),
+    Column('index_version', Text, primary_key=True),
+    Column('model', Text, primary_key=True),
+    Column('dimensions', Integer, primary_key=True),
+    Column('embedding', VECTOR().with_variant(JSON(), 'sqlite'), nullable=False),
+    Index('ix_corpus_embeddings_profile', 'index_version', 'model', 'dimensions'),
+    CheckConstraint('dimensions BETWEEN 1 AND 2000', name='dimensions'),
+)
+
+corpus_passages.append_constraint(
+    Index('ix_corpus_passages_fulltext', literal_column("to_tsvector('simple'::regconfig, text)"),
+          postgresql_using='gin').ddl_if(dialect='postgresql')
+)
+corpus_embeddings.append_constraint(
+    Index('ix_corpus_embeddings_hnsw', literal_column('(embedding::vector(1536))').label('embedding_1536'),
+          postgresql_using='hnsw', postgresql_ops={'embedding_1536': 'vector_cosine_ops'},
+          postgresql_where=corpus_embeddings.c.dimensions == 1536).ddl_if(dialect='postgresql')
+)
+
+
 def _now():
     return datetime.now(timezone.utc)
 
@@ -210,9 +326,12 @@ class SnapshotStore:
         # Missing or damaged: write under a unique temporary name so concurrent saves can't collide.
         path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         temporary = path.with_name(f'{sha256}.{os.getpid()}.{uuid.uuid4().hex}.tmp')
-        temporary.write_bytes(content)
-        os.chmod(temporary, 0o600)
-        os.replace(temporary, path)
+        try:
+            temporary.write_bytes(content)
+            os.chmod(temporary, 0o600)
+            os.replace(temporary, path)
+        finally:
+            temporary.unlink(missing_ok=True)
         return sha256
 
     def get(self, sha256: str) -> bytes:
@@ -220,6 +339,20 @@ class SnapshotStore:
         if hashlib.sha256(content).hexdigest() != sha256:
             raise ValueError('Snapshot content does not match its hash')
         return content
+
+    def remove(self, sha256: str) -> None:
+        self._path(sha256).unlink(missing_ok=True)
+
+    def digests(self):
+        for path in self.root.glob('[0-9a-f][0-9a-f]/*'):
+            if path.is_file() and SHA256.fullmatch(path.name) and path.parent.name == path.name[:2]:
+                yield path.name
+
+    def remove_abandoned_writes(self) -> None:
+        """Call with all writers to this snapshot namespace excluded."""
+        for path in self.root.glob('[0-9a-f][0-9a-f]/*.tmp'):
+            if re.fullmatch(r'[0-9a-f]{64}\.\d+\.[0-9a-f]{32}\.tmp', path.name):
+                path.unlink(missing_ok=True)
 
 
 def configured_database_url() -> str | URL:
@@ -234,10 +367,16 @@ def configured_database_url() -> str | URL:
     return DEFAULT_DATABASE_URL
 
 
+def _sqlite_foreign_keys(connection, _):
+    connection.execute('PRAGMA foreign_keys = ON')
+
+
 class Storage:
     def __init__(self, database_url=None, evidence_dir=None):
         url = database_url or configured_database_url()
         self.engine = create_engine(url, future=True)
+        if self.engine.dialect.name == 'sqlite':
+            event.listen(self.engine, 'connect', _sqlite_foreign_keys)
         self.snapshots = SnapshotStore(evidence_dir or os.environ.get('EVIDENCE_DIR', DEFAULT_EVIDENCE_DIR))
 
     @contextmanager
