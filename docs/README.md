@@ -10,6 +10,7 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 
 - [collaborator setup](collaborator-setup.md)
 - [Full-product contracts v2](full-product-contracts.md) and [MVP contract v1](mvp-spec.md)
+- [Evidence freshness and retrieval services](evidence-services.md)
 - [pr policy activation](pr-policy-activation.md)
 - [retailer access requests](retailer-access-requests.md)
 - [source coverage](source-coverage.md) and [Lebanese retailer audit / seeds](retailer-audit-2026-11-16.md)
