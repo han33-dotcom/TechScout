@@ -98,7 +98,11 @@ class RetrievalTests(unittest.TestCase):
         self.assertEqual(EvidenceRetrieval(self.corpus).retrieve(self.query(),vector=vector()),())
 
     def service(self,provider):
-        return EmbeddingService(self.corpus,provider,usd_per_million=Decimal('0.02'))
+        from app.accounting import Ledger
+        ledger = Ledger(self.storage, 'retrieval-fixture', fixture=True)
+        ledger.provision()
+        return EmbeddingService(self.corpus,provider,usd_per_million=Decimal('0.02'),
+                                job=ledger.open_job('embedding-fixture'))
 
     def response(self,texts):
         return {'model':MODEL,'usage':{'total_tokens':len(texts)},

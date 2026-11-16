@@ -308,6 +308,12 @@ corpus_document_passages = Table(
            primary_key=True, index=True),
 )
 
+accounting_state = Table(
+    'accounting_state', metadata,
+    Column('id', Integer, primary_key=True),
+    Column('payload', JSON, nullable=False),
+)
+
 embedding_calls = Table(
     'embedding_calls', metadata,
     Column('call_id', String(32), primary_key=True),

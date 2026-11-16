@@ -507,6 +507,91 @@ def default_assess(request: ShoppingRequest, offers: Sequence[Offer], *,
 Assess = Callable[[ShoppingRequest, Sequence[Offer]], Sequence[tuple[Offer, Assessment]]]
 
 
+class _AccountedCall:
+    def __init__(self, local, shared):
+        self.local, self.shared = local, shared
+
+    def still_wanted(self):
+        return self.local.still_wanted() and self.shared.still_wanted()
+
+    def commit(self, elapsed_seconds):
+        self.shared.commit(elapsed_seconds)
+        self.local.commit(elapsed_seconds)
+
+    def release(self):
+        self.shared.release()
+        self.local.release()
+
+
+class _AccountedSpend:
+    def __init__(self, local, shared):
+        self.local, self.shared, self.started = local, shared, time.monotonic()
+
+    def commit(self, actual):
+        from app.accounting import BudgetDenied
+        try:
+            self.shared.complete(actual, time.monotonic() - self.started)
+        except BudgetDenied:
+            self.shared.ledger.recover()
+        self.local.commit(actual)
+
+    def release(self):
+        # The legacy planner reports unbilled only after dispatch; keep the call
+        # attempt but reconcile its charge to zero.
+        self.commit(Decimal(0))
+
+
+class AccountedRunBudget(RunBudget):
+    """Preserve v1 tracing/caps while enforcing the shared ledger before dispatch."""
+    def __init__(self, *args, job, registry_path, model_seconds, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.job = job
+        self.source_budget = job.source_budget(registry_path)
+        self.model_seconds = model_seconds
+
+    def reserve_call(self, source_id, max_seconds):
+        local = super().reserve_call(source_id, max_seconds)
+        if local is None:
+            return None
+        try:
+            shared = self.source_budget.reserve_call(source_id, max_seconds)
+        except Exception:
+            local.release()
+            raise
+        if shared is None:
+            local.release()
+            return None
+        return _AccountedCall(local, shared)
+
+    def reserve_spend(self, amount):
+        from app.accounting import Charge, BudgetDenied
+        local = super().reserve_spend(amount)
+        if local is None:
+            return None
+        try:
+            shared = self.job.reserve('model', Charge(amount), self.model_seconds)
+            shared.dispatch()
+        except BudgetDenied:
+            local.release()
+            return None
+        except Exception:
+            local.release()
+            raise
+        return _AccountedSpend(local, shared)
+
+    def enter_final_phase(self):
+        self.job.enter_final_phase()
+        super().enter_final_phase()
+
+    def cancel(self):
+        self.job.cancel()
+        super().cancel()
+
+    def close(self):
+        self.job.cancel()
+        super().close()
+
+
 @dataclass(frozen=True)
 class RunDependencies:
     """What one run needs. assess=None uses the fixed rules; planner=None the RulePlanner baseline."""
@@ -518,14 +603,16 @@ class RunDependencies:
     registry_path: Path | str = DEFAULT_REGISTRY
     wall_clock: Callable[[], datetime] = _utc_now
     clock: Callable[[], float] = time.monotonic
+    accounting: object | None = None
 
 
 def default_dependencies(storage: Storage | None = None, *, planner: Planner | None = None,
                          registry_path: Path | str = DEFAULT_REGISTRY) -> RunDependencies:
     """The production wiring: the process's gate, the admitted stores' readers and the database."""
     from app.adapters import ADAPTERS  # imported here so this module loads without the readers
+    from app.accounting import Ledger
     return RunDependencies(gate=SourceGate(registry_path), storage=storage or Storage(), adapters=ADAPTERS,
-                           planner=planner, registry_path=registry_path)
+                           planner=planner, registry_path=registry_path, accounting=Ledger.configured())
 
 
 def new_run_id() -> str:
@@ -671,6 +758,10 @@ class _Run:
         # Charged against the time budget before every turn (see _menu).
         self.planner_seconds = getattr(self.planner, 'max_call_seconds', None)
         _check_seconds('planner max_call_seconds', self.planner_seconds)
+        if deps.accounting is not None:
+            self.budget = AccountedRunBudget(run_id, caps, deps.clock, cancel_signal=_cancel_signal(cancel),
+                on_usage=self._write_ahead, job=deps.accounting.open_job(run_id),
+                registry_path=deps.registry_path, model_seconds=max(.001, self.planner_seconds))
         self.planner_record = _planner_record(self.planner)  # stored once, with the clarify stage
         self.assess_fn = deps.assess or (lambda req, offers: default_assess(req, offers, now=self._now()))
         self.planner_view = request_constraints(request)

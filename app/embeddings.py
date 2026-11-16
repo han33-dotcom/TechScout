@@ -34,12 +34,15 @@ class OpenAIEmbeddings:
 
 
 class EmbeddingService:
-    def __init__(self, corpus: Corpus, provider, *, usd_per_million: Decimal):
+    def __init__(self, corpus: Corpus, provider, *, usd_per_million: Decimal, job=None, international=False):
         if not isinstance(usd_per_million,Decimal) or not usd_per_million.is_finite() or usd_per_million <= 0:
             raise ValueError('Supply the configured positive Decimal embedding rate')
         self.corpus = corpus
         self.provider = provider
         self.rate = usd_per_million
+        self.job, self.international = job, international
+        if isinstance(provider, OpenAIEmbeddings) and job is None:
+            raise ValueError('Live embeddings require the central accounting job')
 
     def embed(self, texts, *, owner_id: str, purpose: str, index_version: str,
               max_spend_usd: Decimal):
@@ -58,11 +61,19 @@ class EmbeddingService:
         if reserved > max_spend_usd:
             raise ValueError('Embedding call exceeds its spend allowance')
         call_id = uuid.uuid4().hex
+        attempt = None
+        if self.job is not None:
+            from app.accounting import Charge
+            attempt = self.job.reserve('embedding', Charge(reserved), 20, international=self.international)
+        import time
+        started = time.monotonic()
         with self.corpus.storage.transaction() as db:
             db.execute(insert(embedding_calls).values(call_id=call_id,owner_id=owner_id,
                 purpose=purpose,model=MODEL,index_version=index_version,status='reserved',
                 reserved_usd=reserved,rate_usd_per_million=self.rate,recorded_at=_now()))
         try:
+            if attempt:
+                attempt.dispatch()
             result = self.provider(texts)
             tokens = result['usage']['total_tokens']
             if type(tokens) is not int or tokens < 0 or tokens > reserved_tokens or result['model'] != MODEL:
@@ -76,9 +87,17 @@ class EmbeddingService:
             vectors = tuple(checked_vector(row['embedding']) for row in rows)
             actual = Decimal(tokens)*self.rate/Decimal(1_000_000)
         except Exception:
+            if attempt:
+                from app.accounting import BudgetDenied
+                try:
+                    attempt.uncertain()
+                except BudgetDenied:
+                    self.job.ledger.recover()
             with self.corpus.storage.transaction() as db:
                 db.execute(update(embedding_calls).where(embedding_calls.c.call_id==call_id).values(status='uncertain'))
             raise
+        if attempt:
+            attempt.complete(actual, time.monotonic() - started)
         with self.corpus.storage.transaction() as db:
             db.execute(update(embedding_calls).where(embedding_calls.c.call_id==call_id)
                 .values(status='completed',tokens=tokens,actual_usd=actual))
