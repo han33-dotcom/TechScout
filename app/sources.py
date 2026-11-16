@@ -393,6 +393,20 @@ class SourceGate:
         """Requests counted against the store's per-run cap, for the run controller (MVP 11)."""
         return self._limiter.used(run_id, source_id)
 
+    def check_scope(self, source_id, url, *, expect, capability=None):
+        """Read-only preflight; dispatch still repeats all gate checks."""
+        try:
+            return self._allowed(source_id, url, expect, capability)[1]
+        except _Stop as exc:
+            raise ValueError('Source target is not admitted') from exc
+
+    def admitted_policy(self, source_id):
+        """Return current reviewed policy, without authorizing any network request."""
+        try:
+            return self._admitted(source_id)[1]
+        except _Stop as exc:
+            raise ValueError('Source is not admitted') from exc
+
     def fetch(self, budget: RunBudget, source_id: str, url: str, *, expect: Expect,
               capability: CapabilityRef | None = None) -> FetchOutcome:
         """GET an exact endpoint or the scope named by a current capability reference."""
