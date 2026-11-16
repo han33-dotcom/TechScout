@@ -1,0 +1,463 @@
+[
+  {
+    "schema_version": 2,
+    "retailer_id": "class_cellulars",
+    "name": "Class Cellulars",
+    "origin": "https://classcellulars.com/",
+    "markets": [
+      "LB"
+    ],
+    "categories": [
+      "phone",
+      "laptop",
+      "tablet",
+      "audio"
+    ],
+    "brands": [
+      "Apple",
+      "Samsung",
+      "Honor"
+    ],
+    "discovery_status": "audited",
+    "retrieval_method": "direct",
+    "last_checked_at": "2026-11-16T18:54:07.918585+00:00",
+    "coverage_gaps": [
+      "FAQ supplies delivery estimates and conditional returns; selected-variant SIM/region, condition and branch stock remain gaps.",
+      "No qualifying offer established by this audit; registry activation and current-run verification are separate."
+    ]
+  },
+  {
+    "schema_version": 2,
+    "retailer_id": "mojitech",
+    "name": "Mojitech",
+    "origin": "https://mojitech.net/",
+    "markets": [
+      "LB"
+    ],
+    "categories": [
+      "phone",
+      "laptop",
+      "tablet",
+      "monitor",
+      "audio"
+    ],
+    "brands": [
+      "Apple",
+      "Lenovo",
+      "Dell"
+    ],
+    "discovery_status": "audited",
+    "retrieval_method": "direct",
+    "last_checked_at": "2026-11-16T18:54:07.918585+00:00",
+    "coverage_gaps": [
+      "Direct homepage, product, policy and API returned 403; browser product yielded no content and policy timed out. Homepage mixes priced and inquiry-only listings. Do not carry old zero-price findings forward as current catalog-wide facts.",
+      "No qualifying offer established by this audit; registry activation and current-run verification are separate."
+    ]
+  },
+  {
+    "schema_version": 2,
+    "retailer_id": "beytech",
+    "name": "Beytech",
+    "origin": "https://beytech.com.lb/",
+    "markets": [
+      "LB"
+    ],
+    "categories": [
+      "phone",
+      "laptop",
+      "tablet",
+      "monitor",
+      "audio"
+    ],
+    "brands": [
+      "Apple",
+      "Samsung"
+    ],
+    "discovery_status": "audited",
+    "retrieval_method": "direct",
+    "last_checked_at": "2026-11-16T18:54:07.918585+00:00",
+    "coverage_gaps": [
+      "Selected iPhone title leaves SIM meaning unresolved; warranty duration does not establish provider, territory, condition, branch stock or delivered total.",
+      "No qualifying offer established by this audit; registry activation and current-run verification are separate."
+    ]
+  },
+  {
+    "schema_version": 2,
+    "retailer_id": "pcandparts",
+    "name": "PC and Parts",
+    "origin": "https://pcandparts.com/",
+    "markets": [
+      "LB"
+    ],
+    "categories": [
+      "phone",
+      "laptop",
+      "tablet",
+      "monitor",
+      "audio"
+    ],
+    "brands": [
+      "HP",
+      "Lenovo",
+      "MSI",
+      "Asus"
+    ],
+    "discovery_status": "audited",
+    "retrieval_method": "direct",
+    "last_checked_at": "2026-11-16T18:52:44.720954+00:00",
+    "coverage_gaps": [
+      "Shipping varies by zone and weight with possible fuel/volumetric surcharges. Tax-included wording is item-specific; pickup appointment is not reserved stock.",
+      "No qualifying offer established by this audit; registry activation and current-run verification are separate."
+    ]
+  },
+  {
+    "schema_version": 2,
+    "retailer_id": "ayoub_computers",
+    "name": "Ayoub Computers",
+    "origin": "https://ayoubcomputers.com/",
+    "markets": [
+      "LB"
+    ],
+    "categories": [
+      "laptop",
+      "tablet",
+      "monitor",
+      "audio"
+    ],
+    "brands": [
+      "Apple",
+      "Lenovo",
+      "JBL"
+    ],
+    "discovery_status": "audited",
+    "retrieval_method": "direct",
+    "last_checked_at": "2026-11-16T18:57:21.713326+00:00",
+    "coverage_gaps": [
+      "Delivery guide includes partners and marketplace vendors. Seller/fulfiller must be identified per listing. Footer excludes VAT; catalog success does not settle variant identity or price.",
+      "No qualifying offer established by this audit; registry activation and current-run verification are separate."
+    ]
+  },
+  {
+    "schema_version": 2,
+    "retailer_id": "amhaz_official_candidate",
+    "name": "Amhaz Official (candidate)",
+    "origin": "https://amhazofficial.com/",
+    "markets": [
+      "LB"
+    ],
+    "categories": [
+      "phone",
+      "tablet",
+      "audio"
+    ],
+    "brands": [
+      "Apple",
+      "Samsung",
+      "Honor",
+      "Infinix",
+      "Xiaomi"
+    ],
+    "discovery_status": "audited",
+    "retrieval_method": "direct",
+    "last_checked_at": "2026-11-16T18:52:58.697987+00:00",
+    "coverage_gaps": [
+      "Site identifies Amhaz Official in Saint Therese, Hadath. No evidence links it to Amhaz Original or establishes it as the user-intended Amhaz. Sample product is out of stock and availability needs checking; policy links are placeholders.",
+      "No qualifying offer established by this audit; registry activation and current-run verification are separate."
+    ]
+  },
+  {
+    "schema_version": 2,
+    "retailer_id": "abed_tahan",
+    "name": "Abed Tahan",
+    "origin": "https://abedtahan.com/",
+    "markets": [
+      "LB"
+    ],
+    "categories": [
+      "phone",
+      "laptop",
+      "tablet",
+      "monitor",
+      "audio"
+    ],
+    "brands": [
+      "Apple",
+      "Samsung",
+      "Lenovo"
+    ],
+    "discovery_status": "audited",
+    "retrieval_method": "direct",
+    "last_checked_at": "2026-11-16T18:52:58.863517+00:00",
+    "coverage_gaps": [
+      "Delivery policy page retrieved; exact selected-item fee, taxes, stock and warranty applicability remain unverified. Do not use similarly named external domains as aliases.",
+      "No qualifying offer established by this audit; registry activation and current-run verification are separate."
+    ]
+  },
+  {
+    "schema_version": 2,
+    "retailer_id": "macrotronics",
+    "name": "Macrotronics",
+    "origin": "https://www.macrotronics.net/",
+    "markets": [
+      "LB"
+    ],
+    "categories": [
+      "laptop",
+      "tablet",
+      "monitor",
+      "audio"
+    ],
+    "brands": [
+      "Lenovo",
+      "Asus",
+      "Samsung",
+      "Sony"
+    ],
+    "discovery_status": "audited",
+    "retrieval_method": "direct",
+    "last_checked_at": "2026-11-16T18:52:59.747070+00:00",
+    "coverage_gaps": [
+      "Shipping depends on weight, size, method and destination; checkout calculation is not a known fee. Homepage tax wording needs binding to selected variant. Renewed items must stay distinct.",
+      "No qualifying offer established by this audit; registry activation and current-run verification are separate."
+    ]
+  },
+  {
+    "schema_version": 2,
+    "retailer_id": "souq_961",
+    "name": "961Souq",
+    "origin": "https://961souq.com/",
+    "markets": [
+      "LB"
+    ],
+    "categories": [
+      "phone",
+      "laptop",
+      "tablet",
+      "monitor",
+      "audio"
+    ],
+    "brands": [
+      "Apple",
+      "AOC",
+      "Huawei"
+    ],
+    "discovery_status": "audited",
+    "retrieval_method": "direct",
+    "last_checked_at": "2026-11-16T18:53:12.628266+00:00",
+    "coverage_gaps": [
+      "Homepage marked sample monitor sold out while product structured data reported InStock. Reconcile the selected variant; no qualifying-stock claim. Route-specific shipping, warranty and condition still need extraction.",
+      "No qualifying offer established by this audit; registry activation and current-run verification are separate."
+    ]
+  },
+  {
+    "schema_version": 2,
+    "retailer_id": "hicart",
+    "name": "HiCart",
+    "origin": "https://www.hicart.com/",
+    "markets": [
+      "LB"
+    ],
+    "categories": [
+      "phone",
+      "audio"
+    ],
+    "brands": [
+      "Apple",
+      "Nokia",
+      "Vivo"
+    ],
+    "discovery_status": "audited",
+    "retrieval_method": "direct",
+    "last_checked_at": "2026-11-16T18:53:12.109970+00:00",
+    "coverage_gaps": [
+      "Terms identify independent sellers; warranty is supplier-covered only where the listing says so. Actual seller for sampled listing is unknown. Brand/vendor labels must not be treated as merchant identity.",
+      "No qualifying offer established by this audit; registry activation and current-run verification are separate."
+    ]
+  },
+  {
+    "schema_version": 2,
+    "retailer_id": "istyle_lebanon",
+    "name": "iSTYLE Lebanon",
+    "origin": "https://istyle.com.lb/",
+    "markets": [
+      "LB"
+    ],
+    "categories": [
+      "phone",
+      "laptop",
+      "tablet",
+      "audio"
+    ],
+    "brands": [
+      "Apple"
+    ],
+    "discovery_status": "audited",
+    "retrieval_method": "direct",
+    "last_checked_at": "2026-11-16T18:54:09.110433+00:00",
+    "coverage_gaps": [
+      "Store policy describes conditional exchange and DOA handling. Store picker is not branch stock. Model/part number, region, SIM, delivery cost and selected pickup stock need explicit evidence.",
+      "No qualifying offer established by this audit; registry activation and current-run verification are separate."
+    ]
+  },
+  {
+    "schema_version": 2,
+    "retailer_id": "expert_zone",
+    "name": "Expert-Zone",
+    "origin": "https://ezonelb.com/",
+    "markets": [
+      "LB"
+    ],
+    "categories": [
+      "laptop",
+      "monitor",
+      "audio"
+    ],
+    "brands": [
+      "Lenovo",
+      "Asus",
+      "MSI"
+    ],
+    "discovery_status": "audited",
+    "retrieval_method": "direct",
+    "last_checked_at": "2026-11-16T18:54:07.918585+00:00",
+    "coverage_gaps": [
+      "Warranty duration varies by item. Used/refurbished and new catalog sections must stay separate; branch addresses do not prove stock. Tax and shipping totals remain unverified.",
+      "No qualifying offer established by this audit; registry activation and current-run verification are separate."
+    ]
+  },
+  {
+    "schema_version": 2,
+    "retailer_id": "technodel",
+    "name": "Technodel",
+    "origin": "https://technodel.net/",
+    "markets": [
+      "LB"
+    ],
+    "categories": [
+      "phone",
+      "laptop",
+      "tablet",
+      "monitor",
+      "audio"
+    ],
+    "discovery_status": "discovered",
+    "coverage_gaps": [
+      "New phone/laptop alternatives and regional branches.",
+      "No product or policy retrieval audit; no qualifying offer established."
+    ]
+  },
+  {
+    "schema_version": 2,
+    "retailer_id": "istore_plus",
+    "name": "iStore Plus",
+    "origin": "https://istoreplus.me/",
+    "markets": [
+      "LB"
+    ],
+    "categories": [
+      "phone",
+      "tablet",
+      "audio"
+    ],
+    "discovery_status": "discovered",
+    "coverage_gaps": [
+      "Audio and brand diversity; distinct from iSTYLE.",
+      "No product or policy retrieval audit; no qualifying offer established."
+    ]
+  },
+  {
+    "schema_version": 2,
+    "retailer_id": "tech_zone",
+    "name": "Tech Zone",
+    "origin": "https://techzone.com.lb/",
+    "markets": [
+      "LB"
+    ],
+    "categories": [],
+    "discovery_status": "discovered",
+    "coverage_gaps": [
+      "Retailer-owned search result identifies Beirut; browser homepage timed out. Category coverage awaits verification.",
+      "No product or policy retrieval audit; no qualifying offer established."
+    ]
+  },
+  {
+    "schema_version": 2,
+    "retailer_id": "kaystore",
+    "name": "KAYSTORE",
+    "origin": "https://kaystore.com/",
+    "markets": [
+      "LB"
+    ],
+    "categories": [],
+    "discovery_status": "discovered",
+    "coverage_gaps": [
+      "Electronics navigation observed; verify five-category product coverage rather than appliance counts.",
+      "No product or policy retrieval audit; no qualifying offer established."
+    ]
+  },
+  {
+    "schema_version": 2,
+    "retailer_id": "microcity",
+    "name": "Microcity",
+    "origin": "https://www.gomicrocity.com/",
+    "markets": [
+      "LB"
+    ],
+    "categories": [
+      "laptop",
+      "tablet",
+      "monitor",
+      "audio"
+    ],
+    "discovery_status": "discovered",
+    "coverage_gaps": [
+      "Category navigation and marketplace link observed; resolve seller per offer.",
+      "No product or policy retrieval audit; no qualifying offer established."
+    ]
+  },
+  {
+    "schema_version": 2,
+    "retailer_id": "gcs",
+    "name": "GCS Computers Pro",
+    "origin": "https://gcslb.com/",
+    "markets": [
+      "LB"
+    ],
+    "categories": [],
+    "discovery_status": "discovered",
+    "coverage_gaps": [
+      "MEIT reseller directory lead; retailer identity/category verification remains open; browser unavailable.",
+      "No product or policy retrieval audit; no qualifying offer established."
+    ]
+  },
+  {
+    "schema_version": 2,
+    "retailer_id": "m2",
+    "name": "M2",
+    "origin": "https://www.m2.com.lb/",
+    "markets": [
+      "LB"
+    ],
+    "categories": [],
+    "discovery_status": "discovered",
+    "coverage_gaps": [
+      "MEIT reseller directory lead; browser 403; retailer verification remains open.",
+      "No product or policy retrieval audit; no qualifying offer established."
+    ]
+  },
+  {
+    "schema_version": 2,
+    "retailer_id": "qabass",
+    "name": "Qabass Computers",
+    "origin": "https://qabass.computer/",
+    "markets": [
+      "LB"
+    ],
+    "categories": [],
+    "discovery_status": "discovered",
+    "coverage_gaps": [
+      "MEIT directory Tripoli lead; not fetched; prioritize geographic diversity only after identity verification.",
+      "No product or policy retrieval audit; no qualifying offer established."
+    ]
+  }
+]

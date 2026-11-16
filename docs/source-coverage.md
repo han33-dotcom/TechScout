@@ -1,4 +1,13 @@
-# Source coverage (MVP 06)
+# Source coverage
+
+The current full-product [Lebanese retailer audit](retailer-audit-2026-11-16.md)
+records 12 priority sources and eight wider leads, with importable directory seeds
+and dated access/policy findings. No qualifying-offer count is inferred from discovery.
+
+The following MVP snapshot is retained as historical adapter evidence. Its prices,
+stock and blockers describe November 14, not current catalog availability.
+
+# Historical MVP 06 snapshot
 
 Observed **2026-11-14**, one read of each allow-listed URL through the source gate. The store
 readers are in `app/adapters/` (MVP 05); minimized copies of the replies are in
