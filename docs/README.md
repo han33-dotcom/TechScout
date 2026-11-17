@@ -8,6 +8,7 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 
 ## Documents
 
+- [Private session history and exports](buyer-history.md)
 - [Monitor and audio identity](monitor-audio-identity.md)
 - [Bounded research workers](research-workers.md)
 - [collaborator setup](collaborator-setup.md)
