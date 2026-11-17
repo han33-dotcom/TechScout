@@ -308,13 +308,16 @@
       "name": "Ayoub Computers",
       "origin": "https://ayoubcomputers.com",
       "status": "pending",
-      "reviewed_at": "2026-10-12",
+      "reviewed_at": "2026-11-17",
       "admission": null,
-      "allowed_endpoints": [],
+      "allowed_endpoints": [
+        "https://ayoubcomputers.com/terms-of-service/",
+        "https://ayoubcomputers.com/quick-delivery-guide/"
+      ],
       "limits": {
-        "requests_per_minute": 0,
-        "concurrency": 0,
-        "max_requests_per_run": 0
+        "requests_per_minute": 6,
+        "concurrency": 1,
+        "max_requests_per_run": 6
       },
       "published_rate_limits": {
         "robots_url": "https://ayoubcomputers.com/robots.txt",
@@ -322,21 +325,81 @@
         "applies_to": "Listed AI/scraper user-agent group; not a general API grant"
       },
       "review_evidence": [
-        "https://ayoubcomputers.com/terms-of-service/"
+        "https://ayoubcomputers.com/terms-of-service/",
+        "https://ayoubcomputers.com/robots.txt",
+        "https://ayoubcomputers.com/quick-delivery-guide/",
+        "https://ayoubcomputers.com/search.php?search_query=macbook+air&section=product",
+        "https://ayoubcomputers.com/products.php?productId=80559",
+        "https://ayoubcomputers.com/apple-macbook-air-m4-10-core-cpu-16-512-gb-ssd-13-silver-mw0x3/",
+        "https://ayoubcomputers.com/apple-macbook-air-m4-10-core-cpu-16-512-gb-ssd-13-silver-mw0x3-oxdv/"
       ],
-      "decision_reason": "Outside the initial three-source set; pending technical coverage/parsing work only. No retailer-permission blocker.",
+      "decision_reason": "Registered for the bounded T19 marketplace catalog reader with read-only capabilities and workload limits, but not admitted to the live release: on 2026-11-17 the gate client received HTTP 403 from the store edge and every page exceeded the gate 2 MiB response cap, so admitted runs would only spend budget on refusals. Technical gaps, not a permission blocker; no bypass is attempted. Parsing is validated offline on dated captures (docs/ayoub-catalog.md).",
       "coverage": {
-        "catalog_observation": "Official Apple category and marketplace purchase terms reviewed; matching exact-phone product/variant feed not validated.",
-        "delivery_claim": "Lebanon free delivery and zone estimates published; branch pickup requires readiness confirmation.",
+        "catalog_observation": "BigCommerce product pages: BCData and JSON-LD price, stock and purchasability; custom fields for CPU/RAM/SSD/size/resolution/refresh, condition and warranty. Five laptop/monitor listings parsed on 2026-11-17; one priced and in stock.",
+        "delivery_claim": "Delivery guide: free delivery to every Lebanese district, 2-5 or 4-6 business-day zones, southern-border villages excluded. Pickup readiness 24-48 hours; online items are not guaranteed at retail locations.",
         "verified_delivery_locations": [],
         "verified_pickup_branches": [],
         "known_gaps": [
-          "overlapping exact smartphone listings",
-          "seller identity per offer",
-          "variant-specific price/stock"
+          "gate client receives HTTP 403 from the store edge",
+          "every page exceeds the gate 2 MiB response cap",
+          "no listing names its seller or fulfiller",
+          "option-specific price and stock",
+          "branch stock",
+          "warranty provider and territory",
+          "11% VAT added at checkout"
         ]
       },
-      "next_action": "Validate useful variants, prices and source parsing if additional coverage is needed."
+      "next_action": "Team decision on a sanctioned route for Ayoub (managed extraction #58, or a per-source cap with a client the store accepts); no bot-protection bypass. Then admit it (status active, admission record, live_release) and run a gated live smoke. Keep seller unknown until a listing names it.",
+      "endpoint_capabilities": [
+        {
+          "capability_id": "ayoub_computers-search",
+          "version": "1",
+          "host": "ayoubcomputers.com",
+          "operation": "search",
+          "expect": "html",
+          "path": [
+            "search.php"
+          ],
+          "query": [
+            {
+              "name": "search_query",
+              "parameter": {
+                "kind": "search_text",
+                "max_length": 64
+              }
+            },
+            {
+              "name": "section",
+              "parameter": {
+                "kind": "choice",
+                "values": [
+                  "product"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "capability_id": "ayoub_computers-product",
+          "version": "1",
+          "host": "ayoubcomputers.com",
+          "operation": "product",
+          "expect": "html",
+          "path": [
+            "products.php"
+          ],
+          "query": [
+            {
+              "name": "productId",
+              "parameter": {
+                "kind": "integer",
+                "minimum": 1,
+                "maximum": 9999999999
+              }
+            }
+          ]
+        }
+      ]
     },
     {
       "id": "mojitech",
