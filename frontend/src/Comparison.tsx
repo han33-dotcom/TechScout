@@ -64,9 +64,10 @@ export function currentRecommendations(snapshot: RunSnapshot) {
 }
 function Identity({ offers }: { offers: Offer[] }) {
   if (offers.length < 2) return <p className="muted">Select at least two offers to inspect their differences.</p>;
-  const [left,right] = offers;
-  const same = left.variant.variant_id === right.variant.variant_id && left.variant.product.product_id === right.variant.product.product_id;
-  return <p className="identity">{same ? 'Confirmed canonical configuration match. Seller terms may differ.' : left.variant.product.product_id === right.variant.product.product_id ? 'Different configurations of the same model.' : 'Different models. Compare their configuration and fit.'} Unresolved fields stay labelled Unknown.</p>;
+  const [first] = offers;
+  const sameModel = offers.every(offer => offer.variant.product.product_id === first.variant.product.product_id);
+  const same = sameModel && offers.every(offer => offer.variant.variant_id === first.variant.variant_id);
+  return <p className="identity">{same ? 'Confirmed canonical configuration match. Seller terms may differ.' : sameModel ? 'Different configurations of the same model.' : 'Different models. Compare their configuration and fit.'} Unresolved fields stay labelled Unknown.</p>;
 }
 export default function Comparison({ workspace, historical=false }: { workspace: ComparisonWorkspace; historical?: boolean }) {
   const snapshot=workspace.current;

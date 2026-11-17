@@ -35,6 +35,18 @@ describe('comparison evidence boundaries',()=>{
   const w=data();w.current.source_outcomes=[{source_id:'x',name:'Failed shop',status:'failed',reason:'Rate limited'},{source_id:'y',name:'Queued shop',status:'unchecked'}];
   render(<Comparison workspace={w}/>);expect(screen.getByText('Rate limited')).toBeTruthy();expect(screen.getByText('unchecked')).toBeTruthy();
  });
+ it('includes the third selection when explaining configuration differences',()=>{
+  const w=data(),rec=w.current.recommendations[0];
+  const same=structuredClone(rec.primary);same.offer.offer_id='same-config';
+  rec.additional_sellers=[same];
+  const other=structuredClone(rec);other.additional_sellers=[];
+  other.primary.offer.offer_id='other-config';other.primary.offer.variant.variant_id='other-variant';
+  w.current.recommendations.push(other);
+  render(<Comparison workspace={w}/>);
+  screen.getAllByRole('checkbox').forEach(check=>fireEvent.click(check));
+  expect(screen.getByText(/Different configurations of the same model/)).toBeTruthy();
+  expect(screen.queryByText(/Confirmed canonical configuration match/)).toBeNull();
+ });
  it('preserves unknown and estimated costs and rejects unsafe outbound links',()=>{
   expect(costText({status:'incomplete',missing:['duty']})).toContain('Subtotal unknown');
   expect(costText({status:'estimated',lower:{amount:'10',currency:'USD'},upper:{amount:'20',currency:'USD'},assumptions:['weight estimate']})).toContain('estimated');
