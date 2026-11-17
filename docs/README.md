@@ -14,6 +14,7 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 - [Persistent retailer directory](retailer-directory.md)
 - [Shared accounting and bounded research](shared-accounting.md)
 - [Direct OpenAI model boundary](model-provider.md)
+- [Grounded writer and deterministic fallback](writer.md)
 - [Full-product eligibility and domestic costs](full-product-assessment.md)
 - [Owned buyer API and worker lifecycle](buyer-api.md)
 - [Direct Tavily discovery](discovery.md)
