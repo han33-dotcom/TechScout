@@ -8,6 +8,8 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 
 ## Documents
 
+- [PC and Parts exact-listing retrieval and live-access limitations](pcandparts.md)
+
 - [International source audit and initial ingestion manifest](international-source-audit.md)
 
 - [Beytech catalog and policy evidence](beytech-catalog.md)
