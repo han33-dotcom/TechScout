@@ -65,7 +65,9 @@ Storage and Wi-Fi/cellular words in the name are checked against the offer's own
 `storage_gb` and `connectivity` facts. A name that contradicts them is not trusted, for
 example `... Wi-Fi + Cellular` on a Wi-Fi offer or `... 256GB` on a 128 GB offer.
 
-- Memory is not storage: `8GB RAM` and the first number of `8/128` are skipped.
+- Memory is not storage: `8GB RAM` and the first number of `8/128` are skipped, but the size
+  after `8GB RAM` is storage again and is checked (`8GB RAM 256GB` on a 128 GB offer is not
+  trusted).
 - French `Go` and `To` are storage units.
 - The words stay in the compared name. They can keep two names apart but never merge them:
   an LTE and a 5G model, or `4/128` and `6/128`, stay different.

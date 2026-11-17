@@ -646,7 +646,7 @@ def _tablet_editions(words: list[str], apple: bool) -> dict[str, list[str]] | No
             # '8GB RAM' and 'RAM 8GB' are memory; after '8GB RAM' the next size is storage again.
             memory = after == 'ram' or (before == 'ram' and not _TABLET_STORAGE_WORD.fullmatch(
                 words[index - 2] if index > 1 else '-'))
-            found['memory' if memory else 'storage'].append(re.match(r'\d+', word).group(0))
+            found['memory' if memory else 'storage'].append(re.match(r'\d+', word).group(0) if memory else word)
     # An ordinal beside a CPU tier may be the CPU's generation ('i5 7th Gen'), and a whole number
     # beside an ordinal may be a nickname for another one ('iPad Air 4 5th Gen'), except a Fire's size.
     numbers = [index for index, word in enumerate(words) if re.fullmatch(r'\d{1,2}', word)]
@@ -740,6 +740,11 @@ def _tablet_model(model: str, offer: v2.Offer, maker: str | None) -> str | None:
             or len(editions['token']) > 1 or len(editions['part']) > 1 \
             or (editions['part'] and any(sum(c.isdigit() for c in token) >= 3 for token in editions['token'])):
         return None  # 'SM-X510 X610' names two parts
+    for word in editions['storage']:  # including the size after '8GB RAM', which the scan above skips
+        amount, unit = re.fullmatch(r'(\d+)(gb|tb|go|to)', word).groups()
+        allowed = {int(amount)} if unit in ('gb', 'go') else {int(amount) * 1000, int(amount) * 1024}
+        if specs.storage_gb.state == 'known' and specs.storage_gb.value not in allowed:
+            return None
     text = ' '.join(words)
     sizes = {match.group(1) for word in words if (match := _TABLET_SIZE_WORD.fullmatch(word))}
     # A bare tablet-sized number beside another size is a second size ('iPad Pro 11 12.9-inch').

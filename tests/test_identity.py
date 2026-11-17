@@ -1082,6 +1082,14 @@ class FullProductIdentityTests(unittest.TestCase):
                                  'confirmed_equivalent')
         too_big = offer('tablet', 'left', {'manufacturer': 'Samsung', 'model': 'Galaxy Tab S9 12/256GB'})
         self.assertIsNone(variant_identity_key(too_big))  # 256 GB contradicts the 128 GB fact
+        # The storage after '8GB RAM' is checked too, in every spelling of the memory.
+        for name in ('Galaxy Tab S9 8GB RAM 256GB', 'Galaxy Tab S9 RAM 8GB 256GB', 'Galaxy Tab S9 8GB RAM 1TB'):
+            with self.subTest(name=name):
+                contradicting = offer('tablet', 'left', {'manufacturer': 'Samsung', 'model': name})
+                self.assertIsNone(variant_identity_key(contradicting))  # 128 GB fact
+        agreeing = offer('tablet', 'left', {'manufacturer': 'Samsung', 'model': 'Galaxy Tab S9 8GB RAM 256GB',
+                                            'specs.storage_gb': 256})
+        self.assertIsNotNone(variant_identity_key(agreeing))
 
     def test_grouping_deduplicates_hardware_but_preserves_sellers_and_terms(self):
         from tests.identity_v2 import offer
