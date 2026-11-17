@@ -30,7 +30,7 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 - [Evidence freshness and retrieval services](evidence-services.md)
 - [Persistent retailer directory](retailer-directory.md)
 - [Shared accounting and bounded research](shared-accounting.md)
-- [Direct OpenAI model boundary](model-provider.md)
+- [Direct OpenAI model boundary](model-provider.md) and the [optional OpenRouter adapter](openrouter.md)
 - [Grounded writer and deterministic fallback](writer.md)
 - [Full-product eligibility and domestic costs](full-product-assessment.md)
 - [Owned buyer API and worker lifecycle](buyer-api.md)

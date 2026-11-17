@@ -1,7 +1,8 @@
-"""Typed, metered model boundary. Direct OpenAI is the only installed provider.
+"""Typed, metered model boundary. Direct OpenAI is the default provider.
 
-No provider chooses tools, runs agents, or changes buyer decisions here. A future
-gateway adapter must implement ModelProvider and supply its own verified pricing.
+No provider chooses tools, runs agents, or changes buyer decisions here. A gateway
+adapter must implement ModelProvider and supply its own verified pricing; the
+optional, explicitly enabled OpenRouter adapter lives in app.openrouter.
 """
 from dataclasses import dataclass
 from datetime import date
@@ -292,14 +293,18 @@ class OpenAIPlanner:
             def count(name):
                 value = tokens.get(name)
                 return value if type(value) is int and value >= 0 else 0
+            # A gateway adapter lists every attempt that still holds spend (fallbacks included).
+            billed = [a['actual_model'] or a['requested_model'] for a in u.get('attempts', ())
+                      if a.get('billing') != 'not_sent']
             usage = PlannerUsage(model=u['actual_model'] or u['requested_model'],
                 input_tokens=count('input_tokens'), output_tokens=count('output_tokens'),
                 cost=Money(amount=Decimal(u['actual_usd'] or u['reserved_usd']), currency='USD'),
                 priced=u['billing']=='known', prompt_version=u['prompt_version'],
-                attempt_models=[u['actual_model'] or u['requested_model']])
+                attempt_models=billed or [u['actual_model'] or u['requested_model']])
         choice = result.value
         if result.status != 'completed':
-            return PlannerDecision(kind='invalid', reason='openai: '+result.status, usage=usage)
+            return PlannerDecision(kind='invalid', reason=f"{u.get('provider', 'openai')}: {result.status}",
+                                   usage=usage)
         if ((choice.kind == 'act' and choice.action_id not in {a.action_id for a in state.actions})
                 or (choice.kind == 'stop' and choice.action_id is not None)):
             return PlannerDecision(kind='invalid', reason='chosen action is not in the menu', usage=usage)
