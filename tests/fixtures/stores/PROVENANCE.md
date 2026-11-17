@@ -46,9 +46,11 @@ Synthetic variants of the minimized fixtures above, each with one deliberate cha
 
 `amhaz/candidate-2026-11-17.json` is a minimized factual extract of three read-only GETs made
 on 2026-11-17 outside the app runtime, recorded in [source coverage](../../../docs/source-coverage.md)
-under Amhaz (#56). It keeps each reply's URL, time, status, byte count and SHA-256, the contact
-page's brand name, address and gallery captions, the footer's link targets, the sample product's
-visible price and availability lines, and the product records from the page's embedded Next.js
-data (images, descriptions and units removed). Contact numbers and email were left out. The
-identity is unresolved (#50), so this capture is evidence for the blocker, not purchase evidence;
-no reader consumes it.
+under Amhaz (#56). It keeps the request method and bounds, each reply's URL, time, status, byte
+count and SHA-256, and case-insensitive counts of policy words (warranty, return, delivery and
+others) in each full reply. From the pages it keeps the contact page's brand name, address and
+gallery captions, the footer's link targets, the sample product's visible price and availability
+lines, the related product cards' visible lines and links, and the product records from the
+page's embedded Next.js data (images and units removed; descriptions kept, all empty). Contact
+numbers and email were left out. The identity is unresolved (#50), so this capture is evidence
+for the blocker, not purchase evidence; no reader consumes it.

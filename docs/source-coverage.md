@@ -4,77 +4,8 @@ The current full-product [Lebanese retailer audit](retailer-audit-2026-11-16.md)
 records 12 priority sources and eight wider leads, with importable directory seeds
 and dated access/policy findings. No qualifying-offer count is inferred from discovery.
 
-## Amhaz (#56): blocked until the intended business is identified
-
-**Status on 17 November 2026: blocked, no retrieval.** Issue #56 may use only the identity the
-retailer audit (#50) established. The audit found one candidate storefront,
-[amhazofficial.com](https://amhazofficial.com/) ("Amhaz Official", Saint Therese, Hadath), and
-recorded its identity as `unresolved_user_intent` with no canonical seller: the user named
-"Amhaz", and nothing shows which similarly named business was meant. Building retrieval for this
-site would turn a guess into a seller identity, so #56 ships a blocked profile instead.
-
-- **What ships.** `app/adapters/amhaz.py` declares no retrieval capability, no supported
-  category and no canonical origin. `PROFILE.search(...)` has the same call shape as the catalog
-  readers' `search`, sends no request and returns no candidate. Its result is an `error` with
-  one non-retryable `SOURCE_DISABLED` error: "amhaz_official_candidate: business identity is
-  unresolved; no retrieval is configured". The profile is not in `ADAPTERS`, `CATALOGS` or
-  `config/sources.json`, so no run can dispatch to the site.
-- **Directory.** The candidate stays an unconfigured lead with `seller_identity` "unresolved".
-  "Amhaz", "Amhaz Official", "Amhaz Mobile" and similar names resolve to no directory record.
-- **Capabilities and categories.** None supported. Category leads seen in the candidate's
-  navigation: phone, tablet, audio. Laptop and monitor: not established.
-
-### Live check, 17 November 2026
-
-Three read-only GETs of the audit's recorded candidate entry points, made outside the app
-runtime: 20 s timeout, 4 MB cap, 12 s apart, no retries, no login, cart, form or message.
-
-| URL | Checked (UTC) | Status | Bytes | SHA-256 of the reply |
-|---|---|---|---|---|
-| https://amhazofficial.com/ | 15:44:07 | 200 | 84649 | `1cf33f9feb46a2d51ee0e4683cfc53c139d3e36df54b484f9d1807877315e009` |
-| https://amhazofficial.com/contact | 15:44:24 | 200 | 25549 | `b1b347788d58b10a22a1c4521d3fa387ea5ad45961289b194f6a11b7ffa1df6d` |
-| https://amhazofficial.com/product/1018 | 15:44:36 | 200 | 44212 | `ed9cea5f8c2e166ba425d15a416624add2d688dc7a863fee52a0c379b9603d0c` |
-
-What the pages show:
-
-- **Identity.** The brand is "Amhaz Official" and the address "Saint Therese, Hadath , Lebanon".
-  Gallery captions also read "Amhaz Mobile Store front" and "Wholesale and maintenance". Nothing
-  links the site to another Amhaz business or names a legal entity, so identity stays unresolved.
-- **Policies.** The footer's "FAQs", "Shipping" and "About Us" are plain text with no link; only
-  "Contact Us" links (to `/contact`). No delivery, warranty, returns, VAT or payment policy is
-  published.
-- **Sample product `/product/1018`.** The page shows "IPHONE 17", a 256GB storage option,
-  "$2,865.00", "Out of stock" and "Availability: Check for availability". Its embedded Next.js
-  data gives `price` 2865, `currency` USD, `qty_available` 0, no warehouse and specs
-  `{"Size": "256GB"}`: no condition and no warranty. The price is far above the 14 November
-  listings of this model at Class Cellulars and Beytech (USD 1,030 and 1,079) and is not
-  explained. It is recorded, not interpreted.
-- **Related items** on the same page carry an explicit `Condition` spec ("New" or "Used"). One
-  "IPHONE 11 128GB USED" has price 0, shown as "Ask for price".
-
-The site is reachable, but even apart from identity it offers no qualifying listing today: the
-sample is out of stock, its price is unexplained, its condition is not stated and no policy page
-exists. The minimized capture is `tests/fixtures/stores/amhaz/candidate-2026-11-17.json` (contact
-numbers and email left out).
-
-### What unblocks it
-
-1. A teammate records, with evidence, which Amhaz business the user meant (name, domain and
-   location) in the audit sidecar and seed, and on #56. If it is this candidate, update its
-   identity there. If it is another business, add a separate record; never merge the names.
-2. Review narrow endpoint capabilities for the confirmed domain in `config/sources.json`.
-3. Replace the blocked profile with a reader. For this candidate the reader must:
-   - read condition only from the item's own explicit `Condition` spec, never from a name token
-     such as "USED", from sibling items or from silence (`1018` states none, so it stays unknown);
-   - leave price 0 or "Ask for price" unknown, and parse prices as Decimal;
-   - treat `qty_available` 0 or "Out of stock" as not in stock; "Check for availability" is not
-     stock evidence, and online quantity is not branch stock;
-   - leave warranty, delivery fee, VAT and arrival time unknown, never zero, while no policy
-     states them;
-   - treat the embedded Next.js data as page-internal, not a documented API, and report a
-     changed shape as `INVALID_SCHEMA`.
-4. `tests/test_amhaz_profile.py` fails as soon as the audit, seed or registry resolves, aliases
-   or admits Amhaz, so the blocked profile cannot silently drift from the records.
+Amhaz is blocked until the intended business is identified; see
+[Amhaz (#56)](#amhaz-56-blocked-until-the-intended-business-is-identified) at the end.
 
 The following MVP snapshot is retained as historical adapter evidence. Its prices,
 stock and blockers describe November 14, not current catalog availability.
@@ -232,3 +163,79 @@ Mojitech were priced again, its "ESIM ACT" variants are eSIM-only and could matc
 eSIM-only offer; only its two ABM variants (Blue and White, SIM unknown) could pair with the
 others, and only as an open identity match. A human decision is needed (a documented exception,
 a different reviewed Mojitech product, or a later re-capture).
+
+# Amhaz (#56): blocked until the intended business is identified
+
+**Status on 17 November 2026: blocked, no retrieval.** Issue #56 may use only the identity the
+retailer audit (#50) established. The audit found one candidate storefront,
+[amhazofficial.com](https://amhazofficial.com/) ("Amhaz Official", Saint Therese, Hadath), and
+recorded its identity as `unresolved_user_intent` with no canonical seller: the user named
+"Amhaz", and nothing shows which similarly named business was meant. Building retrieval for this
+site would turn a guess into a seller identity, so #56 ships a blocked profile instead.
+
+- **What ships.** `app/adapters/amhaz.py` declares no retrieval capability, no supported
+  category and no canonical origin. `PROFILE.search(...)` has the same call shape as the catalog
+  readers' `search`, sends no request and returns no candidate. Its result is an `error` with
+  one non-retryable `SOURCE_DISABLED` error: "amhaz_official_candidate: business identity is
+  unresolved; no retrieval is configured". The profile is not in `ADAPTERS`, `CATALOGS` or
+  `config/sources.json`, so no run can dispatch to the site.
+- **Directory.** The candidate stays an unconfigured lead with `seller_identity` "unresolved".
+  "Amhaz", "Amhaz Official", "Amhaz Mobile" and similar names resolve to no directory record.
+- **Capabilities and categories.** None supported. Category leads the audit observed in the
+  candidate's catalog (`catalog_observed`): phone, tablet, audio. Laptop and monitor: not
+  established.
+
+## Live check, 17 November 2026
+
+Three read-only HTTPS GETs of the audit's recorded candidate entry points, made outside the app
+runtime with Python `urllib.request` and the User-Agent `TechScout-research-check/1`: 20 s
+timeout, 4 MB cap, at least 12 s between requests, no retries, no login, cart, form or message.
+They are evidence for the blocker, not extraction for a reader.
+
+| URL | Checked (UTC) | Status | Bytes | SHA-256 of the reply |
+|---|---|---|---|---|
+| https://amhazofficial.com/ | 15:44:07 | 200 | 84649 | `1cf33f9feb46a2d51ee0e4683cfc53c139d3e36df54b484f9d1807877315e009` |
+| https://amhazofficial.com/contact | 15:44:24 | 200 | 25549 | `b1b347788d58b10a22a1c4521d3fa387ea5ad45961289b194f6a11b7ffa1df6d` |
+| https://amhazofficial.com/product/1018 | 15:44:36 | 200 | 44212 | `ed9cea5f8c2e166ba425d15a416624add2d688dc7a863fee52a0c379b9603d0c` |
+
+What the three pages show:
+
+- **Identity.** The brand is "Amhaz Official" and the address "Saint Therese, Hadath , Lebanon".
+  Gallery captions also read "Amhaz Mobile Store front" and "Wholesale and maintenance". Nothing
+  links the site to another Amhaz business or names a legal entity, so identity stays unresolved.
+- **Policies.** The footer's "FAQs", "Shipping" and "About Us" are plain text with no link; only
+  "Contact Us" links (to `/contact`). None of the three replies contains the words "warranty",
+  "guarantee", "return", "refund", "VAT", "delivery" or "payment"; "shipping" appears only as
+  that unlinked footer label. No delivery, warranty, returns, VAT or payment policy was found.
+- **Sample product `/product/1018`.** The page shows "IPHONE 17", a 256GB storage option,
+  "$2,865.00", "Out of stock" and "Availability: Check for availability". Its embedded Next.js
+  data gives `price` 2865, `currency` USD, `qty_available` 0, no warehouse, an empty
+  description and specs `{"Size": "256GB"}`: no condition is stated for it. The price is far
+  above the 14 November listings of this model at Class Cellulars and Beytech (USD 1,030 and
+  1,079) and is not explained. It is recorded, not interpreted.
+- **Related items** on the same page carry an explicit `Condition` spec ("New" or "Used"). The
+  card for `/product/909`, "IPHONE 11 128GB USED", shows "Ask for price"; its data says price 0.
+
+The site is reachable, but even apart from identity it offers no qualifying listing today: the
+sample is out of stock, its price is unexplained, its condition is not stated and no policy was
+found. The minimized capture is `tests/fixtures/stores/amhaz/candidate-2026-11-17.json` (contact
+numbers and email left out).
+
+## What unblocks it
+
+1. A teammate records, with evidence, which Amhaz business the user meant (name, domain and
+   location) in the audit sidecar and seed, and on #56. If it is this candidate, update its
+   identity there. If it is another business, add a separate record; never merge the names.
+2. Review narrow endpoint capabilities for the confirmed domain in `config/sources.json`.
+3. Replace the blocked profile with a reader. For this candidate the reader must:
+   - read condition only from the item's own explicit `Condition` spec, never from a name token
+     such as "USED", from sibling items or from silence (`1018` states none, so it stays unknown);
+   - leave price 0 or "Ask for price" unknown, and parse prices as Decimal;
+   - treat `qty_available` 0 or "Out of stock" as not in stock; "Check for availability" is not
+     stock evidence, and online quantity is not branch stock;
+   - leave warranty, delivery fee, VAT and arrival time unknown, never zero, while no policy
+     states them;
+   - treat the embedded Next.js data as page-internal, not a documented API, and report a
+     changed shape as `INVALID_SCHEMA`.
+4. `tests/test_amhaz_profile.py` fails as soon as a dated retailer audit, the seed or the registry
+   resolves, aliases or admits Amhaz, so the blocked profile cannot silently drift from the records.

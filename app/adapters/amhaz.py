@@ -32,7 +32,7 @@ class BlockedProfile:
     candidate_origin: str
     identity_status: str
     blocker: str
-    # Categories the audit saw in the candidate's navigation. Leads only: nothing is retrieved.
+    # Categories the audit recorded as catalog_observed for the candidate. Leads only: nothing is retrieved.
     category_leads: tuple[str, ...]
     canonical_origin: str | None = None
     capabilities: tuple = ()

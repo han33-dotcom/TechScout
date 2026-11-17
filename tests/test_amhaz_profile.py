@@ -35,8 +35,14 @@ def capture():
 
 
 def audit_records():
-    audit = json.loads((ROOT / 'docs/retailer-audit-2026-11-16.json').read_text(encoding='utf-8'))
-    return [r for r in audit['retailers'] if 'amhaz' in r['retailer_id'].casefold()]
+    """Amhaz records in every dated retailer audit, so a newer audit cannot resolve it unnoticed."""
+    paths = sorted(ROOT.glob('docs/retailer-audit-*.json'))
+    records = []
+    for path in paths:
+        audit = json.loads(path.read_text(encoding='utf-8'))
+        records += [(path.name, r) for r in audit['retailers']
+                    if 'amhaz' in ' '.join((r['retailer_id'], str(r.get('canonical_seller')))).casefold()]
+    return paths, records
 
 
 def seed_records():
@@ -85,16 +91,6 @@ class BlockedProfileTests(NoNetworkTestCase):
                     self.assertBlocked(amhaz.PROFILE.search(fetch, category=category, search='iPhone 17',
                                                             only=only, run=None), fetch)
 
-    def test_reachable_priced_listing_with_stated_condition_is_still_no_candidate(self):
-        # The capture shows the site is readable and states price, stock and condition for some
-        # items; the block is about identity, not data.
-        data = capture()
-        stated = [r for r in data['related_records']
-                  if r['price'] > 0 and r['attributes']['specs'].get('Condition') == 'New']
-        self.assertTrue(stated)
-        fetch = ServingFetch()
-        self.assertBlocked(amhaz.PROFILE.search(fetch, category='phone', search='IPHONE 17'), fetch)
-
     def test_no_capability_supported_category_or_canonical_origin_is_declared(self):
         profile = amhaz.PROFILE
         self.assertEqual((profile.capabilities, profile.supported_categories, profile.canonical_origin),
@@ -115,12 +111,65 @@ class BlockedProfileTests(NoNetworkTestCase):
         self.assertEqual(fetch.calls, [])
 
 
+class CaptureTests(unittest.TestCase):
+    """The dated capture backs each claim docs/source-coverage.md makes about the live check."""
+
+    def test_capture_records_three_bounded_successful_reads(self):
+        data = capture()
+        self.assertEqual((data['retailer_id'], data['identity_status']), (amhaz.RETAILER_ID, amhaz.IDENTITY_STATUS))
+        self.assertEqual([o['url'] for o in data['observations']],
+                         [amhaz.CANDIDATE_ORIGIN, amhaz.CANDIDATE_ORIGIN + 'contact',
+                          amhaz.CANDIDATE_ORIGIN + 'product/1018'])
+        for o in data['observations']:
+            with self.subTest(url=o['url']):
+                self.assertEqual((o['status'], o['final_url']), (200, o['url']))
+                self.assertRegex(o['sha256'], r'^[0-9a-f]{64}$')
+                self.assertTrue(o['checked_at'].startswith('2026-11-17T') and o['checked_at'].endswith('+00:00'))
+                self.assertEqual({k: v for k, v in o['term_counts'].items() if v}, {'shipping': 2})
+        self.assertEqual((data['method']['retries'], data['method']['min_gap_s']), (0, 12))
+
+    def test_capture_shows_identity_and_no_policy_link(self):
+        data = capture()
+        self.assertEqual((data['identity']['brand_name'], data['identity']['address']),
+                         ('Amhaz Official', 'Saint Therese, Hadath , Lebanon'))
+        self.assertIn('Amhaz Mobile Store front', data['identity']['gallery_captions'])
+        self.assertEqual(data['footer']['linked_items'], {'Contact Us': '/contact'})
+        self.assertTrue({'FAQs', 'Shipping', 'About Us'} <= set(data['footer']['unlinked_items']))
+        text = json.dumps(data).casefold()
+        for private in ('70 70 72 71', '76 70 72 71', 'whatsapp', 'email', '@'):
+            self.assertNotIn(private, text)
+
+    def test_capture_shows_the_sample_states_no_condition_and_is_out_of_stock(self):
+        product = capture()['product']
+        record = product['record']
+        self.assertEqual((record['item_code'], record['item_name'], record['price'], record['currency'],
+                          record['qty_available'], record['warehouses'], record['description']),
+                         ('1018', 'IPHONE 17', Decimal(2865), 'USD', 0, [], ''))
+        self.assertEqual(record['attributes']['specs'], {'Size': '256GB'})
+        self.assertNotIn('Condition', record['attributes']['selectable'])
+        for line in ('$2,865.00', 'Out of stock', 'Check for availability'):
+            self.assertIn(line, product['visible_lines'])
+
+    def test_capture_shows_explicit_conditions_tokens_and_ask_for_price(self):
+        data = capture()
+        records = {r['item_code']: r for r in data['related_records']}
+        self.assertEqual({code: r['attributes']['specs'].get('Condition') for code, r in records.items()},
+                         {'241': 'New', '590': 'Used', '909': 'Used', '254': 'New'})
+        self.assertTrue(all(r['description'] == '' for r in records.values()))
+        cards = {c['href']: c['visible_lines'] for c in data['product']['related_cards']}
+        self.assertEqual(set(cards), {f'/product/{code}' for code in records})
+        self.assertEqual(records['909']['price'], 0)
+        self.assertIn('Ask for price', cards['/product/909'])
+        self.assertIn('IPHONE 11 128GB USED', cards['/product/909'])
+
+
 class AuditAndRegistryTripwireTests(unittest.TestCase):
     def test_the_audit_still_leaves_every_amhaz_identity_unresolved(self):
-        records = audit_records()
-        self.assertEqual([r['retailer_id'] for r in records], [amhaz.RETAILER_ID])
-        for record in records:
-            with self.subTest(retailer=record['retailer_id']):
+        paths, records = audit_records()
+        self.assertTrue(paths)
+        self.assertEqual([r['retailer_id'] for _, r in records], [amhaz.RETAILER_ID])
+        for path, record in records:
+            with self.subTest(audit=path, retailer=record['retailer_id']):
                 self.assertEqual(record['identity_status'], amhaz.IDENTITY_STATUS, REPLACE)
                 self.assertIsNone(record['canonical_seller'], REPLACE)
                 self.assertEqual(record['qualifying_offer_status'], 'not_established')
@@ -170,8 +219,10 @@ class DirectoryLeadTests(unittest.TestCase):
         self.assertTrue(all(not c.retrieval_tested and not c.qualifying_offer for c in record.coverage))
         for category in amhaz.PROFILE.category_leads:
             with self.subTest(category=category):
-                hits = {h.record.entry.retailer_id: h for h in
-                        self.directory.select(DirectoryQuery(category=category, include_unconfigured=True))}
+                # limit=20 is the query maximum; the candidate must still be among the leads.
+                hits = {h.record.entry.retailer_id: h for h in self.directory.select(
+                    DirectoryQuery(category=category, include_unconfigured=True, limit=20))}
+                self.assertIn(amhaz.RETAILER_ID, hits, 'candidate missing from the bounded lead list')
                 hit = hits[amhaz.RETAILER_ID]
                 self.assertEqual((hit.configured, hit.permitted_urls), (False, ()))
                 self.assertIn('technical configuration gap; lead only', hit.reasons)
