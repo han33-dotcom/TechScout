@@ -1,0 +1,12 @@
+# Seed the evidence corpus
+
+Apply the normal corpus migrations and load the active source policies into the product database. Load the existing shared accounting configuration. From the repository root run
+
+    python -m app.bootstrap config/domestic-bootstrap-validation.json
+
+Run the same command after interruption. Each manifest ID binds to its exact contents. The accounting database stores the lease, per-resource attempts, conservative reservations, response hashes and outcomes. The corpus stores the public captures and evidence. A completed page is skipped only when its corpus head and processing recipe still match. Inspect the returned page statuses, gaps and counts before planning another batch. A new manifest is still charged against the same campaign and bootstrap limits. Set the accounting job's cancellation flag to stop subsequent work.
+
+Catalog seeds use the reviewed source capability and category slugs, including explicitly listed pagination URLs. Search hits outside those categories are discarded. Catalog names are product evidence. SKU-bound HTML and reviewed source policy statements use the shared extractor. For paid vector indexing supply a configured OpenAI key and an explicit positive `--embedding-rate` in USD per million tokens. The embedding service checks for pending passages before charging a batch. An initial search can read stored passages by keyword without this option. Verification of finalist prices and stock belongs to the buyer run.
+
+The November 18 Beirut sample acquired 30 product fields across five categories and one warranty passage from two retailers. The committed report records the source hashes and UTC times. Repeating it returned an identical report with no further calls. Live vector indexing and international coverage were not demonstrated. International sources still require technical admission under issue #60. No stored listing is a verified purchase recommendation.
+
