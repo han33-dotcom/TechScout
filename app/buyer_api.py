@@ -1,13 +1,14 @@
 """Thin same-origin JSON handlers over the durable buyer application service."""
 from datetime import datetime
 
-from fastapi import APIRouter, Request, Response
+from fastapi import APIRouter, Request, Response, Query
 from fastapi.responses import JSONResponse
 from pydantic import Field
 
 from app.buyer_runs import RunError
 from app.contracts import Model, Text
 from app.contracts_v2 import ShoppingRequest, RunSnapshot, RunReference, ComparisonWorkspace
+from app.buyer_history import HistoryList, HistoricalWorkspace, DeletionResult, export_comparison
 
 COOKIE = 'techscout_session'
 
@@ -92,6 +93,25 @@ def router(*,cookie_secure=True):
     @api.get('/runs/{run_id}',response_model=ComparisonWorkspace)
     def read(run_id:str,request:Request):
         return request.app.state.buyer_runs.read(owned(request),run_id)
+
+    @api.get('/history',response_model=HistoryList)
+    def history(request:Request,limit:int=Query(default=20,ge=1,le=20)):
+        return request.app.state.buyer_runs.history(owned(request),limit)
+
+    @api.get('/history/{run_id}',response_model=HistoricalWorkspace)
+    def reopen(run_id:str,request:Request):
+        return request.app.state.buyer_runs.reopen(owned(request),run_id)
+
+    @api.post('/history/{run_id}/delete',response_model=DeletionResult)
+    def delete_history(run_id:str,request:Request):
+        return request.app.state.buyer_runs.delete_history(owned(request,mutate=True),run_id)
+
+    @api.get('/history/{run_id}/export')
+    def export(run_id:str,request:Request,include_evidence:bool=True):
+        saved=request.app.state.buyer_runs.reopen(owned(request),run_id)
+        return Response(export_comparison(saved.workspace.current,include_evidence=include_evidence),
+            media_type='text/plain',headers={'Content-Disposition':'attachment; filename="techscout-comparison.txt"',
+                'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'})
 
     @api.post('/runs/{run_id}/cancel',response_model=RunSnapshot)
     def cancel(run_id:str,body:RunCommand,request:Request):

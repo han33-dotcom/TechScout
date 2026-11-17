@@ -35,6 +35,11 @@ export function useWorkspace(api: Transport) {
     return () => { clearTimeout(timer); controller.abort(); };
   }, [workspace, busy, error, api, commit]);
   return { workspace, busy, error,
+    startFresh: (request: ShoppingRequest) => mutate(async () => envelope(await api.start(request))),
+    forget: (requestId: string) => {
+      if (lock.current || current.current?.current.request.request_id !== requestId) return;
+      generation.current++; poll.current?.abort(); current.current = undefined; setWorkspace(undefined); setError('');
+    },
     submit: (request: ShoppingRequest) => mutate(async () => current.current ? api.refine(current.current.current.run, request) : envelope(await api.start(request))),
     cancel: () => mutate(async () => envelope(await api.cancel(current.current!.current.run), current.current?.previous)),
     clarify: (answer: string) => mutate(async () => envelope(await api.clarify(current.current!.current.run, current.current!.current.clarification!.clarification_id, answer), current.current?.previous)),

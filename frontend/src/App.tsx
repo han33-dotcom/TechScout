@@ -4,6 +4,7 @@ import { categories, examples, initialDraft, specLabels, toRequest, fromRequest,
 import { active, useWorkspace, type Transport } from './useWorkspace';
 import './styles.css';
 import Comparison from './Comparison';
+import History, { type HistoryTransport } from './History';
 const api = new BuyerApi();
 const phases = { interpret: 'Understanding your requirements', discover: 'Finding relevant retailers', research: 'Checking products and evidence', evaluate: 'Comparing eligible offers', verify: 'Rechecking price and availability', write: 'Preparing your comparison' };
 const endings = { complete: 'Your search is complete', partial: 'Some checks could not finish', abstained: 'No verified recommendation yet', cancelled: 'Search cancelled', error: 'Search could not finish' };
@@ -37,7 +38,7 @@ export function Progress({ snapshot, busy, cancel, clarify }: { snapshot: RunSna
     {snapshot.provisional.length > 0 && <div className="provisional"><h3>Early candidates <span className="badge">Checking · not verified</span></h3>{snapshot.provisional.map(candidate => <article key={candidate.offer.offer_id}><strong>{candidate.offer.variant.product.manufacturer} {candidate.offer.variant.product.model}</strong><p>{candidate.offer.seller.name} · Originally observed {new Date(candidate.observed_at).toLocaleString()}</p><small>Price, stock and eligibility still need checks for this search.</small></article>)}</div>}
   </section>;
 }
-export default function App({ transport = api, renderResults }: { transport?: Transport; renderResults?: (workspace: ComparisonWorkspace) => ReactNode }) {
+export default function App({ transport = api, historyTransport = api, renderResults }: { transport?: Transport; historyTransport?: HistoryTransport; renderResults?: (workspace: ComparisonWorkspace) => ReactNode }) {
   const [draft, setDraft] = useState<Draft>(initialDraft), [validation, setValidation] = useState('');
   const state = useWorkspace(transport);
   const [followup,setFollowup] = useState('');
@@ -47,6 +48,7 @@ export default function App({ transport = api, renderResults }: { transport?: Tr
   const submit = (e: FormEvent) => { e.preventDefault(); setValidation(''); try { const request = toRequest(draft, state.workspace?.current.request); setDirty(false); void state.submit(request); } catch (error) { setValidation(error instanceof Error ? error.message : 'Check your requirements.'); } };
   return <><header className="topbar"><a className="brand" href="/" aria-label="TechScout home"><span className="brand-mark">t↗</span>techscout<span className="brand-dot">.</span></a><span className="location">LB <span>Built for buying in Lebanon</span></span></header>
     <main><section className="hero"><span className="eyebrow">LESS GUESSWORK. BETTER CHOICES.</span><h1>Find the right tech.<br/><span>Know what you’re buying.</span></h1><p>Tell us what matters. Compare configurations, sellers and the full cost, with evidence you can check.</p></section>
+      <History api={historyTransport} onDeleted={state.forget} onRecheck={request=>{setDirty(false);setValidation('');void state.startFresh({...request,request_id:crypto.randomUUID(),revision:1});}}/>
       <section className="panel request-panel" aria-label="Your search"><RequestForm draft={draft} setDraft={edit} onSubmit={submit} busy={state.busy} refining={!!state.workspace} />{validation && <p role="alert" className="error">{validation}</p>}</section>
       {!state.workspace && <div className="examples"><span>Try an example</span>{examples.map(example => <button key={example.label} onClick={() => edit(example.draft)}>{example.label} ↗</button>)}<small>These examples have preset requirements. General language interpretation happens during research.</small></div>}
       {state.error && <div role="alert" className="error panel"><p>{state.error}</p>{state.workspace && <button disabled={state.busy} onClick={() => void state.recover()}>Check latest status</button>}</div>}

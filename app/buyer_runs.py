@@ -15,6 +15,7 @@ from sqlalchemy import select, insert, update, delete, func
 
 from app import contracts_v2 as v
 from app.storage import buyer_guard, buyer_sessions, buyer_runs
+from app.buyer_history import HistoryEntry, HistoryList, HistoricalWorkspace, DeletionResult
 
 ACTIVE = {'queued','running','clarification'}
 TERMINAL = {'complete','partial','abstained','cancelled','error'}
@@ -167,6 +168,47 @@ class BuyerRunService:
             owner=self._session(db,now,token)['session_hash']
             self._recover(db,now)
             return self._workspace(db,owner,self._row(db,run_id,owner))
+
+    def history(self,token,limit=20):
+        if type(limit) is not int or not 1<=limit<=20:
+            raise RunError(422,'History limit must be between 1 and 20')
+        with self._transaction() as (db,now):
+            session=self._session(db,now,token)
+            owner=session['session_hash']
+            self._recover(db,now)
+            newer=buyer_runs.alias('newer')
+            latest=~select(1).where(newer.c.session_hash==owner,
+                newer.c.request_id==buyer_runs.c.request_id,
+                newer.c.request_revision>buyer_runs.c.request_revision).exists()
+            # Contracts normalize UTC timestamps to Z. Remove that suffix so
+            # a whole second sorts before its fractional timestamps as well.
+            updated=func.replace(buyer_runs.c.snapshot['updated_at'].as_string(),'Z','')
+            rows=db.execute(select(buyer_runs).where(buyer_runs.c.session_hash==owner,latest)
+                .order_by(updated.desc(),buyer_runs.c.run_id)
+                .limit(limit)).mappings().all()
+            return HistoryList(expires_at=session['expires_at'],items=tuple(HistoryEntry(
+                run_id=row['run_id'],revision=row['request_revision'],status=row['status'],
+                category=row['snapshot']['request']['requirements']['category'],
+                updated_at=row['snapshot']['updated_at']) for row in rows))
+
+    def reopen(self,token,run_id):
+        with self._transaction() as (db,now):
+            owner=self._session(db,now,token)['session_hash']
+            self._recover(db,now)
+            row=self._row(db,run_id,owner)
+            previous=self._row(db,row['previous_id'],owner)['snapshot'] if row['previous_id'] else None
+            return HistoricalWorkspace(workspace=v.ComparisonWorkspace(current=row['snapshot'],previous=previous))
+
+    def delete_history(self,token,run_id):
+        with self._transaction() as (db,now):
+            owner=self._session(db,now,token)['session_hash']
+            self._recover(db,now)
+            row=self._row(db,run_id,owner)
+            chain=(buyer_runs.c.session_hash==owner,buyer_runs.c.request_id==row['request_id'])
+            if db.execute(select(buyer_runs.c.run_id).where(*chain,buyer_runs.c.status.in_(ACTIVE))).first():
+                raise RunError(409,'Cancel the active search before deleting its history')
+            db.execute(delete(buyer_runs).where(*chain))
+            return DeletionResult()
 
     @staticmethod
     def _reference(row,run):

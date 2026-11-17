@@ -4,6 +4,8 @@ export type ShoppingRequest = components['schemas']['ShoppingRequest-Input'];
 export type RunReference = components['schemas']['RunReference'];
 export type RunSnapshot = components['schemas']['RunSnapshot'];
 export type ComparisonWorkspace = components['schemas']['ComparisonWorkspace'];
+export type HistoryList = components['schemas']['HistoryList'];
+export type HistoricalWorkspace = components['schemas']['HistoricalWorkspace'];
 type SessionInfo = components['schemas']['SessionInfo'];
 
 export class ApiError extends Error {
@@ -23,7 +25,7 @@ export class BuyerApi {
     }
     return this.pendingSession;
   }
-  private async send<T>(path: string, body?: unknown, signal?: AbortSignal): Promise<T> {
+  private async send<T>(path: string, body?: unknown, signal?: AbortSignal, format: 'json' | 'text' = 'json'): Promise<T> {
     if (body !== undefined && !this.csrf) await this.session();
     const response = await fetch(path, {
       method: body === undefined ? 'GET' : 'POST',
@@ -38,10 +40,23 @@ export class BuyerApi {
       // Never automatically repeat a mutation after an ambiguous failure.
       throw new ApiError(response.status, `Request failed (${response.status})`);
     }
-    return response.json() as Promise<T>;
+    return (format === 'text' ? response.text() : response.json()) as Promise<T>;
   }
   start(request: ShoppingRequest): Promise<RunSnapshot> {
     return this.send('/api/runs', request);
+  }
+  async history(): Promise<HistoryList> {
+    await this.session();
+    return this.send('/api/history');
+  }
+  reopen(runId: string): Promise<HistoricalWorkspace> {
+    return this.send(`/api/history/${encodeURIComponent(runId)}`);
+  }
+  deleteHistory(runId: string): Promise<{ deleted: true }> {
+    return this.send(`/api/history/${encodeURIComponent(runId)}/delete`, {});
+  }
+  exportHistory(runId: string, includeEvidence: boolean): Promise<string> {
+    return this.send(`/api/history/${encodeURIComponent(runId)}/export?include_evidence=${includeEvidence}`, undefined, undefined, 'text');
   }
   read(runId: string, signal?: AbortSignal): Promise<ComparisonWorkspace> {
     return this.send(`/api/runs/${encodeURIComponent(runId)}`, undefined, signal);
