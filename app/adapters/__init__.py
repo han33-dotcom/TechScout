@@ -24,5 +24,9 @@ def fetch_offer(fetch: Fetch, source_id: str, offer_id: str, query: CandidateQue
     return get_adapter(source_id).fetch_offer(fetch, offer_id, query)
 
 
+def fetch_offers(fetch: Fetch, source_id: str, offer_ids: list[str], query: CandidateQuery) -> AdapterResult:
+    return get_adapter(source_id).fetch_offers(fetch, offer_ids, query)
+
+
 def fetch_policy(fetch: Fetch, source_id: str, policy_id: str) -> AdapterResult:
     return get_adapter(source_id).fetch_policy(fetch, policy_id)

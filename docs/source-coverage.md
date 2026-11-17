@@ -20,8 +20,10 @@ names a known model gives "product name does not name a known model") and the re
 without a currency code likewise leaves prices unknown ("currency is not declared").
 
 All three admitted stores run WooCommerce. One product read is two requests (Store API slug
-query, then the product page); each policy page is one more. The per-store cap is 4 requests
-per run, so a search plus every policy page fits (Class 3, Mojitech 3, Beytech 4). A run fetches
+query, then the product page); each policy page is one more. The per-store cap is 6 requests
+per run, so a search, every policy page and one final re-read of the finalists' product fit
+(Class 5, Mojitech 5, Beytech 6; issue #70). Every gate attempt counts, so retries or redirect hops
+can use the spare requests or the final re-read. A run fetches
 a policy page only for an open gap the page declares it may settle (see Policy pages), so it never
 fetches Beytech's two pages.
 
