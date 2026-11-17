@@ -33,7 +33,7 @@ def fetch_policy(fetch: Fetch, source_id: str, policy_id: str) -> AdapterResult:
 
 
 # Full-product acquisition returns v2 corpus observations; legacy APIs above stay v1.
-CATALOGS = {"mojitech": mojitech.CATALOG}
+CATALOGS = {"mojitech": mojitech.CATALOG, "beytech": beytech.CATALOG}
 
 
 def search_catalog(fetch, source_id, *, category, search, run=None, only=None, corpus_version="catalog-preview-v1"):

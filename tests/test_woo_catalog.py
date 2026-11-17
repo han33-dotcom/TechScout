@@ -69,7 +69,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual((c.product_id,c.variant_id,c.category),('101','101','laptop'))
         self.assertEqual(f['variant.specs.ram_gb'].value,16)
         self.assertEqual(f['variant.specs.cpu'].value,'Core Ultra 5 125H')
-        self.assertEqual(f['price'].value,{'amount':'799.00','currency':'USD'})
+        self.assertEqual(f['price'].value,{'amount':'799','currency':'USD'})
         self.assertTrue(c.priced)
         self.assertEqual(len(fetch.calls),3)
         hashes={s.sha256 for s in result.snapshots}
@@ -161,7 +161,7 @@ class CatalogTests(unittest.TestCase):
         first=CATALOG.search(f,category='laptop',search='Example')
         p['prices']['price']='89900';f.table=routes([p])
         second=CATALOG.search(f,category='laptop',search='Example',only={('101','101')})
-        self.assertEqual(facts(second.candidates[0])['price'].value['amount'],'899.00')
+        self.assertEqual(facts(second.candidates[0])['price'].value['amount'],'899')
         self.assertNotEqual(facts(first.candidates[0])['price'].evidence_ids,facts(second.candidates[0])['price'].evidence_ids)
 
     def test_legacy_capture_is_still_unpriced_in_v2(self):

@@ -8,6 +8,8 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 
 ## Documents
 
+- [Beytech catalog and policy evidence](beytech-catalog.md)
+
 - [Mojitech catalog and live-access evidence](mojitech-catalog.md)
 
 - [Private session history and exports](buyer-history.md)
