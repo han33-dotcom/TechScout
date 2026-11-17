@@ -8,6 +8,7 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 
 ## Documents
 
+- [Monitor and audio identity](monitor-audio-identity.md)
 - [Bounded research workers](research-workers.md)
 - [collaborator setup](collaborator-setup.md)
 - [Full-product contracts v2](full-product-contracts.md) and [MVP contract v1](mvp-spec.md)
