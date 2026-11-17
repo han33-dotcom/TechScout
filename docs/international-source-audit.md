@@ -134,18 +134,19 @@ the 11 direct attempts are **not a measured total for all research tooling**.
 Only metadata and our summaries are committed, not full retailer pages.
 
 **Accounting discrepancy:** these manual probes were executed outside the
-central ledger without reservations. That does not meet
-[shared accounting](shared-accounting.md), and this document does not create
-an exception. Further collection is blocked until the audit debit is reconciled
-with the shared campaign. Do not provision a separate local ledger or reset the
-initial allowance. Conservatively retain the entire validation envelope of
-**100 attempts, 15 minutes and $3** pending reconciliation; unknown browser
-paid-call usage remains unresolved. This is a retained budget debit, not a claim
-that exactly those resources were consumed or that provider fan-out was measured.
+ledger without reservations. That did not meet [shared accounting](shared-accounting.md).
+In the subsequent [local-first setup](local-accounting.md), explicitly selected
+by the user, the entire **100-attempt, 15-minute, $3** validation envelope was
+posted to the authoritative local ledger as an immutable conservative hold.
+The full 60-call international paid allowance is also held because browser
+paid-call usage remains unresolved. This does not retroactively establish prior
+reservations or claim that exactly those resources were consumed. Teammates
+must not create independent ledgers or reset the allowance.
 
 Before other existing usage, that leaves at most **900 international attempts,
-45 minutes and $12**, subject to the central ledger's actual lower balance and
-paid-call reconciliation. Debit the parent all-market initial envelope too.
+45 minutes and $12**, subject to the authoritative ledger's actual lower balance.
+There are **zero paid international call slots available** until the hold can be
+reconciled with evidence. The parent all-market initial envelope was debited too.
 Keep the existing 2,000 domestic/shared attempt slots, $500 campaign cap and
 daily maintenance limits. No broad collection was started. Source admission,
 workload caps and runtime enablement remain separate prerequisites.
@@ -157,7 +158,7 @@ category/allocation totals and fail-closed readiness. Ordinary CI remains
 offline. Live results above establish only this bounded sample's observed
 retrievability; HTTP 200 alone is not successful extraction.
 
-Next work must reconcile accounting, implement an admitted Microless reader
+Next work must resolve the paid-call hold, implement an admitted Microless reader
 with offer/region binding, resolve or replace B&H retrieval, and replace the
 Amazon sample. Then validate actual item routes and quote components within
 the remaining shared allowance. Broad ingestion and recommendations stay

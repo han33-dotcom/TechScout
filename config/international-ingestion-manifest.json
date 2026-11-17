@@ -105,9 +105,9 @@
   },
   "validation_accounting": {
     "job_id": "international-source-audit-2026-11-17",
-    "status": "unreconciled_manual_audit_do_not_dispatch",
+    "status": "conservative_hold_posted_local_authority_paid_international_blocked",
     "central_ledger_used": false,
-    "discrepancy": "Direct manual probes did not reserve in the central ledger. Do not treat this report as an exception to shared-accounting.md; reconcile this debit before further collection.",
+    "discrepancy": "The original probes lacked prior reservations. Conservative historical debits are now posted to the approved local authority; this does not retroactively establish prior reservations or measured browser billing.",
     "direct_measured": {
       "fetch_attempts": 11,
       "wall_seconds": 39.469,
@@ -120,12 +120,6 @@
       "service_cost_usd": null,
       "basis": "Official-page search/open research; provider fan-out and service billing are not exposed. Not measured as free or exact request count."
     },
-    "conservative_debit_pending_reconciliation": {
-      "fetch_attempts": 100,
-      "active_seconds": 900,
-      "usd": "3.00",
-      "paid_calls": null
-    },
     "probe_product_urls_by_retailer": {
       "microless": 3,
       "bh": 1,
@@ -135,12 +129,25 @@
       "fetch_attempts": 900,
       "active_seconds": 2700,
       "usd": "12.00",
-      "paid_calls": null
+      "paid_calls": 0
     },
-    "scope": "Debit is INCLUDED in international and all-market initial allowances, not a reset per job. Unknown paid-call accounting blocks dispatch; these figures are ceilings, not available central balances."
+    "scope": "Debit is posted within both initial scopes. The entire international paid-call allowance is held. Only unpaid gated work may use remaining capacity, subject to source admission and route gaps. These figures are ceilings; query the actual ledger before dispatch.",
+    "conservative_debit_posted": {
+      "fetch_attempts": 100,
+      "active_seconds": 900,
+      "usd": "3.00",
+      "paid_calls": 60
+    },
+    "reconciliation": {
+      "receipt_id": "international-audit-2026-11-17",
+      "project": "techscout-december-2026",
+      "authority": "local PostgreSQL on Hassan PC, approved November 17",
+      "receipt_manifest": "accounting-reconciliation-2026-11-17.json",
+      "status": "conservative_hold_not_final_billing_settlement"
+    }
   },
   "dispatch_requirements": [
-    "Central ledger configured and audit debit reconciled against campaign and both initial scopes",
+    "Use the configured authoritative ledger; retain posted conservative holds and account for additional discovered historical usage before dispatch",
     "SourceGate admission, scoped endpoints and positive shared workload limits",
     "No more than one concurrent request and six requests/minute per source, four overall; stricter configured limits win",
     "Retry only within remaining allowances, at most two per resource; no automatic bypass of denial",
