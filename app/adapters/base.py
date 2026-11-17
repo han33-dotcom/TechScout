@@ -12,6 +12,7 @@ from typing import Literal, Protocol
 
 from app.contracts import ArrivalWindow, Evidence, Fulfillment, Offer, ShoppingRequest, ToolError, ToolResult
 from app.sources import Expect, FetchOutcome
+from app.source_capabilities import CapabilityRef
 
 MAX_EXCERPT = 500
 # Lebanon keeps UTC+2 in winter and UTC+3 in summer. Windows use the offset that makes them wider,
@@ -29,7 +30,7 @@ _DIGITS = re.compile(r'[0-9]+')
 
 class Fetch(Protocol):
     """A gate fetch bound to one run's budget."""
-    def __call__(self, source_id: str, url: str, *, expect: Expect) -> FetchOutcome: ...
+    def __call__(self, source_id: str, url: str, *, expect: Expect, capability: CapabilityRef | None = None) -> FetchOutcome: ...
 
 
 @dataclass(frozen=True)

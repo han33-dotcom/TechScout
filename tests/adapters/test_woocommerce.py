@@ -560,10 +560,13 @@ class FailureTests(ReaderTestCase):
         self.assertEqual([s.media_type for s in result.snapshots], ['application/json'])
 
     def test_model_label_rules_out_products_before_fetching(self):
+        from app.adapters.class_cellulars import CONFIG
+        from app.adapters.woocommerce import WooCommerceAdapter
+        fixed = WooCommerceAdapter(CONFIG)
         fetch = FakeFetch(routes('class_cellulars'))
-        result = CLASS.search_candidates(fetch, query(model='iPhone 17 Pro'))
+        result = fixed.search_candidates(fetch, query(model='iPhone 17 Pro'))
         self.assertEqual((result.tool_result.status, result.offers, fetch.calls), ('ok', (), []))
-        unknown_model = CLASS.search_candidates(fetch, query(model='Galaxy S26 Ultra'))
+        unknown_model = fixed.search_candidates(fetch, query(model='Galaxy S26 Ultra'))
         self.assertEqual(len(unknown_model.offers), 4)  # not ruled out; identity decides later
 
     def test_unknown_offer_or_policy_fetches_nothing(self):

@@ -1,4 +1,4 @@
-"""Class Cellulars reader (MVP 05): the iPhone 17 product and the FAQ page.
+"""Class Cellulars variable-phone discovery and policy reader.
 
 The product page states VAT inclusion next to the price, a 14-30 day delivery estimate, an
 18-month warranty at Genuine Warranty Center and a free-shipping banner. The FAQ states delivery
@@ -9,6 +9,13 @@ speaks to online (delivery) orders, so it settles nothing for a pickup offer.
 from decimal import Decimal
 import re
 from types import MappingProxyType
+from urllib.parse import quote
+
+from app.adapters.base import Snapshot, parse_offer_id
+from app.adapters.woocommerce import strict_json, _Read
+from app.devices import match_model
+from app.source_capabilities import CapabilityRef, safe_endpoint
+
 
 from app.adapters.base import PolicyDocument, PolicyFact
 from app.adapters.woocommerce import (
@@ -120,4 +127,111 @@ CONFIG = StoreConfig(
     branches=(('mar-elias', 'Beirut'), ('abc-verdun', 'Beirut'), ('abc-achrafieh', 'Beirut'),
               ('abc-dbayeh', 'Dbayeh'), ('tyre', 'Tyre')),
 )
-ADAPTER = WooCommerceAdapter(CONFIG)
+
+
+class ClassCatalogAdapter(WooCommerceAdapter):
+    """Bounded variable-phone discovery; other categories remain unsupported.
+
+    No process-global discovery cache: refresh rediscovers the same model using
+    the current run's gate and verifies the parent/variant IDs again.
+    """
+    supported_categories = ('phone',)
+    max_products = 2
+
+    def _scoped(self, fetch):
+        def scoped(source_id, url, *, expect):
+            if url in {p.api_url for p in CONFIG.products} | {p.page_url for p in CONFIG.products}:
+                return fetch(source_id, url, expect=expect)
+            kind = 'class-product' if expect == 'html' else 'class-slug'
+            return fetch(source_id, url, expect=expect,
+                         capability=CapabilityRef(capability_id=kind, version='1'))
+        return scoped
+
+    def _discover(self, fetch, query):
+        read = _Read()
+        model = match_model(query.model)
+        if model is None:
+            read.errors.append(self._error('unsupported phone model'))
+            return (), read
+        url = f'{ORIGIN}/wp-json/wc/store/v1/products?search={quote(model)}&per_page=10&page=1'
+        outcome = fetch(self.source_id, url, expect='json',
+                        capability=CapabilityRef(capability_id='class-search', version='1'))
+        read.outcomes.append(outcome)
+        if outcome.errors or outcome.body is None:
+            return (), read
+        read.snapshots.append(Snapshot.of(outcome))
+        try:
+            records = strict_json(outcome.body.decode('utf-8'))
+            if not isinstance(records, list) or len(records) > 10:
+                raise ValueError()
+        except (ValueError, UnicodeDecodeError, RecursionError):
+            read.errors.append(self._error('invalid catalog response'))
+            return (), read
+        products = {}
+        for record in records:
+            if not isinstance(record, dict):
+                read.errors.append(self._error('invalid catalog entry'))
+                continue
+            # A case/accessory mentioning a phone is never a phone candidate.
+            categories = record.get('categories', [])
+            is_phone = isinstance(categories, list) and any(
+                isinstance(c, dict) and c.get('slug') in ('mobiles', 'smartphones', 'mobile-phones')
+                for c in categories)
+            name, slug, pid = record.get('name'), record.get('slug'), record.get('id')
+            if not (is_phone and record.get('type') == 'variable' and record.get('parent') == 0
+                    and isinstance(name, str) and match_model(name) == model):
+                continue
+            if not (type(pid) is int and 0 < pid < 10**12 and isinstance(slug, str)
+                    and re.fullmatch(r'[a-z0-9][a-z0-9-]{0,99}', slug)):
+                read.errors.append(self._error('invalid catalog identity'))
+                continue
+            page = f'{ORIGIN}/product/{slug}/'
+            if record.get('permalink') != page or not safe_endpoint(page, 'classcellulars.com'):
+                read.errors.append(self._error('unsafe catalog product URL'))
+                continue
+            product = ProductEndpoints(str(pid), f'{ORIGIN}/wp-json/wc/store/v1/products?slug={slug}', page, name)
+            if str(pid) in products and products[str(pid)] != product:
+                read.errors.append(self._error('conflicting catalog identity'))
+                return (), read
+            products[str(pid)] = product
+        if len(products) > self.max_products or len(records) == 10:
+            read.errors.append(self._error('catalog discovery truncated by configured bound'))
+        return tuple(products.values())[:self.max_products], read
+
+    def search_candidates(self, fetch, query):
+        if match_model(query.model) == 'iPhone 17':
+            return super().search_candidates(fetch, query)
+        products, discovery = self._discover(fetch, query)
+        return self._result([discovery] + [self._read(self._scoped(fetch), p, query) for p in products])
+
+    def fetch_offers(self, fetch, offer_ids, query):
+        if match_model(query.model) == "iPhone 17":
+            return super().fetch_offers(fetch, offer_ids, query)
+        ids = offer_ids if isinstance(offer_ids, (list, tuple)) else []
+        try:
+            parsed = [parse_offer_id(value) for value in ids]
+        except (ValueError, TypeError, AttributeError):
+            return super().fetch_offers(fetch, ids, query)
+        if not parsed or any(s != self.source_id for s, _, _ in parsed):
+            return super().fetch_offers(fetch, ids, query)
+        if all(p in self._products for _, p, _ in parsed):
+            return super().fetch_offers(fetch, ids, query)
+        products, discovery = self._discover(fetch, query)
+        available = {p.key: p for p in products + self.config.products}
+        wanted = {}
+        for _, pid, vid in parsed:
+            wanted.setdefault(pid, set()).add(vid)
+        reads = [discovery]
+        for pid, variants in wanted.items():
+            if pid not in available:
+                discovery.errors.append(self._error('requested product is not in bounded discovery'))
+                continue
+            read = self._read(self._scoped(fetch), available[pid], query, only=frozenset(variants))
+            if read.listed and variants.difference(read.variation_ids):
+                read.errors.append(self._error('requested variation is no longer listed'))
+            reads.append(read)
+        return self._result(reads)
+
+
+
+ADAPTER = ClassCatalogAdapter(CONFIG)
