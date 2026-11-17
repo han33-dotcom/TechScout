@@ -660,7 +660,8 @@ class FullProductIdentityTests(unittest.TestCase):
             ('Samsung', 'Galaxy Tab S9 FE +', 'Galaxy Tab S9 FE', different),
             ('Samsung', 'Galaxy Tab S9 Wi-Fi+128GB', 'Galaxy Tab S9+ Wi-Fi 128GB', different),
             ('Lenovo', 'Tab P11 Wi-Fi 4/128 2021', 'Tab P11 Wi-Fi 6/128 2021', different),
-            ('Microsoft', 'Surface Pro 9 i5 13" 2-in-1', 'Surface Pro 9 i5 13-inch 2-in-1', same),
+            # A CPU tier is not an edition: the same i5 13-inch title fits more than one Surface Pro.
+            ('Microsoft', 'Surface Pro 9 i5 13" 2-in-1', 'Surface Pro 9 i5 13-inch 2-in-1', unresolved),
             ('Samsung', 'Galaxy Tab S6 Lite (2024)', 'Galaxy Tab S6 Lite 2024', same),
             ('Samsung', 'Galaxy Tab S6 Lite (2022)', 'Galaxy Tab S6 Lite (2024)', different),
             ('Apple', 'iPad mini (A17 Pro)', 'iPad mini (6th generation)', different),
@@ -674,6 +675,106 @@ class FullProductIdentityTests(unittest.TestCase):
                 right = offer('tablet', 'right', {'manufacturer': maker, 'model': right_name})
                 self.assertEqual(compare_offers(left, right).hardware.outcome, expected)
                 self.assertEqual(compare_offers(right, left).hardware.outcome, expected)
+
+    def test_retail_titles_that_fit_several_tablets_stay_unresolved(self):
+        # Each title is sold as two or more real devices with the same storage, connection and color.
+        from tests.identity_v2 import offer
+        from app.identity import compare_offers, variant_identity_key
+        titles = [
+            # An accessory's generation is not the tablet's edition.
+            ('Apple', 'Apple iPad Pro 11-inch Wi-Fi 128GB Space Gray - Supports Apple Pencil (2nd Generation)',
+             128, 'wifi'),
+            ('Apple', 'Apple iPad 10.2-inch Wi-Fi 32GB Space Gray, Apple Pencil (1st generation) support', 32, 'wifi'),
+            ('Apple', 'Apple iPad Pro 12.9" Wi-Fi 256GB Silver (Apple Pencil 2nd Gen compatible)', 256, 'wifi'),
+            ('Apple', 'Apple iPad Wi-Fi 64GB Silver - works with Apple Pencil 1st Gen', 64, 'wifi'),
+            # A line word joined to a number is not a model token.
+            ('Apple', 'Apple iPad Pro11 Wi-Fi 256GB', 256, 'wifi'),
+            ('Apple', 'Apple iPad Air6 128GB Wi-Fi', 128, 'wifi'),
+            ('Apple', 'Apple iPad Air13 Wi-Fi 128GB', 128, 'wifi'),
+            ('Apple', 'Apple iPad Pro4 256GB Wi-Fi', 256, 'wifi'),
+            ('Apple', 'iPad Pro13 Wi-Fi 512GB', 512, 'wifi'),
+            ('Amazon', 'Amazon Fire HD10 32GB', 32, 'wifi'),
+            # Two editions in one name.
+            ('Apple', 'Apple iPad 10.2-inch 7th/8th Gen Wi-Fi 32GB', 32, 'wifi'),
+            ('Apple', 'Apple iPad 10.2" (2019/2020) Wi-Fi 128GB', 128, 'wifi'),
+            ('Apple', 'Apple iPad Air 11-inch Wi-Fi 128GB (2024/2025)', 128, 'wifi'),
+            ('Apple', 'Apple iPad Pro 11" M1/M2 Wi-Fi 128GB', 128, 'wifi'),
+            ('Apple', 'Apple iPad Pro 11-inch (2nd/3rd Gen) Wi-Fi 128GB', 128, 'wifi'),
+            ('Apple', 'Apple iPad Pro 11-inch M1 M2 Wi-Fi 128GB', 128, 'wifi'),
+            ('Apple', 'Apple iPad Pro 11-inch 2021 2022 Wi-Fi 128GB', 128, 'wifi'),
+            ('Apple', 'Apple iPad Pro 11-inch 2nd Gen 3rd Gen Wi-Fi 128GB', 128, 'wifi'),
+            # Two sizes in one name.
+            ('Apple', 'Apple iPad Pro 11-inch 13-inch M4 Wi-Fi 256GB', 256, 'wifi'),
+            ('Samsung', 'Galaxy Tab S9 FE 10.9-inch 12.4-inch 128GB', 128, 'wifi'),
+            # A bundle joined by a spaced '+'.
+            ('Samsung', 'Galaxy Tab S9 + Galaxy Tab S9 FE 128GB', 128, 'wifi'),
+            # Unknown spellings of the line, and an Apple name without 'iPad'.
+            ('Apple', 'Apple iPad™ Pro M4 Wi-Fi 256GB', 256, 'wifi'),
+            ('Apple', 'Apple iPad® Air M2 Wi-Fi 128GB', 128, 'wifi'),
+            ('Apple', 'Apple i-Pad Pro M4 256GB Wi-Fi', 256, 'wifi'),
+            ('Apple', 'Apple iPad.Pro M4 256GB', 256, 'wifi'),
+            ('Apple', 'Air M2 Wi-Fi 128GB', 128, 'wifi'),
+            # Chips shared by two generations, in any spelling, and Apple's motion coprocessors.
+            ('Apple', 'Apple iPad mini with Retina display, A7 chip, M7 coprocessor, 16GB Wi-Fi', 16, 'wifi'),
+            ('Apple', 'Apple iPad Wi-Fi 32GB Space Gray, A10 Fusion chip with embedded M10 coprocessor', 32, 'wifi'),
+            ('Apple', 'Apple iPad mini A7 Bionic 16GB Wi-Fi', 16, 'wifi'),
+            ('Apple', 'Apple iPad A10 Bionic 32GB Wi-Fi', 32, 'wifi'),
+            ('Apple', 'Apple iPad with A10 Fusion chip 32GB Wi-Fi', 32, 'wifi'),
+            # Lines sold across several editions, with words after the line name.
+            ('Lenovo', 'Lenovo Tab M10 Plus 64GB', 64, 'wifi'),
+            ('Lenovo', 'Lenovo Tab M8 32GB Wi-Fi', 32, 'wifi'),
+            ('Lenovo', 'Lenovo Tab M10 HD 32GB', 32, 'wifi'),
+            ('Samsung', 'Samsung Galaxy Tab A7 10.4" 32GB Wi-Fi', 32, 'wifi'),
+            ('Lenovo', 'Lenovo M10 Plus Iron Grey', 128, 'wifi'),
+            ('Lenovo', 'Lenovo Legion Tab Y700 256GB', 256, 'wifi'),
+            # A display resolution is not a year.
+            ('Samsung', 'Samsung Galaxy Tab S6 Lite 10.4" 2000 x 1200 64GB Wi-Fi', 64, 'wifi'),
+            ('Samsung', 'Samsung Galaxy Tab S6 Lite 10.4" 2000x1200 64GB Wi-Fi', 64, 'wifi'),
+            ('Amazon', 'Amazon Fire HD 10 10.1" 1920 x 1200 32GB', 32, 'wifi'),
+            # A Galaxy Tab A size written without a space is not an Apple chip.
+            ('Samsung', 'Samsung Galaxy Tab A10.1 32GB Wi-Fi', 32, 'wifi'),
+            ('Samsung', 'Samsung Galaxy Tab A8.0 32GB LTE', 32, 'cellular'),
+            # Lines sold in two sizes under one name need the size.
+            ('Huawei', 'Huawei MediaPad M5 4GB/64GB Wi-Fi', 64, 'wifi'),
+            ('Huawei', 'Huawei MediaPad M6 64GB Wi-Fi', 64, 'wifi'),
+            ('Samsung', 'Samsung Galaxy Tab S2 32GB Wi-Fi', 32, 'wifi'),
+            ('Samsung', 'Samsung Galaxy Tab A (2019) 32GB Wi-Fi', 32, 'wifi'),
+            # A CPU tier is not an edition.
+            ('Microsoft', 'Microsoft Surface Pro (Intel Core i7, 16GB RAM, 512GB)', 512, 'wifi'),
+            ('Microsoft', 'Microsoft Surface Pro m3 4GB RAM 128GB', 128, 'wifi'),
+            ('Microsoft', 'Microsoft Surface Pro i7 256GB', 256, 'wifi'),
+        ]
+        for maker, title, storage, connectivity in titles:
+            with self.subTest(title=title):
+                changes = {'manufacturer': maker, 'model': title, 'specs.storage_gb': storage,
+                           'specs.connectivity': connectivity}
+                left, right = offer('tablet', 'left', changes), offer('tablet', 'right', changes)
+                self.assertEqual(compare_offers(left, right).unresolved_identity_fields, ('model',))
+                self.assertIsNone(variant_identity_key(left))
+        # The same lines resolve once the name carries one edition and, where needed, the size.
+        for maker, left_title, right_title in (
+                ('Apple', 'Apple iPad Air 11-inch (M2) Wi-Fi 128GB Space Gray',
+                 'iPad Air 11" M2 Wi-Fi 128 GB Space Gray'),
+                ('Apple', 'iPad Air 11-inch with M2 chip', 'iPad Air 11-inch (M2)'),
+                ('Apple', 'iPad-Pro 11-inch (M4)', 'iPad Pro 11-inch (M4)'),
+                ('Apple', 'iPadPro 11" M4', 'iPad Pro 11-inch (M4)'),
+                ('Apple', 'iPad​Pro 11-inch (M4)', 'iPad Pro 11-inch (M4)'),
+                ('Apple', 'iPad Pro­ 11-inch (M4)', 'iPad Pro 11-inch (M4)'),
+                ('Apple', 'iPad mini A17 Pro', 'iPad mini (A17 Pro)'),
+                ('Apple', 'Apple iPad (7th generation) A10 Fusion', 'iPad 7th Gen A10 Fusion'),
+                ('Samsung', 'Galaxy Tab S9 FE WiFi 128GB', 'Galaxy Tab S9 FE Wi-Fi 128 GB'),
+                ('Samsung', 'Galaxy Tab S9 SM-X710', 'Samsung Galaxy Tab S9 SM-X710'),
+                ('Lenovo', 'Lenovo Tab M10 Plus (3rd Gen) 128GB', 'Tab M10 Plus 3rd Generation 128 GB'),
+                ('Lenovo', 'Lenovo Legion Tab Y700 (2023)', 'Legion Tab Y700 2023'),
+                ('Huawei', 'MediaPad M5 8.4" 128GB', 'MediaPad M5 8.4-inch 128GB')):
+            with self.subTest(left=left_title):
+                left = offer('tablet', 'left', {'manufacturer': maker, 'model': left_title})
+                right = offer('tablet', 'right', {'manufacturer': maker, 'model': right_title})
+                self.assertEqual(compare_offers(left, right).hardware.outcome, 'confirmed_equivalent')
+        # Different generations of a dated line stay different.
+        left = offer('tablet', 'left', {'manufacturer': 'Lenovo', 'model': 'Tab M10 Plus (2nd Gen) 128GB'})
+        right = offer('tablet', 'right', {'manufacturer': 'Lenovo', 'model': 'Tab M10 Plus (3rd Gen) 128GB'})
+        self.assertEqual(compare_offers(left, right).hardware.outcome, 'different_configuration')
 
     def test_tablet_stylus_support_is_a_capability_not_identity(self):
         from tests.identity_v2 import offer
