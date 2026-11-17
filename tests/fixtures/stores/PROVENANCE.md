@@ -54,3 +54,35 @@ lines, the related product cards' visible lines and links, and the product recor
 page's embedded Next.js data (images and units removed; descriptions kept, all empty). Contact
 numbers and email were left out. The identity is unresolved (#50), so this capture is evidence
 for the blocker, not purchase evidence; no reader consumes it.
+
+## Ayoub Computers fixtures (`ayoub_computers/`)
+
+Minimized from public pages fetched directly on 2026-11-17 for issue #55 (log in
+`docs/source-coverage.md`). Every original exceeded the gate's 2 MiB cap, so the fixtures keep
+verbatim fragments in their original order and drop the rest:
+- product pages keep the title, canonical link, JSON-LD Product and BCData scripts, the
+  `productView-scope` block up to the description tabs' end, and the footer's VAT line;
+- the search page keeps each card's title, price, SKU, compare and quick-view parts;
+- policy pages keep the page body from its heading to the footer, plus the VAT line.
+
+Removed: navigation, scripts, styles, SVG, images, comments, the image gallery, share and wishlist
+links, card images and bulk-order blocks, and layout IDs. Store text is unchanged, including a
+few replacement characters (`�`) the store itself serves. Parsing each full original and its
+fixture gave identical facts on 2026-11-17.
+
+| Fixture | Source URL | Observed (UTC) | Original response SHA-256 | Original bytes |
+|---|---|---|---|---|
+| `ayoub_computers/xiaomi-a27ui.html` | https://ayoubcomputers.com/xiaomi-4k-monitor-a27ui-27-uhd-ips-usb-c-monitor/ | 2026-11-17T15:50:30Z | `34b723060a97b5c8d8b7d446956fe4312d4def1cd67bc7947be5a66c5eedd74a` | 2528172 |
+| `ayoub_computers/macbook-air-m4-mw0x3.html` | https://ayoubcomputers.com/apple-macbook-air-m4-10-core-cpu-16-512-gb-ssd-13-silver-mw0x3/ | 2026-11-17T15:51:38Z | `2f90200ea38249fddd63acc55b5fe0ea9effc4121cc40fdf70ed32aa9184f814` | 2510230 |
+| `ayoub_computers/macbook-air-m4-mw0x3-oxdv.html` | https://ayoubcomputers.com/apple-macbook-air-m4-10-core-cpu-16-512-gb-ssd-13-silver-mw0x3-oxdv/ | 2026-11-17T15:51:24Z | `a1af461da92ff57074402fd04f9cc4a28ab46d50930326afd2b34e14007881a8` | 2510946 |
+| `ayoub_computers/macbook-air-m5.html` | https://ayoubcomputers.com/apple-macbook-air-13-6-m5-chip-10-core-cpu-10-core-gpu-24gb-ram-1tb-ssd/ | 2026-11-17T15:50:51Z | `bd292cc9cd9e134f5459dce15236a9c850c8f94a5e80caffa3eb2ad00f757e27` | 2531332 |
+| `ayoub_computers/acer-aspire-5.html` | https://ayoubcomputers.com/acer-aspire-5-a515-58p-53sd-15-6-laptop-intel-core-i5-1335u-ram-8gb-ssd-256gb-intel-iris-xe-nx-khjem-007/ | 2026-11-17T15:42:07Z | `07e5fbe05235ae06fdd2613dfbd5778d14e25c49d754ac8b9afe857bdbef47f4` | 2513895 |
+| `ayoub_computers/search-macbook-air.html` | https://ayoubcomputers.com/search.php?search_query=macbook+air&section=product | 2026-11-17T15:46:37Z | `3f79b7f272fe1df87d79c92003391658415ca5006a4bfd6538460025b93be9d4` | 2718505 |
+| `ayoub_computers/terms-of-service.html` | https://ayoubcomputers.com/terms-of-service/ | 2026-11-17T15:46:23Z | `5a93630056995f6cc593cf4ad99c5d8f0474dd1d184ba62d5a33ae020c89ac75` | 2518812 |
+| `ayoub_computers/quick-delivery-guide.html` | https://ayoubcomputers.com/quick-delivery-guide/ | 2026-11-17T15:46:05Z | `9c0e23ef9259d608f26683fcb78e027a7243b9aef4ada8823ec5e6373a2a069c` | 2489466 |
+
+Tests serve the captured `macbook air` search page for a `MW0X3` query. Ranking then
+selects the two MW0X3 listings, which that page holds. Synthetic Ayoub cases are built inside
+`tests/adapters/test_ayoub.py` from these fixtures, one stated change each. Examples: a
+`Sold By` field (no real listing names a seller), a relisted product ID, or a changed price or
+stock flag. They are test data, not claims about Ayoub's inventory.

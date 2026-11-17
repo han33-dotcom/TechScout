@@ -21,7 +21,8 @@ ReferenceText = Annotated[str, StringConstraints(strip_whitespace=True, min_leng
 LiteralSegment = Annotated[str, StringConstraints(
     strict=True, max_length=128, pattern=r'^[a-zA-Z0-9_-][a-zA-Z0-9._-]*$',
 )]
-QueryKey = Annotated[str, StringConstraints(strict=True, pattern=r'^[a-z][a-z0-9_-]{0,31}$')]
+# Parameter names are case-sensitive on the wire; BigCommerce reads products.php?productId=N.
+QueryKey = Annotated[str, StringConstraints(strict=True, pattern=r'^[a-zA-Z][a-zA-Z0-9_-]{0,31}$')]
 SafeHost = Annotated[str, StringConstraints(
     strict=True, max_length=253, pattern=r'^[a-z0-9-]+(\.[a-z0-9-]+)+$',
 )]
@@ -32,6 +33,11 @@ def _has_action_words(target: str) -> bool:
     words = set(re.findall(r'[a-z0-9._-]+', target.lower()))
     # PHP reads dots in a query parameter name as underscores.
     return bool((words | {word.replace('.', '_') for word in words}) & ACTION_PATH_DENYLIST)
+
+
+def _camel_words(name: str) -> str:
+    """'addToCart' as 'add-To-Cart', so camel-case names meet the hyphenated denylist."""
+    return re.sub(r'(?<=[a-z0-9])(?=[A-Z])', '-', name)
 
 
 def _named_host(host: str) -> bool:
@@ -145,7 +151,8 @@ class EndpointCapability(CapabilityRef):
         if any(_has_action_words(part) for part in self.path if isinstance(part, str)):
             raise ValueError('Action paths cannot be configured')
         names = [argument.name for argument in self.query]
-        if len(names) != len(set(names)) or any(_has_action_words(name) for name in names):
+        if len(names) != len({n.lower() for n in names}) or any(
+                _has_action_words(name) or _has_action_words(_camel_words(name)) for name in names):
             raise ValueError('Query names must be distinct and read-only')
         return self
 

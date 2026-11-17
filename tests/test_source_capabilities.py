@@ -128,6 +128,8 @@ class CapabilityGateTests(GateCase):
             lambda r: r.update(url_template='https://alpha.example/{anything}'),
             lambda r: r['query'][0].update(name='_method'),
             lambda r: r['query'][0].update(name='wc-ajax'),
+            lambda r: r['query'][0].update(name='addToCart'),
+            lambda r: r['query'][0].update(name='Type'),  # differs from 'type' only in case
             lambda r: r['query'][0].update(parameter={'kind': 'search_text'}),
             lambda r: r['query'][0].update(parameter={'kind': 'integer', 'minimum': 6, 'maximum': 5}),
             lambda r: r['query'][0].update(parameter={'kind': 'token', 'max_length': True}),
@@ -149,6 +151,18 @@ class CapabilityGateTests(GateCase):
         self.use_registry([candidate])
         self.assertRefused(self.fetch('alpha', A1), 'SOURCE_DISABLED')
         self.assertNothingSent()
+
+    def test_camel_case_query_names_match_exactly(self):
+        candidate = deepcopy(self.source)
+        rule = candidate['endpoint_capabilities'][1]
+        rule['query'][0]['name'] = 'variantId'
+        self.use_registry([candidate])
+        policy = SourcePolicy.model_validate(get_active_source('alpha', self.path))
+        [scoped] = [r for r in policy.endpoint_capabilities if r.capability_id == 'variant-details']
+        camel = VARIANT.replace('variant=', 'variantId=')
+        self.assertTrue(scoped.matches(camel))
+        for url in (VARIANT, VARIANT.replace('variant=', 'variantid='), VARIANT.replace('variant=', 'VariantId=')):
+            self.assertFalse(scoped.matches(url))
 
     def test_discovery_does_not_supply_permission_and_refs_do_not_expand_scope(self):
         for rule, url, version, expect in (

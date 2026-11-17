@@ -10,6 +10,37 @@ Amhaz is blocked until the intended business is identified; see
 The following MVP snapshot is retained as historical adapter evidence. Its prices,
 stock and blockers describe November 14, not current catalog availability.
 
+## Ayoub Computers live check, 2026-11-17
+
+Issue #55 (T19); the reader and its rules are in [Ayoub catalog](ayoub-catalog.md). These were
+direct public GETs with the gate's user agent, `TechScout/0.1`. They were made one at a time, 10
+or more seconds apart, with a 2 MB compressed read limit, and used no login, cart, form or
+checkout. Sizes are decoded bytes. Rows marked *fixture* are kept, minimized, in
+`tests/fixtures/stores/ayoub_computers/`.
+
+| UTC | Path on ayoubcomputers.com | Status | Bytes | Seen |
+|---|---|---|---|---|
+| 15:41:53 | `/robots.txt` | 200 | 1,345 | `*` disallows only `_bc_fsnf=1`; a 10 s crawl delay for listed AI crawlers |
+| 15:42:07 | `/acer-aspire-5-…-nx-khjem-007/` | 200 | 2,513,895 | *fixture*: laptop with no price, out of stock, new, 1-year warranty |
+| 15:42:18 | `/search.php?search_query=iphone+17&section=product` | 200 | 2,698,761 | 20 cards, all cases and protectors; no phone |
+| 15:46:05 | `/quick-delivery-guide/` | 200 | 2,489,466 | *fixture*: free delivery to every district; 2–5 / 4–6 business days; border villages excluded |
+| 15:46:23 | `/terms-of-service/` | 200 | 2,518,812 | *fixture*: Ayoub or vendor sells; 11% VAT at checkout; warranty guarantor; pickup scope |
+| 15:46:37 | `/search.php?search_query=macbook+air&section=product` | 200 | 2,718,505 | *fixture*: 20 cards, including two MW0X3 listings (38080 and 38082) |
+| 15:46:54 | `/search.php?search_query=monitor&section=product` | 200 | 2,679,897 | 20 cards, mostly stands; Xiaomi A27Ui at USD 367 |
+| 15:49:27 | `/apple-macbook-air-m4-…-mw0x3/` | timeout | | the 20 s read timed out; retried once at 15:51 |
+| 15:49:58 | `/apple-macbook-air-m4-…-mw0x3-oxdv/` | timeout | | the 20 s read timed out; retried once at 15:51 |
+| 15:50:30 | `/xiaomi-4k-monitor-a27ui-27-uhd-ips-usb-c-monitor/` | 200 | 2,528,172 | *fixture*: USD 367, in stock, purchasable, 3840×2160 at 60 Hz |
+| 15:50:51 | `/apple-macbook-air-13-6-m5-…-1tb-ssd/` | 200 | 2,531,332 | *fixture*: two colour options; USD 2,050 for the default option, out of stock |
+| 15:51:24 | `/apple-macbook-air-m4-…-mw0x3-oxdv/` | 200 | 2,510,946 | *fixture*: USD 1,129, not purchasable; SSD field 256 GB against "512GB" in the description |
+| 15:51:38 | `/apple-macbook-air-m4-…-mw0x3/` | 200 | 2,510,230 | *fixture*: no price; `AVAILABILITY: In Stock` field against the store's out-of-stock flag |
+| 15:58:50 | `/products.php?productId=80559` | 200 | 2,528,120 | the same Xiaomi page by ID, without a redirect |
+
+Every product page shows only a store-wide marketplace notice: "Fulfilled by AyoubComputers.com".
+The same notice says certain products may be sold and fulfilled by third-party vendors. No
+listing names its own seller, so seller and fulfiller stay unknown. Every reply exceeded the
+gate's 2 MiB response cap, so gated reads are refused (see the
+[smoke trace](ayoub-catalog-smoke.json)). This is a technical gap awaiting a team decision.
+
 # Historical MVP 06 snapshot
 
 Observed **2026-11-14**, one read of each allow-listed URL through the source gate. The store

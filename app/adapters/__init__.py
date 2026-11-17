@@ -3,7 +3,7 @@
 Each reader turns gate replies into version 1 offers and policy statements with evidence; the
 shared interfaces live in app.adapters.base and the WooCommerce reader in app.adapters.woocommerce.
 """
-from app.adapters import beytech, class_cellulars, mojitech
+from app.adapters import ayoub, beytech, class_cellulars, mojitech
 from app.adapters.base import AdapterResult, CandidateQuery, Fetch, StoreAdapter
 
 ADAPTERS: dict[str, StoreAdapter] = {
@@ -33,7 +33,8 @@ def fetch_policy(fetch: Fetch, source_id: str, policy_id: str) -> AdapterResult:
 
 
 # Full-product acquisition returns v2 corpus observations; legacy APIs above stay v1.
-CATALOGS = {"mojitech": mojitech.CATALOG, "beytech": beytech.CATALOG}
+# Ayoub is a marketplace: its candidates also carry the listing seller, fulfiller and warranty.
+CATALOGS = {"mojitech": mojitech.CATALOG, "beytech": beytech.CATALOG, "ayoub_computers": ayoub.CATALOG}
 
 
 def search_catalog(fetch, source_id, *, category, search, run=None, only=None, corpus_version="catalog-preview-v1"):
