@@ -874,6 +874,50 @@ class FullProductIdentityTests(unittest.TestCase):
             ('iPad', 'Air (M2)', 128, 'wifi'),
             ('Apple, Inc.', 'Air M2 Wi-Fi 128GB', 128, 'wifi'),
             ('Microsoft, Inc.', 'Pro 13" (2024) 256GB', 256, 'wifi'),
+            # A whole number beside a generation is a nickname for another one, wherever it stands.
+            ('Apple', 'Apple iPad Air 4 5th Gen 10.9" Wi-Fi 64GB', 64, 'wifi'),
+            ('Apple', 'Apple iPad Air 4 10.9" Gen 5 Wi-Fi 64GB', 64, 'wifi'),
+            ('Apple', 'Apple iPad 7 8th Gen Wi-Fi 32GB', 32, 'wifi'),
+            ('Apple', 'Apple iPad 9 10th Gen Wi-Fi 64GB', 64, 'wifi'),
+            ('Apple', 'Apple iPad mini 5 6th Gen Wi-Fi 64GB', 64, 'wifi'),
+            ('Apple', 'Apple iPad Air 10.9" 4 Wi-Fi 5th Gen 64GB', 64, 'wifi'),
+            ('Microsoft', 'Microsoft Surface Go 2 3rd Gen 10.5" 64GB', 64, 'wifi'),
+            # A number after a chip or year continues a list.
+            ('Apple', 'Apple iPad Pro 11-inch M1 2 Wi-Fi 128GB', 128, 'wifi'),
+            ('Apple', 'Apple iPad Air 11-inch 2024 25 Wi-Fi 128GB', 128, 'wifi'),
+            # Decorated maker spellings still mean Apple or Microsoft.
+            ('Apple\u00ae', 'Air M2 Wi-Fi 128GB', 128, 'wifi'),
+            ('\ufeffApple', 'Air M2 Wi-Fi 128GB', 128, 'wifi'),
+            ('Apple.', 'Air M2 Wi-Fi 128GB', 128, 'wifi'),
+            ('Apple\u2122', 'Air M2 Wi-Fi 128GB', 128, 'wifi'),
+            ('Apple-Inc', 'Air M2 Wi-Fi 128GB', 128, 'wifi'),
+            ('Apple\u00ae', 'A10 Fusion Wi-Fi 32GB', 32, 'wifi'),
+            ('Microsoft\u00ae', 'Pro 13" (2024) 256GB', 256, 'wifi'),
+            ('Microsoft.', 'Pro 13" (2024) 256GB', 256, 'wifi'),
+            # A written Plus after storage or a connection word is ambiguous.
+            ('Amazon', 'Amazon Fire HD 10 32GB Plus (11th Generation)', 32, 'wifi'),
+            ('Samsung', 'Galaxy Tab S9 FE 5G Plus 128GB', 128, 'cellular'),
+            ('Samsung', 'Galaxy Tab S9 FE 5G+ 128GB', 128, 'cellular'),
+            ('Lenovo', 'Lenovo Tab M10 64GB Plus (3rd Gen)', 64, 'wifi'),
+            ('Samsung', 'Galaxy Tab S9 256GB Plus Ultra', 256, 'wifi'),
+            ('Samsung', 'Galaxy Tab S9 Wi-Fi Plus Ultra 256GB', 256, 'wifi'),
+            ('Samsung', 'Galaxy Tab A9 Wi-Fi Plus 64GB', 64, 'wifi'),
+            ('Lenovo', 'Lenovo Tab M8 (2019) 32GB +', 32, 'wifi'),
+            # Two-word lines with a word between them, two memory sizes, an early Lenovo edition.
+            ('Samsung', 'Samsung Galaxy Tab S6 10.4" Lite 64GB Wi-Fi', 64, 'wifi'),
+            ('Samsung', 'Samsung Galaxy Tab S6 64GB Lite Wi-Fi', 64, 'wifi'),
+            ('Lenovo', 'Lenovo Tab P11 (2nd Gen) 4/128GB, 6/128GB', 128, 'wifi'),
+            ('Lenovo', 'Lenovo Tab P11 (2nd Gen) 4/128GB 6/128GB', 128, 'wifi'),
+            ('Lenovo', 'Lenovo Tab M10 (1st Gen) 2021 32GB', 32, 'wifi'),
+            # Every word after a comma, not only the first, describes the configuration.
+            ('Samsung', 'Galaxy Tab S9, ( Ultra ) 256GB', 256, 'wifi'),
+            ('Samsung', 'Galaxy Tab S9, 256GB Ultra', 256, 'wifi'),
+            # A base iPad name with another line's size, and a decimal comma without a size unit.
+            ('Apple', 'Apple iPad 11-inch (4th generation) Wi-Fi 128GB', 128, 'wifi'),
+            ('Apple', 'Apple iPad 12.9-inch (M2) 128GB', 128, 'wifi'),
+            ('Amazon', 'Amazon Fire 7,8 (12th Generation) 32GB', 32, 'wifi'),
+            # An ordinal needs the word 'generation'.
+            ('Apple', 'Apple iPad (10th) 64GB', 64, 'wifi'),
         ]
         for maker, title, storage, connectivity in titles:
             with self.subTest(title=title):
@@ -916,6 +960,9 @@ class FullProductIdentityTests(unittest.TestCase):
                 ('Apple', 'iPad 9th generation (2021)', 'iPad 9th Gen 2021'),
                 ('Amazon', 'Fire HD 10 (11th Generation)', 'Amazon Fire HD 10 11th Gen'),
                 ('Apple, Inc.', 'Apple iPad Air 11-inch (M2)', 'iPad Air 11-inch (M2)'),
+                ('Apple\u00ae', 'Apple iPad Air 11-inch (M2)', 'iPad Air 11-inch (M2)'),
+                ('Lenovo', 'Lenovo Tab M10 HD (2nd Gen)', 'Tab M10 HD 2nd Gen'),
+                ('Apple', 'iPad Pro 12,9" (6th generation) Wi-Fi', 'iPad Pro 12.9-inch (6th generation) Wi-Fi'),
                 ('Lenovo', 'Lenovo Legion Tab Y700 (2023)', 'Legion Tab Y700 2023'),
                 ('Huawei', 'MediaPad M5 8.4" 128GB', 'MediaPad M5 8.4-inch 128GB')):
             with self.subTest(left=left_title):
@@ -934,11 +981,14 @@ class FullProductIdentityTests(unittest.TestCase):
                 left = offer('tablet', 'left', {'manufacturer': maker, 'model': left_title})
                 right = offer('tablet', 'right', {'manufacturer': maker, 'model': right_title})
                 self.assertEqual(compare_offers(left, right).hardware.outcome, 'different_configuration')
-        # A model's own Plus is not read as a memory/storage pair.
+        # A model's own Plus is not read as a memory/storage pair, however 'HD' is written.
         fire = {'manufacturer': 'Amazon', 'specs.storage_gb': 32}
-        plus = offer('tablet', 'left', {**fire, 'model': 'Amazon Fire HD 10+ 32GB (11th Generation)'})
-        base = offer('tablet', 'right', {**fire, 'model': 'Amazon Fire HD 10 32GB (11th Generation)'})
-        self.assertEqual(compare_offers(plus, base).hardware.outcome, 'different_configuration')
+        base = offer('tablet', 'right', {**fire, 'model': 'Amazon Fire HD 10/32GB (11th Generation)'})
+        for name in ('Amazon Fire HD 10+ 32GB (11th Generation)', 'Amazon Fire HD\u00ad 10+ 32GB (11th Generation)',
+                     'Amazon Fire \uff28\uff24 10+ 32GB (11th Generation)'):
+            with self.subTest(name=name):
+                plus = offer('tablet', 'left', {**fire, 'model': name})
+                self.assertEqual(compare_offers(plus, base).hardware.outcome, 'different_configuration')
         lenovo = {'manufacturer': 'Lenovo', 'specs.storage_gb': 128}
         pair = offer('tablet', 'left', {**lenovo, 'model': 'Lenovo Tab P11 (2nd Gen) 4+128GB'})
         slash = offer('tablet', 'right', {**lenovo, 'model': 'Tab P11 2nd Gen 4/128GB'})

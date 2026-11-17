@@ -19,8 +19,9 @@ test pins both. Monitor and audio identity are described in
 ## How a model name is read
 
 The name rule, `_tablet_model`, runs in `_identity_facts` beside the monitor and audio rule.
-It reads the evidenced name after the shared normalization (case, typographic dashes, spaces,
-and `S9+` spelled `S9 Plus`).
+It first cleans the evidenced name (NFKC, case, invisible characters such as zero-width spaces
+and soft hyphens, and digits in any script), then applies the shared normalization (typographic
+dashes, spaces, and `S9+` spelled `S9 Plus`).
 
 **A name that does not clearly name one model stays unresolved.** Two identical unresolved
 names never match, and an unresolved name against a specific one is unresolved, not different.
@@ -39,7 +40,7 @@ Retail spellings are unified so that the same device compares equal:
 | Chip | `with M2 chip`, `M2 chip`; `A17 Pro` | `m2`; `a17-pro` |
 | Color phrase | `Space Gray`, `Light Gold` | `space-gray`, `light-gold` |
 | Storage and Wi-Fi | `128 GB`, `WiFi`, `2+32GB` (but `Fire HD 10+ 32GB` is the Plus) | `128gb`, `wi-fi`, `2/32gb` |
-| Joining `+` | `Wi-Fi + Cellular`, `Wi-Fi+Cellular`, `32GB +` | `wi-fi cellular`, `32gb` |
+| Joining `+` | `Wi-Fi + Cellular`, `Wi-Fi+Cellular`, `Wi-Fi + 128GB` | `wi-fi cellular`, `wi-fi 128gb` |
 | Digits | other scripts (`M١٠`) | `m10` |
 | Display suffix | `M10HD`, `M8FHD` | `m10 hd`, `m8 fhd` |
 | Plus | a spaced `+` at the end, or before storage or connection words (`Galaxy Tab S9 +`) | `plus` |
@@ -48,12 +49,14 @@ Also:
 - Only 7 to 19.99 inches is read as a screen size, so `2-in-1` is not a size.
 - A dash with spaces on both sides separates parts of a title, as a comma does (`... (M2) -
   Space Gray`).
-- A decimal comma is read only when the digits after it cannot be a size themselves: `12,9"` is
-  12.9 inches, but `11,13"` is two sizes.
+- A decimal comma is read only before a size unit, and only when the digits after it cannot be a
+  size themselves: `12,9"` is 12.9 inches, but `11,13"` and `7,8` are lists.
 - Parentheses and commas drop out.
 - A leading maker drops out, word by word: `Apple` or `Apple Inc.` for the evidenced `Apple
-  Inc.` (commas in the maker are ignored). A maker word that is itself a tablet word stays (`Surface` for `Microsoft Surface`, or a
-  maker evidenced as `iPad`).
+  Inc.` (commas in the maker are ignored). A maker word that is itself a tablet word stays
+  (`Surface` for `Microsoft Surface`, or a maker evidenced as `iPad`).
+- The maker is recognised with the project's maker matcher, so decorated spellings such as
+  `Apple®`, `Apple-Inc` and `Microsoft®` count as Apple or Microsoft.
 
 ### 2. Checked against the offer's own facts
 
@@ -74,7 +77,7 @@ Every word must be one the rule recognises:
   `pad`, ...);
 - sizes, storage, memory pairs, `ram`, `2-in-1` and connection words;
 - whole color names;
-- bare one- or two-digit numbers;
+- a bare number, but only right after a line word (`Pad 6`, `Fire HD 10`, `iPad 10.2`);
 - the edition evidence listed below.
 
 **Any other word leaves the name unresolved.** A retail title is often more than one model's
@@ -93,14 +96,18 @@ name, and an unknown word is where the extra meaning hides:
 | `S6 Light` | a fragment of a color (`light gold`) |
 
 Lists are rejected too:
-- after a comma or spaced dash, only configuration may follow (storage, memory, size,
-  connection and color), so `S9 FE, FE+`, `Pro 11, 12.9-inch` and `Gen 7, 8` stay unresolved;
-- a name may give one radio generation and one of `Plus`, `Ultra`, `Lite` and `Max` (`LTE 5G`
-  and `Plus Ultra` stay unresolved);
+- after the first comma or spaced dash, every word must describe the configuration (storage,
+  memory, size, connection and color), so `S9 FE, FE+`, `Pro 11, 12.9-inch`, `Gen 7, 8` and
+  `S9, (Ultra)` stay unresolved;
+- a name may give one radio generation, one of `Plus`, `Ultra`, `Lite` and `Max`, one memory
+  size and one of `HD` and `FHD` (`LTE 5G`, `Plus Ultra`, `4/128GB 6/128GB` and `HD FHD` stay
+  unresolved);
+- a line or suffix word written twice (`S9 FE FE+`) names two models;
+- a whole number beside a generation is a nickname for another generation (`iPad Air 4 5th Gen`,
+  `Gen 4 5`, `Surface Go 2 3rd Gen`), except a Fire's size (`Fire HD 10 11th Generation`);
 - a bare number from 7 to 19.99 counts as a size for the two-size rule (`iPad Pro 11 12.9-inch`);
-- a line or suffix word written twice (`S9 FE FE+`), two bare numbers, both `HD` and `FHD`, or a
-  bare number beside a generation (`Gen 4 5`, `4 5th Gen`) also name more than one model. A bare
-  number after a line word is the line's own (`Fire HD 10 11th Generation`).
+- a `Plus` written after storage or a connection word is ambiguous (`32GB Plus`, `5G+`), while a
+  model's own `+` stays its Plus (`Fire HD 10+ 32GB`).
 
 Extraction is expected to supply the model name itself, not the whole listing title.
 
@@ -129,8 +136,8 @@ Some things never count as evidence:
 
 ### 5. iPad rules
 
-A name is read as an iPad when it contains `iPad`, or the evidenced maker starts with `Apple` or
-is `iPad`.
+A name is read as an iPad when it contains `iPad`, or the evidenced maker is Apple (in any
+spelling) or `iPad`.
 It then stays unresolved when:
 - `iPad` is missing (`Air M2`) or appears twice (`iPad - iPad Pro ...`);
 - a line word (`Air`, `Pro`, `mini`) is not right after `iPad` (`iPad M4 Pro`, `iPad 128GB Air`);
@@ -143,9 +150,9 @@ It then stays unresolved when:
     line also had, because a base name may be an Air, Pro or mini written without its line word:
     the `A5`, `A12` and `A14`, and every year after 2011;
   - the iPad mini's `A7` (mini 2 and 3);
-  - the iPad Pro 11-inch's 3rd to 6th generation. Apple counts that line per size, so the
-    2021 M1 model is its 3rd generation. Many retailers count across the whole Pro family,
-    which makes the 2018 model the 3rd generation.
+  - the iPad Pro 11-inch's 3rd to 6th generation, also on an 11-inch name without `Pro`. Apple
+    counts that line per size, so the 2021 M1 model is its 3rd generation. Many retailers count
+    across the whole Pro family, which makes the 2018 model the 3rd generation.
 
 ### 6. Other lines
 
@@ -156,17 +163,18 @@ A non-Apple name stays unresolved when:
 - **Year only.** Its only evidence is a year and it gives no size (`Honor Pad 5 (2019)`,
   `Redmi Pad SE (2024)`).
 - **Size missing.** It names a line sold in more than one size under one name, without the
-  size: Galaxy Tab S2, `Tab S`, `Tab A`, `Tab E` and numbered Tabs, `Pad 5`-style numbered
-  Pads, MediaPad, MatePad, Yoga and Surface Pro.
+  size: Galaxy Tab S2, `Tab S`, `Tab A` and `Tab E`, MediaPad, MatePad and Yoga. A numbered
+  Pad or Tab whose only evidence is a year needs its size through the year-only rule.
 - **Edition missing.** It names a line sold under one name across several editions, without
   a year or generation: Galaxy Tab S6 Lite, S2 and A7, Lenovo Tab M7, M8, M10 and P11, Fire,
-  Redmi Pad and Legion Y700. Words after the line name (`Tab M10 Plus 64GB`) do not hide it.
+  Redmi Pad and Legion Y700. The line is found wherever its words stand (`Tab M10 Plus 64GB`,
+  `Galaxy Tab S6 10.4" Lite`).
 - **Part number missing.** It is a Lenovo Tab M10 Plus (also `M10 FHD Plus`) without a part
   number, because the 3rd Gen ships on two chips under one name (TB125FU and TB128FU).
 - **Refresh.** It is a Lenovo Tab M8 (4th Gen) without a year or part number, because a 2024
   refresh kept the name (TB300FU and TB301FU).
 - **HD or FHD missing.** It is an early Lenovo Tab M8 or M10 (a 2019 or 2020 year, or the 1st or
-  2nd generation) without `HD` or `FHD`, because those came in both.
+  2nd generation, even beside a later year) without `HD` or `FHD`, because those came in both.
 
 ## Limitations
 
