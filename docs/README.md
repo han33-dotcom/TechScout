@@ -15,6 +15,7 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 - [Shared accounting and bounded research](shared-accounting.md)
 - [Direct OpenAI model boundary](model-provider.md)
 - [Full-product eligibility and domestic costs](full-product-assessment.md)
+- [Owned buyer API and worker lifecycle](buyer-api.md)
 - [Direct Tavily discovery](discovery.md)
 - [Shared page extraction and Firecrawl fallback](shared-extraction.md)
 - [pr policy activation](pr-policy-activation.md)
