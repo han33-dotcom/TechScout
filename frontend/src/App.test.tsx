@@ -1,14 +1,14 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, renderHook, act } from '@testing-library/react';
 import App, { Progress } from './App';
-import { toRequest, initialDraft, examples } from './request';
+import { toRequest, fromRequest, initialDraft, examples } from './request';
 import { useWorkspace, type Transport } from './useWorkspace';
 import type { RunSnapshot, ComparisonWorkspace } from './api';
 import fixture from '../../tests/fixtures/v2/workspace.json';
 
 const request = () => toRequest(examples[0].draft);
 function snap(status: RunSnapshot['status'] = 'running'): RunSnapshot {
- const r=request() as RunSnapshot["request"]; return {schema_version:2,request:r,run:{run_id:'run-1',run_revision:1,request_id:r.request_id,request_revision:1},status,phase:'research',started_at:'2026-11-17T10:00:00Z',updated_at:'2026-11-17T10:00:01Z',provisional:[],recommendations:[],uncertain:[]};
+ const r=request() as RunSnapshot["request"]; return {schema_version:2,request:r,run:{run_id:'run-1',run_revision:1,request_id:r.request_id,request_revision:1},status,phase:'research',started_at:'2026-11-17T10:00:00Z',updated_at:'2026-11-17T10:00:01Z',provisional:[],recommendations:[],uncertain:[],source_outcomes:[]};
 }
 const workspace=(s:RunSnapshot):ComparisonWorkspace=>({schema_version:2,current:s});
 function api(s=snap()): Transport {return {start:vi.fn().mockResolvedValue(s),read:vi.fn().mockResolvedValue(workspace(s)),cancel:vi.fn().mockResolvedValue({...s,status:'cancelled'}),clarify:vi.fn().mockResolvedValue({...s,run:{...s.run,run_revision:2}}),refine:vi.fn().mockResolvedValue(workspace({...s,run:{...s.run,run_id:'run-2',request_revision:2},request:{...s.request,revision:2}}))};}
@@ -27,6 +27,13 @@ describe('request boundaries',()=>{
   const base=request();base.requirements={category:'laptop',min_ram_gb:16,cpu:'Required CPU'};base.allowed_colors=['Black'];
   const r=toRequest({...examples[0].draft,maximum:'1100'},base);
   expect(r.revision).toBe(2);expect(r.request_id).toBe(base.request_id);expect(r.allowed_colors).toEqual(['Black']);expect(r.requirements).toMatchObject({cpu:'Required CPU'});
+ });
+ it('preserves foreign-currency budgets and manufacturer through refinement',()=>{
+  const base=toRequest({...initialDraft,text:'Scout Book',kind:'exact_model',maximum:'900',currency:'EUR'});
+  base.intent={kind:'exact_model',model:'Scout Book',manufacturer:'Example'};
+  const refined=toRequest(fromRequest(base),base);
+  expect(refined.budget?.maximum).toEqual({amount:'900',currency:'EUR'});
+  expect(refined.intent).toEqual(base.intent);
  });
 });
 describe('buyer interactions',()=>{

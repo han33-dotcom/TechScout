@@ -26,6 +26,11 @@ def main():
         subprocess.run(['node',str(ROOT/'frontend/node_modules/openapi-typescript/bin/cli.js'),
                         str(source),'--output',str(OUTPUT)],check=True,cwd=ROOT)
     OUTPUT.write_text(schema_header()+'\n'+OUTPUT.read_text(encoding='utf-8'),encoding='utf-8')
+    from app.contracts_v2 import ComparisonWorkspace
+    fixture=ComparisonWorkspace.model_validate_json((ROOT/'tests/fixtures/v2/workspace.json').read_text())
+    target=ROOT/'frontend/src/fixtures/workspace.json'
+    target.parent.mkdir(parents=True,exist_ok=True)
+    target.write_text(fixture.model_dump_json(indent=2)+'\n',encoding='utf-8')
 
 
 if __name__=='__main__':

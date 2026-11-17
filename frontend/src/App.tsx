@@ -3,6 +3,7 @@ import { BuyerApi, type RunSnapshot, type ComparisonWorkspace } from './api';
 import { categories, examples, initialDraft, specLabels, toRequest, fromRequest, type Draft } from './request';
 import { active, useWorkspace, type Transport } from './useWorkspace';
 import './styles.css';
+import Comparison from './Comparison';
 const api = new BuyerApi();
 const phases = { interpret: 'Understanding your requirements', discover: 'Finding relevant retailers', research: 'Checking products and evidence', evaluate: 'Comparing eligible offers', verify: 'Rechecking price and availability', write: 'Preparing your comparison' };
 const endings = { complete: 'Your search is complete', partial: 'Some checks could not finish', abstained: 'No verified recommendation yet', cancelled: 'Search cancelled', error: 'Search could not finish' };
@@ -14,8 +15,9 @@ export function RequestForm({ draft, setDraft, onSubmit, busy, refining }: { dra
     <div className="search-box"><textarea id="request" dir="auto" maxLength={4000} required value={draft.text} onChange={e => field('text', e.target.value)} placeholder="A light laptop for university, around $1,000…" /><button className="primary" disabled={busy} type="submit">{busy ? 'Updating…' : refining ? 'Update search' : 'Find my options'} <span aria-hidden="true">↗</span></button></div>
     <div className="form-options"><label>Search for <select value={draft.kind} onChange={e => field('kind', e.target.value as Draft['kind'])}><option value="needs">My needs</option><option value="exact_model">An exact model</option></select></label><span className="muted">Product links are recognized automatically.</span></div>
     <details className="filters" open><summary>Your requirements <span>Editable at any time</span></summary><div className="filter-grid">
-      <label>Target budget · USD<input inputMode="decimal" placeholder="Around…" value={draft.target} onChange={e => field('target', e.target.value)} /></label>
-      <label>Hard maximum · USD<input inputMode="decimal" placeholder="Optional ceiling" value={draft.maximum} onChange={e => field('maximum', e.target.value)} /></label>
+      <label>Target budget · {draft.currency}<input inputMode="decimal" placeholder="Around…" value={draft.target} onChange={e => field('target', e.target.value)} /></label>
+      <label>Hard maximum · {draft.currency}<input inputMode="decimal" placeholder="Optional ceiling" value={draft.maximum} onChange={e => field('maximum', e.target.value)} /></label>
+      <label>Budget currency<select value={draft.currency} onChange={e=>field("currency",e.target.value)}>{[...new Set(["USD","LBP","EUR","AED",draft.currency])].map(c=><option key={c}>{c}</option>)}</select></label>
       <label>City in Lebanon<input value={draft.city} placeholder="Any city" onChange={e => field('city', e.target.value)} /></label>
       {specLabels[draft.category] && <label>{specLabels[draft.category]}<input inputMode="numeric" value={draft.spec} placeholder="No requirement" onChange={e => field('spec', e.target.value)} /></label>}
       <label>Condition<select value={draft.condition} onChange={e => field('condition', e.target.value as Draft['condition'])}><option value="new">New only</option><option value="used">Used only</option><option value="refurbished">Refurbished only</option></select></label>
@@ -38,6 +40,7 @@ export function Progress({ snapshot, busy, cancel, clarify }: { snapshot: RunSna
 export default function App({ transport = api, renderResults }: { transport?: Transport; renderResults?: (workspace: ComparisonWorkspace) => ReactNode }) {
   const [draft, setDraft] = useState<Draft>(initialDraft), [validation, setValidation] = useState('');
   const state = useWorkspace(transport);
+  const [followup,setFollowup] = useState('');
   const [dirty, setDirty] = useState(false);
   const edit = (next: Draft) => { setDirty(true); setDraft(next); };
   useEffect(() => { if (state.workspace && !dirty && !state.busy && !state.error) setDraft(fromRequest(state.workspace.current.request)); }, [state.workspace, dirty, state.busy, state.error]);
@@ -47,7 +50,10 @@ export default function App({ transport = api, renderResults }: { transport?: Tr
       <section className="panel request-panel" aria-label="Your search"><RequestForm draft={draft} setDraft={edit} onSubmit={submit} busy={state.busy} refining={!!state.workspace} />{validation && <p role="alert" className="error">{validation}</p>}</section>
       {!state.workspace && <div className="examples"><span>Try an example</span>{examples.map(example => <button key={example.label} onClick={() => edit(example.draft)}>{example.label} ↗</button>)}<small>These examples have preset requirements. General language interpretation happens during research.</small></div>}
       {state.error && <div role="alert" className="error panel"><p>{state.error}</p>{state.workspace && <button disabled={state.busy} onClick={() => void state.recover()}>Check latest status</button>}</div>}
-      {state.workspace && <><Progress snapshot={state.workspace.current} busy={state.busy} cancel={() => void state.cancel()} clarify={answer => void state.clarify(answer)} />{renderResults?.(state.workspace)}{state.workspace.previous && <details className="panel previous"><summary>Previous search · revision {state.workspace.previous.request.revision}</summary><p>These results belong to earlier requirements and are not verified for your current search.</p><p>{state.workspace.previous.recommendations.length} previous recommendations · {state.workspace.previous.status}</p></details>}</>}
+      {state.workspace && <><Progress snapshot={state.workspace.current} busy={state.busy} cancel={() => void state.cancel()} clarify={answer => void state.clarify(answer)} />{renderResults ? renderResults(state.workspace) : <Comparison workspace={state.workspace}/>}
+        <form className="panel refinement" onSubmit={e=>{e.preventDefault();setValidation('');try {const request=toRequest(draft,state.workspace!.current.request);request.refinement_note=[request.refinement_note,followup.trim()].filter(Boolean).join('\n');if(!followup.trim())return;void state.submit(request);}catch(error){setValidation(error instanceof Error?error.message:'Check your refinement.')}}}>
+          <label htmlFor="followup">What would you like to change?</label><div className="search-box"><input id="followup" value={followup} maxLength={4000} required onChange={e=>setFollowup(e.target.value)} placeholder="Tell us what matters more, or clarify a requirement..."/><button className="primary" disabled={state.busy}>Refine comparison</button></div><p className="muted">Adds to this request. Existing filters remain in force until you explicitly edit them above. Previous results stay labelled while new evidence is checked.</p>{state.workspace.current.request.refinement_note && <p>Refinement sent: {state.workspace.current.request.refinement_note}</p>}
+        </form>{state.workspace.previous && <details className="panel previous"><summary>Previous search · revision {state.workspace.previous.request.revision}</summary><p>These results belong to earlier requirements and are not verified for your current search.</p><Comparison workspace={{schema_version:2,current:state.workspace.previous}} historical/></details>}</>}
       {!state.workspace && <section className="promise-grid"><article><span>01 / FIT</span><h2>The exact configuration</h2><p>Storage, specifications and regional differences stay visible.</p></article><article><span>02 / COST</span><h2>Beyond the sticker price</h2><p>Known charges and missing costs are kept separate.</p></article><article><span>03 / EVIDENCE</span><h2>Checked, then explained</h2><p>Verified recommendations stay separate from promising leads.</p></article></section>}
     </main><footer><span>TECHSCOUT / BUY WITH CONTEXT</span><span>Compare here. Buy directly from the retailer.</span></footer></>;
 }

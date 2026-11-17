@@ -1,8 +1,9 @@
+import { compareDecimal } from './money';
 import type { ShoppingRequest } from './api';
 export type Category = ShoppingRequest['requirements']['category'];
 export const categories: Record<Category, string> = { phone: 'Phones', laptop: 'Laptops', tablet: 'Tablets', monitor: 'Monitors', audio: 'Headphones & earbuds' };
-export interface Draft { text: string; kind: 'needs' | 'exact_model'; category: Category; target: string; maximum: string; city: string; international: boolean; condition: 'new' | 'used' | 'refurbished'; mode: 'any' | 'delivery' | 'pickup'; payment: '' | 'cash' | 'card'; spec: string }
-export const initialDraft: Draft = { text: '', kind: 'needs', category: 'laptop', target: '', maximum: '', city: '', international: false, condition: 'new', mode: 'any', payment: '', spec: '' };
+export interface Draft { text: string; kind: 'needs' | 'exact_model'; category: Category; target: string; maximum: string; currency: string; city: string; international: boolean; condition: 'new' | 'used' | 'refurbished'; mode: 'any' | 'delivery' | 'pickup'; payment: '' | 'cash' | 'card'; spec: string }
+export const initialDraft: Draft = { text: '', kind: 'needs', category: 'laptop', target: '', maximum: '', currency: 'USD', city: '', international: false, condition: 'new', mode: 'any', payment: '', spec: '' };
 export const specFields = { phone: 'storage_gb', laptop: 'min_ram_gb', tablet: 'min_storage_gb', monitor: 'min_refresh_hz', audio: '' } as const;
 export const specLabels = { phone: 'Storage (GB)', laptop: 'Minimum RAM (GB)', tablet: 'Minimum storage (GB)', monitor: 'Minimum refresh rate (Hz)', audio: '' };
 export const examples: { label: string; draft: Draft }[] = [
@@ -10,9 +11,10 @@ export const examples: { label: string; draft: Draft }[] = [
   { label: 'مثال بالعربية', draft: { ...initialDraft, text: 'بدي لابتوب للدراسة بحدود ١٠٠٠ دولار', target: '1000' } },
   { label: 'Arabizi example', draft: { ...initialDraft, text: 'baddi laptop lal jem3a bi 7doud 1000 dollar', target: '1000' } },
 ];
-function money(value: string) {
-  if (!/^\d+(\.\d{1,2})?$/.test(value) || Number(value) <= 0 || value.length > 14) throw new Error('Enter a positive budget with at most two decimal places.');
-  return { amount: value, currency: 'USD' };
+function money(value: string, currency: string) {
+  if (!/^\d+(\.\d{1,2})?$/.test(value) || !/[1-9]/.test(value) || value.length > 14) throw new Error('Enter a positive budget with at most two decimal places.');
+  if (!/^[A-Z]{3}$/.test(currency)) throw new Error('Choose a valid currency.');
+  return { amount: value, currency };
 }
 export function toRequest(draft: Draft, base?: ShoppingRequest): ShoppingRequest {
   const text = draft.text.trim();
@@ -22,10 +24,10 @@ export function toRequest(draft: Draft, base?: ShoppingRequest): ShoppingRequest
     const url = new URL(text);
     if (url.protocol !== 'https:' || url.username || url.password) throw new Error('Use a public HTTPS product link.');
     intent = { kind: 'product_link', url: url.href };
-  } else if (draft.kind === 'exact_model') intent = { kind: 'exact_model', model: text };
+  } else if (draft.kind === 'exact_model') intent = { kind: 'exact_model', model: text, manufacturer: base?.intent.kind === 'exact_model' && base.intent.model === text ? base.intent.manufacturer : undefined };
   else intent = { kind: 'needs', description: text, required_software: base?.intent.kind === 'needs' ? base.intent.required_software : [] };
-  const target = draft.target ? money(draft.target) : null, maximum = draft.maximum ? money(draft.maximum) : null;
-  if (target && maximum && Number(target.amount) > Number(maximum.amount)) throw new Error('Your target must fit your hard maximum.');
+  const target = draft.target ? money(draft.target,draft.currency) : null, maximum = draft.maximum ? money(draft.maximum,draft.currency) : null;
+  if (target && maximum && compareDecimal(target.amount,maximum.amount) > 0) throw new Error('Your target must fit your hard maximum.');
   const requirements = base?.requirements.category === draft.category ? { ...base.requirements } : draft.category === 'phone' ? { category: 'phone' as const, regions: [] } : { category: draft.category };
   const key = specFields[draft.category];
   if (key) {
@@ -44,7 +46,7 @@ export function fromRequest(r: ShoppingRequest): Draft {
   return { text: r.intent.kind === 'needs' ? r.intent.description : r.intent.kind === 'product_link' ? r.intent.url : r.intent.model,
     kind: r.intent.kind === 'exact_model' ? 'exact_model' : 'needs', category: r.requirements.category,
     target: String(r.budget?.target?.amount ?? ''), maximum: String(r.budget?.maximum?.amount ?? ''),
-    city: r.fulfillment?.destination?.city ?? '', mode: r.fulfillment?.mode ?? 'any', international: r.market_scope?.include_international ?? false,
+    currency: r.budget?.target?.currency ?? r.budget?.maximum?.currency ?? 'USD', city: r.fulfillment?.destination?.city ?? '', mode: r.fulfillment?.mode ?? 'any', international: r.market_scope?.include_international ?? false,
     condition: r.allowed_conditions[0] ?? 'new', payment: r.payment ?? '',
     spec: String((r.requirements as unknown as Record<string, unknown>)[specFields[r.requirements.category]] ?? '') };
 }
