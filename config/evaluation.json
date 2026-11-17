@@ -1,5 +1,18 @@
 {
   "schema_version": 1,
+  "model_provider": {
+    "provider": "openai",
+    "model": "gpt-6.1-sol",
+    "effort": "low",
+    "max_input_tokens": 65536,
+    "max_output_tokens": 4096,
+    "timeout_seconds": 30,
+    "prompt_version": "roles-v1",
+    "pricing_checked_on": "2026-11-17",
+    "prices": {
+      "gpt-6.1-sol": {"input": "2", "cached": "0.10", "write": "2.50", "write_12h": "5", "output": "10"}
+    }
+  },
   "planner": {
     "provider": "anthropic",
     "model": "claude-opus-5-5",

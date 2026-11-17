@@ -203,15 +203,21 @@ class AccountingTests(unittest.TestCase):
 
     def test_timeout_cancels_dispatch_and_keeps_completed_results(self):
         job = self.ledger.open_job('research')
-        finished = threading.Event()
+        finished, started = threading.Event(), threading.Event()
         def slow(request, handle, stop):
+            started.set()
             stop.wait(2)
             try:
                 with self.assertRaises(BudgetDenied):
                     handle.reserve('model', Charge(D('.1')), 1)
             finally:
                 finished.set()
-        result = research(job, [lambda *args: 'partial', slow], None, timeout=.1)
+        def fast(*args):
+            self.assertTrue(started.wait(2))
+            return 'partial'
+        # Both clients must enter before testing cancellation of an active one.
+        # A 100ms deadline could cancel a queued worker before it ever entered.
+        result = research(job, [fast, slow], None, timeout=1)
         self.assertEqual(result[0], {'status':'completed','result':'partial'})
         self.assertEqual(result[1]['status'], 'cancelled')
         self.assertTrue(finished.wait(2))

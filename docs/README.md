@@ -13,6 +13,7 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 - [Evidence freshness and retrieval services](evidence-services.md)
 - [Persistent retailer directory](retailer-directory.md)
 - [Shared accounting and bounded research](shared-accounting.md)
+- [Direct OpenAI model boundary](model-provider.md)
 - [Direct Tavily discovery](discovery.md)
 - [Shared page extraction and Firecrawl fallback](shared-extraction.md)
 - [pr policy activation](pr-policy-activation.md)

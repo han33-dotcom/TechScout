@@ -261,6 +261,21 @@ class Attempt:
     def dispatch(self):
         self.ledger._change(self.token, self.owner, 'send')
 
+    def record(self, metadata):
+        """Attach credential-free provider accounting evidence to this attempt.
+
+        Settlement/recovery never discards it. A late network worker cannot write
+        after ownership expires; callers must record only from the waiting thread.
+        """
+        import json
+        safe = json.loads(json.dumps(metadata, allow_nan=False))
+        with self.ledger._transaction() as (state, now):
+            attempt = state['attempts'][self.token]
+            if (attempt['owner'] != self.owner or attempt['status'] not in {'held', 'sent'}
+                    or now >= attempt['expires']):
+                raise BudgetDenied('Provider accounting owner expired')
+            attempt['provider_usage'] = safe
+
     def complete(self, actual, elapsed):
         self.ledger._change(self.token, self.owner, 'complete', actual, elapsed)
 

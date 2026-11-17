@@ -315,8 +315,8 @@ class EndToEndTests(unittest.TestCase):
 
     def test_the_model_planner_without_credentials_stops_before_any_request(self):
         err = io.StringIO()
-        missing = ValueError('AnthropicPlanner needs API credentials, such as ANTHROPIC_API_KEY')
-        with mock.patch('app.planner.AnthropicPlanner', side_effect=missing), contextlib.redirect_stderr(err):
+        missing = ValueError('Direct OpenAI requires backend OPENAI_API_KEY')
+        with mock.patch('app.model_provider.OpenAIPlanner', side_effect=missing), contextlib.redirect_stderr(err):
             code = runs.main(['search', str(ROOT / 'examples' / 'request-iphone17-beirut.json'),
                               '--planner', 'model'])
         self.assertEqual((code, err.getvalue().strip()), (2, 'Cannot set up the model planner: ValueError'))
