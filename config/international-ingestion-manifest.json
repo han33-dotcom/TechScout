@@ -1,0 +1,353 @@
+{
+  "schema_version": 1,
+  "kind": "initial_international_ingestion_plan",
+  "reviewed_at": "2026-11-17",
+  "runtime_enabled": false,
+  "collection_ready": false,
+  "qualifying_offer_count": 0,
+  "audit": "../docs/international-audit-2026-11-17.json",
+  "report": "../docs/international-source-audit.md",
+  "targets": [
+    {
+      "id": "microless",
+      "origin": "https://uae.microless.com",
+      "market": "AE",
+      "route": "direct",
+      "product_url_ceiling": 300,
+      "category_url_allocation": {
+        "phone": 105,
+        "laptop": 105,
+        "tablet": 30,
+        "monitor": 30,
+        "audio": 30
+      },
+      "retrieval": "three product pages and shipping policy returned 200",
+      "route_validation": "unknown",
+      "next_action": "Bind exact seller/variant, reconcile stock and obtain item-specific Lebanon route evidence before promotion"
+    },
+    {
+      "id": "bh",
+      "origin": "https://www.bhphotovideo.com",
+      "market": "US",
+      "route": "direct",
+      "product_url_ceiling": 300,
+      "category_url_allocation": {
+        "phone": 105,
+        "laptop": 105,
+        "tablet": 30,
+        "monitor": 30,
+        "audio": 30
+      },
+      "retrieval": "product and policy direct GET returned 403; browser evidence only",
+      "route_validation": "unknown",
+      "next_action": "Hold bulk collection; validate an admitted extraction path or replace overlapping configurations with Microless candidates within its existing ceiling"
+    },
+    {
+      "id": "amazon",
+      "origin": "https://www.amazon.com",
+      "observed_host": "us.amazon.com",
+      "market": "US",
+      "route": "forwarding",
+      "product_url_ceiling": 100,
+      "category_url_allocation": {
+        "phone": 35,
+        "laptop": 35,
+        "tablet": 10,
+        "monitor": 10,
+        "audio": 10
+      },
+      "retrieval": "one renewed/unavailable listing returned 200",
+      "route_validation": "unknown",
+      "next_action": "Replace sample with a new in-stock offer with exact seller/fulfiller; B&H or Microless overlap is a fallback candidate only"
+    }
+  ],
+  "forwarders": [
+    {
+      "id": "myus",
+      "priority": 1,
+      "origin": "https://www.myus.com",
+      "country_policy": "Lebanon page retrieved",
+      "item_route": "unknown"
+    },
+    {
+      "id": "stackry",
+      "priority": 2,
+      "origin": "https://www.stackry.com",
+      "country_policy": "Lebanon calculator page retrieved",
+      "item_route": "unknown"
+    }
+  ],
+  "replacement_directory_leads": [
+    {
+      "name": "Shop & Ship",
+      "status": "existing approved directory lead; not probed or validated; no allocation transferred"
+    }
+  ],
+  "support_url_ceilings": {
+    "specification_review": 100,
+    "policy": 30
+  },
+  "initial_limits": {
+    "international": {
+      "fetch_attempts": 1000,
+      "paid_calls": 60,
+      "active_seconds": 3600,
+      "usd": "15.00"
+    },
+    "all_markets_including_international": {
+      "fetch_attempts": 3000,
+      "paid_calls": 200,
+      "active_seconds": 10800,
+      "usd": "50.00"
+    },
+    "minimum_domestic_shared_attempt_slots": 2000,
+    "campaign_usd": "500.00"
+  },
+  "validation_accounting": {
+    "job_id": "international-source-audit-2026-11-17",
+    "status": "unreconciled_manual_audit_do_not_dispatch",
+    "central_ledger_used": false,
+    "discrepancy": "Direct manual probes did not reserve in the central ledger. Do not treat this report as an exception to shared-accounting.md; reconcile this debit before further collection.",
+    "direct_measured": {
+      "fetch_attempts": 11,
+      "wall_seconds": 39.469,
+      "request_seconds": 24.376,
+      "paid_provider_calls": 0,
+      "paid_provider_cost_usd": "0.00"
+    },
+    "browser_research": {
+      "provider_internal_fetch_attempts": null,
+      "service_cost_usd": null,
+      "basis": "Official-page search/open research; provider fan-out and service billing are not exposed. Not measured as free or exact request count."
+    },
+    "conservative_debit_pending_reconciliation": {
+      "fetch_attempts": 100,
+      "active_seconds": 900,
+      "usd": "3.00",
+      "paid_calls": null
+    },
+    "probe_product_urls_by_retailer": {
+      "microless": 3,
+      "bh": 1,
+      "amazon": 1
+    },
+    "max_remaining_international_before_other_usage": {
+      "fetch_attempts": 900,
+      "active_seconds": 2700,
+      "usd": "12.00",
+      "paid_calls": null
+    },
+    "scope": "Debit is INCLUDED in international and all-market initial allowances, not a reset per job. Unknown paid-call accounting blocks dispatch; these figures are ceilings, not available central balances."
+  },
+  "dispatch_requirements": [
+    "Central ledger configured and audit debit reconciled against campaign and both initial scopes",
+    "SourceGate admission, scoped endpoints and positive shared workload limits",
+    "No more than one concurrent request and six requests/minute per source, four overall; stricter configured limits win",
+    "Retry only within remaining allowances, at most two per resource; no automatic bypass of denial",
+    "At least an exact item/seller and reproducible retrieval path; route/quote gaps remain explicit"
+  ],
+  "quote_required_fields": [
+    "seller",
+    "fulfiller",
+    "item_and_variant",
+    "condition",
+    "merchant_to_warehouse_eligibility_if_forwarded",
+    "destination_country_and_locality",
+    "carrier_service",
+    "battery_chemistry_installed_count_wh",
+    "package_count_weight_dimensions",
+    "item_price_currency_tax_scope",
+    "merchant_shipping",
+    "forwarder_handling_consolidation_storage_if_applicable",
+    "international_freight",
+    "battery_surcharge_if_applicable",
+    "insurance_if_required",
+    "duties_tax_brokerage",
+    "payment_fx_fees",
+    "quote_expiry",
+    "delivery_estimate_or_guarantee_scope",
+    "warranty_territory_and_return_shipping"
+  ],
+  "samples": [
+    {
+      "id": "microless-phone-esim",
+      "source": "microless",
+      "url": "https://uae.microless.com/product/apple-iphone-17-mobile-phone-6-3-super-retina-xdr-display-a19-chip-6-core-cpu-5-core-gpu-16-core-neural-engine-256gb-storage-5g-wi-fi7-face-id-esim-international-version-black-iphone-17/?offer_id=435162",
+      "observed_at": "2026-11-17T15:41:07.208612+00:00",
+      "direct_http_status": 200,
+      "response_sha256": "50cec9033bd06d279b2ba4528f3be6569bb4a89627d9130516d90c2b05a11110",
+      "route_eligibility": "unknown",
+      "quote": null,
+      "packaged_weight_kg": null,
+      "packaged_dimensions_cm": null,
+      "battery_wh": null,
+      "qualifying_offer": false,
+      "category": "phone",
+      "model": "Apple iPhone 17",
+      "storage_gb": 256,
+      "color": "black",
+      "region_label": "International",
+      "sim_label": "eSIM",
+      "network_bands": null,
+      "regulatory_model": null,
+      "seller": "SeenGo",
+      "fulfiller": null,
+      "condition": "new",
+      "availability": "conflicting_page_text",
+      "price": {
+        "amount": "3750.00",
+        "currency": "AED",
+        "scope": "UAE default destination; not Lebanon landed total"
+      },
+      "missing": [
+        "exact network bands",
+        "regional hardware model",
+        "fulfiller",
+        "selected-offer stock",
+        "Lebanon eligibility"
+      ]
+    },
+    {
+      "id": "microless-phone-physical-esim",
+      "source": "microless",
+      "url": "https://uae.microless.com/product/apple-iphone-17-mobile-phone-6-3-super-retina-xdr-display-a19-chip-6-core-cpu-5-core-gpu-16-core-neural-engine-256gb-storage-5g-wi-fi7-face-id-physical-sim-esim-intl-white-iphone-17/",
+      "observed_at": "2026-11-17T15:41:20.278114+00:00",
+      "direct_http_status": 200,
+      "response_sha256": "717765814ff5d7aadfd04e9926179cf827a8bb224c0c978aadd55a915da41247",
+      "route_eligibility": "unknown",
+      "quote": null,
+      "packaged_weight_kg": null,
+      "packaged_dimensions_cm": null,
+      "battery_wh": null,
+      "qualifying_offer": false,
+      "category": "phone",
+      "model": "Apple iPhone 17",
+      "storage_gb": 256,
+      "color": "white",
+      "region_label": "International",
+      "sim_label": "physical SIM and eSIM",
+      "network_bands": null,
+      "regulatory_model": null,
+      "seller": "ITOA",
+      "fulfiller": null,
+      "condition": "new",
+      "availability": "conflicting_page_text",
+      "price": {
+        "amount": "3371.73",
+        "currency": "AED",
+        "scope": "UAE default destination; not Lebanon landed total"
+      },
+      "missing": [
+        "exact network bands",
+        "regional hardware model",
+        "fulfiller",
+        "selected-offer stock",
+        "Lebanon eligibility"
+      ]
+    },
+    {
+      "id": "microless-laptop",
+      "source": "microless",
+      "url": "https://uae.microless.com/product/lenovo-thinkpad-e16-gen-3-laptop-16-wuxga-ips-60hz-display-intel-core-ultra-5-225u-16gb-ram-512gb-ssd-intel-graphics-backlit-english-arabic-k-b-windows-11-pro-black-21sr005mgr/offers/",
+      "observed_at": "2026-11-17T15:41:32.830470+00:00",
+      "direct_http_status": 200,
+      "response_sha256": "7eafdf5b974462914b99f30a8eca748a52928b2c8ee1e1f2808e0880dc4bc0e3",
+      "route_eligibility": "unknown",
+      "quote": null,
+      "packaged_weight_kg": null,
+      "packaged_dimensions_cm": null,
+      "battery_wh": null,
+      "qualifying_offer": false,
+      "category": "laptop",
+      "model": "Lenovo ThinkPad E16 Gen 3",
+      "part_number": "21SR005MGR",
+      "cpu": "Intel Core Ultra 5 225U",
+      "ram_gb": 16,
+      "storage_gb": 512,
+      "keyboard": "English/Arabic",
+      "seller": "Microless",
+      "fulfiller": "Microless",
+      "condition": "new",
+      "availability": "not_verified_for_destination",
+      "price": {
+        "amount": "4589.00",
+        "currency": "AED",
+        "scope": "Microless seller row; UAE default destination"
+      },
+      "other_seller": "Al Lavisha Computers Trading LLC",
+      "other_seller_price_aed": "4499.00",
+      "missing": [
+        "packaged battery/weight/dimensions",
+        "Lebanon eligibility",
+        "offer identifier before ingestion"
+      ]
+    },
+    {
+      "id": "bh-laptop",
+      "source": "bh",
+      "url": "https://www.bhphotovideo.com/c/product/1825336-REG/lenovo_21m3000nus_14_thinkpad_e14_gen.html",
+      "observed_at": "2026-11-17T15:41:07.209594+00:00",
+      "direct_http_status": 403,
+      "response_sha256": "9098ca263a43725d782a4085d1303744e654d4a618f519bb08d0e28b7fea7eb8",
+      "route_eligibility": "unknown",
+      "quote": null,
+      "packaged_weight_kg": null,
+      "packaged_dimensions_cm": null,
+      "battery_wh": null,
+      "qualifying_offer": false,
+      "category": "laptop",
+      "model": "Lenovo ThinkPad E14 Gen 6",
+      "part_number": "21M3000NUS",
+      "cpu": "AMD Ryzen 5 7535U",
+      "ram_gb": 16,
+      "storage_gb": 256,
+      "seller": null,
+      "fulfiller": null,
+      "condition": null,
+      "availability": "browser_snapshot_only",
+      "price": null,
+      "fact_basis": "Retailer-owned browser page; direct GET denied. B&H is storefront identity, not proof of seller/fulfillment for a retrieved live offer.",
+      "missing": [
+        "direct retrieval",
+        "bound seller/fulfiller",
+        "Lebanon eligibility",
+        "battery/package details",
+        "current price and stock"
+      ]
+    },
+    {
+      "id": "amazon-renewed-laptop",
+      "source": "amazon",
+      "url": "https://us.amazon.com/Lenovo-Thinkpad-T14-Gen-i5-1145G7/dp/B0GSH4P948",
+      "observed_at": "2026-11-17T15:41:07.210580+00:00",
+      "direct_http_status": 200,
+      "response_sha256": "3b4ae656969eda1b9a54ad806624a203e34e84bc1af4bbf88f40cf3a5d699967",
+      "route_eligibility": "unknown",
+      "quote": null,
+      "packaged_weight_kg": null,
+      "packaged_dimensions_cm": null,
+      "battery_wh": null,
+      "qualifying_offer": false,
+      "category": "laptop",
+      "model": "Lenovo ThinkPad T14 Gen 2",
+      "asin": "B0GSH4P948",
+      "part_number": null,
+      "cpu": "Intel Core i5-1145G7",
+      "ram_gb": 16,
+      "storage_gb": 512,
+      "seller": null,
+      "fulfiller": null,
+      "condition": "renewed",
+      "availability": "unavailable",
+      "price": null,
+      "missing": [
+        "new-condition replacement listing",
+        "seller/fulfiller",
+        "manufacturer part number",
+        "US forwarding-address acceptance",
+        "battery/package details",
+        "carrier eligibility"
+      ]
+    }
+  ]
+}
