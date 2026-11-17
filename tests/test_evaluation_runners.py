@@ -42,9 +42,11 @@ class BaselineTests(unittest.TestCase):
         fixture=api_fixture.BuyerApiTests()
         fixture.setUp()
         self.addCleanup(fixture.doCleanups)
-        @fixture.app.get('/_evaluation/binding')
-        def binding():
-            return dict(side='fixed-heuristic-warm',corpus='warm')
+        from eval.deployment import expose_binding
+        @fixture.app.get('/{path:path}')
+        def frontend(path: str):
+            return {'frontend':True}
+        expose_binding(fixture.app,dict(side='fixed-heuristic-warm',corpus='warm'))
         case=json.loads(Path('eval/calibration.json').read_text())['cases'][0]
         def finish(_):
             claim=fixture.service.claim()
