@@ -1,0 +1,553 @@
+{
+  "dataset": "calibration",
+  "protocol_version": "1.0.0",
+  "issue": "https://github.com/han33-dotcom/TechScout/issues/78",
+  "purpose": "Development and calibration cases for #79 scorer checks and #80 calibration runs. They reuse products and inputs the team already develops with (the iPhone 17 example, a Mojitech listing from the store fixtures, identity fixtures, UI presets and the plan walkthrough), so they share no case, text, link or target product with the held-out set. Run, inspect and tune on these freely; never on held-out cases.",
+  "cases": [
+    {
+      "case_id": "C01",
+      "category": "phone",
+      "entry_path": "exact",
+      "market": "domestic",
+      "language": "en",
+      "buyer_text": "iPhone 17 256GB",
+      "target_products": [
+        "Apple iPhone 17"
+      ],
+      "designed_outcome": "answerable",
+      "scenarios": [
+        "variant_trap"
+      ],
+      "design_note": "The existing MVP example product, delivered to Beirut.",
+      "hard_constraints": [
+        "Apple iPhone 17",
+        "256 GB storage",
+        "new condition",
+        "delivered to Beirut"
+      ],
+      "interpretation_checks": [
+        "identifies Apple iPhone 17"
+      ],
+      "clarification_answer": null,
+      "request": {
+        "schema_version": 2,
+        "request_id": "eval-c01",
+        "intent": {
+          "kind": "exact_model",
+          "model": "iPhone 17 256GB"
+        },
+        "requirements": {
+          "category": "phone",
+          "storage_gb": 256
+        },
+        "fulfillment": {
+          "mode": "delivery",
+          "destination": {
+            "country": "LB",
+            "city": "Beirut"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "C02",
+      "category": "phone",
+      "entry_path": "exact",
+      "market": "domestic",
+      "language": "en",
+      "buyer_text": "Samsung Galaxy S25 256GB",
+      "target_products": [
+        "Samsung Galaxy S25"
+      ],
+      "designed_outcome": "answerable",
+      "scenarios": [
+        "variant_trap"
+      ],
+      "design_note": "S25, S25+ and S25 Ultra share most of the name (identity fixtures cover them).",
+      "hard_constraints": [
+        "Samsung Galaxy S25 (not S25+ or S25 Ultra)",
+        "256 GB storage",
+        "new condition"
+      ],
+      "interpretation_checks": [
+        "identifies Samsung Galaxy S25"
+      ],
+      "clarification_answer": null,
+      "request": {
+        "schema_version": 2,
+        "request_id": "eval-c02",
+        "intent": {
+          "kind": "exact_model",
+          "model": "Samsung Galaxy S25 256GB"
+        },
+        "requirements": {
+          "category": "phone",
+          "storage_gb": 256
+        }
+      }
+    },
+    {
+      "case_id": "C03",
+      "category": "phone",
+      "entry_path": "exact",
+      "market": "domestic",
+      "language": "arabizi",
+      "buyer_text": "baddi iphone 17 pro 256 ma3 sim card",
+      "target_products": [
+        "Apple iPhone 17 Pro"
+      ],
+      "designed_outcome": "answerable",
+      "scenarios": [
+        "variant_trap"
+      ],
+      "design_note": "Arabizi SIM-variant development case.",
+      "hard_constraints": [
+        "Apple iPhone 17 Pro",
+        "256 GB storage",
+        "nano-SIM tray plus eSIM",
+        "new condition"
+      ],
+      "interpretation_checks": [
+        "identifies Apple iPhone 17 Pro from the Arabizi text"
+      ],
+      "clarification_answer": null,
+      "request": {
+        "schema_version": 2,
+        "request_id": "eval-c03",
+        "intent": {
+          "kind": "exact_model",
+          "model": "baddi iphone 17 pro 256 ma3 sim card"
+        },
+        "requirements": {
+          "category": "phone",
+          "storage_gb": 256,
+          "sim": "physical+esim"
+        }
+      }
+    },
+    {
+      "case_id": "C04",
+      "category": "phone",
+      "entry_path": "exact",
+      "market": "international",
+      "language": "en",
+      "buyer_text": "Google Pixel 9 Pro 256GB",
+      "target_products": [
+        "Google Pixel 9 Pro"
+      ],
+      "designed_outcome": "uncertain",
+      "scenarios": [
+        "international_route",
+        "missing_cost_trap"
+      ],
+      "design_note": "International development case for route and landed-cost states.",
+      "hard_constraints": [
+        "Google Pixel 9 Pro (not Pixel 9 Pro XL)",
+        "256 GB storage",
+        "new condition",
+        "delivered to Beirut"
+      ],
+      "interpretation_checks": [
+        "identifies Google Pixel 9 Pro"
+      ],
+      "clarification_answer": null,
+      "request": {
+        "schema_version": 2,
+        "request_id": "eval-c04",
+        "intent": {
+          "kind": "exact_model",
+          "model": "Google Pixel 9 Pro 256GB"
+        },
+        "requirements": {
+          "category": "phone",
+          "storage_gb": 256
+        },
+        "market_scope": {
+          "include_international": true,
+          "international_markets": [
+            "US"
+          ]
+        },
+        "fulfillment": {
+          "mode": "delivery",
+          "destination": {
+            "country": "LB",
+            "city": "Beirut"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "C05",
+      "category": "phone",
+      "entry_path": "exact",
+      "market": "domestic",
+      "language": "en",
+      "buyer_text": "iPhone 17 2TB",
+      "target_products": [
+        "Apple iPhone 17"
+      ],
+      "designed_outcome": "no_match",
+      "scenarios": [
+        "no_match",
+        "variant_trap"
+      ],
+      "design_note": "Development no-match case for tuning abstention: a storage size the base model is not expected to offer.",
+      "hard_constraints": [
+        "Apple iPhone 17",
+        "2 TB storage exactly",
+        "new condition"
+      ],
+      "interpretation_checks": [
+        "keeps 2 TB as a hard storage constraint"
+      ],
+      "clarification_answer": null,
+      "request": {
+        "schema_version": 2,
+        "request_id": "eval-c05",
+        "intent": {
+          "kind": "exact_model",
+          "model": "iPhone 17 2TB"
+        },
+        "requirements": {
+          "category": "phone",
+          "storage_gb": 2048
+        }
+      }
+    },
+    {
+      "case_id": "C06",
+      "category": "laptop",
+      "entry_path": "needs",
+      "market": "domestic",
+      "language": "en",
+      "buyer_text": "Engineering laptop delivered to Beirut with good battery life",
+      "target_products": [],
+      "designed_outcome": "answerable",
+      "scenarios": [
+        "needs_selection"
+      ],
+      "design_note": "The plan's acceptance walkthrough and the v2 needs fixture.",
+      "hard_constraints": [
+        "new laptop",
+        "at least 16 GB RAM",
+        "able to run CAD software",
+        "delivered to Beirut"
+      ],
+      "interpretation_checks": [
+        "reads the text as an engineering laptop with good battery life, delivered to Beirut"
+      ],
+      "clarification_answer": "I use AutoCAD and MATLAB on Windows.",
+      "request": {
+        "schema_version": 2,
+        "request_id": "eval-c06",
+        "intent": {
+          "kind": "needs",
+          "description": "Engineering laptop delivered to Beirut with good battery life",
+          "required_software": [
+            "CAD"
+          ]
+        },
+        "requirements": {
+          "category": "laptop",
+          "min_ram_gb": 16
+        },
+        "budget": {
+          "target": {
+            "amount": "900",
+            "currency": "USD"
+          }
+        },
+        "preferences": [
+          "battery",
+          "portability"
+        ],
+        "fulfillment": {
+          "mode": "delivery",
+          "destination": {
+            "country": "LB",
+            "city": "Beirut"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "C07",
+      "category": "laptop",
+      "entry_path": "needs",
+      "market": "domestic",
+      "language": "ar",
+      "buyer_text": "بدي لابتوب للدراسة بحدود ١٠٠٠ دولار",
+      "target_products": [],
+      "designed_outcome": "answerable",
+      "scenarios": [
+        "needs_selection"
+      ],
+      "design_note": "The Arabic example preset in the buyer UI.",
+      "hard_constraints": [
+        "new laptop"
+      ],
+      "interpretation_checks": [
+        "reads the Arabic text as a study laptop with an approximate USD 1,000 budget"
+      ],
+      "clarification_answer": null,
+      "request": {
+        "schema_version": 2,
+        "request_id": "eval-c07",
+        "intent": {
+          "kind": "needs",
+          "description": "بدي لابتوب للدراسة بحدود ١٠٠٠ دولار"
+        },
+        "requirements": {
+          "category": "laptop"
+        },
+        "budget": {
+          "target": {
+            "amount": "1000",
+            "currency": "USD"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "C08",
+      "category": "laptop",
+      "entry_path": "needs",
+      "market": "domestic",
+      "language": "arabizi",
+      "buyer_text": "baddi laptop lal jem3a bi 7doud 1000 dollar",
+      "target_products": [],
+      "designed_outcome": "answerable",
+      "scenarios": [
+        "needs_selection"
+      ],
+      "design_note": "The Arabizi example preset in the buyer UI.",
+      "hard_constraints": [
+        "new laptop"
+      ],
+      "interpretation_checks": [
+        "reads the Arabizi text as a university laptop with an approximate USD 1,000 budget"
+      ],
+      "clarification_answer": null,
+      "request": {
+        "schema_version": 2,
+        "request_id": "eval-c08",
+        "intent": {
+          "kind": "needs",
+          "description": "baddi laptop lal jem3a bi 7doud 1000 dollar"
+        },
+        "requirements": {
+          "category": "laptop"
+        },
+        "budget": {
+          "target": {
+            "amount": "1000",
+            "currency": "USD"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "C09",
+      "category": "laptop",
+      "entry_path": "exact",
+      "market": "international",
+      "language": "en",
+      "buyer_text": "Lenovo ThinkPad T14 Gen 5, 16GB RAM, 512GB SSD",
+      "target_products": [
+        "Lenovo ThinkPad T14 Gen 5"
+      ],
+      "designed_outcome": "answerable",
+      "scenarios": [
+        "variant_trap",
+        "international_route"
+      ],
+      "design_note": "Laptop identity fixture product (T14 Gen 5 versus T14s Gen 5) with US and UAE comparison.",
+      "hard_constraints": [
+        "Lenovo ThinkPad T14 Gen 5 (not T14s)",
+        "at least 16 GB RAM",
+        "at least 512 GB SSD",
+        "new condition",
+        "delivered to Beirut"
+      ],
+      "interpretation_checks": [
+        "keeps T14 Gen 5 separate from T14s Gen 5"
+      ],
+      "clarification_answer": null,
+      "request": {
+        "schema_version": 2,
+        "request_id": "eval-c09",
+        "intent": {
+          "kind": "exact_model",
+          "model": "Lenovo ThinkPad T14 Gen 5, 16GB RAM, 512GB SSD"
+        },
+        "requirements": {
+          "category": "laptop",
+          "min_ram_gb": 16,
+          "min_storage_gb": 512
+        },
+        "market_scope": {
+          "include_international": true,
+          "international_markets": [
+            "US",
+            "AE"
+          ]
+        },
+        "fulfillment": {
+          "mode": "delivery",
+          "destination": {
+            "country": "LB",
+            "city": "Beirut"
+          }
+        }
+      }
+    },
+    {
+      "case_id": "C10",
+      "category": "tablet",
+      "entry_path": "needs",
+      "market": "domestic",
+      "language": "en",
+      "buyer_text": "Tablet for taking notes",
+      "target_products": [],
+      "designed_outcome": "answerable",
+      "scenarios": [
+        "needs_selection"
+      ],
+      "design_note": "The v2 tablet request fixture.",
+      "hard_constraints": [
+        "new tablet",
+        "pen (stylus) support"
+      ],
+      "interpretation_checks": [
+        "reads taking notes as a pen-input use case"
+      ],
+      "clarification_answer": null,
+      "request": {
+        "schema_version": 2,
+        "request_id": "eval-c10",
+        "intent": {
+          "kind": "needs",
+          "description": "Tablet for taking notes"
+        },
+        "requirements": {
+          "category": "tablet",
+          "stylus_support": true
+        }
+      }
+    },
+    {
+      "case_id": "C11",
+      "category": "monitor",
+      "entry_path": "needs",
+      "market": "domestic",
+      "language": "en",
+      "buyer_text": "High refresh work display",
+      "target_products": [],
+      "designed_outcome": "answerable",
+      "scenarios": [
+        "needs_selection"
+      ],
+      "design_note": "The v2 monitor request fixture.",
+      "hard_constraints": [
+        "new monitor",
+        "at least 120 Hz"
+      ],
+      "interpretation_checks": [
+        "reads 'high refresh' as a high-refresh-rate requirement"
+      ],
+      "clarification_answer": null,
+      "request": {
+        "schema_version": 2,
+        "request_id": "eval-c11",
+        "intent": {
+          "kind": "needs",
+          "description": "High refresh work display"
+        },
+        "requirements": {
+          "category": "monitor",
+          "min_refresh_hz": 120
+        }
+      }
+    },
+    {
+      "case_id": "C12",
+      "category": "audio",
+      "entry_path": "needs",
+      "market": "domestic",
+      "language": "en",
+      "buyer_text": "Earbuds for travel",
+      "target_products": [],
+      "designed_outcome": "answerable",
+      "scenarios": [
+        "needs_selection",
+        "condition_evidence"
+      ],
+      "design_note": "The v2 audio request fixture, allowing refurbished offers.",
+      "hard_constraints": [
+        "earbuds",
+        "active noise cancellation",
+        "new, or refurbished with evidenced condition"
+      ],
+      "interpretation_checks": [
+        "reads 'for travel' as portable earbuds where noise cancellation helps"
+      ],
+      "clarification_answer": null,
+      "request": {
+        "schema_version": 2,
+        "request_id": "eval-c12",
+        "intent": {
+          "kind": "needs",
+          "description": "Earbuds for travel"
+        },
+        "requirements": {
+          "category": "audio",
+          "form_factor": "earbuds",
+          "active_noise_cancellation": true
+        },
+        "allowed_conditions": [
+          "new",
+          "refurbished"
+        ]
+      }
+    },
+    {
+      "case_id": "C13",
+      "category": "phone",
+      "entry_path": "exact",
+      "market": "domestic",
+      "language": "en",
+      "buyer_text": "https://mojitech.net/shop/brands/apple-brands/apple-iphone-17-256gb/",
+      "target_products": [
+        "Apple iPhone 17"
+      ],
+      "designed_outcome": "answerable",
+      "scenarios": [
+        "variant_trap"
+      ],
+      "design_note": "Retailer product-link development case, using a Mojitech listing already in the store fixtures. The listing has colour and warranty options, so the selected variant must be bound to its own price and stock.",
+      "hard_constraints": [
+        "Apple iPhone 17",
+        "256 GB storage",
+        "new condition",
+        "seller in Lebanon"
+      ],
+      "interpretation_checks": [
+        "treats the retailer link as a lead that passes source validation before use"
+      ],
+      "clarification_answer": null,
+      "request": {
+        "schema_version": 2,
+        "request_id": "eval-c13",
+        "intent": {
+          "kind": "product_link",
+          "url": "https://mojitech.net/shop/brands/apple-brands/apple-iphone-17-256gb/"
+        },
+        "requirements": {
+          "category": "phone",
+          "storage_gb": 256
+        }
+      }
+    }
+  ]
+}

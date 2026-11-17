@@ -1,0 +1,57 @@
+{
+  "version": "1.0.0",
+  "issue": "https://github.com/han33-dotcom/TechScout/issues/78",
+  "main_evaluation": {
+    "label": "main",
+    "access_path": "openai-direct",
+    "provider": "openai",
+    "api": "responses",
+    "model": "gpt-6.1-sol",
+    "service_tier": "standard",
+    "embedding": {"provider": "openai", "model": "text-embedding-3-small", "dimensions": 1536},
+    "applies_to": ["full-warm", "single-agent-warm", "full-cold"],
+    "embedding_applies_to": "Every automated configuration that queries the corpus, including fixed-heuristic-warm.",
+    "same_model_for_every_role": true,
+    "automatic_model_substitution": false,
+    "provider_fallbacks": false,
+    "automatic_retries": false,
+    "settings_source": "config/evaluation.json, section model_provider",
+    "run_settings_recorded_at_pre_run_freeze": [
+      "model_provider.effort",
+      "model_provider.max_input_tokens",
+      "model_provider.max_output_tokens",
+      "model_provider.timeout_seconds",
+      "model_provider.prompt_version",
+      "model_provider.pricing_checked_on and prices",
+      "caps"
+    ],
+    "actual_version_rule": "The requested model ID is gpt-6.1-sol. Every call records the model version the API reports. The pre-run freeze records the version reported by the bounded smoke check. If any held-out call reports a different version, or no version, it is listed as a deviation with the affected runs; it is never silently accepted or replaced.",
+    "excluded": [
+      {
+        "path": "config/evaluation.json, section planner",
+        "reason": "Historical v1 Anthropic planner settings. Not used by any main-evaluation configuration; its fallbacks setting does not apply to the main evaluation."
+      }
+    ]
+  },
+  "call_record_fields": [
+    "configuration", "case_id", "repetition", "role",
+    "requested_model", "reported_model", "provider", "access_path", "api", "endpoint",
+    "service_tier_requested", "service_tier_reported", "response_id",
+    "input_tokens", "cached_input_tokens", "output_tokens", "reasoning_tokens",
+    "latency_ms", "retries", "fallback_used", "routing_settings",
+    "cost_usd", "cost_state", "pricing_checked_on", "prompt_version"
+  ],
+  "unavailable_metadata_value": "not_reported",
+  "unavailable_metadata_rule": "A field the provider does not return is recorded as not_reported, never guessed, and the count of not_reported fields is published with the results.",
+  "optional_experiments": {
+    "declared": [],
+    "status": "No OpenRouter or alternative-model experiment is planned in version 1.0.0. The OpenRouter adapter is not installed.",
+    "rules": [
+      "An experiment is declared here, with a protocol version bump, before it runs.",
+      "Its label starts with exp- and its results are stored and reported apart from the main evaluation; they never enter the main tables.",
+      "It states the requested model, the routing settings (fixed provider order, fallbacks off), the required capabilities, the data policy, the cases, the repetitions and the spend allowance.",
+      "Each call records the requested and reported model, the serving provider and endpoint when returned, routing settings, retries, fallbacks, gateway fees and latency; anything missing is not_reported.",
+      "Automatic model substitution stays off. A run that the gateway served with another model is reported as a deviation, not as a result for the requested model."
+    ]
+  }
+}
