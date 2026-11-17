@@ -32,7 +32,7 @@ def verify_http(project):
     asset = re.search(r'src="(/assets/[^"]+\.js)"', html).group(1)
     with urlopen(base + asset, timeout=5) as response:
         assert 'javascript' in response.headers.get_content_type()
-        assert b'/health' in response.read()
+        assert b'/api/runs' in response.read()  # Buyer bundle includes the owned run API client.
     for path in ('/api/missing', '/evidence/missing'):
         try:
             with urlopen(base + path, timeout=5):
