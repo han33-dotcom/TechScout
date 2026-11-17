@@ -1,0 +1,44 @@
+[
+  {
+    "attempted_at": "2026-11-17T13:30:56.728761+00:00",
+    "url": "https://classcellulars.com/wp-json/wc/store/v1/products?search=iPhone%2016&per_page=10&page=1",
+    "result": {
+      "source_id": "class_cellulars",
+      "origin_url": "https://classcellulars.com/wp-json/wc/store/v1/products?search=iPhone%2016&per_page=10&page=1",
+      "final_url": null,
+      "redirect_chain": [
+        "https://classcellulars.com/wp-json/wc/store/v1/products?search=iPhone%2016&per_page=10&page=1"
+      ],
+      "status_code": null,
+      "content_type": null,
+      "content_encoding": null,
+      "byte_length": null,
+      "response_sha256": null,
+      "observed_at": null,
+      "attempts": 1,
+      "outcome": "error",
+      "error_code": "INVALID_SCHEMA"
+    }
+  },
+  {
+    "attempted_at": "2026-11-17T13:30:57.246220+00:00",
+    "url": "https://classcellulars.com/wp-json/wc/store/v1/products?slug=iphone-16",
+    "result": {
+      "source_id": "class_cellulars",
+      "origin_url": "https://classcellulars.com/wp-json/wc/store/v1/products?slug=iphone-16",
+      "final_url": null,
+      "redirect_chain": [
+        "https://classcellulars.com/wp-json/wc/store/v1/products?slug=iphone-16"
+      ],
+      "status_code": null,
+      "content_type": null,
+      "content_encoding": null,
+      "byte_length": null,
+      "response_sha256": null,
+      "observed_at": null,
+      "attempts": 1,
+      "outcome": "error",
+      "error_code": "INVALID_SCHEMA"
+    }
+  }
+]

@@ -736,10 +736,11 @@ class _SourceFetch:
         self._gate, self._budget, self._source_id, self._observed = gate, budget, source_id, observed
         self._final = final
 
-    def __call__(self, source_id: str, url: str, *, expect: str):
+    def __call__(self, source_id: str, url: str, *, expect: str, capability=None):
         if source_id != self._source_id:
             raise ValueError('A store reader may only fetch from its own store')
-        outcome = self._gate.fetch(self._budget, source_id, url, expect=expect)
+        options = {} if capability is None else {"capability": capability}
+        outcome = self._gate.fetch(self._budget, source_id, url, expect=expect, **options)
         if outcome.response_sha256 is not None and outcome.observed_at is not None:
             reply = (outcome.response_sha256, outcome.observed_at)
             self._observed.add(reply)

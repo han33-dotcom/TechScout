@@ -99,7 +99,7 @@
       "limits": {
         "requests_per_minute": 6,
         "concurrency": 1,
-        "max_requests_per_run": 6
+        "max_requests_per_run": 12
       },
       "published_rate_limits": null,
       "review_evidence": [
@@ -118,7 +118,7 @@
           "pickup branch stock"
         ]
       },
-      "next_action": "Implement source-specific parsing and final checks in MVP 04–06; preserve missing offer facts as unresolved.",
+      "next_action": "Bounded variable-phone discovery supported; live access and category limits documented in docs/class-catalog.md.",
       "technical_check": {
         "url": "https://classcellulars.com/wp-json/wc/store/v1/products?slug=iphone-17",
         "observed_at": "2026-10-12T14:49:10.066787+00:00",
@@ -126,7 +126,86 @@
         "price_usd": "1100",
         "price_fractional_digits": 2,
         "variants_listed": 4
-      }
+      },
+      "endpoint_capabilities": [
+        {
+          "capability_id": "class-search",
+          "version": "1",
+          "host": "classcellulars.com",
+          "operation": "search",
+          "expect": "json",
+          "path": [
+            "wp-json",
+            "wc",
+            "store",
+            "v1",
+            "products"
+          ],
+          "query": [
+            {
+              "name": "search",
+              "parameter": {
+                "kind": "search_text",
+                "max_length": 64
+              }
+            },
+            {
+              "name": "per_page",
+              "parameter": {
+                "kind": "integer",
+                "minimum": 10,
+                "maximum": 10
+              }
+            },
+            {
+              "name": "page",
+              "parameter": {
+                "kind": "integer",
+                "minimum": 1,
+                "maximum": 1
+              }
+            }
+          ]
+        },
+        {
+          "capability_id": "class-slug",
+          "version": "1",
+          "host": "classcellulars.com",
+          "operation": "product",
+          "expect": "json",
+          "path": [
+            "wp-json",
+            "wc",
+            "store",
+            "v1",
+            "products"
+          ],
+          "query": [
+            {
+              "name": "slug",
+              "parameter": {
+                "kind": "token",
+                "max_length": 100
+              }
+            }
+          ]
+        },
+        {
+          "capability_id": "class-product",
+          "version": "1",
+          "host": "classcellulars.com",
+          "operation": "product",
+          "expect": "html",
+          "path": [
+            "product",
+            {
+              "kind": "token",
+              "max_length": 100
+            }
+          ],
+          "trailing_slash": true
+        }
+      ]
     },
     {
       "id": "tech_zone",
@@ -306,7 +385,7 @@
           "branch stock"
         ]
       },
-      "next_action": "Implement source-specific parsing and final checks in MVP 04–06; preserve missing offer facts as unresolved.",
+      "next_action": "Implement source-specific parsing and final checks in MVP 04\u00e2\u20ac\u201c06; preserve missing offer facts as unresolved.",
       "technical_check": {
         "url": "https://mojitech.net/wp-json/wc/store/v1/products?slug=apple-iphone-17-256gb",
         "observed_at": "2026-10-12T14:49:10.071693+00:00",
@@ -363,7 +442,7 @@
           "branch stock"
         ]
       },
-      "next_action": "Implement source-specific parsing and final checks in MVP 04–06; preserve missing offer facts as unresolved.",
+      "next_action": "Implement source-specific parsing and final checks in MVP 04\u00e2\u20ac\u201c06; preserve missing offer facts as unresolved.",
       "technical_check": {
         "url": "https://beytech.com.lb/wp-json/wc/store/v1/products?slug=apple-iphone-17-1-sim-2-years-warranty",
         "observed_at": "2026-10-12T14:49:11.201397+00:00",
