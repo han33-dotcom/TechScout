@@ -322,5 +322,27 @@
       },
       "outcome": "different_configuration"
     }
-  ]
+  ],
+  "monitor": {
+    "manufacturer": "Example",
+    "model": "View 27Q v2",
+    "color": "Black",
+    "specs": {
+      "diagonal_inches": "27",
+      "width_px": 2560,
+      "height_px": 1440,
+      "refresh_hz": 165,
+      "panel": "IPS"
+    }
+  },
+  "audio": {
+    "manufacturer": "Example",
+    "model": "Sound Pro v2",
+    "color": "Black",
+    "specs": {
+      "form_factor": "headphones",
+      "connectivity": "wireless",
+      "active_noise_cancellation": true
+    }
+  }
 }

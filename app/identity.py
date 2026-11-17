@@ -365,6 +365,32 @@ _LAPTOP_FIELDS = (
     'display_width_px', 'display_height_px', 'display_refresh_hz', 'display_panel',
     'display_touchscreen',
 )
+_PROFILE_FIELDS = {
+    'phone': _PHONE_FIELDS,
+    'laptop': _LAPTOP_FIELDS,
+    'monitor': ('diagonal_inches', 'width_px', 'height_px', 'refresh_hz', 'panel'),
+    'audio': ('form_factor', 'connectivity', 'active_noise_cancellation'),
+}
+
+
+def _specific_model(value: str, manufacturer: str) -> str | None:
+    """Reject generic descriptions and explicit ambiguity; never guess a generation.
+
+    Exact source model/version strings are otherwise kept whole. Product names
+    without a numeric SKU are valid; punctuation and version suffixes are not lost.
+    """
+    text = _identity_text(value)
+    if re.search(r'\b(?:or|series|assorted|various|unspecified|unknown)\b|[/|]', text):
+        return None
+    generic = {'monitor', 'display', 'screen', 'gaming', 'oled', 'lcd', 'led', 'ips',
+               'headphones', 'headphone', 'earbuds', 'earbud', 'headset', 'buds',
+               'wireless', 'wired', 'bluetooth', 'noise', 'cancelling', 'canceling',
+               'anc', 'stereo', 'inch', 'inches', 'hz', '4k', '2k', 'uhd', 'fhd',
+               *_identity_text(manufacturer).split()}
+    tokens = re.findall(r'[\w.-]+', text)
+    specific = [token for token in tokens if token not in generic and re.search(r'[a-z]', token)
+                and not re.fullmatch(r'\d+(?:\.\d+)?(?:inch|in|hz|p)',token)]
+    return text if specific else None
 
 
 class OfferComparison(Model):
@@ -419,9 +445,12 @@ def _identity_facts(offer: v2.Offer) -> dict[str, tuple[object | None, tuple[str
                     and e.scope in ('product', 'variant')
                     and e.product_id == offer.source_product_id
                     and (e.scope != 'variant' or e.variant_id == offer.source_variant_id))
-        facts[name] = (_identity_value(name, getattr(variant.product, name)) if ids else None, ids)
-    names = _PHONE_FIELDS if variant.product.category == 'phone' else _LAPTOP_FIELDS
-    if variant.product.category not in ('phone', 'laptop'):
+        value = _identity_value(name, getattr(variant.product, name)) if ids else None
+        if ids and name == 'model' and variant.product.category in ('monitor', 'audio'):
+            value = _specific_model(variant.product.model,variant.product.manufacturer)
+        facts[name] = (value, ids)
+    names = _PROFILE_FIELDS.get(variant.product.category)
+    if names is None:
         return facts
     for name in (*names, 'color'):
         fact = variant.color if name == 'color' else getattr(variant.specs, name)
@@ -440,7 +469,7 @@ def _terms(offer: v2.Offer) -> dict[str, Fact | None]:
 
 
 def compare_offers(left: v2.Offer, right: v2.Offer) -> OfferComparison:
-    """Compare evidenced phone/laptop hardware, separately exposing purchase-term differences.
+    """Compare supported evidenced hardware, separately exposing purchase-term differences.
 
     A decisive known difference wins over other unknowns. Unsupported categories and absent
     evidence remain unresolved. Never rewrite source/canonical IDs or lend facts across sellers.
@@ -453,7 +482,7 @@ def compare_offers(left: v2.Offer, right: v2.Offer) -> OfferComparison:
     if category_a != category_b:
         # Category metadata has no field-bound Fact in v2; do not invent evidence for it.
         unresolved.append('category')
-    elif category_a not in ('phone', 'laptop'):
+    elif category_a not in _PROFILE_FIELDS:
         unresolved.append('unsupported_category')
     else:
         for name in a:
@@ -497,7 +526,7 @@ def compare_offers(left: v2.Offer, right: v2.Offer) -> OfferComparison:
 
 def variant_identity_key(offer: v2.Offer) -> str | None:
     """Versioned cross-seller hardware key only for a fully evidenced supported configuration."""
-    if offer.variant.product.category not in ('phone', 'laptop'):
+    if offer.variant.product.category not in _PROFILE_FIELDS:
         return None
     facts = _identity_facts(offer)
     if any(value is None for value, _ in facts.values()):
