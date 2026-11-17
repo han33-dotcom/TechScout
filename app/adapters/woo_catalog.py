@@ -78,9 +78,11 @@ def _spec(name, raw, category):
              'region':'variant.specs.region'}.get(name)
     if field:
         return field, raw
-    if name in {'ram', 'storage', 'capacity'} and (m := re.fullmatch(r'([1-9][0-9]{0,4})\s*(GB|TB)', raw, re.I)):
+    if name in {'ram', 'storage', 'capacity', 'msize'} and (m := re.fullmatch(r'([1-9][0-9]{0,4})\s*(GB|TB)', raw, re.I)):
         value = int(m[1]) * (1024 if m[2].upper() == 'TB' else 1)
         return ('variant.specs.ram_gb' if name == 'ram' else 'variant.specs.storage_gb'), value
+    if name == 'condition' and raw.casefold() in {'new','used','refurbished'}:
+        return 'condition', raw.casefold()
     if category == 'monitor':
         if name in {'refreshrate', 'refresh'} and (m := re.fullmatch(r'([1-9][0-9]{0,3})\s*Hz', raw, re.I)):
             return 'variant.specs.refresh_hz', int(m[1])
@@ -251,7 +253,9 @@ class WooCatalog:
                         raise ValueError()
                     if type(digits) is not int or not 0 <= digits <= 6 or amount != amount.quantize(Decimal(1).scaleb(-digits)):
                         raise ValueError()
-                    value, reason = {'amount':str(amount),'currency':currency}, None
+                    canonical = format(amount, 'f')
+                    canonical = canonical.rstrip('0').rstrip('.') if '.' in canonical else canonical
+                    value, reason = {'amount':canonical,'currency':currency}, None
                 except (ValueError, TypeError, ArithmeticError):
                     value, reason = None, 'price is absent, zero, call-for-price or invalid'
                 add('price',value,outcome,pointer+('/display_price' if html else '/prices/price'),reason=reason)
@@ -268,7 +272,7 @@ class WooCatalog:
                     if reason is None and value not in values:
                         values.append(value)
                 fact = {'evidence_ids':[r.evidence_id for r in receipts]}
-                if not complete and field.startswith('variant.specs.'):
+                if not complete and (field.startswith('variant.specs.') or field in {'condition','variant.color'}):
                     fact.update(state='unknown',reason='selected attributes disagree or configuration is incomplete')
                 elif field=='price' and not can_price:
                     fact.update(state='unknown',reason='configuration is incomplete or not explicitly purchasable')

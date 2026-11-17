@@ -537,7 +537,7 @@
           "https://beytech.com.lb/wp-json/wc/store/v1/products?slug=apple-iphone-17-1-sim-2-years-warranty"
         ],
         "reviewed_at": "2026-10-12T14:49:11.201397+00:00",
-        "scope": "Read-only public smartphone offer facts and public fulfillment/warranty information for Tech Scout."
+        "scope": "Read-only bounded phone/laptop/monitor catalog search and exact product retrieval, with existing warranty/exchange policy pages; technical evidence in docs/beytech-catalog.md."
       },
       "allowed_endpoints": [
         "https://beytech.com.lb/wp-json/wc/store/v1/products?slug=apple-iphone-17-1-sim-2-years-warranty",
@@ -579,7 +579,86 @@
         "price_usd": "1079",
         "price_fractional_digits": 2,
         "variants_listed": 4
-      }
+      },
+      "endpoint_capabilities": [
+        {
+          "version": "1",
+          "host": "beytech.com.lb",
+          "operation": "search",
+          "expect": "json",
+          "path": [
+            "wp-json",
+            "wc",
+            "store",
+            "v1",
+            "products"
+          ],
+          "capability_id": "beytech-search",
+          "query": [
+            {
+              "name": "search",
+              "parameter": {
+                "kind": "search_text",
+                "max_length": 64
+              }
+            },
+            {
+              "name": "per_page",
+              "parameter": {
+                "kind": "integer",
+                "minimum": 10,
+                "maximum": 10
+              }
+            },
+            {
+              "name": "page",
+              "parameter": {
+                "kind": "integer",
+                "minimum": 1,
+                "maximum": 1
+              }
+            }
+          ]
+        },
+        {
+          "version": "1",
+          "host": "beytech.com.lb",
+          "operation": "product",
+          "expect": "json",
+          "path": [
+            "wp-json",
+            "wc",
+            "store",
+            "v1",
+            "products"
+          ],
+          "capability_id": "beytech-slug",
+          "query": [
+            {
+              "name": "slug",
+              "parameter": {
+                "kind": "token",
+                "max_length": 100
+              }
+            }
+          ]
+        },
+        {
+          "capability_id": "beytech-product",
+          "version": "1",
+          "host": "beytech.com.lb",
+          "operation": "product",
+          "expect": "html",
+          "path": [
+            "product",
+            {
+              "kind": "token",
+              "max_length": 100
+            }
+          ],
+          "trailing_slash": true
+        }
+      ]
     }
   ],
   "access_assumption": "Treat obtaining data from public websites as unrestricted for this project, as explicitly instructed by the user. Retailer permission emails are not required."

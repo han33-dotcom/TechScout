@@ -6,6 +6,16 @@ brand reads 'Electronics' and is not used). The warranty page covers repairs onl
 original invoice; the exchange page allows one exchange within 5 days but lists mobiles as
 non-returnable. Neither page settles an offer field.
 """
+from dataclasses import dataclass
+from hashlib import sha256
+
+from app.adapters.base import Snapshot, tool_result
+from app.adapters.woo_catalog import WooCatalog
+from app.adapters.woocommerce import visible_text
+from app.contracts import ToolResult
+from app.contracts_v2 import Evidence
+from app.corpus_contracts import Extraction, FieldObservation
+
 import re
 from types import MappingProxyType
 
@@ -78,3 +88,66 @@ CONFIG = StoreConfig(
     name_warranty=name_warranty,
 )
 ADAPTER = WooCommerceAdapter(CONFIG)
+
+
+@dataclass(frozen=True)
+class CatalogPolicies:
+    extraction: Extraction
+    tool_result: ToolResult
+    snapshots: tuple[Snapshot, ...]
+    missing_topics: tuple[str, ...]
+
+
+class BeytechCatalog(WooCatalog):
+    def fetch_policies(self, fetch, *, run=None, corpus_version="catalog-preview-v1"):
+        """Preserve published policy text; it never silently becomes a resolved offer cost.
+
+        Existing reviewed warranty/exchange endpoints only. Delivery, VAT and
+        condition statements are retained if explicitly published on these pages;
+        otherwise the caller receives named gaps. In particular a returns rule
+        requiring sealed packaging does not establish a new-device store policy.
+        """
+        outcomes, snapshots, fields = [], [], {}
+        patterns = {
+            'delivery': r'Delivery\s+all\s+over\s+Lebanon\b',
+            'tax': r'All\s+(?:our\s+)?prices\s+(?:include|exclude)\s+VAT\b',
+            'condition': r'All\s+(?:our\s+)?(?:products|devices)\s+are\s+(?:brand\s+)?new\b',
+        }
+        for policy in CONFIG.policies:
+            outcome = fetch(self.source_id,policy.url,expect='html')
+            outcomes.append(outcome)
+            if outcome.errors or outcome.body is None:
+                continue
+            snapshots.append(Snapshot.of(outcome))
+            text = visible_text(outcome.body)
+            statements = [(fact.topic,fact.excerpt) for fact in policy.extract(text)]
+            for topic, pattern in patterns.items():
+                statements.extend((topic,m.group(0)) for m in re.finditer(pattern,text,re.I))
+            for topic, statement in statements:
+                field = 'policy.'+topic
+                receipt = Evidence(evidence_id=sha256((outcome.response_sha256+outcome.observed_at.isoformat()+
+                    field+statement+str(run)+corpus_version).encode()).hexdigest(),source_id=self.source_id,
+                    scope='source',field_path=field,origin_url=outcome.origin_url,final_url=outcome.final_url,
+                    observed_at=outcome.observed_at,response_sha256=outcome.response_sha256,
+                    adapter_version='beytech-policy/2',excerpt=statement,origin='runtime',
+                    run=run,corpus_version=corpus_version)
+                fields.setdefault(field,[]).append((statement,receipt))
+        observations=[]
+        for field,entries in fields.items():
+            # Different policy sentences are retained together, not mislabelled as contradictions.
+            statements=list(dict.fromkeys(s for s,_ in entries))
+            receipts=tuple({e.evidence_id:e for _,e in entries}.values())
+            observations.append(FieldObservation(fact={'state':'known','value':' | '.join(statements),
+                'evidence_ids':[e.evidence_id for e in receipts]},evidence=receipts))
+        missing=tuple(t for t in ('delivery','tax','condition','warranty') if 'policy.'+t not in fields)
+        extraction=Extraction(observations=tuple(observations))
+        trace=tool_result(outcomes,[],{'missing_topics':list(missing),'resolved_offer_costs':False},
+                          [e.evidence_id for o in observations for e in o.evidence],bool(observations))
+        return CatalogPolicies(extraction,trace,tuple(snapshots),missing)
+
+
+CATALOG = BeytechCatalog(SOURCE_ID, ORIGIN, {
+    'phone': frozenset({'mobiles','smartphones','mobile-phones'}),
+    'laptop': frozenset({'laptops'}),
+    'monitor': frozenset({'monitors'}),
+}, (('product', ('product',), 2),))

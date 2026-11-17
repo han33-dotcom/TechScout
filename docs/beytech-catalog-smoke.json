@@ -1,0 +1,798 @@
+{
+  "checked_at": "2026-11-17T15:33:39.578654+00:00",
+  "budget": {
+    "seconds": 110,
+    "external_calls": 8,
+    "paid_calls": 0,
+    "provider_spend_usd": "0"
+  },
+  "catalog": {
+    "schema_version": 1,
+    "status": "partial",
+    "data": {
+      "fetches": [
+        {
+          "source_id": "beytech",
+          "origin_url": "https://beytech.com.lb/wp-json/wc/store/v1/products?search=iPhone%2017&per_page=10&page=1",
+          "final_url": "https://beytech.com.lb/wp-json/wc/store/v1/products?search=iPhone%2017&per_page=10&page=1",
+          "redirect_chain": [
+            "https://beytech.com.lb/wp-json/wc/store/v1/products?search=iPhone%2017&per_page=10&page=1"
+          ],
+          "status_code": 200,
+          "content_type": "application/json",
+          "content_encoding": "gzip",
+          "byte_length": 104100,
+          "response_sha256": "f301effcee9f1318b7f29148366ad8270d49a7117d7a183c974f07a156d07542",
+          "observed_at": "2026-11-17T15:33:35.819755+00:00",
+          "attempts": 1,
+          "outcome": "ok",
+          "error_code": null
+        },
+        {
+          "source_id": "beytech",
+          "origin_url": "https://beytech.com.lb/wp-json/wc/store/v1/products?slug=apple-iphone-17-1-sim-2-years-warranty",
+          "final_url": "https://beytech.com.lb/wp-json/wc/store/v1/products?slug=apple-iphone-17-1-sim-2-years-warranty",
+          "redirect_chain": [
+            "https://beytech.com.lb/wp-json/wc/store/v1/products?slug=apple-iphone-17-1-sim-2-years-warranty"
+          ],
+          "status_code": 200,
+          "content_type": "application/json",
+          "content_encoding": "gzip",
+          "byte_length": 29640,
+          "response_sha256": "cd83e32d1581153c3c22f8145fd8b4773d45869346fa365c14273a69e649fac9",
+          "observed_at": "2026-11-17T15:33:36.846077+00:00",
+          "attempts": 1,
+          "outcome": "ok",
+          "error_code": null
+        },
+        {
+          "source_id": "beytech",
+          "origin_url": "https://beytech.com.lb/product/apple-iphone-17-1-sim-2-years-warranty/",
+          "final_url": "https://beytech.com.lb/product/apple-iphone-17-1-sim-2-years-warranty/",
+          "redirect_chain": [
+            "https://beytech.com.lb/product/apple-iphone-17-1-sim-2-years-warranty/"
+          ],
+          "status_code": 200,
+          "content_type": "text/html",
+          "content_encoding": "gzip",
+          "byte_length": 666136,
+          "response_sha256": "375165921c0edefe96e43e488aa76a07843a4eac2865f380e44fcde6ea275ded",
+          "observed_at": "2026-11-17T15:33:37.330052+00:00",
+          "attempts": 1,
+          "outcome": "ok",
+          "error_code": null
+        },
+        {
+          "source_id": "beytech",
+          "origin_url": "https://beytech.com.lb/wp-json/wc/store/v1/products?slug=apple-iphone-17-pro-1-sim-2-years-warranty",
+          "final_url": "https://beytech.com.lb/wp-json/wc/store/v1/products?slug=apple-iphone-17-pro-1-sim-2-years-warranty",
+          "redirect_chain": [
+            "https://beytech.com.lb/wp-json/wc/store/v1/products?slug=apple-iphone-17-pro-1-sim-2-years-warranty"
+          ],
+          "status_code": 200,
+          "content_type": "application/json",
+          "content_encoding": "gzip",
+          "byte_length": 27192,
+          "response_sha256": "3bd623fe53f33467b293af3489939a8c91eb849d658418b484fb0a8db7587c58",
+          "observed_at": "2026-11-17T15:33:38.603907+00:00",
+          "attempts": 1,
+          "outcome": "ok",
+          "error_code": null
+        },
+        {
+          "source_id": "beytech",
+          "origin_url": "https://beytech.com.lb/product/apple-iphone-17-pro-1-sim-2-years-warranty/",
+          "final_url": "https://beytech.com.lb/product/apple-iphone-17-pro-1-sim-2-years-warranty/",
+          "redirect_chain": [
+            "https://beytech.com.lb/product/apple-iphone-17-pro-1-sim-2-years-warranty/"
+          ],
+          "status_code": 200,
+          "content_type": "text/html",
+          "content_encoding": "gzip",
+          "byte_length": 656298,
+          "response_sha256": "b4327fd953868e1c3af0773f1d138be366450472888ca9841be868643a2dc893",
+          "observed_at": "2026-11-17T15:33:39.088936+00:00",
+          "attempts": 1,
+          "outcome": "ok",
+          "error_code": null
+        }
+      ],
+      "candidates_seen": 10,
+      "priced_candidates": 10,
+      "coverage_complete": false,
+      "requires_current_run_verification": true
+    },
+    "errors": [
+      {
+        "code": "INVALID_SCHEMA",
+        "message": "beytech: catalog discovery truncated by configured bound",
+        "retryable": false
+      }
+    ],
+    "duration_ms": 4625
+  },
+  "candidates": [
+    {
+      "product_id": "139968",
+      "variant_id": "139978",
+      "name": "Apple |  iPhone 17 &#8211;  1 Sim &#8211; 2  Years Warranty",
+      "url": "https://beytech.com.lb/product/apple-iphone-17-1-sim-2-years-warranty/",
+      "priced": true,
+      "fields": {
+        "variant.specs.storage_gb": {
+          "state": "known",
+          "value": 256,
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.color": {
+          "state": "known",
+          "value": "Black",
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.product.manufacturer": {
+          "state": "known",
+          "value": "Apple",
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.product.model": {
+          "state": "known",
+          "value": "Apple |  iPhone 17 &#8211;  1 Sim &#8211; 2  Years Warranty",
+          "alternatives": [],
+          "reason": null
+        },
+        "purchasable": {
+          "state": "known",
+          "value": true,
+          "alternatives": [],
+          "reason": null
+        },
+        "stock": {
+          "state": "known",
+          "value": true,
+          "alternatives": [],
+          "reason": null
+        },
+        "price": {
+          "state": "known",
+          "value": {
+            "amount": "1079",
+            "currency": "USD"
+          },
+          "alternatives": [],
+          "reason": null
+        }
+      }
+    },
+    {
+      "product_id": "139968",
+      "variant_id": "139979",
+      "name": "Apple |  iPhone 17 &#8211;  1 Sim &#8211; 2  Years Warranty",
+      "url": "https://beytech.com.lb/product/apple-iphone-17-1-sim-2-years-warranty/",
+      "priced": true,
+      "fields": {
+        "variant.specs.storage_gb": {
+          "state": "known",
+          "value": 256,
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.color": {
+          "state": "known",
+          "value": "Green",
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.product.manufacturer": {
+          "state": "known",
+          "value": "Apple",
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.product.model": {
+          "state": "known",
+          "value": "Apple |  iPhone 17 &#8211;  1 Sim &#8211; 2  Years Warranty",
+          "alternatives": [],
+          "reason": null
+        },
+        "purchasable": {
+          "state": "known",
+          "value": true,
+          "alternatives": [],
+          "reason": null
+        },
+        "stock": {
+          "state": "known",
+          "value": true,
+          "alternatives": [],
+          "reason": null
+        },
+        "price": {
+          "state": "known",
+          "value": {
+            "amount": "1079",
+            "currency": "USD"
+          },
+          "alternatives": [],
+          "reason": null
+        }
+      }
+    },
+    {
+      "product_id": "139968",
+      "variant_id": "139980",
+      "name": "Apple |  iPhone 17 &#8211;  1 Sim &#8211; 2  Years Warranty",
+      "url": "https://beytech.com.lb/product/apple-iphone-17-1-sim-2-years-warranty/",
+      "priced": true,
+      "fields": {
+        "variant.specs.storage_gb": {
+          "state": "known",
+          "value": 256,
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.color": {
+          "state": "known",
+          "value": "Lavender",
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.product.manufacturer": {
+          "state": "known",
+          "value": "Apple",
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.product.model": {
+          "state": "known",
+          "value": "Apple |  iPhone 17 &#8211;  1 Sim &#8211; 2  Years Warranty",
+          "alternatives": [],
+          "reason": null
+        },
+        "purchasable": {
+          "state": "known",
+          "value": true,
+          "alternatives": [],
+          "reason": null
+        },
+        "stock": {
+          "state": "known",
+          "value": true,
+          "alternatives": [],
+          "reason": null
+        },
+        "price": {
+          "state": "known",
+          "value": {
+            "amount": "1079",
+            "currency": "USD"
+          },
+          "alternatives": [],
+          "reason": null
+        }
+      }
+    },
+    {
+      "product_id": "139968",
+      "variant_id": "140008",
+      "name": "Apple |  iPhone 17 &#8211;  1 Sim &#8211; 2  Years Warranty",
+      "url": "https://beytech.com.lb/product/apple-iphone-17-1-sim-2-years-warranty/",
+      "priced": true,
+      "fields": {
+        "variant.specs.storage_gb": {
+          "state": "known",
+          "value": 256,
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.color": {
+          "state": "known",
+          "value": "Blue",
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.product.manufacturer": {
+          "state": "known",
+          "value": "Apple",
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.product.model": {
+          "state": "known",
+          "value": "Apple |  iPhone 17 &#8211;  1 Sim &#8211; 2  Years Warranty",
+          "alternatives": [],
+          "reason": null
+        },
+        "purchasable": {
+          "state": "known",
+          "value": true,
+          "alternatives": [],
+          "reason": null
+        },
+        "stock": {
+          "state": "known",
+          "value": true,
+          "alternatives": [],
+          "reason": null
+        },
+        "price": {
+          "state": "known",
+          "value": {
+            "amount": "1079",
+            "currency": "USD"
+          },
+          "alternatives": [],
+          "reason": null
+        }
+      }
+    },
+    {
+      "product_id": "139958",
+      "variant_id": "139959",
+      "name": "Apple |  iPhone 17 Pro &#8211; 1 Sim &#8211; 2  Years Warranty",
+      "url": "https://beytech.com.lb/product/apple-iphone-17-pro-1-sim-2-years-warranty/",
+      "priced": true,
+      "fields": {
+        "variant.specs.storage_gb": {
+          "state": "known",
+          "value": 256,
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.color": {
+          "state": "known",
+          "value": "Orange",
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.product.manufacturer": {
+          "state": "known",
+          "value": "Apple",
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.product.model": {
+          "state": "known",
+          "value": "Apple |  iPhone 17 Pro &#8211; 1 Sim &#8211; 2  Years Warranty",
+          "alternatives": [],
+          "reason": null
+        },
+        "purchasable": {
+          "state": "known",
+          "value": true,
+          "alternatives": [],
+          "reason": null
+        },
+        "stock": {
+          "state": "known",
+          "value": true,
+          "alternatives": [],
+          "reason": null
+        },
+        "price": {
+          "state": "known",
+          "value": {
+            "amount": "1499",
+            "currency": "USD"
+          },
+          "alternatives": [],
+          "reason": null
+        }
+      }
+    },
+    {
+      "product_id": "139958",
+      "variant_id": "139960",
+      "name": "Apple |  iPhone 17 Pro &#8211; 1 Sim &#8211; 2  Years Warranty",
+      "url": "https://beytech.com.lb/product/apple-iphone-17-pro-1-sim-2-years-warranty/",
+      "priced": true,
+      "fields": {
+        "variant.specs.storage_gb": {
+          "state": "known",
+          "value": 256,
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.color": {
+          "state": "known",
+          "value": "Silver",
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.product.manufacturer": {
+          "state": "known",
+          "value": "Apple",
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.product.model": {
+          "state": "known",
+          "value": "Apple |  iPhone 17 Pro &#8211; 1 Sim &#8211; 2  Years Warranty",
+          "alternatives": [],
+          "reason": null
+        },
+        "purchasable": {
+          "state": "known",
+          "value": true,
+          "alternatives": [],
+          "reason": null
+        },
+        "stock": {
+          "state": "known",
+          "value": true,
+          "alternatives": [],
+          "reason": null
+        },
+        "price": {
+          "state": "known",
+          "value": {
+            "amount": "1499",
+            "currency": "USD"
+          },
+          "alternatives": [],
+          "reason": null
+        }
+      }
+    },
+    {
+      "product_id": "139958",
+      "variant_id": "139961",
+      "name": "Apple |  iPhone 17 Pro &#8211; 1 Sim &#8211; 2  Years Warranty",
+      "url": "https://beytech.com.lb/product/apple-iphone-17-pro-1-sim-2-years-warranty/",
+      "priced": true,
+      "fields": {
+        "variant.specs.storage_gb": {
+          "state": "known",
+          "value": 512,
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.color": {
+          "state": "known",
+          "value": "Blue",
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.product.manufacturer": {
+          "state": "known",
+          "value": "Apple",
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.product.model": {
+          "state": "known",
+          "value": "Apple |  iPhone 17 Pro &#8211; 1 Sim &#8211; 2  Years Warranty",
+          "alternatives": [],
+          "reason": null
+        },
+        "purchasable": {
+          "state": "known",
+          "value": true,
+          "alternatives": [],
+          "reason": null
+        },
+        "stock": {
+          "state": "known",
+          "value": true,
+          "alternatives": [],
+          "reason": null
+        },
+        "price": {
+          "state": "known",
+          "value": {
+            "amount": "1799",
+            "currency": "USD"
+          },
+          "alternatives": [],
+          "reason": null
+        }
+      }
+    },
+    {
+      "product_id": "139958",
+      "variant_id": "139962",
+      "name": "Apple |  iPhone 17 Pro &#8211; 1 Sim &#8211; 2  Years Warranty",
+      "url": "https://beytech.com.lb/product/apple-iphone-17-pro-1-sim-2-years-warranty/",
+      "priced": true,
+      "fields": {
+        "variant.specs.storage_gb": {
+          "state": "known",
+          "value": 512,
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.color": {
+          "state": "known",
+          "value": "Orange",
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.product.manufacturer": {
+          "state": "known",
+          "value": "Apple",
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.product.model": {
+          "state": "known",
+          "value": "Apple |  iPhone 17 Pro &#8211; 1 Sim &#8211; 2  Years Warranty",
+          "alternatives": [],
+          "reason": null
+        },
+        "purchasable": {
+          "state": "known",
+          "value": true,
+          "alternatives": [],
+          "reason": null
+        },
+        "stock": {
+          "state": "known",
+          "value": true,
+          "alternatives": [],
+          "reason": null
+        },
+        "price": {
+          "state": "known",
+          "value": {
+            "amount": "1799",
+            "currency": "USD"
+          },
+          "alternatives": [],
+          "reason": null
+        }
+      }
+    },
+    {
+      "product_id": "139958",
+      "variant_id": "139963",
+      "name": "Apple |  iPhone 17 Pro &#8211; 1 Sim &#8211; 2  Years Warranty",
+      "url": "https://beytech.com.lb/product/apple-iphone-17-pro-1-sim-2-years-warranty/",
+      "priced": true,
+      "fields": {
+        "variant.specs.storage_gb": {
+          "state": "known",
+          "value": 512,
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.color": {
+          "state": "known",
+          "value": "Silver",
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.product.manufacturer": {
+          "state": "known",
+          "value": "Apple",
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.product.model": {
+          "state": "known",
+          "value": "Apple |  iPhone 17 Pro &#8211; 1 Sim &#8211; 2  Years Warranty",
+          "alternatives": [],
+          "reason": null
+        },
+        "purchasable": {
+          "state": "known",
+          "value": true,
+          "alternatives": [],
+          "reason": null
+        },
+        "stock": {
+          "state": "known",
+          "value": true,
+          "alternatives": [],
+          "reason": null
+        },
+        "price": {
+          "state": "known",
+          "value": {
+            "amount": "1799",
+            "currency": "USD"
+          },
+          "alternatives": [],
+          "reason": null
+        }
+      }
+    },
+    {
+      "product_id": "139958",
+      "variant_id": "139967",
+      "name": "Apple |  iPhone 17 Pro &#8211; 1 Sim &#8211; 2  Years Warranty",
+      "url": "https://beytech.com.lb/product/apple-iphone-17-pro-1-sim-2-years-warranty/",
+      "priced": true,
+      "fields": {
+        "variant.specs.storage_gb": {
+          "state": "known",
+          "value": 256,
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.color": {
+          "state": "known",
+          "value": "Blue",
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.product.manufacturer": {
+          "state": "known",
+          "value": "Apple",
+          "alternatives": [],
+          "reason": null
+        },
+        "variant.product.model": {
+          "state": "known",
+          "value": "Apple |  iPhone 17 Pro &#8211; 1 Sim &#8211; 2  Years Warranty",
+          "alternatives": [],
+          "reason": null
+        },
+        "purchasable": {
+          "state": "known",
+          "value": true,
+          "alternatives": [],
+          "reason": null
+        },
+        "stock": {
+          "state": "known",
+          "value": true,
+          "alternatives": [],
+          "reason": null
+        },
+        "price": {
+          "state": "known",
+          "value": {
+            "amount": "1499",
+            "currency": "USD"
+          },
+          "alternatives": [],
+          "reason": null
+        }
+      }
+    }
+  ],
+  "policies": {
+    "schema_version": 1,
+    "status": "partial",
+    "data": {
+      "fetches": [
+        {
+          "source_id": "beytech",
+          "origin_url": "https://beytech.com.lb/warranty-terms-conditions/",
+          "final_url": "https://beytech.com.lb/warranty-terms-conditions/",
+          "redirect_chain": [
+            "https://beytech.com.lb/warranty-terms-conditions/"
+          ],
+          "status_code": 200,
+          "content_type": "text/html",
+          "content_encoding": "gzip",
+          "byte_length": 386639,
+          "response_sha256": "7429bf5403e06999944c3e79489a43a4ad5b09ef5a4a6f6b9c9082af4fcc7e20",
+          "observed_at": "2026-11-17T15:33:39.532872+00:00",
+          "attempts": 1,
+          "outcome": "ok",
+          "error_code": null
+        },
+        {
+          "source_id": "beytech",
+          "origin_url": "https://beytech.com.lb/exchange-policy-2/",
+          "final_url": null,
+          "redirect_chain": [
+            "https://beytech.com.lb/exchange-policy-2/"
+          ],
+          "status_code": null,
+          "content_type": null,
+          "content_encoding": null,
+          "byte_length": null,
+          "response_sha256": null,
+          "observed_at": null,
+          "attempts": 0,
+          "outcome": "error",
+          "error_code": "BUDGET_EXHAUSTED"
+        }
+      ],
+      "missing_topics": [
+        "tax",
+        "condition"
+      ],
+      "resolved_offer_costs": false
+    },
+    "evidence_ids": [
+      "73ff5d3cc3ad6e091248320a6cee4f551cd2849c0e800f4df28760338f7ae7cd",
+      "f6f25fc4fd74a12df7673e954c9fcd9ac26249e2106e8da35af9c3182ab44808"
+    ],
+    "errors": [
+      {
+        "code": "BUDGET_EXHAUSTED",
+        "message": "beytech: per-run request cap reached",
+        "retryable": false
+      }
+    ],
+    "duration_ms": 375
+  },
+  "policy_observations": {
+    "observations": [
+      {
+        "fact": {
+          "state": "known",
+          "value": "warranty covers repairs only and does not include product exchange. Warranty service will only be provided upon presentation of the original sales invoice issued by BEYTECH.",
+          "alternatives": [],
+          "reason": null,
+          "evidence_ids": [
+            "f6f25fc4fd74a12df7673e954c9fcd9ac26249e2106e8da35af9c3182ab44808"
+          ]
+        },
+        "evidence": [
+          {
+            "schema_version": 2,
+            "evidence_id": "f6f25fc4fd74a12df7673e954c9fcd9ac26249e2106e8da35af9c3182ab44808",
+            "source_id": "beytech",
+            "product_id": null,
+            "variant_id": null,
+            "scope": "source",
+            "branch_id": null,
+            "route_id": null,
+            "field_path": "policy.warranty",
+            "origin_url": "https://beytech.com.lb/warranty-terms-conditions/",
+            "final_url": "https://beytech.com.lb/warranty-terms-conditions/",
+            "observed_at": "2026-11-17T15:33:39.532872Z",
+            "response_sha256": "7429bf5403e06999944c3e79489a43a4ad5b09ef5a4a6f6b9c9082af4fcc7e20",
+            "adapter_version": "beytech-policy/2",
+            "json_pointer": null,
+            "excerpt": "warranty covers repairs only and does not include product exchange. Warranty service will only be provided upon presentation of the original sales invoice issued by BEYTECH.",
+            "conflicts": [],
+            "origin": "runtime",
+            "corpus_version": "catalog-preview-v1",
+            "index_version": null,
+            "run": null
+          }
+        ]
+      },
+      {
+        "fact": {
+          "state": "known",
+          "value": "Delivery all over lebanon",
+          "alternatives": [],
+          "reason": null,
+          "evidence_ids": [
+            "73ff5d3cc3ad6e091248320a6cee4f551cd2849c0e800f4df28760338f7ae7cd"
+          ]
+        },
+        "evidence": [
+          {
+            "schema_version": 2,
+            "evidence_id": "73ff5d3cc3ad6e091248320a6cee4f551cd2849c0e800f4df28760338f7ae7cd",
+            "source_id": "beytech",
+            "product_id": null,
+            "variant_id": null,
+            "scope": "source",
+            "branch_id": null,
+            "route_id": null,
+            "field_path": "policy.delivery",
+            "origin_url": "https://beytech.com.lb/warranty-terms-conditions/",
+            "final_url": "https://beytech.com.lb/warranty-terms-conditions/",
+            "observed_at": "2026-11-17T15:33:39.532872Z",
+            "response_sha256": "7429bf5403e06999944c3e79489a43a4ad5b09ef5a4a6f6b9c9082af4fcc7e20",
+            "adapter_version": "beytech-policy/2",
+            "json_pointer": null,
+            "excerpt": "Delivery all over lebanon",
+            "conflicts": [],
+            "origin": "runtime",
+            "corpus_version": "catalog-preview-v1",
+            "index_version": null,
+            "run": null
+          }
+        ]
+      }
+    ],
+    "passages": []
+  },
+  "notes": [
+    "Bounded manual smoke, not ingestion or a full recommendation.",
+    "Six attempts succeeded; seventh logical fetch refused by existing source limit.",
+    "Preliminary access checks used four successful GETs; initial catalog debugging used five GETs. Total manual Beytech attempts in this session: 15; paid calls: 0.",
+    "Minimized two-product fixture retains API fields and variation forms; original response hashes are in fetch traces."
+  ]
+}
