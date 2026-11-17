@@ -918,6 +918,40 @@ class FullProductIdentityTests(unittest.TestCase):
             ('Amazon', 'Amazon Fire 7,8 (12th Generation) 32GB', 32, 'wifi'),
             # An ordinal needs the word 'generation'.
             ('Apple', 'Apple iPad (10th) 64GB', 64, 'wifi'),
+            # A comma before a single digit 7 to 9 may list a second size.
+            ('Amazon', 'Amazon Fire HD 10,8" (7th Generation) 32GB', 32, 'wifi'),
+            ('Amazon', 'Amazon Fire HD 10,8 inch (7th Generation) 32GB', 32, 'wifi'),
+            ('Huawei', 'Huawei MediaPad T3 7,8" 16GB Wi-Fi', 16, 'wifi'),
+            # A glued FE is its own word, so 'S9FE FE+' repeats it.
+            ('Samsung', 'Samsung Galaxy Tab S9FE FE+ 128GB Wi-Fi', 128, 'wifi'),
+            ('Samsung', 'Galaxy Tab S10FE FE+ 128GB Wi-Fi', 128, 'wifi'),
+            ('Samsung', 'Galaxy Tab S9FE (FE+) 128GB', 128, 'wifi'),
+            # Full-width or soft-hyphenated makers, and a maker joined to the line by hyphens.
+            ('\uff21\uff50\uff50\uff4c\uff45', 'Air M2 Wi-Fi 128GB', 128, 'wifi'),
+            ('\uff21\uff50\uff50\uff4c\uff45', 'A10 Fusion Wi-Fi 32GB', 32, 'wifi'),
+            ('Ap\u00adple', 'Air M2 Wi-Fi 128GB', 128, 'wifi'),
+            ('\uff2d\uff49\uff43\uff52\uff4f\uff53\uff4f\uff46\uff54', 'Pro 13" (2024) 256GB', 256, 'wifi'),
+            ('Lenovo', 'Lenovo-Tab-M8 (3rd Gen) 32GB', 32, 'wifi'),
+            # A line word joined to a year, and codes with a leading zero.
+            ('Microsoft', 'Microsoft Surface Pro-2024 13" 256GB', 256, 'wifi'),
+            ('Apple', 'iPad mini A07 Wi-Fi 16GB', 16, 'wifi'),
+            ('Apple', 'iPad A010 Fusion Wi-Fi 32GB', 32, 'wifi'),
+            # '4G RAM' is memory, not a radio; a size after 'RAM' after a size is storage.
+            ('Samsung', 'Galaxy Tab S7 FE 4G RAM 64GB', 64, 'cellular'),
+            ('Lenovo', 'Lenovo Tab P11 (2nd Gen) 4GB RAM 6GB 128GB', 128, 'wifi'),
+            # A base iPad generation that another line also reached, without the base-only 10.2-inch size.
+            ('Apple', 'Apple iPad 9.7-inch (2nd generation) Wi-Fi 64GB', 64, 'wifi'),
+            ('Apple', 'Apple iPad (7th generation) A10 Fusion', 128, 'wifi'),
+            # A nickname beside a chip, two selectors, two part numbers, two small numbers.
+            ('Apple', 'Apple iPad mini 5 (A15) Wi-Fi 64GB', 64, 'wifi'),
+            ('Microsoft', 'Microsoft Surface Pro Go 3rd Gen 128GB', 128, 'wifi'),
+            ('Samsung', 'Samsung Galaxy Tab S9 FE Ultra 256GB Wi-Fi', 256, 'wifi'),
+            ('Samsung', 'Samsung Galaxy Tab SM-X510 X610 128GB Wi-Fi', 128, 'wifi'),
+            ('Samsung', 'Samsung Galaxy Tab 3 Lite 4 7-inch (2014) 8GB Wi-Fi', 8, 'wifi'),
+            ('Lenovo', 'Lenovo Tab P11 2021 22 128GB', 128, 'wifi'),
+            ('Apple', 'Apple iPad 10.2" 7th Gen Pro 32GB', 32, 'wifi'),
+            ('Samsung', 'Samsung Galaxy Tab A 8 10.1" (2019) 32GB', 32, 'wifi'),
+            ('i\u00adPad', 'Air (M2)', 128, 'wifi'),
         ]
         for maker, title, storage, connectivity in titles:
             with self.subTest(title=title):
@@ -936,7 +970,10 @@ class FullProductIdentityTests(unittest.TestCase):
                 ('Apple', 'iPad\u200bPro 11-inch (M4)', 'iPad Pro 11-inch (M4)'),
                 ('Apple', 'iPad Pro\u00ad 11-inch (M4)', 'iPad Pro 11-inch (M4)'),
                 ('Apple', 'iPad mini A17 Pro', 'iPad mini (A17 Pro)'),
-                ('Apple', 'Apple iPad (7th generation) A10 Fusion', 'iPad 7th Gen A10 Fusion'),
+                ('Apple', 'Apple iPad 10.2" (7th generation) A10 Fusion', 'iPad 10.2-inch 7th Gen A10 Fusion'),
+                ('Samsung', 'Galaxy Tab S9FE', 'Galaxy Tab S9 FE'),
+                ('Apple', 'iPad Pro 12,9" (5th generation)', 'iPad Pro 12.9-inch (5th generation)'),
+                ('Apple', 'iPad 10,2" (9th generation)', 'iPad 10.2-inch (9th generation)'),
                 ('Samsung', 'Galaxy Tab S9 FE WiFi 128GB', 'Galaxy Tab S9 FE Wi-Fi 128 GB'),
                 ('Samsung', 'Galaxy Tab S9 SM-X710', 'Samsung Galaxy Tab S9 SM-X710'),
                 ('Lenovo', 'Lenovo Tab M10 Plus (3rd Gen) TB125FU 128GB', 'Tab M10 Plus 3rd Generation TB125FU 128 GB'),

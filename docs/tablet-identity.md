@@ -19,8 +19,8 @@ test pins both. Monitor and audio identity are described in
 ## How a model name is read
 
 The name rule, `_tablet_model`, runs in `_identity_facts` beside the monitor and audio rule.
-It first cleans the evidenced name (NFKC, case, invisible characters such as zero-width spaces
-and soft hyphens, and digits in any script), then applies the shared normalization (typographic
+It first cleans the evidenced name and maker (NFKC, case, invisible characters such as zero-width
+spaces and soft hyphens, and digits in any script), then applies the shared normalization (typographic
 dashes, spaces, and `S9+` spelled `S9 Plus`).
 
 **A name that does not clearly name one model stays unresolved.** Two identical unresolved
@@ -42,7 +42,7 @@ Retail spellings are unified so that the same device compares equal:
 | Storage and Wi-Fi | `128 GB`, `WiFi`, `2+32GB` (but `Fire HD 10+ 32GB` is the Plus) | `128gb`, `wi-fi`, `2/32gb` |
 | Joining `+` | `Wi-Fi + Cellular`, `Wi-Fi+Cellular`, `Wi-Fi + 128GB` | `wi-fi cellular`, `wi-fi 128gb` |
 | Digits | other scripts (`M١٠`) | `m10` |
-| Display suffix | `M10HD`, `M8FHD` | `m10 hd`, `m8 fhd` |
+| Joined suffix | `M10HD`, `M8FHD`, `S9FE` | `m10 hd`, `m8 fhd`, `s9 fe` |
 | Plus | a spaced `+` at the end, or before storage or connection words (`Galaxy Tab S9 +`) | `plus` |
 
 Also:
@@ -50,7 +50,8 @@ Also:
 - A dash with spaces on both sides separates parts of a title, as a comma does (`... (M2) -
   Space Gray`).
 - A decimal comma is read only before a size unit, and only when the digits after it cannot be a
-  size themselves: `12,9"` is 12.9 inches, but `11,13"` and `7,8` are lists.
+  size themselves: `12,9"` and `10,2"` are sizes, but `10,8"`, `11,13"` and `7,8` may list two
+  sizes, so they stay lists (and `10,9"` stays unresolved).
 - Parentheses and commas drop out.
 - A leading maker drops out, word by word: `Apple` or `Apple Inc.` for the evidenced `Apple
   Inc.` (commas in the maker are ignored). A maker word that is itself a tablet word stays
@@ -91,7 +92,8 @@ name, and an unknown word is where the extra meaning hides:
 | `A7 chip, M7 coprocessor` | a coprocessor |
 | `7th/8th Gen`, `2019/2020`, `M1/M2` | alternatives |
 | `Galaxy Tab S9 + Book Cover` | a bundle |
-| `iPad Pro11`, `iPad Air6`, `Fire HD10` | a line word joined to a number |
+| `iPad Pro11`, `iPad Air6`, `Fire HD10`, `Pro-2024` | a line word joined to a number |
+| `iPad mini A07` | a code with a leading zero |
 | `i-Pad`, `iPad™`, `iPad.Pro`, `Tab-A`, `Galaxy Tablet` | an unknown spelling |
 | `S6 Light` | a fragment of a color (`light gold`) |
 
@@ -100,11 +102,16 @@ Lists are rejected too:
   memory, size, connection and color), so `S9 FE, FE+`, `Pro 11, 12.9-inch`, `Gen 7, 8` and
   `S9, (Ultra)` stay unresolved;
 - a name may give one radio generation, one of `Plus`, `Ultra`, `Lite` and `Max`, one memory
-  size and one of `HD` and `FHD` (`LTE 5G`, `Plus Ultra`, `4/128GB 6/128GB` and `HD FHD` stay
-  unresolved);
-- a line or suffix word written twice (`S9 FE FE+`) names two models;
+  size, one storage size, one bare number and one of `HD` and `FHD` (`LTE 5G`, `Plus Ultra`,
+  `4/128GB 6/128GB`, `4GB RAM 6GB 128GB`, `Tab 3 Lite 4` and `HD FHD` stay unresolved);
+- a radio word beside `RAM` is memory, not a radio (`4G RAM`);
+- a name may give one line selector (`Air`, `Pro`, `mini`, `Go`, `FE`, `SE`, `Kids`), and `FE`
+  or `SE` only with `Plus` (`Surface Pro Go` and `S9 FE Ultra` stay unresolved);
+- a part number and a part-shaped model token together name two parts (`SM-X510 X610`);
+- a line or suffix word written twice (`S9 FE FE+`, `S9FE FE+`) names two models;
 - a whole number beside a generation is a nickname for another generation (`iPad Air 4 5th Gen`,
-  `Gen 4 5`, `Surface Go 2 3rd Gen`), except a Fire's size (`Fire HD 10 11th Generation`);
+  `Gen 4 5`, `Surface Go 2 3rd Gen`), except a Fire's size (`Fire HD 10 11th Generation`); on an
+  iPad name, a whole number beside a chip or year is one too (`iPad mini 5 (A15)`);
 - a bare number from 7 to 19.99 counts as a size for the two-size rule (`iPad Pro 11 12.9-inch`);
 - a `Plus` written after storage or a connection word is ambiguous (`32GB Plus`, `5G+`), while a
   model's own `+` stays its Plus (`Fire HD 10+ 32GB`).
@@ -146,13 +153,15 @@ It then stays unresolved when:
   the years 2010–2012, 2017–2022 and 2025;
 - an iPad Air or Pro gives no size (`iPad Air (M2)`, `iPad Pro 2024`);
 - its only evidence is shared by two editions:
-  - on a base iPad name, the `A10` (6th and 7th generation), and every chip or year another iPad
-    line also had, because a base name may be an Air, Pro or mini written without its line word:
-    the `A5`, `A12` and `A14`, and every year after 2011;
+  - on a base iPad name, the `A10` (6th and 7th generation), and every chip, year or generation
+    another iPad line also had, because a base name may be an Air, Pro or mini written without its
+    line word: the `A5`, `A12` and `A14`, every year after 2011, and the 1st to 8th generation
+    unless the name gives the 10.2-inch size only base iPads had (`iPad 9.7-inch (2nd generation)`
+    may be an Air 2);
   - the iPad mini's `A7` (mini 2 and 3);
-  - the iPad Pro 11-inch's 3rd to 6th generation, also on an 11-inch name without `Pro`. Apple
-    counts that line per size, so the 2021 M1 model is its 3rd generation. Many retailers count
-    across the whole Pro family, which makes the 2018 model the 3rd generation.
+  - the iPad Pro 11-inch's 3rd to 6th generation. Apple counts that line per size, so the 2021
+    M1 model is its 3rd generation. Many retailers count across the whole Pro family, which makes
+    the 2018 model the 3rd generation.
 
 ### 6. Other lines
 
@@ -188,7 +197,6 @@ A non-Apple name stays unresolved when:
     128GB` versus `iPad Air 11-inch (M2)`);
   - token order (`iPad Air 11-inch M2` versus `iPad Air M2 11-inch`);
   - chip versus ordinal (`iPad (A16)` versus `iPad 11th generation`);
-  - joined suffixes (`Galaxy Tab S9FE` versus `Galaxy Tab S9 FE`);
   - other color spellings (`space-gray` versus `space-grey`).
 - **Some real single-model names stay unresolved**, which also fails safe:
   - names with no edition evidence, including nicknames (`Pixel Tablet`, `Xiaomi Pad 6`,
