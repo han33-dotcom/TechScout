@@ -161,6 +161,8 @@ groups = group_variants(candidate_offers)
 differences and unresolved identity. Phone identity requires manufacturer, model,
 color, storage, SIM and region. Laptop identity requires manufacturer, model, color,
 CPU, GPU, RAM, storage, OS, screen size, resolution, refresh rate, panel and touch.
+Tablet identity requires manufacturer, model, color, storage and Wi-Fi/cellular
+connectivity (see [Tablet identity](tablet-identity.md)).
 A known difference remains visible beside missing facts. Missing/unknown/conflicting
 fields are never wildcards; even two identical unknowns cannot confirm equivalence.
 Manufacturer and model require product/variant-scoped evidence at
@@ -216,10 +218,24 @@ under later tasks should use this revision when they expose laptop comparisons.
 
 [Identity recipes](../tests/fixtures/identity/full-product.json) and
 `tests.identity_v2.offer` build synthetic, evidence-bound v2 offers. They cover
-31 positive/adversarial cases, including SIM/region/activation/condition/warranty
-traps and laptop CPU/GPU/memory/storage/display differences. Additional tests
-exercise missing fields, receipt scope, seller/SKU/route separation, exact Decimal
-keys, canonical-ID collisions and schema/corpus compatibility. All run offline.
+52 positive/adversarial cases, including SIM/region/activation/condition/warranty
+traps, laptop CPU/GPU/memory/storage/display differences, and tablet generation,
+size, storage, connectivity, ambiguous-name and cross-retailer spelling cases.
+Additional tests exercise missing fields, receipt scope, seller/SKU/route separation,
+exact Decimal keys, canonical-ID collisions and schema/corpus compatibility. All run
+offline.
+
+### Tablet identity profile
+
+Implemented for [#43](https://github.com/han33-dotcom/TechScout/issues/43) with no contract
+change; [Tablet identity](tablet-identity.md) describes it in full. The tablet entry joins the
+shared `_PROFILE_FIELDS` table in `app/identity.py` (color is always added), and its name rule,
+`_tablet_model`, runs beside the monitor and audio rule from #44 (`_specific_model`) in
+`_identity_facts`. A tablet name resolves only when every word is in a closed tablet vocabulary
+and it carries positive evidence of exactly one edition (an ordinal generation, a year, an
+Apple chip, a letters-and-digits model token or a manufacturer part number); ambiguous,
+contradicting, bundled, multi-size and multi-edition names stay unresolved.
+
 
 ### Module interface revision: 2026-11-17 writing context
 
