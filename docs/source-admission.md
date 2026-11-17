@@ -26,7 +26,13 @@ All three have overlapping model/storage/color options. Exact SIM/region and war
 
 `config/sources.json` marks these three sources active and records their public product/API and relevant information endpoints. The existing `admission` field now records technical review and the user's project assumption; it does not represent merchant approval.
 
-`app/source_registry.py:get_active_source` validates configured source identity, review provenance, endpoint scope and positive execution limits. No permission-email field exists. Its selected-source bounds are our engineering defaults: six requests/minute, one concurrent request and four requests per shopping run. They control polling/workload, not admission negotiations.
+`app/source_registry.py:get_active_source` validates configured source identity, review provenance, endpoint scope and positive execution limits. No permission-email field exists. Its selected-source bounds are our engineering defaults: six requests/minute, one concurrent request and six requests per shopping run. They control polling/workload, not admission negotiations. The per-run cap went from four to six for the final live re-check (issue #70): a search (two requests), every policy page a run can fetch, and one final re-read of the finalists' product (two requests). The minute limit stays six, so one run never exceeds a store's minute allowance, but one run can now use all of it. A second search within about a minute may then find that store's minute window full:
+
+- If the window clears within 10 seconds, the gate waits and then sends the request.
+- Otherwise the gate's limiter refuses it (`RATE_LIMIT`).
+- In production, the shared accounting ledger also counts every process's requests. When it already holds six requests to that store in the last minute, it denies the request, and the gate reports `BUDGET_EXHAUSTED`.
+
+Either way, the refused request is not sent. That store's search may then return offers from its API reply only, or nothing. On demo day, leave about a minute between searches. The cap also bounds discovery and Firecrawl jobs on these stores. Revisit both numbers in the limit calibration (#80).
 
 MVP 04 implements the runtime retrieval boundary. MVP 05–06 implement the actual adapters and additional coverage. This task does not implement a shopping assistant or an end-to-end scraper.
 

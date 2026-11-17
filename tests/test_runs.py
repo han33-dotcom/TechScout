@@ -101,7 +101,7 @@ def registry_entry(source_id, **limits):
         'admission': {'basis': 'Synthetic store for offline tests', 'evidence': [f'{origin}/'],
                       'reviewed_at': '2026-10-12T14:49:10+00:00', 'scope': 'Read-only test facts'},
         'allowed_endpoints': [API.format(source_id), PAGE.format(source_id), FAQ.format(source_id)],
-        'limits': {'requests_per_minute': 6, 'concurrency': 1, 'max_requests_per_run': 4, **limits},
+        'limits': {'requests_per_minute': 6, 'concurrency': 1, 'max_requests_per_run': 6, **limits},
     }
 
 
@@ -157,6 +157,7 @@ class FakeStore:
         self.calls = []
 
     def _read(self, fetch, wanted=None):
+        """One product read; `wanted` (a set of offer IDs) keeps only those offers, at reread_price."""
         outcomes = [fetch(self.source_id, API.format(self.source_id), expect='json')]
         if outcomes[0].status == 'ok':
             outcomes.append(fetch(self.source_id, PAGE.format(self.source_id), expect='html'))
@@ -170,7 +171,7 @@ class FakeStore:
                            price=self.reread_price if wanted and self.reread_price else price,
                            raw_name=self.raw_name, costs=self.costs)
                 for variant, color, price in self.variants
-                if wanted is None or base.offer_id(self.source_id, '100', variant) == wanted)
+                if wanted is None or base.offer_id(self.source_id, '100', variant) in wanted)
         snapshots = tuple(Snapshot.of(o) for o in outcomes if o.status == 'ok'
                           and not (self.drop_page_snapshot and o.origin_url == PAGE.format(self.source_id)))
         result = base.tool_result(outcomes, [], {'offer_ids': [o.offer_id for o in offers],
@@ -186,7 +187,11 @@ class FakeStore:
 
     def fetch_offer(self, fetch, offer_id, query):
         self.calls.append(('fetch_offer', offer_id))
-        return self._read(fetch, wanted=offer_id)
+        return self._read(fetch, wanted={offer_id})
+
+    def fetch_offers(self, fetch, offer_ids, query):
+        self.calls.append(('fetch_offers', tuple(offer_ids)))
+        return self._read(fetch, wanted=set(offer_ids))
 
     def fetch_policy(self, fetch, policy_id):
         self.calls.append(('fetch_policy', policy_id))
@@ -457,13 +462,13 @@ class CompleteRunTests(RunCase):
         self.assertEqual([(c.source_id, c.status, c.candidates_seen) for c in result.source_coverage],
                          [('alpha', 'ok', 1), ('beta', 'ok', 1), ('gamma', 'ok', 1)])
         self.assertEqual((result.usage.external_calls, result.usage.planner_turns, result.usage.spend.amount),
-                         (8, 2, Decimal('0')))
-        self.assertEqual(result.usage.elapsed_ms, 4000)
+                         (12, 2, Decimal('0')))
+        self.assertEqual(result.usage.elapsed_ms, 6000)
         self.assertTruthful(result)
         self.assertEqual(self.names(), [
             'stage:clarify', 'search_candidates', 'search_candidates', 'search_candidates', 'stage:retrieve',
             'stage:assess', 'planner', 'fetch_policy', 'planner', 'fetch_policy', 'stage:investigate',
-            'stage:verify', 'stage:results'])
+            'fetch_offers', 'fetch_offers', 'stage:verify', 'stage:results'])
         # Every stored offer is the final one, and every body its evidence cites is stored.
         for offer_id in ('alpha:100:101', 'beta:100:201', 'gamma:100:301'):
             stored = self.storage.load_offer(offer_id)
@@ -517,9 +522,9 @@ class CompleteRunTests(RunCase):
                          [('tool', s, 2) for s in SOURCES])
         self.assertEqual({line['kind'] for line in self.lines if line['name'] == 'planner'}, {'planner'})
         metrics = self.action('run-1', 'stage:results')['result']['data']['metrics']
-        self.assertEqual(metrics['calls_per_source'], {'alpha': 3, 'beta': 3, 'gamma': 2})
+        self.assertEqual(metrics['calls_per_source'], {'alpha': 5, 'beta': 5, 'gamma': 2})
         self.assertEqual((metrics['external_calls'], metrics['planner_turns'], metrics['tool_calls']),
-                         (8, 2, 5))
+                         (12, 2, 7))
         self.assertEqual((metrics['status'], metrics['stop_reason']), (result.status, result.stop_reason))
         self.assertEqual(metrics['spend'], {'amount': '0', 'currency': 'USD'})
 
@@ -544,7 +549,8 @@ class CompleteRunTests(RunCase):
         self.assertEqual(result.status, 'complete')
 
     def test_a_fresh_product_read_keeps_the_policies_read_earlier(self):
-        self.write_registry(beta={'max_requests_per_run': 5})  # search 2 + policy 1 + product re-read 2
+        # search 2 + policy 1 + product re-read 2 + final re-check 2, within one minute's requests
+        self.write_registry(beta={'max_requests_per_run': 7, 'requests_per_minute': 7})
         self.stores['beta'] = FakeStore('beta', [('201', 'Blue', None)], reread_price='990.00')
         planner = ScriptedPlanner(pick('fetch_policy', 'beta'), pick('fetch_offer', 'beta'), STOP)
         result = self.search(planner)
@@ -586,7 +592,8 @@ class CompleteRunTests(RunCase):
         self.assertIn(('alpha:100:101', [runs.REASON_STALE]),
                       [(i.offer_id, i.reasons) for i in result.unresolved])
         self.assertEqual(self.action('run-1', 'stage:verify')['result']['data'],
-                         {'finalists': 2, 'verified': 1})
+                         {'finalists': 2, 'reads': 2, 'rechecked': 2, 'changed': 0, 'not_rechecked': 0,
+                          'verified': 1})
         self.assertTruthful(result)
 
     def test_offers_citing_replies_that_were_not_stored_are_dropped(self):
@@ -660,16 +667,18 @@ class CompleteRunTests(RunCase):
 
 class LimitTests(RunCase):
     def test_the_call_budget_skips_a_search_that_cannot_fit_and_keeps_truthful_results(self):
-        result = self.search(caps=RunCaps(external_calls=5, reserve_calls=1), assess=make_assess(required=()))
+        # Four calls before the reserve: two searches fit, gamma's does not; the reserve of five
+        # holds the two final re-reads.
+        result = self.search(caps=RunCaps(external_calls=9, reserve_calls=5), assess=make_assess(required=()))
         self.assertEqual(self.stores['gamma'].calls, [])
-        self.assertEqual(len(self.gate.requests), 4)
+        self.assertEqual(len(self.gate.requests), 8)
         self.assertEqual((result.status, result.stop_reason), ('partial', runs.STOP_CALLS))
         self.assertEqual([r.offer.offer_id for r in result.recommendations],
                          ['beta:100:201', 'alpha:100:101'])
         gamma = result.source_coverage[2]
         self.assertEqual((gamma.status, gamma.errors[0].code, gamma.errors[0].message), (
             'error', 'BUDGET_EXHAUSTED', 'gamma: not searched; the run call budget has no room'))
-        self.assertEqual(result.usage.external_calls, 4)
+        self.assertEqual(result.usage.external_calls, 8)
         self.assertTruthful(result)
 
     def test_the_time_budget_stops_tools_before_the_deadline(self):
@@ -1316,13 +1325,14 @@ class RealGateTests(RunCase):
                                      limiter=SourceLimiter())
         result = self.search(gate=gate, assess=make_assess(required=()))
         self.assertEqual(result.status, 'complete')
-        self.assertEqual(result.usage.external_calls, 7)  # three searches of two requests, plus one retry
+        # three searches of two requests, one retry, and two final re-reads of two requests
+        self.assertEqual(result.usage.external_calls, 11)
         alpha = next(line for line in self.lines
                      if line['name'] == 'search_candidates' and line['source_id'] == 'alpha')
         self.assertEqual((alpha['external_calls'], alpha['retries']), (3, 1))
         metrics = self.action('run-1', 'stage:results')['result']['data']['metrics']
         self.assertEqual((metrics['retries'], metrics['calls_per_source']),
-                         (1, {'alpha': 3, 'beta': 2, 'gamma': 2}))
+                         (1, {'alpha': 5, 'beta': 4, 'gamma': 2}))
         self.assertTruthful(result)
 
     def test_a_followed_redirect_is_a_request_but_not_a_retry(self):
@@ -1351,7 +1361,7 @@ class RealGateTests(RunCase):
                      if line['name'] == 'search_candidates' and line['source_id'] == 'alpha')
         self.assertEqual((alpha['external_calls'], alpha['retries']), (3, 0))
         metrics = self.action('run-1', 'stage:results')['result']['data']['metrics']
-        self.assertEqual((metrics['external_calls'], metrics['retries']), (7, 0))
+        self.assertEqual((metrics['external_calls'], metrics['retries']), (12, 0))
         self.assertTruthful(result)
 
 

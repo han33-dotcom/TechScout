@@ -1224,16 +1224,35 @@ class WooCommerceAdapter:
 
     def fetch_offer(self, fetch: Fetch, offer_id: str, query: CandidateQuery) -> AdapterResult:
         """Re-read one offer's product and return only that variation."""
-        try:
-            source_id, product_id, variant_id = parse_offer_id(offer_id)
-        except (ValueError, AttributeError, TypeError):
-            source_id = product_id = variant_id = None
-        product = self._products.get(product_id) if source_id == self.source_id else None
-        if product is None:
-            return self._result([], [self._error(UNKNOWN_OFFER)])
-        read = self._read(fetch, product, query, only=variant_id)
-        missing = read.listed and variant_id not in read.variation_ids
-        return self._result([read], [self._error(OFFER_NOT_LISTED)] if missing else [])
+        return self.fetch_offers(fetch, [offer_id], query)
+
+    def fetch_offers(self, fetch: Fetch, offer_ids, query: CandidateQuery) -> AdapterResult:
+        """Re-read the products of these offers, once each, and return only the named variations.
+
+        An ID that is not one of this store's configured products gets UNKNOWN_OFFER and no request;
+        a named variation missing from a product read that succeeded gets OFFER_NOT_LISTED. The final
+        re-check of a run uses it, so finalists of one product share one read (two requests).
+        """
+        wanted: dict[str, set[str]] = {}
+        errors = []
+        for offer_id in offer_ids if isinstance(offer_ids, (list, tuple)) else ():
+            try:
+                source_id, product_id, variant_id = parse_offer_id(offer_id)
+            except (ValueError, AttributeError, TypeError):
+                source_id = product_id = variant_id = None
+            if source_id != self.source_id or product_id not in self._products:
+                errors.append(self._error(UNKNOWN_OFFER))
+            else:
+                wanted.setdefault(product_id, set()).add(variant_id)
+        if not wanted and not errors:
+            errors.append(self._error(UNKNOWN_OFFER))
+        reads = []
+        for product_id, variant_ids in wanted.items():
+            read = self._read(fetch, self._products[product_id], query, only=frozenset(variant_ids))
+            reads.append(read)
+            if read.listed:
+                errors += [self._error(OFFER_NOT_LISTED) for v in sorted(variant_ids) if v not in read.variation_ids]
+        return self._result(reads, errors)
 
     def fetch_policy(self, fetch: Fetch, policy_id: str) -> AdapterResult:
         """One policy page's statements; their evidence is made when apply_policy uses them.
@@ -1275,7 +1294,7 @@ class WooCommerceAdapter:
         return ToolError(code='INVALID_SCHEMA', message=f'{self.source_id}: {reason}', retryable=False)
 
     def _read(self, fetch: Fetch, product: ProductEndpoints, query: CandidateQuery,
-              only: str | None = None) -> _Read:
+              only: frozenset[str] | None = None) -> _Read:
         """API then page: two requests. Without a usable API reply the page is not fetched."""
         read = _Read()
         api_outcome = fetch(self.source_id, product.api_url, expect='json')
@@ -1301,7 +1320,7 @@ class WooCommerceAdapter:
         ids += [vid for vid in (page.items or {}) if vid not in api.options]
         read.listed, read.variation_ids = True, ids
         for vid in ids:
-            if only is not None and vid != only:
+            if only is not None and vid not in only:
                 continue
             try:
                 builder = _OfferBuilder(self, product, api, page, facts, vat_claims, query, vid)

@@ -108,8 +108,8 @@ result; a failed/cancelled run cannot masquerade as completed recommendations.
 
 ## Shopping workflow
 
-This section covers MVP 05-09 and 11-12. Indexed discovery (MVP 10) and final live
-re-verification (MVP 13) are not implemented: there is no `app/retrieval.py`, offer index or
+This section covers MVP 05-09, 11-12 and the final live re-check (MVP 13, issue #70). Indexed
+discovery (MVP 10) is not implemented: there is no `app/retrieval.py`, offer index or
 refresh job, and the retrieve stage reads one configured iPhone 17 product per store instead.
 A request for another model in the device table (for example iPhone 17 Pro or iPhone Air) reads
 nothing: every store reports ok with 0 candidates, and the run abstains with 'no open evidence
@@ -252,8 +252,10 @@ directly.
 
 `run_search(request, deps)` runs one search within `RunCaps` (120 seconds, 40 external calls,
 6 planner turns, USD 1.00 variable spend; 30 seconds, 10 calls and USD 0.25 of those are held
-back for final verification and are never extra). Final live verification (MVP 13) is not built,
-so nothing uses the reserve yet: in practice, investigation gets 90 seconds, 30 calls and USD 0.75.
+back for final verification and are never extra). Before the final phase, investigation gets at
+most 90 seconds, 30 calls and USD 0.75; the final live re-check (see Final verification) may then
+use what is left of the totals, the reserve included. Its store reads cost nothing, so the USD 0.25
+stays for the writer (#71).
 `RunCaps.seconds` may be at most 300, half the recovery lease, so a run that keeps to its caps is
 not taken for an abandoned one. A run that stalls past 10 minutes in an OS-bounded lookup, a
 database write, or a planner that overruns its `max_call_seconds` (the model planner drops its
@@ -261,7 +263,8 @@ call at 30 seconds) can be closed by another process's recovery; it then stops o
 (see the README). The gate reserves every
 attempt, retries included, against the run budget, and each tool is offered only when its
 requests fit at the 15 seconds the run budget reserves per attempt (the gate's 10-second deadline
-plus one 5-second phase) and within the store's per-run cap.
+plus one 5-second phase) and within the store's per-run cap, less one product read (two requests)
+that each store keeps for the final re-check.
 A request reserved before a cancel but still waiting out a backoff, a rate-limit wait or its
 address lookup is dropped unsent: the gate asks the reservation's `still_wanted()` just before
 sending.
@@ -330,16 +333,67 @@ per-step counts (calls, retries, error codes, evidence count, tokens and spend) 
 line, and the results record carries the run's metrics. A followed redirect hop is a request but
 not a retry: retries are the attempts beyond the redirect chain.
 
-Up to three recommendations, cheapest verified total first, are shown only for offers whose
-every evidence record cites a reply this run's gate returned (its body hash and observation
-time), whatever the wall clock says; `usage.elapsed_ms` uses the same monotonic run clock as the
-caps. Otherwise the run abstains with each offer's reasons. Runs supply no exchange rates:
+Up to three recommendations, cheapest verified total first, are shown only for offers the final
+re-check confirmed (see Final verification), so every evidence record cites a reply this run's
+gate returned (its body hash and observation time), whatever the wall clock says;
+`usage.elapsed_ms` uses the same monotonic run clock as the caps. Otherwise the run abstains with
+each offer's reasons. Runs supply no exchange rates:
 `RunDependencies` has no rate source and the assess stage calls `calculate_cost` without one, so
 an offer priced in another currency than the budget stays unresolved, and the shortlist holds
 back any verified total not in the budget currency. A run can therefore verify only a budget in
 the price currency, which is USD at every admitted store today. Candidate discovery is the
 configured product endpoints; indexed discovery (MVP 10) is not built. `python -m app.runs search
 REQUEST.json` runs one search by hand (see the README).
+
+### Final verification (MVP 13, issue #70)
+
+The verify stage enters the final phase, then re-reads the finalists (recommendable offers) live
+through the gate, best first in shortlist order (`app.runs._final_check`, rules in
+`app/verification.py`):
+
+- **What is re-read.** Each step takes the best-ranked finalist not yet settled, while fewer than
+  three confirmed finalists rank above it. One product read (two requests) re-reads every
+  unsettled finalist of that product through the reader's `fetch_offers`. A reader without it
+  re-reads one finalist per read. A finalist the shortlist could never show (another currency, or a
+  charge with unknown terms) is held back first, with no read spent on it.
+- **Limits.** A read starts only when it fits the run's final limits, each request counted at the
+  gate's full 15-second timeout, and the store's per-run cap. Investigation offers only actions
+  that leave each store one product read of its cap for this. Gate retries and redirect hops
+  during investigation count against the cap too, so they can still use that read. A store without
+  room is skipped: its cap is not a run limit, so the next finalist takes its place. The run's own time or call limit ends the
+  re-checks, and the run is then partial with 'time budget reached' or 'external call budget
+  reached'. With the default caps, a re-check that starts at the 90-second reserve boundary has
+  room for one read.
+- **Changed offers.** The re-read copy replaces every earlier copy of the offer, every policy page
+  read in this run applies to it again, and the same fixed rules re-assess it. A changed price
+  therefore re-ranks the offer, or rejects it when the total exceeds the budget. A sold-out or
+  unbuyable offer is judged by the rules, and an offer whose facts became unknown stays unresolved.
+  Each keeps the rules' own reasons.
+- **The refresh boundary.** A re-read offer stands only if its decisive facts cite replies the gate
+  returned during the final phase: price, purchasability, online stock and any branch stock. That
+  is reply membership, never a timestamp, so a reader's cached copy, an earlier read in this run or
+  an index entry never counts. Other records must come from the same re-read, or from a store
+  policy page read in this run that the shared freshness policy (`app/freshness.py`, T11) still
+  allows reusing: seven days for store-wide policy pages. Policy pages are not re-read in the final
+  phase, so a route fact such as an arrival estimate or payment terms is reused from this run's
+  read of that page.
+- **Reasons.** A finalist that could have been shown but was not confirmed is listed as unresolved:
+  - 'not verified: the final re-check did not confirm this offer': the read failed, the offer is no
+    longer listed, or its evidence fails the boundary;
+  - 'evidence was not observed during this run': the reader served a reply this run never received;
+  - 'not verified: no final re-check fit within the limits'.
+
+  Finalists ranked below three confirmed offers stay unlisted, as before. A run may therefore show
+  fewer than three, or none.
+- **Stop reason.** If investigation ended with 'no open evidence gaps remain' but a re-read
+  reopened a gap (for example, the price is no longer published), the run's stop reason is 'the
+  final re-check left open evidence gaps' instead.
+
+The `stage:verify` record holds `finalists`, `reads`, `rechecked` (finalists the reads covered),
+`changed` (re-read finalists whose total or decision changed), `not_rechecked` and `verified`.
+Each read is a `fetch_offers` (or `fetch_offer`) tool record with `phase: verify`. The re-check is
+demonstrated offline with synthetic offers. Today's real stores publish no device condition, so
+no real search reaches a finalist yet.
 
 ### Planner (MVP 12)
 

@@ -16,6 +16,17 @@ the run's own time or call budget cut retrieval short: then it is partial with t
 'cancelled' and 'error' runs never carry recommendations. A run interrupted by a crash is closed
 as partial, never resumed, by the next web-app start or command-line search once it is older
 than the recovery lease (app.storage).
+
+Verify re-reads the finalists live in the final phase (issue #70), best first, one product read per
+finalist product, within the verification reserve and each store's per-run cap; investigation
+offers only actions that leave one product read of each store's cap for it (gate retries and
+redirect hops can still use that read). A finalist is shown only when that re-read confirms its
+price and stock (app.verification). A changed offer is re-assessed by the same fixed rules, so it
+is re-ranked, rejected or left unresolved; the next finalist replaces one that drops out. A
+finalist that could have been shown but was not confirmed is listed with a reason, so a run may
+show fewer than three. When the run's own time or call reserve stops the re-checks, the run is
+partial with that limit's reason; when a re-read reopens gaps investigation had settled, the run
+says so ('the final re-check left open evidence gaps').
 """
 import argparse
 from collections.abc import Callable, Mapping, Sequence
@@ -35,6 +46,7 @@ import uuid
 
 from pydantic import ValidationError
 
+from app import verification
 from app.adapters.base import AdapterResult, CandidateQuery, PolicyDocument, StoreAdapter
 from app.assessment import Assessment, EvidenceGap
 from app.contracts import (
@@ -55,7 +67,7 @@ log = logging.getLogger('techscout.runs')
 USD = 'USD'
 _ZERO = Decimal('0')
 SEARCH_CALLS = 2  # one product per store today: its Store API record, then its page
-OFFER_CALLS = 2
+OFFER_CALLS = 2  # one product read; investigation leaves this much of each store's cap for verify
 POLICY_CALLS = 1
 # What a fresh product read can settle. It never shows branch stock, so pickup gaps get no re-read.
 OFFER_GAP_FIELDS = frozenset({'price', 'online_stock', 'purchasable'})
@@ -77,6 +89,7 @@ STOP_CANCELLED = 'run was cancelled'
 STOP_ERROR = 'run stopped on an unexpected error'
 STOP_NO_SOURCES = 'no admitted source has a reader'
 STOP_NO_STORE_READ = 'no store could be searched'
+STOP_VERIFY_GAPS = 'the final re-check left open evidence gaps'
 PARTIAL_STOPS = frozenset({STOP_TURNS, STOP_CALLS, STOP_TIME, STOP_SPEND, STOP_SPEND_UNKNOWN})
 
 # Fixed reasons for offers held back from the shortlist.
@@ -85,6 +98,8 @@ REASON_CURRENCY = 'total is not in the budget currency'
 REASON_UNKNOWN_CHARGE = 'offer lists a charge with unknown terms'
 REASON_CANCELLED = 'not verified: the run was cancelled'
 REASON_ERROR = 'not verified: the run stopped on an error'
+REASON_RECHECK_FAILED = 'not verified: the final re-check did not confirm this offer'
+REASON_NOT_RECHECKED = 'not verified: no final re-check fit within the limits'
 
 _LIMIT_STOPS = {'calls': STOP_CALLS, 'time': STOP_TIME, 'spend': STOP_SPEND,
                 'spend_unknown': STOP_SPEND_UNKNOWN, 'turns': STOP_TURNS}
@@ -714,17 +729,22 @@ class _Coverage:
 
 class _SourceFetch:
     """A reader's Fetch: the gate bound to this run's budget and to the reader's own store. Each
-    reply it returns is noted (body hash, observed_at), so evidence can be matched to this run."""
+    reply it returns is noted (body hash, observed_at), so evidence can be matched to this run;
+    in the final phase it is also noted in `final`, the replies a final re-check may stand on."""
 
-    def __init__(self, gate, budget: RunBudget, source_id: str, observed: set):
+    def __init__(self, gate, budget: RunBudget, source_id: str, observed: set, final: set | None = None):
         self._gate, self._budget, self._source_id, self._observed = gate, budget, source_id, observed
+        self._final = final
 
     def __call__(self, source_id: str, url: str, *, expect: str):
         if source_id != self._source_id:
             raise ValueError('A store reader may only fetch from its own store')
         outcome = self._gate.fetch(self._budget, source_id, url, expect=expect)
         if outcome.response_sha256 is not None and outcome.observed_at is not None:
-            self._observed.add((outcome.response_sha256, outcome.observed_at))
+            reply = (outcome.response_sha256, outcome.observed_at)
+            self._observed.add(reply)
+            if self._final is not None:
+                self._final.add(reply)
         return outcome
 
 
@@ -780,6 +800,7 @@ class _Run:
         self.attempted: set[tuple[str, str, str]] = set()  # (tool, store, target) tried this run
         self.stored_bodies: set[str] = set()
         self.observed: set[tuple[str, datetime]] = set()  # (body hash, observed_at) of this run's replies
+        self.final_observed: set[tuple[str, datetime]] = set()  # the replies received in the final phase
         self.saved: dict[str, Offer] = {}
         self.withheld: dict[str, list[str]] = {}
         self.history: list[dict] = []
@@ -886,7 +907,8 @@ class _Run:
         The caller clears self.tool once it has absorbed the results."""
         self.tool = {'tool': tool, 'source_id': source_id}
         before = self.budget.calls_used(source_id)
-        result = invoke(_SourceFetch(self.deps.gate, self.budget, source_id, self.observed))
+        final = self.final_observed if self.budget.final_phase else None
+        result = invoke(_SourceFetch(self.deps.gate, self.budget, source_id, self.observed, final))
         if not isinstance(result, AdapterResult):
             raise TypeError('Store readers return an AdapterResult')
         offers, policies, dropped = self._keep(source_id, result)
@@ -910,10 +932,17 @@ class _Run:
         dropped = len(result.offers) - len(offers) + len(result.policies) - len(policies)
         return offers, policies, dropped
 
-    def _absorb(self, source_id: str, offers: Sequence[Offer], policies: Sequence[PolicyDocument]) -> None:
-        """Add new observations; every store policy read in this run applies to that store's offers."""
+    def _absorb(self, source_id: str, offers: Sequence[Offer], policies: Sequence[PolicyDocument], *,
+                replace: bool = False) -> None:
+        """Add new observations; every store policy read in this run applies to that store's offers.
+
+        With replace, the returned offers supersede every earlier copy of the same offer IDs, so a
+        final re-read is judged on its own facts whatever times the copies carry."""
         adapter = self.deps.adapters[source_id]
         known = self.policies.setdefault(source_id, [])
+        if replace:
+            ids = {offer.offer_id for offer in offers}
+            self.offers = [offer for offer in self.offers if offer.offer_id not in ids]
         if policies:
             self.offers = [_apply(adapter, o, policies) if o.source_id == source_id else o
                            for o in self.offers]
@@ -1007,7 +1036,8 @@ class _Run:
         # Checked again now: a cancel, or a planner call that ran past its declared time, may have
         # left no room for the chosen action. An action that does not fit is not run at all.
         not_run = None if action is None else (
-            'spend_unknown' if unknown_cost else self._blocked(action.calls, self._rooms()[action.source_id]))
+            'spend_unknown' if unknown_cost
+            else self._blocked(action.calls, self._rooms(keep=OFFER_CALLS)[action.source_id]))
         self.tracer.planner_turn(
             decision, duration_ms=duration, spend=spend, action=action, not_run=not_run,
             rejected='action is not in the menu' if decision.kind == 'act' and action is None else None,
@@ -1108,9 +1138,10 @@ class _Run:
 
         Each action must still fit after the planner's own call (its max_call_seconds), so a turn
         starts only when the planner and at least one action both fit before the verification
-        reserve; an empty menu for time ends the run before the turn is counted or paid for.
+        reserve; an empty menu for time ends the run before the turn is counted or paid for. Each
+        store keeps one product read of its cap for the final re-check (OFFER_CALLS).
         """
-        candidates, rooms = self._candidates(gaps), self._rooms()
+        candidates, rooms = self._candidates(gaps), self._rooms(keep=OFFER_CALLS)
         menu, reasons = [], set()
         for tool, source_id, target, settles, calls in candidates:
             reason = self._blocked(calls, rooms[source_id], self.planner_seconds)
@@ -1122,8 +1153,9 @@ class _Run:
         shortfall = next((r for r in ('cancelled', 'calls', 'time', 'store') if r in reasons), None)
         return menu, shortfall, bool(candidates)
 
-    def _rooms(self) -> dict[str, int]:
-        """Requests each store's per-run cap still allows, re-read from the registry as the gate does."""
+    def _rooms(self, keep: int = 0) -> dict[str, int]:
+        """Requests each store's per-run cap still allows, re-read from the registry as the gate does,
+        less `keep` requests held back (investigation keeps one product read for the final re-check)."""
         rooms = {}
         for source_id in self.sources:
             try:
@@ -1132,7 +1164,7 @@ class _Run:
             except (PermissionError, ValueError):
                 rooms[source_id] = 0
             else:
-                rooms[source_id] = max(0, limits.max_requests_per_run - self.budget.calls_used(source_id))
+                rooms[source_id] = max(0, limits.max_requests_per_run - self.budget.calls_used(source_id) - keep)
         return rooms
 
     def _blocked(self, calls: int, room: int, extra_seconds: float = 0.0) -> str | None:
@@ -1153,48 +1185,157 @@ class _Run:
     def _verify(self, data: dict) -> list[tuple[Offer, Assessment]]:
         if self._cancelled():
             return []
-        self.budget.enter_final_phase()
-        finalists = [(o, a) for o, a in self.assessed if a.decision == 'recommendable']
-        verified = self._final_check(finalists)
-        data.update(finalists=len(finalists), verified=len(verified))
+        self.budget.enter_final_phase()  # from here on, every gate reply is noted as a final re-read
+        return self._final_check(data)
+
+    def _final_check(self, data: dict) -> list[tuple[Offer, Assessment]]:
+        """Re-read the finalists live, best first, and keep those the re-read confirms (issue #70).
+
+        Each step re-checks the best-ranked finalist not yet settled, while fewer than three
+        confirmed finalists rank above it. One product read (OFFER_CALLS gate requests) covers
+        every unsettled finalist of that product, and it starts only when it fits the run's final
+        limits (each request counted at the gate's full timeout) and the store's cap. A store
+        without room is skipped, since its cap is not a run limit, so the next finalist takes its
+        place; the run's own time or call limit ends the re-checks and makes the run partial. The
+        re-read copies replace the earlier ones and every offer is re-assessed by the same rules,
+        so a changed price re-ranks or rejects its offer. A re-read offer stands only when its
+        decisive facts cite the re-read itself (app.verification). Finalists that could have been
+        shown but were not confirmed are listed with a reason; lower ones stay unlisted.
+        """
+        start = {offer.offer_id: assessment.cost.verified_total for offer, assessment in self._finalists()}
+        confirmed, settled, rechecked = set(), set(), []
+        reads, cancelled = 0, False
+        while True:
+            ranked = self._finalists()
+            target = verification.next_target(ranked, confirmed, settled, MAX_RECOMMENDATIONS)
+            if target is None:
+                break
+            assessment = next(a for offer, a in ranked if offer.offer_id == target.offer_id)
+            reason = self._showable(target, assessment)
+            if reason is not None:  # the shortlist could never show it, so no read is spent on it
+                self.withheld[target.offer_id] = [reason]
+                continue
+            blocked = self._blocked(OFFER_CALLS, self._rooms()[target.source_id])
+            if blocked == 'cancelled':
+                cancelled = True
+                break
+            if blocked in _GATE_LIMITS:  # the run's own final time or call limit
+                self._hit(blocked)
+                break
+            group = self._read_group(target, ranked, settled)
+            settled.update(group)
+            if blocked is not None:  # 'store': this store's cap has no room for the read
+                continue
+            reads += 1
+            rechecked += group
+            returned = self._recheck(target.source_id, group)
+            if self._cancelled():
+                cancelled = True
+                break
+            self._reassess()
+            confirmed |= self._confirm(group, returned)
+        ranked = [] if cancelled else self._finalists()
+        not_rechecked = verification.left_unchecked(ranked, confirmed, MAX_RECOMMENDATIONS)
+        for offer_id in not_rechecked:
+            self.withheld[offer_id] = [REASON_NOT_RECHECKED]
+        verified = [(offer, assessment) for offer, assessment in ranked if offer.offer_id in confirmed]
+        latest = {offer.offer_id: assessment for offer, assessment in self.assessed}
+        changed = sum(1 for offer_id in rechecked if offer_id in latest
+                      and (latest[offer_id].decision != 'recommendable'
+                           or latest[offer_id].cost.verified_total != start.get(offer_id)))
+        data.update(finalists=len(start), reads=reads, rechecked=len(rechecked), changed=changed,
+                    not_rechecked=len(not_rechecked), verified=len(verified))
         return verified
 
-    def _final_check(self, finalists: list[tuple[Offer, Assessment]]) -> list[tuple[Offer, Assessment]]:
-        """Re-assess the finalists on evidence observed during this run: every record must cite a
-        reply this run's gate returned (its body hash and observation time), which a step of the
-        wall clock cannot fake or spoil.
+    def _finalists(self) -> list[tuple[Offer, Assessment]]:
+        """Recommendable offers not held back, in shortlist order."""
+        return verification.rank([(offer, assessment) for offer, assessment in self.assessed
+                                  if assessment.decision == 'recommendable'
+                                  and offer.offer_id not in self.withheld])
 
-        MVP 13 adds a live re-fetch of each finalist here, within the final-phase reserve, and
-        drops or re-ranks the offers that changed.
+    def _read_group(self, target: Offer, ranked, settled) -> list[str]:
+        """The finalists one re-read of the target's product covers: every unsettled finalist of that
+        product when the store reader can re-read several offers at once (fetch_offers), otherwise
+        the target alone. The target comes first, since no unsettled finalist ranks above it."""
+        if not callable(getattr(self.deps.adapters[target.source_id], 'fetch_offers', None)):
+            return [target.offer_id]
+        product = (target.source_id, target.variant.product_id)
+        return [offer.offer_id for offer, _ in ranked if offer.offer_id not in settled
+                and (offer.source_id, offer.variant.product_id) == product]
+
+    def _recheck(self, source_id: str, offer_ids: list[str]) -> set[str]:
+        """One live product read for the final re-check; the IDs of the re-read offers it returned.
+
+        The returned copies replace every earlier copy, every policy page read in this run applies
+        to them again, and the read's errors join the store's coverage, as an investigation read's do.
         """
-        fresh = []
-        for offer, _ in finalists:
-            if all((e.response_sha256, e.observed_at) in self.observed for e in offer.evidence):
-                fresh.append(offer)
+        adapter = self.deps.adapters[source_id]
+        batch = getattr(adapter, 'fetch_offers', None)
+        if callable(batch):
+            tool, invoke = 'fetch_offers', (lambda fetch: batch(fetch, list(offer_ids), self.query))
+        else:
+            tool, invoke = 'fetch_offer', (lambda fetch: adapter.fetch_offer(fetch, offer_ids[0], self.query))
+        arguments = {'source_id': source_id, 'targets': [offer_id[:120] for offer_id in offer_ids[:20]],
+                     'offers': len(offer_ids), 'phase': 'verify'}
+        result, offers, policies = self._run_tool(source_id, tool, arguments, invoke)
+        self.coverage[source_id].errors.extend(result.errors)
+        wanted = set(offer_ids)
+        offers = [offer for offer in offers if offer.offer_id in wanted]
+        self._absorb(source_id, offers, policies, replace=True)
+        self.tool = None  # a failure in the rules below is not the store tool's
+        return {offer.offer_id for offer in offers}
+
+    def _confirm(self, group: list[str], returned: set[str]) -> set[str]:
+        """Judge each finalist one re-read covered, after re-assessment; the IDs it confirms.
+
+        Not returned: the re-check failed. No longer recommendable: the rules' own reasons list it.
+        Otherwise it stands only when its evidence passes app.verification.recheck_problem and the
+        shortlist could show it.
+        """
+        current = {offer.offer_id: (offer, assessment) for offer, assessment in self.assessed}
+        confirmed = set()
+        for offer_id in group:
+            if offer_id not in returned or offer_id not in current:
+                self.withheld[offer_id] = [REASON_RECHECK_FAILED]
+                continue
+            offer, assessment = current[offer_id]
+            if assessment.decision != 'recommendable':
+                continue
+            policies = {(p.response_sha256, p.observed_at) for p in self.policies.get(offer.source_id, ())}
+            problem = verification.recheck_problem(offer, run_replies=self.observed,
+                                                   final_replies=self.final_observed,
+                                                   policy_replies=policies, now=self._now())
+            reason = (REASON_STALE if problem == verification.STALE
+                      else REASON_RECHECK_FAILED if problem is not None
+                      else self._showable(offer, assessment))
+            if reason is None:
+                confirmed.add(offer_id)
             else:
-                self.withheld[offer.offer_id] = [REASON_STALE]
-        if not fresh:
-            return []
-        again = self._assess(fresh)
-        updated = {offer.offer_id: (offer, assessment) for offer, assessment in again}
-        self.assessed = [updated.get(offer.offer_id, (offer, assessment))
-                         for offer, assessment in self.assessed]
-        return [(o, a) for o, a in again if a.decision == 'recommendable']
+                self.withheld[offer_id] = [reason]
+        return confirmed
+
+    def _showable(self, offer: Offer, assessment: Assessment) -> str | None:
+        """Why the shortlist could never show a recommendable offer, or None. The final re-check and
+        the shortlist both use this one rule, so they cannot drift apart."""
+        total = assessment.cost.verified_total
+        if total.currency != self.request.budget.currency:
+            return REASON_CURRENCY
+        try:
+            Recommendation(offer=offer, payable_total=total, verified_at=self.started_at)
+        except ValidationError:  # the offer still lists a charge whose terms are unknown
+            return REASON_UNKNOWN_CHARGE
+        return None
 
     def _shortlist(self, finalists, verified_at: datetime) -> list[Recommendation]:
         """Up to three, cheapest verified total first, then offer ID."""
         recommendations = []
-        ranked = sorted(finalists, key=lambda pair: (pair[1].cost.verified_total.amount, pair[0].offer_id))
-        for offer, assessment in ranked:
-            total = assessment.cost.verified_total
-            if total.currency != self.request.budget.currency:
-                self.withheld[offer.offer_id] = [REASON_CURRENCY]
+        for offer, assessment in verification.rank(finalists):
+            reason = self._showable(offer, assessment)
+            if reason is not None:
+                self.withheld[offer.offer_id] = [reason]
             elif len(recommendations) < MAX_RECOMMENDATIONS:
-                try:
-                    recommendations.append(Recommendation(offer=offer, payable_total=total,
-                                                          verified_at=verified_at))
-                except ValidationError:  # the offer still lists a charge whose terms are unknown
-                    self.withheld[offer.offer_id] = [REASON_UNKNOWN_CHARGE]
+                recommendations.append(Recommendation(offer=offer, payable_total=assessment.cost.verified_total,
+                                                      verified_at=verified_at))
         return recommendations
 
     def _finish(self, finalists=(), *, error: str | None = None, failure: dict | None = None) -> RunResult:
@@ -1218,6 +1359,9 @@ class _Run:
             status, stop = 'error', STOP_NO_STORE_READ  # every store's search failed or could not run
         else:
             status, stop = 'complete' if recommendations else 'abstained', self.stop_reason or STOP_NO_GAPS
+            gaps, withheld_gaps = self._open_gaps()
+            if stop == STOP_NO_GAPS and (gaps or withheld_gaps):  # a re-read reopened what was settled
+                stop = STOP_VERIFY_GAPS
         shown = {r.offer.offer_id for r in recommendations}
         unresolved, rejected = [], []
         for offer, assessment in self.assessed:
