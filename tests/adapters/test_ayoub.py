@@ -8,13 +8,14 @@ from datetime import datetime, timezone
 import json
 from pathlib import Path
 import re
+import time
 
 from app.adapters import CATALOGS, search_catalog
 from app.adapters.ayoub import (
     BACKORDER, AVAILABILITY_UNCLEAR, CALL_FOR_PRICE, CATALOG, CONDITION_UNCLEAR, DELIVERY_URL,
     FULFILLER_UNNAMED, NOT_PUBLISHED, NOT_PURCHASABLE, OPTION_PRICED, PARTY_INVALID, PRICE_ABSENT,
-    PRICE_INVALID, SELLER_UNNAMED, TERMS_URL, WARRANTY_ABSENT, WARRANTY_PROVIDER, AyoubCatalog,
-    party_id,
+    PRICE_INVALID, SELLER_UNNAMED, SPEC_UNCLEAR, TAX_EXCLUDED, TAX_UNPUBLISHED, TERMS_URL, WARRANTY_ABSENT,
+    WARRANTY_PROVIDER, AyoubCatalog, party_id,
 )
 from app.contracts import Fact, SourcePolicy, ToolError
 from app.contracts_v2 import (
@@ -74,6 +75,16 @@ def facts(candidate):
     return {o.evidence[0].field_path: o.fact for o in candidate.extraction.observations}
 
 
+def notes(candidate):
+    """The store-wide statements kept beside a listing's own facts."""
+    return {o.evidence[0].field_path: o.fact for o in candidate.notices.observations}
+
+
+UNSUPPORTED = 'ayoub_computers: unsupported or conflicting product data'
+NOT_ON_PAGE = 'ayoub_computers: a requested configuration is not on its current product page'
+SKIPPED = 'ayoub_computers: pages without the structured specifications of the category were skipped'
+
+
 def body(path):
     return fixture(path).decode('utf-8')
 
@@ -85,11 +96,16 @@ def relist(page, pid, *, old='80559', slug=None):
     return re.sub(r"<link rel='canonical' href='[^']*'", f"<link rel='canonical' href='{ORIGIN}/{slug}/'", page)
 
 
-def with_fields(page, fields):
-    rows = ''.join(f'<tr><td><div>{name}:</div></td><td><div>{value}</div></td></tr>' for name, value in fields)
+def in_details(page, rows):
+    """Markup added at the end of the custom-field table (the description has its own table)."""
     table = page.index('productView-addition-table')
     end = page.index('</tbody>', table)
     return page[:end] + rows + page[end:]
+
+
+def with_fields(page, fields):
+    return in_details(page, ''.join(f'<tr><td><div>{name}:</div></td><td><div>{value}</div></td></tr>'
+                                    for name, value in fields))
 
 
 def with_bcdata(page, **changes):
@@ -117,17 +133,23 @@ class AyoubCase(ReaderTestCase):
         return fetch, result
 
     def assertBound(self, result):
-        """Every receipt cites a returned snapshot and, unless store-wide, its own listing."""
-        hashes = {s.sha256 for s in result.snapshots}
+        """Every receipt cites a returned snapshot and, unless store-wide, its own listing.
+
+        An excerpt is always a verbatim quotation of the raw page, as corpus storage requires.
+        """
+        bodies = {s.sha256: s.body.decode('utf-8', errors='replace') for s in result.snapshots}
         for c in result.candidates:
-            receipts = [e for o in c.extraction.observations for e in o.evidence]
-            receipts += [*c.seller.evidence, *c.fulfiller.evidence, *c.warranty.evidence]
+            receipts = [e for o in (*c.extraction.observations, *c.notices.observations) for e in o.evidence]
+            receipts += [*c.seller.evidence, *c.fulfiller.evidence, *c.warranty.evidence, *c.evidence]
             for e in receipts:
-                self.assertIn(e.response_sha256, hashes)
+                self.assertIn(e.response_sha256, bodies)
                 self.assertEqual((e.source_id, e.adapter_version, e.origin), (SOURCE, 'ayoub-catalog/1', 'runtime'))
                 self.assertIsNone(e.branch_id)
+                self.assertTrue(e.json_pointer)
+                if e.excerpt is not None:
+                    self.assertIn(e.excerpt, bodies[e.response_sha256])
                 if e.scope == 'source':
-                    self.assertTrue(e.field_path.startswith('policy.'))
+                    self.assertTrue(e.field_path.startswith('policy.') or e.field_path == 'costs.order.tax')
                     self.assertIsNone(e.product_id)
                 else:
                     self.assertEqual((e.scope, e.product_id, e.variant_id), ('variant', c.product_id, c.variant_id))
@@ -151,10 +173,17 @@ class RealListingTests(AyoubCase):
         self.assertEqual(f['variant.product.manufacturer'].value, 'Xiaomi')
         self.assertTrue(c.priced)
         self.assertEqual(dict(c.identifiers), {'sku': 'A27Ui', 'mpn': 'A27Ui'})
-        # The listed price excludes VAT; the footer says so on the same page, as store-wide text.
-        self.assertEqual(f['policy.tax'].value, 'Prices exclude 11% VAT, applied at checkout')
-        self.assertIn('Fulfilled by AyoubComputers.com', f['policy.marketplace'].value)
-        self.assertIn('third-party vendors', f['policy.marketplace'].value)
+        # The listed price excludes VAT; the footer says so on the same page, as store-wide text, and the
+        # tax charge stays unknown rather than zero.
+        n = notes(c)
+        self.assertEqual(n['policy.tax'].value, 'Prices exclude 11% VAT, applied at checkout')
+        self.assertIn('Fulfilled by AyoubComputers.com', n['policy.marketplace'].value)
+        self.assertIn('third-party vendors', n['policy.marketplace'].value)
+        self.assertNotIn('policy.tax', f)
+        [tax] = c.costs
+        self.assertEqual((tax.kind, tax.leg, tax.state, tax.reason, tax.amount), ('tax', 'order', 'unknown', TAX_EXCLUDED, None))
+        [receipt] = [e for e in c.evidence if e.evidence_id in tax.evidence_ids]
+        self.assertEqual((receipt.field_path, receipt.excerpt), ('costs.order.tax', 'Prices exclude 11% VAT, applied at checkout'))
         # No observed listing names its seller or fulfiller, so neither is assumed to be Ayoub.
         self.assertEqual((c.seller.fact.state, c.seller.fact.reason, c.seller.party_id),
                          ('unknown', SELLER_UNNAMED, None))
@@ -206,6 +235,7 @@ class RealListingTests(AyoubCase):
                 self.assertEqual((f[field].state, f[field].reason), ('unknown', OPTION_PRICED))
             self.assertEqual((f['variant.specs.ram_gb'].value, f['variant.specs.storage_gb'].value), (24, 1024))
             self.assertFalse(c.priced)
+            self.assertEqual(c.identifiers, ())  # the embedded SKU and MPN describe the default selection
 
     def test_laptop_condition_and_warranty_come_from_the_listing(self):
         _, result = self.read({product('28342'): ACER}, {('28342', '28342')}, category='laptop')
@@ -217,22 +247,24 @@ class RealListingTests(AyoubCase):
         months = c.warranty.warranty.months
         self.assertEqual((months.value, len(months.evidence_ids)), (12, 2))  # tab "1 year", field "1 Year"
         texts = {e.excerpt for e in c.warranty.evidence if e.field_path == 'warranty.months'}
-        self.assertEqual(texts, {'1 year', 'WARRANTY: 1 Year'})
+        self.assertEqual(texts, {'1 year', '1 Year'})
 
     def test_a_page_without_the_category_specifications_is_not_read_as_that_category(self):
         _, result = self.read({product('80559'): XIAOMI}, {('80559', '80559')}, category='laptop')
         self.assertEqual(result.candidates, ())
         self.assertEqual(result.tool_result.data['skipped_not_category'], 1)
-        self.assertEqual([e.message for e in result.tool_result.errors],
-                         ['ayoub_computers: requested configuration is no longer available for re-reading'])
+        self.assertEqual([e.message for e in result.tool_result.errors], [SKIPPED, NOT_ON_PAGE])
 
-    def test_online_stock_is_never_branch_stock(self):
-        _, result = self.read({product('80559'): XIAOMI}, {('80559', '80559')})
+    def test_branch_wording_never_becomes_branch_stock(self):
+        page = with_fields(body(XIAOMI), [('Jnah Branch', 'In Stock'), ('Pickup', 'Available at Zalqa')])
+        _, result = self.read({product('80559'): page.encode()}, {('80559', '80559')})
         [c] = result.candidates
         stock = [e for o in c.extraction.observations for e in o.evidence if e.field_path == 'stock']
-        self.assertTrue(stock)
+        # Only the store's own flag and the JSON-LD availability: branch fields are not read as stock.
+        self.assertEqual([e.json_pointer for e in stock], ['/BCData/product_attributes/instock',
+                                                           '/ld+json/0/offers/availability'])
         self.assertEqual({(e.scope, e.branch_id) for e in stock}, {('variant', None)})
-        self.assertFalse(any(e.scope == 'branch' for o in c.extraction.observations for e in o.evidence))
+        self.assertFalse(any(e.scope == 'branch' or e.branch_id for o in c.extraction.observations for e in o.evidence))
 
 
 class MarketplaceSellerTests(AyoubCase):
@@ -259,17 +291,20 @@ class MarketplaceSellerTests(AyoubCase):
             candidates.extend(result.candidates)
         sellers = {c.product_id: (c.seller.fact.value, c.seller.party_id) for c in candidates}
         self.assertEqual(sellers, {'90001': ('Ayoub Computers', 'ayoub_computers'),
-                                   '90002': ('TechHub LB', 'ayoub_computers.vendor.techhub-lb'),
-                                   '90003': ('Gadget Corner', 'ayoub_computers.vendor.gadget-corner')})
+                                   '90002': ('TechHub LB', party_id('TechHub LB')),
+                                   '90003': ('Gadget Corner', party_id('Gadget Corner'))})
+        self.assertEqual(len({p for _, p in sellers.values()}), 3)
+        self.assertTrue(sellers['90002'][1].startswith('ayoub_computers.party.techhub-lb-'))
         fulfillers = {c.product_id: c.fulfiller.party_id for c in candidates}
-        self.assertEqual(fulfillers['90003'], 'ayoub_computers.vendor.aramex')
+        self.assertEqual(fulfillers['90003'], party_id('Aramex'))
         self.assertEqual(fulfillers['90001'], 'ayoub_computers')
         prices = {c.product_id: facts(c)['price'].value['amount'] for c in candidates}
         self.assertEqual(prices, {'90001': '367', '90002': '359', '90003': '372'})
         for c in candidates:
             [receipt] = c.seller.evidence
             self.assertEqual((receipt.product_id, receipt.field_path), (c.product_id, 'seller'))
-            self.assertEqual(receipt.excerpt, f'Sold By: {c.seller.fact.value}')
+            self.assertEqual(receipt.excerpt, c.seller.fact.value)
+            self.assertEqual(receipt.json_pointer, '/custom-fields/7/Sold By')
             self.assertEqual(offer(c).seller.seller_id, c.seller.party_id)  # contract-compatible
 
     def test_one_listing_naming_two_parties_is_a_conflict_but_two_operator_names_are_one(self):
@@ -289,26 +324,35 @@ class MarketplaceSellerTests(AyoubCase):
         self.assertEqual((c.seller.fact.state, c.seller.fact.reason, c.seller.party_id),
                          ('unknown', PARTY_INVALID, None))
 
-    def test_store_wide_notice_is_never_read_as_a_listing_party(self):
+    def test_only_global_regions_hold_the_store_notice_and_it_names_no_party(self):
+        # In its real global region the notice is store policy text and still names no listing party.
+        _, result = self.read({product('80559'): XIAOMI}, {('80559', '80559')})
+        [c] = result.candidates
+        self.assertIn('policy.marketplace', notes(c))
+        self.assertEqual((c.fulfiller.fact.state, c.fulfiller.fact.reason), ('unknown', FULFILLER_UNNAMED))
+        # Moved into a listing region, the same text is not kept as store-wide policy.
         page = body(XIAOMI).replace('data-content-region="product_below_price--global"',
                                     'data-content-region="product_below_price"')
         _, result = self.read({product('80559'): page.encode()}, {('80559', '80559')})
         [c] = result.candidates
+        self.assertNotIn('policy.marketplace', notes(c))
         self.assertEqual(c.fulfiller.fact.reason, FULFILLER_UNNAMED)
-        self.assertNotIn('policy.marketplace', facts(c))
 
-    def test_vendor_ids_differ_for_different_names(self):
+    def test_party_ids_never_merge_different_names(self):
         self.assertEqual(party_id(' ayoub computers '), 'ayoub_computers')
         self.assertEqual(party_id('AyoubComputers.com'), 'ayoub_computers')
         self.assertNotEqual(party_id('Ayoub Computers Zalqa'), 'ayoub_computers')
         self.assertNotEqual(party_id('TechHub LB'), party_id('TechHub'))
+        self.assertNotEqual(party_id('A.B. Tech'), party_id('A-B Tech'))  # punctuation alone differs
+        self.assertEqual(party_id('TechHub  LB'), party_id('techhub lb'))  # spacing and case do not
 
 
 def offer(candidate):
     """A v2 Offer from a synthetic vendor candidate: the evidence binding passes the contract."""
     f = {path: fact.model_dump(mode='json') for path, fact in facts(candidate).items()}
     receipts = {e.evidence_id: e for o in candidate.extraction.observations for e in o.evidence}
-    receipts.update({e.evidence_id: e for e in (*candidate.seller.evidence, *candidate.warranty.evidence)})
+    receipts.update({e.evidence_id: e for e in (*candidate.seller.evidence, *candidate.warranty.evidence,
+                                                *candidate.evidence)})
     specs = MonitorSpecs(category='monitor', width_px=f['variant.specs.width_px'], height_px=f['variant.specs.height_px'],
                          refresh_hz=f['variant.specs.refresh_hz'], diagonal_inches=f['variant.specs.diagonal_inches'])
     variant = Variant(variant_id=candidate.variant_id, specs=specs,
@@ -323,7 +367,7 @@ def offer(candidate):
                  seller=Seller(seller_id=candidate.seller.party_id, name=candidate.seller.fact.value, market='LB'),
                  variant=variant, listing_url=candidate.listing_url, route=route, price=f['price'], stock=f['stock'],
                  purchasable=f['purchasable'], condition=f['condition'], warranty=candidate.warranty.warranty,
-                 evidence=tuple(receipts.values()))
+                 costs=candidate.costs, evidence=tuple(receipts.values()))
 
 
 class ConditionStockAndPriceTests(AyoubCase):
@@ -446,8 +490,11 @@ class BoundsAndFailureTests(AyoubCase):
         self.assertEqual(fetch.urls(), [product('74423')])
         self.assertEqual([c.variant_id for c in result.candidates], ['74423-1276-1721'])
         _, result = self.read({product('74423'): M5}, {('74423', '74423-1276-9999')}, category='laptop')
-        self.assertEqual([e.message for e in result.tool_result.errors],
-                         ['ayoub_computers: requested configuration is no longer available for re-reading'])
+        self.assertEqual([e.message for e in result.tool_result.errors], [NOT_ON_PAGE])
+        # A page that was never read is a fetch error, not a delisted configuration.
+        refused = ToolError(code='HTTP_ERROR', message='http:403 ayoub_computers: permanent HTTP status', retryable=False)
+        _, result = self.read({product('74423'): refused}, {('74423', '74423-1276-1721')}, category='laptop')
+        self.assertEqual([e.code for e in result.tool_result.errors], ['HTTP_ERROR'])
 
     def test_inputs_are_bounded(self):
         fetch = self.fetch({})
@@ -464,6 +511,129 @@ class BoundsAndFailureTests(AyoubCase):
         result = search_catalog(fetch, SOURCE, category='monitor', search='A27Ui', only={('80559', '80559')})
         self.assertEqual([c.product_id for c in result.candidates], ['80559'])
         self.assertEqual(AyoubCatalog.max_products, 2)
+
+
+
+def in_footer(page, html):
+    return page.replace('</footer>', html + '</footer>')
+
+
+def with_option(page, field):
+    """An extra option field at the start of the M5 page's option block."""
+    opening = '<div data-product-option-change style="display:none;">'
+    assert page.count(opening) == 1
+    return page.replace(opening, opening + field)
+
+
+SELECT = ('<div class="form-field" data-product-attribute="set-select"><label class="form-label">AppleCare:'
+          '<small>Required</small></label><select name="attribute[1300]"{required}><option value="">Choose</option>'
+          '<option value="1900">None</option><option value="1901">AppleCare+</option></select></div>')
+
+
+class ReviewRegressionTests(AyoubCase):
+    """Each case reproduces one finding of the independent review of this reader."""
+
+    def page_result(self, page, pid='80559', only=None, category='monitor'):
+        _, result = self.read({product(pid): page.encode()}, only or {(pid, pid)}, category=category)
+        return result
+
+    def test_omitted_cell_end_tags_are_closed_by_their_row(self):
+        rows = '<tr><td><div>Note:</div></td><td><div>open cell</div></tr><tr><td>CONDITION:<td>Refurbished</tr>'
+        page = in_footer(in_details(body(XIAOMI), rows), '<table><tr><td>footer cell</td></tr></table>')
+        result = self.page_result(page)
+        self.assertEqual(result.tool_result.status, 'ok')
+        f = facts(result.candidates[0])
+        self.assertEqual(f['price'].value, {'amount': '367', 'currency': 'USD'})
+        # The row after the unclosed cells is still read, so condition is a conflict, not a silent "new".
+        self.assertEqual((f['condition'].state, f['condition'].alternatives), ('conflict', ['refurbished', 'new']))
+
+    def test_repeated_or_nested_details_are_refused_not_mixed_in(self):
+        second = ('<table class="productView-addition-table"><tbody><tr><td>Sold By:</td><td>Other Vendor</td></tr>'
+                  '<tr><td>WARRANTY:</td><td>3 Years</td></tr></tbody></table>')
+        nested = '<tr><td>Note:</td><td><table><tr><td>x</td></tr></table></td></tr><tr><td>CONDITION:</td><td>Refurbished</td></tr>'
+        for page in (in_footer(body(XIAOMI), second), in_details(body(XIAOMI), nested),
+                     in_footer(body(XIAOMI), '<dl class="productView-info"><dt>Condition:</dt><dd>Used</dd></dl>'),
+                     in_footer(body(ACER), '<div id="tab-warranty"><div class="productView-description-tabContent">'
+                                           '3 years</div></div>')):
+            with self.subTest():
+                pid = '28342' if 'Acer' in page[:400] else '80559'
+                result = self.page_result(page, pid, category='laptop' if pid == '28342' else 'monitor')
+                self.assertEqual(result.candidates, ())
+                self.assertIn(UNSUPPORTED, [e.message for e in result.tool_result.errors])
+
+    def test_deep_nesting_parses_in_linear_time(self):
+        page = in_footer(body(XIAOMI), '<div>x' * 20000 + '</div>' * 20000)
+        started = time.perf_counter()
+        result = self.page_result(page)
+        self.assertLess(time.perf_counter() - started, 5)  # was quadratic: about 33 s at this depth
+        self.assertEqual(len(result.candidates), 1)
+
+    def test_too_many_option_combinations_are_refused_before_they_are_built(self):
+        fields = ''.join(
+            f'<div class="form-field" data-product-attribute="set-radio"><label class="form-label">Opt{a}:'
+            f'<small>Required</small></label>' + ''.join(
+                f'<input type="radio" name="attribute[{2000 + a}]" value="{3000 + a * 10 + v}" required '
+                f'data-product-attribute-label="v{v}">' for v in range(10)) + '</div>' for a in range(8))
+        started = time.perf_counter()
+        result = self.page_result(with_option(body(M5), fields), '74423', {('74423', '74423')}, 'laptop')
+        self.assertLess(time.perf_counter() - started, 2)  # 10**8 combinations were never enumerated
+        self.assertEqual(result.candidates, ())
+        self.assertIn(UNSUPPORTED, [e.message for e in result.tool_result.errors])
+
+    def test_repeated_option_value_ids_are_refused(self):
+        page = body(M5).replace('name="attribute[1276]" value="1721"', 'name="attribute[1276]" value="1720"')
+        result = self.page_result(page, '74423', {('74423', '74423-1276-1720')}, 'laptop')
+        self.assertEqual(result.candidates, ())
+        self.assertIn(UNSUPPORTED, [e.message for e in result.tool_result.errors])
+
+    def test_optional_choices_are_refused_and_required_ones_multiply_configurations(self):
+        optional = with_option(body(M5), SELECT.format(required=''))
+        result = self.page_result(optional, '74423', {('74423', '74423-1300-1900-1276-1720')}, 'laptop')
+        self.assertEqual(result.candidates, ())
+        required = with_option(body(M5), SELECT.format(required=' required'))
+        wanted = {('74423', f'74423-1300-{a}-1276-{c}') for a in (1900, 1901) for c in (1720, 1721)}
+        result = self.page_result(required, '74423', wanted, 'laptop')
+        self.assertEqual({(c.product_id, c.variant_id) for c in result.candidates}, wanted)
+
+    def test_free_text_availability_leaves_stock_unknown(self):
+        for text in ('Pre-Order', 'Available on request', 'Out Of Stock - arriving soon'):
+            with self.subTest(text=text):
+                [c] = self.page_result(with_fields(body(XIAOMI), [('AVAILABILITY', text)])).candidates
+                self.assertEqual((facts(c)['stock'].state, facts(c)['stock'].reason), ('unknown', AVAILABILITY_UNCLEAR))
+
+    def test_spec_text_in_another_form_is_never_dropped(self):
+        suffixed = body(MW0X3_B).replace('--cfSsd">256GB<', '--cfSsd">256GB SSD<')
+        [c] = self.page_result(suffixed, '38082', category='laptop').candidates
+        storage = facts(c)['variant.specs.storage_gb']
+        self.assertEqual((storage.state, storage.alternatives), ('conflict', [256, 512]))
+        vague = body(MW0X3_B).replace('--cfSsd">256GB<', '--cfSsd">about a quarter terabyte<')
+        [c] = self.page_result(vague, '38082', category='laptop').candidates
+        storage = facts(c)['variant.specs.storage_gb']
+        self.assertEqual((storage.state, storage.reason), ('unknown', SPEC_UNCLEAR))
+
+    def test_resolution_labels_are_read_and_unreadable_specs_are_reported_as_skipped(self):
+        labelled = body(XIAOMI).replace('--cfResolution">3840 × 2160<', '--cfResolution">3840 x 2160 (4K UHD)<')
+        [c] = self.page_result(labelled).candidates
+        self.assertEqual((facts(c)['variant.specs.width_px'].value, facts(c)['variant.specs.height_px'].value), (3840, 2160))
+        unreadable = body(XIAOMI).replace('--cfResolution">3840 × 2160<', '--cfResolution">4K<')
+        result = self.page_result(unreadable)
+        self.assertEqual((result.candidates, result.tool_result.data['skipped_not_category']), ((), 1))
+        self.assertIn(SKIPPED, [e.message for e in result.tool_result.errors])
+
+    def test_without_the_vat_footer_tax_is_unpublished_not_zero(self):
+        page = body(XIAOMI).replace('Prices exclude 11% VAT, applied at checkout', 'Governed by Lebanese law')
+        [c] = self.page_result(page).candidates
+        [tax] = c.costs
+        self.assertEqual((tax.state, tax.reason, tax.amount, tax.evidence_ids), ('unknown', TAX_UNPUBLISHED, None, ()))
+        self.assertNotIn('policy.tax', notes(c))
+
+    def test_identifiers_carry_receipts(self):
+        [c] = self.page_result(body(XIAOMI)).candidates
+        paths = sorted((e.field_path, e.json_pointer) for e in c.evidence if e.field_path.startswith('identifiers.'))
+        self.assertEqual(paths, [('identifiers.mpn', '/BCData/product_attributes/mpn'),
+                                 ('identifiers.mpn', '/ld+json/0/mpn'),
+                                 ('identifiers.sku', '/BCData/product_attributes/sku'),
+                                 ('identifiers.sku', '/ld+json/0/sku')])
 
 
 class PolicyTests(AyoubCase):
@@ -483,11 +653,17 @@ class PolicyTests(AyoubCase):
         self.assertIn('Free delivery to every district in Lebanon', f['policy.delivery'].value)
         self.assertIn('Cash on Delivery (COD)', f['policy.payment'].value)
         hashes = {s.sha256 for s in result.snapshots}
+        raw = {s.sha256: s.body.decode('utf-8') for s in result.snapshots}
         for o in result.extraction.observations:
             for e in o.evidence:
                 self.assertEqual((e.scope, e.product_id, e.adapter_version), ('source', None, 'ayoub-policy/1'))
                 self.assertIn(e.response_sha256, hashes)
-                self.assertIn(e.excerpt, o.fact.value)
+                self.assertTrue(e.json_pointer.startswith('/visible-text/'))
+                if e.excerpt is not None:  # quoted only where the raw page holds it verbatim
+                    self.assertIn(e.excerpt, o.fact.value)
+                    self.assertIn(e.excerpt, raw[e.response_sha256])
+        quoted = [e for o in result.extraction.observations for e in o.evidence if e.excerpt]
+        self.assertTrue(quoted)
 
     def test_unreadable_policy_pages_leave_named_gaps(self):
         refused = ToolError(code='BLOCKED', message='blocked:size ayoub_computers: reply is over 2097152 bytes', retryable=False)
@@ -513,8 +689,8 @@ class RegistryTests(AyoubCase):
     def test_registered_scope_is_read_only_and_bounded(self):
         _, source = registry_entry()
         limits = source['limits']
-        # One request per 10 seconds on average, as robots.txt asks of crawlers, one at a time; a run fits a
-        # search, two product pages and two policy pages.
+        # At most six a minute and one at a time; a run fits a search, two product pages and two policy
+        # pages. (The robots.txt crawl delay names AI crawlers, not this agent.)
         self.assertLessEqual(limits['requests_per_minute'], 6)
         self.assertEqual(limits['concurrency'], 1)
         self.assertGreaterEqual(limits['max_requests_per_run'], 1 + AyoubCatalog.max_products + 2)

@@ -129,6 +129,9 @@ class CapabilityGateTests(GateCase):
             lambda r: r['query'][0].update(name='_method'),
             lambda r: r['query'][0].update(name='wc-ajax'),
             lambda r: r['query'][0].update(name='addToCart'),
+            lambda r: r['query'][0].update(name='ADDtoCart'),
+            lambda r: r['query'][0].update(name='MYaccount'),
+            lambda r: r['query'][0].update(name='WCajax'),
             lambda r: r['query'][0].update(name='Type'),  # differs from 'type' only in case
             lambda r: r['query'][0].update(parameter={'kind': 'search_text'}),
             lambda r: r['query'][0].update(parameter={'kind': 'integer', 'minimum': 6, 'maximum': 5}),

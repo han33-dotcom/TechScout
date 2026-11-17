@@ -8,8 +8,9 @@ Facts come only from the listing's own structured data: the BCData and JSON-LD b
 online stock, purchasability, condition), the details list and the custom-field table
 (configuration, condition, warranty, seller and fulfiller fields). The marketplace notice and
 the VAT footer are store-wide template text: they are kept as source-scoped policy statements
-and never become a listing's seller, fulfiller or cost. Titles are not parsed for
-configuration. Online stock is not branch stock, and no branch facts are produced.
+and never become a listing's seller or fulfiller. The VAT is marked as an unknown charge, never
+zero and never computed here. Titles are not parsed for configuration. Online stock is not
+branch stock, and no branch facts are produced. Excerpts are verbatim quotations of the page.
 
 Candidates are corpus observations, not verified offers; current-run verification, identity
 and eligibility still decide recommendations. See docs/ayoub-catalog.md.
@@ -23,10 +24,10 @@ import json
 import re
 from urllib.parse import quote, urlsplit
 
-from app.adapters.base import Snapshot, excerpt, tool_result
+from app.adapters.base import Snapshot, json_pointer, tool_result
 from app.adapters.woo_catalog import CatalogCandidate, CatalogResult
 from app.contracts import Fact, ToolError, ToolResult, Warranty
-from app.contracts_v2 import Evidence
+from app.contracts_v2 import Charge, Evidence
 from app.corpus_contracts import Extraction, FieldObservation
 from app.source_capabilities import CapabilityRef, safe_endpoint
 
@@ -59,21 +60,28 @@ WARRANTY_ABSENT = 'warranty is not published'
 WARRANTY_UNCLEAR = 'warranty duration is not stated as a plain period'
 WARRANTY_PROVIDER = 'listing does not name who services the warranty'
 WARRANTY_TERRITORY = 'warranty territory is not published'
+SPEC_UNCLEAR = 'specification is not stated in a recognized form'
+TAX_EXCLUDED = 'listed price excludes VAT; the store adds it at checkout'
+TAX_UNPUBLISHED = 'tax treatment is not published on the listing page'
 CONFLICT = 'source values disagree for this listing'
 
 _SEARCH_TEXT = re.compile(r'[a-zA-Z0-9][a-zA-Z0-9._-]*( [a-zA-Z0-9][a-zA-Z0-9._-]*)*')
 _PRODUCT_ID = re.compile(r'[1-9][0-9]{0,9}')
 _SLUG_PATH = re.compile(r'/[a-z0-9][a-z0-9-]{0,199}/')
 _ATTRIBUTE = re.compile(r'attribute\[([1-9][0-9]{0,9})\]')
-_GB = re.compile(r'([1-9][0-9]{0,4})\s*(GB|TB)', re.IGNORECASE)
-_DESCRIPTION_GB = re.compile(r'([1-9][0-9]{0,4})\s*(GB|TB)(?:\s+(?:SSD|RAM|Unified Memory))?\.?',
-                             re.IGNORECASE)
+# A capacity, optionally followed by one plain memory or drive word ('256GB SSD', '16GB Unified Memory').
+_GB = re.compile(r'([1-9][0-9]{0,4})\s*(GB|TB)(?:\s+(?:SSD|NVMe SSD|NVMe|RAM|Unified Memory|LPDDR[45]X?|'
+                 r'DDR[45]))?\.?', re.IGNORECASE)
 _DESCRIPTION_LINE = re.compile(r'(RAM|Memory|Storage)\s*:\s*(.+)', re.IGNORECASE)
 _INCHES = re.compile(r'([1-9][0-9]?(?:\.[0-9])?)\s*(?:"|”|\'\'|inch|inches)?', re.IGNORECASE)
-_RESOLUTION = re.compile(r'([1-9][0-9]{2,4})\s*[xX×]\s*([1-9][0-9]{2,4})')
-_HERTZ = re.compile(r'([1-9][0-9]{0,3})\s*Hz', re.IGNORECASE)
+# An optional short parenthetical label may follow ('3840 x 2160 (4K UHD)'); it is not read.
+_LABEL = r'(?:\s*\([A-Za-z0-9 +.-]{1,20}\))?'
+_RESOLUTION = re.compile(r'([1-9][0-9]{2,4})\s*[xX×]\s*([1-9][0-9]{2,4})(?:\s*(?:pixels|px))?' + _LABEL,
+                         re.IGNORECASE)
+_HERTZ = re.compile(r'([1-9][0-9]{0,3})\s*Hz' + _LABEL, re.IGNORECASE)
 _PERIOD = re.compile(r'([1-9][0-9]?)\s*(years?|yrs?|months?)', re.IGNORECASE)
 _PARTY_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9 .&'-]{0,79}")
+_OPTION_VALUE = re.compile(r'[1-9][0-9]{0,9}')
 _BCDATA = re.compile(r'\s*var\s+BCData\s*=\s*(\{.*\})\s*;?\s*', re.DOTALL)
 _VAT_FOOTER = re.compile(r'Prices\s+exclude\s+[0-9]{1,2}%\s+VAT,\s+applied\s+at\s+checkout', re.IGNORECASE)
 _MARKETPLACE_NOTICE = (
@@ -162,10 +170,17 @@ class _Option:
 
 
 class _ProductPage(HTMLParser):
-    """The parts of a BigCommerce product page this reader uses, with their content regions."""
+    """The parts of a BigCommerce product page this reader uses, with their content regions.
+
+    Every step is constant time: open-element flags are counted, not searched, so deeply nested
+    markup cannot make parsing quadratic. Structure this reader does not expect (a second details
+    table, a table nested in one, a cell outside a row) is counted in `malformed` and refused.
+    """
+    _FLAGS = ('warranty_tab', 'warranty', 'options', 'option')
 
     def __init__(self):
         super().__init__(convert_charrefs=True)
+        self.raw = ''
         self.json_ld: list[str] = []
         self.scripts: list[str] = []
         self.canonical: list[str] = []
@@ -175,33 +190,28 @@ class _ProductPage(HTMLParser):
         self.warranty: list[str] = []
         self.options: list[_Option] = []
         self.unsupported_inputs = 0
+        self.malformed = 0
+        self.counts = {'table': 0, 'dl': 0, 'warranty_tab': 0}
         self.regions: dict[str, list[str]] = {}
         self.footer: list[str] = []
         self.visible: list[str] = []
         self._script: list[str] | None = None
         self._script_ld = False
         self._hidden = 0
-        self._divs: list[dict] = []
-        self._dl = False
+        self._divs: list[tuple[tuple[str, ...], bool]] = []  # flags set, and whether a region opened
+        self._active = dict.fromkeys(self._FLAGS, 0)
+        self._region_stack: list[str] = []
+        self._dl = 0
         self._dt: list[str] | None = None
         self._dd: list[str] | None = None
         self._pending_dt: str | None = None
-        self._table = False
+        self._table = 0
         self._row: list[str] | None = None
         self._cell: list[str] | None = None
         self._label: list[str] | None = None
         self._select: str | None = None
         self._option_value: tuple[str, list[str]] | None = None
         self._footer = 0
-
-    def _flag(self, name):
-        return any(d.get(name) for d in self._divs)
-
-    def _region(self):
-        for d in reversed(self._divs):
-            if 'region' in d:
-                return d['region']
-        return None
 
     def handle_starttag(self, tag, attrs):
         values = {}
@@ -222,32 +232,35 @@ class _ProductPage(HTMLParser):
         if tag == 'footer':
             self._footer += 1
         if tag == 'div':
-            marker = {}
-            if 'data-content-region' in values:
-                marker['region'] = values['data-content-region']
-            if values.get('id') == 'tab-warranty':
-                marker['warranty_tab'] = True
-            elif 'productView-description-tabContent' in classes and self._flag('warranty_tab'):
-                marker['warranty'] = True  # the tab's text, without its heading and collapse links
-            if 'data-product-option-change' in values:
-                marker['options'] = True
-            if 'form-field' in classes and self._flag('options') and 'data-product-attribute' in values:
-                self.options.append(_Option('', values['data-product-attribute']))
-                marker['option'] = True
-            self._divs.append(marker)
-        elif tag == 'dl' and 'productView-info' in classes:
-            self._dl = True
-        elif tag == 'dt' and self._dl:
+            self._open_div(values, classes)
+        elif tag == 'dl':
+            if self._dl:
+                self._dl += 1
+                self.malformed += 1  # a list nested in the details list
+            elif 'productView-info' in classes:
+                self._dl = 1
+                self.counts['dl'] += 1
+        elif tag == 'dt' and self._dl == 1:
             self._dt = []
-        elif tag == 'dd' and self._dl:
+        elif tag == 'dd' and self._dl == 1:
             self._dd = []
-        elif tag == 'table' and 'productView-addition-table' in classes:
-            self._table = True
-        elif tag == 'tr' and self._table:
+        elif tag == 'table':
+            if self._table:
+                self._table += 1
+                self.malformed += 1  # a table nested in the custom-field table
+            elif 'productView-addition-table' in classes:
+                self._table = 1
+                self.counts['table'] += 1
+        elif tag == 'tr' and self._table == 1:
+            self._end_row()
             self._row = []
-        elif tag == 'td' and self._row is not None:
-            self._cell = []
-        elif tag == 'label' and self._flag('option') and self.options and not self.options[-1].name_done:
+        elif tag == 'td' and self._table == 1:
+            if self._row is None:
+                self.malformed += 1
+            else:
+                self._end_cell()
+                self._cell = []
+        elif tag == 'label' and self._active['option'] and self.options and not self.options[-1].name_done:
             self._label = []
         elif tag in {'span', 'small'} and self._label is not None and (
                 tag == 'small' or 'data-option-value' in values):
@@ -255,26 +268,55 @@ class _ProductPage(HTMLParser):
         elif tag == 'input':
             if values.get('name') == 'product_id' and values.get('type', '').lower() == 'hidden':
                 self.product_ids.append(values.get('value', ''))
-            elif self._flag('options'):
+            elif self._active['options']:
                 self._option_input(values)
-        elif tag == 'select' and self._flag('options'):
+        elif tag == 'select' and self._active['options']:
             match = _ATTRIBUTE.fullmatch(values.get('name', ''))
-            if match is None or not self.options or not self._flag('option'):
-                self.unsupported_inputs += 1
+            if match is None or not self.options or not self._active['option'] or 'required' not in values:
+                self.unsupported_inputs += 1  # an optional choice hides a "none" configuration
             else:
-                self.options[-1].attribute = self.options[-1].attribute or match.group(1)
-                if self.options[-1].attribute != match.group(1):
-                    self.options[-1].supported = False
+                option = self.options[-1]
+                option.attribute = option.attribute or match.group(1)
+                if option.attribute != match.group(1):
+                    option.supported = False
                 self._select = match.group(1)
         elif tag == 'option' and self._select is not None:
             self._option_value = (values.get('value', ''), [])
-        elif tag == 'textarea' and self._flag('options'):
+        elif tag == 'textarea' and self._active['options']:
             self.unsupported_inputs += 1
+
+    def _open_div(self, values, classes):
+        flags = []
+        if values.get('id') == 'tab-warranty':
+            flags.append('warranty_tab')
+            self.counts['warranty_tab'] += 1
+        elif 'productView-description-tabContent' in classes and self._active['warranty_tab']:
+            flags.append('warranty')  # the tab's text, without its heading and collapse links
+        if 'data-product-option-change' in values:
+            flags.append('options')
+        if 'form-field' in classes and self._active['options'] and 'data-product-attribute' in values:
+            self.options.append(_Option('', values['data-product-attribute']))
+            flags.append('option')
+        for flag in flags:
+            self._active[flag] += 1
+        region = 'data-content-region' in values
+        if region:
+            self._region_stack.append(values['data-content-region'])
+        self._divs.append((tuple(flags), region))
+
+    def _close_div(self):
+        if not self._divs:
+            return
+        flags, region = self._divs.pop()
+        for flag in flags:
+            self._active[flag] -= 1
+        if region:
+            self._region_stack.pop()
 
     def _option_input(self, values):
         kind = values.get('type', '').lower()
         match = _ATTRIBUTE.fullmatch(values.get('name', ''))
-        if kind != 'radio' or match is None or not self.options or not self._flag('option'):
+        if kind != 'radio' or match is None or not self.options or not self._active['option']:
             if kind != 'hidden':
                 self.unsupported_inputs += 1
             return
@@ -290,6 +332,22 @@ class _ProductPage(HTMLParser):
         option.name_done = True
         self._label = None
 
+    def _end_cell(self):
+        if self._cell is not None:
+            self._row.append(_text(''.join(self._cell)))
+            self._cell = None
+
+    def _end_row(self):
+        """A row ends at its end tag, the next row or the table's end; HTML may omit </td> and </tr>."""
+        if self._row is None:
+            return
+        self._end_cell()
+        if len(self._row) == 2:
+            self.fields.append((self._row[0].rstrip(':').strip(), self._row[1]))
+        elif self._row:
+            self.malformed += 1  # a row that is not one name and one value is never guessed
+        self._row = None
+
     def handle_endtag(self, tag):
         if tag == 'script':
             if self._script is not None:
@@ -303,8 +361,8 @@ class _ProductPage(HTMLParser):
             self._break()
         if tag == 'footer':
             self._footer = max(0, self._footer - 1)
-        if tag == 'div' and self._divs:
-            self._divs.pop()
+        if tag == 'div':
+            self._close_div()
         elif tag == 'dt' and self._dt is not None:
             self._pending_dt = _text(''.join(self._dt))
             self._dt = None
@@ -312,19 +370,17 @@ class _ProductPage(HTMLParser):
             if self._pending_dt is not None:
                 self.info.append((self._pending_dt.rstrip(':').strip(), _text(''.join(self._dd))))
             self._pending_dt, self._dd = None, None
-        elif tag == 'dl':
-            self._dl = False
-        elif tag == 'td' and self._cell is not None:
-            self._row.append(_text(''.join(self._cell)))
-            self._cell = None
-        elif tag == 'tr' and self._row is not None:
-            if len(self._row) == 2:
-                self.fields.append((self._row[0].rstrip(':').strip(), self._row[1]))
-            elif self._row:
-                self.fields.append(('', ''))  # a malformed row is reported, never guessed
-            self._row = None
-        elif tag == 'table':
-            self._table = False
+        elif tag == 'dl' and self._dl:
+            self._dl -= 1
+        elif tag == 'td' and self._table == 1:
+            if self._row is not None:
+                self._end_cell()
+        elif tag == 'tr' and self._table == 1:
+            self._end_row()
+        elif tag == 'table' and self._table:
+            if self._table == 1:
+                self._end_row()
+            self._table -= 1
         elif tag == 'label' and self._label is not None:
             self._finish_label()
         elif tag == 'option' and self._option_value is not None:
@@ -334,6 +390,11 @@ class _ProductPage(HTMLParser):
             self._option_value = None
         elif tag == 'select':
             self._select = None
+
+    def close(self):
+        super().close()
+        if self._table or self._dl:
+            self.malformed += 1  # the document ended inside the details list or table
 
     def _break(self):
         if self._script is None and not self._hidden:
@@ -353,18 +414,18 @@ class _ProductPage(HTMLParser):
                 buffer.append(data)
         if self._option_value is not None:
             self._option_value[1].append(data)
-        if self._flag('warranty'):
+        if self._active['warranty']:
             self.warranty.append(data)
-        region = self._region()
-        if region is not None:
-            self.regions.setdefault(region, []).append(data)
+        if self._region_stack:
+            self.regions.setdefault(self._region_stack[-1], []).append(data)
         if self._footer:
             self.footer.append(data)
 
 
 def _read_page(body: bytes) -> _ProductPage:
     page = _ProductPage()
-    page.feed(body.decode('utf-8', errors='replace'))
+    page.raw = body.decode('utf-8', errors='replace')
+    page.feed(page.raw)
     page.close()
     return page
 
@@ -440,10 +501,21 @@ class WarrantyObservation:
 
 @dataclass(frozen=True)
 class MarketplaceCandidate(CatalogCandidate):
+    """A catalog candidate plus what a marketplace listing must keep apart.
+
+    `notices` holds the page's store-wide, source-scoped statements (VAT footer, marketplace
+    notice) separately from the listing's own `extraction`. `costs` marks the VAT as unknown,
+    never zero. `identifiers` (SKU, MPN) are kept only for listings without options, with their
+    receipts in `evidence` alongside the cost receipts. A candidate whose seller is unknown cannot
+    become a v2 Offer: it stays provisional, and the seller must never default to the operator.
+    """
     seller: PartyObservation | None = None
     fulfiller: PartyObservation | None = None
     warranty: WarrantyObservation | None = None
     identifiers: tuple[tuple[str, str], ...] = ()
+    notices: Extraction | None = None
+    costs: tuple[Charge, ...] = ()
+    evidence: tuple[Evidence, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -455,11 +527,17 @@ class PolicyResult:
 
 
 def party_id(name: str) -> str:
-    """The operator's own ID, or a vendor ID unique to the vendor's name."""
-    key = _key(name)
-    if key in _OPERATOR_NAMES:
+    """The operator's own ID, or an ID unique to one party's exact name.
+
+    Ayoub's terms name Ayoub Computers as the operator of ayoubcomputers.com, so both names are
+    the operator. Any other name keeps a readable slug plus a digest of its spelling (case and
+    spacing aside), so names differing only in punctuation are never merged into one party.
+    """
+    if _key(name) in _OPERATOR_NAMES:
         return OPERATOR_ID
-    return f'{OPERATOR_ID}.vendor.' + '-'.join(re.findall(r'[a-z0-9]+', name.casefold()))
+    spelling = _text(name).casefold()
+    slug = '-'.join(re.findall(r'[a-z0-9]+', spelling))
+    return f'{OPERATOR_ID}.party.{slug}-{sha256(spelling.encode()).hexdigest()[:8]}'
 
 
 def _same(a, b):
@@ -564,22 +642,29 @@ class AyoubCatalog:
                     errors.append(self._error('catalog discovery truncated by configured bound'))
                 if stats['invalid_cards']:
                     errors.append(self._error('search cards without a safe, unique listing identity were skipped'))
+        read_pages = set()
         for pid, card_url in targets:
             page = get(self.product_url(pid), 'product')
             if page is None:
                 continue
             try:
                 read = self._extract(page, pid, card_url, category, run, wanted, corpus_version)
-            except (_SchemaError, ValueError, TypeError, KeyError, ArithmeticError, RecursionError,
-                    AssertionError):
+            except (_SchemaError, ValueError, TypeError, KeyError, AttributeError, IndexError,
+                    ArithmeticError, RecursionError, AssertionError):
                 errors.append(self._error('unsupported or conflicting product data'))
                 continue
+            read_pages.add(pid)
             if read is None:
                 stats['skipped_not_category'] += 1
                 continue
             candidates.extend(read)
-        if wanted is not None and wanted - {(c.product_id, c.variant_id) for c in candidates}:
-            errors.append(self._error('requested configuration is no longer available for re-reading'))
+        if stats['skipped_not_category']:
+            # An accessory, or a product whose specifications are written in another form.
+            errors.append(self._error('pages without the structured specifications of the category were skipped'))
+        if wanted is not None:
+            found = {(c.product_id, c.variant_id) for c in candidates}
+            if any(p in read_pages and (p, v) not in found for p, v in wanted):
+                errors.append(self._error('a requested configuration is not on its current product page'))
         data = {'candidates_seen': len(candidates), 'priced_candidates': sum(c.priced for c in candidates),
                 'sellers_named': sum(c.seller.party_id is not None for c in candidates),
                 'coverage_complete': False, 'requires_current_run_verification': True, **stats}
@@ -652,14 +737,22 @@ class AyoubCatalog:
         attributes = _strict_json(bcdata[0]).get('product_attributes')
         if not isinstance(attributes, dict):
             raise _SchemaError('product attributes are missing')
-        if len(page.fields) > self.max_fields or ('', '') in page.fields:
-            raise _SchemaError('custom fields are malformed or unbounded')
+        if page.malformed or len(page.fields) > self.max_fields or any(
+                n > 1 for n in page.counts.values()):
+            raise _SchemaError('details are malformed, repeated or unbounded')
         if page.unsupported_inputs or any(not o.supported or o.kind not in _SUPPORTED_OPTIONS
                                           or not o.attribute or not o.values for o in page.options):
             raise _SchemaError('product options are not plain required choices')
+        if len({o.attribute for o in page.options}) != len(page.options) or any(
+                not _OPTION_VALUE.fullmatch(v) or [w for w, _ in o.values].count(v) != 1
+                for o in page.options for v, _ in o.values):
+            raise _SchemaError('option IDs are malformed or repeated')
+        count = 1
+        for option in page.options:  # bounded before any combination is built
+            count *= len(option.values)
+            if count > self.max_variants:
+                raise ValueError('variant bound exceeded')
         combos = list(itertools.product(*[[(o, vid, label) for vid, label in o.values] for o in page.options]))
-        if len(combos) > self.max_variants:
-            raise ValueError('variant bound exceeded')
         name = ld.get('name') if isinstance(ld.get('name'), str) and ld['name'].strip() else None
         candidates = []
         for combo in combos:
@@ -676,7 +769,9 @@ class AyoubCatalog:
     def fetch_policies(self, fetch, *, run=None, corpus_version='catalog-preview-v1'):
         """Store-wide marketplace, warranty, tax, delivery, pickup and payment statements.
 
-        Statements are verbatim and source-scoped. They never resolve an offer's cost, seller,
+        Statements are the page's visible text and source-scoped; a receipt quotes the raw page
+        only where it holds the statement verbatim, and otherwise points at its offset in the
+        visible text. They never resolve an offer's cost, seller,
         branch stock or warranty provider; topics with no recognized statement are named gaps.
         """
         outcomes, snapshots, fields = [], [], {}
@@ -686,7 +781,8 @@ class AyoubCatalog:
             if outcome.errors or outcome.body is None:
                 continue
             snapshots.append(Snapshot.of(outcome))
-            text = _text(''.join(_read_page(outcome.body).visible))
+            page = _read_page(outcome.body)
+            text = _text(''.join(page.visible))
             for topic, pattern in patterns:
                 for match in pattern.finditer(text):
                     statement = _text(match.group(0))
@@ -697,8 +793,9 @@ class AyoubCatalog:
                         evidence_id=sha256(identity.encode()).hexdigest(), source_id=SOURCE_ID, scope='source',
                         field_path=field, origin_url=outcome.origin_url, final_url=outcome.final_url,
                         observed_at=outcome.observed_at, response_sha256=outcome.response_sha256,
-                        adapter_version=POLICY_VERSION, excerpt=excerpt(statement), origin='runtime',
-                        run=run, corpus_version=corpus_version)
+                        adapter_version=POLICY_VERSION, json_pointer=f'/visible-text/{match.start()}',
+                        excerpt=_quote(page.raw, statement), origin='runtime', run=run,
+                        corpus_version=corpus_version)
                     fields.setdefault(field, []).append((statement, receipt))
         observations = []
         for field, entries in fields.items():
@@ -716,33 +813,48 @@ class AyoubCatalog:
 
 def _receipts(candidate):
     receipts = [e for o in candidate.extraction.observations for e in o.evidence]
+    if candidate.notices is not None:
+        receipts.extend(e for o in candidate.notices.observations for e in o.evidence)
     for part in (candidate.seller, candidate.fulfiller, candidate.warranty):
         if part is not None:
             receipts.extend(part.evidence)
+    receipts.extend(candidate.evidence)
     return receipts
 
 
+def _quote(raw, text):
+    """The text as an evidence excerpt only when the page holds it verbatim; otherwise None."""
+    if text is None:
+        return None
+    text = _text(text)
+    return text if text and len(text) <= 500 and text in raw else None
+
+
 class _Listing:
-    """One configuration of one listing: its readings, then its facts."""
+    """One configuration of one listing: its readings, then its facts.
+
+    Receipts point at the field they read; an excerpt is attached only when the page holds that
+    text verbatim, so an excerpt is always a quotation.
+    """
 
     def __init__(self, catalog, outcome, page, pid, vid, category, run, corpus_version):
         self.catalog, self.outcome, self.page = catalog, outcome, page
         self.pid, self.vid, self.category = pid, vid, category
         self.run, self.corpus_version = run, corpus_version
         self.fields: dict[str, list] = {}
+        self.notices: dict[str, list] = {}
 
     def receipt(self, field, pointer, text=None, *, scope='variant'):
-        o = self.outcome
+        o, quote = self.outcome, _quote(self.page.raw, text)
         identity = '/'.join((o.response_sha256, o.observed_at.isoformat(), self.pid, self.vid, field, pointer,
-                             text or '', str(self.run), self.corpus_version))
+                             quote or '', str(self.run), self.corpus_version))
         variant = scope == 'variant'
         return Evidence(
             evidence_id=sha256(identity.encode()).hexdigest(), source_id=SOURCE_ID,
             product_id=self.pid if variant else None, variant_id=self.vid if variant else None, scope=scope,
             field_path=field, origin_url=o.origin_url, final_url=o.final_url, observed_at=o.observed_at,
             response_sha256=o.response_sha256, adapter_version=ADAPTER_VERSION, json_pointer=pointer,
-            excerpt=None if text is None else excerpt(text), origin='runtime', run=self.run,
-            corpus_version=self.corpus_version)
+            excerpt=quote, origin='runtime', run=self.run, corpus_version=self.corpus_version)
 
     def add(self, field, value, pointer, text=None, *, reason=None):
         self.fields.setdefault(field, []).append((value, self.receipt(field, pointer, text), reason))
@@ -752,89 +864,100 @@ class _Listing:
         roles = {'seller': [], 'fulfiller': [], 'warranty': []}
         for index, (label, raw) in enumerate(self.page.fields):
             role = _FIELD_ROLES.get(_key(label))
-            pointer, text = f'/custom-fields/{index}', f'{label}: {raw}'
+            pointer = json_pointer('custom-fields', index, label)
             if role in roles:
-                roles[role].append((raw, pointer, text))
+                roles[role].append((raw, pointer))
             elif role == 'condition':
                 value = raw.casefold() if raw.casefold() in {'new', 'used', 'refurbished'} else None
-                self.add('condition', value, pointer, text, reason=None if value else CONDITION_UNCLEAR)
+                self.add('condition', value, pointer, raw, reason=None if value else CONDITION_UNCLEAR)
             elif role == 'availability':
+                # A merchant's free text; anything but a plain in or out of stock leaves stock unknown.
                 value = {'in stock': True, 'out of stock': False}.get(_text(raw).casefold())
-                if value is not None:
-                    self.add('stock', value, pointer, text)
+                self.add('stock', value, pointer, raw, reason=None if value is not None else AVAILABILITY_UNCLEAR)
             elif role == 'brand' and raw:
-                self.add('variant.product.manufacturer', raw, pointer, text)
+                self.add('variant.product.manufacturer', raw, pointer, raw)
             elif role == 'color' and raw:
-                self.add('variant.color', raw, pointer, text)
+                self.add('variant.color', raw, pointer, raw)
             else:
-                self.spec(role, raw, pointer, text, specs)
+                self.spec(role, raw, pointer, specs)
         if self.category == 'laptop' and isinstance(ld.get('description'), str):
+            pointer = json_pointer('ld+json', ld_index, 'description')
             for line in ld['description'].splitlines():
                 match = _DESCRIPTION_LINE.fullmatch(line.strip())
-                gb = match and _DESCRIPTION_GB.fullmatch(match.group(2).strip())
+                gb = match and _GB.fullmatch(match.group(2).strip())
                 if gb:
                     role = 'ram' if match.group(1).casefold() in {'ram', 'memory'} else 'storage'
-                    self.add(specs[role], _gigabytes(gb), f'/ld+json/{ld_index}/description', line.strip())
+                    self.add(specs[role], _gigabytes(gb), pointer, line)
         brand = ld.get('brand')
         if isinstance(brand, dict) and isinstance(brand.get('name'), str) and brand['name'].strip():
-            self.add('variant.product.manufacturer', brand['name'].strip(), f'/ld+json/{ld_index}/brand/name')
+            self.add('variant.product.manufacturer', brand['name'].strip(),
+                     json_pointer('ld+json', ld_index, 'brand', 'name'))
         if name:
-            self.add('variant.product.model', name, f'/ld+json/{ld_index}/name')
+            self.add('variant.product.model', name, json_pointer('ld+json', ld_index, 'name'))
         for index, (label, raw) in enumerate(self.page.info):
             if _key(label) == 'condition':
                 value = raw.casefold() if raw.casefold() in {'new', 'used', 'refurbished'} else None
-                self.add('condition', value, f'/details/{index}', f'{label}: {raw}',
+                self.add('condition', value, json_pointer('details', index, label), raw,
                          reason=None if value else CONDITION_UNCLEAR)
         offer = ld.get('offers') if isinstance(ld.get('offers'), dict) else {}
         condition = offer.get('itemCondition')
         if isinstance(condition, str):
             value = _SCHEMA_CONDITION.get(condition.casefold().replace('http://', 'https://'))
-            self.add('condition', value, f'/ld+json/{ld_index}/offers/itemCondition',
+            self.add('condition', value, json_pointer('ld+json', ld_index, 'offers', 'itemCondition'),
                      reason=None if value else CONDITION_UNCLEAR)
         for option, value_id, label in combo:
-            pointer = f'/options/attribute[{option.attribute}]/{value_id}'
+            pointer = json_pointer('options', f'attribute[{option.attribute}]', value_id)
             if _key(option.name) in {'color', 'colour'} and label:
-                self.add('variant.color', label, pointer, f'{option.name}: {label}')
+                self.add('variant.color', label, pointer, label)
             else:
-                self.spec(_FIELD_ROLES.get(_key(option.name)), label, pointer, f'{option.name}: {label}', specs)
+                self.spec(_FIELD_ROLES.get(_key(option.name)), label, pointer, specs)
         if any(not any(r is None for _, _, r in self.fields.get(f, [])) for f in _REQUIRED_SPECS[self.category]):
             return None  # the page does not carry this category's mandatory specifications
         self.offer_state(attributes, offer, ld_index, combo)
-        self.store_notices()
-        observations = []
-        for field, entries in self.fields.items():
-            fact, receipts = _compose(entries)
-            observations.append(FieldObservation(fact=fact, evidence=receipts))
+        costs, extra = self.store_notices()
+        if not combo:  # the embedded identifiers describe the default selection only
+            identifiers, receipts = self.identifiers(attributes, ld, ld_index)
+            extra += receipts
+        else:
+            identifiers = ()
         return MarketplaceCandidate(
             SOURCE_ID, self.pid, self.vid, self.category, name or self.pid, listing_url,
-            Extraction(observations=tuple(observations)),
-            tuple((o.name, label) for o, _, label in combo),
+            _extraction(self.fields), tuple((o.name, label) for o, _, label in combo),
             seller=self.party('seller', roles['seller'], SELLER_UNNAMED),
             fulfiller=self.party('fulfiller_id', roles['fulfiller'], FULFILLER_UNNAMED),
-            warranty=self.warranty(roles['warranty']),
-            identifiers=self.identifiers(attributes, ld))
+            warranty=self.warranty(roles['warranty']), identifiers=identifiers,
+            notices=_extraction(self.notices), costs=costs, evidence=tuple(extra))
 
-    def spec(self, role, raw, pointer, text, specs):
-        if role in {'cpu', 'gpu', 'os'} and role in specs and raw:
-            self.add(specs[role], raw, pointer, text)
-        elif role in {'ram', 'storage'} and role in specs and (m := _GB.fullmatch(raw.strip())):
-            self.add(specs[role], _gigabytes(m), pointer, text)
-        elif role == 'size' and (m := _INCHES.fullmatch(raw.strip())):
-            self.add(specs['size'], m.group(1), pointer, text)
-        elif role == 'resolution' and (m := _RESOLUTION.fullmatch(raw.strip())):
-            self.add(specs['width'], int(m.group(1)), pointer, text)
-            self.add(specs['height'], int(m.group(2)), pointer, text)
-        elif role == 'refresh' and (m := _HERTZ.fullmatch(raw.strip())):
-            self.add(specs['refresh'], int(m.group(1)), pointer, text)
+    def spec(self, role, raw, pointer, specs):
+        """A configuration reading; text in an unrecognized form is an unknown reading, never dropped."""
+        raw = raw.strip()
+        if role in {'cpu', 'gpu', 'os'} and role in specs:
+            if raw:
+                self.add(specs[role], raw, pointer, raw)
+        elif role in {'ram', 'storage'} and role in specs:
+            m = _GB.fullmatch(raw)
+            self.add(specs[role], _gigabytes(m) if m else None, pointer, raw, reason=None if m else SPEC_UNCLEAR)
+        elif role == 'size':
+            m = _INCHES.fullmatch(raw)
+            self.add(specs['size'], m.group(1) if m else None, pointer, raw, reason=None if m else SPEC_UNCLEAR)
+        elif role == 'resolution':
+            m = _RESOLUTION.fullmatch(raw)
+            for key, group in (('width', 1), ('height', 2)):
+                self.add(specs[key], int(m.group(group)) if m else None, pointer, raw,
+                         reason=None if m else SPEC_UNCLEAR)
+        elif role == 'refresh':
+            m = _HERTZ.fullmatch(raw)
+            self.add(specs['refresh'], int(m.group(1)) if m else None, pointer, raw,
+                     reason=None if m else SPEC_UNCLEAR)
 
     def offer_state(self, attributes, offer, ld_index, combo):
         """Price, online stock and purchasability; selectable options leave all three unknown."""
         if combo:
             option, value_id, label = combo[0]
-            pointer, text = f'/options/attribute[{option.attribute}]/{value_id}', f'{option.name}: {label}'
+            pointer = json_pointer('options', f'attribute[{option.attribute}]', value_id)
             for field in ('price', 'stock', 'purchasable'):
                 self.fields.pop(field, None)
-                self.add(field, None, pointer, text, reason=OPTION_PRICED)
+                self.add(field, None, pointer, label, reason=OPTION_PRICED)
             return
         base = '/BCData/product_attributes'
         if type(attributes.get('purchasable')) is bool:
@@ -851,7 +974,7 @@ class _Listing:
         availability = offer.get('availability')
         if isinstance(availability, str):
             value = _SCHEMA_STOCK.get(availability.casefold().replace('http://', 'https://'))
-            self.add('stock', value, f'/ld+json/{ld_index}/offers/availability',
+            self.add('stock', value, json_pointer('ld+json', ld_index, 'offers', 'availability'),
                      reason=None if value is not None else AVAILABILITY_UNCLEAR)
         self.price(attributes, offer, ld_index)
 
@@ -865,12 +988,12 @@ class _Listing:
         else:
             self.add('price', None, pointer, reason=PRICE_ABSENT)
         if 'price' in offer:
-            raw = offer.get('price')
+            raw, ld_pointer = offer.get('price'), json_pointer('ld+json', ld_index, 'offers', 'price')
             if raw == '' or raw is None:
-                self.add('price', None, f'/ld+json/{ld_index}/offers/price', reason=PRICE_ABSENT)
+                self.add('price', None, ld_pointer, reason=PRICE_ABSENT)
             else:
                 value, reason = self.money(raw, offer.get('priceCurrency'))
-                self.add('price', value, f'/ld+json/{ld_index}/offers/price', reason=reason)
+                self.add('price', value, ld_pointer, reason=reason)
         purchasable = [v for v, _, r in self.fields['purchasable'] if r is None]
         call = attributes.get('call_for_price_message')
         if isinstance(call, str) and call.strip():
@@ -898,11 +1021,21 @@ class _Listing:
         return {'amount': format(amount.normalize(), 'f'), 'currency': currency}, None
 
     def store_notices(self):
-        """Store-wide VAT footer and marketplace notice, kept as source-scoped policy text."""
+        """Store-wide VAT footer and marketplace notice as source-scoped text, and the VAT marker.
+
+        The listed price excludes VAT, so the tax charge is unknown with a reason: never zero and
+        never computed here. Without the footer the tax treatment is unpublished, also unknown.
+        """
         footer = _text(''.join(self.page.footer))
         statements = [_text(m.group(0)) for m in _VAT_FOOTER.finditer(footer)]
+        extra = []
         if statements:
             self.notice('policy.tax', statements, '/footer')
+            receipt = self.receipt('costs.order.tax', '/footer', statements[0], scope='source')
+            extra.append(receipt)
+            tax = Charge(kind='tax', state='unknown', reason=TAX_EXCLUDED, evidence_ids=(receipt.evidence_id,))
+        else:
+            tax = Charge(kind='tax', state='unknown', reason=TAX_UNPUBLISHED)
         notices = []
         for region, chunks in self.page.regions.items():
             if region.endswith('--global'):
@@ -910,11 +1043,12 @@ class _Listing:
                 notices.extend(_text(m.group(0)) for p in _MARKETPLACE_NOTICE for m in p.finditer(text))
         if notices:
             self.notice('policy.marketplace', list(dict.fromkeys(notices)), '/regions/global')
+        return (tax,), extra
 
     def notice(self, field, statements, pointer):
-        value = ' | '.join(dict.fromkeys(statements))
-        receipt = self.receipt(field, pointer, value, scope='source')
-        self.fields[field] = [(value, receipt, None)]
+        statements = list(dict.fromkeys(statements))
+        receipts = tuple(self.receipt(field, f'{pointer}/{i}', s, scope='source') for i, s in enumerate(statements))
+        self.notices[field] = [(' | '.join(statements), r, None) for r in receipts]
 
     def party(self, field, readings, unnamed):
         if not readings:
@@ -922,14 +1056,14 @@ class _Listing:
             return PartyObservation(Fact[str](state='unknown', reason=unnamed, evidence_ids=[receipt.evidence_id]),
                                     None, (receipt,))
         entries = []
-        for raw, pointer, text in readings:
+        for raw, pointer in readings:
             name = _text(raw)
             valid = _PARTY_NAME.fullmatch(name) is not None
-            entries.append((name if valid else None, self.receipt(field, pointer, text),
+            entries.append((name if valid else None, self.receipt(field, pointer, raw),
                             None if valid else PARTY_INVALID))
         fact, receipts = _compose(entries)
         if fact['state'] == 'conflict':
-            # Two spellings of one party are still one party; two parties are a conflict.
+            # Two names of the operator are one party; any other two names are a conflict.
             ids = {party_id(v) for v in fact['alternatives']}
             if len(ids) == 1:
                 fact = {'state': 'known', 'value': fact['alternatives'][0], 'evidence_ids': fact['evidence_ids']}
@@ -944,9 +1078,9 @@ class _Listing:
             months = _months(tab)
             entries.append((months, self.receipt('warranty.months', '/tabs/warranty', tab),
                             None if months is not None else WARRANTY_UNCLEAR))
-        for raw, pointer, text in readings:
+        for raw, pointer in readings:
             months = _months(raw)
-            entries.append((months, self.receipt('warranty.months', pointer, text),
+            entries.append((months, self.receipt('warranty.months', pointer, raw),
                             None if months is not None else WARRANTY_UNCLEAR))
         if entries:
             fact, receipts = _compose(entries)
@@ -962,13 +1096,25 @@ class _Listing:
             territory={'state': 'unknown', 'reason': WARRANTY_TERRITORY, 'evidence_ids': [territory.evidence_id]})
         return WarrantyObservation(warranty, (*receipts, provider, territory))
 
-    def identifiers(self, attributes, ld):
-        found = []
+    def identifiers(self, attributes, ld, ld_index):
+        """SKU, MPN, UPC and GTIN when the embedded blocks agree, each with its receipts."""
+        found, receipts = [], []
         for key in ('sku', 'mpn', 'upc', 'gtin'):
-            values = {v.strip() for v in (attributes.get(key), ld.get(key)) if isinstance(v, str) and v.strip()}
-            if len(values) == 1:
-                found.append((key, values.pop()))
-        return tuple(found)
+            sources = [(v.strip(), pointer) for v, pointer in (
+                (attributes.get(key), f'/BCData/product_attributes/{key}'),
+                (ld.get(key), json_pointer('ld+json', ld_index, key))) if isinstance(v, str) and v.strip()]
+            if len({v for v, _ in sources}) == 1:
+                found.append((key, sources[0][0]))
+                receipts.extend(self.receipt(f'identifiers.{key}', pointer, value) for value, pointer in sources)
+        return tuple(found), receipts
+
+
+def _extraction(fields):
+    observations = []
+    for entries in fields.values():
+        fact, receipts = _compose(entries)
+        observations.append(FieldObservation(fact=fact, evidence=receipts))
+    return Extraction(observations=tuple(observations))
 
 
 def _statement(*parts):

@@ -4,7 +4,14 @@ Task #55 (T19) adds `app.adapters.search_catalog(fetch, "ayoub_computers", categ
 for laptop and monitor candidates on ayoubcomputers.com, a BigCommerce multi-vendor marketplace.
 Like the [Mojitech catalog](mojitech-catalog.md), it returns v2 `FieldObservation`/`Extraction`
 records and raw snapshots, not verified offers. Ayoub candidates (`MarketplaceCandidate`) also
-carry the listing's `seller`, `fulfiller`, `warranty` and `identifiers` (SKU, MPN).
+carry what a marketplace listing must keep apart:
+
+- the listing's `seller`, `fulfiller` and `warranty`;
+- `identifiers` (SKU, MPN), for listings without options;
+- `notices`: the page's store-wide statements, kept apart from the listing's own `extraction`;
+- `costs`: the VAT, marked unknown;
+- `evidence`: the receipts for identifiers and costs.
+
 `CATALOG.fetch_policies(fetch)` reads the terms and delivery guide as source-scoped policy text.
 Current-run verification, identity and eligibility still decide recommendations (#76).
 
@@ -33,9 +40,10 @@ discovery or cached data.
 Product pages are fetched by ID. Ayoub's product URLs are a bare `/<slug>/`, and capabilities
 must begin with a literal path segment. BigCommerce's `products.php?productId=N` returns the
 same page with status 200, no redirect (checked live for 80559). Its query name is camel case,
-so `QueryKey` now accepts upper-case letters. Names still match exactly, and a camel-case name
-is also checked against the action denylist (`addToCart` is refused). Names differing only in
-case cannot be declared together.
+so `QueryKey` now accepts upper-case letters. Names still match exactly. A name is refused if,
+in any case and with separators removed, it spells an action word (`addToCart`, `ADDtoCart`,
+`MYaccount` and `WCajax` are all refused). Names differing only in case cannot be declared
+together.
 
 A search page holds about 20 cards and only two product pages are read, so discovery ranks
 cards first. Cards whose titles contain every search word come first; among those, cards
@@ -43,7 +51,8 @@ naming an accessory (case, sleeve, stand, ...) that the search did not ask for c
 ranking orders reads only: no fact comes from a card. A product page must show its category's
 mandatory specifications as structured fields to be read as that category: CPU, RAM and
 storage for laptops; resolution, refresh rate and size for monitors. Other pages are counted
-in `skipped_not_category`. Phones, tablets and audio are not supported: the audit did not
+in `skipped_not_category` and reported as a partial result. A skip can be an accessory or a real
+product whose specifications are written in another form. Phones, tablets and audio are not supported: the audit did not
 establish Ayoub phones, and no tablet or audio page was checked.
 
 ## What a listing yields
@@ -53,22 +62,38 @@ Every fact cites the product-page snapshot and is bound to its own product and c
 | Field | Source on the page | Rule |
 |---|---|---|
 | `price` | BCData `price.without_tax` and JSON-LD `offers.price` | Decimal (at most cents); USD/LBP/EUR/AED; disagreement is a conflict |
-| `stock` | BCData `instock`, JSON-LD `availability`, an `AVAILABILITY` custom field | Online stock only; needs the store's own flag; backorder and pre-order stay unknown |
+| `stock` | BCData `instock`, JSON-LD `availability`, an `AVAILABILITY` custom field | Online stock only; needs the store's own flag; backorder, pre-order and any availability text other than plain "In Stock"/"Out of Stock" stay unknown |
 | `purchasable` | BCData `purchasable` | |
 | `condition` | Details list, JSON-LD `itemCondition`, `CONDITION` field | new, used or refurbished; anything else is unknown |
-| specs | Custom fields (`CPU`, `RAM`, `SSD`, `GPU`, `SIZE`, `Resolution`, `REFRESH RATE`), plus explicit `RAM:`/`Memory:`/`Storage:` lines in the description | Titles are never parsed; 1 TB is 1024 GB as elsewhere |
+| specs | Custom fields (`CPU`, `RAM`, `SSD`, `GPU`, `SIZE`, `Resolution`, `REFRESH RATE`), plus explicit `RAM:`/`Memory:`/`Storage:` lines in the description | Titles are never parsed; 1 TB is 1024 GB as elsewhere; a plain unit word ("256GB SSD") or a short label ("(4K UHD)") is allowed; other wording is an unknown reading, never dropped |
 | `variant.color` | A `Color` option or custom field | |
 | `seller`, `fulfiller_id` | A listing custom field `Sold By`/`Seller`/`Vendor` or `Fulfilled By`/`Shipped By` | See below |
 | `warranty.months` | The warranty tab and a `WARRANTY` field ("1 Year" is 12) | Provider and territory stay unknown |
-| `policy.tax` | Footer: "Prices exclude 11% VAT, applied at checkout" | Source-scoped text |
-| `policy.marketplace` | The store-wide marketplace notice | Source-scoped text |
+| `notices`: `policy.tax` | Footer: "Prices exclude 11% VAT, applied at checkout" | Source-scoped text |
+| `notices`: `policy.marketplace` | The store-wide marketplace notice | Source-scoped text |
+| `costs`: tax | The same footer | `Charge(kind='tax', state='unknown')`: "listed price excludes VAT; the store adds it at checkout"; without the footer, "tax treatment is not published"; never zero, never computed here |
+| `identifiers` | BCData and JSON-LD SKU, MPN, UPC, GTIN | Kept when the two agree, with receipts; omitted for option products, whose embedded identifiers describe the default selection |
+
+Receipts point at the field they read, for example `/custom-fields/7/Sold By` or
+`/BCData/product_attributes/instock`. An excerpt is attached only when the raw page holds that
+text verbatim, so every excerpt is a quotation, as corpus storage requires.
 
 Price is unknown unless the listing is explicitly purchasable. Missing, empty, zero, negative,
 malformed, sub-cent or call-for-price amounts never become a price. Products with selectable
-options (for example two colours) become one candidate per combination, at most 12. Their
-price, stock and purchasability stay unknown, because BigCommerce loads them only after a
-selection. Checkbox, text or optional options are refused as unsupported. Nothing is resolved as
-a cost here: the VAT footer and the delivery guide are kept as text for the cost engine.
+options (for example two colours) become one candidate per combination, at most 12, checked
+before any combination is built. Their price, stock and purchasability stay unknown, because
+BigCommerce loads them only after a selection.
+
+The following are refused as unsupported:
+- checkbox, text or optional options;
+- repeated option IDs;
+- a second or nested custom-field table, details list or warranty tab.
+
+The parser takes constant time per element, so deeply nested markup cannot stall it. Omitted
+`</td>` and `</tr>` end tags are closed at the next row, as browsers do.
+
+The only cost recorded is the unknown VAT charge. The delivery guide is kept as text for the
+cost engine.
 
 ### Sellers and fulfillers
 
@@ -83,8 +108,12 @@ The reader therefore keeps seller and fulfiller **unknown** for every observed l
 assumes Ayoub is the seller. A listing-specific custom field naming a party is read when present:
 
 - Ayoub Computers (or AyoubComputers.com) gets the operator ID `ayoub_computers`.
-- Every other name gets its own ID, `ayoub_computers.vendor.<name>`.
+- Every other name gets its own ID, `ayoub_computers.party.<slug>-<digest>`. The digest is of
+  the exact spelling, ignoring case and spacing, so "A.B. Tech" and "A-B Tech" stay apart.
 - Two different names on one listing are a conflict.
+
+A v2 `Offer` needs a seller ID. A candidate whose seller is unknown therefore stays
+provisional, and integration (#76) must never default its seller to `ayoub_computers`.
 
 Each listing is a separate BigCommerce product, so two listings of one model stay two candidates
 with their own sellers. Synthetic tests cover three vendors on one model, because no real
