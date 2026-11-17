@@ -41,3 +41,16 @@ Synthetic variants of the minimized fixtures above, each with one deliberate cha
 | `price_mismatch.page.html` | `class_cellulars/page.html` | Variation 19116 shows 1100 while the API record says 103000 minor units |
 | `duplicate_variation.page.html` | `class_cellulars/page.html` | Variation 18398 repeated identically; 20648 repeated at 1050 |
 | `too_many_decimals.page.html` | `mojitech/page.html` | Variation 91707 at 1100.55 and 91708 at 1100.5 (currency minor unit 1) |
+
+## Amhaz candidate capture (`amhaz/`)
+
+`amhaz/candidate-2026-11-17.json` is a minimized factual extract of three read-only GETs made
+on 2026-11-17 outside the app runtime, recorded in [source coverage](../../../docs/source-coverage.md)
+under Amhaz (#56). It keeps the request method and bounds, each reply's URL, time, status, byte
+count and SHA-256, and case-insensitive counts of policy words (warranty, return, delivery and
+others) in each full reply. From the pages it keeps the contact page's brand name, address and
+gallery captions, the footer's link targets, the sample product's visible price and availability
+lines, the related product cards' visible lines and links, and the product records from the
+page's embedded Next.js data (images and units removed; descriptions kept, all empty). Contact
+numbers and email were left out. The identity is unresolved (#50), so this capture is evidence
+for the blocker, not purchase evidence; no reader consumes it.
