@@ -15,6 +15,7 @@ from app.contracts_v2 import (
     AgentFinding, Clarification, ComparisonWorkspace, Evidence, Offer, Recommendation,
     RunReference, RunSnapshot, ShoppingRequest,
 )
+from app.contracts_v2 import CoverageCounts, UncertainAlternative
 
 
 class AgentTask(Model):
@@ -64,9 +65,13 @@ class ResearchContext(Model):
 
 
 class WritingContext(Model):
+    """What the writer explains. request, coverage and uncertain are optional (2026-11-17 revision)."""
     run: RunReference
     recommendations: tuple[Recommendation, ...]
     evidence: tuple[Evidence, ...] = ()
+    request: ShoppingRequest | None = None
+    coverage: CoverageCounts | None = None
+    uncertain: tuple[UncertainAlternative, ...] = ()
 
 
 Orchestrator = AgentRole[PlanningContext, ResearchPlan]
