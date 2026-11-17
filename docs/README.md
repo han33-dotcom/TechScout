@@ -8,6 +8,8 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 
 ## Documents
 
+- [Held-out evaluation protocol](evaluation-protocol.md)
+
 - [Architecture, API and reproducibility report: implemented checkpoint and remaining work](architecture-api-report.md)
 
 - [PC and Parts exact-listing retrieval and live-access limitations](pcandparts.md)

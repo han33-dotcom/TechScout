@@ -1,0 +1,25 @@
+{
+  "manifest": "cold",
+  "state": "frozen",
+  "version": "1.0.0",
+  "issue": "https://github.com/han33-dotcom/TechScout/issues/78",
+  "applies_to": ["full-cold"],
+  "corpus_version": "eval-cold-empty-v1",
+  "index_version": "none",
+  "processing_versions": {"extraction_version": "none", "chunk_version": "none", "embedding_model": "none", "embedding_dimensions": 0},
+  "sources": [],
+  "categories": [],
+  "observation_dates": {"earliest": null, "latest": null},
+  "contents": {"documents": 0, "observations": 0, "passages": 0, "embeddings": 0},
+  "acquisition_cost": {"spend_usd": "0", "fetch_attempts": 0, "paid_calls": 0, "elapsed_ms": 0},
+  "construction": [
+    "Create a new PostgreSQL database for each cold run and apply the migrations at the commit in eval/run-freeze.json.",
+    "Load the retailer directory and source capabilities from the same directory snapshot as the warm runs (recorded in eval/run-freeze.json); load no corpus documents, observations, passages or embeddings.",
+    "Leave earlier run history and private buyer data out of the database."
+  ],
+  "isolation": [
+    "The background ingestion worker is stopped for the whole evaluation.",
+    "Each cold run has its own database; whatever it writes is kept for audit and never reaches any other run.",
+    "No held-out answer, baseline output or verifier finding is ever written into a corpus."
+  ]
+}

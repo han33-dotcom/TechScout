@@ -1,0 +1,27 @@
+{
+  "protocol": "TechScout held-out evaluation protocol",
+  "issue": "https://github.com/han33-dotcom/TechScout/issues/78",
+  "version": "1.0.0",
+  "hash_rule": "SHA-256 of each file with CRLF line endings normalized to LF. combined_sha256 is the SHA-256 of one line per file, \"<path>  <hash>\", sorted by path, each line ending in a newline. Check with: python eval/freeze.py",
+  "files": {
+    "docs/evaluation-protocol.md": "9e933caf5a079475850421c8a053dcc88a187a5f5a7e2afb2934487b3de1b6e6",
+    "eval/README.md": "d315a46d9c92853c11a0a8886b43da30823aedb760579a4ba3fa0018cac7ef35",
+    "eval/baselines.json": "4cc60cc7438eef83cabea3be1964851bd3dc80f6de5fe57c3a5608d29f235a98",
+    "eval/calibration.json": "f71001089a6e91c2bc2613e613b768e888040bd6a54414b02b3e55ccfec4070e",
+    "eval/corpus/cold.json": "e5acaca9f9a5dc5ee2e23b2164246ef059383a7e71da8ca34a115a419d867f85",
+    "eval/corpus/warm.template.json": "dff5838d57fd110a56f70d2449263a208d030feeb1ccadc2c133e19156dcd113",
+    "eval/heldout.json": "056311f115db956a4086c47ad0ef11deba3719d571ffbf29b779c4004c302f82",
+    "eval/models.json": "70414817143142dc69c3bcfb829ed5f884cd4029855423420564aeb3c73dbf09",
+    "eval/protocol.json": "36aa862ee50ddd53b284929cbd58c9d90141a725e45bf9f45c3cc002f689c84f",
+    "eval/run-freeze.template.json": "4ccb7aec923e25ec19c8cc5c37033fc6fa81cb697ff9bf7cc07599c75b2c1cd0"
+  },
+  "combined_sha256": "09b6542e85143fcb0071ddddfc47c7b0adf4c3f8437aa49bbd94a48a29352275",
+  "pre_run": null,
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-11-17",
+      "change": "Initial freeze of the protocol, 30 held-out requests, calibration set, baselines, corpus manifests and model settings (#78)."
+    }
+  ]
+}

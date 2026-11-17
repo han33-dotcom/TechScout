@@ -1,0 +1,513 @@
+{
+  "version": "1.0.0",
+  "issue": "https://github.com/han33-dotcom/TechScout/issues/78",
+  "status": "Frozen before results. Defines who runs what, on which cases, how often and in what order.",
+  "configurations": [
+    {
+      "id": "full-warm",
+      "kind": "automated",
+      "cases": "all",
+      "repetitions": 3,
+      "corpus": "warm",
+      "description": "TechScout full system: AI orchestrator, up to three research workers, AI evaluator and writer under the deterministic controller."
+    },
+    {
+      "id": "single-agent-warm",
+      "kind": "automated",
+      "cases": "all",
+      "repetitions": 3,
+      "corpus": "warm",
+      "description": "One agent with the same tools, adapters, evidence, verifier, cost engine, budgets and base model; no separate workers or evaluator."
+    },
+    {
+      "id": "fixed-heuristic-warm",
+      "kind": "automated",
+      "cases": "all",
+      "repetitions": 3,
+      "corpus": "warm",
+      "description": "Fixed search, filter and recheck path (the existing rule planner) through the same adapters, verifier, cost engine and budgets; no model planning."
+    },
+    {
+      "id": "full-cold",
+      "kind": "automated",
+      "cases": "all",
+      "repetitions": 1,
+      "corpus": "cold",
+      "description": "TechScout full system starting from the empty corpus."
+    },
+    {
+      "id": "lebtech",
+      "kind": "external_service",
+      "cases": "local_external",
+      "repetitions": 1,
+      "corpus": "external",
+      "description": "LebTech price comparison (https://lebtechlb.com), operated by hand without an account."
+    },
+    {
+      "id": "onesouq",
+      "kind": "external_service",
+      "cases": "local_external",
+      "repetitions": 1,
+      "corpus": "external",
+      "description": "One Souq price comparison (https://onesouqlb.com), operated by hand without an account."
+    },
+    {
+      "id": "manual-shopping",
+      "kind": "manual",
+      "cases": "local_external",
+      "repetitions": 1,
+      "corpus": "external",
+      "description": "A teammate using a web search engine and retailer websites, as a buyer would."
+    },
+    {
+      "id": "chatgpt-browsing",
+      "kind": "external_assistant",
+      "cases": "assistant",
+      "repetitions": 1,
+      "corpus": "external",
+      "description": "ChatGPT with web search enabled, memory and custom instructions off."
+    },
+    {
+      "id": "claude-browsing",
+      "kind": "external_assistant",
+      "cases": "assistant",
+      "repetitions": 1,
+      "corpus": "external",
+      "description": "Claude with web search enabled, memory and custom instructions off."
+    }
+  ],
+  "not_in_frozen_comparisons": [
+    {
+      "id": "no-investigation",
+      "reason": "Existing development baseline in config/evaluation.json; useful for calibration, not part of the held-out comparisons."
+    },
+    {
+      "id": "webmall",
+      "reason": "Optional timeboxed supplemental benchmark. Its task subset must be declared and frozen in its own file before it runs; it is never mixed into held-out metrics or reported as an official full benchmark score."
+    }
+  ],
+  "automated_equivalence": [
+    "same code commit, recorded in eval/run-freeze.json",
+    "same corpus snapshot copy for every warm run, and the same empty corpus for every cold run",
+    "same caps: 120 seconds active execution, external-call cap and per-run spend cap from config/evaluation.json",
+    "same base model and settings (eval/models.json)",
+    "same adapters, source gate, eligibility and cost engine, and final verifier"
+  ],
+  "external_resources_rule": "External services and assistants have their own unknown corpus, compute and cost. They are never described as resource-equivalent to the automated configurations, and no internal cost is invented for them.",
+  "subsets": {
+    "local_external": [
+      "H01",
+      "H02",
+      "H03",
+      "H04",
+      "H06",
+      "H10",
+      "H12",
+      "H15",
+      "H17",
+      "H24"
+    ],
+    "assistant": [
+      "H01",
+      "H02",
+      "H03",
+      "H04",
+      "H06",
+      "H10",
+      "H12",
+      "H15",
+      "H17",
+      "H24",
+      "H11",
+      "H30"
+    ],
+    "rationale": {
+      "local_external": "10 domestic cases, 9 of them phones or laptops: exact-variant traps (H01, H03, H06, H10, H15, H17), needs-based selection (H04, H12, H24), missing-cost traps (H02, H04, H10, H12, H15, H17, H24), availability traps (H03, H15), designed no-match (H06), and Arabic (H02, H17) and Arabizi (H03) inputs.",
+      "assistant": "The local subset plus two international cases (H11, H30). Assistants can attempt international purchases, while LebTech and One Souq are domestic services. H11 and H30 are scored only in the international capability table, never in paired price outcomes or domestic success comparisons."
+    }
+  },
+  "subset_inputs": {
+    "H01": {
+      "buyer_text": "iPhone 17 Pro Max 512GB, physical SIM + eSIM version (not eSIM-only)",
+      "fixed_requirements": "512 GB storage; one physical nano-SIM plus eSIM (not eSIM-only, not dual physical SIM); new condition; delivered to Beirut; only sellers in Lebanon.",
+      "destination": "Beirut"
+    },
+    "H02": {
+      "buyer_text": "سامسونج غالاكسي A56 ذاكرة ٢٥٦ جيجا",
+      "fixed_requirements": "256 GB storage; new condition; delivered to Tripoli; only sellers in Lebanon.",
+      "destination": "Tripoli"
+    },
+    "H03": {
+      "buyer_text": "baddi redmi note 14 pro 5g 256 giga, a3la shi 350$",
+      "fixed_requirements": "256 GB storage; total at most 350 USD (hard limit); new condition; only sellers in Lebanon.",
+      "destination": "Lebanon"
+    },
+    "H04": {
+      "buyer_text": "A phone for my mother: big screen, long battery life, easy to use. Under $250, cash on delivery to Saida.",
+      "fixed_requirements": "total at most 250 USD (hard limit); new condition; pay by cash; delivered to Saida; only sellers in Lebanon.",
+      "destination": "Saida"
+    },
+    "H06": {
+      "buyer_text": "iPhone 16 Pro 64GB, new",
+      "fixed_requirements": "64 GB storage; new condition; only sellers in Lebanon.",
+      "destination": "Lebanon"
+    },
+    "H10": {
+      "buyer_text": "Lenovo LOQ 15 with RTX 4060, 16GB RAM, 512GB SSD",
+      "fixed_requirements": "NVIDIA GeForce RTX 4060 graphics; at least 16 GB RAM; at least 512 GB storage; total at most 1,100 USD (hard limit); new condition; delivered to Zahle; only sellers in Lebanon.",
+      "destination": "Zahle"
+    },
+    "H12": {
+      "buyer_text": "Laptop for video editing in DaVinci Resolve. It needs a dedicated NVIDIA GPU. Hard max $1,300, delivered to Byblos.",
+      "fixed_requirements": "at least 16 GB RAM; must run DaVinci Resolve; total at most 1,300 USD (hard limit); new condition; delivered to Byblos; only sellers in Lebanon.",
+      "destination": "Byblos"
+    },
+    "H15": {
+      "buyer_text": "HP ProBook 450 G10 (Core i5), 16GB RAM, 512GB SSD",
+      "fixed_requirements": "Intel Core i5 processor; at least 16 GB RAM; at least 512 GB storage; new condition; pay by card; pickup in Beirut; only sellers in Lebanon.",
+      "destination": "Beirut"
+    },
+    "H17": {
+      "buyer_text": "لابتوب HP Victus 15 مع كرت شاشة RTX 3050 ورام ١٦ جيجا",
+      "fixed_requirements": "NVIDIA GeForce RTX 3050 graphics; at least 16 GB RAM; new condition; delivered to Nabatieh; only sellers in Lebanon.",
+      "destination": "Nabatieh"
+    },
+    "H24": {
+      "buyer_text": "27-inch 1440p gaming monitor, at least 165Hz, around $250, delivered to Tyre.",
+      "fixed_requirements": "listed diagonal at least 26.5 inches; at least 2560 x 1440 resolution; at least 165 Hz; budget around 250 USD (flexible); new condition; delivered to Tyre; only sellers in Lebanon.",
+      "destination": "Tyre"
+    },
+    "H11": {
+      "buyer_text": "MacBook Pro 14-inch M5, 16GB, 512GB",
+      "fixed_requirements": "Apple M5 processor; at least 16 GB RAM; at least 512 GB storage; new condition; delivered to Beirut; sellers in Lebanon and also in the US and the UAE with shipping to Lebanon.",
+      "destination": "Beirut"
+    },
+    "H30": {
+      "buyer_text": "Over-ear noise-cancelling headphones for long flights, around $350. Include US and UAE offers, delivered to Beirut.",
+      "fixed_requirements": "headphones; active noise cancellation; budget around 350 USD (flexible); new condition; delivered to Beirut; sellers in Lebanon and also in the US and the UAE with shipping to Lebanon.",
+      "destination": "Beirut"
+    }
+  },
+  "repetition_budget": {
+    "worst_case_rule": "Before the first held-out run, multiply the planned automated runs (30 x 3 x 3 warm runs + 30 cold runs = 300) by the per-run spend cap recorded in eval/run-freeze.json, and compare with the remaining project allowance minus the demo reserve.",
+    "reduction_order": [
+      "fixed-heuristic-warm: 3 repetitions to 1",
+      "full-warm and single-agent-warm together: 3 repetitions to 2",
+      "stop and ask the team; never drop the cold runs, never go below 2 repetitions for full-warm and single-agent-warm, and never cut cases silently"
+    ],
+    "record": "Any reduction is written in eval/run-freeze.json before the first held-out run and reported with the results."
+  },
+  "run_order": {
+    "unit": "A block is one case: the repetition-r runs of every automated warm configuration for that case, run back to back, then one verification pass.",
+    "algorithm": "Python: order = sorted(case_ids); random.Random(seed).shuffle(order). Warm repetition r uses seed 77 + r; the cold pass uses seed 178.",
+    "warm_repetition_1": [
+      "H23",
+      "H11",
+      "H15",
+      "H20",
+      "H26",
+      "H17",
+      "H08",
+      "H30",
+      "H18",
+      "H06",
+      "H03",
+      "H12",
+      "H28",
+      "H01",
+      "H25",
+      "H19",
+      "H16",
+      "H29",
+      "H13",
+      "H05",
+      "H21",
+      "H02",
+      "H14",
+      "H09",
+      "H24",
+      "H22",
+      "H10",
+      "H04",
+      "H07",
+      "H27"
+    ],
+    "warm_repetition_2": [
+      "H10",
+      "H11",
+      "H02",
+      "H09",
+      "H22",
+      "H18",
+      "H13",
+      "H26",
+      "H14",
+      "H17",
+      "H27",
+      "H21",
+      "H29",
+      "H24",
+      "H19",
+      "H04",
+      "H07",
+      "H01",
+      "H28",
+      "H03",
+      "H30",
+      "H16",
+      "H23",
+      "H25",
+      "H08",
+      "H06",
+      "H20",
+      "H12",
+      "H15",
+      "H05"
+    ],
+    "warm_repetition_3": [
+      "H11",
+      "H21",
+      "H26",
+      "H15",
+      "H06",
+      "H16",
+      "H05",
+      "H17",
+      "H19",
+      "H20",
+      "H10",
+      "H30",
+      "H03",
+      "H04",
+      "H07",
+      "H02",
+      "H08",
+      "H22",
+      "H27",
+      "H01",
+      "H24",
+      "H29",
+      "H28",
+      "H25",
+      "H12",
+      "H14",
+      "H23",
+      "H18",
+      "H13",
+      "H09"
+    ],
+    "cold": [
+      "H14",
+      "H12",
+      "H05",
+      "H27",
+      "H02",
+      "H22",
+      "H01",
+      "H19",
+      "H07",
+      "H24",
+      "H23",
+      "H20",
+      "H13",
+      "H30",
+      "H17",
+      "H09",
+      "H29",
+      "H26",
+      "H28",
+      "H03",
+      "H06",
+      "H10",
+      "H16",
+      "H11",
+      "H25",
+      "H08",
+      "H21",
+      "H15",
+      "H18",
+      "H04"
+    ],
+    "configuration_order_in_block": "Block k (counting from 0) runs the three warm configurations rotated by k: [full-warm, single-agent-warm, fixed-heuristic-warm] shifted left by k mod 3. Exception: in a paired session (local subset, repetition 1), full-warm runs in the techscout slot and the other two run right after it, unattended, in the rotated order.",
+    "sequence": "Warm repetition-1 blocks (including the paired sessions), then the cold pass, then warm repetition-2 blocks, then warm repetition-3 blocks.",
+    "cold_pass": "Cold runs use their own empty-corpus databases, so cold and warm runs never share a database."
+  },
+  "paired_sessions": {
+    "what": "For each local_external case, the four sides run one after another in the listed order, within 90 minutes. The techscout slot is the full-warm repetition-1 run (at most 3 minutes); each external side is its service phase followed by its own verification phase (LebTech and One Souq at most 8 + 10 minutes, manual shopping at most 20 minutes), so the worst case is about 60 minutes. The other two warm configurations run unattended right after full-warm.",
+    "verification_pass": "The independent verifier checks each side's selected offers as soon as that side finishes, each within 60 minutes of it. These checks form the case's verification pass, which ends within 60 minutes after the last side; paired price outcomes use the totals from this pass, not the operators' own verification phases.",
+    "order_design": "Williams balanced Latin square: each side takes each position once and follows each other side once across every four cases.",
+    "orders": {
+      "H01": [
+        "techscout",
+        "lebtech",
+        "manual-shopping",
+        "onesouq"
+      ],
+      "H02": [
+        "lebtech",
+        "onesouq",
+        "techscout",
+        "manual-shopping"
+      ],
+      "H03": [
+        "onesouq",
+        "manual-shopping",
+        "lebtech",
+        "techscout"
+      ],
+      "H04": [
+        "manual-shopping",
+        "techscout",
+        "onesouq",
+        "lebtech"
+      ],
+      "H06": [
+        "techscout",
+        "lebtech",
+        "manual-shopping",
+        "onesouq"
+      ],
+      "H10": [
+        "lebtech",
+        "onesouq",
+        "techscout",
+        "manual-shopping"
+      ],
+      "H12": [
+        "onesouq",
+        "manual-shopping",
+        "lebtech",
+        "techscout"
+      ],
+      "H15": [
+        "manual-shopping",
+        "techscout",
+        "onesouq",
+        "lebtech"
+      ],
+      "H17": [
+        "techscout",
+        "lebtech",
+        "manual-shopping",
+        "onesouq"
+      ],
+      "H24": [
+        "lebtech",
+        "onesouq",
+        "techscout",
+        "manual-shopping"
+      ]
+    },
+    "assistant_orders": {
+      "H01": [
+        "chatgpt-browsing",
+        "claude-browsing"
+      ],
+      "H02": [
+        "claude-browsing",
+        "chatgpt-browsing"
+      ],
+      "H03": [
+        "chatgpt-browsing",
+        "claude-browsing"
+      ],
+      "H04": [
+        "claude-browsing",
+        "chatgpt-browsing"
+      ],
+      "H06": [
+        "chatgpt-browsing",
+        "claude-browsing"
+      ],
+      "H10": [
+        "claude-browsing",
+        "chatgpt-browsing"
+      ],
+      "H12": [
+        "chatgpt-browsing",
+        "claude-browsing"
+      ],
+      "H15": [
+        "claude-browsing",
+        "chatgpt-browsing"
+      ],
+      "H17": [
+        "chatgpt-browsing",
+        "claude-browsing"
+      ],
+      "H24": [
+        "claude-browsing",
+        "chatgpt-browsing"
+      ],
+      "H11": [
+        "chatgpt-browsing",
+        "claude-browsing"
+      ],
+      "H30": [
+        "claude-browsing",
+        "chatgpt-browsing"
+      ]
+    },
+    "operators": "Pseudonymous operators (op1, op2, op3). Where possible each external side of a case has a different operator, and nobody looks at TechScout output for a case before finishing their own session on it. Actual assignments are recorded per session."
+  },
+  "procedures": {
+    "external_service": [
+      "Use the public website in a normal browser, logged out, with no paid account. Do not bypass bot checks or log in.",
+      "Start the timer when the service home page has loaded.",
+      "Type the buyer_text exactly. If the service shows nothing relevant, you may reformulate using only the case inputs (for example the model name in English). Log every query with its time.",
+      "Apply the service's own filters that match the fixed_requirements. Record each requirement the service cannot filter as unsupported_feature for that requirement.",
+      "For a needs case, choose only from what the service itself suggests or filters; do not pick models from your own knowledge.",
+      "Record the time of the first result page that shows a matching product with a price (first useful display).",
+      "Service phase (at most 8 minutes): choose up to three offers the service shows as meeting the requirements. For each, record what the service shows: retailer, link, configuration, condition, price, stock, delivery cost, warranty, and which of these are missing.",
+      "Verification phase (at most 10 minutes, logged separately as extra buyer effort): open the retailer pages through the service links and confirm the decisive facts. Record the time every decisive fact of the chosen offer is confirmed (verified result), or that it was not reached.",
+      "Never add to a cart, start checkout or contact a seller. A cost shown only at checkout stays not shown.",
+      "Outcome: answered, no_results, unsupported_feature, access_failure (retry once within the paired session; then record it) or timeout."
+    ],
+    "manual_shopping": [
+      "Use a web search engine and retailer websites in a normal browser, logged out. Same no-cart, no-login, no-bypass rules.",
+      "One phase of at most 20 minutes. Record first useful display and verified result times as above, plus every site visited.",
+      "Choose up to three offers that meet the fixed_requirements and record the same fields."
+    ],
+    "assistant": [
+      "Start a new chat with web search enabled and memory and custom instructions off. Record the product, the plan tier and any model name the interface shows (or not_shown).",
+      "Send the prompt template filled with the case inputs. Record the time the first reply that names a matching product with a price arrives (first useful display).",
+      "Send the single follow-up template once. The reply phase lasts at most 8 minutes in total.",
+      "Verification phase (at most 10 minutes, logged separately): confirm the decisive facts of the best offer at the retailer, as above.",
+      "Export or screenshot the conversation without account details."
+    ],
+    "verifier": [
+      "A teammate who did not operate the session, where possible, checks every selected offer within 60 minutes of the run or session that presented it.",
+      "Use a normal browser, logged out; no cart, checkout, seller contact or bot-check bypass.",
+      "Confirm each decisive fact in eval/protocol.json and give the verdict and invalid reasons defined there. Take a sanitized screenshot of each retailer page.",
+      "In each case's repetition-1 block, also spend up to 10 minutes on an independent search for valid offers (the verifier pool) used to adjudicate answerable versus no_match_observed.",
+      "Record one Banque du Liban reference exchange rate (URL and time) per verification pass when any compared offer is priced in LBP."
+    ]
+  },
+  "assistant_prompt_template": "I am a buyer in Lebanon. {buyer_text}\n\nPlease find where I can buy this now. My fixed requirements: {fixed_requirements}\n\nFor up to three offers, give the retailer and its product page link, the exact configuration, the condition, the price and currency, whether it is in stock now, the delivery or pickup cost to {destination}, any other charges, the total I would pay, and the warranty. Say clearly which of these facts you could not verify. Do not guess missing costs.",
+  "assistant_follow_up_template": "Please check again. For each offer, confirm current stock and the delivery cost to {destination}, and list any fact you could not verify.",
+  "capture_record": {
+    "file": "One JSON record per session, stored with the results in #82 (eval/results/), sanitized of personal and account data.",
+    "fields": {
+      "session_id": "unique ID",
+      "case_id": "held-out case ID",
+      "side": "configuration or service ID",
+      "operator": "pseudonym",
+      "interface": "website or app, browser and version, device",
+      "service_version": "model name or version shown by the interface, or not_shown",
+      "started_at": "ISO 8601 with offset",
+      "queries": "list of {text, at}",
+      "filters_used": "list",
+      "unsupported_requirements": "requirements the service could not apply",
+      "first_useful_display_at": "ISO 8601 or null",
+      "service_phase_ended_at": "ISO 8601",
+      "results_viewed": "list of {url, title, shown_configuration, shown_price, shown_stock, shown_delivery_cost, at}",
+      "selected_offers": "list of {retailer, url, configuration, condition, price, currency, stock, delivery_cost, other_charges, total, warranty, missing_fields}",
+      "verification_steps": "list of {url, fact, value, at}",
+      "verified_result_at": "ISO 8601 or null",
+      "outcome": "one of the external outcomes in eval/protocol.json",
+      "outcome_reason": "text",
+      "screenshots": "sanitized file paths",
+      "notes": "text"
+    }
+  }
+}
