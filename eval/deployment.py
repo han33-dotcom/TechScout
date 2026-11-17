@@ -26,11 +26,17 @@ def worker_controller(compose):
     return compose(investigator=partial(run_strategy,settings['side']))
 
 
-def api():
-    settings=binding()
-    application=create_app()
-    @application.get('/_evaluation/binding')
-    def configured_side():
-        return settings
+def expose_binding(application, settings):
+    from starlette.responses import JSONResponse
+    from starlette.routing import Route
+
+    async def configured_side(request):
+        return JSONResponse(settings)
+
+    # The production app can already have its React fallback at /{path:path}.
+    application.router.routes.insert(0, Route('/_evaluation/binding',configured_side,methods=['GET']))
     return application
 
+
+def api():
+    return expose_binding(create_app(), binding())
