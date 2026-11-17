@@ -1,0 +1,50 @@
+import type { ShoppingRequest } from './api';
+export type Category = ShoppingRequest['requirements']['category'];
+export const categories: Record<Category, string> = { phone: 'Phones', laptop: 'Laptops', tablet: 'Tablets', monitor: 'Monitors', audio: 'Headphones & earbuds' };
+export interface Draft { text: string; kind: 'needs' | 'exact_model'; category: Category; target: string; maximum: string; city: string; international: boolean; condition: 'new' | 'used' | 'refurbished'; mode: 'any' | 'delivery' | 'pickup'; payment: '' | 'cash' | 'card'; spec: string }
+export const initialDraft: Draft = { text: '', kind: 'needs', category: 'laptop', target: '', maximum: '', city: '', international: false, condition: 'new', mode: 'any', payment: '', spec: '' };
+export const specFields = { phone: 'storage_gb', laptop: 'min_ram_gb', tablet: 'min_storage_gb', monitor: 'min_refresh_hz', audio: '' } as const;
+export const specLabels = { phone: 'Storage (GB)', laptop: 'Minimum RAM (GB)', tablet: 'Minimum storage (GB)', monitor: 'Minimum refresh rate (Hz)', audio: '' };
+export const examples: { label: string; draft: Draft }[] = [
+  { label: 'Study & everyday work', draft: { ...initialDraft, text: 'A lightweight laptop for university, around $1,000', target: '1000', spec: '16' } },
+  { label: 'مثال بالعربية', draft: { ...initialDraft, text: 'بدي لابتوب للدراسة بحدود ١٠٠٠ دولار', target: '1000' } },
+  { label: 'Arabizi example', draft: { ...initialDraft, text: 'baddi laptop lal jem3a bi 7doud 1000 dollar', target: '1000' } },
+];
+function money(value: string) {
+  if (!/^\d+(\.\d{1,2})?$/.test(value) || Number(value) <= 0 || value.length > 14) throw new Error('Enter a positive budget with at most two decimal places.');
+  return { amount: value, currency: 'USD' };
+}
+export function toRequest(draft: Draft, base?: ShoppingRequest): ShoppingRequest {
+  const text = draft.text.trim();
+  if (!text) throw new Error('Describe what you need, enter a model, or paste a retailer link.');
+  let intent: ShoppingRequest['intent'];
+  if (/^https?:\/\//i.test(text)) {
+    const url = new URL(text);
+    if (url.protocol !== 'https:' || url.username || url.password) throw new Error('Use a public HTTPS product link.');
+    intent = { kind: 'product_link', url: url.href };
+  } else if (draft.kind === 'exact_model') intent = { kind: 'exact_model', model: text };
+  else intent = { kind: 'needs', description: text, required_software: base?.intent.kind === 'needs' ? base.intent.required_software : [] };
+  const target = draft.target ? money(draft.target) : null, maximum = draft.maximum ? money(draft.maximum) : null;
+  if (target && maximum && Number(target.amount) > Number(maximum.amount)) throw new Error('Your target must fit your hard maximum.');
+  const requirements = base?.requirements.category === draft.category ? { ...base.requirements } : draft.category === 'phone' ? { category: 'phone' as const, regions: [] } : { category: draft.category };
+  const key = specFields[draft.category];
+  if (key) {
+    if (draft.spec && (!/^\d+$/.test(draft.spec) || Number(draft.spec) < 1 || Number(draft.spec) > 100000)) throw new Error('Enter a positive whole number for the specification.');
+    Object.assign(requirements, { [key]: draft.spec ? Number(draft.spec) : null });
+  }
+  return { ...base, schema_version: 2, request_id: base?.request_id ?? crypto.randomUUID(), revision: base ? base.revision + 1 : 1,
+    intent, requirements: requirements as ShoppingRequest['requirements'], budget: target || maximum ? { target, maximum } : null,
+    allowed_colors: base?.allowed_colors ?? [], preferences: base?.preferences ?? [], allowed_conditions: base?.allowed_conditions[0] === draft.condition ? base.allowed_conditions : [draft.condition], payment: draft.payment || null,
+    market_scope: { include_international: draft.international, international_markets: draft.international ? base?.market_scope?.international_markets ?? [] : [] },
+    fulfillment: { ...base?.fulfillment, mode: draft.mode, branch_id: draft.mode === 'pickup' ? base?.fulfillment?.branch_id : null,
+      destination: { ...base?.fulfillment?.destination, country: 'LB', city: draft.city.trim() || null } } };
+}
+
+export function fromRequest(r: ShoppingRequest): Draft {
+  return { text: r.intent.kind === 'needs' ? r.intent.description : r.intent.kind === 'product_link' ? r.intent.url : r.intent.model,
+    kind: r.intent.kind === 'exact_model' ? 'exact_model' : 'needs', category: r.requirements.category,
+    target: String(r.budget?.target?.amount ?? ''), maximum: String(r.budget?.maximum?.amount ?? ''),
+    city: r.fulfillment?.destination?.city ?? '', mode: r.fulfillment?.mode ?? 'any', international: r.market_scope?.include_international ?? false,
+    condition: r.allowed_conditions[0] ?? 'new', payment: r.payment ?? '',
+    spec: String((r.requirements as unknown as Record<string, unknown>)[specFields[r.requirements.category]] ?? '') };
+}

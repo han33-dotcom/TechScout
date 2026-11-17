@@ -1,0 +1,53 @@
+import { useState, useEffect, type FormEvent, type ReactNode } from 'react';
+import { BuyerApi, type RunSnapshot, type ComparisonWorkspace } from './api';
+import { categories, examples, initialDraft, specLabels, toRequest, fromRequest, type Draft } from './request';
+import { active, useWorkspace, type Transport } from './useWorkspace';
+import './styles.css';
+const api = new BuyerApi();
+const phases = { interpret: 'Understanding your requirements', discover: 'Finding relevant retailers', research: 'Checking products and evidence', evaluate: 'Comparing eligible offers', verify: 'Rechecking price and availability', write: 'Preparing your comparison' };
+const endings = { complete: 'Your search is complete', partial: 'Some checks could not finish', abstained: 'No verified recommendation yet', cancelled: 'Search cancelled', error: 'Search could not finish' };
+export function RequestForm({ draft, setDraft, onSubmit, busy, refining }: { draft: Draft; setDraft: (d: Draft) => void; onSubmit: (e: FormEvent) => void; busy: boolean; refining: boolean }) {
+  const field = <K extends keyof Draft>(key: K, value: Draft[K]) => setDraft({ ...draft, [key]: value });
+  return <form onSubmit={onSubmit} className="request-form">
+    <div className="category-row" aria-label="Product category">{Object.entries(categories).map(([key, label]) => <button key={key} type="button" aria-pressed={draft.category === key} onClick={() => setDraft({ ...draft, category: key as Draft['category'], spec: '' })}>{label}</button>)}</div>
+    <label className="input-label" htmlFor="request">What are you looking for?</label>
+    <div className="search-box"><textarea id="request" dir="auto" maxLength={4000} required value={draft.text} onChange={e => field('text', e.target.value)} placeholder="A light laptop for university, around $1,000…" /><button className="primary" disabled={busy} type="submit">{busy ? 'Updating…' : refining ? 'Update search' : 'Find my options'} <span aria-hidden="true">↗</span></button></div>
+    <div className="form-options"><label>Search for <select value={draft.kind} onChange={e => field('kind', e.target.value as Draft['kind'])}><option value="needs">My needs</option><option value="exact_model">An exact model</option></select></label><span className="muted">Product links are recognized automatically.</span></div>
+    <details className="filters" open><summary>Your requirements <span>Editable at any time</span></summary><div className="filter-grid">
+      <label>Target budget · USD<input inputMode="decimal" placeholder="Around…" value={draft.target} onChange={e => field('target', e.target.value)} /></label>
+      <label>Hard maximum · USD<input inputMode="decimal" placeholder="Optional ceiling" value={draft.maximum} onChange={e => field('maximum', e.target.value)} /></label>
+      <label>City in Lebanon<input value={draft.city} placeholder="Any city" onChange={e => field('city', e.target.value)} /></label>
+      {specLabels[draft.category] && <label>{specLabels[draft.category]}<input inputMode="numeric" value={draft.spec} placeholder="No requirement" onChange={e => field('spec', e.target.value)} /></label>}
+      <label>Condition<select value={draft.condition} onChange={e => field('condition', e.target.value as Draft['condition'])}><option value="new">New only</option><option value="used">Used only</option><option value="refurbished">Refurbished only</option></select></label>
+      <label>Fulfillment<select value={draft.mode} onChange={e => field('mode', e.target.value as Draft['mode'])}><option value="any">Delivery or pickup</option><option value="delivery">Delivery</option><option value="pickup">Pickup</option></select></label>
+      <label>Payment<select value={draft.payment} onChange={e => field('payment', e.target.value as Draft['payment'])}><option value="">No preference</option><option value="cash">Cash</option><option value="card">Card</option></select></label>
+    </div><label className="toggle"><input type="checkbox" checked={draft.international} onChange={e => field('international', e.target.checked)} /><span>Include international offers<small>Keep Lebanon results and compare supported overseas routes.</small></span></label><p className="muted">A target is a preference. Only a hard maximum is a price ceiling. Your original wording is kept for interpretation.</p></details>
+  </form>;
+}
+export function Progress({ snapshot, busy, cancel, clarify }: { snapshot: RunSnapshot; busy: boolean; cancel: () => void; clarify: (answer: string) => void }) {
+  const [answer, setAnswer] = useState('');
+  const title = snapshot.status === 'queued' ? 'Waiting to start' : snapshot.status === 'clarification' ? 'One detail to clarify' : snapshot.status === 'running' ? phases[snapshot.phase] : endings[snapshot.status];
+  return <section className="progress panel" aria-label="Search progress"><div className="section-heading"><div><span className="eyebrow">SEARCH · REVISION {snapshot.request.revision}</span><h2 role="status">{title}</h2></div>{active(snapshot) && <button type="button" disabled={busy} onClick={cancel}>Cancel search</button>}</div>
+    {snapshot.stop_reason && <p>{snapshot.stop_reason}</p>}
+    {snapshot.status === 'queued' && <p className="muted">Your request is saved. Results will appear when a research worker starts.</p>}
+    {snapshot.clarification && <form onSubmit={e => { e.preventDefault(); if (answer.trim()) clarify(answer.trim()); }}><label>{snapshot.clarification.question}<input value={answer} onChange={e => setAnswer(e.target.value)} maxLength={4000} required /></label><p className="muted">{snapshot.clarification.material_reason}</p><button className="primary" disabled={busy}>Continue search</button></form>}
+    <div className="coverage">{[['Discovered',snapshot.coverage?.discovered],['Attempted',snapshot.coverage?.attempted],['Retrieved',snapshot.coverage?.retrieved],['Qualifying',snapshot.coverage?.qualifying]].map(([label,count]) => <span key={String(label)}><strong>{count ?? 0}</strong>{label} retailers</span>)}</div>
+    {snapshot.provisional.length > 0 && <div className="provisional"><h3>Early candidates <span className="badge">Checking · not verified</span></h3>{snapshot.provisional.map(candidate => <article key={candidate.offer.offer_id}><strong>{candidate.offer.variant.product.manufacturer} {candidate.offer.variant.product.model}</strong><p>{candidate.offer.seller.name} · Originally observed {new Date(candidate.observed_at).toLocaleString()}</p><small>Price, stock and eligibility still need checks for this search.</small></article>)}</div>}
+  </section>;
+}
+export default function App({ transport = api, renderResults }: { transport?: Transport; renderResults?: (workspace: ComparisonWorkspace) => ReactNode }) {
+  const [draft, setDraft] = useState<Draft>(initialDraft), [validation, setValidation] = useState('');
+  const state = useWorkspace(transport);
+  const [dirty, setDirty] = useState(false);
+  const edit = (next: Draft) => { setDirty(true); setDraft(next); };
+  useEffect(() => { if (state.workspace && !dirty && !state.busy && !state.error) setDraft(fromRequest(state.workspace.current.request)); }, [state.workspace, dirty, state.busy, state.error]);
+  const submit = (e: FormEvent) => { e.preventDefault(); setValidation(''); try { const request = toRequest(draft, state.workspace?.current.request); setDirty(false); void state.submit(request); } catch (error) { setValidation(error instanceof Error ? error.message : 'Check your requirements.'); } };
+  return <><header className="topbar"><a className="brand" href="/" aria-label="TechScout home"><span className="brand-mark">t↗</span>techscout<span className="brand-dot">.</span></a><span className="location">LB <span>Built for buying in Lebanon</span></span></header>
+    <main><section className="hero"><span className="eyebrow">LESS GUESSWORK. BETTER CHOICES.</span><h1>Find the right tech.<br/><span>Know what you’re buying.</span></h1><p>Tell us what matters. Compare configurations, sellers and the full cost, with evidence you can check.</p></section>
+      <section className="panel request-panel" aria-label="Your search"><RequestForm draft={draft} setDraft={edit} onSubmit={submit} busy={state.busy} refining={!!state.workspace} />{validation && <p role="alert" className="error">{validation}</p>}</section>
+      {!state.workspace && <div className="examples"><span>Try an example</span>{examples.map(example => <button key={example.label} onClick={() => edit(example.draft)}>{example.label} ↗</button>)}<small>These examples have preset requirements. General language interpretation happens during research.</small></div>}
+      {state.error && <div role="alert" className="error panel"><p>{state.error}</p>{state.workspace && <button disabled={state.busy} onClick={() => void state.recover()}>Check latest status</button>}</div>}
+      {state.workspace && <><Progress snapshot={state.workspace.current} busy={state.busy} cancel={() => void state.cancel()} clarify={answer => void state.clarify(answer)} />{renderResults?.(state.workspace)}{state.workspace.previous && <details className="panel previous"><summary>Previous search · revision {state.workspace.previous.request.revision}</summary><p>These results belong to earlier requirements and are not verified for your current search.</p><p>{state.workspace.previous.recommendations.length} previous recommendations · {state.workspace.previous.status}</p></details>}</>}
+      {!state.workspace && <section className="promise-grid"><article><span>01 / FIT</span><h2>The exact configuration</h2><p>Storage, specifications and regional differences stay visible.</p></article><article><span>02 / COST</span><h2>Beyond the sticker price</h2><p>Known charges and missing costs are kept separate.</p></article><article><span>03 / EVIDENCE</span><h2>Checked, then explained</h2><p>Verified recommendations stay separate from promising leads.</p></article></section>}
+    </main><footer><span>TECHSCOUT / BUY WITH CONTEXT</span><span>Compare here. Buy directly from the retailer.</span></footer></>;
+}
