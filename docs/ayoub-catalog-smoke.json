@@ -1,0 +1,202 @@
+{
+  "kind": "manual free public-source smoke through the real gate; not corpus ingestion",
+  "registry_state": "Ayoub was briefly admitted on the working branch for this smoke only; the merged entry is pending (not in live_release).",
+  "follow_up_direct_check": {
+    "observed_at": "2026-11-17T16:40:03Z",
+    "url": "https://ayoubcomputers.com/products.php?productId=80559",
+    "client": "plain Python urllib, same user agent",
+    "status": 200,
+    "server": "cloudflare"
+  },
+  "budget": {
+    "seconds": 120,
+    "external_calls": 4,
+    "paid_calls": 0,
+    "provider_spend_usd": "0"
+  },
+  "attempts_used": 4,
+  "elapsed_seconds": 1.2,
+  "results": [
+    {
+      "checked_at": "2026-11-17T16:39:30.404196+00:00",
+      "call": "search laptop \"MW0X3\"",
+      "trace": {
+        "schema_version": 1,
+        "status": "error",
+        "data": {
+          "fetches": [
+            {
+              "source_id": "ayoub_computers",
+              "origin_url": "https://ayoubcomputers.com/search.php?search_query=MW0X3&section=product",
+              "final_url": null,
+              "redirect_chain": [
+                "https://ayoubcomputers.com/search.php?search_query=MW0X3&section=product"
+              ],
+              "status_code": null,
+              "content_type": null,
+              "content_encoding": null,
+              "byte_length": null,
+              "response_sha256": null,
+              "observed_at": null,
+              "attempts": 1,
+              "outcome": "error",
+              "error_code": "HTTP_ERROR"
+            }
+          ],
+          "candidates_seen": 0,
+          "priced_candidates": 0,
+          "sellers_named": 0,
+          "coverage_complete": false,
+          "requires_current_run_verification": true,
+          "cards_seen": 0,
+          "invalid_cards": 0,
+          "skipped_not_category": 0,
+          "discovery_truncated": false
+        },
+        "evidence_ids": [],
+        "errors": [
+          {
+            "code": "HTTP_ERROR",
+            "message": "http:403 ayoub_computers: permanent HTTP status",
+            "retryable": false
+          }
+        ],
+        "duration_ms": 703
+      },
+      "candidates": 0,
+      "missing_topics": []
+    },
+    {
+      "checked_at": "2026-11-17T16:39:31.109458+00:00",
+      "call": "re-read monitor 80559",
+      "trace": {
+        "schema_version": 1,
+        "status": "error",
+        "data": {
+          "fetches": [
+            {
+              "source_id": "ayoub_computers",
+              "origin_url": "https://ayoubcomputers.com/products.php?productId=80559",
+              "final_url": null,
+              "redirect_chain": [
+                "https://ayoubcomputers.com/products.php?productId=80559"
+              ],
+              "status_code": null,
+              "content_type": null,
+              "content_encoding": null,
+              "byte_length": null,
+              "response_sha256": null,
+              "observed_at": null,
+              "attempts": 1,
+              "outcome": "error",
+              "error_code": "HTTP_ERROR"
+            }
+          ],
+          "candidates_seen": 0,
+          "priced_candidates": 0,
+          "sellers_named": 0,
+          "coverage_complete": false,
+          "requires_current_run_verification": true,
+          "cards_seen": 0,
+          "invalid_cards": 0,
+          "skipped_not_category": 0,
+          "discovery_truncated": false
+        },
+        "evidence_ids": [],
+        "errors": [
+          {
+            "code": "HTTP_ERROR",
+            "message": "http:403 ayoub_computers: permanent HTTP status",
+            "retryable": false
+          },
+          {
+            "code": "INVALID_SCHEMA",
+            "message": "ayoub_computers: requested configuration is no longer available for re-reading",
+            "retryable": false
+          }
+        ],
+        "duration_ms": 250
+      },
+      "candidates": 0,
+      "missing_topics": []
+    },
+    {
+      "checked_at": "2026-11-17T16:39:31.357863+00:00",
+      "call": "policies",
+      "trace": {
+        "schema_version": 1,
+        "status": "error",
+        "data": {
+          "fetches": [
+            {
+              "source_id": "ayoub_computers",
+              "origin_url": "https://ayoubcomputers.com/terms-of-service/",
+              "final_url": null,
+              "redirect_chain": [
+                "https://ayoubcomputers.com/terms-of-service/"
+              ],
+              "status_code": null,
+              "content_type": null,
+              "content_encoding": null,
+              "byte_length": null,
+              "response_sha256": null,
+              "observed_at": null,
+              "attempts": 1,
+              "outcome": "error",
+              "error_code": "HTTP_ERROR"
+            },
+            {
+              "source_id": "ayoub_computers",
+              "origin_url": "https://ayoubcomputers.com/quick-delivery-guide/",
+              "final_url": null,
+              "redirect_chain": [
+                "https://ayoubcomputers.com/quick-delivery-guide/"
+              ],
+              "status_code": null,
+              "content_type": null,
+              "content_encoding": null,
+              "byte_length": null,
+              "response_sha256": null,
+              "observed_at": null,
+              "attempts": 1,
+              "outcome": "error",
+              "error_code": "HTTP_ERROR"
+            }
+          ],
+          "missing_topics": [
+            "marketplace",
+            "warranty",
+            "tax",
+            "delivery",
+            "pickup",
+            "payment"
+          ],
+          "resolved_offer_costs": false
+        },
+        "evidence_ids": [],
+        "errors": [
+          {
+            "code": "HTTP_ERROR",
+            "message": "http:403 ayoub_computers: permanent HTTP status",
+            "retryable": false
+          },
+          {
+            "code": "HTTP_ERROR",
+            "message": "http:403 ayoub_computers: permanent HTTP status",
+            "retryable": false
+          }
+        ],
+        "duration_ms": 250
+      },
+      "candidates": 0,
+      "missing_topics": [
+        "marketplace",
+        "warranty",
+        "tax",
+        "delivery",
+        "pickup",
+        "payment"
+      ]
+    }
+  ]
+}

@@ -34,12 +34,17 @@ checkout. Sizes are decoded bytes. Rows marked *fixture* are kept, minimized, in
 | 15:51:24 | `/apple-macbook-air-m4-…-mw0x3-oxdv/` | 200 | 2,510,946 | *fixture*: USD 1,129, not purchasable; SSD field 256 GB against "512GB" in the description |
 | 15:51:38 | `/apple-macbook-air-m4-…-mw0x3/` | 200 | 2,510,230 | *fixture*: no price; `AVAILABILITY: In Stock` field against the store's out-of-stock flag |
 | 15:58:50 | `/products.php?productId=80559` | 200 | 2,528,120 | the same Xiaomi page by ID, without a redirect |
+| 16:39:30–31 | gated smoke: search, `products.php?productId=80559`, both policy pages | 403 ×4 | | through the real `SourceGate`, with Ayoub briefly admitted on the working branch: `HTTP_ERROR`, no candidates, $0 ([trace](ayoub-catalog-smoke.json)) |
+| 16:40:03 | `/products.php?productId=80559` (direct) | 200 | 267,368 compressed | the same URL accepted for a plain client (Cloudflare); the 403 targets the gate's client |
 
 Every product page shows only a store-wide marketplace notice: "Fulfilled by AyoubComputers.com".
 The same notice says certain products may be sold and fulfilled by third-party vendors. No
-listing names its own seller, so seller and fulfiller stay unknown. Every reply exceeded the
-gate's 2 MiB response cap, so gated reads are refused (see the
-[smoke trace](ayoub-catalog-smoke.json)). This is a technical gap awaiting a team decision.
+listing names its own seller, so seller and fulfiller stay unknown.
+
+The gate cannot read Ayoub yet. Its client gets HTTP 403 from the store's edge, and every page
+also exceeds the gate's 2 MiB response cap. No bot-protection workaround was tried. Ayoub is
+registered with read-only capabilities and limits but stays `pending` until the team picks a
+route. These are technical gaps, not permission issues.
 
 # Historical MVP 06 snapshot
 

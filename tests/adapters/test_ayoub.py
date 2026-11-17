@@ -6,6 +6,7 @@ custom field, which no observed Ayoub listing has published.
 """
 from datetime import datetime, timezone
 import json
+from pathlib import Path
 import re
 
 from app.adapters import CATALOGS, search_catalog
@@ -15,7 +16,7 @@ from app.adapters.ayoub import (
     PRICE_INVALID, SELLER_UNNAMED, TERMS_URL, WARRANTY_ABSENT, WARRANTY_PROVIDER, AyoubCatalog,
     party_id,
 )
-from app.contracts import Fact, ToolError
+from app.contracts import Fact, SourcePolicy, ToolError
 from app.contracts_v2 import (
     DeliveryDestination, DirectRoute, MonitorSpecs, Offer, Product, Seller, Variant,
 )
@@ -35,6 +36,14 @@ SEARCH_PAGE = 'ayoub_computers/search-macbook-air.html'
 TERMS = 'ayoub_computers/terms-of-service.html'
 DELIVERY = 'ayoub_computers/quick-delivery-guide.html'
 XIAOMI_URL = 'https://ayoubcomputers.com/xiaomi-4k-monitor-a27ui-27-uhd-ips-usb-c-monitor/'
+REGISTRY = Path(__file__).resolve().parents[2] / 'config' / 'sources.json'
+
+
+def registry_entry():
+    """Ayoub's reviewed registry entry: registered with a scope and limits, not yet admitted."""
+    registry = json.loads(REGISTRY.read_text(encoding='utf-8'))
+    [entry] = [s for s in registry['sources'] if s['id'] == SOURCE]
+    return registry, entry
 
 
 def product(pid):
@@ -49,7 +58,8 @@ class ScopedFetch(FakeFetch):
     """The fake gate, which also checks each URL against the real registry's Ayoub scope."""
 
     def __call__(self, source_id, url, *, expect, capability=None):
-        source = get_active_source(source_id)
+        assert source_id == SOURCE
+        _, source = registry_entry()
         if capability is None:
             assert url in source['allowed_endpoints'], url
         else:
@@ -489,8 +499,19 @@ class PolicyTests(AyoubCase):
 
 
 class RegistryTests(AyoubCase):
+    def test_registered_but_not_admitted_until_the_gate_can_read_the_store(self):
+        registry, source = registry_entry()
+        policy = SourcePolicy.model_validate(source)
+        self.assertEqual((policy.status, policy.admission), ('pending', None))
+        self.assertNotIn(SOURCE, registry['live_release']['admitted_source_ids'])
+        with self.assertRaises(PermissionError):
+            get_active_source(SOURCE)  # so the real gate refuses it before any network use
+        for gap in ('gate client receives HTTP 403 from the store edge',
+                    'every page exceeds the gate 2 MiB response cap'):
+            self.assertIn(gap, source['coverage']['known_gaps'])
+
     def test_registered_scope_is_read_only_and_bounded(self):
-        source = get_active_source(SOURCE)
+        _, source = registry_entry()
         limits = source['limits']
         # One request per 10 seconds on average, as robots.txt asks of crawlers, one at a time; a run fits a
         # search, two product pages and two policy pages.

@@ -16,12 +16,19 @@ Current-run verification, identity and eligibility still decide recommendations 
 | Product | `products.php?productId=<id>`, at most two per call | `ayoub_computers-product` |
 | Policies | `terms-of-service/` and `quick-delivery-guide/` | exact allowed endpoints |
 
-The registry limits are 6 requests per minute, one at a time, and 6 per run. A run's search
+The source is registered with these capabilities and limits, but it stays `pending`, outside
+the live release, until the access gaps below are resolved. Until then the gate refuses it
+(`SOURCE_DISABLED`) before any network use, so runs spend nothing on a store that rejects
+them. Like the PC and Parts reader (#54), the code is available to explicit callers and
+tests. Admitting it later means setting `status: active`, adding an admission record and
+adding the ID to `live_release`. The registry limits are 6 requests per minute, one at a
+time, and 6 per run. A run's search
 (1), two product pages (2) and both policy pages (2) fit, with one spare request for a retry.
-Six a minute matches the 10-second crawl delay in Ayoub's robots.txt. That delay is addressed
-to a list of AI crawlers; our `TechScout/0.1` agent falls under `*`, which disallows only
-`_bc_fsnf=1` URLs. Re-reading with `only={(product_id, variant_id)}` fetches those products
-directly, without discovery or cached data.
+The gate counts requests per minute and does not space them, so a run's few requests can go
+back to back. Ayoub's robots.txt asks for a 10-second crawl delay, but only from a list of AI
+crawlers. Our `TechScout/0.1` agent falls under `*`, which disallows only `_bc_fsnf=1` URLs.
+Re-reading with `only={(product_id, variant_id)}` fetches those products directly, without
+discovery or cached data.
 
 Product pages are fetched by ID. Ayoub's product URLs are a bare `/<slug>/`, and capabilities
 must begin with a literal path segment. BigCommerce's `products.php?productId=N` returns the
@@ -100,8 +107,9 @@ route-specific check before treating delivery as free.
 
 ## Live evidence, 17 November 2026
 
-Fourteen bounded direct requests were made with our user agent, 10 seconds or more apart, plus
-the gated smoke below; there were no logins, carts or forms. The full log is in
+Fifteen bounded direct requests were made with our user agent, mostly 10 seconds or more apart.
+Four more went through the real gate in the smoke below. There were no logins, carts or forms.
+The full log is in
 [source coverage](source-coverage.md#ayoub-computers-live-check-2026-11-17), and minimized
 captures are under `tests/fixtures/stores/ayoub_computers/` (provenance in
 `tests/fixtures/stores/PROVENANCE.md`).
@@ -119,13 +127,24 @@ fixture:
 - **MacBook Air M5 (74423):** two colour options, so two configurations without prices.
 - **Acer Aspire 5 (28342):** no price, out of stock, new, 1-year warranty.
 
-**Gap: the gate cannot read Ayoub today.** Every page observed was 2.46–2.72 MB decoded, above
-the gate's 2 MiB response cap (`MAX_RESPONSE_BYTES`, from the MVP spec). Most of each page is the
-site's navigation menu, about 4,000 links. The product data sits after the first 2 MB. The
-gated smoke (`ayoub-catalog-smoke.json`) shows the refusal. This is a technical gap, not a
-permission issue. Changing a shared, security-relevant limit is a team decision. Options are a
-per-source cap, a cap that keeps only the product region, or a managed extraction route (#58).
-Until one is chosen, live Ayoub retrieval returns `BLOCKED` with no candidates.
+**Gap: the gate cannot read Ayoub today, for two reasons.**
+
+1. **The edge refuses the gate's client.** The [gated smoke](ayoub-catalog-smoke.json) at
+   16:39 UTC ran while Ayoub was briefly admitted on the working branch. It sent four requests
+   through the real `SourceGate` (search, one product, both policy pages). Each got HTTP 403 from Ayoub's Cloudflare edge, so the run reported `HTTP_ERROR` with
+   no candidates and $0 spend. At 16:40 a plain Python client with the same user agent got 200
+   for the same product URL. The refusal is specific to the gate's HTTP client, not a block on
+   our address. It is bot protection, so no workaround (headers, TLS settings, browsers) was
+   attempted.
+2. **The pages are too large.** Every page observed was 2.46–2.72 MB decoded, above the gate's
+   2 MiB response cap (`MAX_RESPONSE_BYTES`, from the MVP spec). Most of each page is the site's
+   navigation menu, about 4,000 links, and the product data sits after the first 2 MB. So even
+   an accepted request would be refused as `blocked:size`.
+
+Both are technical gaps, not permission issues, and both need a team decision. The candidate
+route is the managed extraction fallback (#58), which must also respect the size limits.
+Another is a per-source cap together with a client the store accepts. Until then, live Ayoub
+retrieval reports errors and no candidates; it never reports stale or invented facts.
 
 Other gaps:
 
