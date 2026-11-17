@@ -1,18 +1,36 @@
 # Tech Scout
 
-Exact-device shopping comparison for buyers in Lebanon. FastAPI serves the local runtime and its React status page. The buyer interface is planned.
+Evidence-backed electronics comparison for buyers in Lebanon. FastAPI serves the React comparison workspace and owned run APIs; the full live shopping controller is still being integrated.
 
 ## Current implementation
 
-MVP 01 is complete: [Class Cellulars, Mojitech and Beytech](docs/source-admission.md) are technically checked public sources, selected in [the configuration](config/sources.json). Public website data is assumed unrestricted for this project, as instructed by the user. Retailer permission emails are not a dependency.
+The [architecture, API and reproducibility report](docs/architecture-api-report.md)
+describes the implemented checkpoint, pending integration, API examples and validation.
+The [delivery plan](docs/full-product-plan.md) defines the target product; it is not
+an assertion that every planned feature is already operational.
 
-MVP 02 defines the shared [request, offer and evidence contracts](docs/mvp-spec.md) in `app/contracts.py`.
+- React + TypeScript + Vite provides request/filter entry, progress, clarification,
+  comparison, refinement and private session history/export. Typed FastAPI endpoints
+  persist owned runs and enforce session, CSRF and revision checks.
+- The backend includes versioned source evidence, scoped full-text/vector retrieval,
+  freshness, a retailer directory, shared resource accounting, bounded research
+  workers, deterministic matching/cost checks, verification and grounded writing.
+- The buyer worker requires an explicitly configured trusted controller. Without
+  one, API runs remain queued. Full-product orchestration, initial collection,
+  scheduled refresh and automatic onboarding remain separate backlog tasks.
+- Class Cellulars, Mojitech and Beytech have existing readers/catalog helpers.
+  Coverage is field/category-specific and includes documented live-access gaps.
+  The [PC and Parts reader](docs/pcandparts.md) is validated with synthetic fixtures;
+  its prior HTTP 403 remains unresolved and it is not activated as a live source.
+- The v1 CLI and records remain available alongside the v2 workspace. They are not
+  the complete five-category browser flow. See the [v1 specification](docs/mvp-spec.md)
+  for legacy search limitations and the [v2 contracts](docs/full-product-contracts.md).
 
-MVP 03 adds the backend foundation: a FastAPI application (`app/main.py`), Postgres storage with Alembic migrations (`app/storage.py`, `migrations/`), protected evidence snapshots, Docker Compose and CI.
-
-MVP 04 adds the source gate (`app/sources.py`), which every store request goes through: GET only, to an allow-listed endpoint of an admitted source, within per-source limits and the run budget.
-
-MVP 05–06 add store readers for the three sources (`app/adapters/`), with a [coverage matrix](docs/source-coverage.md) of what each store publishes. MVP 07–09 add the fixed rules: variant identity and deduplication (`app/identity.py`), buyer-constraint eligibility (`app/eligibility.py`) and evidence-bound totals (`app/costs.py`). MVP 11 adds run control with budgets and traces (`app/runs.py`, `app/tracing.py`) and MVP 12 the bounded planner (`app/planner.py`, `config/evaluation.json`). See [Shopping workflow](docs/mvp-spec.md#shopping-workflow). Before results, verify re-reads the finalists live, best first, until three are confirmed or a store's per-run cap or the run's time or call limit stops it. It shows only offers whose price and stock that re-read confirms, and lists the finalists it could not re-check as not verified, so a run may show fewer than three offers, or none (MVP 13, issue #70; see [Final verification](docs/mvp-spec.md#final-verification-mvp-13-issue-70)). Indexed discovery (MVP 10) and the buyer interface are not built yet: a search reads one configured iPhone 17 product per store. A request for another model in the device table (for example iPhone 17 Pro or iPhone Air) reads nothing: every store reports `ok` with 0 candidates, and the run abstains with `no open evidence gaps remain` (`investigation is disabled for this run` with `--planner none`). A model outside the table still reads the iPhone 17 products, which then fail or leave open the model check. No store currently states device condition, so today's searches end with candidates and open doubts rather than recommendations.
+Live work requires the shared ledger described in [accounting](docs/shared-accounting.md).
+Its provisioning/reconciliation remains tracked in [#60](https://github.com/han33-dotcom/TechScout/issues/60).
+Passing offline tests does not prove provider access, complete retailer coverage or
+qualified buyer recommendations. Retailer permission emails are not a dependency;
+the existing public-data assumption and technical source gates still apply.
 
 ## Run with Docker Compose
 
@@ -30,7 +48,7 @@ docker compose exec db psql -U techscout -d techscout -c "SELECT '[1,2,3]'::vect
 
 On macOS or Linux use `cp .env.example .env` and `curl`. The distance query returns
 `1`. Adjust the database user and name in the query if you override the defaults.
-The API status page is at `http://127.0.0.1:8000/`. `/health` checks the database.
+The buyer workspace is at `http://127.0.0.1:8000/`. `/health` checks the database.
 `docker compose ps` shows the API, database and ingestion worker health. The worker
 checks its database connection and access to the evidence volume. Job execution
 arrives with the ingestion implementation.
@@ -43,7 +61,7 @@ database and evidence volumes.
 
 Keep OpenAI, Tavily and Firecrawl keys in the repository-root `.env` or backend
 environment. Compose passes them only to the API and worker at runtime. Keep them
-out of frontend env files, `VITE_` variables and backups. The status page, health
+out of frontend env files, `VITE_` variables and backups. The workspace shell, health
 checks and synthetic recovery fixture run without provider keys.
 
 ### Back up and restore
@@ -98,10 +116,11 @@ Without `DATABASE_URL`, the app and Alembic use a local SQLite file (`techscout.
 ```powershell
 alembic upgrade head                      # apply migrations
 python -m app.storage load-fixtures       # load config/sources.json and the synthetic contract example
+$env:TECHSCOUT_COOKIE_SECURE = '0'         # local HTTP only; use 1 for HTTPS
 uvicorn app.main:app --reload             # http://127.0.0.1:8000
 ```
 
-For frontend development, use Node 24 and run `npm --prefix frontend ci`
+For frontend development, use Node 22.12+ (Docker pins Node 24.14.1) and run `npm --prefix frontend ci`
 then `npm --prefix frontend run dev`. Vite proxies `/health`, `/sources` and
 `/api` to the FastAPI origin at `http://127.0.0.1:8000` by default. Set
 `TECHSCOUT_API_ORIGIN` in the development shell if the API runs elsewhere.
@@ -120,13 +139,13 @@ python -m app.runs search examples/request-iphone17-beirut.json --planner model 
 
 Each search first closes runs that a crash left `running`, once they started more than 10 minutes ago. The result prints as JSON. Press Ctrl+C once and wait: the run stops before its next step and the result prints. A second Ctrl+C aborts without a result and leaves the run `running` until recovery closes it, more than 10 minutes after it started. The command exits 0 when it prints a result, unless the run's status is `error`, and then it exits 1; an `error` run ends with `no store could be searched`, `no admitted source has a reader` or `run stopped on an unexpected error`. A run cut short by its own time or call budget ends `partial` with that limit's stop reason and exits 0, even if no store was searched, so check `source_coverage`. The command exits 1 without a result when the database cannot be used before the run starts, for example because migrations were not applied (`The run could not start: <Error>`); when the run stops on a storage failure after it was stored, for example because another process closed it (`Run <id> stopped on an unexpected <Error> without storing its result (stored status: <status>)`); and when even the stored status cannot be read (`Run <id> failed on an unexpected <Error>; whether it was stored could not be read`). It exits 2 before any store request when the request file cannot be read (`Cannot read the request: <Error>`), when the caps in `config/evaluation.json` cannot be read (`Cannot read the run caps in evaluation.json: <Error>`), or when the planner cannot be set up, for example `--planner model` without API credentials (`Cannot set up the model planner: <Error>`). `--planner none` runs the no-investigation baseline (`no-investigation` in the stored run) and, unless it ends in error, is cancelled or hits a run limit, ends with `investigation is disabled for this run`.
 
-Runs use no exchange rates, so give the budget in USD, the price currency of every admitted store; with a budget in another currency, no offer can be verified. The model planner needs API credentials, such as `ANTHROPIC_API_KEY`, exported in the shell that runs the command (nothing reads it from `.env`, and Compose does not pass it to the container) and under the default caps spends at most USD 0.75 (the USD 1.00 spend cap less the USD 0.25 verification reserve; the final re-check's store reads cost nothing). The ordinary test suite never contacts a store.
+The legacy v1 CLI uses no exchange rates, so its request budget must match the retailer price currency. `--planner model` now uses direct OpenAI and requires backend `OPENAI_API_KEY` plus a configured shared accounting job; the default remains the rule baseline. Its model, price table and limits are pinned in `config/evaluation.json`. The old Anthropic implementation is retained for explicitly selected historical evaluations, not automatic fallback. See [model-provider configuration](docs/model-provider.md) and [shared accounting](docs/shared-accounting.md). Ordinary tests never contact retailers or paid providers.
 
 To run the storage tests against Postgres as well, point `TEST_DATABASE_URL` at a disposable database (the tests reset its schema). CI runs both SQLite and Postgres, plus the Compose build and recovery rehearsal.
 
 ## Storage
 
-Six storage groups: sources, variants, offers, evidence (with raw-response snapshots), runs and actions. Rows keep queryable columns plus the validated contract JSON, so stored data always reloads into the MVP 02 contracts.
+Storage includes legacy sources/variants/offers/runs/actions, versioned public documents and observations, passages/vector indexes, retailer-directory records, accounting state and private buyer sessions/run snapshots. Rows retain queryable columns and validated contract JSON. v1 and v2 run lifecycles coexist; see [the architecture report](docs/architecture-api-report.md) for their boundaries.
 
 - **Money** is stored exactly: `NUMERIC` without fixed scale on Postgres, a decimal string elsewhere. Floats are rejected.
 - **Evidence** rows are immutable once stored and reference their raw response by SHA-256. Snapshots are written under `EVIDENCE_DIR` (owner-only permissions), verified against their hash on every read, and never served over HTTP.

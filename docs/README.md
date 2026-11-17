@@ -8,6 +8,8 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 
 ## Documents
 
+- [Architecture, API and reproducibility report: implemented checkpoint and remaining work](architecture-api-report.md)
+
 - [PC and Parts exact-listing retrieval and live-access limitations](pcandparts.md)
 
 - [International source audit and initial ingestion manifest](international-source-audit.md)

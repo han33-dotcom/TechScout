@@ -1,12 +1,12 @@
 # TechScout full product and submission plan
 
-Approved delivery plan. Implementation status updated 16 November 2026.
+Approved delivery plan. For the implemented checkpoint and remaining integration as of 17 November 2026, see the [architecture/API report](architecture-api-report.md). Target flows below are not completion claims.
 
 Build one Path A submission that compares electronics offers in Lebanon and international markets, explains how they meet the buyer's needs, and distinguishes verified payable totals from incomplete or estimated landed costs. The submission deadline is Saturday, December 5, 2026. Section 9 lists the target checkpoints leading to submission.
 
-The [GitHub backlog](https://github.com/han33-dotcom/TechScout/issues/36) contains the 53 delivery tasks, their prerequisites and the crosswalk from the earlier MVP issues. Use GitHub issue state and assignees to see live progress.
+The [GitHub backlog](https://github.com/han33-dotcom/TechScout/issues/36) contains the delivery tasks, their prerequisites and the crosswalk from the earlier MVP issues. Use GitHub issue state and assignees to see live progress.
 
-The application uses the merged foundation and shopping stack described in section 7. The [v1 specification](mvp-spec.md) continues to govern existing records until the contract migration in [task #41](https://github.com/han33-dotcom/TechScout/issues/41).
+The application uses the merged foundation and shopping stack described in section 7. The [v1 specification](mvp-spec.md) continues to govern legacy records; the merged [v2 contracts](full-product-contracts.md) govern the full-product workspace. The two lifecycles currently coexist.
 
 ## 1. Product and user experience
 
