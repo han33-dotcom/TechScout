@@ -83,6 +83,7 @@ class SeedBudget:
     """Reserve every retry and redirect before dispatch, including after a restart."""
     def __init__(self, job, manifest, seed, token, registry):
         self.job, self.run_id, self.registry = job, job.run_id, registry
+        self.ledger = job.ledger
         self.manifest, self.seed, self.token = manifest, seed, token
         self.foreign = seed.source_id in INTERNATIONAL
 
@@ -191,6 +192,7 @@ def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None):
             digest=fingerprint,all=empty.copy(),international=empty.copy(),tries={},pages={},lease_until=0))
         if record['digest'] != fingerprint or now < record['lease_until']:
             raise ValueError('Manifest changed or another worker holds the lease')
+        record.pop('stop_reason', None)
         record.update(owner=token,lease_until=now+120)
     try:
         for seed in manifest.seeds:
@@ -274,6 +276,12 @@ def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None):
                     record[scope]['records'] -= row_hold - min(row_hold, rows)
             if embedder and result['status']=='indexed':
                 index_pending(corpus, receipt.document_id, embedder, rate, budget)
+    except BudgetDenied as exc:
+        with ledger._transaction() as (state, now):
+            record = state['bootstrap_manifests'][job.run_id]
+            if record.get('owner') != token:
+                raise
+            record['stop_reason'] = str(exc)
     finally:
         with ledger._transaction() as (state, now):
             record = state['bootstrap_manifests'][job.run_id]

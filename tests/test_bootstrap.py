@@ -54,6 +54,20 @@ class BootstrapTests(TestCase):
                     embedder=provider,rate=Decimal('0.02'))
         self.assertEqual(provider.call_count,6)
         self.assertEqual(self.gate.fetch.call_count,6)
+        # A fresh manifest sees the same corpus. A new processing recipe makes
+        # its passages pending, and its paid-call ceiling stops indexing cleanly.
+        limited = self.manifest.model_copy(update={
+            'manifest_id':'limited-indexing',
+            'processing':self.manifest.processing.model_copy(update={'index_version':'test-index-v2'}),
+            'limits':limits.model_copy(update={'max_paid_calls':1}),
+        })
+        for _ in range(2):
+            partial = collect(limited, ledger=self.ledger, corpus=self.corpus, gate=self.gate,
+                              embedder=provider, rate=Decimal('0.02'))
+            self.assertEqual(partial['stop_reason'], 'Manifest allowance exhausted')
+            self.assertEqual(partial['all']['paid'], 1)
+            self.assertIsNone(partial['owner'])
+        self.assertEqual(provider.call_count, 7)
         seed = self.manifest.seeds[-1]
         state = self.corpus.state(ResourceKey(source_id=seed.source_id,url=seed.url,representation='html'))
         self.assertEqual([p.text for p in self.corpus.passages(state.document_id)],list(seed.policy_statements))
