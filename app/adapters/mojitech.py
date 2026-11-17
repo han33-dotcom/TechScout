@@ -92,3 +92,12 @@ CONFIG = StoreConfig(
     policy_effect=apply_refund_returns,
 )
 ADAPTER = WooCommerceAdapter(CONFIG)
+
+# V2 candidates carry reusable, variant-bound observations for research/ingestion.
+from app.adapters.woo_catalog import WooCatalog
+
+CATALOG = WooCatalog(SOURCE_ID, ORIGIN, {
+    'phone': frozenset({'smartphones', 'mobiles', 'mobile-phones', 'iphones'}),
+    'laptop': frozenset({'laptops', 'gaming-laptops'}),
+    'monitor': frozenset({'monitors', 'gaming-monitors'}),
+}, (('product', ('shop',), 4), ('deep-product', ('shop',), 5), ('short-product', ('product',), 2)))

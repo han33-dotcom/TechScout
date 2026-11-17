@@ -1,0 +1,143 @@
+{
+  "kind": "manual free public-source smoke; not corpus ingestion",
+  "budget": {
+    "seconds": 90,
+    "external_calls": 6,
+    "paid_calls": 0,
+    "provider_spend_usd": "0"
+  },
+  "results": [
+    {
+      "checked_at": "2026-11-17T15:26:58.871542+00:00",
+      "category": "phone",
+      "query": "iPhone",
+      "trace": {
+        "schema_version": 1,
+        "status": "error",
+        "data": {
+          "fetches": [
+            {
+              "source_id": "mojitech",
+              "origin_url": "https://mojitech.net/wp-json/wc/store/v1/products?search=iPhone&per_page=10&page=1",
+              "final_url": null,
+              "redirect_chain": [
+                "https://mojitech.net/wp-json/wc/store/v1/products?search=iPhone&per_page=10&page=1"
+              ],
+              "status_code": null,
+              "content_type": null,
+              "content_encoding": null,
+              "byte_length": null,
+              "response_sha256": null,
+              "observed_at": null,
+              "attempts": 1,
+              "outcome": "error",
+              "error_code": "INVALID_SCHEMA"
+            }
+          ],
+          "candidates_seen": 0,
+          "priced_candidates": 0,
+          "coverage_complete": false,
+          "requires_current_run_verification": true
+        },
+        "evidence_ids": [],
+        "errors": [
+          {
+            "code": "INVALID_SCHEMA",
+            "message": "mojitech: unexpected status 202",
+            "retryable": false
+          }
+        ],
+        "duration_ms": 906
+      },
+      "candidates": 0
+    },
+    {
+      "checked_at": "2026-11-17T15:26:59.462959+00:00",
+      "category": "laptop",
+      "query": "Lenovo",
+      "trace": {
+        "schema_version": 1,
+        "status": "error",
+        "data": {
+          "fetches": [
+            {
+              "source_id": "mojitech",
+              "origin_url": "https://mojitech.net/wp-json/wc/store/v1/products?search=Lenovo&per_page=10&page=1",
+              "final_url": null,
+              "redirect_chain": [
+                "https://mojitech.net/wp-json/wc/store/v1/products?search=Lenovo&per_page=10&page=1"
+              ],
+              "status_code": null,
+              "content_type": null,
+              "content_encoding": null,
+              "byte_length": null,
+              "response_sha256": null,
+              "observed_at": null,
+              "attempts": 1,
+              "outcome": "error",
+              "error_code": "INVALID_SCHEMA"
+            }
+          ],
+          "candidates_seen": 0,
+          "priced_candidates": 0,
+          "coverage_complete": false,
+          "requires_current_run_verification": true
+        },
+        "evidence_ids": [],
+        "errors": [
+          {
+            "code": "INVALID_SCHEMA",
+            "message": "mojitech: unexpected status 202",
+            "retryable": false
+          }
+        ],
+        "duration_ms": 594
+      },
+      "candidates": 0
+    },
+    {
+      "checked_at": "2026-11-17T15:27:00.168570+00:00",
+      "category": "monitor",
+      "query": "Samsung",
+      "trace": {
+        "schema_version": 1,
+        "status": "error",
+        "data": {
+          "fetches": [
+            {
+              "source_id": "mojitech",
+              "origin_url": "https://mojitech.net/wp-json/wc/store/v1/products?search=Samsung&per_page=10&page=1",
+              "final_url": null,
+              "redirect_chain": [
+                "https://mojitech.net/wp-json/wc/store/v1/products?search=Samsung&per_page=10&page=1"
+              ],
+              "status_code": null,
+              "content_type": null,
+              "content_encoding": null,
+              "byte_length": null,
+              "response_sha256": null,
+              "observed_at": null,
+              "attempts": 1,
+              "outcome": "error",
+              "error_code": "INVALID_SCHEMA"
+            }
+          ],
+          "candidates_seen": 0,
+          "priced_candidates": 0,
+          "coverage_complete": false,
+          "requires_current_run_verification": true
+        },
+        "evidence_ids": [],
+        "errors": [
+          {
+            "code": "INVALID_SCHEMA",
+            "message": "mojitech: unexpected status 202",
+            "retryable": false
+          }
+        ],
+        "duration_ms": 703
+      },
+      "candidates": 0
+    }
+  ]
+}
