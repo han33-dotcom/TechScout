@@ -38,13 +38,18 @@ Retail spellings are unified so that the same device compares equal:
 | iPad line | `iPad-Pro`, `iPadPro`, invisible web characters (zero-width spaces, soft hyphens) | `ipad pro` |
 | Chip | `with M2 chip`, `M2 chip`; `A17 Pro` | `m2`; `a17-pro` |
 | Color phrase | `Space Gray`, `Light Gold` | `space-gray`, `light-gold` |
-| Storage and Wi-Fi | `128 GB`, `WiFi` | `128gb`, `wi-fi` |
+| Storage and Wi-Fi | `128 GB`, `WiFi`, `2+32GB` | `128gb`, `wi-fi`, `2/32gb` |
+| Joining `+` | `Wi-Fi + Cellular`, `Wi-Fi+Cellular`, `32GB +` | `wi-fi cellular`, `32gb` |
+| Digits | other scripts (`M١٠`) | `m10` |
 | Display suffix | `M10HD`, `M8FHD` | `m10 hd`, `m8 fhd` |
 | Plus | a spaced `+` at the end, or before storage or connection words (`Galaxy Tab S9 +`) | `plus` |
 
 Also:
 - Only 7 to 19.99 inches is read as a screen size, so `2-in-1` is not a size.
-- A dash with spaces on both sides separates parts of a title (`... (M2) - Space Gray`).
+- A dash with spaces on both sides separates parts of a title, as a comma does (`... (M2) -
+  Space Gray`).
+- A decimal comma is read only when the digits after it cannot be a size themselves: `12,9"` is
+  12.9 inches, but `11,13"` is two sizes.
 - Parentheses and commas drop out.
 - A leading maker drops out, word by word: `Apple` or `Apple Inc.` for the evidenced `Apple
   Inc.`. A maker word that is itself a tablet word stays (`Surface` for `Microsoft Surface`, or a
@@ -87,6 +92,13 @@ name, and an unknown word is where the extra meaning hides:
 | `i-Pad`, `iPad™`, `iPad.Pro`, `Tab-A`, `Galaxy Tablet` | an unknown spelling |
 | `S6 Light` | a fragment of a color (`light gold`) |
 
+Lists are rejected too:
+- after a comma or spaced dash, only configuration may follow (storage, memory, size,
+  connection and color), so `S9 FE, FE+`, `Pro 11, 12.9-inch` and `Gen 7, 8` stay unresolved;
+- a name may give one radio generation and one of `Plus`, `Ultra`, `Lite` and `Max` (`LTE 5G`
+  and `Plus Ultra` stay unresolved);
+- a bare number from 7 to 19.99 counts as a size for the two-size rule (`iPad Pro 11 12.9-inch`).
+
 Extraction is expected to supply the model name itself, not the whole listing title.
 
 ### 4. Positive evidence of one edition
@@ -95,7 +107,8 @@ A name identifies one model only with positive evidence of its edition:
 - an ordinal generation written with its correct suffix (`10th generation`; `3th` and `03rd`
   leave the name unresolved);
 - a year from 2010 to 2039 (`2024`);
-- an Apple chip (`M2`, `A17 Pro`, `A12Z`);
+- an Apple chip (`M2`, `A17 Pro`, `A12Z`); Apple's motion coprocessors (`M7` to `M12`) are
+  chip words too, so `A10 Fusion, M10` names two chips;
 - one short model token that joins letters and digits (`S9`, `P11`, `Y700`);
 - one manufacturer part number (`SM-X710`, `TB125FU`).
 
@@ -106,7 +119,8 @@ Some things never count as evidence:
 - a bare number: retail titles carry sizes, warranty years, operating-system versions and
   accessory numbers that name no edition (`iPad 10.2`, `Surface Pro 9`, `Windows 11`,
   `Apple Pencil 2`);
-- an Intel CPU tier (`i5`, and `m3` in a Surface name);
+- an Intel CPU tier (`i5`, and `m3` in a Surface name), and a generation next to one leaves the
+  name unresolved, because `i5 7th Gen` may be the CPU's generation;
 - a year in a Surface name, because Surface Pro years name more than one model (2013, 2021,
   2024 and 2025).
 
@@ -130,6 +144,7 @@ It then stays unresolved when:
 ### 6. Other lines
 
 A non-Apple name stays unresolved when:
+- **Surface line missing.** The maker is Microsoft or Surface but the name lacks `Surface`.
 - **Radio missing.** The offer is cellular but the name does not say `LTE`, `3G`, `4G` or `5G`,
   because some lines ship both (Galaxy Tab S7 FE LTE and 5G).
 - **Year only.** Its only evidence is a year and it gives no size (`Honor Pad 5 (2019)`,
