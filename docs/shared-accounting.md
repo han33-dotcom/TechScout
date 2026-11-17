@@ -8,8 +8,8 @@ use the same interface without credentials or network calls.
 
 ## Configuration and ownership
 
-All API processes, collection workers and developer laptops must point
-`TECHSCOUT_ACCOUNTING_URL` at **one central PostgreSQL database**, with
+All participating API processes, collection workers and developer laptops must point
+`TECHSCOUT_ACCOUNTING_URL` at **one authoritative PostgreSQL database**, with
 `TECHSCOUT_ACCOUNTING_PROJECT=techscout-december-2026`. This URL is distinct from
 the local corpus/database URL and has no local fallback. Apply repository migrations
 to that database, then an administrator explicitly runs:
@@ -24,7 +24,17 @@ Clients cannot reset the existing campaign by changing an environment variable.
 Do not provision separate ledgers per laptop. Back up the database and restrict
 administrative credentials; deleting/restoring accounting data can defeat any
 application ledger. SQLite and injected clocks are explicit offline-test options.
-Missing configuration, migrations, database access or project identity stops work.
+Missing configuration, schema, database access or project identity stops work.
+
+**Local-first decision, November 17:** the user selected a dedicated local PostgreSQL
+ledger on Hassan's PC for now, with migration to hosted PostgreSQL later if needed.
+This is the active accounting authority for work on that PC. It does not coordinate
+separate machines automatically: teammates must not independently spend against
+another copy of the same campaign. See [local setup and migration](local-accounting.md).
+For a dedicated ledger, `python -m app.accounting_admin initialize` creates only the
+accounting table and initial row, without requiring the corpus schema or pgvector.
+It is an explicit administrative alternative to full application migrations;
+it does not stamp an Alembic revision or reset an existing campaign.
 
 Migration 0007 adds a single serialized campaign state row. Every transition takes
 a database write lock, reads the database clock, validates all relevant scopes,
@@ -52,6 +62,14 @@ needs a new reservation. Provider clients must enforce their declared timeout an
 stop reading/working at cancellation. Budget refusals preserve previously stored
 partial results. A reported overrun is recorded and blocks the entire campaign
 for explicit operator reconciliation; it is never silently discarded.
+
+`python -m app.accounting_admin reconcile --receipts FILE` records historical
+bootstrap usage or conservative holds with immutable receipt IDs and an evidence
+basis. It adds usage to the project, bootstrap and applicable international scopes;
+it does not fabricate dispatched attempts. Identical retries are idempotent;
+conflicting receipts are rejected. Overages remain recorded and block the campaign.
+There is no automatic refund or unblock command. Reinitialization cannot clear
+usage, receipts, or a blocked state. Additional historical usage requires new receipts.
 
 `credit_purchase(receipt_id, credit_usd, fee_usd)` records funding idempotently.
 Credit principal is not spending twice: subsequent provider consumption is charged,

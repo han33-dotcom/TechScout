@@ -62,7 +62,11 @@ class Ledger:
     @classmethod
     def configured(cls):
         # Deliberately no DATABASE_URL/local fallback: every laptop uses this service.
-        return cls(Storage(os.environ['TECHSCOUT_ACCOUNTING_URL']), os.environ['TECHSCOUT_ACCOUNTING_PROJECT'])
+        url = os.environ.get('TECHSCOUT_ACCOUNTING_URL', '').strip()
+        project = os.environ.get('TECHSCOUT_ACCOUNTING_PROJECT', '').strip()
+        if not url or not project:
+            raise BudgetDenied('An explicit accounting URL and project are required')
+        return cls(Storage(url), project)
 
     @contextmanager
     def _transaction(self, *, initializing=False):
