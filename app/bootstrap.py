@@ -18,7 +18,7 @@ from app.contracts import HttpsUrl, Model, SourcePolicy, Text
 from app.contracts_v2 import Evidence
 from app.corpus import Corpus
 from app.corpus_contracts import DocumentCapture, Extraction, FieldObservation, PassageDraft, ProcessingVersion, ResourceKey
-from app.embeddings import EmbeddingService, OpenAIEmbeddings
+from app.embeddings import EmbeddingAllowanceExceeded, EmbeddingService, OpenAIEmbeddings
 from app.extraction import PageProfile, extract_page
 from app.source_capabilities import CapabilityRef
 from app.source_registry import get_active_source
@@ -276,7 +276,7 @@ def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None):
                     record[scope]['records'] -= row_hold - min(row_hold, rows)
             if embedder and result['status']=='indexed':
                 index_pending(corpus, receipt.document_id, embedder, rate, budget)
-    except BudgetDenied as exc:
+    except (BudgetDenied, EmbeddingAllowanceExceeded) as exc:
         with ledger._transaction() as (state, now):
             record = state['bootstrap_manifests'][job.run_id]
             if record.get('owner') != token:
