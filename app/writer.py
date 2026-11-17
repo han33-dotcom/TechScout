@@ -192,9 +192,9 @@ def day(value: datetime) -> str:
 
 def lebanon_day(value: datetime, *, earliest: bool) -> str:
     """A window bound as a Lebanese calendar date. Lebanon keeps UTC+2 in winter and UTC+3 in
-    summer; the earliest bound uses UTC+3 and the latest UTC+2, the offsets that never make the
-    window look narrower than the store stated (as app.adapters.base reads it)."""
-    value = value.astimezone(_UTC3 if earliest else _UTC2)
+    summer; the earliest bound takes its UTC+2 date and the latest its UTC+3 date, the earlier and
+    the later of the two, so a stated window is never narrowed or reversed."""
+    value = value.astimezone(_UTC2 if earliest else _UTC3)
     return f'{value.day} {value:%b %Y}'
 
 
@@ -411,23 +411,24 @@ def _uncertain_cost(cost) -> str:
     return f'{known}missing: {missing} (not counted as zero)'
 
 
-def _arrival(verified: v2.VerifiedOffer, run: v2.RunReference) -> tuple[str | None, str | None]:
-    """(claim text, open question) for an offer's arrival window. Only a window observed in this run
-    whose latest day has not passed is stated as a checked arrival."""
+def _arrival(verified: v2.VerifiedOffer, run: v2.RunReference) -> tuple[str | None, str | None, list[str]]:
+    """(claim text, open question, the question's evidence) for an offer's arrival window. Only a
+    window observed in this run whose latest day has not passed is stated as a checked arrival."""
     fact = verified.offer.arrival
     if fact is None or fact.state == 'unknown':
-        return None, 'delivery time not published'
+        return None, 'delivery time not published', []
+    ids = list(fact.evidence_ids)
     if fact.state == 'conflict':
-        return None, 'delivery time: conflicting values reported'
+        return None, 'delivery time: conflicting values reported', ids
     older = _stored(verified.offer, fact.evidence_ids, run)
     if older is not None:
-        return None, f'delivery time not checked in this run (stored record, observed {day(older)})'
+        return None, f'delivery time not checked in this run (stored record, observed {day(older)})', ids
     window = fact.value
     if window.latest < verified.verification.checked_at:
-        return None, 'the published delivery window has already passed'
+        return None, 'the published delivery window has already passed', ids
     basis = 'guaranteed by the seller' if window.basis == 'guaranteed' else 'an estimate, not a promise'
     return (f'between {lebanon_day(window.earliest, earliest=True)} and {lebanon_day(window.latest, earliest=False)} '
-            f'(dates in Lebanon; {basis})'), None
+            f'(dates in Lebanon; {basis})'), None, []
 
 
 def _check(context: WritingContext) -> None:
@@ -480,16 +481,19 @@ def build_menu(context: WritingContext) -> Menu:
                   ids, required=False, tags=[tag])
 
     gaps_by_offer: dict[tuple[int, int], list[str]] = {}
+    gap_evidence: dict[tuple[int, int], list[str]] = {}  # the records behind conflicting or stored gaps
     for g, recommendation in enumerate(groups, start=1):
         sellers = _offers(recommendation)
         for s, verified in enumerate(sellers, start=1):
             offer = verified.offer
             gaps = gaps_by_offer.setdefault((g, s), [])
+            gap_ids = gap_evidence.setdefault((g, s), [])
             pickup = isinstance(offer.route, v2.PickupRoute)
             stock = ('reported in stock at that branch when checked; not reserved' if pickup
                      else 'reported in stock when checked; not reserved')
             terms = [_fact_phrase(name, fact, '') for name, fact in _terms(offer)]
             gaps += [phrase for (name, fact), phrase in zip(_terms(offer), terms) if fact.state != 'known']
+            gap_ids += [i for _, fact in _terms(offer) if fact.state != 'known' for i in _cited(fact)]
             ids = [*offer.price.evidence_ids, *offer.stock.evidence_ids, *offer.purchasable.evidence_ids,
                    *(i for _, fact in _terms(offer) for i in _cited(fact)), *_route_evidence(offer)]
             b.add('seller', 'route', f'G{g}', 'verified',
@@ -504,6 +508,7 @@ def build_menu(context: WritingContext) -> Menu:
                     fact = getattr(warranty, field)
                     if fact.state != 'known':
                         gaps.append(_fact_phrase(f'warranty {label}', fact, '', unknown='not published'))
+                        gap_ids += _cited(fact)
                 if warranty.months.state == 'known':
                     parts, ids = [f'{warranty.months.value} months'], list(warranty.months.evidence_ids)
                     provider = (safe_text(warranty.provider.value, 60) if warranty.provider.state == 'known'
@@ -521,7 +526,7 @@ def build_menu(context: WritingContext) -> Menu:
                           f'Warranty for option {g} from {_seller(offer, s)}: {", ".join(parts)}'
                           f'{_stored_note(offer, ids, run)}.', ids, required='warranty' in preferences,
                           tags=['warranty'])
-            window, question = _arrival(verified, run)
+            window, question, question_ids = _arrival(verified, run)
             if window is not None:
                 evidenced.add('delivery')
                 b.add('seller', 'arrival', f'G{g}', 'verified',
@@ -529,6 +534,7 @@ def build_menu(context: WritingContext) -> Menu:
                       required='delivery' in preferences, tags=['delivery'])
             else:
                 gaps.append(question)
+                gap_ids += question_ids
         currencies = {v.cost.total.currency for v in sellers}
         if len(sellers) > 1 and len(currencies) == 1:
             totals = [v.cost.total.amount for v in sellers]
@@ -569,11 +575,13 @@ def build_menu(context: WritingContext) -> Menu:
         offer = _offers(groups[g - 1])[s - 1].offer
         gaps[:0] = [_fact_phrase(label, fact, unit) for _, label, unit, _, fact in _spec_facts(offer)
                     if fact.state != 'known']
+        ids = [i for *_, fact in _spec_facts(offer) if fact.state != 'known' for i in _cited(fact)]
+        ids += gap_evidence[(g, s)]
         if gaps:
             tags = [t for t, word in (('warranty', 'warranty'), ('delivery', 'delivery')) if
                     any(word in gap for gap in gaps)]
             b.add('open', 'unknown', f'G{g}', 'verified', f'Option {g} from {_seller(offer, s)}: {_join(gaps)}.',
-                  required=bool(set(tags) & set(preferences)) or any('conflicting' in x for x in gaps), tags=tags)
+                  ids, required=bool(set(tags) & set(preferences)) or any('conflicting' in x for x in gaps), tags=tags)
     if groups:
         evidenced.add('price')
     for preference in preferences:

@@ -87,8 +87,9 @@ or Markdown.
   condition, activation and payment terms where the offer has them. Branch stock is
   worded only for pickup, and stock is never called reserved.
 - **Arrival is stated only when checked in this run and not yet past.** The dates are
-  Lebanese calendar dates, widened as the store readers widen them, and the line says
-  whether they are an estimate or guaranteed. A stored or past window, or a
+  Lebanese calendar dates: the earliest day uses UTC+2 and the latest UTC+3, Lebanon's two
+  offsets, so a window is never narrowed or reversed. The line says whether the dates are an
+  estimate or guaranteed. A stored or past window, or a
   conflicting one, becomes an open question.
 - **Unknown stays unknown.** Missing costs of unverified alternatives are named and
   "not counted as zero".
@@ -107,7 +108,8 @@ or Markdown.
   warranty observed before this run is marked "stored record, observed <date>" on that
   fact, not on its neighbours.
 - **Conflicts are reported as conflicts.** For example, "warranty length: conflicting
-  values reported". They are never shown as "not published".
+  values reported". They are never shown as "not published", and the open question cites
+  the conflicting records (and a stored arrival's record).
 
 ## Fallback
 

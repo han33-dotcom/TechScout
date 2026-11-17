@@ -466,7 +466,7 @@ def known(value, *ids) -> dict:
 class TermsTests(WriterCase):
     """Warranty, arrival, pickup, conversion and purchase-term wording (AGENTS.md rules)."""
 
-    def with_terms(self, *, arrival_current=True, earliest='2026-11-18T22:00:00Z', latest='2026-11-21T21:59:00Z',
+    def with_terms(self, *, arrival_current=True, earliest='2026-11-18T22:00:00Z', latest='2026-11-21T20:00:00Z',
                    basis='estimate'):
         data = snapshot()
         offer = primary(data)['offer']
@@ -488,10 +488,20 @@ class TermsTests(WriterCase):
         guaranteed = deterministic_explanation(context(self.with_terms(basis='guaranteed'))).text
         self.assertIn('(dates in Lebanon; guaranteed by the seller).', guaranteed)
 
+    def test_arrival_dates_are_never_narrowed_or_reversed(self):
+        # Both instants fall on 18 Nov in Lebanon's winter time; the window is widened, never reversed.
+        near_midnight = self.with_terms(earliest='2026-11-18T21:30:00Z', latest='2026-11-18T21:45:00Z')
+        self.assertIn('between 18 Nov 2026 and 19 Nov 2026', deterministic_explanation(context(near_midnight)).text)
+        # A window stated in UTC+2 to 23:59 local is widened to the later UTC+3 date.
+        widened = self.with_terms(latest='2026-11-21T21:59:00Z')
+        self.assertIn('between 19 Nov 2026 and 22 Nov 2026', deterministic_explanation(context(widened)).text)
+
     def test_a_stored_or_past_arrival_is_an_open_question_not_a_checked_one(self):
         stored = deterministic_explanation(context(self.with_terms(arrival_current=False))).text
         self.assertNotIn('Arrival for option', stored)
         self.assertIn('delivery time not checked in this run (stored record, observed 1 Nov 2026)', stored)
+        stored_ctx = context(self.with_terms(arrival_current=False))
+        self.assertIn('book-local:arrival', deterministic_explanation(stored_ctx).evidence_ids)
         past = deterministic_explanation(context(self.with_terms(earliest='2026-11-08T22:00:00Z',
                                                                  latest='2026-11-10T12:00:00Z'))).text
         self.assertNotIn('Arrival for option', past)
@@ -507,6 +517,9 @@ class TermsTests(WriterCase):
         claim = next(c for c in menu.claims if c.kind == 'unknown')
         self.assertIn('warranty length: conflicting values reported', claim.text)
         self.assertTrue(claim.required)
+        conflict_ids = offer['warranty']['months']['evidence_ids']
+        self.assertEqual(set(conflict_ids) & set(claim.evidence_ids), set(conflict_ids))  # cited, AGENTS.md
+        self.assertTrue(set(conflict_ids) <= set(deterministic_explanation(ctx).evidence_ids))
         self.assertNotIn('Warranty for option', deterministic_explanation(ctx).text)  # length not established
 
     def test_prioritized_terms_cannot_be_left_out_by_the_model(self):
