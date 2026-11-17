@@ -1,0 +1,56 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "sku": "fixture-16-512",
+  "model": "Synthetic Laptop",
+  "mpn": "FIXTURE-L16-512",
+  "brand": {
+    "name": "Fixture Brand"
+  },
+  "additionalProperty": [
+    {
+      "name": "CPU",
+      "value": "Synthetic CPU 8"
+    },
+    {
+      "name": "RAM",
+      "value": "16 GB"
+    },
+    {
+      "name": "Storage",
+      "value": "512 GB"
+    },
+    {
+      "name": "GPU",
+      "value": "Synthetic GPU"
+    },
+    {
+      "name": "Shipping weight",
+      "value": "3.5 kg"
+    }
+  ],
+  "offers": {
+    "@type": "Offer",
+    "price": "900.25",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock",
+    "itemCondition": "https://schema.org/NewCondition",
+    "seller": {
+      "name": "PC and Parts"
+    },
+    "priceSpecification": {
+      "valueAddedTaxIncluded": true
+    },
+    "shippingDetails": {
+      "shippingDestination": {
+        "addressCountry": "LB",
+        "addressLocality": "Beirut"
+      },
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "8.50",
+        "currency": "USD"
+      }
+    }
+  }
+}

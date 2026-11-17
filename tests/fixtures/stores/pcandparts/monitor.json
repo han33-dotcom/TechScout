@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "sku": "fixture-16-512",
+  "model": "Synthetic Monitor 27",
+  "mpn": "FIXTURE-M27-144",
+  "additionalProperty": [
+    {
+      "name": "Width",
+      "value": "2560 px"
+    },
+    {
+      "name": "Height",
+      "value": "1440 px"
+    },
+    {
+      "name": "Refresh rate",
+      "value": "144 Hz"
+    },
+    {
+      "name": "Diagonal",
+      "value": "27 inches"
+    },
+    {
+      "name": "Panel",
+      "value": "IPS"
+    }
+  ],
+  "offers": {
+    "@type": "Offer",
+    "price": "280.00",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/OutOfStock",
+    "itemCondition": "https://schema.org/NewCondition"
+  }
+}
