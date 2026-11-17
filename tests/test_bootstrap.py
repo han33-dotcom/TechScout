@@ -1,6 +1,7 @@
 import hashlib
 import json
 from datetime import datetime, timezone
+from decimal import Decimal
 from pathlib import Path
 from unittest import TestCase
 from unittest.mock import Mock
@@ -37,12 +38,21 @@ class BootstrapTests(TestCase):
             return FetchOutcome(source,url,(url,),1,2,final_url=url,body=body,
                 observed_at=datetime.now(timezone.utc),response_sha256=hashlib.sha256(body).hexdigest())
         self.gate.fetch.side_effect = fetch
+        limits = self.manifest.limits.model_copy(update={'max_paid_calls': 6, 'max_spend_usd': Decimal('0.01')})
+        self.manifest = self.manifest.model_copy(update={'limits':limits})
         def collect_once():
             return collect(self.manifest,ledger=self.ledger,corpus=self.corpus,gate=self.gate)
         first = collect_once()
         self.assertEqual({p['category'] for p in first['pages'].values() if p['status']=='indexed'},
                          {'phone','laptop','audio','monitor','tablet'})
         self.assertEqual(collect_once()['pages'],first['pages'])
+        from app.retrieval import MODEL, DIMENSIONS
+        provider = Mock(side_effect=lambda texts:dict(model=MODEL,usage={'total_tokens':len(texts)},
+            data=[dict(index=i,embedding=[1.0]+[0.0]*(DIMENSIONS-1)) for i in range(len(texts))]))
+        for _ in range(2):
+            collect(self.manifest,ledger=self.ledger,corpus=self.corpus,gate=self.gate,
+                    embedder=provider,rate=Decimal('0.02'))
+        self.assertEqual(provider.call_count,6)
         self.assertEqual(self.gate.fetch.call_count,6)
         seed = self.manifest.seeds[-1]
         state = self.corpus.state(ResourceKey(source_id=seed.source_id,url=seed.url,representation='html'))
@@ -62,4 +72,3 @@ class BootstrapTests(TestCase):
             result = collect(m,ledger=self.ledger,corpus=self.corpus,gate=self.gate)
         self.assertEqual(len(calls),1)
         self.assertEqual(result['all']['fetch'],1)
-
