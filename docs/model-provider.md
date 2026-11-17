@@ -8,10 +8,10 @@ no-investigation baseline. The old Anthropic planner/configuration stays availab
 for explicitly selected historical evaluations, with no automatic substitution.
 
 Backend workers supply `OPENAI_API_KEY`. Startup, offline tests, and the React
-bundle require no provider credentials. OpenRouter is not installed or required.
-An optional future gateway must implement `ModelProvider.generate`, including its
-own actual provider/model attribution and all-inclusive pricing; agent roles can
-use that typed boundary without changing orchestration.
+bundle require no provider credentials. OpenRouter is optional, off by default and
+never required: the [OpenRouter adapter](openrouter.md) implements the same
+`ModelProvider.generate` boundary with its own pinned routes, provider/model
+attribution and pricing, so agent roles can use it without changing orchestration.
 
 Full-product roles call `generate(instructions, data, OutputModel,
 budget=JobBudget(job), cancelled=...)`. The output is validated with the supplied

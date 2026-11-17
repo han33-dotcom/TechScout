@@ -1,7 +1,8 @@
-"""Typed, metered model boundary. Direct OpenAI is the only installed provider.
+"""Typed, metered model boundary. Direct OpenAI is the default provider.
 
-No provider chooses tools, runs agents, or changes buyer decisions here. A future
-gateway adapter must implement ModelProvider and supply its own verified pricing.
+No provider chooses tools, runs agents, or changes buyer decisions here. A gateway
+adapter must implement ModelProvider and supply its own verified pricing; the
+optional, explicitly enabled OpenRouter adapter lives in app.openrouter.
 """
 from dataclasses import dataclass
 from datetime import date
