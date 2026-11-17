@@ -305,3 +305,83 @@ def _aware(now: datetime | None) -> datetime:
     if now.utcoffset() is None:
         raise ValueError('now must be timezone-aware')
     return now.astimezone(timezone.utc)
+
+
+def calculate_domestic_cost(request, offer, *, fx: Sequence[FxRate] = (), now=None, estimates=None):
+    """V2 cost union; explicit fee estimates never verify an offer."""
+    from types import SimpleNamespace
+    from app import contracts_v2 as v2
+    now, estimates = _aware(now), estimates or {}
+    if (offer.seller.market != 'LB' or isinstance(offer.route,v2.ForwardedRoute)
+            or isinstance(offer.route,v2.DirectRoute) and offer.route.origin_country != 'LB'):
+        return v2.IncompleteCost(status='incomplete',missing=('international cost evaluation required',))
+    price = offer.price.value if offer.price.state == 'known' else None
+    if price is None or price.amount <= 0:
+        return v2.IncompleteCost(status='incomplete',missing=('positive, unambiguous price',))
+    if any(e.observed_at > now for e in offer.evidence if e.evidence_id in offer.price.evidence_ids):
+        return v2.IncompleteCost(status='incomplete',missing=('price observation is in the future',))
+    amounts, missing = [price.amount], []
+    currency = price.currency
+    required = {'tax'} | ({'shipping'} if isinstance(offer.route,v2.DirectRoute) else set())
+    listed = {c.kind for c in offer.costs}
+    missing.extend('costs.order.'+k for k in sorted(required-listed))
+    payment = request.payment or (offer.payment.value if offer.payment and offer.payment.state=='known' else None)
+    city = request.fulfillment.destination.city
+    order = SimpleNamespace(payment_basis=payment,fulfillment=SimpleNamespace(city=city or ''))
+    for charge in offer.costs:
+        path = f'costs.{charge.leg}.{charge.kind}'
+        if charge.state=='unknown' or charge.valid_until is not None and charge.valid_until < now:
+            missing.append(path)
+            continue
+        receipts = [e for e in offer.evidence if e.evidence_id in charge.evidence_ids]
+        if any(e.observed_at > now for e in receipts):
+            missing.append(path)
+            continue
+        applicable = set()
+        for condition in charge.conditions:
+            name = condition.partition(':')[0]
+            applicable.add(None if (name=='payment' and payment is None or name=='city' and city is None)
+                           else _holds(condition,order,price))
+        if None in applicable:
+            missing.append(path)
+            continue
+        if False in applicable:
+            # A failed waiver doesn't establish the normal charge. Conditional
+            # required fees don't establish the fee outside their condition.
+            if charge.kind in required or charge.state != 'additional' or charge.amount.amount == 0:
+                missing.append(path)
+            continue
+        if charge.state=='additional':
+            if charge.amount.currency != currency:
+                missing.append(path)
+            else:
+                amounts.append(charge.amount.amount)
+    subtotal = _sum(amounts)
+    if subtotal is None or not subtotal.is_finite():
+        return v2.IncompleteCost(status='incomplete',missing=('exact payable arithmetic',))
+    money = Money(amount=subtotal,currency=currency)
+    if missing:
+        # No invented fee or range: every missing component needs an explicit
+        # same-currency estimate with assumptions before a range can be shown.
+        ranges = [estimates.get(path) for path in missing]
+        if all(isinstance(r,v2.EstimatedCost) and r.lower.currency==currency for r in ranges):
+            lower = _sum([subtotal,*(r.lower.amount for r in ranges)])
+            upper = _sum([subtotal,*(r.upper.amount for r in ranges)])
+            if lower is not None and upper is not None and lower.is_finite() and upper.is_finite():
+                return v2.EstimatedCost(status='estimated',lower=Money(amount=lower,currency=currency),
+                    upper=Money(amount=upper,currency=currency),
+                    assumptions=tuple(a for r in ranges for a in r.assumptions))
+        return v2.IncompleteCost(status='incomplete',known_subtotal=money,missing=tuple(dict.fromkeys(missing)))
+    conversion = None
+    maximum = request.budget.maximum if request.budget else None
+    if maximum and maximum.currency != currency:
+        rate = _rate([FxRate.model_validate(r) for r in fx],currency,maximum.currency,now)
+        if rate is None:
+            return v2.IncompleteCost(status='incomplete',known_subtotal=money,missing=('current budget FX quote',))
+        converted = _context().multiply(subtotal,rate.rate)
+        if not converted.is_finite():
+            return v2.IncompleteCost(status='incomplete',known_subtotal=money,missing=('finite budget conversion',))
+        conversion = v2.FxConversion(base=money,quote=Money(amount=converted,currency=maximum.currency),
+            rate=rate.rate,evidence_id=rate.evidence_id,observed_at=rate.observed_at,
+            valid_until=rate.observed_at+FX_MAX_AGE)
+    return v2.VerifiedCost(status='verified',total=money,budget_conversion=conversion)
