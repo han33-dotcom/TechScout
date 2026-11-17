@@ -308,6 +308,32 @@ corpus_document_passages = Table(
            primary_key=True, index=True),
 )
 
+buyer_guard = Table('buyer_guard', metadata, Column('id', Integer, primary_key=True, autoincrement=False))
+
+buyer_sessions = Table(
+    'buyer_sessions', metadata,
+    Column('session_hash', String(64), primary_key=True),
+    Column('csrf', String(64), nullable=False),
+    Column('expires_at', UtcDateTime, nullable=False, index=True),
+)
+
+buyer_runs = Table(
+    'buyer_runs', metadata,
+    Column('run_id', String(36), primary_key=True),
+    Column('session_hash', ForeignKey('buyer_sessions.session_hash', ondelete='CASCADE'), nullable=False, index=True),
+    Column('request_id', Text, nullable=False),
+    Column('request_revision', Integer, nullable=False),
+    Column('status', String(20), nullable=False, index=True),
+    Column('snapshot', JSON, nullable=False),
+    Column('answers', JSON, nullable=False),
+    Column('previous_id', String(36)),
+    Column('lease_token', String(32)),
+    Column('lease_until', UtcDateTime),
+    Column('active_since', UtcDateTime),
+    Column('active_ms', Integer, nullable=False),
+    UniqueConstraint('session_hash','request_id','request_revision',name='uq_buyer_request_revision'),
+)
+
 accounting_state = Table(
     'accounting_state', metadata,
     Column('id', Integer, primary_key=True),
