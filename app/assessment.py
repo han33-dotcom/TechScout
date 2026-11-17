@@ -8,9 +8,45 @@ from typing import Literal
 from pydantic import Field, StrictBool, model_validator
 
 from app.contracts import CostComponent, Model, Money, Text
+from app import contracts_v2 as v2
 
 Outcome = Literal['pass', 'fail', 'unresolved']
 Decision = Literal['recommendable', 'unresolved', 'rejected']
+
+
+class FullProductAssessment(Model):
+    """Decision over held evidence; this is never a current-run verification."""
+    offer_id: Text
+    eligibility: 'Eligibility'
+    cost: v2.Cost
+    within_maximum: StrictBool | None
+
+    @model_validator(mode='after')
+    def same_offer(self):
+        if self.offer_id != self.eligibility.offer_id:
+            raise ValueError('Assessment must cover the eligibility offer')
+        return self
+
+    @property
+    def decision(self) -> Decision:
+        if self.eligibility.outcome=='fail' or self.within_maximum is False:
+            return 'rejected'
+        if self.eligibility.outcome=='pass' and self.cost.status=='verified' and self.within_maximum is True:
+            return 'recommendable'
+        return 'unresolved'
+
+
+def assess_full_product(request: v2.ShoppingRequest, offer: v2.Offer, *, fx=(), now=None, estimates=None):
+    from app.costs import calculate_domestic_cost
+    from app.eligibility import check_full_product
+    eligibility = check_full_product(request,offer)
+    cost = calculate_domestic_cost(request,offer,fx=fx,now=now,estimates=estimates)
+    within = None
+    if cost.status=='verified':
+        maximum = request.budget.maximum if request.budget else None
+        total = cost.budget_conversion.quote if cost.budget_conversion else cost.total
+        within = maximum is None or total.currency==maximum.currency and total.amount<=maximum.amount
+    return FullProductAssessment(offer_id=offer.offer_id,eligibility=eligibility,cost=cost,within_maximum=within)
 
 
 class EvidenceGap(Model):

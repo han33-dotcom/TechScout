@@ -27,6 +27,7 @@ from app.devices import canonical_manufacturer, spell_plus
 from app.identity import (
     COLOR_FAMILIES, NormalizedVariant, canonical_color, known_color, known_model, normalize_variant,
 )
+from app import contracts_v2 as v2
 
 # Every offer gets these checks, in this order.
 CHECKS = ('fulfillment', 'condition', 'manufacturer', 'model', 'storage', 'color', 'sim', 'region',
@@ -409,6 +410,149 @@ def _market(request: ShoppingRequest, offer: Offer) -> tuple[Check, Open]:
         return _check('market', 'pass', f'offer is in the {market} market', ['fulfillment.country']), []
     return _check('market', 'fail', f'offer is in the {market} market, which the request does not allow',
                   ['fulfillment.country']), []
+
+
+def check_full_product(request: v2.ShoppingRequest, offer: v2.Offer) -> Eligibility:
+    """V2 hard constraints only; missing optional facts do not disqualify a buyer.
+
+    This evaluates stored evidence, not freshness or current-run verification.
+    Use VerifiedOffer/RunSnapshot only after the controller's live checks.
+    """
+    from app.identity import _identity_value, _identity_text
+    checks, gaps = [], []
+
+    def add(name, path, verdict, ids=()):
+        outcome = 'unresolved' if verdict is None else 'pass' if verdict else 'fail'
+        reason = f'{name}: ' + {'pass':'requirement met', 'fail':'requirement not met',
+                                'unresolved':'required evidence is missing or conflicting'}[outcome]
+        checks.append(_check(name, outcome, reason, [path], ids))
+        if verdict is None:
+            gaps.append(EvidenceGap(offer_id=offer.offer_id, source_id=offer.source_id,
+                                    field_path=path, reason=reason))
+
+    def fact(name, path, observed, predicate):
+        verdict = predicate(observed.value) if observed is not None and observed.state == 'known' else None
+        add(name, path, verdict, observed.evidence_ids if observed else ())
+
+    req, specs, product = request.requirements, offer.variant.specs, offer.variant.product
+    add('category', 'variant.product.category', req.category == product.category)
+    add('market', 'seller.market', request.market_scope.allows(offer.seller.market))
+    fact('condition','condition',offer.condition,lambda v:v in request.allowed_conditions)
+    fact('purchasable','purchasable',offer.purchasable,lambda v:v is True)
+    fact('stock','stock',offer.stock,lambda v:v is True)
+    fact('price','price',offer.price,lambda v:v.amount > 0)
+    intent = request.intent
+    if intent.kind == 'exact_model':
+        add('model','variant.product.model',
+            _identity_value('model',product.model) == _identity_value('model',intent.model))
+        if intent.manufacturer:
+            add('manufacturer','variant.product.manufacturer',
+                _identity_value('manufacturer',product.manufacturer) == _identity_value('manufacturer',intent.manufacturer))
+    elif intent.kind == 'product_link' and intent.url != offer.listing_url:
+        add('linked product identity','variant.product',None)
+    elif intent.kind == 'needs' and intent.required_software:
+        # Software suitability requires a later evidence-backed capability profile;
+        # matching a RAM number never proves an arbitrary application runs well.
+        add('required software suitability','variant.specs',None)
+    if product.category == req.category:
+        for field, wanted in req.model_dump().items():
+            if field == 'category' or wanted is None or wanted == ():
+                continue
+            minimum = field.startswith('min_')
+            name = field[4:] if minimum else 'region' if field == 'regions' else field
+            observed = getattr(specs,name)
+            def matches(value, wanted=wanted, name=name, minimum=minimum, field=field):
+                if minimum:
+                    return value >= wanted
+                if field == 'regions':
+                    return _identity_value('region',value) in {_identity_value('region',v) for v in wanted}
+                if isinstance(value,str):
+                    # 'both' is positive evidence for either audio connection mode.
+                    if name=='connectivity' and req.category=='audio' and value=='both':
+                        return True
+                    return _identity_text(value) == _identity_text(wanted)
+                return value == wanted
+            fact(name,'variant.specs.'+name,observed,matches)
+    if request.allowed_colors:
+        fact('color','variant.color',offer.variant.color,
+             lambda v:_identity_value('color',v) in {_identity_value('color',c) for c in request.allowed_colors})
+    if request.payment:
+        fact('payment','payment',offer.payment,lambda v:v == request.payment)
+    route, wanted = offer.route, request.fulfillment
+    mode = 'pickup' if isinstance(route,v2.PickupRoute) else 'delivery'
+    add('fulfillment mode','route.kind',wanted.mode in ('any',mode))
+    if wanted.branch_id:
+        add('pickup branch','route.branch_id',isinstance(route,v2.PickupRoute) and route.branch_id == wanted.branch_id)
+    for field in ('country','city','postal_code'):
+        value = getattr(wanted.destination,field)
+        if value:
+            actual = getattr(route.destination,field)
+            add('destination '+field,'route.destination.'+field,
+                None if actual is None else _identity_text(value)==_identity_text(actual))
+    if isinstance(route,v2.DirectRoute):
+        fact('item delivery eligibility','route.item_eligible',route.item_eligible,lambda v:v is True)
+    elif isinstance(route,v2.ForwardedRoute):
+        for leg in ('retailer_leg','forwarding_leg'):
+            fact(leg+' eligibility','route.'+leg+'.item_eligible',getattr(route,leg).item_eligible,lambda v:v is True)
+    if wanted.deadline:
+        def on_time(window):
+            if window.earliest > wanted.deadline.arrive_by:
+                return False
+            if wanted.deadline.basis=='guaranteed' and window.basis!='guaranteed':
+                return None
+            return True if window.latest <= wanted.deadline.arrive_by else None
+        fact('deadline','arrival',offer.arrival,on_time)
+    if request.warranty_requirement:
+        w, need = offer.warranty, request.warranty_requirement
+        if need.min_months:
+            fact('warranty duration','warranty.months',w.months if w else None,lambda v:v>=need.min_months)
+        fact('warranty territory','warranty.territory',w.territory if w else None,
+             lambda v:_names_place(v,{_place(need.territory)}))
+        if need.provider:
+            fact('warranty provider','warranty.provider',w.provider if w else None,
+                 lambda v:_identity_text(v)==_identity_text(need.provider))
+    return Eligibility(offer_id=offer.offer_id,outcome=combine(c.outcome for c in checks),checks=checks,gaps=gaps)
+
+
+class NewOnlyPolicy(v2.Model):
+    """A source-profile extraction, explicitly limited to a seller and categories.
+
+    Profiles must encode exceptions as exclusions, never infer this from a store
+    reputation. The receipt remains a policy observation when applied to a SKU.
+    """
+    seller_id: v2.Text
+    categories: tuple[v2.Category, ...]
+    evidence: v2.Evidence
+    excluded_products: tuple[v2.Text, ...] = ()
+    valid_until: v2.UtcTime
+
+    @v2.model_validator(mode='after')
+    def scoped_policy(self):
+        e = self.evidence
+        if (not self.categories or e.scope != 'source' or e.field_path != 'condition'
+                or any((e.product_id,e.variant_id,e.branch_id,e.route_id)) or e.conflicts
+                or self.valid_until < e.observed_at):
+            raise ValueError('New-only policy requires a dated source receipt and explicit categories')
+        return self
+
+
+def apply_new_only_policy(offer: v2.Offer, policy: NewOnlyPolicy, *, now: datetime) -> v2.Offer:
+    if now.utcoffset() is None:
+        raise ValueError('Policy application needs an aware timestamp')
+    e = policy.evidence
+    if (offer.condition.state != 'unknown' or policy.seller_id != offer.seller.seller_id
+            or e.source_id != offer.source_id or e.scope != 'source' or e.field_path != 'condition'
+            or not e.observed_at <= now <= policy.valid_until
+            or offer.variant.product.category not in policy.categories
+            or offer.source_product_id in policy.excluded_products):
+        return offer
+    receipt = e.model_dump()
+    receipt.update(evidence_id=e.evidence_id+':'+offer.source_variant_id,
+        scope='variant', product_id=offer.source_product_id, variant_id=offer.source_variant_id)
+    data = offer.model_dump()
+    data['condition'] = dict(state='known',value='new',evidence_ids=[receipt['evidence_id']])
+    data['evidence'] = [*data['evidence'], receipt]
+    return v2.Offer.model_validate(data)
 
 
 def _any(choices: list[str]) -> bool:
