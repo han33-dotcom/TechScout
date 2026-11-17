@@ -409,7 +409,7 @@ _TABLET_SIZE = re.compile(r'(?<![\w.])((?:[7-9]|1\d)(?:\.\d{1,2})?)(?:-| )?'
 _TABLET_SEPARATOR = re.compile(r'\s+[-‐-―]\s+')
 _TABLET_PLUS_PAIR = re.compile(r'(?<![\w.])(\d{1,2}) ?((?:gb|go)?) ?\+ ?(\d{2,4})(?= ?(?:gb|tb|go|to)(?!\w))',
                                re.IGNORECASE)
-# 'ipad-pro', 'ipadpro' and 'ipad​pro' are 'ipad pro'. A number joined to the line ('ipad pro11',
+# 'ipad-pro', 'ipadpro' and 'ipad\u200bpro' are 'ipad pro'. A number joined to the line ('ipad pro11',
 # 'ipad air6') is left joined: it is not a known word, so the name stays unresolved.
 _TABLET_IPAD_LINE = re.compile(r'(?<!\w)ipad[\s_-]*(air|pro|mini)(?!\w)')
 # '10th gen', '10th-gen', '10th gen.' and '10th generation' are one spelling; so are 'gen 10'
@@ -469,6 +469,7 @@ _TABLET_WORDS = frozenset({
 # color. Another line word, suffix, number or edition there ('S9 FE, FE+', 'Pro 11, 12.9-inch',
 # 'Gen 7, 8') lists more than one model.
 _TABLET_CONFIG_WORDS = frozenset({'wi-fi', 'cellular', 'lte', '3g', '4g', '5g', 'ram', *_TABLET_COLORS})
+_TABLET_LINE_WORDS = _TABLET_WORDS - _TABLET_CONFIG_WORDS - {'2-in-1', 'bionic', 'fusion'}
 _TABLET_AFTER_COMMA = re.compile(r',\s*\(?([^\s,()]+)')
 # One radio and one size tier at most: 'LTE 5G' and 'Plus Ultra' name two models.
 _TABLET_RADIOS = {'lte': '4g', '4g': '4g', '3g': '3g', '5g': '5g'}
@@ -485,7 +486,7 @@ _TABLET_NUMBER = re.compile(r'\d{1,2}(?:\.\d{1,2})?')
 # OS, port and spec words with a number, are not tokens.
 _TABLET_ORDINAL_WORD = re.compile(r'\d{1,2}(?:st|nd|rd|th)')
 _TABLET_YEAR = re.compile(r'20[1-3]\d')
-_TABLET_CHIP_WORD = re.compile(r'm(?:[1-9]|1[0-2])|a\d{1,2}[xz]?(?:-pro)?')
+_TABLET_CHIP_WORD = re.compile(r'm[1-9]|a\d{1,2}[xz]?(?:-pro)?')
 _TABLET_CPU_TIER = re.compile(r'i[3579]')
 _TABLET_INTEL_M = re.compile(r'm[357]')
 _TABLET_NOT_TOKEN = (r'(?!(?:wi-?fi|win|ios|ipados|android|usb|gen|lte|ram|rom|hz|mp|air|pro|mini|max|plus'
@@ -511,8 +512,14 @@ _TABLET_HD_SUFFIX = re.compile(r'(?<!\w)([a-z]{1,3}\d{1,4})(f?hd)(?!\w)')
 # which Apple counts per size and many retailers count across the whole Pro family.
 _IPAD_BASE_CHIPS = frozenset({'a4', 'a5', 'a5x', 'a6x', 'a9', 'a10', 'a12', 'a13', 'a14', 'a16'})
 _IPAD_BASE_YEARS = frozenset({'2010', '2011', '2012', '2017', '2018', '2019', '2020', '2021', '2022', '2025'})
-_IPAD_SHARED = {'base': frozenset({'a10', '2012'}), 'mini': frozenset({'a7'}),
+# A base name may also be an Air, Pro or mini written without its line word, so a chip or year the
+# base iPad shares with another line is no evidence either: the A5 (mini), A12 (Air, mini) and A14
+# (Air), and every base year after 2011. Apple's motion coprocessors (M7 to M12) name no edition.
+_IPAD_SHARED = {'base': frozenset({'a5', 'a10', 'a12', 'a14', '2012', '2017', '2018', '2019', '2020', '2021',
+                                   '2022', '2025'}),
+                'mini': frozenset({'a7'}),
                 'pro 11': frozenset({'3rd', '4th', '5th', '6th'})}
+_IPAD_COPROCESSORS = frozenset({'m7', 'm8', 'm9', 'm10', 'm11', 'm12'})
 
 
 class OfferComparison(Model):
@@ -562,6 +569,15 @@ def _size_number(number: str) -> str:
     return number.rstrip('0').rstrip('.') if '.' in number else number
 
 
+def _plus_pair(match: re.Match) -> str:
+    """'2+32GB' as the pair '2/32GB', unless the number before '+' is a model's ('Fire HD 10+')."""
+    before = re.sub(r'[(),]', ' ', match.string[:match.start()]).split()
+    previous = before[-1].casefold() if before else ''
+    if not match.group(2) and (previous in _TABLET_LINE_WORDS or _TABLET_NUMBER.fullmatch(previous)):
+        return match.group(0)
+    return f'{match.group(1)}{match.group(2)}/{match.group(3)}'
+
+
 def _ordinal(number: int) -> str:
     suffix = 'th' if 10 <= number % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(number % 10, 'th')
     return f'{number}{suffix}'
@@ -577,9 +593,11 @@ def _tablet_editions(words: list[str], apple: bool) -> dict[str, list[str]] | No
         if _TABLET_ORDINAL_WORD.fullmatch(word):
             if after != 'generation' or word != _ordinal(int(word[:-2])):  # not '3th' or '03rd'
                 return None
+            if _TABLET_NUMBER.fullmatch(before) and (index < 2 or words[index - 2] not in _TABLET_LINE_WORDS):
+                return None
             found['generation'].append(word)
         elif word == 'generation':
-            if not _TABLET_ORDINAL_WORD.fullmatch(before):
+            if not _TABLET_ORDINAL_WORD.fullmatch(before) or _TABLET_NUMBER.fullmatch(after):
                 return None
         elif _TABLET_YEAR.fullmatch(word):
             found['year'].append(word)
@@ -618,7 +636,7 @@ def _tablet_model(model: str, offer: v2.Offer, maker: str | None) -> str | None:
     with only a year. Numbers, chips and suffixes stay exact: M2 is not M3, S9 is not S9 FE, LTE is
     not 5G, 12.9 is not 13.
     """
-    text = _identity_value('model', _TABLET_PLUS_PAIR.sub(r'\1\2/\3', _TABLET_SEPARATOR.sub(', ', model)))
+    text = _identity_value('model', _TABLET_PLUS_PAIR.sub(_plus_pair, _TABLET_SEPARATOR.sub(', ', model)))
     if not text:
         return None
     text = ''.join(c for c in text if unicodedata.category(c) != 'Cf')  # zero-width and soft hyphens
@@ -651,18 +669,20 @@ def _tablet_model(model: str, offer: v2.Offer, maker: str | None) -> str | None:
     if named is not None and specs.connectivity.state == 'known' and specs.connectivity.value != named:
         return None
     words = re.sub(r'[(),]', ' ', text).split()
-    maker_words = (maker or '').split()
+    maker_words = re.sub(r'[(),]', ' ', maker or '').split()
     for word in maker_words:  # 'Apple' or 'Apple Inc.' for the evidenced 'Apple Inc.'; never 'Surface'
         if not words or words[0] != word or word in _TABLET_WORDS:
             break
         words = words[1:]
-    apple = 'ipad' in words or maker_words[:1] == ['apple']
+    apple = 'ipad' in words or maker_words[:1] == ['apple'] or 'ipad' in maker_words
     if (maker_words[:1] == ['microsoft'] or 'surface' in maker_words) and 'surface' not in words:
         return None  # the Surface rules need the line word
     if len({_TABLET_RADIOS[word] for word in words if word in _TABLET_RADIOS}) > 1 \
-            or len(_TABLET_TIERS & set(words)) > 1:
+            or len(_TABLET_TIERS & set(words)) > 1 or {'hd', 'fhd'} <= set(words) \
+            or any(words.count(word) > 1 for word in _TABLET_LINE_WORDS & set(words)) \
+            or len([word for word in words if _TABLET_NUMBER.fullmatch(word)]) > 1:
         return None
-    if apple and (words.count('ipad') != 1 or any(
+    if apple and ('ipad' not in words or any(
             word in ('air', 'pro', 'mini') and (index == 0 or words[index - 1] != 'ipad')
             for index, word in enumerate(words))):
         return None
@@ -687,6 +707,7 @@ def _tablet_model(model: str, offer: v2.Offer, maker: str | None) -> str | None:
         if line == 'base' and (set(editions['chip']) - _IPAD_BASE_CHIPS or years - _IPAD_BASE_YEARS):
             return None
         evidence -= _IPAD_SHARED.get('pro 11' if line == 'pro' and sizes == {'11'} else line, frozenset())
+        evidence -= _IPAD_COPROCESSORS
     else:
         later = any(int(g[:-2]) >= 3 for g in editions['generation']) or any(int(y) >= 2021 for y in years)
         if (specs.connectivity.state == 'known' and specs.connectivity.value == 'cellular'

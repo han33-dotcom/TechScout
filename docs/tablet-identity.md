@@ -38,7 +38,7 @@ Retail spellings are unified so that the same device compares equal:
 | iPad line | `iPad-Pro`, `iPadPro`, invisible web characters (zero-width spaces, soft hyphens) | `ipad pro` |
 | Chip | `with M2 chip`, `M2 chip`; `A17 Pro` | `m2`; `a17-pro` |
 | Color phrase | `Space Gray`, `Light Gold` | `space-gray`, `light-gold` |
-| Storage and Wi-Fi | `128 GB`, `WiFi`, `2+32GB` | `128gb`, `wi-fi`, `2/32gb` |
+| Storage and Wi-Fi | `128 GB`, `WiFi`, `2+32GB` (but `Fire HD 10+ 32GB` is the Plus) | `128gb`, `wi-fi`, `2/32gb` |
 | Joining `+` | `Wi-Fi + Cellular`, `Wi-Fi+Cellular`, `32GB +` | `wi-fi cellular`, `32gb` |
 | Digits | other scripts (`M١٠`) | `m10` |
 | Display suffix | `M10HD`, `M8FHD` | `m10 hd`, `m8 fhd` |
@@ -52,7 +52,7 @@ Also:
   12.9 inches, but `11,13"` is two sizes.
 - Parentheses and commas drop out.
 - A leading maker drops out, word by word: `Apple` or `Apple Inc.` for the evidenced `Apple
-  Inc.`. A maker word that is itself a tablet word stays (`Surface` for `Microsoft Surface`, or a
+  Inc.` (commas in the maker are ignored). A maker word that is itself a tablet word stays (`Surface` for `Microsoft Surface`, or a
   maker evidenced as `iPad`).
 
 ### 2. Checked against the offer's own facts
@@ -97,7 +97,10 @@ Lists are rejected too:
   connection and color), so `S9 FE, FE+`, `Pro 11, 12.9-inch` and `Gen 7, 8` stay unresolved;
 - a name may give one radio generation and one of `Plus`, `Ultra`, `Lite` and `Max` (`LTE 5G`
   and `Plus Ultra` stay unresolved);
-- a bare number from 7 to 19.99 counts as a size for the two-size rule (`iPad Pro 11 12.9-inch`).
+- a bare number from 7 to 19.99 counts as a size for the two-size rule (`iPad Pro 11 12.9-inch`);
+- a line or suffix word written twice (`S9 FE FE+`), two bare numbers, both `HD` and `FHD`, or a
+  bare number beside a generation (`Gen 4 5`, `4 5th Gen`) also name more than one model. A bare
+  number after a line word is the line's own (`Fire HD 10 11th Generation`).
 
 Extraction is expected to supply the model name itself, not the whole listing title.
 
@@ -107,8 +110,8 @@ A name identifies one model only with positive evidence of its edition:
 - an ordinal generation written with its correct suffix (`10th generation`; `3th` and `03rd`
   leave the name unresolved);
 - a year from 2010 to 2039 (`2024`);
-- an Apple chip (`M2`, `A17 Pro`, `A12Z`); Apple's motion coprocessors (`M7` to `M12`) are
-  chip words too, so `A10 Fusion, M10` names two chips;
+- an Apple chip (`M2`, `A17 Pro`, `A12Z`), but not one of Apple's motion coprocessors (`M7` to
+  `M12`), which name no edition;
 - one short model token that joins letters and digits (`S9`, `P11`, `Y700`);
 - one manufacturer part number (`SM-X710`, `TB125FU`).
 
@@ -126,7 +129,8 @@ Some things never count as evidence:
 
 ### 5. iPad rules
 
-A name is read as an iPad when it contains `iPad` or the evidenced maker starts with `Apple`.
+A name is read as an iPad when it contains `iPad`, or the evidenced maker starts with `Apple` or
+is `iPad`.
 It then stays unresolved when:
 - `iPad` is missing (`Air M2`) or appears twice (`iPad - iPad Pro ...`);
 - a line word (`Air`, `Pro`, `mini`) is not right after `iPad` (`iPad M4 Pro`, `iPad 128GB Air`);
@@ -135,7 +139,9 @@ It then stays unresolved when:
   the years 2010–2012, 2017–2022 and 2025;
 - an iPad Air or Pro gives no size (`iPad Air (M2)`, `iPad Pro 2024`);
 - its only evidence is shared by two editions:
-  - the base iPad's `A10` (6th and 7th generation) and `2012` (3rd and 4th);
+  - on a base iPad name, the `A10` (6th and 7th generation), and every chip or year another iPad
+    line also had, because a base name may be an Air, Pro or mini written without its line word:
+    the `A5`, `A12` and `A14`, and every year after 2011;
   - the iPad mini's `A7` (mini 2 and 3);
   - the iPad Pro 11-inch's 3rd to 6th generation. Apple counts that line per size, so the
     2021 M1 model is its 3rd generation. Many retailers count across the whole Pro family,

@@ -602,7 +602,7 @@ class FullProductIdentityTests(unittest.TestCase):
             ('Apple', 'iPad 2012 Wi-Fi 16GB', 16),
             ('Apple', 'Apple iPad-Pro M4 256GB Wi-Fi', 256),
             ('Apple', 'Apple iPadPro M4 256GB Wi-Fi', 256),
-            ('Apple', 'Apple iPad​Pro M4 256GB Wi-Fi', 256),
+            ('Apple', 'Apple iPad\u200bPro M4 256GB Wi-Fi', 256),
             ('Apple', 'Apple iPad Pro M4 (11" / 13") 256GB Wi-Fi', 256),
             ('Samsung', 'Galaxy Tab S9 + Book Cover Keyboard', 128),
             ('Samsung', 'Samsung Tab S6 Lite 64GB Wi-Fi', 64),
@@ -794,6 +794,7 @@ class FullProductIdentityTests(unittest.TestCase):
             ('Samsung', 'Galaxy Tab S8, S8+ 128GB Wi-Fi', 128, 'wifi'),
             ('Samsung', 'Galaxy Tab S9 SM-X710 SM-X810 128GB', 128, 'wifi'),
             ('Samsung', 'Galaxy Tab S8 S8+ 128GB Wi-Fi', 128, 'wifi'),
+            ('Apple', 'Apple iPad Air 11-inch (M2) + Starlight 128GB', 128, 'wifi'),
             ('Samsung', 'Samsung Galaxy Tab S9 - FE 128GB', 128, 'wifi'),
             # Other spellings of a shared iPad Pro 11-inch generation: the size, a doubled 'iPad', a
             # wrong ordinal suffix.
@@ -848,8 +849,31 @@ class FullProductIdentityTests(unittest.TestCase):
             ('Microsoft Surface', 'Pro 12.3" m3 4GB RAM 128GB', 128, 'wifi'),
             ('Microsoft', 'Pro 13" (2024) 256GB', 256, 'wifi'),
             # Digits in other scripts are digits.
-            ('Lenovo', 'Lenovo Tab M١٠ Plus', 128, 'wifi'),
-            ('Apple', 'iPad mini A٧ 16GB', 16, 'wifi'),
+            ('Lenovo', 'Lenovo Tab M\u0661\u0660 Plus', 128, 'wifi'),
+            ('Apple', 'iPad mini A\u0667 16GB', 16, 'wifi'),
+            # Lists with no punctuation: generations, repeated suffixes, both display versions.
+            ('Apple', 'Apple iPad Air 10.9" Gen 4 5 Wi-Fi 64GB', 64, 'wifi'),
+            ('Apple', 'Apple iPad Air 10.9" 4 5th Gen Wi-Fi 64GB', 64, 'wifi'),
+            ('Apple', 'Apple iPad mini Gen 5 6 Wi-Fi 64GB', 64, 'wifi'),
+            ('Apple', 'Apple iPad Gen 7 8 Wi-Fi 32GB', 32, 'wifi'),
+            ('Samsung', 'Samsung Galaxy Tab S9 FE FE+ 128GB Wi-Fi', 128, 'wifi'),
+            ('Samsung', 'Galaxy Tab S9 FE (FE+) 128GB', 128, 'wifi'),
+            ('Samsung', 'Galaxy Tab S10 FE FE+ 128GB Wi-Fi', 128, 'wifi'),
+            ('Lenovo', 'Lenovo Tab M8 HD FHD (2019) 32GB', 32, 'wifi'),
+            ('Lenovo', 'Lenovo Tab M10 (HD) (FHD) 2019 32GB', 32, 'wifi'),
+            ('Lenovo', 'Lenovo Tab M10HD FHD 2019 32GB', 32, 'wifi'),
+            ('Lenovo', 'Lenovo Tab 4 8+ 16GB 8" (2017)', 16, 'wifi'),
+            # A base iPad name whose chip or year another iPad line also had.
+            ('Apple', 'Apple iPad (2019) Wi-Fi 64GB Space Gray', 64, 'wifi'),
+            ('Apple', 'iPad (A12) 64GB', 64, 'wifi'),
+            ('Apple', 'iPad 2021 64GB', 64, 'wifi'),
+            # Apple's motion coprocessors name no edition.
+            ('Apple', 'iPad mini M7 16GB Wi-Fi', 16, 'wifi'),
+            ('Apple', 'iPad M10 32GB', 32, 'wifi'),
+            # Maker spellings with punctuation, or 'iPad' as the maker.
+            ('iPad', 'Air (M2)', 128, 'wifi'),
+            ('Apple, Inc.', 'Air M2 Wi-Fi 128GB', 128, 'wifi'),
+            ('Microsoft, Inc.', 'Pro 13" (2024) 256GB', 256, 'wifi'),
         ]
         for maker, title, storage, connectivity in titles:
             with self.subTest(title=title):
@@ -865,8 +889,8 @@ class FullProductIdentityTests(unittest.TestCase):
                 ('Apple', 'iPad Air 11-inch with M2 chip', 'iPad Air 11-inch (M2)'),
                 ('Apple', 'iPad-Pro 11-inch (M4)', 'iPad Pro 11-inch (M4)'),
                 ('Apple', 'iPadPro 11" M4', 'iPad Pro 11-inch (M4)'),
-                ('Apple', 'iPad​Pro 11-inch (M4)', 'iPad Pro 11-inch (M4)'),
-                ('Apple', 'iPad Pro­ 11-inch (M4)', 'iPad Pro 11-inch (M4)'),
+                ('Apple', 'iPad\u200bPro 11-inch (M4)', 'iPad Pro 11-inch (M4)'),
+                ('Apple', 'iPad Pro\u00ad 11-inch (M4)', 'iPad Pro 11-inch (M4)'),
                 ('Apple', 'iPad mini A17 Pro', 'iPad mini (A17 Pro)'),
                 ('Apple', 'Apple iPad (7th generation) A10 Fusion', 'iPad 7th Gen A10 Fusion'),
                 ('Samsung', 'Galaxy Tab S9 FE WiFi 128GB', 'Galaxy Tab S9 FE Wi-Fi 128 GB'),
@@ -887,7 +911,11 @@ class FullProductIdentityTests(unittest.TestCase):
                 ('Apple', 'iPad Air 11-inch (M2), 128GB, Wi-Fi, Space Gray', 'iPad Air 11-inch (M2) 128GB Wi-Fi Space Gray'),
                 ('Samsung', 'Galaxy Tab S9 FE, 128GB, Wi-Fi', 'Galaxy Tab S9 FE 128GB Wi-Fi'),
                 ('Lenovo', 'Lenovo Tab P11 (2nd Gen) 4+128GB', 'Tab P11 2nd Gen 4/128GB'),
-                ('Apple', 'iPad Pro 1١-inch (M4)', 'iPad Pro 11-inch (M4)'),
+                ('Apple', 'iPad Pro 1\u0661-inch (M4)', 'iPad Pro 11-inch (M4)'),
+                ('Apple', 'iPad (A13)', 'iPad A13'),
+                ('Apple', 'iPad 9th generation (2021)', 'iPad 9th Gen 2021'),
+                ('Amazon', 'Fire HD 10 (11th Generation)', 'Amazon Fire HD 10 11th Gen'),
+                ('Apple, Inc.', 'Apple iPad Air 11-inch (M2)', 'iPad Air 11-inch (M2)'),
                 ('Lenovo', 'Lenovo Legion Tab Y700 (2023)', 'Legion Tab Y700 2023'),
                 ('Huawei', 'MediaPad M5 8.4" 128GB', 'MediaPad M5 8.4-inch 128GB')):
             with self.subTest(left=left_title):
@@ -906,6 +934,15 @@ class FullProductIdentityTests(unittest.TestCase):
                 left = offer('tablet', 'left', {'manufacturer': maker, 'model': left_title})
                 right = offer('tablet', 'right', {'manufacturer': maker, 'model': right_title})
                 self.assertEqual(compare_offers(left, right).hardware.outcome, 'different_configuration')
+        # A model's own Plus is not read as a memory/storage pair.
+        fire = {'manufacturer': 'Amazon', 'specs.storage_gb': 32}
+        plus = offer('tablet', 'left', {**fire, 'model': 'Amazon Fire HD 10+ 32GB (11th Generation)'})
+        base = offer('tablet', 'right', {**fire, 'model': 'Amazon Fire HD 10 32GB (11th Generation)'})
+        self.assertEqual(compare_offers(plus, base).hardware.outcome, 'different_configuration')
+        lenovo = {'manufacturer': 'Lenovo', 'specs.storage_gb': 128}
+        pair = offer('tablet', 'left', {**lenovo, 'model': 'Lenovo Tab P11 (2nd Gen) 4+128GB'})
+        slash = offer('tablet', 'right', {**lenovo, 'model': 'Tab P11 2nd Gen 4/128GB'})
+        self.assertEqual(compare_offers(pair, slash).hardware.outcome, 'confirmed_equivalent')
         # A cellular Android name that states its radio resolves; LTE and 5G stay apart.
         cellular = {'manufacturer': 'Samsung', 'specs.connectivity': 'cellular'}
         lte = offer('tablet', 'left', {**cellular, 'model': 'Galaxy Tab S7 FE LTE'})
