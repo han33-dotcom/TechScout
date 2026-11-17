@@ -58,7 +58,8 @@ class ResearchWorkerTests(unittest.TestCase):
         return result['result']
 
     def seed(self):
-        self.corpus.ingest(self.capture(),extract)
+        now=datetime.now(timezone.utc)
+        self.corpus.ingest(self.capture().model_copy(update={'checked_at':now,'observed_at':now}),extract)
 
     def foreign(self):
         old=self.directory.get('offline')

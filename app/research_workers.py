@@ -270,11 +270,12 @@ class ResearchWorkers:
             gaps.append('Research stopped at cancellation or deadline')
         claims = []
         for row in observations.values():
-            key, obs = row.resource, row.observation
-            if row.freshness != 'fresh' or not (key.variant_id or key.product_id):
+            obs = row.observation
+            binding = obs.evidence[0]
+            if row.freshness != 'fresh' or binding.scope not in {'variant','product'}:
                 continue
-            claims.append(FindingClaim(target='variant' if key.variant_id else 'product',
-                target_id=key.variant_id or key.product_id,field_path=obs.evidence[0].field_path,
+            claims.append(FindingClaim(target='variant' if binding.variant_id else 'product',
+                target_id=binding.variant_id or binding.product_id,field_path=binding.field_path,
                 fact=obs.fact.model_dump(mode='json')))
         return Report(finding=AgentFinding(finding_id=task.task_id+':research',task_id=task.task_id,
             run=task.run,role='researcher',claims=tuple(claims),gaps=tuple(dict.fromkeys(gaps))),
