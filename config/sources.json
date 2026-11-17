@@ -99,7 +99,7 @@
       "limits": {
         "requests_per_minute": 6,
         "concurrency": 1,
-        "max_requests_per_run": 4
+        "max_requests_per_run": 6
       },
       "published_rate_limits": null,
       "review_evidence": [
@@ -282,7 +282,7 @@
       "limits": {
         "requests_per_minute": 6,
         "concurrency": 1,
-        "max_requests_per_run": 4
+        "max_requests_per_run": 6
       },
       "published_rate_limits": null,
       "review_evidence": [
@@ -340,7 +340,7 @@
       "limits": {
         "requests_per_minute": 6,
         "concurrency": 1,
-        "max_requests_per_run": 4
+        "max_requests_per_run": 6
       },
       "published_rate_limits": null,
       "review_evidence": [

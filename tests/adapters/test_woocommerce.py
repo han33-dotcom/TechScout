@@ -597,6 +597,32 @@ class FailureTests(ReaderTestCase):
         self.assertEqual((gone.tool_result.status, gone.tool_result.errors, gone.offers),
                          ('error', [schema('offer is not listed')], ()))
 
+    def test_fetch_offers_rereads_each_product_once(self):
+        fetch = FakeFetch(routes('class_cellulars'))
+        ids = ['class_cellulars:18392:19117', 'class_cellulars:18392:19116', 'class_cellulars:18392:11111',
+               'mojitech:1:2', 'class_cellulars:99999:1', 'not an offer ID']
+        result = CLASS.fetch_offers(fetch, ids, query())
+        self.assertContract(result)
+        self.assertEqual(fetch.urls(), [CLASS_API, CLASS_PAGE])  # one read covers both variations
+        self.assertEqual(sorted(o.offer_id for o in result.offers),
+                         ['class_cellulars:18392:19116', 'class_cellulars:18392:19117'])
+        self.assertEqual(result.tool_result.status, 'partial')
+        self.assertEqual(sorted(e.message for e in result.tool_result.errors),
+                         sorted([schema('unknown offer').message] * 3 + [schema('offer is not listed').message]))
+        # fetch_offer is the same read for one ID
+        one = CLASS.fetch_offer(FakeFetch(routes('class_cellulars')), 'class_cellulars:18392:19117', query())
+        many = CLASS.fetch_offers(FakeFetch(routes('class_cellulars')), ['class_cellulars:18392:19117'], query())
+        self.assertEqual((one.tool_result.status, one.tool_result.data, one.offers),
+                         (many.tool_result.status, many.tool_result.data, many.offers))
+        for nothing in ([], 'class_cellulars:18392:19117', None):
+            with self.subTest(offer_ids=nothing):
+                empty = CLASS.fetch_offers(fetch, nothing, query())
+                self.assertEqual((empty.tool_result.status, empty.tool_result.errors, empty.offers),
+                                 ('error', [schema('unknown offer')], ()))
+        self.assertEqual(fetch.urls(), [CLASS_API, CLASS_PAGE])  # unknown IDs cost no request
+        self.assertEqual(adapters.fetch_offers(FakeFetch(routes('class_cellulars')), 'class_cellulars',
+                                               ['class_cellulars:18392:19117'], query()).offers, many.offers)
+
     def test_refused_request_mid_read_is_reported_not_invented(self):
         fetch = FakeFetch(routes('class_cellulars'), cap=4)
         CLASS.search_candidates(fetch, query())
