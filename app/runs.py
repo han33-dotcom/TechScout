@@ -535,6 +535,9 @@ class _AccountedSpend:
             self.shared.ledger.recover()
         self.local.commit(actual)
 
+    def record(self, usage):
+        self.shared.record(usage)
+
     def release(self):
         # The legacy planner reports unbilled only after dispatch; keep the call
         # attempt but reconcile its charge to zero.
@@ -734,6 +737,10 @@ class _SpendView:
 
     def reserve_spend(self, amount: Decimal | None) -> SpendReservation | None:
         return self._budget.reserve_spend(amount)
+
+    @property
+    def cancelled(self):
+        return self._budget.cancelled
 
 
 def _apply(adapter: StoreAdapter, offer: Offer, policies: Sequence[PolicyDocument]) -> Offer:
@@ -1297,11 +1304,10 @@ class _Run:
 def _planner(name: str) -> Planner:
     """The planner a command-line search uses, so the run records the right one: 'rule' is the
     deterministic baseline, 'none' the no-investigation baseline (its run also has no planner
-    turns, so it is never asked) and 'model' the configured AnthropicPlanner, which needs
-    ANTHROPIC_API_KEY."""
+    turns, so it is never asked) and 'model' the configured direct OpenAI planner."""
     if name == 'model':
-        from app.planner import AnthropicPlanner, load_planner_config
-        return AnthropicPlanner(load_planner_config())
+        from app.model_provider import OpenAIPlanner
+        return OpenAIPlanner()
     if name == 'none':
         return NoInvestigationPlanner()
     return RulePlanner()
@@ -1320,7 +1326,7 @@ def main(argv: Sequence[str] | None = None, *, dependencies: RunDependencies | N
     search.add_argument('request', type=Path, help='a ShoppingRequest as JSON')
     search.add_argument('--planner', choices=('rule', 'none', 'model'), default='rule',
                         help="'rule' investigates with the rule baseline, 'none' never investigates and "
-                             "'model' uses the configured model planner (paid; needs ANTHROPIC_API_KEY)")
+                             "'model' uses direct OpenAI (paid; needs OPENAI_API_KEY)")
     args = parser.parse_args(argv)
     try:
         request = ShoppingRequest.model_validate_json(args.request.read_text(encoding='utf-8'))

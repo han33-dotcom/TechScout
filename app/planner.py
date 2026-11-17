@@ -26,6 +26,7 @@ from app.assessment import EvidenceGap
 from app.contracts import Amount, Count, Model, Money, PositiveInt, ShoppingRequest, Text
 from app.devices import canonical_manufacturer, match_model
 from app.storage import MAX_RUN_SECONDS
+from app.model_provider import ProviderConfig
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_CONFIG = ROOT / 'config' / 'evaluation.json'
@@ -221,6 +222,9 @@ class EvaluationCaps(Model):
 class EvaluationConfig(Model):
     schema_version: Literal[1]
     planner: PlannerConfig
+    # The prior Anthropic planner remains explicit historical evaluation config.
+    # New operational model calls use this direct-provider configuration.
+    model_provider: ProviderConfig | None = None
     caps: EvaluationCaps
     baselines: list[Literal['rule-planner', 'no-investigation']] = Field(min_length=1)
 
