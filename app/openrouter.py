@@ -115,21 +115,24 @@ class OpenRouterConfig(Model):
         return self
 
 
+class ProviderUnavailable(ValueError):
+    """The optional gateway is disabled, unconfigured or has no backend key; nothing was sent."""
+
+
 def load_openrouter_config(path=None):
     """Disabled unless an explicit configuration file's ``openrouter`` section enables it."""
     if path is None:
         return OpenRouterConfig()
-    return OpenRouterConfig.model_validate(json.loads(Path(path).read_text(encoding='utf-8'))['openrouter'])
+    raw = json.loads(Path(path).read_text(encoding='utf-8'))
+    if not isinstance(raw, dict) or 'openrouter' not in raw:
+        raise ProviderUnavailable('The configuration file has no openrouter section')
+    return OpenRouterConfig.model_validate(raw['openrouter'])
 
 
 def route_fingerprint(settings):
     """Stable identifier of the pinned route/model settings recorded with every attempt."""
     pinned = settings.model_dump(mode='json', exclude={'enabled'})
     return hashlib.sha256(json.dumps(pinned, sort_keys=True, separators=(',', ':')).encode()).hexdigest()[:16]
-
-
-class ProviderUnavailable(ValueError):
-    """The optional gateway is disabled or has no backend key; nothing was sent."""
 
 
 _HTTP_STATUS = {400: 'invalid_request', 401: 'access_denied', 402: 'insufficient_credits',
@@ -169,8 +172,8 @@ def _accounting(reply):
     p, c, t = u['prompt_tokens'], u['completion_tokens'], u['total_tokens']
     if any(type(n) is not int or n < 0 for n in (p, c, t)) or t != p + c:
         raise ValueError('Malformed token accounting')
-    if u.get('is_byok', False) is not False:
-        raise ValueError('BYOK usage is billed upstream; this adapter cannot account for it')
+    if u.get('is_byok') is not False:  # missing counts as unknown: BYOK cost excludes the upstream bill
+        raise ValueError('Only an explicit non-BYOK cost can be accounted for')
     cost = u['cost']
     if type(cost) not in (int, Decimal) or not Decimal(cost).is_finite() or cost < 0:
         raise ValueError('Reported cost is not a known nonnegative decimal')
@@ -355,7 +358,12 @@ class OpenRouterProvider:
             attempts.append(record)
             if status == 'completed' or not s.allow_fallback or status not in s.fallback_on:
                 break
-        return ModelResult(status, value, self._summary(attempts))
+        # A fallback refused before sending (budget, deadline, cancellation) leaves the outcome of
+        # the last request actually sent; the refusal is recorded under usage['fallback'].
+        final = next((a for a in reversed(attempts) if a['dispatched']), attempts[-1])
+        if final is not attempts[-1]:
+            status, value = final['status'], None
+        return ModelResult(status, value, self._summary(attempts, final))
 
     def _attempt(self, route, index, instructions, data, output, budget, stopped, deadline):
         s = self.settings
@@ -363,8 +371,8 @@ class OpenRouterProvider:
                    actual_model=None, serving_provider=None, provider_verified=None, response_id=None,
                    system_fingerprint=None, endpoints_available=None, gateway_attempts=None,
                    pricing=route.rates.model_dump(mode='json'), tokens=None, reserved_usd=None,
-                   actual_usd=None, rate_estimate_usd=None, billing='not_sent', latency_ms=None,
-                   error_code=None, status=None, metadata_unavailable=[], deviations=[])
+                   actual_usd=None, rate_estimate_usd=None, billing='not_sent', dispatched=False,
+                   latency_ms=None, error_code=None, status=None, metadata_unavailable=[], deviations=[])
 
         def done(status, value=None):
             rec['status'] = status
@@ -397,7 +405,7 @@ class OpenRouterProvider:
                 return done('timeout')
             if hasattr(hold, 'dispatch'):
                 hold.dispatch()
-            sent = True
+            sent = rec['dispatched'] = True
             started = time.monotonic()
             kind, reply = _wait(lambda: self._client(payload), deadline, stopped)
             rec['latency_ms'] = round((time.monotonic() - started) * 1000)
@@ -427,6 +435,8 @@ class OpenRouterProvider:
                 rec.update(tokens=tokens, actual_usd=str(actual), rate_estimate_usd=str(estimate), billing='known')
                 if actual > estimate:
                     rec['deviations'].append('cost_above_configured_rates')
+                elif actual < estimate / 2:  # e.g. an undeclared BYOK fee or a changed price
+                    rec['deviations'].append('cost_below_configured_rates')
             ledger()
             if actual is not None and (actual > reserved or tokens['input_tokens'] > s.max_input_tokens
                                        or tokens['output_tokens'] > s.max_output_tokens):
@@ -449,10 +459,11 @@ class OpenRouterProvider:
                     ledger()
                 except BudgetDenied:
                     pass
-                try:
-                    hold.commit(actual)  # None keeps the whole reservation as uncertain spend
-                except BudgetDenied:
-                    pass  # the durable ledger keeps the bound or blocks the campaign on overrun
+                finally:  # settle even if the evidence write itself failed
+                    try:
+                        hold.commit(actual)  # None keeps the whole reservation as uncertain spend
+                    except BudgetDenied:
+                        pass  # the durable ledger keeps the bound or blocks the campaign on overrun
             else:
                 try:
                     hold.release()
@@ -460,25 +471,28 @@ class OpenRouterProvider:
                 except BudgetDenied:
                     pass  # an expired unsent hold stays reserved until recovery
 
-    def _summary(self, attempts):
-        """Caller-facing usage: the final attempt's identity plus totals over every attempt."""
-        s, last = self.settings, attempts[-1]
-        sent = [a for a in attempts if a['billing'] != 'not_sent']
-        billing = ('not_sent' if not sent else 'known' if all(a['billing'] == 'known' for a in sent)
+    def _summary(self, attempts, final):
+        """Caller-facing usage: the identity of the last request actually sent (or the only
+        attempt), plus money and token totals over every attempt that still holds spend."""
+        s = self.settings
+        held = [a for a in attempts if a['billing'] != 'not_sent']
+        billing = ('not_sent' if not held else 'known' if all(a['billing'] == 'known' for a in held)
                    else 'unknown')
-        known = [a['tokens'] for a in sent if a['tokens']]
+        known = [a['tokens'] for a in held if a['tokens']]
         tokens = ({k: sum(t[k] for t in known) for k in ('input_tokens', 'output_tokens', 'total_tokens')}
                   if known else None)
-        deviations = {d for a in attempts for d in a['deviations']} | ({'fallback_used'} if len(attempts) > 1 else set())
+        used = any(a['dispatched'] for a in attempts[1:])
+        refused = attempts[-1]['status'] if len(attempts) > 1 and not attempts[-1]['dispatched'] else None
+        deviations = {d for a in attempts for d in a['deviations']} | ({'fallback_used'} if used else set())
         return copy.deepcopy(dict(
-            self._context(), requested_model=last['requested_model'], requested_provider=last['requested_provider'],
-            actual_model=last['actual_model'], serving_provider=last['serving_provider'],
-            provider_verified=last['provider_verified'], response_id=last['response_id'],
-            system_fingerprint=last['system_fingerprint'], pricing=last['pricing'], tokens=tokens,
-            reserved_usd=str(sum((Decimal(a['reserved_usd']) for a in sent), Decimal(0))) if sent else None,
-            actual_usd=str(sum((Decimal(a['actual_usd']) for a in sent), Decimal(0))) if billing == 'known' else None,
-            billing=billing, latency_ms=last['latency_ms'],
-            fallback=dict(allowed=s.allow_fallback, used=len(attempts) > 1,
-                          triggers=[a['status'] for a in attempts[:-1]]),
+            self._context(), requested_model=final['requested_model'], requested_provider=final['requested_provider'],
+            actual_model=final['actual_model'], serving_provider=final['serving_provider'],
+            provider_verified=final['provider_verified'], response_id=final['response_id'],
+            system_fingerprint=final['system_fingerprint'], pricing=final['pricing'], tokens=tokens,
+            reserved_usd=str(sum((Decimal(a['reserved_usd']) for a in held), Decimal(0))) if held else None,
+            actual_usd=str(sum((Decimal(a['actual_usd']) for a in held), Decimal(0))) if billing == 'known' else None,
+            billing=billing, latency_ms=final['latency_ms'],
+            fallback=dict(allowed=s.allow_fallback, used=used, triggers=[a['status'] for a in attempts[:-1]],
+                          refused=refused),
             attempts=attempts, metadata_unavailable=sorted({g for a in attempts for g in a['metadata_unavailable']}),
             deviations=sorted(deviations)))

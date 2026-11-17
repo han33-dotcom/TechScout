@@ -213,6 +213,8 @@ class OpenRouterTests(unittest.TestCase):
             path = Path(folder) / 'openrouter.json'
             path.write_text(json.dumps({'openrouter': config().model_dump(mode='json')}), encoding='utf-8')
             self.assertEqual(load_openrouter_config(path), config())
+        with self.assertRaisesRegex(ProviderUnavailable, 'no openrouter section'):
+            load_openrouter_config(ROOT / 'config' / 'evaluation.json')
 
     # Request shape: explicit model, pinned provider, no gateway fallbacks or tools
 
@@ -288,7 +290,7 @@ class OpenRouterTests(unittest.TestCase):
         result = self.generate([http_error(503), reply()])
         self.assertEqual(result.status, 'provider_unavailable')
         self.assertEqual(len(self.sent), 1)
-        self.assertEqual(result.usage['fallback'], dict(allowed=False, used=False, triggers=[]))
+        self.assertEqual(result.usage['fallback'], dict(allowed=False, used=False, triggers=[], refused=None))
         self.assertEqual([a['status'] for a in self.attempts()], ['uncertain'])
         self.assertEqual(self.attempts()[0]['values'][3], str(PRIMARY_BOUND))
 
@@ -303,7 +305,7 @@ class OpenRouterTests(unittest.TestCase):
                 self.assertEqual({p['model'] for p in self.sent}, {'openai/gpt-6.1-sol'})
                 self.assertEqual(budget.amounts, [PRIMARY_BOUND, FALLBACK_BOUND])
                 u = result.usage
-                self.assertEqual(u['fallback'], dict(allowed=True, used=True, triggers=[trigger]))
+                self.assertEqual(u['fallback'], dict(allowed=True, used=True, triggers=[trigger], refused=None))
                 self.assertIn('fallback_used', u['deviations'])
                 self.assertEqual((u['purpose'], u['experiment']), ('experiment', 'provider-comparison'))
                 self.assertEqual((u['requested_provider'], u['serving_provider']), ('azure', 'azure'))
@@ -315,6 +317,15 @@ class OpenRouterTests(unittest.TestCase):
         rows = [a for a in self.attempts()]
         self.assertEqual(sorted(a['status'] for a in rows), ['completed', 'completed', 'uncertain', 'uncertain'])
         self.assertTrue(all(a['provider_usage']['experiment'] == 'provider-comparison' for a in rows))
+        # Cross-model fallback through the planner bridge: every billed model is attributed.
+        cross = experiment(routes=[route(), route('openai/gpt-6.1-mini', 'azure', input='3', output='15')])
+        choice = reply(model='openai/gpt-6.1-mini', provider='azure',
+                       text=json.dumps(dict(kind='act', action_id='A1', reason='settles gaps')))
+        decision = OpenAIPlanner(self.provider([http_error(503), choice], cross)).decide(state(), self.fresh('cross'))
+        self.assertEqual(decision.kind, 'act')
+        self.assertEqual(decision.usage.model, 'openai/gpt-6.1-mini')
+        self.assertEqual(decision.usage.attempt_models, ['openai/gpt-6.1-sol', 'openai/gpt-6.1-mini'])
+        self.assertFalse(decision.usage.priced)  # the failed first attempt's cost is unknown
 
     def test_fallback_is_denied_outside_its_explicit_bounds(self):
         cases = {
@@ -332,13 +343,32 @@ class OpenRouterTests(unittest.TestCase):
                 self.assertEqual(len(self.sent), 1)
                 self.assertFalse(result.usage['fallback']['used'])
         # Budget exhaustion: the failed first attempt keeps its bound, so the fallback cannot fit.
+        # The result reports the request actually sent and records the refused fallback.
         self.fresh('budget')
         held = self.budget.job.reserve('model', Charge(Decimal('0.69')), 30)
         result = self.generate([http_error(503), reply()], settings=experiment())
-        self.assertEqual(result.status, 'budget_denied')
+        self.assertEqual(result.status, 'provider_unavailable')
         self.assertEqual(len(self.sent), 1)
-        self.assertEqual([a['billing'] for a in result.usage['attempts']], ['unknown', 'not_sent'])
+        u = result.usage
+        self.assertEqual([a['billing'] for a in u['attempts']], ['unknown', 'not_sent'])
+        self.assertEqual(u['fallback'], dict(allowed=True, used=False, triggers=['provider_unavailable'],
+                                             refused='budget_denied'))
+        self.assertNotIn('fallback_used', u['deviations'])
+        self.assertEqual((u['requested_provider'], Decimal(u['reserved_usd'])), ('openai', PRIMARY_BOUND))
         held.release()
+        # The run controller's budget refuses all spend after an unknown cost, so there the
+        # fallback is refused too; the planner attributes the spend to the model actually called.
+        from app.runs import AccountedRunBudget, RunCaps, _SpendView
+        run_budget = AccountedRunBudget('buyer', RunCaps(), job=self.fresh('run-budget').job,
+                                        registry_path='config/sources.json', model_seconds=30)
+        cross = experiment(routes=[route(), route('openai/gpt-6.1-mini', 'azure', input='3', output='15')])
+        self.sent = []
+        decision = OpenAIPlanner(self.provider([http_error(503), reply()], cross)).decide(
+            state(), _SpendView(run_budget))
+        self.assertEqual(len(self.sent), 1)
+        self.assertEqual((decision.kind, decision.reason), ('invalid', 'openrouter: provider_unavailable'))
+        self.assertEqual((decision.usage.model, decision.usage.attempt_models, decision.usage.priced),
+                         ('openai/gpt-6.1-sol', ['openai/gpt-6.1-sol'], False))
         # Cancellation during the first attempt stops the chain.
         self.fresh('cancel')
         stop = threading.Event()
@@ -381,6 +411,50 @@ class OpenRouterTests(unittest.TestCase):
         self.assertEqual(self.generate().status, 'cancelled')
         self.assertEqual(self.sent, [])
         self.assertEqual(self.attempts(), [])
+
+    def test_cancel_after_reserving_releases_the_unsent_hold(self):
+        checks = []
+
+        def cancelled():  # false at the first check, true at the check just before dispatch
+            checks.append(1)
+            return len(checks) > 1
+        budget = self.fresh('reserved-then-cancelled')
+        result = self.generate(budget=budget, cancelled=cancelled)
+        self.assertEqual(result.status, 'cancelled')
+        self.assertEqual(self.sent, [])
+        self.assertEqual((result.usage['billing'], result.usage['reserved_usd']), ('not_sent', None))
+        (row,) = [a for a in self.attempts() if a['job'] == budget.job.run_id]
+        self.assertEqual(row['status'], 'released')
+
+    def test_settlement_still_happens_when_the_evidence_write_fails(self):
+        class Hold:
+            def __init__(self):
+                self.records, self.committed = 0, []
+
+            def record(self, usage):
+                self.records += 1
+                if self.records > 1:
+                    raise RuntimeError('ledger unavailable')
+
+            def dispatch(self):
+                pass
+
+            def commit(self, actual):
+                self.committed.append(actual)
+
+            def release(self):
+                raise AssertionError('a sent attempt must never be released')
+
+        class Budget:
+            cancelled = False
+
+            def reserve_spend(self, amount):
+                self.hold = Hold()
+                return self.hold
+        budget = Budget()
+        with self.assertRaises(RuntimeError):
+            self.generate(budget=budget)
+        self.assertEqual(budget.hold.committed, [EXACT_COST])
 
     def test_timeout_and_cancellation_discard_the_late_reply(self):
         for cancel in (False, True):
@@ -502,6 +576,7 @@ class OpenRouterTests(unittest.TestCase):
             'negative cost': (changed(cost=Decimal('-1')), 'unknown_usage'),
             'nonfinite cost': (changed(cost=Decimal('NaN')), 'unknown_usage'),
             'byok upstream bill': (changed(is_byok=True), 'unknown_usage'),
+            'missing byok flag': (without('is_byok'), 'unknown_usage'),
             'inconsistent total': (changed(total_tokens=121), 'unknown_usage'),
             'boolean tokens': (changed(prompt_tokens=True), 'unknown_usage'),
             'detail exceeds total': (changed(prompt_tokens_details=dict(cached_tokens=200)), 'unknown_usage'),
@@ -575,6 +650,9 @@ class OpenRouterTests(unittest.TestCase):
         dear = self.generate([reply(cost=Decimal('0.0004'))])
         self.assertEqual(dear.status, 'completed')
         self.assertIn('cost_above_configured_rates', dear.usage['deviations'])
+        cheap = self.generate([reply(cost=Decimal('0.0001'))])  # under half the configured-rate estimate
+        self.assertEqual((cheap.status, cheap.usage['deviations']), ('completed', ['cost_below_configured_rates']))
+        self.assertEqual(self.generate([reply(cost=Decimal('0.0003'))]).usage['deviations'], [])
         long = reply(provider='p' * 500)
         long['openrouter_metadata']['attempts'].append({'provider': None, 'model': 7, 'status': None})
         attempt = self.generate([long]).usage['attempts'][0]
@@ -584,7 +662,7 @@ class OpenRouterTests(unittest.TestCase):
     def test_main_evaluation_is_pinned_and_experiments_are_labelled(self):
         main = self.generate().usage
         self.assertEqual((main['purpose'], main['experiment']), ('evaluation', None))
-        self.assertEqual(main['fallback'], dict(allowed=False, used=False, triggers=[]))
+        self.assertEqual(main['fallback'], dict(allowed=False, used=False, triggers=[], refused=None))
         self.assertEqual(main['routing'], dict(allow_fallbacks=False, require_parameters=True,
                                                data_collection='deny', zdr=False))
         self.assertEqual(main['route_fingerprint'], route_fingerprint(config()))
@@ -665,11 +743,28 @@ class OpenRouterTests(unittest.TestCase):
         self.assertEqual(decision.kind, 'act')
         self.assertEqual((decision.usage.model, decision.usage.input_tokens, decision.usage.priced),
                          ('openai/gpt-6.1-sol', 100, True))
-        from app.writer import OpenAIWriter
-        writer = OpenAIWriter.for_job(self.job, seconds=10, provider=self.provider())
+        import asyncio
+        from app import writer as writing
+        from test_writer import context as writing_context, ids
+        ctx = writing_context()
+        menu = writing.build_menu(ctx)
+        selection = {section: ids(menu, section) for section in writing.SECTIONS}
+        # The writer needs its own prompt version and a smaller input ceiling (USD 0.25 final reserve).
+        writer_settings = config(prompt_version=writing.WRITER_PROMPT_VERSION, max_input_tokens=32768)
+        self.sent = []
+        provider = self.provider([reply(text=json.dumps(selection))], writer_settings)
+        writer = writing.OpenAIWriter.for_job(self.job, seconds=10, provider=provider)
         self.assertEqual(writer.config['provider'], 'openrouter')
+        result = asyncio.run(writer.explain(ctx))
+        self.assertEqual(result.status, 'completed')
+        self.assertIn(result.source, ('model', 'mixed'))
+        self.assertEqual((len(self.sent), result.spend, result.priced), (1, EXACT_COST, True))
+        # The general role prompt version is not a writer prompt, so the writer keeps its template.
+        self.sent = []
+        fallback = asyncio.run(writing.OpenAIWriter.for_job(self.job, seconds=10, provider=self.provider()).explain(ctx))
+        self.assertEqual((fallback.source, fallback.reason, self.sent), ('fallback', 'unknown_prompt', []))
         with self.assertRaises(ValueError):
-            OpenAIWriter.for_job(self.job, seconds=1, provider=self.provider())
+            writing.OpenAIWriter.for_job(self.job, seconds=1, provider=self.provider())
 
 
 if __name__ == '__main__':

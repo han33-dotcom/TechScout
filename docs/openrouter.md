@@ -30,7 +30,19 @@ To use it, put a configuration file outside git (for example `var/openrouter.jso
 ```python
 from app.openrouter import OpenRouterProvider, load_openrouter_config
 provider = OpenRouterProvider(load_openrouter_config('var/openrouter.json'))
-writer = OpenAIWriter.for_job(job, seconds=30, provider=provider)  # or a research worker / planner
+planner = OpenAIPlanner(provider)  # research workers take it as their provider the same way
+```
+
+Each role's prompt version and input ceiling come from the provider's settings,
+so a role with its own prompts needs its own configuration file. The writer
+needs `"prompt_version": "writer-v1"` and an input ceiling whose reservation
+fits the USD 0.25 final-phase reserve (the direct writer uses 32,768 tokens).
+With the general `roles-v1` version the writer finds no prompt and returns its
+deterministic template without calling the model (`reason: unknown_prompt`).
+
+```python
+writer_provider = OpenRouterProvider(load_openrouter_config('var/openrouter-writer.json'))
+writer = OpenAIWriter.for_job(job, seconds=30, provider=writer_provider)
 ```
 
 ## Configuration
@@ -98,15 +110,26 @@ covers all attempts), stops at cancellation, and is refused when the shared budg
 cannot reserve it. Invalid output, model substitution, bad requests and timeouts
 never fall back.
 
+`usage['fallback']` records `allowed`, `used` (a fallback request was actually
+sent), the `triggers` and `refused`: the status of a fallback that was stopped
+before sending (budget, deadline or cancellation). A refused fallback leaves
+the result of the last request actually sent, for example `provider_unavailable`,
+and the top-level identity fields describe that request. The failed attempt's
+cost is unknown and keeps its reservation. The v1 run controller budget
+(`AccountedRunBudget`) refuses all further spend in a run after an unknown cost,
+so a fallback can only be sent under a ledger job budget (`JobBudget`).
+
 ## Results and recording
 
 Statuses: `completed`, `cancelled`, `timeout`, `budget_denied`, `input_too_large`,
 `unsupported_parameters`, `access_denied` (401/403), `insufficient_credits` (402),
 `unavailable` (404, for example no endpoint passes the account's provider
 allowlist), `invalid_request` (400), `rate_limited` (429), `provider_unavailable`
-(502/503, or a 200 body that carries an error), `http_<code>`, `transport_error`,
-`malformed_response`, `model_mismatch`, `unknown_usage`, `invalid_output`,
-`refused` and `incomplete`. There are no automatic retries.
+(502/503), `http_<code>`, `transport_error`, `malformed_response`,
+`model_mismatch`, `unknown_usage`, `invalid_output`, `refused` and `incomplete`.
+A 200 reply whose body carries an error is mapped by its `error.code` in the same
+way, or `malformed_response` without an integer code; its cost stays unknown.
+There are no automatic retries.
 
 `result.usage` keeps the keys the existing roles read (`billing`, `actual_usd`,
 `reserved_usd`, `tokens`, `requested_model`, `actual_model`, `prompt_version`). It
@@ -115,8 +138,9 @@ also records: provider `openrouter`; `purpose` and `experiment`; a
 and serving provider with `provider_verified`; generation ID; `system_fingerprint`;
 the number of endpoints OpenRouter reported; latency; and the full `attempts`
 list with each attempt's tokens (including cached, cache-write and reasoning),
-cost, reservation and status. The top-level identity fields describe the final
-attempt; totals cover all attempts. Each attempt's record is written to the
+cost, reservation and status. The top-level identity fields describe the last
+request actually sent; money and token totals cover every attempt that still holds
+spend. Each attempt's record is written to the
 shared ledger before dispatch and again at settlement, without prompts, answers
 or keys.
 
@@ -124,8 +148,9 @@ Missing metadata is reported, never claimed. `metadata_unavailable` lists what
 OpenRouter did not return (`serving_provider`, `endpoint_metadata`,
 `system_fingerprint`, `actual_model`). `deviations` labels `fallback_used`,
 `model_mismatch`, `serving_provider_unconfirmed` (a reported provider name that
-does not match the slug, such as "Google" for `google-vertex`) and
-`cost_above_configured_rates`.
+does not match the slug, such as "Google" for `google-vertex`),
+`cost_above_configured_rates` and `cost_below_configured_rates` (under half the
+configured-rate estimate, which can mean a price change or an undeclared BYOK fee).
 
 ## Spend, fees and prepaid credits
 
@@ -136,10 +161,14 @@ exact Decimal. The usage page calls it credits, the generation-stats page calls
 it USD and the FAQ names USD as the base currency, so it is treated as USD.
 If the cost or token counts are missing, malformed, floats, or the request failed,
 timed out or was cancelled after dispatch, the attempt keeps its full reservation
-as uncertain spend. A cost above the reservation, or tokens above either
-ceiling, returns `budget_denied` and blocks the campaign for reconciliation (the
-existing ledger rule). BYOK responses are refused as unknown: their upstream bill
-is outside OpenRouter's `cost`.
+as uncertain spend. A reported cost above the reservation returns
+`budget_denied`, is recorded, and blocks the campaign for reconciliation (the
+existing ledger rule). Token counts above either ceiling also return
+`budget_denied` and discard the answer, but their known cost is settled normally
+and does not block the campaign. The cost is accepted only when the reply states
+`is_byok: false`. A BYOK reply, or one without that flag, is treated as unknown,
+because under BYOK `cost` is only OpenRouter's fee and the provider bills the rest
+upstream.
 
 Prepaid credits: when the team buys credits, record the purchase once with
 `Ledger.credit_purchase(receipt_id, credit_usd, fee_usd)`. Only the
@@ -170,8 +199,10 @@ missing metadata are reported instead.
 - A dispatched request that times out or is cancelled may still finish and be
   billed. The adapter stops waiting and keeps the reservation.
 - Not verified live: account access, the exact `openrouter_metadata` shape, the
-  serving-provider name forms and the `max_tokens` capability name. Before any paid
-  comparison, run one bounded, ledger-recorded call per route and check these.
+  serving-provider name forms, the `max_tokens` capability name and whether every
+  reply carries `usage.is_byok` (if not, every call stays `unknown_usage` and keeps
+  its full reservation). Before any paid comparison, run one bounded,
+  ledger-recorded call per route and check these.
 - Not implemented: streaming, tool calling, a CLI switch, BYOK accounting and the
   generation-stats lookup (`GET /api/v1/generation`) for later reconciliation.
 
