@@ -194,8 +194,9 @@ class LeadIntakeTests(OnboardingCase):
     def test_directory_leads_without_configuration_are_queued(self):
         self.directory.upsert(DirectoryRecord(entry=RetailerDirectoryEntry(retailer_id='cedar_tech', name='Cedar Tech',
             origin=SHOP, markets=('LB',), categories=('laptop',), discovery_status='discovered'), updated_at=START,
-            source_id='cedar_tech', seller_identity='unresolved', product_urls=(SCOUT,)))
-        (result,) = self.queue.enqueue_directory(DirectoryQuery(category='laptop'))
+            source_id='cedar_tech', seller_identity='unresolved',
+            product_urls=(SCOUT, 'https://marketplace.example/item/scout-book')))
+        (result,) = self.queue.enqueue_directory(DirectoryQuery(category='laptop'))  # its own domain only
         self.assertEqual(result.status, 'queued')
         record = self.queue.get('cedartech.example').record
         self.assertEqual((record.channels, record.retailer_id, record.name_hint), (('directory',), 'cedar_tech', 'Cedar Tech'))
@@ -658,6 +659,21 @@ class FailureTests(OnboardingCase):
         self.now += ob.BUSY_PAUSE
         (outcome,) = self.worker().run()
         self.assertEqual(outcome.status, 'active')
+
+    def test_a_lead_whose_markets_grow_after_a_deferral_opens_a_new_ledger_job(self):
+        self.enqueue(SCOUT, TRAIL)
+        other = self.ledger.open_job('other-maintenance', 'maintenance')
+        held = [other.reserve('work', Charge(Decimal(0)), 60) for _ in range(2)]
+        self.assertEqual(self.worker().run()[0].status, 'deferred')
+        foreign = request(market_scope={'include_international': True, 'international_markets': ['US']})
+        self.assertEqual(self.queue.enqueue_tavily([Lead(SCOUT, 't', 's', .5)], foreign)[0].status, 'merged')
+        for attempt in held:
+            attempt.release()
+        self.now += ob.BUSY_PAUSE
+        (outcome,) = self.worker().run()
+        self.assertEqual(outcome.status, 'active', outcome.reason)
+        jobs = [j for j in self.ledger.snapshot()['jobs'] if j.startswith('onboarding:cedartech.example:1:')]
+        self.assertEqual(sorted(j.rsplit(':', 1)[1] for j in jobs), ['domestic', 'international'])
 
     def test_project_stop_also_defers(self):
         self.enqueue(SCOUT, TRAIL)

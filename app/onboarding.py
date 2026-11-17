@@ -618,7 +618,9 @@ class OnboardingQueue:
             if selection.configured:
                 continue
             entry = selection.record.entry
-            urls = [str(u) for u in selection.record.product_urls][:3] or [str(entry.origin)]
+            # Only this retailer's own domain: a listing hosted elsewhere is not its source.
+            urls = [str(u) for u in selection.record.product_urls
+                    if (canonical(str(u)) or ('',))[0] == _key_of_origin(str(entry.origin))][:3] or [str(entry.origin)]
             for url in urls:
                 results.append(self.enqueue(url, channel='directory', categories=entry.categories,
                     markets=entry.markets, reason='; '.join(selection.reasons), retailer_id=entry.retailer_id,
@@ -1218,8 +1220,10 @@ class OnboardingWorker:
         international = any(market != 'LB' for market in record.markets)
         try:
             try:
-                job = self.ledger.open_job(f'onboarding:{record.lead_id}:{lease.attempt}:{now.date().isoformat()}',
-                                           'maintenance', international=international)
+                # The scope is part of the ID: a lead whose markets grew meanwhile opens a new job.
+                scope = 'international' if international else 'domestic'
+                job = self.ledger.open_job(f'onboarding:{record.lead_id}:{lease.attempt}:{now.date().isoformat()}:'
+                                           f'{scope}', 'maintenance', international=international)
                 return self._onboard(lease, job, international, now)
             except BudgetDenied as exc:
                 return self.queue.defer(lease, f'Shared budget refused onboarding work: {exc}',
