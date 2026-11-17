@@ -7,7 +7,7 @@ from unittest.mock import Mock
 
 from app.contract_interfaces import PlanningContext
 from app.model_provider import ModelResult
-from app.orchestrator import Proposal
+from app.orchestrator import Proposal, Selection
 from eval.runners import run_strategy, trial_request
 from eval.scoring import PriceSide, Trial, compare_price, score
 from eval.session import manual_capture
@@ -27,11 +27,13 @@ class BaselineTests(unittest.TestCase):
         context=PlanningContext(run=work.context.task.run,request=work.context.request)
         fixed=run_strategy('fixed-heuristic-warm',context,**args)
         provider.generate.assert_not_called()
-        provider.generate.return_value=ModelResult('completed',Proposal(
-            investigations=[dict(question='Check the RAM requirement',resources=[0])],clarification=None),{})
+        provider.generate.side_effect=[ModelResult('completed',Proposal(
+            investigations=[dict(question='Check the RAM requirement',resources=[0])],clarification=None),{}),
+            ModelResult('completed',Selection(candidates=[dict(target_id=work.resources[0].key.variant_id,claim_indexes=[0])]),{})]
         solo=run_strategy('single-agent-warm',context,**args)
         self.assertEqual(solo.reports[0].evidence,fixed.reports[0].evidence)
         self.assertEqual(len(solo.reports),1)
+        self.assertEqual(solo.candidates[0].target_id,work.resources[0].key.variant_id)
         self.assertFalse(run_strategy('no-investigation',context,**args).reports)
 
     def test_trial_through_owned_api_records_abstention(self):

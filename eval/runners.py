@@ -7,7 +7,7 @@ from app.assessment import EvidenceGap
 from app.contract_interfaces import AgentTask, ResearchContext
 from app.contracts_v2 import ShoppingRequest
 from app.model_provider import JobBudget
-from app.orchestrator import InvestigationResult, Proposal, investigate
+from app.orchestrator import InvestigationResult, Proposal, investigate, select_candidates
 from app.planner import NoInvestigationPlanner, PlannerAction, PlannerState, RulePlanner
 from app.research_workers import Work
 
@@ -91,6 +91,19 @@ def run_strategy(side, context, *, job, workers, provider, resources, processing
         else:
             gaps.append(result['status'])
         available = [(i,r) for i,r in available if i not in selected]
+    if side=='single-agent-warm':
+        def generate(prompt, data, schema):
+            seconds=(deadline-datetime.now(timezone.utc)).total_seconds()
+            if job.cancelled or seconds<=0:
+                gaps.append('Research deadline or cancellation')
+                return None
+            reply=provider.generate(prompt,data,schema,budget=JobBudget(job,min(seconds,30)),
+                cancelled=lambda:job.cancelled or datetime.now(timezone.utc)>=deadline)
+            if reply.status!='completed' or not isinstance(reply.value,schema):
+                gaps.append('Model selection unavailable: '+reply.status)
+                return None
+            return reply.value
+        return select_candidates(request,answers,reports,gaps,generate)
     return InvestigationResult(reports=tuple(reports),gaps=tuple(gaps))
 
 
@@ -101,4 +114,3 @@ def trial_request(case, side, repetition):
     request = ShoppingRequest.model_validate(case['request'])
     return ShoppingRequest.model_validate(dict(request.model_dump(mode='json'),
         request_id=f'{request.request_id}-{side}-r{repetition}',revision=1))
-

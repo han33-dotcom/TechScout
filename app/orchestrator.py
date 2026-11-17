@@ -127,6 +127,11 @@ def investigate(context: PlanningContext, *, job, workers, provider, resources, 
         if used >= 3 or not gaps:
             break
 
+    return select_candidates(request, answers, reports, gaps, generate)
+
+
+def select_candidates(request, answers, reports, gaps, generate):
+    """Select supported needs-based models with the caller's bounded reasoning role."""
     candidates = []
     claims = [c for report in reports for c in report.finding.claims
               if c.fact.state == 'known' and c.field_path.startswith('variant.specs.')]
@@ -144,4 +149,3 @@ def investigate(context: PlanningContext, *, job, workers, provider, resources, 
                     supporting_specifications=tuple(claims[i] for i in dict.fromkeys(fit.claim_indexes))))
     return InvestigationResult(reports=tuple(reports), candidates=tuple(candidates),
                                gaps=tuple(dict.fromkeys(gaps)))
-

@@ -17,6 +17,8 @@ BASELINES = json.loads((ROOT/'baselines.json').read_text(encoding='utf-8'))
 
 def clone_database(admin_url, template, evidence, output):
     """Clone an operator-prepared frozen warm or empty cold database for one trial."""
+    if output.resolve().is_relative_to(evidence.resolve()):
+        raise ValueError('Place the trial output outside the frozen evidence directory')
     target = 'techscout_eval_'+uuid4().hex
     evidence_copy = output/target/'evidence'
     evidence_copy.parent.mkdir(parents=True,exist_ok=False)
