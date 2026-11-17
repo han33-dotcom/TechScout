@@ -48,7 +48,7 @@ def config(**changes):
 
 
 def experiment(**changes):
-    data = dict(purpose='experiment', experiment='provider-comparison', allow_fallback=True,
+    data = dict(purpose='experiment', experiment='exp-provider-comparison', allow_fallback=True,
                 routes=[route(), route(provider='azure', input='3', output='15')])
     data.update(changes)
     return config(**data)
@@ -181,16 +181,18 @@ class OpenRouterTests(unittest.TestCase):
             'fallback route without opt-in': dict(routes=two),
             'fallback in the main evaluation': dict(allow_fallback=True, routes=two),
             'experiment without label': dict(purpose='experiment'),
-            'label on the main evaluation': dict(experiment='side-test'),
+            'label on the main evaluation': dict(experiment='exp-side-test'),
+            'experiment label without exp- prefix': dict(purpose='experiment', experiment='side-test'),
+            'experiment labelled main': dict(purpose='experiment', experiment='main'),
             'string boolean': dict(enabled='true'),
-            'duplicate routes': dict(purpose='experiment', experiment='x', allow_fallback=True,
+            'duplicate routes': dict(purpose='experiment', experiment='exp-x', allow_fallback=True,
                                      routes=[route(), route()]),
-            'more than three routes': dict(purpose='experiment', experiment='x', allow_fallback=True,
+            'more than three routes': dict(purpose='experiment', experiment='exp-x', allow_fallback=True,
                                            routes=two + [route(provider='p3'), route(provider='p4')]),
-            'fallback with one route': dict(purpose='experiment', experiment='x', allow_fallback=True),
-            'unknown fallback trigger': dict(purpose='experiment', experiment='x', allow_fallback=True,
+            'fallback with one route': dict(purpose='experiment', experiment='exp-x', allow_fallback=True),
+            'unknown fallback trigger': dict(purpose='experiment', experiment='exp-x', allow_fallback=True,
                                              routes=two, fallback_on=['invalid_output']),
-            'no fallback trigger': dict(purpose='experiment', experiment='x', allow_fallback=True,
+            'no fallback trigger': dict(purpose='experiment', experiment='exp-x', allow_fallback=True,
                                         routes=two, fallback_on=[]),
         }
         for name, change in bad.items():
@@ -307,7 +309,7 @@ class OpenRouterTests(unittest.TestCase):
                 u = result.usage
                 self.assertEqual(u['fallback'], dict(allowed=True, used=True, triggers=[trigger], refused=None))
                 self.assertIn('fallback_used', u['deviations'])
-                self.assertEqual((u['purpose'], u['experiment']), ('experiment', 'provider-comparison'))
+                self.assertEqual((u['purpose'], u['experiment']), ('experiment', 'exp-provider-comparison'))
                 self.assertEqual((u['requested_provider'], u['serving_provider']), ('azure', 'azure'))
                 self.assertEqual([a['billing'] for a in u['attempts']], ['unknown', 'known'])
                 # The failed attempt may have been billed, so the total stays an unknown upper bound.
@@ -316,7 +318,7 @@ class OpenRouterTests(unittest.TestCase):
                 self.assertEqual(Decimal(u['reserved_usd']), PRIMARY_BOUND + FALLBACK_BOUND)
         rows = [a for a in self.attempts()]
         self.assertEqual(sorted(a['status'] for a in rows), ['completed', 'completed', 'uncertain', 'uncertain'])
-        self.assertTrue(all(a['provider_usage']['experiment'] == 'provider-comparison' for a in rows))
+        self.assertTrue(all(a['provider_usage']['experiment'] == 'exp-provider-comparison' for a in rows))
         # Cross-model fallback through the planner bridge: every billed model is attributed.
         cross = experiment(routes=[route(), route('openai/gpt-6.1-mini', 'azure', input='3', output='15')])
         choice = reply(model='openai/gpt-6.1-mini', provider='azure',
@@ -671,7 +673,7 @@ class OpenRouterTests(unittest.TestCase):
         prints = {route_fingerprint(config(**c)) for c in changes} | {route_fingerprint(config())}
         self.assertEqual(len(prints), len(changes) + 1)
         labelled = self.generate(settings=experiment()).usage
-        self.assertEqual((labelled['purpose'], labelled['experiment']), ('experiment', 'provider-comparison'))
+        self.assertEqual((labelled['purpose'], labelled['experiment']), ('experiment', 'exp-provider-comparison'))
         self.assertNotEqual(labelled['route_fingerprint'], main['route_fingerprint'])
 
     # Secrets and transport

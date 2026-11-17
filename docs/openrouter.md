@@ -78,7 +78,7 @@ provider's endpoint on OpenRouter during setup. Unknown keys are rejected.
 | `routes[].provider` | The single approved serving provider for that route. |
 | `routes[].supported_parameters` | Must include `response_format`, `structured_outputs` and `max_tokens` (and `reasoning` when `effort` is set). Otherwise the call returns `unsupported_parameters` without sending or reserving. |
 | `routes[].rates` | Decimal strings. An enabled route needs positive input and output rates: an unknown cost is never zero. |
-| `purpose` | `evaluation` (default) pins exactly one route with no fallback. `experiment` requires an `experiment` label. |
+| `purpose` | `evaluation` (default) pins exactly one route with no fallback. `experiment` requires an `experiment` label starting with `exp-`. |
 | `allow_fallback`, `fallback_on` | Off by default. Only an experiment may list up to three routes and turn this on (see below). |
 | `data_collection`, `zdr` | Data-policy filters sent to OpenRouter. `deny` is the default. |
 | `effort` | Optional `reasoning.effort`; omitted by default. |
@@ -182,8 +182,18 @@ counted twice. Recheck fees before buying; no code here buys credits.
 The main evaluation stays on direct OpenAI. If a later decision runs part of it
 through OpenRouter, use `purpose: "evaluation"`: one pinned model and provider, no
 fallback, and the `route_fingerprint` recorded on every attempt. Optional route or
-model comparisons use `purpose: "experiment"` with their own label and are
-reported apart from the main results. Pinning removes deliberate substitution,
+model comparisons use `purpose: "experiment"` with their own `exp-` label and are
+reported apart from the main results.
+
+The frozen [evaluation protocol](evaluation-protocol.md) (version 1.0.0) plans no
+OpenRouter experiment. Before one runs, it must be declared in `eval/models.json`
+with a protocol version bump. A declared experiment keeps a fixed provider order
+with fallbacks off, so use one route and leave `allow_fallback` false. Its
+records write each field listed in `metadata_unavailable` as `not_reported`.
+Fallback experiments outside that protocol stay exploratory and are never
+reported as evaluation results.
+
+Pinning removes deliberate substitution,
 but OpenRouter and its providers can still change model weights, serving stacks or
 metadata, so results are not claimed to be fully reproducible: deviations and
 missing metadata are reported instead.

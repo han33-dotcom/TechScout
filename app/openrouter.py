@@ -49,7 +49,8 @@ ModelId = Annotated[str, StringConstraints(
     strict=True, max_length=128, pattern=r'^[A-Za-z0-9][A-Za-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9._-]*$')]
 ProviderSlug = Annotated[str, StringConstraints(
     strict=True, max_length=64, pattern=r'^[a-z0-9][a-z0-9._-]*(/[a-z0-9][a-z0-9._-]*)?$')]
-Label = Annotated[str, StringConstraints(strict=True, pattern=r'^[a-z0-9][a-z0-9._-]{0,63}$')]
+# Evaluation protocol (eval/models.json): optional experiment labels start with exp-.
+Label = Annotated[str, StringConstraints(strict=True, pattern=r'^exp-[a-z0-9][a-z0-9._-]{0,59}$')]
 FallbackTrigger = Literal['provider_unavailable', 'rate_limited', 'unavailable']
 
 
