@@ -18,7 +18,7 @@ from app.contracts import HttpsUrl, Model, SourcePolicy, Text
 from app.contracts_v2 import Evidence
 from app.corpus import Corpus
 from app.corpus_contracts import DocumentCapture, Extraction, FieldObservation, PassageDraft, ProcessingVersion, ResourceKey
-from app.embeddings import EmbeddingService, OpenAIEmbeddings
+from app.embeddings import EmbeddingAllowanceExceeded, EmbeddingService, OpenAIEmbeddings
 from app.extraction import PageProfile, extract_page
 from app.source_capabilities import CapabilityRef
 from app.source_registry import get_active_source
@@ -60,6 +60,8 @@ class Manifest(Model):
             if seed.format == 'catalog' and (not seed.category_slugs or seed.content != 'listing'):
                 raise ValueError('Catalog seeds need reviewed categories')
             if seed.source_id in INTERNATIONAL:
+                if seed.format=='catalog':
+                    raise ValueError('International listing allocations require individual product URLs')
                 if self.international_limits is None:
                     raise ValueError('International targets require a nested allowance')
                 counts[seed.source_id if seed.content == 'listing' else
@@ -81,6 +83,7 @@ class SeedBudget:
     """Reserve every retry and redirect before dispatch, including after a restart."""
     def __init__(self, job, manifest, seed, token, registry):
         self.job, self.run_id, self.registry = job, job.run_id, registry
+        self.ledger = job.ledger
         self.manifest, self.seed, self.token = manifest, seed, token
         self.foreign = seed.source_id in INTERNATIONAL
 
@@ -106,6 +109,19 @@ class SeedBudget:
                 used['ms'] += int(seconds * 1000)
             if is_fetch:
                 key = str(self.seed.url)
+                if self.foreign:
+                    bucket = (self.seed.source_id if self.seed.content=='listing' else
+                              'policy' if self.seed.content=='policy' else 'support')
+                    allocation = state.setdefault('international_seed_urls',{}).setdefault(bucket,{})
+                    caps = {**INTERNATIONAL,'policy':30,'support':100}
+                    if key not in allocation:
+                        if len(allocation) >= caps[bucket]:
+                            raise BudgetDenied('International seed URL ceiling reached')
+                        if self.seed.content=='listing':
+                            share = 35 if self.seed.category in {'phone','laptop'} else 10
+                            if sum(c==self.seed.category for c in allocation.values()) >= caps[bucket]*share//100:
+                                raise BudgetDenied('International seed category allocation exhausted')
+                        allocation[key] = self.seed.category
                 tries = record['tries'].get(key,0)
                 if tries >= 1 + min(l.max_retries_per_resource for _,l in allocations):
                     raise BudgetDenied('Resource attempt ceiling reached')
@@ -157,6 +173,14 @@ def catalog(capture, outcome, seed, cap):
     return Extraction(observations=tuple(observations),passages=tuple(passages))
 
 
+def index_pending(corpus, document_id, embedder, rate, budget):
+    service = EmbeddingService(corpus,embedder,usd_per_million=rate,job=budget,
+                               international=budget.foreign)
+    while service.index_document(document_id,owner_id=budget.run_id,
+            max_spend_usd=budget.manifest.limits.max_spend_usd):
+        pass
+
+
 def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None):
     job = ledger.open_job('bootstrap:'+manifest.manifest_id,'bootstrap',
                           international=any(s.source_id in INTERNATIONAL for s in manifest.seeds))
@@ -168,6 +192,7 @@ def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None):
             digest=fingerprint,all=empty.copy(),international=empty.copy(),tries={},pages={},lease_until=0))
         if record['digest'] != fingerprint or now < record['lease_until']:
             raise ValueError('Manifest changed or another worker holds the lease')
+        record.pop('stop_reason', None)
         record.update(owner=token,lease_until=now+120)
     try:
         for seed in manifest.seeds:
@@ -186,21 +211,25 @@ def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None):
                     raise BudgetDenied('Bootstrap lease lost')
                 record['lease_until'] = now+120
                 page = record['pages'].get(url,{})
-                if (page.get('status') in {'indexed','empty'} and previous and
-                        previous.processing == processing and previous.raw_sha256 == page.get('sha256')):
-                    continue
-                allocations = [(record['all'],manifest.limits)]
-                if seed.source_id in INTERNATIONAL:
-                    allocations.append((record['international'],manifest.international_limits))
-                bytes_left = min(l.max_response_bytes-u['bytes'] for u,l in allocations)
-                rows_left = min(l.max_records-u['records'] for u,l in allocations)
-                if rows_left <= 0 or bytes_left < MAX_RESPONSE_BYTES:
-                    break
-                row_hold = min(100, rows_left) if seed.format == 'catalog' else 1
-                for usage, _ in allocations:
-                    usage['records'] += row_hold
-                    usage['bytes'] += MAX_RESPONSE_BYTES
+                reusable = (page.get('status') in {'indexed','empty'} and previous and
+                            previous.processing == processing and previous.raw_sha256 == page.get('sha256'))
+                if not reusable:
+                    allocations = [(record['all'],manifest.limits)]
+                    if seed.source_id in INTERNATIONAL:
+                        allocations.append((record['international'],manifest.international_limits))
+                    bytes_left = min(l.max_response_bytes-u['bytes'] for u,l in allocations)
+                    rows_left = min(l.max_records-u['records'] for u,l in allocations)
+                    if rows_left <= 0 or bytes_left < MAX_RESPONSE_BYTES:
+                        break
+                    row_hold = min(100, rows_left) if seed.format == 'catalog' else 1
+                    for usage, _ in allocations:
+                        usage['records'] += row_hold
+                        usage['bytes'] += MAX_RESPONSE_BYTES
             budget = SeedBudget(job,manifest,seed,token,gate._registry_path)
+            if reusable:
+                if embedder and previous.document_id:
+                    index_pending(corpus, previous.document_id, embedder, rate, budget)
+                continue
             result = dict(source=seed.source_id,category=seed.category,status='failed',
                           checked_at=datetime.now(timezone.utc).isoformat())
             size = rows = 0
@@ -230,12 +259,6 @@ def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None):
                             passages = tuple(p for p in extraction.passages if p.text in seed.policy_statements)
                             extraction = Extraction(passages=passages)
                     receipt = corpus.ingest(capture,lambda _:extraction)
-                    if embedder and extraction.passages:
-                        service = EmbeddingService(corpus,embedder,usd_per_million=rate,job=budget,
-                                                   international=budget.foreign)
-                        while service.index_document(receipt.document_id,owner_id=job.run_id,
-                                max_spend_usd=manifest.limits.max_spend_usd):
-                            pass
                     stored_fields = len(corpus.observations(receipt.document_id))
                     stored_passages = len(corpus.passages(receipt.document_id))
                     result.update(status='indexed' if stored_fields or stored_passages else 'empty',
@@ -251,6 +274,14 @@ def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None):
                 for scope in (('all','international') if budget.foreign else ('all',)):
                     record[scope]['bytes'] -= MAX_RESPONSE_BYTES - size
                     record[scope]['records'] -= row_hold - min(row_hold, rows)
+            if embedder and result['status']=='indexed':
+                index_pending(corpus, receipt.document_id, embedder, rate, budget)
+    except (BudgetDenied, EmbeddingAllowanceExceeded) as exc:
+        with ledger._transaction() as (state, now):
+            record = state['bootstrap_manifests'][job.run_id]
+            if record.get('owner') != token:
+                raise
+            record['stop_reason'] = str(exc)
     finally:
         with ledger._transaction() as (state, now):
             record = state['bootstrap_manifests'][job.run_id]

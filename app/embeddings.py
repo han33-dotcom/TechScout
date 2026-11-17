@@ -10,6 +10,10 @@ from app.retrieval import MODEL, DIMENSIONS, checked_vector
 from app.storage import embedding_calls, _now
 
 
+class EmbeddingAllowanceExceeded(ValueError):
+    """The pending batch requires more than the caller's spend allowance."""
+
+
 class OpenAIEmbeddings:
     """Direct API transport. No implicit keys, retries or paid calls at import time."""
     def __init__(self, api_key: str, *, transport=None):
@@ -59,7 +63,7 @@ class EmbeddingService:
         reserved_tokens = sum(len(t.encode('utf-8')) for t in texts)
         reserved = Decimal(reserved_tokens)*self.rate/Decimal(1_000_000)
         if reserved > max_spend_usd:
-            raise ValueError('Embedding call exceeds its spend allowance')
+            raise EmbeddingAllowanceExceeded('Embedding call exceeds its spend allowance')
         call_id = uuid.uuid4().hex
         attempt = None
         if self.job is not None:
