@@ -1,0 +1,202 @@
+{
+  "retailer_id": "amhaz_official_candidate",
+  "identity_status": "unresolved_user_intent",
+  "observations": [
+    {
+      "url": "https://amhazofficial.com/",
+      "checked_at": "2026-11-17T15:44:07.508655+00:00",
+      "status": 200,
+      "final_url": "https://amhazofficial.com/",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 84649,
+      "sha256": "1cf33f9feb46a2d51ee0e4683cfc53c139d3e36df54b484f9d1807877315e009"
+    },
+    {
+      "url": "https://amhazofficial.com/contact",
+      "checked_at": "2026-11-17T15:44:24.300282+00:00",
+      "status": 200,
+      "final_url": "https://amhazofficial.com/contact",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 25549,
+      "sha256": "b1b347788d58b10a22a1c4521d3fa387ea5ad45961289b194f6a11b7ffa1df6d"
+    },
+    {
+      "url": "https://amhazofficial.com/product/1018",
+      "checked_at": "2026-11-17T15:44:36.754990+00:00",
+      "status": 200,
+      "final_url": "https://amhazofficial.com/product/1018",
+      "content_type": "text/html; charset=utf-8",
+      "bytes": 44212,
+      "sha256": "ed9cea5f8c2e166ba425d15a416624add2d688dc7a863fee52a0c379b9603d0c"
+    }
+  ],
+  "identity": {
+    "url": "https://amhazofficial.com/contact",
+    "brand_name": "Amhaz Official",
+    "address": "Saint Therese, Hadath , Lebanon",
+    "gallery_captions": [
+      "Wholesale and maintenance",
+      "Amhaz Mobile Store front",
+      "Inside the accessories section"
+    ]
+  },
+  "footer": {
+    "url": "https://amhazofficial.com/",
+    "unlinked_items": [
+      "About Us",
+      "Careers",
+      "Press",
+      "FAQs",
+      "Shipping"
+    ],
+    "linked_items": {
+      "Contact Us": "/contact"
+    }
+  },
+  "product": {
+    "url": "https://amhazofficial.com/product/1018",
+    "visible_lines": [
+      "IPHONE 17",
+      "Storage",
+      "256GB",
+      "$2,865.00",
+      "Out of stock",
+      "Availability",
+      "Check for availability"
+    ],
+    "record": {
+      "item_code": "1018",
+      "item_name": "IPHONE 17",
+      "price": 2865,
+      "currency": "USD",
+      "qty_available": 0,
+      "warehouses": [],
+      "item_group": "IPHONE",
+      "brand": "APPLE",
+      "attributes": {
+        "specs": {
+          "Size": "256GB"
+        },
+        "selectable": {
+          "Storage": [
+            "256GB"
+          ]
+        }
+      }
+    }
+  },
+  "related_records": [
+    {
+      "item_code": "241",
+      "item_name": "IPHONE 11 128GB",
+      "price": 320,
+      "currency": "USD",
+      "qty_available": 0,
+      "warehouses": [],
+      "item_group": "IPHONE",
+      "brand": "APPLE",
+      "attributes": {
+        "specs": {
+          "Storage": "128GB",
+          "Type": "Phone",
+          "Condition": "New"
+        },
+        "selectable": {
+          "Storage": [
+            "128GB"
+          ],
+          "Type": [
+            "Phone"
+          ],
+          "Condition": [
+            "New"
+          ]
+        }
+      }
+    },
+    {
+      "item_code": "590",
+      "item_name": "IPHONE 11 128GB USED",
+      "price": 290,
+      "currency": "USD",
+      "qty_available": 0,
+      "warehouses": [],
+      "item_group": "IPHONE",
+      "brand": "APPLE",
+      "attributes": {
+        "specs": {
+          "Storage": "128GB",
+          "Condition": "Used",
+          "Type": "Phone"
+        },
+        "selectable": {
+          "Storage": [
+            "128GB"
+          ],
+          "Type": [
+            "Phone"
+          ],
+          "Condition": [
+            "Used"
+          ]
+        }
+      }
+    },
+    {
+      "item_code": "909",
+      "item_name": "IPHONE 11 128GB USED",
+      "price": 0,
+      "currency": "USD",
+      "qty_available": 0,
+      "warehouses": [],
+      "item_group": "IPHONE",
+      "brand": "APPLE",
+      "attributes": {
+        "specs": {
+          "Storage": "128GB",
+          "Condition": "Used",
+          "Type": "Phone"
+        },
+        "selectable": {
+          "Storage": [
+            "128GB"
+          ],
+          "Type": [
+            "Phone"
+          ],
+          "Condition": [
+            "Used"
+          ]
+        }
+      }
+    },
+    {
+      "item_code": "254",
+      "item_name": "IPHONE 11 256GB",
+      "price": 330,
+      "currency": "USD",
+      "qty_available": 0,
+      "warehouses": [],
+      "item_group": "IPHONE",
+      "brand": "APPLE",
+      "attributes": {
+        "specs": {
+          "Storage": "256GB",
+          "Type": "Phone",
+          "Condition": "New"
+        },
+        "selectable": {
+          "Storage": [
+            "256GB"
+          ],
+          "Type": [
+            "Phone"
+          ],
+          "Condition": [
+            "New"
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -37,5 +37,6 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 - [pr policy activation](pr-policy-activation.md)
 - [retailer access requests](retailer-access-requests.md)
 - [source coverage](source-coverage.md) and [Lebanese retailer audit / seeds](retailer-audit-2026-11-16.md)
+- [Amhaz: blocked until the intended business is identified](source-coverage.md#amhaz-56-blocked-until-the-intended-business-is-identified)
 - [source admission](source-admission.md)
 - [team workflow](team-workflow.md)
