@@ -220,3 +220,18 @@ under later tasks should use this revision when they expose laptop comparisons.
 traps and laptop CPU/GPU/memory/storage/display differences. Additional tests
 exercise missing fields, receipt scope, seller/SKU/route separation, exact Decimal
 keys, canonical-ID collisions and schema/corpus compatibility. All run offline.
+
+### Module interface revision: 2026-11-17 writing context
+
+`WritingContext` (`app/contract_interfaces.py`) gained three optional fields:
+`request` (the `ShoppingRequest` revision the run answered), `coverage`
+(`CoverageCounts`) and `uncertain` (`UncertainAlternative` records). The writer
+needs them to explain budget limits, open priorities, search coverage and
+unverified alternatives. They default to absent or empty, so earlier
+three-field contexts still validate.
+
+`WritingContext` is an in-process port, not part of the published schema bundle,
+so the wire major and the JSON Schemas are unchanged. Its only consumer is
+`app/writer.py` (see [Grounded writer](writer.md)). That consumer also rejects a
+context whose recommendations were verified in another run, whose request
+revision differs from the run's, or which holds more than three recommendations.
