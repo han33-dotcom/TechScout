@@ -154,6 +154,7 @@ class ShoppingRequest(Contract):
     request_id: Text
     revision: PositiveInt = 1
     intent: Intent
+    refinement_note: Text | None = None  # Additional buyer wording; never replaces existing constraints.
     requirements: Requirements
     budget: Budget | None = None
     preferences: tuple[ChoicePriority, ...] = ()
@@ -628,6 +629,19 @@ class Clarification(Model):
     material_reason: Text
 
 
+class SourceOutcome(Model):
+    source_id: Text
+    name: Text
+    status: Literal['checked', 'failed', 'unchecked']
+    reason: Text | None = None
+
+    @model_validator(mode='after')
+    def failed_reason(self):
+        if self.status == 'failed' and self.reason is None:
+            raise ValueError('A failed source requires a reason')
+        return self
+
+
 class RunSnapshot(Contract):
     run: RunReference
     request: ShoppingRequest
@@ -640,12 +654,15 @@ class RunSnapshot(Contract):
     stop_reason: Text | None = None
     clarification: Clarification | None = None
     coverage: CoverageCounts = Field(default_factory=CoverageCounts)
+    source_outcomes: tuple[SourceOutcome, ...] = ()
     provisional: tuple[ProvisionalCandidate, ...] = ()
     recommendations: Annotated[tuple[Recommendation, ...], Field(max_length=3)] = ()
     uncertain: tuple[UncertainAlternative, ...] = ()
 
     @model_validator(mode='after')
     def coherent_results(self):
+        if len({source.source_id for source in self.source_outcomes}) != len(self.source_outcomes):
+            raise ValueError("Source outcomes must be unique")
         if (self.run.request_id, self.run.request_revision) != (self.request.request_id, self.request.revision):
             raise ValueError('Run must refer to the displayed request revision')
         terminal = self.status in {'complete', 'partial', 'abstained', 'cancelled', 'error'}

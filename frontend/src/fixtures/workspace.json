@@ -1,0 +1,1512 @@
+{
+  "schema_version": 2,
+  "current": {
+    "schema_version": 2,
+    "run": {
+      "run_id": "run-new",
+      "run_revision": 1,
+      "request_id": "needs-1",
+      "request_revision": 2
+    },
+    "request": {
+      "schema_version": 2,
+      "request_id": "needs-1",
+      "revision": 2,
+      "intent": {
+        "kind": "needs",
+        "description": "Engineering laptop delivered to Beirut with good battery life",
+        "required_software": [
+          "CAD"
+        ]
+      },
+      "refinement_note": null,
+      "requirements": {
+        "category": "laptop",
+        "min_ram_gb": 16,
+        "min_storage_gb": null,
+        "cpu": null,
+        "gpu": null,
+        "operating_system": null
+      },
+      "budget": {
+        "target": {
+          "amount": "900",
+          "currency": "USD"
+        },
+        "maximum": {
+          "amount": "950",
+          "currency": "USD"
+        }
+      },
+      "preferences": [
+        "battery"
+      ],
+      "allowed_colors": [],
+      "payment": null,
+      "allowed_conditions": [
+        "new"
+      ],
+      "market_scope": {
+        "include_international": true,
+        "international_markets": [
+          "US",
+          "AE"
+        ]
+      },
+      "fulfillment": {
+        "destination": {
+          "country": "LB",
+          "city": "Beirut",
+          "postal_code": null
+        },
+        "mode": "delivery",
+        "branch_id": null,
+        "deadline": null
+      },
+      "warranty_requirement": null
+    },
+    "status": "complete",
+    "phase": "write",
+    "started_at": "2026-11-16T12:00:00Z",
+    "updated_at": "2026-11-16T12:00:45Z",
+    "finished_at": "2026-11-16T12:00:45Z",
+    "stop_reason": "Verified a qualifying offer",
+    "clarification": null,
+    "coverage": {
+      "discovered": 5,
+      "attempted": 3,
+      "retrieved": 2,
+      "qualifying": 1
+    },
+    "source_outcomes": [],
+    "provisional": [],
+    "recommendations": [
+      {
+        "primary": {
+          "offer": {
+            "schema_version": 2,
+            "offer_id": "book-local",
+            "retailer_id": "retailer-book-local",
+            "source_id": "source-book-local",
+            "source_product_id": "listing-book-local",
+            "source_variant_id": "sku-book-local",
+            "seller": {
+              "seller_id": "book-local",
+              "name": "Book-Local",
+              "market": "LB"
+            },
+            "fulfiller_id": null,
+            "variant": {
+              "schema_version": 2,
+              "variant_id": "book-u7-16-512",
+              "product": {
+                "product_id": "product-laptop",
+                "category": "laptop",
+                "manufacturer": "Example",
+                "model": "Scout Book"
+              },
+              "specs": {
+                "category": "laptop",
+                "cpu": {
+                  "state": "known",
+                  "value": "Example U7",
+                  "alternatives": [],
+                  "reason": null,
+                  "evidence_ids": [
+                    "book-local:variant.specs.cpu"
+                  ]
+                },
+                "ram_gb": {
+                  "state": "known",
+                  "value": 16,
+                  "alternatives": [],
+                  "reason": null,
+                  "evidence_ids": [
+                    "book-local:variant.specs.ram_gb"
+                  ]
+                },
+                "storage_gb": {
+                  "state": "known",
+                  "value": 512,
+                  "alternatives": [],
+                  "reason": null,
+                  "evidence_ids": [
+                    "book-local:variant.specs.storage_gb"
+                  ]
+                },
+                "gpu": null,
+                "operating_system": null,
+                "display_inches": null,
+                "display_width_px": null,
+                "display_height_px": null,
+                "display_refresh_hz": null,
+                "display_panel": null,
+                "display_touchscreen": null
+              },
+              "color": null
+            },
+            "listing_url": "https://book-local.example/book-local",
+            "route": {
+              "kind": "direct",
+              "route_id": "route-book-local",
+              "origin_country": "LB",
+              "destination": {
+                "country": "LB",
+                "city": "Beirut",
+                "postal_code": null
+              },
+              "item_eligible": {
+                "state": "known",
+                "value": true,
+                "alternatives": [],
+                "reason": null,
+                "evidence_ids": [
+                  "book-local:route.item_eligible"
+                ]
+              }
+            },
+            "price": {
+              "state": "known",
+              "value": {
+                "amount": "920",
+                "currency": "USD"
+              },
+              "alternatives": [],
+              "reason": null,
+              "evidence_ids": [
+                "book-local:price"
+              ]
+            },
+            "stock": {
+              "state": "known",
+              "value": true,
+              "alternatives": [],
+              "reason": null,
+              "evidence_ids": [
+                "book-local:stock"
+              ]
+            },
+            "purchasable": {
+              "state": "known",
+              "value": true,
+              "alternatives": [],
+              "reason": null,
+              "evidence_ids": [
+                "book-local:purchasable"
+              ]
+            },
+            "condition": {
+              "state": "known",
+              "value": "new",
+              "alternatives": [],
+              "reason": null,
+              "evidence_ids": [
+                "book-local:condition"
+              ]
+            },
+            "activation": null,
+            "payment": null,
+            "warranty": null,
+            "arrival": null,
+            "costs": [
+              {
+                "schema_version": 2,
+                "kind": "tax",
+                "leg": "order",
+                "state": "included",
+                "amount": null,
+                "reason": null,
+                "conditions": [],
+                "evidence_ids": [
+                  "book-local:costs.order.tax"
+                ],
+                "valid_until": null
+              },
+              {
+                "schema_version": 2,
+                "kind": "shipping",
+                "leg": "order",
+                "state": "additional",
+                "amount": {
+                  "amount": "10",
+                  "currency": "USD"
+                },
+                "reason": null,
+                "conditions": [],
+                "evidence_ids": [
+                  "book-local:costs.order.shipping"
+                ],
+                "valid_until": null
+              }
+            ],
+            "evidence": [
+              {
+                "schema_version": 2,
+                "evidence_id": "book-local:route.item_eligible",
+                "source_id": "source-book-local",
+                "product_id": "listing-book-local",
+                "variant_id": "sku-book-local",
+                "scope": "route",
+                "branch_id": null,
+                "route_id": "route-book-local",
+                "field_path": "route.item_eligible",
+                "origin_url": "https://book-local.example/book-local",
+                "final_url": "https://book-local.example/book-local",
+                "observed_at": "2026-11-16T12:00:30Z",
+                "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "adapter_version": "example-v1",
+                "json_pointer": null,
+                "excerpt": "Synthetic observation for route.item_eligible",
+                "conflicts": [],
+                "origin": "runtime",
+                "corpus_version": "corpus-1",
+                "index_version": "index-1",
+                "run": {
+                  "run_id": "run-new",
+                  "run_revision": 1,
+                  "request_id": "needs-1",
+                  "request_revision": 2
+                }
+              },
+              {
+                "schema_version": 2,
+                "evidence_id": "book-local:variant.specs.cpu",
+                "source_id": "source-book-local",
+                "product_id": "listing-book-local",
+                "variant_id": "sku-book-local",
+                "scope": "variant",
+                "branch_id": null,
+                "route_id": null,
+                "field_path": "variant.specs.cpu",
+                "origin_url": "https://book-local.example/book-local",
+                "final_url": "https://book-local.example/book-local",
+                "observed_at": "2026-11-15T12:00:30Z",
+                "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "adapter_version": "example-v1",
+                "json_pointer": null,
+                "excerpt": "Synthetic observation for variant.specs.cpu",
+                "conflicts": [],
+                "origin": "maintenance",
+                "corpus_version": "corpus-1",
+                "index_version": "index-1",
+                "run": null
+              },
+              {
+                "schema_version": 2,
+                "evidence_id": "book-local:variant.specs.ram_gb",
+                "source_id": "source-book-local",
+                "product_id": "listing-book-local",
+                "variant_id": "sku-book-local",
+                "scope": "variant",
+                "branch_id": null,
+                "route_id": null,
+                "field_path": "variant.specs.ram_gb",
+                "origin_url": "https://book-local.example/book-local",
+                "final_url": "https://book-local.example/book-local",
+                "observed_at": "2026-11-16T12:00:30Z",
+                "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "adapter_version": "example-v1",
+                "json_pointer": null,
+                "excerpt": "Synthetic observation for variant.specs.ram_gb",
+                "conflicts": [],
+                "origin": "runtime",
+                "corpus_version": "corpus-1",
+                "index_version": "index-1",
+                "run": {
+                  "run_id": "run-new",
+                  "run_revision": 1,
+                  "request_id": "needs-1",
+                  "request_revision": 2
+                }
+              },
+              {
+                "schema_version": 2,
+                "evidence_id": "book-local:variant.specs.storage_gb",
+                "source_id": "source-book-local",
+                "product_id": "listing-book-local",
+                "variant_id": "sku-book-local",
+                "scope": "variant",
+                "branch_id": null,
+                "route_id": null,
+                "field_path": "variant.specs.storage_gb",
+                "origin_url": "https://book-local.example/book-local",
+                "final_url": "https://book-local.example/book-local",
+                "observed_at": "2026-11-16T12:00:30Z",
+                "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "adapter_version": "example-v1",
+                "json_pointer": null,
+                "excerpt": "Synthetic observation for variant.specs.storage_gb",
+                "conflicts": [],
+                "origin": "runtime",
+                "corpus_version": "corpus-1",
+                "index_version": "index-1",
+                "run": {
+                  "run_id": "run-new",
+                  "run_revision": 1,
+                  "request_id": "needs-1",
+                  "request_revision": 2
+                }
+              },
+              {
+                "schema_version": 2,
+                "evidence_id": "book-local:price",
+                "source_id": "source-book-local",
+                "product_id": "listing-book-local",
+                "variant_id": "sku-book-local",
+                "scope": "variant",
+                "branch_id": null,
+                "route_id": null,
+                "field_path": "price",
+                "origin_url": "https://book-local.example/book-local",
+                "final_url": "https://book-local.example/book-local",
+                "observed_at": "2026-11-16T12:00:30Z",
+                "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "adapter_version": "example-v1",
+                "json_pointer": null,
+                "excerpt": "Synthetic observation for price",
+                "conflicts": [],
+                "origin": "runtime",
+                "corpus_version": "corpus-1",
+                "index_version": "index-1",
+                "run": {
+                  "run_id": "run-new",
+                  "run_revision": 1,
+                  "request_id": "needs-1",
+                  "request_revision": 2
+                }
+              },
+              {
+                "schema_version": 2,
+                "evidence_id": "book-local:stock",
+                "source_id": "source-book-local",
+                "product_id": "listing-book-local",
+                "variant_id": "sku-book-local",
+                "scope": "variant",
+                "branch_id": null,
+                "route_id": null,
+                "field_path": "stock",
+                "origin_url": "https://book-local.example/book-local",
+                "final_url": "https://book-local.example/book-local",
+                "observed_at": "2026-11-16T12:00:30Z",
+                "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "adapter_version": "example-v1",
+                "json_pointer": null,
+                "excerpt": "Synthetic observation for stock",
+                "conflicts": [],
+                "origin": "runtime",
+                "corpus_version": "corpus-1",
+                "index_version": "index-1",
+                "run": {
+                  "run_id": "run-new",
+                  "run_revision": 1,
+                  "request_id": "needs-1",
+                  "request_revision": 2
+                }
+              },
+              {
+                "schema_version": 2,
+                "evidence_id": "book-local:purchasable",
+                "source_id": "source-book-local",
+                "product_id": "listing-book-local",
+                "variant_id": "sku-book-local",
+                "scope": "variant",
+                "branch_id": null,
+                "route_id": null,
+                "field_path": "purchasable",
+                "origin_url": "https://book-local.example/book-local",
+                "final_url": "https://book-local.example/book-local",
+                "observed_at": "2026-11-16T12:00:30Z",
+                "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "adapter_version": "example-v1",
+                "json_pointer": null,
+                "excerpt": "Synthetic observation for purchasable",
+                "conflicts": [],
+                "origin": "runtime",
+                "corpus_version": "corpus-1",
+                "index_version": "index-1",
+                "run": {
+                  "run_id": "run-new",
+                  "run_revision": 1,
+                  "request_id": "needs-1",
+                  "request_revision": 2
+                }
+              },
+              {
+                "schema_version": 2,
+                "evidence_id": "book-local:condition",
+                "source_id": "source-book-local",
+                "product_id": "listing-book-local",
+                "variant_id": "sku-book-local",
+                "scope": "variant",
+                "branch_id": null,
+                "route_id": null,
+                "field_path": "condition",
+                "origin_url": "https://book-local.example/book-local",
+                "final_url": "https://book-local.example/book-local",
+                "observed_at": "2026-11-16T12:00:30Z",
+                "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "adapter_version": "example-v1",
+                "json_pointer": null,
+                "excerpt": "Synthetic observation for condition",
+                "conflicts": [],
+                "origin": "runtime",
+                "corpus_version": "corpus-1",
+                "index_version": "index-1",
+                "run": {
+                  "run_id": "run-new",
+                  "run_revision": 1,
+                  "request_id": "needs-1",
+                  "request_revision": 2
+                }
+              },
+              {
+                "schema_version": 2,
+                "evidence_id": "book-local:costs.order.tax",
+                "source_id": "source-book-local",
+                "product_id": "listing-book-local",
+                "variant_id": "sku-book-local",
+                "scope": "route",
+                "branch_id": null,
+                "route_id": "route-book-local",
+                "field_path": "costs.order.tax",
+                "origin_url": "https://book-local.example/book-local",
+                "final_url": "https://book-local.example/book-local",
+                "observed_at": "2026-11-16T12:00:30Z",
+                "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "adapter_version": "example-v1",
+                "json_pointer": null,
+                "excerpt": "Synthetic observation for costs.order.tax",
+                "conflicts": [],
+                "origin": "runtime",
+                "corpus_version": "corpus-1",
+                "index_version": "index-1",
+                "run": {
+                  "run_id": "run-new",
+                  "run_revision": 1,
+                  "request_id": "needs-1",
+                  "request_revision": 2
+                }
+              },
+              {
+                "schema_version": 2,
+                "evidence_id": "book-local:costs.order.shipping",
+                "source_id": "source-book-local",
+                "product_id": "listing-book-local",
+                "variant_id": "sku-book-local",
+                "scope": "route",
+                "branch_id": null,
+                "route_id": "route-book-local",
+                "field_path": "costs.order.shipping",
+                "origin_url": "https://book-local.example/book-local",
+                "final_url": "https://book-local.example/book-local",
+                "observed_at": "2026-11-16T12:00:30Z",
+                "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "adapter_version": "example-v1",
+                "json_pointer": null,
+                "excerpt": "Synthetic observation for costs.order.shipping",
+                "conflicts": [],
+                "origin": "runtime",
+                "corpus_version": "corpus-1",
+                "index_version": "index-1",
+                "run": {
+                  "run_id": "run-new",
+                  "run_revision": 1,
+                  "request_id": "needs-1",
+                  "request_revision": 2
+                }
+              }
+            ]
+          },
+          "cost": {
+            "status": "verified",
+            "total": {
+              "amount": "930",
+              "currency": "USD"
+            },
+            "budget_conversion": null
+          },
+          "verification": {
+            "checked_at": "2026-11-16T12:00:40Z",
+            "run": {
+              "run_id": "run-new",
+              "run_revision": 1,
+              "request_id": "needs-1",
+              "request_revision": 2
+            }
+          }
+        },
+        "additional_sellers": []
+      }
+    ],
+    "uncertain": [
+      {
+        "status": "uncertain",
+        "offer": {
+          "schema_version": 2,
+          "offer_id": "book-forward",
+          "retailer_id": "retailer-book-forward",
+          "source_id": "source-book-forward",
+          "source_product_id": "listing-book-forward",
+          "source_variant_id": "sku-book-forward",
+          "seller": {
+            "seller_id": "book-forward",
+            "name": "Book-Forward",
+            "market": "US"
+          },
+          "fulfiller_id": null,
+          "variant": {
+            "schema_version": 2,
+            "variant_id": "book-u7-16-512",
+            "product": {
+              "product_id": "product-laptop",
+              "category": "laptop",
+              "manufacturer": "Example",
+              "model": "Scout Book"
+            },
+            "specs": {
+              "category": "laptop",
+              "cpu": {
+                "state": "known",
+                "value": "Example U7",
+                "alternatives": [],
+                "reason": null,
+                "evidence_ids": [
+                  "book-forward:variant.specs.cpu"
+                ]
+              },
+              "ram_gb": {
+                "state": "known",
+                "value": 16,
+                "alternatives": [],
+                "reason": null,
+                "evidence_ids": [
+                  "book-forward:variant.specs.ram_gb"
+                ]
+              },
+              "storage_gb": {
+                "state": "known",
+                "value": 512,
+                "alternatives": [],
+                "reason": null,
+                "evidence_ids": [
+                  "book-forward:variant.specs.storage_gb"
+                ]
+              },
+              "gpu": null,
+              "operating_system": null,
+              "display_inches": null,
+              "display_width_px": null,
+              "display_height_px": null,
+              "display_refresh_hz": null,
+              "display_panel": null,
+              "display_touchscreen": null
+            },
+            "color": null
+          },
+          "listing_url": "https://book-forward.example/book-forward",
+          "route": {
+            "kind": "forwarded",
+            "route_id": "route-book-forward",
+            "retailer_leg": {
+              "origin": {
+                "country": "US",
+                "city": null,
+                "postal_code": null
+              },
+              "destination": {
+                "country": "US",
+                "city": "Wilmington",
+                "postal_code": null
+              },
+              "item_eligible": {
+                "state": "known",
+                "value": true,
+                "alternatives": [],
+                "reason": null,
+                "evidence_ids": [
+                  "book-forward:route.retailer_leg.item_eligible"
+                ]
+              }
+            },
+            "forwarding_leg": {
+              "origin": {
+                "country": "US",
+                "city": "Wilmington",
+                "postal_code": null
+              },
+              "destination": {
+                "country": "LB",
+                "city": "Beirut",
+                "postal_code": null
+              },
+              "item_eligible": {
+                "state": "known",
+                "value": true,
+                "alternatives": [],
+                "reason": null,
+                "evidence_ids": [
+                  "book-forward:route.forwarding_leg.item_eligible"
+                ]
+              }
+            },
+            "forwarder_id": "example-forwarder",
+            "package": {
+              "weight_g": 2400,
+              "length_mm": null,
+              "width_mm": null,
+              "height_mm": null
+            }
+          },
+          "price": {
+            "state": "known",
+            "value": {
+              "amount": "900",
+              "currency": "USD"
+            },
+            "alternatives": [],
+            "reason": null,
+            "evidence_ids": [
+              "book-forward:price"
+            ]
+          },
+          "stock": {
+            "state": "known",
+            "value": true,
+            "alternatives": [],
+            "reason": null,
+            "evidence_ids": [
+              "book-forward:stock"
+            ]
+          },
+          "purchasable": {
+            "state": "known",
+            "value": true,
+            "alternatives": [],
+            "reason": null,
+            "evidence_ids": [
+              "book-forward:purchasable"
+            ]
+          },
+          "condition": {
+            "state": "known",
+            "value": "new",
+            "alternatives": [],
+            "reason": null,
+            "evidence_ids": [
+              "book-forward:condition"
+            ]
+          },
+          "activation": null,
+          "payment": null,
+          "warranty": null,
+          "arrival": null,
+          "costs": [
+            {
+              "schema_version": 2,
+              "kind": "tax",
+              "leg": "order",
+              "state": "unknown",
+              "amount": null,
+              "reason": "No applicable published amount",
+              "conditions": [],
+              "evidence_ids": [],
+              "valid_until": null
+            },
+            {
+              "schema_version": 2,
+              "kind": "shipping",
+              "leg": "retailer",
+              "state": "included",
+              "amount": null,
+              "reason": null,
+              "conditions": [],
+              "evidence_ids": [
+                "book-forward:costs.retailer.shipping"
+              ],
+              "valid_until": null
+            },
+            {
+              "schema_version": 2,
+              "kind": "shipping",
+              "leg": "forwarding",
+              "state": "additional",
+              "amount": {
+                "amount": "40",
+                "currency": "USD"
+              },
+              "reason": null,
+              "conditions": [],
+              "evidence_ids": [
+                "book-forward:costs.forwarding.shipping"
+              ],
+              "valid_until": null
+            },
+            {
+              "schema_version": 2,
+              "kind": "duty",
+              "leg": "order",
+              "state": "unknown",
+              "amount": null,
+              "reason": "No applicable published amount",
+              "conditions": [],
+              "evidence_ids": [],
+              "valid_until": null
+            },
+            {
+              "schema_version": 2,
+              "kind": "customs_handling",
+              "leg": "order",
+              "state": "unknown",
+              "amount": null,
+              "reason": "No applicable published amount",
+              "conditions": [],
+              "evidence_ids": [],
+              "valid_until": null
+            }
+          ],
+          "evidence": [
+            {
+              "schema_version": 2,
+              "evidence_id": "book-forward:route.retailer_leg.item_eligible",
+              "source_id": "source-book-forward",
+              "product_id": "listing-book-forward",
+              "variant_id": "sku-book-forward",
+              "scope": "route",
+              "branch_id": null,
+              "route_id": "route-book-forward",
+              "field_path": "route.retailer_leg.item_eligible",
+              "origin_url": "https://book-forward.example/book-forward",
+              "final_url": "https://book-forward.example/book-forward",
+              "observed_at": "2026-11-16T12:00:30Z",
+              "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "adapter_version": "example-v1",
+              "json_pointer": null,
+              "excerpt": "Synthetic observation for route.retailer_leg.item_eligible",
+              "conflicts": [],
+              "origin": "bootstrap",
+              "corpus_version": "corpus-1",
+              "index_version": "index-1",
+              "run": null
+            },
+            {
+              "schema_version": 2,
+              "evidence_id": "book-forward:route.forwarding_leg.item_eligible",
+              "source_id": "source-book-forward",
+              "product_id": "listing-book-forward",
+              "variant_id": "sku-book-forward",
+              "scope": "route",
+              "branch_id": null,
+              "route_id": "route-book-forward",
+              "field_path": "route.forwarding_leg.item_eligible",
+              "origin_url": "https://book-forward.example/book-forward",
+              "final_url": "https://book-forward.example/book-forward",
+              "observed_at": "2026-11-16T12:00:30Z",
+              "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "adapter_version": "example-v1",
+              "json_pointer": null,
+              "excerpt": "Synthetic observation for route.forwarding_leg.item_eligible",
+              "conflicts": [],
+              "origin": "bootstrap",
+              "corpus_version": "corpus-1",
+              "index_version": "index-1",
+              "run": null
+            },
+            {
+              "schema_version": 2,
+              "evidence_id": "book-forward:variant.specs.cpu",
+              "source_id": "source-book-forward",
+              "product_id": "listing-book-forward",
+              "variant_id": "sku-book-forward",
+              "scope": "variant",
+              "branch_id": null,
+              "route_id": null,
+              "field_path": "variant.specs.cpu",
+              "origin_url": "https://book-forward.example/book-forward",
+              "final_url": "https://book-forward.example/book-forward",
+              "observed_at": "2026-11-16T12:00:30Z",
+              "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "adapter_version": "example-v1",
+              "json_pointer": null,
+              "excerpt": "Synthetic observation for variant.specs.cpu",
+              "conflicts": [],
+              "origin": "bootstrap",
+              "corpus_version": "corpus-1",
+              "index_version": "index-1",
+              "run": null
+            },
+            {
+              "schema_version": 2,
+              "evidence_id": "book-forward:variant.specs.ram_gb",
+              "source_id": "source-book-forward",
+              "product_id": "listing-book-forward",
+              "variant_id": "sku-book-forward",
+              "scope": "variant",
+              "branch_id": null,
+              "route_id": null,
+              "field_path": "variant.specs.ram_gb",
+              "origin_url": "https://book-forward.example/book-forward",
+              "final_url": "https://book-forward.example/book-forward",
+              "observed_at": "2026-11-16T12:00:30Z",
+              "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "adapter_version": "example-v1",
+              "json_pointer": null,
+              "excerpt": "Synthetic observation for variant.specs.ram_gb",
+              "conflicts": [],
+              "origin": "bootstrap",
+              "corpus_version": "corpus-1",
+              "index_version": "index-1",
+              "run": null
+            },
+            {
+              "schema_version": 2,
+              "evidence_id": "book-forward:variant.specs.storage_gb",
+              "source_id": "source-book-forward",
+              "product_id": "listing-book-forward",
+              "variant_id": "sku-book-forward",
+              "scope": "variant",
+              "branch_id": null,
+              "route_id": null,
+              "field_path": "variant.specs.storage_gb",
+              "origin_url": "https://book-forward.example/book-forward",
+              "final_url": "https://book-forward.example/book-forward",
+              "observed_at": "2026-11-16T12:00:30Z",
+              "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "adapter_version": "example-v1",
+              "json_pointer": null,
+              "excerpt": "Synthetic observation for variant.specs.storage_gb",
+              "conflicts": [],
+              "origin": "bootstrap",
+              "corpus_version": "corpus-1",
+              "index_version": "index-1",
+              "run": null
+            },
+            {
+              "schema_version": 2,
+              "evidence_id": "book-forward:price",
+              "source_id": "source-book-forward",
+              "product_id": "listing-book-forward",
+              "variant_id": "sku-book-forward",
+              "scope": "variant",
+              "branch_id": null,
+              "route_id": null,
+              "field_path": "price",
+              "origin_url": "https://book-forward.example/book-forward",
+              "final_url": "https://book-forward.example/book-forward",
+              "observed_at": "2026-11-16T12:00:30Z",
+              "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "adapter_version": "example-v1",
+              "json_pointer": null,
+              "excerpt": "Synthetic observation for price",
+              "conflicts": [],
+              "origin": "bootstrap",
+              "corpus_version": "corpus-1",
+              "index_version": "index-1",
+              "run": null
+            },
+            {
+              "schema_version": 2,
+              "evidence_id": "book-forward:stock",
+              "source_id": "source-book-forward",
+              "product_id": "listing-book-forward",
+              "variant_id": "sku-book-forward",
+              "scope": "variant",
+              "branch_id": null,
+              "route_id": null,
+              "field_path": "stock",
+              "origin_url": "https://book-forward.example/book-forward",
+              "final_url": "https://book-forward.example/book-forward",
+              "observed_at": "2026-11-16T12:00:30Z",
+              "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "adapter_version": "example-v1",
+              "json_pointer": null,
+              "excerpt": "Synthetic observation for stock",
+              "conflicts": [],
+              "origin": "bootstrap",
+              "corpus_version": "corpus-1",
+              "index_version": "index-1",
+              "run": null
+            },
+            {
+              "schema_version": 2,
+              "evidence_id": "book-forward:purchasable",
+              "source_id": "source-book-forward",
+              "product_id": "listing-book-forward",
+              "variant_id": "sku-book-forward",
+              "scope": "variant",
+              "branch_id": null,
+              "route_id": null,
+              "field_path": "purchasable",
+              "origin_url": "https://book-forward.example/book-forward",
+              "final_url": "https://book-forward.example/book-forward",
+              "observed_at": "2026-11-16T12:00:30Z",
+              "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "adapter_version": "example-v1",
+              "json_pointer": null,
+              "excerpt": "Synthetic observation for purchasable",
+              "conflicts": [],
+              "origin": "bootstrap",
+              "corpus_version": "corpus-1",
+              "index_version": "index-1",
+              "run": null
+            },
+            {
+              "schema_version": 2,
+              "evidence_id": "book-forward:condition",
+              "source_id": "source-book-forward",
+              "product_id": "listing-book-forward",
+              "variant_id": "sku-book-forward",
+              "scope": "variant",
+              "branch_id": null,
+              "route_id": null,
+              "field_path": "condition",
+              "origin_url": "https://book-forward.example/book-forward",
+              "final_url": "https://book-forward.example/book-forward",
+              "observed_at": "2026-11-16T12:00:30Z",
+              "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "adapter_version": "example-v1",
+              "json_pointer": null,
+              "excerpt": "Synthetic observation for condition",
+              "conflicts": [],
+              "origin": "bootstrap",
+              "corpus_version": "corpus-1",
+              "index_version": "index-1",
+              "run": null
+            },
+            {
+              "schema_version": 2,
+              "evidence_id": "book-forward:costs.retailer.shipping",
+              "source_id": "source-book-forward",
+              "product_id": "listing-book-forward",
+              "variant_id": "sku-book-forward",
+              "scope": "route",
+              "branch_id": null,
+              "route_id": "route-book-forward",
+              "field_path": "costs.retailer.shipping",
+              "origin_url": "https://book-forward.example/book-forward",
+              "final_url": "https://book-forward.example/book-forward",
+              "observed_at": "2026-11-16T12:00:30Z",
+              "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "adapter_version": "example-v1",
+              "json_pointer": null,
+              "excerpt": "Synthetic observation for costs.retailer.shipping",
+              "conflicts": [],
+              "origin": "bootstrap",
+              "corpus_version": "corpus-1",
+              "index_version": "index-1",
+              "run": null
+            },
+            {
+              "schema_version": 2,
+              "evidence_id": "book-forward:costs.forwarding.shipping",
+              "source_id": "source-book-forward",
+              "product_id": "listing-book-forward",
+              "variant_id": "sku-book-forward",
+              "scope": "route",
+              "branch_id": null,
+              "route_id": "route-book-forward",
+              "field_path": "costs.forwarding.shipping",
+              "origin_url": "https://book-forward.example/book-forward",
+              "final_url": "https://book-forward.example/book-forward",
+              "observed_at": "2026-11-16T12:00:30Z",
+              "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "adapter_version": "example-v1",
+              "json_pointer": null,
+              "excerpt": "Synthetic observation for costs.forwarding.shipping",
+              "conflicts": [],
+              "origin": "bootstrap",
+              "corpus_version": "corpus-1",
+              "index_version": "index-1",
+              "run": null
+            }
+          ]
+        },
+        "reasons": [
+          "Tax and import charges remain unpublished"
+        ],
+        "cost": {
+          "status": "incomplete",
+          "known_subtotal": {
+            "amount": "940",
+            "currency": "USD"
+          },
+          "missing": [
+            "import tax",
+            "customs duty"
+          ]
+        }
+      }
+    ]
+  },
+  "previous": {
+    "schema_version": 2,
+    "run": {
+      "run_id": "run-old",
+      "run_revision": 1,
+      "request_id": "needs-1",
+      "request_revision": 1
+    },
+    "request": {
+      "schema_version": 2,
+      "request_id": "needs-1",
+      "revision": 1,
+      "intent": {
+        "kind": "needs",
+        "description": "Engineering laptop delivered to Beirut with good battery life",
+        "required_software": [
+          "CAD"
+        ]
+      },
+      "refinement_note": null,
+      "requirements": {
+        "category": "laptop",
+        "min_ram_gb": 16,
+        "min_storage_gb": null,
+        "cpu": null,
+        "gpu": null,
+        "operating_system": null
+      },
+      "budget": {
+        "target": {
+          "amount": "900",
+          "currency": "USD"
+        },
+        "maximum": null
+      },
+      "preferences": [
+        "battery",
+        "portability"
+      ],
+      "allowed_colors": [],
+      "payment": null,
+      "allowed_conditions": [
+        "new"
+      ],
+      "market_scope": {
+        "include_international": false,
+        "international_markets": []
+      },
+      "fulfillment": {
+        "destination": {
+          "country": "LB",
+          "city": "Beirut",
+          "postal_code": null
+        },
+        "mode": "delivery",
+        "branch_id": null,
+        "deadline": null
+      },
+      "warranty_requirement": null
+    },
+    "status": "running",
+    "phase": "research",
+    "started_at": "2026-11-16T11:58:00Z",
+    "updated_at": "2026-11-16T11:58:30Z",
+    "finished_at": null,
+    "stop_reason": null,
+    "clarification": null,
+    "coverage": {
+      "discovered": 1,
+      "attempted": 0,
+      "retrieved": 0,
+      "qualifying": 0
+    },
+    "source_outcomes": [],
+    "provisional": [
+      {
+        "status": "provisional",
+        "offer": {
+          "schema_version": 2,
+          "offer_id": "book-other",
+          "retailer_id": "retailer-book-other",
+          "source_id": "source-book-other",
+          "source_product_id": "listing-book-other",
+          "source_variant_id": "sku-book-other",
+          "seller": {
+            "seller_id": "book-other",
+            "name": "Book-Other",
+            "market": "LB"
+          },
+          "fulfiller_id": null,
+          "variant": {
+            "schema_version": 2,
+            "variant_id": "book-u7-16-512",
+            "product": {
+              "product_id": "product-laptop",
+              "category": "laptop",
+              "manufacturer": "Example",
+              "model": "Scout Book"
+            },
+            "specs": {
+              "category": "laptop",
+              "cpu": {
+                "state": "known",
+                "value": "Example U7",
+                "alternatives": [],
+                "reason": null,
+                "evidence_ids": [
+                  "book-other:variant.specs.cpu"
+                ]
+              },
+              "ram_gb": {
+                "state": "known",
+                "value": 16,
+                "alternatives": [],
+                "reason": null,
+                "evidence_ids": [
+                  "book-other:variant.specs.ram_gb"
+                ]
+              },
+              "storage_gb": {
+                "state": "known",
+                "value": 512,
+                "alternatives": [],
+                "reason": null,
+                "evidence_ids": [
+                  "book-other:variant.specs.storage_gb"
+                ]
+              },
+              "gpu": null,
+              "operating_system": null,
+              "display_inches": null,
+              "display_width_px": null,
+              "display_height_px": null,
+              "display_refresh_hz": null,
+              "display_panel": null,
+              "display_touchscreen": null
+            },
+            "color": null
+          },
+          "listing_url": "https://book-other.example/book-other",
+          "route": {
+            "kind": "direct",
+            "route_id": "route-book-other",
+            "origin_country": "LB",
+            "destination": {
+              "country": "LB",
+              "city": "Beirut",
+              "postal_code": null
+            },
+            "item_eligible": {
+              "state": "known",
+              "value": true,
+              "alternatives": [],
+              "reason": null,
+              "evidence_ids": [
+                "book-other:route.item_eligible"
+              ]
+            }
+          },
+          "price": {
+            "state": "known",
+            "value": {
+              "amount": "890",
+              "currency": "USD"
+            },
+            "alternatives": [],
+            "reason": null,
+            "evidence_ids": [
+              "book-other:price"
+            ]
+          },
+          "stock": {
+            "state": "known",
+            "value": true,
+            "alternatives": [],
+            "reason": null,
+            "evidence_ids": [
+              "book-other:stock"
+            ]
+          },
+          "purchasable": {
+            "state": "known",
+            "value": true,
+            "alternatives": [],
+            "reason": null,
+            "evidence_ids": [
+              "book-other:purchasable"
+            ]
+          },
+          "condition": {
+            "state": "known",
+            "value": "new",
+            "alternatives": [],
+            "reason": null,
+            "evidence_ids": [
+              "book-other:condition"
+            ]
+          },
+          "activation": null,
+          "payment": null,
+          "warranty": null,
+          "arrival": null,
+          "costs": [
+            {
+              "schema_version": 2,
+              "kind": "tax",
+              "leg": "order",
+              "state": "included",
+              "amount": null,
+              "reason": null,
+              "conditions": [],
+              "evidence_ids": [
+                "book-other:costs.order.tax"
+              ],
+              "valid_until": null
+            },
+            {
+              "schema_version": 2,
+              "kind": "shipping",
+              "leg": "order",
+              "state": "additional",
+              "amount": {
+                "amount": "10",
+                "currency": "USD"
+              },
+              "reason": null,
+              "conditions": [],
+              "evidence_ids": [
+                "book-other:costs.order.shipping"
+              ],
+              "valid_until": null
+            }
+          ],
+          "evidence": [
+            {
+              "schema_version": 2,
+              "evidence_id": "book-other:route.item_eligible",
+              "source_id": "source-book-other",
+              "product_id": "listing-book-other",
+              "variant_id": "sku-book-other",
+              "scope": "route",
+              "branch_id": null,
+              "route_id": "route-book-other",
+              "field_path": "route.item_eligible",
+              "origin_url": "https://book-other.example/book-other",
+              "final_url": "https://book-other.example/book-other",
+              "observed_at": "2026-11-15T12:00:30Z",
+              "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "adapter_version": "example-v1",
+              "json_pointer": null,
+              "excerpt": "Synthetic observation for route.item_eligible",
+              "conflicts": [],
+              "origin": "bootstrap",
+              "corpus_version": "corpus-1",
+              "index_version": "index-1",
+              "run": null
+            },
+            {
+              "schema_version": 2,
+              "evidence_id": "book-other:variant.specs.cpu",
+              "source_id": "source-book-other",
+              "product_id": "listing-book-other",
+              "variant_id": "sku-book-other",
+              "scope": "variant",
+              "branch_id": null,
+              "route_id": null,
+              "field_path": "variant.specs.cpu",
+              "origin_url": "https://book-other.example/book-other",
+              "final_url": "https://book-other.example/book-other",
+              "observed_at": "2026-11-15T12:00:30Z",
+              "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "adapter_version": "example-v1",
+              "json_pointer": null,
+              "excerpt": "Synthetic observation for variant.specs.cpu",
+              "conflicts": [],
+              "origin": "bootstrap",
+              "corpus_version": "corpus-1",
+              "index_version": "index-1",
+              "run": null
+            },
+            {
+              "schema_version": 2,
+              "evidence_id": "book-other:variant.specs.ram_gb",
+              "source_id": "source-book-other",
+              "product_id": "listing-book-other",
+              "variant_id": "sku-book-other",
+              "scope": "variant",
+              "branch_id": null,
+              "route_id": null,
+              "field_path": "variant.specs.ram_gb",
+              "origin_url": "https://book-other.example/book-other",
+              "final_url": "https://book-other.example/book-other",
+              "observed_at": "2026-11-15T12:00:30Z",
+              "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "adapter_version": "example-v1",
+              "json_pointer": null,
+              "excerpt": "Synthetic observation for variant.specs.ram_gb",
+              "conflicts": [],
+              "origin": "bootstrap",
+              "corpus_version": "corpus-1",
+              "index_version": "index-1",
+              "run": null
+            },
+            {
+              "schema_version": 2,
+              "evidence_id": "book-other:variant.specs.storage_gb",
+              "source_id": "source-book-other",
+              "product_id": "listing-book-other",
+              "variant_id": "sku-book-other",
+              "scope": "variant",
+              "branch_id": null,
+              "route_id": null,
+              "field_path": "variant.specs.storage_gb",
+              "origin_url": "https://book-other.example/book-other",
+              "final_url": "https://book-other.example/book-other",
+              "observed_at": "2026-11-15T12:00:30Z",
+              "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "adapter_version": "example-v1",
+              "json_pointer": null,
+              "excerpt": "Synthetic observation for variant.specs.storage_gb",
+              "conflicts": [],
+              "origin": "bootstrap",
+              "corpus_version": "corpus-1",
+              "index_version": "index-1",
+              "run": null
+            },
+            {
+              "schema_version": 2,
+              "evidence_id": "book-other:price",
+              "source_id": "source-book-other",
+              "product_id": "listing-book-other",
+              "variant_id": "sku-book-other",
+              "scope": "variant",
+              "branch_id": null,
+              "route_id": null,
+              "field_path": "price",
+              "origin_url": "https://book-other.example/book-other",
+              "final_url": "https://book-other.example/book-other",
+              "observed_at": "2026-11-15T12:00:30Z",
+              "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "adapter_version": "example-v1",
+              "json_pointer": null,
+              "excerpt": "Synthetic observation for price",
+              "conflicts": [],
+              "origin": "bootstrap",
+              "corpus_version": "corpus-1",
+              "index_version": "index-1",
+              "run": null
+            },
+            {
+              "schema_version": 2,
+              "evidence_id": "book-other:stock",
+              "source_id": "source-book-other",
+              "product_id": "listing-book-other",
+              "variant_id": "sku-book-other",
+              "scope": "variant",
+              "branch_id": null,
+              "route_id": null,
+              "field_path": "stock",
+              "origin_url": "https://book-other.example/book-other",
+              "final_url": "https://book-other.example/book-other",
+              "observed_at": "2026-11-15T12:00:30Z",
+              "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "adapter_version": "example-v1",
+              "json_pointer": null,
+              "excerpt": "Synthetic observation for stock",
+              "conflicts": [],
+              "origin": "bootstrap",
+              "corpus_version": "corpus-1",
+              "index_version": "index-1",
+              "run": null
+            },
+            {
+              "schema_version": 2,
+              "evidence_id": "book-other:purchasable",
+              "source_id": "source-book-other",
+              "product_id": "listing-book-other",
+              "variant_id": "sku-book-other",
+              "scope": "variant",
+              "branch_id": null,
+              "route_id": null,
+              "field_path": "purchasable",
+              "origin_url": "https://book-other.example/book-other",
+              "final_url": "https://book-other.example/book-other",
+              "observed_at": "2026-11-15T12:00:30Z",
+              "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "adapter_version": "example-v1",
+              "json_pointer": null,
+              "excerpt": "Synthetic observation for purchasable",
+              "conflicts": [],
+              "origin": "bootstrap",
+              "corpus_version": "corpus-1",
+              "index_version": "index-1",
+              "run": null
+            },
+            {
+              "schema_version": 2,
+              "evidence_id": "book-other:condition",
+              "source_id": "source-book-other",
+              "product_id": "listing-book-other",
+              "variant_id": "sku-book-other",
+              "scope": "variant",
+              "branch_id": null,
+              "route_id": null,
+              "field_path": "condition",
+              "origin_url": "https://book-other.example/book-other",
+              "final_url": "https://book-other.example/book-other",
+              "observed_at": "2026-11-15T12:00:30Z",
+              "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "adapter_version": "example-v1",
+              "json_pointer": null,
+              "excerpt": "Synthetic observation for condition",
+              "conflicts": [],
+              "origin": "bootstrap",
+              "corpus_version": "corpus-1",
+              "index_version": "index-1",
+              "run": null
+            },
+            {
+              "schema_version": 2,
+              "evidence_id": "book-other:costs.order.tax",
+              "source_id": "source-book-other",
+              "product_id": "listing-book-other",
+              "variant_id": "sku-book-other",
+              "scope": "route",
+              "branch_id": null,
+              "route_id": "route-book-other",
+              "field_path": "costs.order.tax",
+              "origin_url": "https://book-other.example/book-other",
+              "final_url": "https://book-other.example/book-other",
+              "observed_at": "2026-11-15T12:00:30Z",
+              "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "adapter_version": "example-v1",
+              "json_pointer": null,
+              "excerpt": "Synthetic observation for costs.order.tax",
+              "conflicts": [],
+              "origin": "bootstrap",
+              "corpus_version": "corpus-1",
+              "index_version": "index-1",
+              "run": null
+            },
+            {
+              "schema_version": 2,
+              "evidence_id": "book-other:costs.order.shipping",
+              "source_id": "source-book-other",
+              "product_id": "listing-book-other",
+              "variant_id": "sku-book-other",
+              "scope": "route",
+              "branch_id": null,
+              "route_id": "route-book-other",
+              "field_path": "costs.order.shipping",
+              "origin_url": "https://book-other.example/book-other",
+              "final_url": "https://book-other.example/book-other",
+              "observed_at": "2026-11-15T12:00:30Z",
+              "response_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "adapter_version": "example-v1",
+              "json_pointer": null,
+              "excerpt": "Synthetic observation for costs.order.shipping",
+              "conflicts": [],
+              "origin": "bootstrap",
+              "corpus_version": "corpus-1",
+              "index_version": "index-1",
+              "run": null
+            }
+          ]
+        },
+        "observed_at": "2026-11-15T12:00:30Z"
+      }
+    ],
+    "recommendations": [],
+    "uncertain": []
+  }
+}
