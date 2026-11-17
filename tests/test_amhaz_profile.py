@@ -191,6 +191,11 @@ class AuditAndRegistryTripwireTests(unittest.TestCase):
                 self.assertNotIn('amhaz', source['id'].casefold(), REPLACE)
                 self.assertNotIn('amhaz', source['origin'].casefold(), REPLACE)
         self.assertNotIn(amhaz.RETAILER_ID, registry['live_release']['admitted_source_ids'])
+        profiles = json.loads((ROOT / 'config/shared-extraction-profiles.json').read_text(encoding='utf-8'))
+        self.assertTrue(profiles['sources'])
+        for profile in profiles['sources']:
+            with self.subTest(shared_profile=profile['source_id']):
+                self.assertNotIn('amhaz', json.dumps(profile).casefold(), REPLACE)
         with self.assertRaises(PermissionError):
             get_active_source(amhaz.RETAILER_ID)
         self.assertNotIn(amhaz.RETAILER_ID, adapters.ADAPTERS)

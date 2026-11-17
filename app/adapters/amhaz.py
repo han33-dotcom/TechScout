@@ -8,7 +8,8 @@ declares no retrieval capability, supports no category, sends no request and yie
 candidate. docs/source-coverage.md records the evidence and what unblocks it.
 
 The profile is deliberately left out of app.adapters.ADAPTERS and CATALOGS and out of
-config/sources.json, so no run can dispatch to the candidate site.
+config/sources.json and config/shared-extraction-profiles.json, so no run can dispatch to the
+candidate site.
 """
 from dataclasses import dataclass
 

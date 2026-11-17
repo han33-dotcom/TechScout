@@ -177,8 +177,9 @@ site would turn a guess into a seller identity, so #56 ships a blocked profile i
   category and no canonical origin. `PROFILE.search(...)` has the same call shape as the catalog
   readers' `search`, sends no request and returns no candidate. Its result is an `error` with
   one non-retryable `SOURCE_DISABLED` error: "amhaz_official_candidate: business identity is
-  unresolved; no retrieval is configured". The profile is not in `ADAPTERS`, `CATALOGS` or
-  `config/sources.json`, so no run can dispatch to the site.
+  unresolved; no retrieval is configured". The profile is not in `ADAPTERS`, `CATALOGS`,
+  `config/sources.json` or `config/shared-extraction-profiles.json`, so no run can dispatch to
+  the site.
 - **Directory.** The candidate stays an unconfigured lead with `seller_identity` "unresolved".
   "Amhaz", "Amhaz Official", "Amhaz Mobile" and similar names resolve to no directory record.
 - **Capabilities and categories.** None supported. Category leads the audit observed in the
