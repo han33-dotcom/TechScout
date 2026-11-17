@@ -75,14 +75,18 @@ and known action routes are rejected. Existing `allowed_endpoints` still work fo
 calls without a capability reference. Live retailer registrations retain their reviewed
 exact endpoints pending separate validation of broader routes.
 
-## Planned automatic retailer onboarding
+## Automatic retailer onboarding
 
 The [full-product plan](full-product-plan.md#53-automatic-retailer-onboarding-confirmed)
 adds an agent that proposes and tests narrow technical capabilities for newly
-discovered shops. It uses a restricted probe through the source gate. Backend
-validation activates passing capabilities and records the evidence. Teammates
-handle unresolved validation failures, such as shops that need a custom parser.
-The active technical registry continues to control ordinary fetches.
+discovered shops. [Retailer onboarding](retailer-onboarding.md) (#99) implements it:
+- A short-lived probe goes through the source gate.
+- Backend validation activates passing product and variant capabilities in the shared
+  database and records their evidence.
+- Teammates handle unresolved validation failures, such as shops that need a custom parser.
+
+The reviewed file stays authoritative. `ActivationRegistry` adds activated capabilities to
+each fresh registry read, so ordinary fetches still go through the same gate checks.
 
 ## Remaining candidates
 

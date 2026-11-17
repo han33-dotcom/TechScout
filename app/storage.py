@@ -340,6 +340,47 @@ accounting_state = Table(
     Column('payload', JSON, nullable=False),
 )
 
+# Automatic retailer onboarding (app.onboarding, issue #99). The guard row serializes
+# lead claims and capability activation across API and worker processes.
+onboarding_guard = Table('onboarding_guard', metadata, Column('id', Integer, primary_key=True, autoincrement=False))
+
+onboarding_leads = Table(
+    'onboarding_leads', metadata,
+    Column('lead_id', Text, primary_key=True),
+    Column('status', String(12), nullable=False),
+    Column('priority', Integer, nullable=False),
+    Column('attempts', Integer, nullable=False),
+    Column('next_attempt_at', UtcDateTime, nullable=False),
+    Column('lease_token', String(32)),
+    Column('lease_until', UtcDateTime),
+    Column('updated_at', UtcDateTime, nullable=False),
+    Column('payload', JSON, nullable=False),
+    Index('ix_onboarding_leads_status', 'status'),
+)
+
+source_activations = Table(
+    'source_activations', metadata,
+    Column('source_id', String(100), primary_key=True),
+    Column('capability_id', String(100), primary_key=True),
+    Column('version', String(100), primary_key=True),
+    Column('status', String(12), nullable=False),
+    Column('activated_at', UtcDateTime, nullable=False),
+    Column('changed_at', UtcDateTime, nullable=False),
+    Column('payload', JSON, nullable=False),
+    Index('ix_source_activations_status', 'status'),
+)
+
+onboarding_events = Table(
+    'onboarding_events', metadata,
+    Column('event_id', Integer, primary_key=True, autoincrement=True),
+    Column('lead_id', Text, nullable=False),
+    Column('source_id', String(100)),
+    Column('kind', String(20), nullable=False),
+    Column('recorded_at', UtcDateTime, nullable=False),
+    Column('detail', JSON, nullable=False),
+    Index('ix_onboarding_events_lead_id', 'lead_id'),
+)
+
 embedding_calls = Table(
     'embedding_calls', metadata,
     Column('call_id', String(32), primary_key=True),
