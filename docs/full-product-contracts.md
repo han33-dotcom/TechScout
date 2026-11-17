@@ -233,8 +233,8 @@ shared `_PROFILE_FIELDS` table in `app/identity.py` (color is always added), and
 `_tablet_model`, runs beside the monitor and audio rule from #44 (`_specific_model`) in
 `_identity_facts`. A tablet name resolves only when every word is in a closed tablet vocabulary
 and it carries positive evidence of exactly one edition (an ordinal generation, a year, an
-Apple chip or a letters-and-digits model token); ambiguous, contradicting, bundled,
-multi-size and multi-edition names stay unresolved.
+Apple chip, a letters-and-digits model token or a manufacturer part number); ambiguous,
+contradicting, bundled, multi-size and multi-edition names stay unresolved.
 
 
 ### Module interface revision: 2026-11-17 writing context
