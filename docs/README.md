@@ -8,6 +8,8 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 
 ## Documents
 
+- [Mojitech catalog and live-access evidence](mojitech-catalog.md)
+
 - [Private session history and exports](buyer-history.md)
 - [Monitor and audio identity](monitor-audio-identity.md)
 - [Bounded research workers](research-workers.md)

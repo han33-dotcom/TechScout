@@ -30,3 +30,12 @@ def fetch_offers(fetch: Fetch, source_id: str, offer_ids: list[str], query: Cand
 
 def fetch_policy(fetch: Fetch, source_id: str, policy_id: str) -> AdapterResult:
     return get_adapter(source_id).fetch_policy(fetch, policy_id)
+
+
+# Full-product acquisition returns v2 corpus observations; legacy APIs above stay v1.
+CATALOGS = {"mojitech": mojitech.CATALOG}
+
+
+def search_catalog(fetch, source_id, *, category, search, run=None, only=None, corpus_version="catalog-preview-v1"):
+    return CATALOGS[source_id].search(fetch, category=category, search=search, run=run,
+                                      only=only, corpus_version=corpus_version)
