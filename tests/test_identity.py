@@ -793,6 +793,26 @@ class FullProductIdentityTests(unittest.TestCase):
             # Two model tokens.
             ('Samsung', 'Galaxy Tab S8, S8+ 128GB Wi-Fi', 128, 'wifi'),
             ('Samsung', 'Galaxy Tab S9 SM-X710 SM-X810 128GB', 128, 'wifi'),
+            # Other spellings of a shared iPad Pro 11-inch generation: the size, a doubled 'iPad', a
+            # wrong ordinal suffix.
+            ('Apple', 'iPad Pro 11.0" (3rd Gen)', 256, 'wifi'),
+            ('Apple', 'iPad Pro 11,0" 3rd Gen', 256, 'wifi'),
+            ('Apple', 'iPad Pro 11.00-inch (5th generation)', 256, 'wifi'),
+            ('Apple', 'Apple iPad - iPad Pro 11" (3rd generation)', 256, 'wifi'),
+            ('Apple', 'iPad iPad Pro 11-inch 3rd Gen', 256, 'wifi'),
+            ('Apple', 'iPad Pro 11-inch 3th Gen', 256, 'wifi'),
+            ('Apple', 'iPad Pro 11-inch 03rd Gen', 256, 'wifi'),
+            ('Apple', 'iPad 4rd generation', 128, 'wifi'),
+            # A maker that is itself a tablet word is not stripped from the name.
+            ('iPad', 'iPad Air (M2)', 128, 'wifi'),
+            ('Microsoft Surface', 'Microsoft Surface Pro 13" (2024)', 256, 'wifi'),
+            ('Microsoft Surface', 'Microsoft Surface Pro 12.3" m3 4GB RAM 128GB', 128, 'wifi'),
+            # Lenovo lines with words between or joined to the line token, and the Tab M8 (4th Gen) refresh.
+            ('Lenovo', 'Lenovo Tab M10 FHD Plus (3rd Gen)', 128, 'wifi'),
+            ('Lenovo', 'Lenovo Tab M10 FHD+ 3rd Gen', 128, 'wifi'),
+            ('Lenovo', 'Lenovo Tab M10HD 32GB', 32, 'wifi'),
+            ('Lenovo', 'Lenovo Tab M8HD', 128, 'wifi'),
+            ('Lenovo', 'Lenovo Tab M8 (4th Gen)', 32, 'wifi'),
         ]
         for maker, title, storage, connectivity in titles:
             with self.subTest(title=title):
@@ -823,6 +843,10 @@ class FullProductIdentityTests(unittest.TestCase):
                 ('Samsung', 'Galaxy Tab S2 9.7" 2016', 'Galaxy Tab S2 9.7-inch (2016)'),
                 ('Lenovo', 'Tab M8 HD (2019)', 'Lenovo Tab M8 HD 2019'),
                 ('Microsoft', 'Surface Pro 12.3" (5th Gen)', 'Microsoft Surface Pro 12.3-inch 5th Generation'),
+                ('Microsoft Surface', 'Microsoft Surface Pro 12.3" (5th Gen)', 'Surface Pro 12.3-inch 5th Generation'),
+                ('Apple', 'iPad Pro 12.90" (6th generation)', 'iPad Pro 12.9-inch (6th generation)'),
+                ('Lenovo', 'Lenovo Tab M10HD (2nd Gen)', 'Tab M10 HD 2nd Gen'),
+                ('Lenovo', 'Lenovo Tab M8 (4th Gen) 2024', 'Tab M8 4th Gen (2024)'),
                 ('Lenovo', 'Lenovo Legion Tab Y700 (2023)', 'Legion Tab Y700 2023'),
                 ('Huawei', 'MediaPad M5 8.4" 128GB', 'MediaPad M5 8.4-inch 128GB')):
             with self.subTest(left=left_title):
@@ -831,7 +855,8 @@ class FullProductIdentityTests(unittest.TestCase):
                 self.assertEqual(compare_offers(left, right).hardware.outcome, 'confirmed_equivalent')
         # Editions that a name does tell apart stay different.
         for maker, left_title, right_title in (
-                ('Lenovo', 'Lenovo Tab M8 (3rd Gen)', 'Lenovo Tab M8 (4th Gen)'),
+                ('Lenovo', 'Lenovo Tab M8 (3rd Gen)', 'Lenovo Tab M8 (4th Gen) 2024'),
+                ('Lenovo', 'Lenovo Tab M8 (4th Gen) 2023', 'Lenovo Tab M8 (4th Gen) 2024'),
                 ('Lenovo', 'Tab M10 Plus (3rd Gen) TB125FU', 'Tab M10 Plus (3rd Gen) TB128FU'),
                 ('Lenovo', 'Tab M8 HD 2019', 'Tab M8 FHD 2019'),
                 ('Samsung', 'Galaxy Tab S2 9.7" (2015)', 'Galaxy Tab S2 9.7" (2016)'),

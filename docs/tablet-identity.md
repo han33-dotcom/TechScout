@@ -33,20 +33,22 @@ Retail spellings are unified so that the same device compares equal:
 
 | Kind | Spellings | Becomes |
 |---|---|---|
-| Screen size | `11"`, `11''`, `11 in`, `11 inch`, `11″`, curly quotes, a decimal comma (`12,9"`) | `11-inch`, `12.9-inch` |
+| Screen size | `11"`, `11''`, `11 in`, `11 inch`, `11″`, curly quotes, a decimal comma (`12,9"`), trailing zeros (`11.0"`) | `11-inch`, `12.9-inch` |
 | Generation | `10th gen`, `10th-gen`, `Gen 10` | `10th generation` |
 | iPad line | `iPad-Pro`, `iPadPro`, invisible web characters (zero-width spaces, soft hyphens) | `ipad pro` |
 | Chip | `with M2 chip`, `M2 chip`; `A17 Pro` | `m2`; `a17-pro` |
 | Color phrase | `Space Gray`, `Light Gold` | `space-gray`, `light-gold` |
 | Storage and Wi-Fi | `128 GB`, `WiFi` | `128gb`, `wi-fi` |
+| Display suffix | `M10HD`, `M8FHD` | `m10 hd`, `m8 fhd` |
 | Plus | a spaced `+` at the end, or before storage or connection words (`Galaxy Tab S9 +`) | `plus` |
 
 Also:
 - Only 7 to 19.99 inches is read as a screen size, so `2-in-1` is not a size.
 - A dash with spaces on both sides separates parts of a title (`... (M2) - Space Gray`).
 - Parentheses and commas drop out.
-- A leading maker drops out, either the whole evidenced manufacturer or its first word
-  (`Apple` for `Apple Inc.`).
+- A leading maker drops out, word by word: `Apple` or `Apple Inc.` for the evidenced `Apple
+  Inc.`. A maker word that is itself a tablet word stays (`Surface` for `Microsoft Surface`, or a
+  maker evidenced as `iPad`).
 
 ### 2. Checked against the offer's own facts
 
@@ -90,7 +92,8 @@ Extraction is expected to supply the model name itself, not the whole listing ti
 ### 4. Positive evidence of one edition
 
 A name identifies one model only with positive evidence of its edition:
-- an ordinal generation (`10th generation`);
+- an ordinal generation written with its correct suffix (`10th generation`; `3th` and `03rd`
+  leave the name unresolved);
 - a year from 2010 to 2039 (`2024`);
 - an Apple chip (`M2`, `A17 Pro`, `A12Z`);
 - one short model token that joins letters and digits (`S9`, `P11`, `Y700`);
@@ -111,7 +114,7 @@ Some things never count as evidence:
 
 A name is read as an iPad when it contains `iPad` or the evidenced maker starts with `Apple`.
 It then stays unresolved when:
-- `iPad` is missing (`Air M2`);
+- `iPad` is missing (`Air M2`) or appears twice (`iPad - iPad Pro ...`);
 - a line word (`Air`, `Pro`, `mini`) is not right after `iPad` (`iPad M4 Pro`, `iPad 128GB Air`);
 - a base iPad name carries a chip or year that no base iPad had (`iPad 11-inch (M2)`,
   `iPad 2024`): the base line had the A4, A5, A5X, A6X, A9, A10, A12, A13, A14 and A16, and
@@ -137,15 +140,17 @@ A non-Apple name stays unresolved when:
 - **Edition missing.** It names a line sold under one name across several editions, without
   a year or generation: Galaxy Tab S6 Lite, S2 and A7, Lenovo Tab M7, M8, M10 and P11, Fire,
   Redmi Pad and Legion Y700. Words after the line name (`Tab M10 Plus 64GB`) do not hide it.
-- **Part number missing.** It is a Lenovo Tab M10 Plus without a part number, because the 3rd
-  Gen ships on two chips under one name (TB125FU and TB128FU).
+- **Part number missing.** It is a Lenovo Tab M10 Plus (also `M10 FHD Plus`) without a part
+  number, because the 3rd Gen ships on two chips under one name (TB125FU and TB128FU).
+- **Refresh.** It is a Lenovo Tab M8 (4th Gen) without a year or part number, because a 2024
+  refresh kept the name (TB300FU and TB301FU).
 - **HD or FHD missing.** It is an early Lenovo Tab M8 or M10 (a 2019 or 2020 year, or the 1st or
   2nd generation) without `HD` or `FHD`, because those came in both.
 
 ## Limitations
 
-- **The lists are owned, not a catalog.** The multi-size, multi-edition, two-chip and HD
-  lists hold the cases found so far. Another line sold under one name in two sizes, editions,
+- **The lists are owned, not a catalog.** The multi-size, multi-edition, two-chip, refresh
+  and HD lists hold the cases found so far. Another line sold under one name in two sizes, editions,
   radios or chips can still match until it is added, unless the name carries a part number.
   Extraction should supply the manufacturer's part number when a listing shows one.
 - **Spelling differences still compare as different.** Model text is otherwise exact, so the

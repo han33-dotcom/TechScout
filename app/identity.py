@@ -478,13 +478,16 @@ _TABLET_MODEL_TOKEN = re.compile(_TABLET_NOT_TOKEN + r'[a-z]{1,3}\d{1,4}[a-z]{0,
 # Owned lists, not a catalog (see docs/tablet-identity.md):
 # - lines sold in more than one screen size under one name need the size in the name;
 # - lines sold under one name across several editions need a year or a generation;
-# - Lenovo's Tab M10 Plus (3rd Gen) ships on two chips under one name, so it needs a part number;
+# - Lenovo's Tab M10 Plus (3rd Gen) ships on two chips under one name, so an M10 Plus name, with
+#   or without 'FHD' between the words, needs a part number;
+# - Lenovo's Tab M8 (4th Gen) had a 2024 refresh under the same name, so it needs a year or a part
+#   number;
 # - Lenovo's 2019 Tab M8 and M10 came as HD and FHD models, so those editions need 'hd' or 'fhd'.
 _TABLET_SIZED_LINES = re.compile(r'(?<!\w)(?:ipad (?:air|pro)|(?:galaxy|tab|pad) (?:s|a|e|\d{1,2})|s2|mediapad'
                                  r'|matepad|yoga|surface pro)(?!\w)')
 _TABLET_DATED_LINES = re.compile(r'(?<!\w)(?:s6 lite|s2|a7|m(?:7|8|10)|p11|fire|redmi pad|y700)(?!\w)')
-_TABLET_PART_LINES = re.compile(r'(?<!\w)m10 plus(?!\w)')
-_TABLET_HD_LINES = re.compile(r'(?<!\w)m(?:8|10)(?! plus)(?!\w)')
+# A display suffix joined to a model token ('m10hd', 'm8fhd') is its own word.
+_TABLET_HD_SUFFIX = re.compile(r'(?<!\w)([a-z]{1,3}\d{1,4})(f?hd)(?!\w)')
 # The base iPad's chips and years (iPad to iPad (A16)); a base name with any other chip or year names
 # an Air, Pro or mini without its line. Shared by two generations: the A10 (6th and 7th) and 2012 (3rd
 # and 4th); the iPad mini's A7 (mini 2 and 3); and the iPad Pro 11-inch's 3rd to 6th generation,
@@ -537,6 +540,11 @@ def _identity_value(path: str, value):
     return _identity_text(value) or None
 
 
+def _size_number(number: str) -> str:
+    """One spelling of a screen size: '11.0' and '11.00' are '11', '12.90' is '12.9'."""
+    return number.rstrip('0').rstrip('.') if '.' in number else number
+
+
 def _ordinal(number: int) -> str:
     suffix = 'th' if 10 <= number % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(number % 10, 'th')
     return f'{number}{suffix}'
@@ -550,7 +558,7 @@ def _tablet_editions(words: list[str], apple: bool) -> dict[str, list[str]] | No
         before = words[index - 1] if index else ''
         after = words[index + 1] if index + 1 < len(words) else ''
         if _TABLET_ORDINAL_WORD.fullmatch(word):
-            if after != 'generation':
+            if after != 'generation' or word != _ordinal(int(word[:-2])):  # not '3th' or '03rd'
                 return None
             found['generation'].append(word)
         elif word == 'generation':
@@ -586,7 +594,7 @@ def _tablet_model(model: str, offer: v2.Offer, maker: str | None) -> str | None:
     Every word must be in the closed tablet vocabulary, and the name needs positive evidence of
     exactly one edition: one generation, year or Apple chip, at most one model token and one part
     number. Evidence shared by two editions does not count (_IPAD_SHARED). A name also stays
-    unresolved when it is an iPad name without 'iPad' or with its line word out of place, a base
+    unresolved when it is an iPad name without exactly one 'iPad' or with its line word out of place, a base
     iPad with another line's chip or year, a name with two sizes, a multi-size line without its
     size, a multi-edition line without a year or generation, a non-Apple cellular name without
     LTE/3G/4G/5G, a non-Apple name whose only evidence is a year and no size, or a Surface name
@@ -599,7 +607,7 @@ def _tablet_model(model: str, offer: v2.Offer, maker: str | None) -> str | None:
     text = ''.join(c for c in text if unicodedata.category(c) != 'Cf')  # zero-width and soft hyphens
     text = _TABLET_DECIMAL_COMMA.sub('.', text)
     text = _TABLET_IPAD_LINE.sub(lambda m: f'ipad {m.group(1)}', text)
-    text = _TABLET_SIZE.sub(lambda m: f'{m.group(1)}-inch', text)
+    text = _TABLET_SIZE.sub(lambda m: _size_number(m.group(1)) + '-inch', text)
     text = _TABLET_ORDINAL.sub(lambda m: f'{m.group(1)}{m.group(2)} generation', text)
     text = _TABLET_GEN_NUMBER.sub(lambda m: f'{_ordinal(int(m.group(1)))} generation', text)
     text = _TABLET_CHIP_PHRASE.sub(lambda m: m.group(1), text)
@@ -608,6 +616,7 @@ def _tablet_model(model: str, offer: v2.Offer, maker: str | None) -> str | None:
     text = _TABLET_WIFI.sub('wi-fi', text)
     text = _TABLET_UNIT.sub(lambda m: m.group(1) + m.group(2), text)
     text = _TABLET_SPACED_PLUS.sub(' plus', text)
+    text = _TABLET_HD_SUFFIX.sub(r'\1 \2', text)
     specs = offer.variant.specs
     stated = [(amount, unit or 'gb') for amount, unit in _TABLET_PAIR.findall(text)]
     for amount, unit in [*stated, *_TABLET_STORAGE.findall(text)]:
@@ -619,12 +628,12 @@ def _tablet_model(model: str, offer: v2.Offer, maker: str | None) -> str | None:
         return None
     words = re.sub(r'[(),]', ' ', text).split()
     maker_words = (maker or '').split()
-    if maker_words and words[:len(maker_words)] == maker_words:
-        words = words[len(maker_words):]
-    elif maker_words and words[:1] == maker_words[:1]:
-        words = words[1:]  # 'Apple' for the evidenced 'Apple Inc.'
+    for word in maker_words:  # 'Apple' or 'Apple Inc.' for the evidenced 'Apple Inc.'; never 'Surface'
+        if not words or words[0] != word or word in _TABLET_WORDS:
+            break
+        words = words[1:]
     apple = 'ipad' in words or maker_words[:1] == ['apple']
-    if apple and ('ipad' not in words or any(
+    if apple and (words.count('ipad') != 1 or any(
             word in ('air', 'pro', 'mini') and (index == 0 or words[index - 1] != 'ipad')
             for index, word in enumerate(words))):
         return None
@@ -652,10 +661,13 @@ def _tablet_model(model: str, offer: v2.Offer, maker: str | None) -> str | None:
         if (specs.connectivity.state == 'known' and specs.connectivity.value == 'cellular'
                 and not {'lte', '3g', '4g', '5g'} & set(words)):
             return None
+        present = {*words, *editions['generation']}
         if (evidence and evidence <= years and not sizes) \
                 or (_TABLET_DATED_LINES.search(text) and not (editions['generation'] or years)) \
-                or (_TABLET_PART_LINES.search(text) and not editions['part']) \
-                or (_TABLET_HD_LINES.search(text) and not {'hd', 'fhd'} & set(words) and not later):
+                or ({'m10', 'plus'} <= present and not editions['part']) \
+                or ({'m8', '4th'} <= present and not (years or editions['part'])) \
+                or ({'m8', 'm10'} & present and 'plus' not in present and not {'hd', 'fhd'} & present
+                    and not later):
             return None
     return text if evidence else None
 
