@@ -28,6 +28,15 @@
       "display_touchscreen": false
     }
   },
+  "tablet": {
+    "manufacturer": "Apple",
+    "model": "iPad Air 11-inch (M2)",
+    "color": "Space Gray",
+    "specs": {
+      "storage_gb": 128,
+      "connectivity": "wifi"
+    }
+  },
   "cases": [
     {
       "name": "phone spelling",
@@ -321,6 +330,190 @@
         "specs.gpu": null
       },
       "outcome": "different_configuration"
+    },
+    {
+      "name": "tablet cross-retailer spelling",
+      "category": "tablet",
+      "changes": {
+        "manufacturer": "APPLE",
+        "model": "Apple iPad Air 11\" (M2)",
+        "color": "space grey"
+      },
+      "outcome": "confirmed_equivalent"
+    },
+    {
+      "name": "tablet size and dash spelling",
+      "category": "tablet",
+      "changes": {
+        "model": "ipad air 11‑inch m2"
+      },
+      "outcome": "confirmed_equivalent"
+    },
+    {
+      "name": "tablet storage and connection words stay in the name",
+      "category": "tablet",
+      "changes": {
+        "model": "iPad Air 11-inch (M2) 128GB Wi-Fi"
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "tablet stylus support is not identity",
+      "category": "tablet",
+      "changes": {
+        "specs.stylus_support": true
+      },
+      "outcome": "confirmed_equivalent"
+    },
+    {
+      "name": "tablet chip generation",
+      "category": "tablet",
+      "changes": {
+        "model": "iPad Air 11-inch (M3)"
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "tablet screen size",
+      "category": "tablet",
+      "changes": {
+        "model": "iPad Air 13-inch (M2)"
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "tablet product line",
+      "category": "tablet",
+      "changes": {
+        "model": "iPad Pro 11-inch (M2)"
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "tablet storage",
+      "category": "tablet",
+      "changes": {
+        "specs.storage_gb": 256
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "tablet cellular",
+      "category": "tablet",
+      "changes": {
+        "specs.connectivity": "cellular"
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "tablet color",
+      "category": "tablet",
+      "changes": {
+        "color": "Starlight"
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "tablet known difference despite unknown",
+      "category": "tablet",
+      "changes": {
+        "specs.storage_gb": 256,
+        "specs.connectivity": {
+          "state": "unknown",
+          "reason": "not listed"
+        }
+      },
+      "outcome": "different_configuration"
+    },
+    {
+      "name": "tablet family name only",
+      "category": "tablet",
+      "changes": {
+        "model": "iPad Air"
+      },
+      "outcome": "unresolved"
+    },
+    {
+      "name": "tablet size without generation",
+      "category": "tablet",
+      "changes": {
+        "model": "iPad Air 11-inch"
+      },
+      "outcome": "unresolved"
+    },
+    {
+      "name": "tablet generation without size",
+      "category": "tablet",
+      "changes": {
+        "model": "iPad Air (M2)"
+      },
+      "outcome": "unresolved"
+    },
+    {
+      "name": "tablet connection word is not a generation",
+      "category": "tablet",
+      "changes": {
+        "model": "iPad Air 11-inch 5G"
+      },
+      "outcome": "unresolved"
+    },
+    {
+      "name": "tablet bare decimal size is not a generation",
+      "category": "tablet",
+      "changes": {
+        "model": "iPad Air 10.9"
+      },
+      "outcome": "unresolved"
+    },
+    {
+      "name": "tablet name contradicts its connectivity",
+      "category": "tablet",
+      "changes": {
+        "model": "iPad Air 11-inch (M2) Wi-Fi + Cellular"
+      },
+      "outcome": "unresolved"
+    },
+    {
+      "name": "tablet name contradicts its storage",
+      "category": "tablet",
+      "changes": {
+        "model": "iPad Air 11-inch (M2) 256GB"
+      },
+      "outcome": "unresolved"
+    },
+    {
+      "name": "tablet unknown connectivity",
+      "category": "tablet",
+      "changes": {
+        "specs.connectivity": {
+          "state": "unknown",
+          "reason": "listing does not say"
+        }
+      },
+      "outcome": "unresolved"
+    },
+    {
+      "name": "tablet conflicting storage",
+      "category": "tablet",
+      "changes": {
+        "specs.storage_gb": {
+          "state": "conflict",
+          "alternatives": [
+            128,
+            256
+          ],
+          "reason": "title and table disagree"
+        }
+      },
+      "outcome": "unresolved"
+    },
+    {
+      "name": "tablet absent color",
+      "category": "tablet",
+      "changes": {
+        "color": null
+      },
+      "outcome": "unresolved"
     }
   ],
   "monitor": {

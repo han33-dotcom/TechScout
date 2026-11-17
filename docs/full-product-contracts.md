@@ -161,6 +161,8 @@ groups = group_variants(candidate_offers)
 differences and unresolved identity. Phone identity requires manufacturer, model,
 color, storage, SIM and region. Laptop identity requires manufacturer, model, color,
 CPU, GPU, RAM, storage, OS, screen size, resolution, refresh rate, panel and touch.
+Tablet identity requires manufacturer, model, color, storage and Wi-Fi/cellular
+connectivity (see Tablet identity profile below).
 A known difference remains visible beside missing facts. Missing/unknown/conflicting
 fields are never wildcards; even two identical unknowns cannot confirm equivalence.
 Manufacturer and model require product/variant-scoped evidence at
@@ -216,10 +218,93 @@ under later tasks should use this revision when they expose laptop comparisons.
 
 [Identity recipes](../tests/fixtures/identity/full-product.json) and
 `tests.identity_v2.offer` build synthetic, evidence-bound v2 offers. They cover
-31 positive/adversarial cases, including SIM/region/activation/condition/warranty
-traps and laptop CPU/GPU/memory/storage/display differences. Additional tests
-exercise missing fields, receipt scope, seller/SKU/route separation, exact Decimal
-keys, canonical-ID collisions and schema/corpus compatibility. All run offline.
+52 positive/adversarial cases, including SIM/region/activation/condition/warranty
+traps, laptop CPU/GPU/memory/storage/display differences, and tablet generation,
+size, storage, connectivity, ambiguous-name and cross-retailer spelling cases.
+Additional tests exercise missing fields, receipt scope, seller/SKU/route separation,
+exact Decimal keys, canonical-ID collisions and schema/corpus compatibility. All run
+offline.
+
+### Tablet identity profile
+
+Implemented for [#43](https://github.com/han33-dotcom/TechScout/issues/43) with no
+contract change.
+- **Fields compared:** manufacturer, model, color, `storage_gb` and `connectivity`
+  (`wifi` or `cellular`).
+- **Where generation lives:** `TabletSpecs` has no generation, chip or screen-size
+  field, so these come only from the evidenced `variant.product.model`, as laptop
+  generation does.
+- **Not identity:** stylus support is a capability of the model, not a configuration a
+  buyer picks, so it is left to eligibility.
+- **No phantom activation:** cellular tablets have no activation term unless one is
+  observed.
+
+Tablet model names are compared after one more normalization step:
+- One size spelling: `11"`, `11''`, `11 in`, `11 inch`, `11″` and a decimal comma
+  (`12,9"`) all become `N-inch`. Only 7 to 19.99 inches is read as a screen size, so
+  `2-in-1` is not a size.
+- One generation spelling: `10th gen`, `10th-gen` and `Gen 10` all become
+  `10th generation`. `iPad-Pro`, `iPadPro` and invisible web characters (zero-width
+  spaces, soft hyphens) become `iPad Pro`.
+- A spaced `+` that ends the name, or is followed only by storage or connection words,
+  is the name's "Plus" (`Galaxy Tab S9 +` is `Galaxy Tab S9+`). Parentheses, commas and
+  a leading maker that repeats the evidenced manufacturer drop out.
+- Storage and Wi-Fi/cellular words in the name are checked against the offer's own
+  `storage_gb` and `connectivity` facts. A name that contradicts them is not trusted,
+  for example `... Wi-Fi + Cellular` on a Wi-Fi offer or `... 256GB` on a 128 GB offer.
+  - Memory is not storage: `8GB RAM` and the first number of `8/128` are skipped.
+  - French `Go` and `To` are storage units.
+  - The words stay in the compared name, so they can keep two names apart but never
+    merge them: an LTE and a 5G model, or `4/128` and `6/128`, stay different.
+- Chips, numbers and suffixes stay exact: M2 is not M3, S9 is not S9+ or S9 FE, and
+  12.9-inch is not 13-inch.
+
+A tablet name identifies one model only with **positive evidence of its edition**:
+- an ordinal generation (`10th generation`);
+- a year (`2024`);
+- a chip (`M2`, `A17 Pro`);
+- a model token that joins letters and digits (`S9`, `P11`, `Y700`, `SM-X710`, a CPU
+  tier such as `i5`).
+
+A bare number never counts. Retail titles carry sizes, storage, warranty years,
+operating-system versions and accessory numbers that name no edition (`iPad 10.2`,
+`1 Year Warranty`, `Windows 11`, `Apple Pencil 2`). Chips and years shared by two
+generations of one line do not count either: the base iPad's `A10 Fusion` and `2012`,
+and the iPad mini's `A7`.
+
+Even with that evidence, these names stay unresolved:
+- an iPad Air or iPad Pro without its size (`iPad Air (M2)`, `iPad Air 2022`);
+- a name with two sizes (`iPad Pro M4 (11" / 13")`);
+- a bundle joined by a spaced `+` (`Galaxy Tab S9 + Book Cover Keyboard`);
+- a line sold under one name across several editions, without a year or generation.
+  These are matched loosely, without spaces or the `Galaxy`/`Tab` words: `Galaxy Tab
+  S6 Lite`, `Lenovo Tab M10 (Plus/HD)`, `Tab M8`, `Tab M7`, `Tab P11`, `Galaxy Tab
+  A7`, `Fire HD 10`, `Fire 7`, `Redmi Pad (SE)`, `Legion Y700`. This short owned list
+  is not a catalog: another reused name that carries a model token can still match.
+
+Two identical unresolved names never match, and an unresolved name against a specific
+one is unresolved, not different.
+
+Limitations:
+- Model text is otherwise exact. These spelling differences still compare as different:
+  - storage or connection words present in one name only (`iPad Air 11" M2 Wi-Fi
+    128GB` versus `iPad Air 11-inch (M2)`);
+  - token order (`iPad Air M2 11-inch` versus `iPad Air 11-inch (M2)`);
+  - nicknames (`iPad mini 7` versus `iPad mini (A17 Pro)`);
+  - chip versus ordinal (`iPad (A16)` versus `iPad 11th generation`);
+  - joined suffixes (`Galaxy Tab S9FE` versus `Galaxy Tab S9 FE`).
+- Some genuinely single-model names without edition evidence stay unresolved, which
+  fails safe (`Pixel Tablet`, `Xiaomi Pad 6`, `Surface Pro 9`, `OnePlus Pad 2`).
+- `TabletSpecs` has no SIM, region, memory or glass field, so regional cellular SKUs,
+  memory-only differences named nowhere in the model text, and glass options cannot be
+  told apart.
+- v2 eligibility's exact-model check still uses the shared model normalization, not this
+  tablet rule.
+
+The tablet entry joins the shared `_PROFILE_FIELDS` table in `app/identity.py` (color
+is always added). Its name rule, `_tablet_model`, runs beside the monitor and audio
+rule from #44 (`_specific_model`) in `_identity_facts`.
+
 
 ### Module interface revision: 2026-11-17 writing context
 

@@ -99,7 +99,8 @@ class ColorTests(unittest.TestCase):
         cases = {'bleu': 'Blue', 'BLEU ': 'Blue', 'blue': 'Blue', 'noir': 'Black', 'Black': 'Black',
                  'blanc': 'White', 'white': 'White', 'lavender': 'Lavender', 'sage': 'Sage', 'green': 'Green',
                  'grey': 'Gray', 'Mist-Blue': 'Mist Blue', 'mist  blue': 'Mist Blue',
-                 'Noir Sidéral': 'Space Black', 'noir sideral': 'Space Black', '(PRODUCT)RED': 'Red'}
+                 'Noir Sidéral': 'Space Black', 'noir sideral': 'Space Black', '(PRODUCT)RED': 'Red',
+                 'space grey': 'Space Gray', 'Space Gray': 'Space Gray'}
         for name, expected in cases.items():
             with self.subTest(name=name):
                 self.assertEqual(canonical_color(name), expected)
@@ -519,7 +520,7 @@ class CapturedStoreTests(unittest.TestCase):
 
 
 class FullProductIdentityTests(unittest.TestCase):
-    def test_phone_and_laptop_acceptance_recipes(self):
+    def test_category_acceptance_recipes(self):
         from tests.identity_v2 import RECIPES, offer
         from app.identity import compare_offers, variant_identity_key
         for case in RECIPES['cases']:
@@ -546,17 +547,175 @@ class FullProductIdentityTests(unittest.TestCase):
 
     def test_unknown_configuration_fields_never_match_each_other(self):
         from tests.identity_v2 import offer
-        from app.identity import compare_offers, group_variants, variant_identity_key, _LAPTOP_FIELDS
-        for path in ('color', 'specs.sim', 'specs.region', 'specs.storage_gb',
-                     *('specs.' + name for name in _LAPTOP_FIELDS)):
-            category = 'phone' if path in ('color', 'specs.sim', 'specs.region', 'specs.storage_gb') else 'laptop'
-            with self.subTest(path=path):
-                missing = {'state': 'unknown', 'reason': 'not provided'}
-                left = offer(category, 'left', {path: missing})
-                right = offer(category, 'right', {path: missing})
-                self.assertEqual(compare_offers(left, right).hardware.outcome, 'unresolved')
+        from app.identity import compare_offers, group_variants, variant_identity_key, _PROFILE_FIELDS
+        for category, fields in _PROFILE_FIELDS.items():
+            for path in ('color' if name == 'color' else 'specs.' + name for name in (*fields, 'color')):
+                with self.subTest(category=category, path=path):
+                    missing = {'state': 'unknown', 'reason': 'not provided'}
+                    left = offer(category, 'left', {path: missing})
+                    right = offer(category, 'right', {path: missing})
+                    self.assertEqual(compare_offers(left, right).hardware.outcome, 'unresolved')
+                    self.assertIsNone(variant_identity_key(left))
+                    self.assertEqual(len(group_variants([left, right])), 2)
+
+    def test_phone_and_laptop_identity_keys_are_unchanged_by_later_profiles(self):
+        from tests.identity_v2 import offer
+        from app.identity import variant_identity_key
+        self.assertEqual(variant_identity_key(offer('phone')),
+                         'hardware-v1:dae23b74b41f9d30c2f73808b52a1d723c077f0e5d1f9af77c8ca2f04f9ca586')
+        self.assertEqual(variant_identity_key(offer('laptop')),
+                         'hardware-v1:158383afb5d7ac509136ffba96e44f8ea2733368aa9577ef9279f3941539855a')
+
+    def test_ambiguous_tablet_names_never_match_each_other(self):
+        from tests.identity_v2 import offer
+        from app.identity import compare_offers, group_variants, variant_identity_key
+        for name in ('iPad', 'iPad Air', 'iPad Pro', 'Galaxy Tab', 'iPad Pro 11-inch', 'iPad Pro (M4)',
+                     'Apple iPad Air 5G 128GB', 'iPad 10.2', 'iPad 10.2-inch', 'iPad mini 8.3', 'iPad 9.7',
+                     'Galaxy Tab 8/256', 'iPad 64G', 'iPad Air 2022', 'Galaxy Tab Wi-Fi', 'Galaxy Tab S6 Lite',
+                     'Lenovo Tab M10 Plus', 'Tab P11', 'iPad Pro 11-inch 120Hz', 'iPad 10.2-inch 8MP',
+                     'Surface Pro 2-in-1', 'Lenovo Tab Wi-Fi 4/128'):
+            with self.subTest(name=name):
+                left = offer('tablet', 'left', {'model': name})
+                right = offer('tablet', 'right', {'model': name})
+                result = compare_offers(left, right)
+                self.assertEqual((result.hardware.outcome, result.unresolved_identity_fields),
+                                 ('unresolved', ('model',)))
                 self.assertIsNone(variant_identity_key(left))
                 self.assertEqual(len(group_variants([left, right])), 2)
+
+    def test_retail_titles_without_edition_evidence_stay_unresolved(self):
+        # Each title is sold as more than one real device; only positive edition evidence (an ordinal
+        # generation, a year, a chip or a letters-and-digits model token) can resolve a tablet name.
+        from tests.identity_v2 import offer
+        from app.identity import compare_offers, variant_identity_key
+        titles = [
+            ('Apple', 'Apple iPad Pro 12,9" Wi-Fi 256GB Space Gray', 256),
+            ('Apple', 'Apple iPad Air 10,9" Wi-Fi 64GB Space Gray', 64),
+            ('Apple', 'Apple iPad 10,2" Wi-Fi 32GB Space Gray', 32),
+            ('Apple', 'Apple iPad Pro 11" Wi-Fi 256 Go Gris sidéral', 256),
+            ('Apple', 'Apple iPad 10.2-inch Wi-Fi 32GB Space Gray - 1 Year Warranty', 32),
+            ('Apple', 'iPad Pro 12.9" Wi-Fi 128GB with Apple Pencil 2', 128),
+            ('Microsoft', 'Surface Pro Copilot+ PC 16GB RAM 256GB SSD Windows 11 Home', 256),
+            ('Samsung', 'Samsung Galaxy Tab A Android 9 32GB Wi-Fi', 32),
+            ('Apple', 'Apple iPad A10 Fusion Wi-Fi 32GB', 32),
+            ('Apple', 'iPad mini A7 Wi-Fi 16GB', 16),
+            ('Apple', 'iPad 2012 Wi-Fi 16GB', 16),
+            ('Apple', 'Apple iPad-Pro M4 256GB Wi-Fi', 256),
+            ('Apple', 'Apple iPadPro M4 256GB Wi-Fi', 256),
+            ('Apple', 'Apple iPad​Pro M4 256GB Wi-Fi', 256),
+            ('Apple', 'Apple iPad Pro M4 (11" / 13") 256GB Wi-Fi', 256),
+            ('Samsung', 'Galaxy Tab S9 + Book Cover Keyboard', 128),
+            ('Samsung', 'Samsung Tab S6 Lite 64GB Wi-Fi', 64),
+            ('Samsung', 'Galaxy Tab S6Lite', 128),
+            ('Lenovo', 'Lenovo M10', 128),
+            ('Amazon', 'Fire HD10', 128),
+            ('Huawei', 'HUAWEI MatePad 11 128GB Wi-Fi', 128),
+            ('Lenovo', 'Lenovo Tab M8', 128),
+            ('Samsung', 'Galaxy Tab A7', 128),
+            ('Lenovo', 'Legion Y700', 128),
+        ]
+        for maker, title, storage in titles:
+            with self.subTest(title=title):
+                changes = {'manufacturer': maker, 'model': title, 'specs.storage_gb': storage}
+                left, right = offer('tablet', 'left', changes), offer('tablet', 'right', changes)
+                self.assertEqual(compare_offers(left, right).unresolved_identity_fields, ('model',))
+                self.assertIsNone(variant_identity_key(left))
+        # Positive evidence resolves the same spellings.
+        for maker, left_title, right_title in (
+                ('Apple', 'iPad Pro 12,9" (6th generation)', 'iPad Pro 12.9-inch (6th generation)'),
+                ('Apple', 'iPad (A16)', 'iPad (A16)'),
+                ('Samsung', 'Galaxy Tab S6 Lite 2024', 'Galaxy Tab S6 Lite (2024)')):
+            with self.subTest(left=left_title):
+                left = offer('tablet', 'left', {'manufacturer': maker, 'model': left_title})
+                right = offer('tablet', 'right', {'manufacturer': maker, 'model': right_title})
+                self.assertEqual(compare_offers(left, right).hardware.outcome, 'confirmed_equivalent')
+
+    def test_tablet_near_names_across_retailers(self):
+        from tests.identity_v2 import offer
+        from app.identity import compare_offers
+        same, different, unresolved = 'confirmed_equivalent', 'different_configuration', 'unresolved'
+        pairs = [
+            ('Samsung', 'Galaxy Tab S9', 'Galaxy Tab S9+', different),
+            ('Samsung', 'Galaxy Tab S9+', 'Galaxy Tab S9 Plus', same),
+            ('Samsung', 'Galaxy Tab S9', 'Galaxy Tab S9 FE', different),
+            ('Samsung', 'Galaxy Tab S9 FE', 'Galaxy Tab S9 FE+', different),
+            ('Samsung', 'Galaxy Tab A9', 'Galaxy Tab A9+', different),
+            ('Samsung', 'Samsung Galaxy Tab S9', 'Galaxy Tab S9', same),
+            ('Samsung', 'Galaxy Tab S9', 'Galaxy Tab S90', different),
+            ('Apple', 'iPad (10th generation)', 'iPad 10th Gen', same),
+            ('Apple', 'iPad (10th generation)', 'iPad 10th-gen', same),
+            ('Apple', 'iPad (10th generation)', 'iPad Gen 10', same),
+            ('Apple', 'iPad (9th generation)', 'iPad (10th generation)', different),
+            ('Apple', 'iPad Pro 12.9-inch (6th generation)', 'iPad Pro 12.9" (6th Generation)', same),
+            ('Apple', 'iPad Pro 12.9-inch (6th generation)', 'iPad Pro 13-inch (M4)', different),
+            ('Apple', 'iPad Pro 11-inch (M4)', 'iPad Pro 11″ (M4)', same),
+            ('Apple', 'iPad Pro 11-inch (M4)', 'iPad Pro 11 in M4', same),
+            ('Apple', 'iPad Pro 11-inch (M4)', 'iPad Pro 11” (M4)', same),
+            ('Apple', 'iPad Pro 11-inch (M4)', "iPad Pro 11'' (M4)", same),
+            ('Apple', 'iPad Air 11-inch (M2)', 'iPad Air 11-in. M2', same),
+            # Storage and connection words stay in the name: they keep names apart, never merge them.
+            ('Apple', 'iPad Air 11-inch (M2)', 'iPad Air 11" M2 Wi-Fi 128GB', different),
+            ('Samsung', 'Galaxy Tab A9 +', 'Galaxy Tab A9', different),
+            ('Samsung', 'Galaxy Tab S9 +', 'Galaxy Tab S9+', same),
+            ('Samsung', 'Galaxy Tab S9 FE +', 'Galaxy Tab S9 FE', different),
+            ('Samsung', 'Galaxy Tab S9 Wi-Fi+128GB', 'Galaxy Tab S9+ Wi-Fi 128GB', different),
+            ('Lenovo', 'Tab P11 Wi-Fi 4/128 2021', 'Tab P11 Wi-Fi 6/128 2021', different),
+            ('Microsoft', 'Surface Pro 9 i5 13" 2-in-1', 'Surface Pro 9 i5 13-inch 2-in-1', same),
+            ('Samsung', 'Galaxy Tab S6 Lite (2024)', 'Galaxy Tab S6 Lite 2024', same),
+            ('Samsung', 'Galaxy Tab S6 Lite (2022)', 'Galaxy Tab S6 Lite (2024)', different),
+            ('Apple', 'iPad mini (A17 Pro)', 'iPad mini (6th generation)', different),
+            ('Apple', 'iPad Air 10.9-inch', 'iPad Air 11-inch (M2)', unresolved),
+            ('Apple', 'iPad Air 2022', 'iPad Air (5th generation)', unresolved),
+            ('Apple', 'iPad Pro 1.1-inch (M4)', 'iPad Pro 11-inch (M4)', different),
+        ]
+        for maker, left_name, right_name, expected in pairs:
+            with self.subTest(left=left_name, right=right_name):
+                left = offer('tablet', 'left', {'manufacturer': maker, 'model': left_name})
+                right = offer('tablet', 'right', {'manufacturer': maker, 'model': right_name})
+                self.assertEqual(compare_offers(left, right).hardware.outcome, expected)
+                self.assertEqual(compare_offers(right, left).hardware.outcome, expected)
+
+    def test_tablet_stylus_support_is_a_capability_not_identity(self):
+        from tests.identity_v2 import offer
+        from app.identity import compare_offers
+        left = offer('tablet', 'left', {'specs.stylus_support': True})
+        right = offer('tablet', 'right', {'specs.stylus_support': False})
+        self.assertEqual(compare_offers(left, right).hardware.outcome, 'confirmed_equivalent')
+
+    def test_a_tablet_name_that_contradicts_its_own_facts_is_not_trusted(self):
+        from tests.identity_v2 import offer
+        from app.identity import compare_offers, variant_identity_key
+        for name, changes in (('cellular name, Wi-Fi fact', {'model': 'iPad Air 11-inch (M2) Wi-Fi+Cellular'}),
+                              ('5G name, Wi-Fi fact', {'model': 'Galaxy Tab S9 5G', 'manufacturer': 'Samsung'}),
+                              ('256GB name, 128 GB fact', {'model': 'iPad Air 11-inch (M2) 256GB'}),
+                              ('1TB name, 128 GB fact', {'model': 'iPad Air 11-inch (M2) 1TB'})):
+            with self.subTest(name):
+                left = offer('tablet', 'left', changes)
+                right = offer('tablet', 'right', changes)
+                self.assertEqual(compare_offers(left, right).unresolved_identity_fields, ('model',))
+                self.assertIsNone(variant_identity_key(left))
+        # A storage amount read as a generation number would skip this check.
+        late = offer('tablet', 'left', {'model': 'iPad 10th Generation 64 GB', 'specs.storage_gb': 256})
+        self.assertIsNone(variant_identity_key(late))
+        # Consistent words stay in the name: an LTE and a 5G model are different devices.
+        cellular = {'manufacturer': 'Samsung', 'specs.connectivity': 'cellular'}
+        lte = offer('tablet', 'left', {**cellular, 'model': 'Galaxy Tab S7 FE LTE'})
+        five_g = offer('tablet', 'right', {**cellular, 'model': 'Galaxy Tab S7 FE 5G'})
+        self.assertEqual(compare_offers(lte, five_g).hardware.outcome, 'different_configuration')
+
+    def test_memory_in_a_tablet_name_is_not_storage(self):
+        from tests.identity_v2 import offer
+        from app.identity import compare_offers, variant_identity_key
+        for name in ('Galaxy Tab S9 8GB RAM 128GB', 'Galaxy Tab S9 8/128GB', 'Galaxy Tab S9 (8GB RAM, 128GB)',
+                     'Galaxy Tab S9 RAM 8GB 128GB'):
+            with self.subTest(name=name):
+                left = offer('tablet', 'left', {'manufacturer': 'Samsung', 'model': name})
+                self.assertIsNotNone(variant_identity_key(left))  # 128 GB agrees with storage_gb
+                self.assertEqual(compare_offers(left, offer('tablet', 'right', {'manufacturer': 'Samsung',
+                                                                               'model': name})).hardware.outcome,
+                                 'confirmed_equivalent')
+        too_big = offer('tablet', 'left', {'manufacturer': 'Samsung', 'model': 'Galaxy Tab S9 12/256GB'})
+        self.assertIsNone(variant_identity_key(too_big))  # 256 GB contradicts the 128 GB fact
 
     def test_grouping_deduplicates_hardware_but_preserves_sellers_and_terms(self):
         from tests.identity_v2 import offer
@@ -695,14 +854,17 @@ class FullProductIdentityTests(unittest.TestCase):
             with self.subTest(field=field), self.assertRaises(ValidationError):
                 offer('laptop', changes={'specs.' + field: value})
 
-    def test_unsupported_categories_are_not_claimed_equivalent(self):
-        from app.contracts_v2 import Offer as OfferV2
-        from app.identity import compare_offers, group_variants
-        data = json.loads((ROOT / 'tests/fixtures/v2/offers.json').read_text())
-        left = OfferV2.model_validate(data['tablet'])
-        right = left.model_copy(update={'offer_id': 'other-tablet'})
-        self.assertEqual(compare_offers(left, right).hardware.outcome, 'unresolved')
-        self.assertEqual(len(group_variants([left, right])), 2)
+    def test_offers_from_different_categories_are_never_claimed_equivalent(self):
+        from app.identity import compare_offers, group_variants, variant_identity_key
+        from tests.identity_v2 import offer
+        for left, right in (('phone', 'tablet'), ('tablet', 'laptop'), ('tablet', 'monitor'), ('audio', 'tablet')):
+            with self.subTest(left=left, right=right):
+                a, b = offer(left, 'left'), offer(right, 'right')
+                result = compare_offers(a, b)
+                self.assertEqual((result.hardware.outcome, result.unresolved_identity_fields),
+                                 ('unresolved', ('category',)))
+                self.assertNotEqual(variant_identity_key(a), variant_identity_key(b))
+                self.assertEqual(len(group_variants([a, b])), 2)
 
 
 if __name__ == '__main__':
