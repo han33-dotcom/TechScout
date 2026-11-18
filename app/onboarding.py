@@ -74,6 +74,13 @@ COUNTRY_NAMES = {
 }
 ORGANIZATION_TYPES = {'Organization', 'Store', 'OnlineStore', 'ElectronicsStore', 'LocalBusiness'}
 TEAMMATE_OPERATIONS = {'search', 'catalog', 'feed', 'sitemap'}
+CATEGORY_WORDS = {category: re.compile(pattern, re.IGNORECASE) for category, pattern in {
+    'phone': r'\b(smart ?phones?|mobile phones?|phones?|iphones?)\b',
+    'laptop': r'\b(laptops?|notebooks?|macbooks?)\b',
+    'tablet': r'\b(tablets?|ipads?)\b',
+    'monitor': r'\b(monitors?)\b',
+    'audio': r'\b(headphones?|earbuds?|earphones?|headsets?)\b',
+}.items()}
 # Purchase terms the shared extractor cannot settle; they stay unknown, never zero.
 PURCHASE_TERMS = ('policy.shipping', 'policy.warranty', 'policy.returns', 'costs.order.tax')
 PROCESSING = ProcessingVersion(corpus_version='onboarding-1', index_version='onboarding-1',
@@ -86,7 +93,9 @@ Host = Annotated[str, StringConstraints(strict=True, min_length=1, max_length=25
 Note = Annotated[str, StringConstraints(strict=True, max_length=500)]
 Channel = Literal['tavily', 'directory', 'buyer']
 FailureCode = Literal['unsafe_scope', 'marketplace', 'blocked', 'transient', 'validation', 'identity',
-                      'ambiguous_variant', 'no_samples', 'proposal', 'retry_limit', 'suspended_scope']
+                      'ambiguous_variant', 'no_samples', 'proposal', 'retry_limit', 'suspended',
+                      'suspended_scope', 'reviewed_registry']
+ACTIVE_OUTCOMES = {'activated', 'already_active', 'reactivated'}
 
 
 class LeaseLost(RuntimeError):
@@ -126,9 +135,9 @@ def canonical(url):
 
 
 def source_id_for(key):
-    slug = re.sub(r'[^a-z0-9]+', '-', key.lower()).strip('-')
-    source_id = 'auto-' + slug
-    return source_id if len(source_id) <= 60 else source_id[:51] + '-' + hashlib.sha256(key.encode()).hexdigest()[:8]
+    """A readable automatic source ID. The digest keeps 'a-b.example' and 'a.b.example' apart."""
+    slug = re.sub(r'[^a-z0-9]+', '-', key.lower()).strip('-')[:40].strip('-')
+    return f'auto-{slug}-{hashlib.sha256(key.encode()).hexdigest()[:8]}'
 
 
 def _key_of_origin(origin):
@@ -235,31 +244,24 @@ class ProbeRegistry:
 
     It is a registry document for SourceGate, so every probe goes through the gate's normal
     checks. It admits only these exact URLs (a redirect must stay inside them), expires after
-    PROBE_TTL, and refuses everything once closed.
+    PROBE_TTL, and refuses everything once closed. The document is fixed when the probe is
+    created: the gate reads it twice per request and requires both reads to agree.
     """
 
     def __init__(self, *, source_id, name, origin, targets, expires_at, clock=_utc_now, evidence=()):
         if not 1 <= len(targets) <= MAX_TARGETS:
             raise ValueError('A probe names one to four targets')
-        self.source_id, self.name, self.origin = source_id, name, origin
-        self.targets, self.expires_at, self.clock = tuple(targets), _now(lambda: expires_at), clock
-        self.evidence, self.closed = tuple(evidence) or tuple(targets), False
-
-    def close(self):
-        self.closed = True
-
-    def read_registry(self):
-        now = _now(self.clock)
-        if self.closed or now >= self.expires_at:
-            raise OSError('Probe scope expired')
-        return {
-            'live_release': {'admitted_source_ids': [self.source_id]},
+        self.source_id, self.targets, self.clock = source_id, tuple(targets), clock
+        self.expires_at, self.closed = _now(lambda: expires_at), False
+        created = _now(clock)
+        self._document = {
+            'live_release': {'admitted_source_ids': [source_id]},
             'sources': [{
-                'id': self.source_id, 'name': self.name, 'origin': self.origin, 'status': 'active',
-                'reviewed_at': now.date().isoformat(),
+                'id': source_id, 'name': name, 'origin': origin, 'status': 'active',
+                'reviewed_at': created.date().isoformat(),
                 'admission': {
                     'basis': 'Short-lived onboarding probe (issue #99): public read-only GET of named targets',
-                    'reviewed_at': now.isoformat(), 'evidence': list(self.evidence),
+                    'reviewed_at': created.isoformat(), 'evidence': list(evidence) or list(self.targets),
                     'scope': f'Exact sample URLs only, until {self.expires_at.isoformat()}',
                 },
                 'allowed_endpoints': list(self.targets),
@@ -268,6 +270,14 @@ class ProbeRegistry:
                            'max_requests_per_run': 3 * len(self.targets)},
             }],
         }
+
+    def close(self):
+        self.closed = True
+
+    def read_registry(self):
+        if self.closed or _now(self.clock) >= self.expires_at:
+            raise OSError('Probe scope expired')
+        return copy.deepcopy(self._document)
 
 
 class ActivationRecord(Model):
@@ -296,13 +306,27 @@ class ActivationPlan:
     records: tuple[ActivationRecord, ...]
 
 
+@dataclass(frozen=True)
+class Reviewed:
+    """The reviewed registry entry that governs one shop domain."""
+    source_id: str
+    status: str
+    admitted: bool
+
+
+def _sample_time(record: ActivationRecord):
+    return min(datetime.fromisoformat(str(s['observed_at']).replace('Z', '+00:00')) for s in record.samples)
+
+
 class ActivationRegistry:
     """The reviewed JSON registry plus capability versions activated by onboarding.
 
     Pass it wherever a registry path is accepted (SourceGate, Directory, Job.source_budget).
-    Each read combines a fresh copy of the reviewed file with the active database rows. A
-    reviewed entry always wins: an onboarded source never replaces a reviewed ID, and a
-    reviewed host with any status other than 'pending' keeps onboarding away from that shop.
+    Each read combines a fresh copy of the reviewed file with the active database rows. The
+    reviewed file always wins:
+    - An onboarded source may stand in only for a reviewed 'pending' entry of the same shop,
+      under that entry's ID, so directory links keep working when a teammate later reviews it.
+    - Any other reviewed status for the shop's domain, or for a parent domain, hides it.
     """
 
     def __init__(self, storage: Storage, *, base=DEFAULT_REGISTRY, clock=_utc_now):
@@ -316,14 +340,40 @@ class ActivationRegistry:
         return copy.deepcopy(document)
 
     def reviewed_hosts(self, document=None):
-        """Lead key -> (status, admitted) for every reviewed entry."""
+        """Lead key -> Reviewed for every reviewed entry; a non-pending entry wins a tie."""
         document = document or self._base()
         admitted = set(document['live_release']['admitted_source_ids'])
         hosts = {}
         for entry in document['sources']:
-            if isinstance(entry, dict) and isinstance(entry.get('origin'), str):
-                hosts[_key_of_origin(entry['origin'])] = (entry.get('status'), entry.get('id') in admitted)
+            if isinstance(entry, dict) and isinstance(entry.get('origin'), str) and isinstance(entry.get('id'), str):
+                key = _key_of_origin(entry['origin'])
+                found = Reviewed(entry['id'], entry.get('status'), entry['id'] in admitted)
+                if key not in hosts or hosts[key].status == 'pending':
+                    hosts[key] = found
         return hosts
+
+    def reviewed(self, key, hosts=None) -> Reviewed | None:
+        """The shop's own reviewed entry, or a parent domain's entry that is not pending."""
+        hosts = self.reviewed_hosts() if hosts is None else hosts
+        if key in hosts:
+            return hosts[key]
+        labels = key.split('.')
+        for index in range(1, len(labels) - 1):
+            parent = hosts.get('.'.join(labels[index:]))
+            if parent is not None and parent.status != 'pending':
+                return parent
+        return None
+
+    def source_id_for(self, key):
+        """The ID an activation uses: a reviewed pending entry's ID, otherwise an automatic one."""
+        found = self.reviewed(key)
+        return found.source_id if found is not None and found.status == 'pending' else source_id_for(key)
+
+    def _belongs(self, source_id, key, hosts):
+        governing = self.reviewed(key, hosts)
+        if governing is not None:  # reviewed by a teammate, or an automatic ID beside a pending one
+            return governing.status == 'pending' and governing.source_id == source_id
+        return source_id == source_id_for(key)
 
     def _rows(self, *conditions):
         try:
@@ -336,15 +386,22 @@ class ActivationRegistry:
 
     def read_registry(self):
         document = self._base()
-        reviewed_ids = {entry.get('id') for entry in document['sources'] if isinstance(entry, dict)}
         hosts = self.reviewed_hosts(document)
         grouped = {}
         for payload in self._rows(source_activations.c.status == 'active'):
             grouped.setdefault(payload['source_id'], []).append(payload)
-        for source_id, records in grouped.items():
-            first = records[0]
-            if source_id in reviewed_ids or hosts.get(_key_of_origin(first['origin']), ('pending',))[0] != 'pending':
+        for source_id, rows in grouped.items():
+            # Keep only records that belong to this ID's shop and to one host; any other record is
+            # left out on its own, never taking the shop's valid capabilities down with it.
+            records = [r for r in rows if self._belongs(source_id, _key_of_origin(r['origin']), hosts)]
+            records = [r for r in records if r['origin'] == records[0]['origin']] if records else []
+            if not records:
                 continue
+            first = records[0]
+            governing = self.reviewed(_key_of_origin(first['origin']), hosts)
+            if governing is not None:  # stand in for the reviewed pending entry
+                document['sources'] = [e for e in document['sources']
+                                       if not (isinstance(e, dict) and e.get('id') == source_id)]
             evidence = sorted({e['evidence_id'] for record in records for e in record['evidence']})[:50]
             latest = max(datetime.fromisoformat(r['activated_at'].replace('Z', '+00:00')) for r in records)
             document['sources'].append({
@@ -361,7 +418,8 @@ class ActivationRegistry:
                 'limits': dict(ACTIVE_LIMITS),
                 'onboarding': {'market': first['market'], 'categories': sorted({r['category'] for r in records})},
             })
-            document['live_release']['admitted_source_ids'].append(source_id)
+            if source_id not in document['live_release']['admitted_source_ids']:
+                document['live_release']['admitted_source_ids'].append(source_id)
         return document
 
     def activations(self, source_id=None, status=None):
@@ -386,7 +444,9 @@ class ActivationRegistry:
 
         The version is a digest of the validated scope, and every activation runs under the
         onboarding guard lock, so an identical capability is recorded once. A newer version
-        supersedes the active one; a suspended identical scope stays suspended.
+        supersedes the active one. A suspended identical scope comes back only through a leased
+        worker attempt whose samples were all observed after the suspension (a teammate reopened
+        the lead and the shop passed again); a replay of older evidence never revives it.
         """
         now = now or _now(self.clock)
         results = []
@@ -402,9 +462,25 @@ class ActivationRegistry:
                 rows = db.execute(select(source_activations).where(
                     source_activations.c.source_id == record.source_id,
                     source_activations.c.capability_id == cap.capability_id)).all()
-                same = [row for row in rows if row.version == cap.version]
-                if same:
-                    outcome = 'already_active' if same[0].status == 'active' else 'kept_' + same[0].status
+                same = next((row for row in rows if row.version == cap.version), None)
+                if same is not None and same.status == 'suspended' and lease is not None:
+                    suspended_at = datetime.fromisoformat(same.payload['changes'][-1]['at'])
+                    if _sample_time(record) > suspended_at:
+                        payload = dict(record.model_dump(mode='json'), changes=[
+                            *same.payload.get('changes', []), dict(status='reactivated', at=now.isoformat(),
+                                                                   lead_id=plan.lead_id)])
+                        db.execute(update(source_activations).where(
+                            source_activations.c.source_id == same.source_id,
+                            source_activations.c.capability_id == same.capability_id,
+                            source_activations.c.version == same.version).values(
+                            status='active', changed_at=now, payload=payload))
+                        _event(db, plan.lead_id, 'reactivated', now,
+                               dict(capability_id=cap.capability_id, version=cap.version,
+                                    evidence_ids=[e.evidence_id for e in record.evidence]), record.source_id)
+                        results.append((cap.capability_id, cap.version, 'reactivated'))
+                        continue
+                if same is not None:
+                    outcome = 'already_active' if same.status == 'active' else 'kept_' + same.status
                     _event(db, plan.lead_id, 'activation_replay', now,
                            dict(capability_id=cap.capability_id, version=cap.version, outcome=outcome),
                            record.source_id)
@@ -431,7 +507,7 @@ class ActivationRegistry:
                        record.source_id)
                 results.append((cap.capability_id, cap.version, 'activated'))
             if lease is not None:
-                active = any(outcome in {'activated', 'already_active'} for _, _, outcome in results)
+                active = any(outcome in ACTIVE_OUTCOMES for _, _, outcome in results)
                 record = lease.record
                 if active:
                     record = record.model_copy(update={'last_outcome': 'activated', 'exception': None})
@@ -447,27 +523,42 @@ class ActivationRegistry:
                     payload=record.model_dump(mode='json'), **values))
         return tuple(results)
 
-    def suspend(self, source_id, capability_id, *, reason, evidence=(), lead_id=None, now=None):
-        """Stop admitting an active capability. Its record, evidence and history stay."""
+    def suspend(self, source_id, capability_id, *, reason, fetches=(), evidence=(), now=None):
+        """Stop admitting an active capability. Its record, evidence and history stay, and the
+        shop's lead becomes a teammate exception so the suspension is followed up."""
         now = now or _now(self.clock)
         if not isinstance(reason, str) or not reason.strip() or len(reason) > 500:
             raise ValueError('A suspension needs a recorded reason of at most 500 characters')
-        evidence = [json.loads(e.model_dump_json()) if isinstance(e, Model) else e for e in evidence][:20]
+        reason = reason.strip()
+        receipts = tuple(Evidence.model_validate(e.model_dump(mode='json') if isinstance(e, Model) else e)
+                         for e in evidence)[:50]
+        fetches = tuple(json.loads(json.dumps(f)) for f in fetches)[:MAX_TARGETS * 3]
         with _guarded(self.storage) as db:
             row = db.execute(select(source_activations).where(
                 source_activations.c.source_id == source_id, source_activations.c.capability_id == capability_id,
                 source_activations.c.status == 'active')).first()
             if row is None:
                 return False
-            change = dict(status='suspended', at=now.isoformat(), reason=reason.strip(), evidence=evidence)
+            change = dict(status='suspended', at=now.isoformat(), reason=reason, fetches=list(fetches),
+                          evidence=[e.model_dump(mode='json') for e in receipts])
             payload = dict(row.payload, status='suspended', changes=[*row.payload.get('changes', []), change])
             db.execute(update(source_activations).where(
                 source_activations.c.source_id == source_id, source_activations.c.capability_id == capability_id,
                 source_activations.c.version == row.version).values(
                 status='suspended', changed_at=now, payload=json.loads(json.dumps(payload))))
-            _event(db, lead_id or row.payload['lead_id'], 'suspended', now,
-                   dict(capability_id=capability_id, version=row.version, reason=reason.strip(), evidence=evidence),
-                   source_id)
+            lead_id = row.payload['lead_id']
+            _event(db, lead_id, 'suspended', now, dict(capability_id=capability_id, version=row.version,
+                                                       reason=reason, fetches=list(fetches)), source_id)
+            lead = db.execute(select(onboarding_leads).where(onboarding_leads.c.lead_id == lead_id)).first()
+            if lead is not None and lead.status == 'active':
+                urls = tuple(dict.fromkeys(str(s['url']) for s in row.payload.get('samples', [])))
+                failure = Failure(code='suspended', reason=f'{capability_id} suspended: {reason}'[:500],
+                                  urls=urls[:MAX_CANDIDATE_URLS], fetches=fetches, evidence=receipts, recorded_at=now)
+                record = LeadRecord.model_validate(lead.payload).model_copy(
+                    update={'exception': failure, 'last_failure': failure, 'last_outcome': 'exception'})
+                db.execute(update(onboarding_leads).where(onboarding_leads.c.lead_id == lead_id).values(
+                    status='exception', updated_at=now, payload=record.model_dump(mode='json')))
+                _event(db, lead_id, 'exception', now, failure.model_dump(mode='json'), source_id)
         return True
 
 
@@ -536,11 +627,11 @@ class OnboardingQueue:
             return EnqueueResult('rejected', key, 'no supported category or configured market')
         if type(relevance) not in (int, float) or not 0 <= relevance <= 1:
             return EnqueueResult('rejected', key, 'relevance must be between 0 and 1')
-        status, admitted = self.registry.reviewed_hosts().get(key, (None, False))
-        if status == 'active' and admitted:
+        reviewed = self.registry.reviewed(key)
+        if reviewed is not None and reviewed.status == 'active' and reviewed.admitted:
             return EnqueueResult('configured', key, 'reviewed source already admitted')
-        if status not in (None, 'pending'):
-            return EnqueueResult('excluded', key, f'reviewed registry entry is {status}; teammate-managed')
+        if reviewed is not None and reviewed.status != 'pending':
+            return EnqueueResult('excluded', key, f'reviewed registry entry is {reviewed.status}; teammate-managed')
         if any(_key_of_origin(r.origin) == key for r in self.registry.activations(status='active')):
             return EnqueueResult('configured', key, 'already onboarded')
         records = self._directory_records(key)
@@ -573,7 +664,8 @@ class OnboardingQueue:
                     payload=record.model_dump(mode='json'), priority=self.priority(record, counts), updated_at=now))
                 _event(db, key, 'merged', now, dict(channel=channel, url=url), record.source_id)
                 return EnqueueResult('merged', key, f'deduplicated with the {row.status} lead for this shop')
-            record = LeadRecord(lead_id=key, source_id=source_id_for(key), hosts=(host,), candidate_urls=(url,),
+            record = LeadRecord(lead_id=key, source_id=self.registry.source_id_for(key), hosts=(host,),
+                candidate_urls=(url,),
                 channels=(channel,), categories=categories, markets=markets, retailer_id=retailer_id,
                 name_hint=name_hint, relevance=float(relevance), reasons=(reason,))
             status = 'queued'
@@ -662,6 +754,23 @@ class OnboardingQueue:
                        dict(attempt=row.attempts + 1), record.source_id)
                 return Lease(row.lead_id, token, row.attempts + 1, record, recovered)
         return None
+
+    def renew(self, lease: Lease):
+        """Extend a live lease before the next step; LeaseLost when another worker took over."""
+        now = _now(self.clock)
+        with _guarded(self.storage) as db:
+            changed = db.execute(update(onboarding_leads).where(
+                onboarding_leads.c.lead_id == lease.lead_id, onboarding_leads.c.status == 'leased',
+                onboarding_leads.c.lease_token == lease.token, onboarding_leads.c.lease_until > now).values(
+                lease_until=now + LEASE, updated_at=now)).rowcount
+        if changed != 1:
+            raise LeaseLost(lease.lead_id)
+
+    def enqueue_reports(self, reports, request: ShoppingRequest):
+        """Leads from buyer-run research reports (app.research_workers.Report and the
+        orchestrator's InvestigationResult.reports): their unconfigured shop URLs."""
+        urls = list(dict.fromkeys(str(url) for report in reports for url in getattr(report, 'leads', ())))
+        return self.enqueue_buyer(urls[:MAX_ENQUEUE], request)
 
     def _finish(self, lease, status, record, kind, detail, **values):
         now = _now(self.clock)
@@ -763,12 +872,37 @@ def _country(value):
     return COUNTRY_NAMES.get(_normalized(value)) if isinstance(value, str) else None
 
 
+def _seller_claims(value):
+    """Every seller an offer states: a name, a string, or an @id reference to resolve later."""
+    claims = []
+    for seller in value if isinstance(value, list) else [value]:
+        if isinstance(seller, str) and seller.strip():
+            claims.append(('name', seller.strip()[:200]))
+        elif isinstance(seller, dict):
+            if isinstance(seller.get('name'), str) and seller['name'].strip():
+                claims.append(('name', seller['name'].strip()[:200]))
+            elif isinstance(seller.get('@id'), str) and seller['@id'].strip():
+                claims.append(('ref', seller['@id'].strip()[:200]))
+            else:
+                claims.append(('name', 'unnamed seller'))
+        elif seller is not None:
+            claims.append(('name', 'unreadable seller'))
+    return claims
+
+
+def _category_text(value):
+    values = value if isinstance(value, list) else [value]
+    texts = [v.get('name') if isinstance(v, dict) else v for v in values]
+    return ' '.join(t for t in texts if isinstance(t, str))[:200]
+
+
 @dataclass(frozen=True)
 class PageFacts:
     """Structured data on one probed page. Every string is untrusted page data."""
     products: tuple[tuple[str, str | None, bool], ...] = ()  # (sku, name, priced), distinct SKUs in order
-    sellers: tuple[tuple[str, str], ...] = ()  # (sku, seller name stated on its offer)
+    sellers: tuple[tuple[str, str], ...] = ()  # (sku, seller its offer states; references resolved)
     organizations: tuple[tuple[str, str | None], ...] = ()  # (name, ISO country of its address)
+    categories: tuple[tuple[str, str], ...] = ()  # (sku, the Product's stated category text)
 
     @property
     def skus(self):
@@ -787,7 +921,7 @@ def read_page_facts(body: bytes) -> PageFacts:
         return PageFacts()
     parsed = _HTML(None)
     parsed.feed(text)
-    products, sellers, organizations = {}, [], []
+    products, claims, organizations, categories, named = {}, [], [], [], {}
     for script in parsed.scripts[:50]:
         try:
             data = json.loads(script, parse_float=Decimal, object_pairs_hook=_unique_pairs,
@@ -796,6 +930,8 @@ def read_page_facts(body: bytes) -> PageFacts:
         except (ValueError, RecursionError):
             continue
         for item in items:
+            if isinstance(item.get('@id'), str) and isinstance(item.get('name'), str) and item['name'].strip():
+                named.setdefault(item['@id'].strip()[:200], item['name'].strip()[:200])
             sku = item.get('sku')
             if item.get('@type') == 'Product' and type(sku) in (str, int) and 0 < len(str(sku).strip()) <= 128:
                 sku = str(sku).strip()
@@ -805,15 +941,21 @@ def read_page_facts(body: bytes) -> PageFacts:
                     name = item.get('name')
                     products[sku] = (sku, _clip(name) if isinstance(name, str) else None,
                                      any(o.get('price') not in (None, '') for o in offers))
+                if _category_text(item.get('category')):
+                    categories.append((sku, _category_text(item.get('category'))))
                 for offer in offers:
-                    seller = offer.get('seller')
-                    if isinstance(seller, dict) and isinstance(seller.get('name'), str) and seller['name'].strip():
-                        sellers.append((sku, seller['name'].strip()[:200]))
+                    if 'seller' in offer:
+                        claims += [(sku, kind, value) for kind, value in _seller_claims(offer['seller'])]
             if _types(item) & ORGANIZATION_TYPES and isinstance(item.get('name'), str) and item['name'].strip():
                 address = item.get('address')
                 country = _country(address.get('addressCountry')) if isinstance(address, dict) else None
                 organizations.append((item['name'].strip()[:200], country))
-    return PageFacts(tuple(products.values())[:50], tuple(sellers)[:50], tuple(organizations)[:20])
+    # A reference the page does not resolve to a name can never match the shop: fail closed.
+    sellers = [(sku, value if kind == 'name' else named.get(value, f'unresolved seller reference {value}'))
+               for sku, kind, value in claims]
+    # Not truncated: a cut list could hide a mismatching seller, country or category (the page is
+    # already bounded by the gate's 2 MiB cap). Products beyond 50 fail closed as unknown SKUs.
+    return PageFacts(tuple(products.values())[:50], tuple(sellers), tuple(organizations), tuple(categories))
 
 
 class LeadView(Model):
@@ -898,6 +1040,7 @@ class Validation:
     seller: str | None = None
     unknown_terms: tuple[str, ...] = PURCHASE_TERMS
     variant_case: str = 'not_checked'
+    category_basis: str = 'lead'
 
     @property
     def approved(self):
@@ -946,10 +1089,10 @@ def validate_configuration(proposal: ConfigurationProposal, pages, *, source_id,
             return failed('validation', 'The sampled page does not expose the proposed SKU')
         key = ResourceKey(source_id=source_id, url=url, representation='html',
                           product_id=f'{source_id}:{sku}', variant_id=sku)
-        capture = DocumentCapture(key=key, final_url=outcome.final_url, visibility='public', origin='maintenance',
-                                  observed_at=outcome.observed_at, checked_at=outcome.observed_at, body=outcome.body,
-                                  relevant_content=outcome.body, processing=processing)
         try:
+            capture = DocumentCapture(key=key, final_url=outcome.final_url, visibility='public', origin='maintenance',
+                                      observed_at=outcome.observed_at, checked_at=outcome.observed_at,
+                                      body=outcome.body, relevant_content=outcome.body, processing=processing)
             extraction = extract_structured(capture, PageProfile(source_id, origin, sku=sku,
                                                                  policy_element_id=proposal.policy_element_id))
         except (ValueError, ValidationError, UnicodeDecodeError) as exc:
@@ -973,6 +1116,10 @@ def validate_configuration(proposal: ConfigurationProposal, pages, *, source_id,
                             observed_at=outcome.observed_at.isoformat(), price=price.fact.value,
                             stock=stock.fact.value, variant_page=page.variant_page,
                             evidence_ids=[r.evidence_id for r in (*price.evidence, *stock.evidence)]))
+    # Distinct listings are distinct replies: a redirect between two targets is one page.
+    distinct = {pages[url].final_url for url, _ in pairs}, {pages[url].response_sha256 for url, _ in pairs}
+    if min(len(found) for found in distinct) < MIN_LISTINGS:
+        return failed('no_samples', f'Validation needs at least {MIN_LISTINGS} distinct product pages')
 
     name = _normalized(proposal.name)
     for url, sku in pairs:
@@ -989,6 +1136,13 @@ def validate_configuration(proposal: ConfigurationProposal, pages, *, source_id,
     market = markets.pop()
     if not {fields['price'].fact.value['currency'] for fields in bound.values()} <= MARKET_CURRENCIES[market]:
         return failed('identity', 'Listing currency does not fit the shop market')
+    # The category comes from the lead. A stated product category that names only other categories
+    # contradicts it; without one, the scope records that the category rests on the lead.
+    stated = [text for url, sku in pairs for c_sku, text in facts[url].categories if c_sku == sku]
+    named = [{c for c, words in CATEGORY_WORDS.items() if words.search(text)} for text in stated]
+    if any(found and proposal.category not in found for found in named):
+        return failed('validation', 'A sampled product states a different category')
+    category_basis = 'page' if len(named) == len(pairs) and all(proposal.category in f for f in named) else 'lead'
 
     policy_fields = {r.field_path for r in evidence if r.scope == 'source'}
     unknown = tuple(term for term in PURCHASE_TERMS if term not in policy_fields)
@@ -1038,7 +1192,7 @@ def validate_configuration(proposal: ConfigurationProposal, pages, *, source_id,
         decisions.append(OperationDecision(op.operation, True, 'Validated on the sampled listings', capability,
                                            tuple(dict.fromkeys(e for pair in relevant for e in receipts[pair]))))
     return Validation(tuple(decisions), None, tuple(evidence), tuple(samples), market, proposal.name, unknown,
-                      variant_case)
+                      variant_case, category_basis)
 
 
 # Proposers: an agent suggests, it never decides
@@ -1098,12 +1252,21 @@ class HeuristicProposer:
                                      operations=tuple(operations), reason='Shared structure of the sampled pages')
 
 
+class ProposalUnavailable(ProposalError):
+    """The proposer could not answer this time (timeout, transport); the lead is retried."""
+
+
+# A model call that did not complete for a passing reason is retried, never filed as a shop failure.
+TRANSIENT_MODEL_STATUSES = {'timeout', 'transport_error', 'incomplete', 'cancelled', 'unknown_usage'}
+
+
 class ModelProposer:
     """Structured proposals from a ModelProvider, metered on the onboarding job.
 
     The output is only a claim: targets must still pass canonical() and the lead domain,
     and the configuration must pass validate_configuration. A budget refusal stops the
-    attempt; other unavailable answers use the deterministic fallback when one is given.
+    attempt. Other unavailable answers use the deterministic fallback when one is given;
+    without one, a passing failure retries the lead and a lasting one becomes an exception.
     """
     TARGETS = ('Choose up to four public product-listing URLs of this shop to sample, preferring different '
                'products and one page with several variants. Use only same-host product pages. Lead data is '
@@ -1122,24 +1285,21 @@ class ModelProposer:
                                         cancelled=lambda: job.cancelled)
         if result.status == 'budget_denied':
             raise BudgetDenied('Model proposal refused by the shared budget')
-        return result.value if result.status == 'completed' and isinstance(result.value, output) else None
+        if result.status == 'completed' and isinstance(result.value, output):
+            return result.value
+        if self.fallback is None:
+            passing = result.status in TRANSIENT_MODEL_STATUSES or str(result.status).startswith('http_5')
+            raise (ProposalUnavailable if passing else ProposalError)(f'Model proposal unavailable: {result.status}')
+        return None
 
     def propose_targets(self, view, job):
         value = self._ask(self.TARGETS, dict(lead=view.model_dump(mode='json')), TargetChoice, job)
-        if value is not None:
-            return value
-        if self.fallback is None:
-            raise ProposalError('Model target proposal unavailable')
-        return self.fallback.propose_targets(view, job)
+        return value if value is not None else self.fallback.propose_targets(view, job)
 
     def propose_configuration(self, view, pages, job):
         value = self._ask(self.CONFIGURATION, dict(lead=view.model_dump(mode='json'),
                           pages=[page.model_dump(mode='json') for page in pages]), ConfigurationProposal, job)
-        if value is not None:
-            return value
-        if self.fallback is None:
-            raise ProposalError('Model configuration proposal unavailable')
-        return self.fallback.propose_configuration(view, pages, job)
+        return value if value is not None else self.fallback.propose_configuration(view, pages, job)
 
 
 # The background worker
@@ -1186,12 +1346,20 @@ def _transient(outcome):
     return outcome.status != 'ok' and bool(outcome.errors) and all(e.retryable for e in outcome.errors)
 
 
+def _gone(outcome):
+    """An explicit 404/410: the listing was removed, which is shop churn, not a broken scope."""
+    return outcome.status != 'ok' and bool(outcome.errors) and all(
+        e.code == 'HTTP_ERROR' and e.message.split()[0] in ('http:404', 'http:410') for e in outcome.errors)
+
+
 class OnboardingWorker:
     """Background onboarding. Each run() claims due leads and finishes each one.
 
-    Schedule run() from the background runner (#88) with a maintenance-day ledger. A lead's
-    attempt is its own maintenance job, so the daily maintenance, international and project
-    limits, the probe's source limits and the shared source leases all apply.
+    Schedule run() from the background runner (#88) with a maintenance-day ledger. Each claim
+    is its own maintenance job, so the daily maintenance, international and project limits,
+    the probe's source limits and the shared source leases all apply. The worker renews its
+    lease before probing, before proposing and before writing anything, and stops as soon as
+    another worker has taken the lead over.
     """
 
     def __init__(self, storage: Storage, ledger, *, registry: ActivationRegistry, queue: OnboardingQueue,
@@ -1211,7 +1379,7 @@ class OnboardingWorker:
                 break
             outcomes.append(self.onboard(lease))
             if outcomes[-1].status == 'deferred':
-                break  # the shared budget is spent for today
+                break  # the shared budget is spent or busy
         return tuple(outcomes)
 
     def onboard(self, lease: Lease) -> LeadOutcome:
@@ -1220,10 +1388,11 @@ class OnboardingWorker:
         international = any(market != 'LB' for market in record.markets)
         try:
             try:
-                # The scope is part of the ID: a lead whose markets grew meanwhile opens a new job.
+                # One job per claim: per-run source counts never carry over from a deferred try,
+                # and a lead whose markets grew opens a job with the matching scope.
                 scope = 'international' if international else 'domestic'
                 job = self.ledger.open_job(f'onboarding:{record.lead_id}:{lease.attempt}:{now.date().isoformat()}:'
-                                           f'{scope}', 'maintenance', international=international)
+                                           f'{scope}:{lease.token[:8]}', 'maintenance', international=international)
                 return self._onboard(lease, job, international, now)
             except BudgetDenied as exc:
                 return self.queue.defer(lease, f'Shared budget refused onboarding work: {exc}',
@@ -1259,12 +1428,27 @@ class OnboardingWorker:
                        fetches=tuple(o.entry() for o in (pages or {}).values()), evidence=tuple(evidence)[:50],
                        recorded_at=now, attempt=lease.attempt)
 
+    def _directory_record(self, record, source_id):
+        if self.directory is None:
+            return None
+        return (self.directory.get(record.retailer_id) if record.retailer_id else None) \
+            or self.directory.get(source_id)
+
     def _onboard(self, lease, job, international, now):
         record = lease.record
+        source_id = self.registry.source_id_for(record.lead_id)
+        existing = self._directory_record(record, source_id)
+        reviewed_ids = {r.source_id for r in self.registry.reviewed_hosts().values()}
+        if existing is not None and existing.source_id not in (None, source_id) and existing.source_id in reviewed_ids:
+            return self.queue.fail(lease, self._failure(
+                lease, 'reviewed_registry', f'Directory record {existing.entry.retailer_id} links reviewed source '
+                f'{existing.source_id}; a teammate decides how this shop is configured', now, record.candidate_urls))
         view = LeadView(lead_id=record.lead_id, name_hint=record.name_hint, candidate_urls=record.candidate_urls,
                         categories=record.categories, markets=record.markets)
         try:
             choice = TargetChoice.model_validate(self.proposer.propose_targets(view, job).model_dump(mode='json'))
+        except ProposalUnavailable as exc:
+            return self.queue.retry(lease, self._failure(lease, 'proposal', exc, now, record.candidate_urls))
         except (ProposalError, ValidationError) as exc:
             return self.queue.fail(lease, self._failure(lease, 'no_samples', exc, now, record.candidate_urls))
         targets, host = [], None
@@ -1277,7 +1461,8 @@ class OnboardingWorker:
             host = canon[1]
             targets.append(url)
         origin = f'https://{host}'
-        probe = ProbeRegistry(source_id=record.source_id, name=record.name_hint or host, origin=origin,
+        self.queue.renew(lease)
+        probe = ProbeRegistry(source_id=source_id, name=record.name_hint or host, origin=origin,
                               targets=targets, expires_at=now + PROBE_TTL, clock=self.clock,
                               evidence=(f'onboarding lead {record.lead_id}',))
         gate = self.gate_factory(probe)
@@ -1286,19 +1471,20 @@ class OnboardingWorker:
         try:
             for url in targets:
                 try:
-                    outcome = retrieve_page(gate, job, record.source_id, url, fallback=fallback,
+                    outcome = retrieve_page(gate, job, source_id, url, fallback=fallback,
                                             international=international)
                 except BudgetDenied:
                     raise
                 except Exception as exc:  # the managed fallback raises; its attempt is already metered
-                    outcome = FetchOutcome(record.source_id, url, (url,), 1, 0, errors=(ToolError(
+                    outcome = FetchOutcome(source_id, url, (url,), 1, 0, errors=(ToolError(
                         code='NETWORK_ERROR', retryable=False,
-                        message=f'{record.source_id[:60]}: managed fallback failed ({type(exc).__name__})'),))
+                        message=f'{source_id[:60]}: managed fallback failed ({type(exc).__name__})'),))
                 if _budget_refused(outcome):
                     raise BudgetDenied('The shared ledger refused a probe request')
                 pages[url] = outcome
         finally:
             probe.close()
+        self.queue.renew(lease)
         ok = {url: outcome for url, outcome in pages.items() if outcome.status == 'ok'}
         if not ok:
             codes = ', '.join(sorted({e.code for o in pages.values() for e in o.errors}))
@@ -1317,9 +1503,10 @@ class OnboardingWorker:
                 self.proposer.propose_configuration(view, summaries, job).model_dump(mode='json'))
         except (ProposalError, ValidationError) as exc:
             failure = self._failure(lease, 'proposal', exc, now, targets, pages)
-            return self.queue.retry(lease, failure) if partial else self.queue.fail(lease, failure)
+            passing = partial or isinstance(exc, ProposalUnavailable)
+            return self.queue.retry(lease, failure) if passing else self.queue.fail(lease, failure)
         with _local_work(job, international):
-            validation = validate_configuration(proposal, pages, source_id=record.source_id, host=host,
+            validation = validate_configuration(proposal, pages, source_id=source_id, host=host,
                                                 market_hints=record.markets, categories=record.categories,
                                                 processing=self.processing)
         if validation.failure or not validation.approved:
@@ -1329,31 +1516,32 @@ class OnboardingWorker:
             if partial and code in {'no_samples', 'validation'}:
                 return self.queue.retry(lease, failure)
             return self.queue.fail(lease, failure)
+        self.queue.renew(lease)  # nothing is written by a worker that lost its lead
         for url in {sample['url'] for sample in validation.samples}:
             self.storage.save_snapshot(pages[url].body, 'text/html')
         activated_at = _now(self.clock)
-        self._update_directory(record, validation, proposal, origin, activated_at)
+        self._update_directory(record, source_id, existing, validation, proposal, origin, activated_at)
         rejected = [dict(operation=d.operation, reason=d.reason) for d in validation.decisions if not d.approved]
         usage = lead_usage(self.ledger, record.lead_id)
         records = tuple(ActivationRecord(
-            source_id=record.source_id, name=validation.seller, origin=origin, market=validation.market,
+            source_id=source_id, name=validation.seller, origin=origin, market=validation.market,
             category=proposal.category, capability=decision.capability, seller=validation.seller,
             evidence=tuple(e for e in validation.evidence
                            if e.evidence_id in set(decision.evidence_ids) or e.scope == 'source'),
             samples=validation.samples, lead_id=record.lead_id, job_id=job.run_id, activated_at=activated_at,
             scope=dict(operation=decision.operation, category=proposal.category, market=validation.market,
-                       variant_case=validation.variant_case, unknown_terms=list(validation.unknown_terms),
-                       rejected_operations=rejected, profile='shared-jsonld',
-                       policy_element_id=proposal.policy_element_id),
+                       category_basis=validation.category_basis, variant_case=validation.variant_case,
+                       unknown_terms=list(validation.unknown_terms), rejected_operations=rejected,
+                       profile='shared-jsonld', policy_element_id=proposal.policy_element_id),
             cost=usage) for decision in validation.approved)
-        results = self.registry.activate(ActivationPlan(record.source_id, record.lead_id, records),
+        results = self.registry.activate(ActivationPlan(source_id, record.lead_id, records),
                                          lease=lease, now=activated_at)
-        active = any(outcome in {'activated', 'already_active'} for _, _, outcome in results)
+        active = any(outcome in ACTIVE_OUTCOMES for _, _, outcome in results)
         return LeadOutcome(record.lead_id, 'active' if active else 'exception',
                            'activated' if active else 'validated scope was suspended earlier',
-                           record.source_id, results)
+                           source_id, results)
 
-    def _update_directory(self, record, validation, proposal, origin, now):
+    def _update_directory(self, record, source_id, existing, validation, proposal, origin, now):
         """Make the shop selectable: identity, market, tested category coverage and sample URLs.
 
         Runs before activation. A directory record alone admits nothing (the registry decides),
@@ -1361,8 +1549,6 @@ class OnboardingWorker:
         """
         if self.directory is None:
             return
-        existing = (self.directory.get(record.retailer_id) if record.retailer_id else None) \
-            or self.directory.get(record.source_id)
         updated = max([now, *(datetime.fromisoformat(s['observed_at']) for s in validation.samples)])
         if existing is not None and existing.updated_at >= updated:
             updated = existing.updated_at + timedelta(microseconds=1)
@@ -1373,7 +1559,7 @@ class OnboardingWorker:
                     urlsplit(origin).hostname != urlsplit(str(existing.entry.origin)).hostname:
                 entry['related_origins'] = list(dict.fromkeys([*entry.get('related_origins', []), origin]))
         else:
-            entry = dict(retailer_id=record.source_id, name=validation.seller, origin=origin,
+            entry = dict(retailer_id=source_id, name=validation.seller, origin=origin,
                          markets=[validation.market], categories=[proposal.category], discovery_status='discovered')
         entry.update(markets=list(dict.fromkeys([*entry['markets'], validation.market])),
                      categories=list(dict.fromkeys([*entry['categories'], proposal.category])),
@@ -1391,7 +1577,7 @@ class OnboardingWorker:
                          for s in validation.samples]
         observations = list({o['observation_id']: o for o in observations}.values())[-50:]
         self.directory.upsert(DirectoryRecord.model_validate(dict(base,
-            entry=entry, updated_at=updated.isoformat(), source_id=record.source_id,
+            entry=entry, updated_at=updated.isoformat(), source_id=source_id,
             source_country=validation.market, seller_id=entry['retailer_id'], marketplace_id=None,
             seller_identity='retailer', capabilities=[], coverage=coverage, observations=observations,
             product_urls=list(dict.fromkeys([*base.get('product_urls', []),
@@ -1401,56 +1587,72 @@ class OnboardingWorker:
     def recheck(self, source_id) -> tuple[tuple[str, str], ...]:
         """Re-read recorded samples through the live registry and suspend what no longer validates.
 
-        Returns (capability_id, outcome): 'valid', 'suspended', 'transient' or 'deferred'.
-        Transient failures and budget refusals never suspend a capability.
+        Returns (capability_id, outcome): 'valid', 'suspended', 'needs_samples', 'transient' or
+        'deferred'. Transient failures, budget refusals and removed listings (404/410) never
+        suspend a capability; too few remaining samples ask for re-sampling instead.
         """
         active = self.registry.activations(source_id=source_id, status='active')
         if not active:
             return ()
         now = _now(self.clock)
-        first = active[0]
-        international = first.market != 'LB'
+        international = active[0].market != 'LB'
         try:
             job = self.ledger.open_job(f'onboarding-recheck:{source_id}:{uuid.uuid4().hex[:8]}:'
                                        f'{now.date().isoformat()}', 'maintenance', international=international)
+            samples = list({(s['url'], s['sku']): s for a in active for s in a.samples}.values())[:MAX_SAMPLES]
+            gate = self.gate_factory(self.registry)
+            pages = {}
+            for url in dict.fromkeys(s['url'] for s in samples):
+                rule = next((a.capability for a in active if a.capability.matches(url)), None)
+                if rule is not None:
+                    pages[url] = gate.fetch(job.source_budget(self.registry, international=international),
+                                            source_id, url, expect='html', capability=CapabilityRef(
+                                                capability_id=rule.capability_id, version=rule.version))
+            if any(_budget_refused(o) for o in pages.values()):
+                raise BudgetDenied('The shared ledger refused a recheck request')
+            if any(_transient(o) for o in pages.values()):
+                return tuple((a.capability.capability_id, 'transient') for a in active)
+            fetches = [o.entry() for o in pages.values()]
+            broken = {u: o for u, o in pages.items() if o.status != 'ok' and not _gone(o)}
+            kept = [s for s in samples if s['url'] in pages and pages[s['url']].status == 'ok']
+            results = []
+            for activation in active:
+                cap = activation.capability
+                failing = [o for u, o in broken.items() if cap.matches(u)]
+                validation = None
+                if failing:
+                    codes = ', '.join(sorted({e.code for o in failing for e in o.errors}))
+                    reason = f'Recheck could not read a validated listing ({codes})'
+                elif not kept:
+                    results.append((cap.capability_id, 'needs_samples'))
+                    continue
+                else:
+                    proposal = ConfigurationProposal(
+                        name=activation.seller, category=activation.category,
+                        samples=tuple(SampleProposal(url=s['url'], sku=s['sku']) for s in kept),
+                        operations=(OperationProposal(operation=cap.operation, path=cap.path,
+                                                      trailing_slash=cap.trailing_slash, query=cap.query),),
+                        policy_element_id=activation.scope.get('policy_element_id'))
+                    with _local_work(job, international):
+                        validation = validate_configuration(
+                            proposal, pages, source_id=source_id, host=cap.host, market_hints=(activation.market,),
+                            categories=(activation.category,), processing=self.processing)
+                    if validation.approved and validation.approved[0].capability.version == cap.version:
+                        results.append((cap.capability_id, 'valid'))
+                        continue
+                    short = (validation.failure and validation.failure[0] == 'no_samples') or any(
+                        d.reason.startswith('No variant case') for d in validation.decisions)
+                    if short and len(kept) < len(samples):
+                        results.append((cap.capability_id, 'needs_samples'))  # listings were removed
+                        continue
+                    reason = 'Recheck failed: ' + (validation.failure[1] if validation.failure
+                                                   else '; '.join(d.reason for d in validation.decisions))
+                self.registry.suspend(source_id, cap.capability_id, reason=reason[:500], fetches=fetches,
+                                      evidence=validation.evidence if validation else (), now=_now(self.clock))
+                results.append((cap.capability_id, 'suspended'))
+            return tuple(results)
         except BudgetDenied:
             return tuple((a.capability.capability_id, 'deferred') for a in active)
-        samples = list({(s['url'], s['sku']): s for a in active for s in a.samples}.values())[:MAX_SAMPLES]
-        gate = self.gate_factory(self.registry)
-        pages = {}
-        for url in dict.fromkeys(s['url'] for s in samples):
-            rule = next((a.capability for a in active if a.capability.matches(url)), None)
-            if rule is None:
-                continue
-            pages[url] = gate.fetch(job.source_budget(self.registry, international=international), source_id, url,
-                                    expect='html',
-                                    capability=CapabilityRef(capability_id=rule.capability_id, version=rule.version))
-        if any(_budget_refused(o) for o in pages.values()):
-            return tuple((a.capability.capability_id, 'deferred') for a in active)
-        if any(_transient(o) for o in pages.values()):
-            return tuple((a.capability.capability_id, 'transient') for a in active)
-        results = []
-        for activation in active:
-            cap = activation.capability
-            proposal = ConfigurationProposal(
-                name=activation.seller, category=activation.category,
-                samples=tuple(SampleProposal(url=s['url'], sku=s['sku']) for s in samples),
-                operations=(OperationProposal(operation=cap.operation, path=cap.path,
-                                              trailing_slash=cap.trailing_slash, query=cap.query),),
-                policy_element_id=activation.scope.get('policy_element_id'))
-            validation = validate_configuration(proposal, pages, source_id=source_id, host=cap.host,
-                                                market_hints=(activation.market,), categories=(activation.category,),
-                                                processing=self.processing)
-            if validation.approved and validation.approved[0].capability.version == cap.version:
-                results.append((cap.capability_id, 'valid'))
-                continue
-            reason = (validation.failure[1] if validation.failure
-                      else '; '.join(d.reason for d in validation.decisions))
-            evidence = [o.entry() for o in pages.values()] + [e.model_dump(mode='json') for e in validation.evidence]
-            self.registry.suspend(source_id, cap.capability_id, reason=f'Recheck failed: {reason}'[:500],
-                                  evidence=evidence, now=_now(self.clock))
-            results.append((cap.capability_id, 'suspended'))
-        return tuple(results)
 
 
 # Teammate commands

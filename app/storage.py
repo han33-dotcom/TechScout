@@ -16,6 +16,7 @@ import sys
 import uuid
 
 from pgvector.sqlalchemy import VECTOR
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy import (
     JSON, Boolean, CheckConstraint, Column, Date, DateTime, ForeignKey, Index, Integer, MetaData, Numeric,
     String, Table, Text, TypeDecorator, URL, UniqueConstraint, create_engine, delete, func,
@@ -542,10 +543,16 @@ class Storage:
 
     def save_snapshot(self, content: bytes, media_type='application/octet-stream') -> str:
         sha256 = self.snapshots.put(content)
-        with self.transaction() as db:
-            if not db.execute(select(snapshots.c.sha256).where(snapshots.c.sha256 == sha256)).first():
-                db.execute(insert(snapshots).values(sha256=sha256, size_bytes=len(content),
-                                                    media_type=media_type, stored_at=_now()))
+        try:
+            with self.transaction() as db:
+                if not db.execute(select(snapshots.c.sha256).where(snapshots.c.sha256 == sha256)).first():
+                    db.execute(insert(snapshots).values(sha256=sha256, size_bytes=len(content),
+                                                        media_type=media_type, stored_at=_now()))
+        except IntegrityError:
+            # Another process stored the same content between the check and the insert.
+            with self.engine.connect() as db:
+                if not db.execute(select(snapshots.c.sha256).where(snapshots.c.sha256 == sha256)).first():
+                    raise
         return sha256
 
     def load_snapshot(self, sha256) -> bytes:

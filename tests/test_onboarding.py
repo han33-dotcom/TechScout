@@ -11,6 +11,7 @@ import threading
 import unittest
 
 import httpx2
+from sqlalchemy import event
 
 from app.accounting import Charge, Ledger
 from app.collection_contracts import RetailerDirectoryEntry
@@ -33,7 +34,7 @@ START = datetime(2026, 11, 16, 9, tzinfo=timezone.utc)
 SHOP = 'https://cedartech.example'
 SCOUT = SHOP + '/product/scout-book'
 TRAIL = SHOP + '/product/trail-book'
-SOURCE_ID = 'auto-cedartech-example'
+SOURCE_ID = ob.source_id_for('cedartech.example')
 
 
 def request(**changes):
@@ -85,10 +86,18 @@ class OnboardingCase(unittest.TestCase):
         self.shop = Shop()
         self.addresses = ['93.184.216.34']
         self.limiter = SourceLimiter()
+        self.live = None  # a clock that moves on every call, like a real one
+
+    def ticking(self):
+        def tick():
+            self.now += timedelta(microseconds=1)
+            return self.now
+        self.live = tick
 
     def gate(self, registry):
         # The gate's per-minute limiter runs on the same fake time as the ledger and the queue.
-        return SourceGate._for_tests(registry, resolver=lambda *_: list(self.addresses), wall_clock=self.clock,
+        return SourceGate._for_tests(registry, resolver=lambda *_: list(self.addresses),
+                                     wall_clock=self.live or self.clock,
                                      clock=lambda: (self.now - START).total_seconds(),
                                      sleep=lambda _: None, limiter=self.limiter,
                                      transport=httpx2.MockTransport(self.shop.handler))
@@ -96,7 +105,7 @@ class OnboardingCase(unittest.TestCase):
     def worker(self, proposer=None, **kwargs):
         return ob.OnboardingWorker(self.storage, self.ledger, registry=self.registry, queue=self.queue,
                                    proposer=proposer or ob.HeuristicProposer(), gate_factory=self.gate,
-                                   directory=self.directory, clock=self.clock, **kwargs)
+                                   directory=self.directory, clock=self.live or self.clock, **kwargs)
 
     def enqueue(self, *urls, req=None):
         return self.queue.enqueue_tavily([Lead(url, 'Scout Book', 'snippet only', .8) for url in urls], req or request())
@@ -330,8 +339,9 @@ class ActivationTests(OnboardingCase):
     def test_parallel_fresh_activation_of_the_same_plan_inserts_once(self):
         self.onboard()
         product = next(a for a in self.registry.activations(SOURCE_ID) if a.capability.operation == 'product')
-        fresh = product.model_copy(update={'source_id': 'auto-other-example', 'origin': 'https://other.example'})
-        plan = ob.ActivationPlan('auto-other-example', 'other.example', (fresh,))
+        other = ob.source_id_for('other.example')
+        fresh = product.model_copy(update={'source_id': other, 'origin': 'https://other.example'})
+        plan = ob.ActivationPlan(other, 'other.example', (fresh,))
         results = []
         threads = [threading.Thread(target=lambda: results.append(self.registry.activate(plan)[0][2])) for _ in range(4)]
         for thread in threads:
@@ -339,7 +349,7 @@ class ActivationTests(OnboardingCase):
         for thread in threads:
             thread.join()
         self.assertEqual(sorted(results), ['activated', 'already_active', 'already_active', 'already_active'])
-        self.assertEqual(len(self.registry.activations('auto-other-example')), 1)
+        self.assertEqual(len(self.registry.activations(other)), 1)
 
     def test_a_new_version_supersedes_and_suspension_keeps_history(self):
         self.onboard()
@@ -673,7 +683,7 @@ class FailureTests(OnboardingCase):
         (outcome,) = self.worker().run()
         self.assertEqual(outcome.status, 'active', outcome.reason)
         jobs = [j for j in self.ledger.snapshot()['jobs'] if j.startswith('onboarding:cedartech.example:1:')]
-        self.assertEqual(sorted(j.rsplit(':', 1)[1] for j in jobs), ['domestic', 'international'])
+        self.assertEqual(sorted(j.split(':')[4] for j in jobs), ['domestic', 'international'])  # one job per claim
 
     def test_project_stop_also_defers(self):
         self.enqueue(SCOUT, TRAIL)
@@ -744,6 +754,259 @@ class ModelProposerTests(OnboardingCase):
         provider.answers = [('budget_denied', None)]
         (deferred,) = self.worker(ob.ModelProposer(provider, fallback=ob.HeuristicProposer())).run()
         self.assertEqual(deferred.status, 'deferred')
+
+
+class ReviewRegressionTests(OnboardingCase):
+    """One test per finding of the independent review of the first version."""
+
+    def test_probe_works_with_a_clock_that_moves_between_the_gates_two_reads(self):
+        self.ticking()
+        (outcome,) = self.onboard()
+        self.assertEqual(outcome.status, 'active', outcome.reason)
+        probe = ob.ProbeRegistry(source_id=SOURCE_ID, name='Cedar Tech', origin=SHOP, targets=(SCOUT,),
+                                 expires_at=self.now + ob.PROBE_TTL, clock=self.live)
+        self.assertEqual(probe.read_registry(), probe.read_registry())
+
+    def test_suspension_surfaces_the_lead_and_reopening_can_reactivate(self):
+        self.onboard()
+        self.registry.suspend(SOURCE_ID, 'product-page', reason='Listing layout changed')
+        (exception,) = self.queue.exceptions()
+        self.assertEqual(exception.record.exception.code, 'suspended')
+        self.assertEqual(set(exception.record.exception.urls), {SCOUT, TRAIL})
+        self.registry.suspend(SOURCE_ID, 'variant-page', reason='Listing layout changed')
+        self.assertNotIn(SOURCE_ID, self.registry.read_registry()['live_release']['admitted_source_ids'])
+        self.assertTrue(self.queue.reopen('cedartech.example', note='layout fixed'))
+        self.now += timedelta(hours=1)
+        (outcome,) = self.worker().run()
+        self.assertEqual(outcome.status, 'active', outcome.reason)
+        self.assertEqual({o for _, _, o in outcome.capabilities}, {'reactivated'})
+        self.assertIn(SOURCE_ID, self.registry.read_registry()['live_release']['admitted_source_ids'])
+        kinds = [e['kind'] for e in self.registry.history(source_id=SOURCE_ID)]
+        self.assertEqual((kinds.count('suspended'), kinds.count('reactivated')), (2, 2))
+        (product,) = [a for a in self.registry.activations(SOURCE_ID) if a.capability.operation == 'product']
+        self.assertEqual([c['status'] for c in product.changes], ['suspended', 'reactivated'])
+
+    def test_a_removed_listing_asks_for_new_samples_instead_of_suspending(self):
+        self.onboard()
+        self.shop.status[TRAIL] = 404
+        self.now += timedelta(hours=1)
+        self.assertEqual(set(o for _, o in self.worker().recheck(SOURCE_ID)), {'needs_samples'})
+        self.assertEqual(len(self.registry.activations(SOURCE_ID, 'active')), 2)
+        self.shop.status[TRAIL] = 200
+        self.shop.redirects[TRAIL] = 'https://elsewhere.example/product/trail-book'
+        self.now += timedelta(hours=1)
+        self.assertEqual(set(o for _, o in self.worker().recheck(SOURCE_ID)), {'suspended'})
+
+    def test_a_redirect_between_targets_is_one_page_not_two_listings(self):
+        self.shop.redirects[TRAIL] = SCOUT
+        self.onboard()
+        failure = self.queue.get('cedartech.example').record.exception
+        self.assertEqual(failure.code, 'no_samples')
+        self.assertEqual(self.registry.activations(), ())
+
+    def test_string_and_reference_sellers_are_checked(self):
+        offer_seller = b'"seller":{"@type":"Organization","name":"Cedar Tech"}'
+        original = self.shop.pages[TRAIL]
+        for seller, outcome in ((b'"seller":"Marketplace Vendor 42"', 'exception'),
+                                (b'"seller":{"@id":"#vendor-42"}', 'exception'),
+                                (b'"seller":[{"name":"Cedar Tech"},{"name":"Vendor 7"}]', 'exception'),
+                                (b'"seller":{"@id":"#shop"}', 'active')):
+            with self.subTest(seller=seller):
+                self.now += timedelta(minutes=2)  # a fresh minute for the shop's request limit
+                page = original.replace(offer_seller, seller)
+                if b'#shop' in seller:
+                    page = page.replace(b'"@type":"ElectronicsStore",', b'"@type":"ElectronicsStore","@id":"#shop",')
+                self.shop.pages[TRAIL] = page
+                for state in self.queue.leads():
+                    self.queue.reopen(state.lead_id, note='retest')
+                if not self.queue.leads():
+                    self.enqueue(SCOUT, TRAIL)
+                (result,) = self.worker().run()
+                self.assertEqual(result.status, outcome, result.reason)
+                if outcome == 'exception':
+                    self.assertEqual(self.queue.get('cedartech.example').record.exception.code, 'identity')
+
+    def test_a_reviewed_pending_entry_keeps_its_id_and_wins_once_reviewed(self):
+        entry = lambda status: {'id': 'cedar_tech', 'name': 'Cedar Tech', 'origin': SHOP, 'status': status,
+            'reviewed_at': '2026-11-16', 'allowed_endpoints': [SCOUT], 'admission': None if status == 'pending' else {
+                'basis': 'Teammate review', 'reviewed_at': '2026-11-17T00:00:00Z', 'scope': 'Read-only',
+                'evidence': [SCOUT]}, 'limits': {'requests_per_minute': 6, 'concurrency': 1, 'max_requests_per_run': 6}}
+        self.base.write_text(json.dumps({'sources': [entry('pending')], 'live_release': {'admitted_source_ids': []}}),
+                             encoding='utf-8')
+        self.directory.upsert(DirectoryRecord(entry=RetailerDirectoryEntry(retailer_id='cedar_tech', name='Cedar Tech',
+            origin=SHOP, markets=('LB',), categories=('laptop',), discovery_status='discovered'), updated_at=START,
+            source_id='cedar_tech', seller_identity='unresolved', product_urls=(SCOUT,)))
+        (outcome,) = self.onboard()
+        self.assertEqual((outcome.status, outcome.source_id), ('active', 'cedar_tech'))
+        document = self.registry.read_registry()
+        (stand_in,) = [s for s in document['sources'] if s['id'] == 'cedar_tech']
+        self.assertEqual(stand_in['status'], 'active')
+        self.assertEqual(self.directory.get('cedar_tech').source_id, 'cedar_tech')
+        self.assertTrue(self.directory.select(DirectoryQuery(category='laptop'))[0].configured)
+        # A teammate promotes the reviewed entry: it wins, and the directory link still works.
+        self.base.write_text(json.dumps({'sources': [entry('active')],
+                                         'live_release': {'admitted_source_ids': ['cedar_tech']}}), encoding='utf-8')
+        (reviewed,) = [s for s in self.registry.read_registry()['sources'] if s['id'] == 'cedar_tech']
+        self.assertEqual(reviewed['allowed_endpoints'], [SCOUT])
+        self.assertNotIn('endpoint_capabilities', reviewed)
+        (selection,) = self.directory.select(DirectoryQuery(category='laptop'))
+        self.assertEqual((selection.configured, selection.permitted_urls), (True, (SCOUT,)))
+
+    def test_a_directory_link_to_another_reviewed_source_needs_a_teammate(self):
+        self.base.write_text(json.dumps({'live_release': {'admitted_source_ids': []}, 'sources': [
+            {'id': 'old_cedar', 'origin': 'https://cedar-old.example', 'status': 'pending'}]}), encoding='utf-8')
+        self.directory.upsert(DirectoryRecord(entry=RetailerDirectoryEntry(retailer_id='cedar_tech', name='Cedar Tech',
+            origin=SHOP, markets=('LB',), categories=('laptop',), discovery_status='discovered'), updated_at=START,
+            source_id='old_cedar', seller_identity='unresolved', product_urls=(SCOUT,)))
+        self.onboard()
+        self.assertEqual(self.queue.get('cedartech.example').record.exception.code, 'reviewed_registry')
+        self.assertEqual(self.shop.seen, [])
+
+    def test_a_late_worker_neither_fetches_nor_writes(self):
+        self.enqueue(SCOUT, TRAIL)
+        stale = self.queue.claim()
+        self.now += ob.LEASE + timedelta(seconds=1)
+        self.assertEqual(self.worker().run()[0].status, 'active')
+        seen, record = list(self.shop.seen), self.directory.get(SOURCE_ID)
+        self.assertEqual(self.worker().onboard(stale).status, 'lease_lost')
+        self.assertEqual((self.shop.seen, self.directory.get(SOURCE_ID)), (seen, record))
+
+    def test_automatic_ids_do_not_collide_and_belong_to_their_domain(self):
+        self.assertNotEqual(ob.source_id_for('cedar-tech.example'), ob.source_id_for('cedar.tech.example'))
+        self.onboard()
+        (product,) = [a for a in self.registry.activations(SOURCE_ID) if a.capability.operation == 'product']
+        foreign = product.model_copy(update={'source_id': SOURCE_ID, 'origin': 'https://other.example'})
+        plan = ob.ActivationPlan(SOURCE_ID, 'other.example', (foreign.model_copy(update={
+            'capability': product.capability.model_copy(update={'capability_id': 'other-page'})}),))
+        self.registry.activate(plan)
+        (entry,) = [s for s in self.registry.read_registry()['sources'] if s['id'] == SOURCE_ID]
+        self.assertEqual(entry['origin'], SHOP)  # the gate keeps validating one host per source
+
+    def test_a_revoked_parent_domain_covers_its_subdomains(self):
+        self.base.write_text(json.dumps({'live_release': {'admitted_source_ids': []}, 'sources': [
+            {'id': 'cedar', 'origin': SHOP, 'status': 'revoked'}]}), encoding='utf-8')
+        result = self.queue.enqueue('https://shop.cedartech.example/p/1', channel='tavily', categories=('laptop',),
+                                    reason='t')
+        self.assertEqual(result.status, 'excluded')
+
+    def test_each_claim_gets_its_own_ledger_job(self):
+        self.enqueue(SCOUT, TRAIL)
+        other = self.ledger.open_job('other-maintenance', 'maintenance')
+        held = [other.reserve('work', Charge(Decimal(0)), 60) for _ in range(2)]
+        self.assertEqual(self.worker().run()[0].status, 'deferred')
+        for attempt in held:
+            attempt.release()
+        self.now += ob.BUSY_PAUSE
+        self.assertEqual(self.worker().run()[0].status, 'active')
+        jobs = [j for j in self.ledger.snapshot()['jobs'] if j.startswith('onboarding:cedartech.example:1:')]
+        self.assertEqual(len(jobs), 2)
+
+    def test_a_stated_product_category_must_not_contradict_the_lead(self):
+        self.shop.pages[TRAIL] = self.shop.pages[TRAIL].replace(b'"sku":"TB-8-256",',
+                                                                b'"sku":"TB-8-256","category":"Monitors",')
+        self.onboard()
+        failure = self.queue.get('cedartech.example').record.exception
+        self.assertEqual((failure.code, failure.reason), ('validation', 'A sampled product states a different category'))
+        self.queue.reopen('cedartech.example', note='retest')
+        self.shop.pages[TRAIL] = self.shop.pages[TRAIL].replace(b'"Monitors"', b'"Laptops & Notebooks"')
+        self.assertEqual(self.worker().run()[0].status, 'active')
+        product = next(a for a in self.registry.activations(SOURCE_ID) if a.capability.operation == 'product')
+        self.assertEqual(product.scope['category_basis'], 'lead')  # the Scout Book pages state no category
+
+    def test_a_model_timeout_retries_instead_of_failing_the_shop(self):
+        provider = ModelProposerTests.Provider(('timeout', None))
+        (outcome,) = self.onboard(ob.ModelProposer(provider))
+        self.assertEqual(outcome.status, 'retry')
+        provider.answers = [('refused', None)]
+        self.now += ob.RETRY_DELAYS[0]
+        (outcome,) = self.worker(ob.ModelProposer(provider)).run()
+        self.assertEqual(outcome.status, 'exception')
+
+    def test_research_reports_can_enqueue_their_leads(self):
+        from app.research_workers import Report
+        reports = (Report.model_construct(leads=(SCOUT, 'https://127.0.0.1/x')), Report.model_construct(leads=(TRAIL,)))
+        results = self.queue.enqueue_reports(reports, request())
+        self.assertEqual([r.status for r in results], ['queued', 'rejected', 'merged'])
+        self.assertEqual(self.queue.get('cedartech.example').record.channels, ('buyer',))
+
+    def concurrently(self, action, count):
+        """Run action in parallel threads and re-raise any thread's error in the test."""
+        if self.storage.engine.dialect.name == 'sqlite':  # wait for the file lock like PG waits for a row lock
+            event.listen(self.storage.engine, 'connect', lambda connection, _: connection.execute(
+                'PRAGMA busy_timeout = 60000'))
+            self.storage.engine.dispose()
+        results, errors = [], []
+        def run():
+            try:
+                results.append(action())
+            except Exception as exc:  # surfaced below
+                errors.append(exc)
+        threads = [threading.Thread(target=run) for _ in range(count)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
+        if errors:
+            raise errors[0]
+        return results
+
+    def test_concurrent_claims_and_workers_never_share_a_lead(self):
+        self.enqueue(SCOUT, TRAIL)
+        claims = self.concurrently(self.queue.claim, 4)
+        self.assertEqual(sum(c is not None for c in claims), 1)
+        self.now += ob.LEASE + timedelta(seconds=1)
+        second = 'https://pinetech.example'
+        for path in ('/product/scout-book', '/product/trail-book'):
+            self.shop.pages[second + path] = self.shop.pages[SHOP + path]
+        self.queue.enqueue_buyer([second + '/product/scout-book', second + '/product/trail-book'], request())
+        outcomes = [o for run in self.concurrently(lambda: self.worker().run(max_leads=1), 2) for o in run]
+        self.assertEqual(sorted(o.lead_id for o in outcomes), ['cedartech.example', 'pinetech.example'])
+        self.assertTrue(all(o.status == 'active' for o in outcomes), outcomes)
+        claimed = [e['lead_id'] for e in self.registry.history() if e['kind'] in ('claimed', 'recovered')]
+        self.assertEqual(sorted(claimed), ['cedartech.example', 'cedartech.example', 'pinetech.example'])
+
+
+class SnapshotRaceTests(OnboardingCase):
+    def test_a_concurrent_save_of_the_same_page_is_not_an_error(self):
+        from hashlib import sha256
+        from app.storage import snapshots
+        body = self.shop.pages[SCOUT]
+        other = Storage(self.url, self.storage.snapshots.root)  # another process
+        self.addCleanup(other.engine.dispose)
+        raced = []
+        def race(conn, cursor, statement, parameters, context, executemany):
+            if statement.lstrip().upper().startswith('INSERT INTO SNAPSHOTS') and not raced:
+                raced.append(True)
+                with other.transaction() as db:
+                    db.execute(snapshots.insert().values(sha256=sha256(body).hexdigest(), size_bytes=len(body),
+                                                         media_type='text/html', stored_at=START))
+        event.listen(self.storage.engine, 'before_cursor_execute', race)
+        self.addCleanup(event.remove, self.storage.engine, 'before_cursor_execute', race)
+        self.assertEqual(self.storage.save_snapshot(body, 'text/html'), sha256(body).hexdigest())
+        self.assertEqual(raced, [True])
+        self.assertEqual(self.storage.load_snapshot(sha256(body).hexdigest()), body)
+
+
+from test_runs import RunCase  # noqa: E402  (the v1 run controller's offline fixture)
+
+
+class FileRegistry:
+    """A registry object, as ActivationRegistry is, over the same reviewed file."""
+
+    def __init__(self, path):
+        self.path = path
+
+    def read_registry(self):
+        return json.loads(Path(self.path).read_text(encoding='utf-8'))
+
+
+class V1RunnerRegistryTests(RunCase):
+    def test_the_v1_run_controller_reads_a_registry_object(self):
+        by_file = self.search()
+        by_object = self.search(registry_path=FileRegistry(self.registry), run_id='run-2')
+        self.assertEqual(by_object.status, by_file.status)
+        self.assertEqual([(c.source_id, c.status) for c in by_object.source_coverage],
+                         [(c.source_id, c.status) for c in by_file.source_coverage])
 
 
 class CommandTests(OnboardingCase):
