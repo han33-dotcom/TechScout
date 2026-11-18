@@ -323,7 +323,7 @@ class BuyerRunService:
                     for checked in group.offers():
                         if check_full_product(snapshot.request,checked.offer).outcome!='pass':
                             raise ValueError('Recommendation does not meet the buyer hard requirements')
-                        if any(charge.valid_until is not None and charge.valid_until <= checked.verification.checked_at
+                        if any(charge.valid_until is not None and charge.valid_until <= now
                                for charge in checked.offer.costs):
                             raise ValueError('Decisive cost quotes must be current')
                         if supports_domestic_cost(checked.offer):

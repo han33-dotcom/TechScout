@@ -205,6 +205,13 @@ class BuyerApiTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Decisive cost quotes must be current'):
             publish()
         self.assertEqual(self.read(snapshot).current.recommendations, ())
+
+        # A quote can expire after verification while the writer prepares results.
+        shipping['valid_until'] = (self.now + timedelta(seconds=1)).isoformat()
+        self.now += timedelta(seconds=1)
+        with self.assertRaisesRegex(ValueError, 'Decisive cost quotes must be current'):
+            publish()
+        self.assertEqual(self.read(snapshot).current.recommendations, ())
         shipping['valid_until'] = (self.now + timedelta(seconds=1)).isoformat()
         publish()
         self.assertEqual(str(self.read(snapshot).current.recommendations[0].primary.cost.total.amount), '910')
