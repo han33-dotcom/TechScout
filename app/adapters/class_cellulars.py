@@ -26,6 +26,7 @@ from app.contracts import Offer
 
 SOURCE_ID = 'class_cellulars'
 ORIGIN = 'https://classcellulars.com'
+MOBILE_CATEGORY_ID = 132
 MAX_VAT_CLAIMS = 50
 
 # Prices read '1,030.00 $ (Inc. VAT)'; the left boundary stops a match inside a longer number.
@@ -153,9 +154,11 @@ class ClassCatalogAdapter(WooCommerceAdapter):
         if model is None:
             read.errors.append(self._error('unsupported phone model'))
             return (), read
-        url = f'{ORIGIN}/wp-json/wc/store/v1/products?search={quote(model)}&per_page=10&page=1'
+        # An unfiltered first page can be entirely accessories, even for an exact model on the site.
+        url = (f'{ORIGIN}/wp-json/wc/store/v1/products?search={quote(model)}'
+               f'&category={MOBILE_CATEGORY_ID}&per_page=10&page=1')
         outcome = fetch(self.source_id, url, expect='json',
-                        capability=CapabilityRef(capability_id='class-search', version='1'))
+                        capability=CapabilityRef(capability_id='class-search', version='2'))
         read.outcomes.append(outcome)
         if outcome.errors or outcome.body is None:
             return (), read

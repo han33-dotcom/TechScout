@@ -130,7 +130,7 @@
       "endpoint_capabilities": [
         {
           "capability_id": "class-search",
-          "version": "1",
+          "version": "2",
           "host": "classcellulars.com",
           "operation": "search",
           "expect": "json",
@@ -147,6 +147,14 @@
               "parameter": {
                 "kind": "search_text",
                 "max_length": 64
+              }
+            },
+            {
+              "name": "category",
+              "parameter": {
+                "kind": "integer",
+                "minimum": 132,
+                "maximum": 132
               }
             },
             {

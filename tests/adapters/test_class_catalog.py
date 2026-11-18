@@ -7,7 +7,8 @@ from app.sources import SourceGate
 from app.contracts import ToolError
 from . import FakeFetch, ReaderTestCase, fixture, query, routes, CLASS_API, CLASS_PAGE
 
-SEARCH = 'https://classcellulars.com/wp-json/wc/store/v1/products?search=iPhone%2016&per_page=10&page=1'
+SEARCH = ('https://classcellulars.com/wp-json/wc/store/v1/products'
+          '?search=iPhone%2016&category=132&per_page=10&page=1')
 API = 'https://classcellulars.com/wp-json/wc/store/v1/products?slug=iphone-16'
 PAGE = 'https://classcellulars.com/product/iphone-16/'
 
@@ -77,7 +78,14 @@ class CatalogTests(ReaderTestCase):
         self.assertFalse(fetch.calls)
 
     def test_scope_rejects_action_and_unbounded_search(self):
-        gate=SourceGate()
-        for url in (SEARCH.replace('per_page=10','per_page=100'),SEARCH+'&add-to-cart=5'):
-            with self.assertRaises(ValueError):
-                gate.check_scope('class_cellulars',url,expect='json',capability=CapabilityRef(capability_id='class-search',version='1'))
+        gate = SourceGate()
+        capability = CapabilityRef(capability_id='class-search', version='2')
+        gate.check_scope('class_cellulars', SEARCH, expect='json', capability=capability)
+        for url in (
+            SEARCH.replace('&category=132', ''),
+            SEARCH.replace('category=132', 'category=200'),
+            SEARCH.replace('per_page=10', 'per_page=100'),
+            SEARCH + '&add-to-cart=5',
+        ):
+            with self.subTest(url=url), self.assertRaises(ValueError):
+                gate.check_scope('class_cellulars', url, expect='json', capability=capability)
