@@ -328,16 +328,17 @@ def calculate_landed_cost(request: v2.ShoppingRequest, offer: v2.Offer, inputs: 
         price = None
 
     checked = [(quote, *_check_quote(quote, offer, item, price, now, started)) for quote in inputs.quotes]
-    # One service (provider and service name) that both refuses and carries the item contradicts itself:
-    # neither statement settles carriage or rules the route out.
-    refusing = {(q.provider_id, q.service) for q, refused, _, _ in checked if refused}
-    carrying = {(q.provider_id, q.service) for q, refused, problems, _ in checked
-                if not refused and not problems and {line.leg for line in q.lines} & set(_CARRIES)}
+    # One service (provider and service name) that both refuses and carries the item on one leg
+    # contradicts itself: neither statement settles that carriage or rules the route out.
+    def carried(quote):
+        return {(quote.provider_id, quote.service, line.leg) for line in quote.lines if line.leg in _CARRIES}
+    refusing = set().union(*(carried(q) for q, refused, _, _ in checked if refused))
+    carrying = set().union(*(carried(q) for q, refused, problems, _ in checked if not refused and not problems))
     found, doubts, unpriced = defaultdict(list), defaultdict(list), defaultdict(list)
     refusals, refused_legs = [], set()
     for quote, refused, problems, undated in checked:
         legs = {line.leg for line in quote.lines}
-        if (quote.provider_id, quote.service) in refusing & carrying and legs & set(_CARRIES):
+        if carried(quote) & refusing & carrying:
             problems = problems + refused + [f'quotes for one service of {quote.provider_id} disagree on '
                                              'carrying the item']
             refused = []

@@ -227,6 +227,13 @@ class LandedCostTests(unittest.TestCase):
         result = self.landed()
         self.assertEqual(result.support, 'unresolved')
         self.assert_open(result, FREIGHT, reason='disagree on carrying the item')
+        # The same service carrying only another leg does not contradict a freight refusal.
+        other['lines'] = [line for line in forwarder['lines'] if line['leg'] == 'final']
+        forwarder['lines'] = [line for line in forwarder['lines'] if line['leg'] != 'final']
+        result = self.landed()
+        self.assertEqual(result.support, 'unsupported')
+        self.assertEqual(self.part(result, 'final delivery in Lebanon').status, 'verified')
+        forwarder['lines'] += other['lines']
         self.case()['inputs']['quotes'].pop()
         forwarder['battery_accepted'] = None
         result = self.landed()
@@ -507,6 +514,10 @@ class LandedCostTests(unittest.TestCase):
         self.assertEqual([item.offer.offer_id for item in ranked.uncertain], ['book-direct'])
         self.assertEqual(ranked.uncertain[0].reasons, ('verified total in AED is not compared with totals in USD',))
         self.assertEqual([offer.offer_id for offer, _ in shortlist(pairs, 'AED').primary], ['book-direct'])
+        # One offer per currency: the tie goes to the domestic offer's currency.
+        tied = shortlist([pairs[0], pairs[2]])
+        self.assertEqual(([o.offer_id for o, _ in tied.primary], [i.offer.offer_id for i in tied.uncertain]),
+                         (['book-local'], ['book-direct']))
         # A hard maximum in another currency still needs a sourced conversion.
         self.case('direct')['request_changes']['budget'] = {'maximum': usd('1100')}
         self.case('direct')['fx'].pop()

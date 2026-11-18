@@ -134,7 +134,7 @@ the order and on the retailer leg), they are separate charges, so that slot stay
   - A refusal from an expired, undated or mismatched quote is only a doubt: the offer stays
     uncertain.
   - Quotes from one service (same `provider_id` and `service`) that both refuse and accept the item
-    contradict each other. Neither settles anything, and the route stays unresolved.
+    on the same leg contradict each other. Neither settles anything, and the route stays unresolved.
   - A route eligibility fact that says no (`item_eligible` false) also makes the route unsupported.
 - **Exchange rates.**
   - Only sourced rates convert: an `FxRate` whose evidence record has the field path for its
@@ -164,7 +164,8 @@ passes, the cost is verified and within any hard maximum, and the route is suppo
 `shortlist` splits assessed offers into three groups:
 - `primary`: recommendable offers, cheapest first, by verified total in one ranking currency. Each
   total is compared in the budget currency when it was converted, otherwise as payable. The
-  ranking currency is the `currency` argument, or else the one most recommendable offers share.
+  ranking currency is the `currency` argument, or else the one most recommendable offers share. A
+  tie goes to a domestic offer's currency, since Lebanon is the default market.
 - `uncertain`: unresolved offers, as v2 `UncertainAlternative`s with fixed-wording reasons and their
   cost. A verified offer whose total is in another currency also lands here, with a reason, rather
   than being ranked against amounts it cannot be compared with.
@@ -232,6 +233,9 @@ Every test runs offline.
   still lists an unpublished charge that a quote later settled. `VerifiedOffer` rejects any unknown
   listed charge, so publication must replace the listed charges with the settled slots (the contract
   revision above).
+- **Budget conversion differs by engine.** The domestic engine converts a total only for a hard
+  maximum, not for a target, so a domestic total in another currency than a target-only budget is
+  not converted and the shortlist keeps it apart. Aligning it is a small follow-up in `app/costs.py`.
 - **Explicit domestic estimates.** `assess_full_product(estimates=...)` applies to domestic offers
   only. International estimates arrive as estimated quote lines.
 - **Assumption length.** The writer shows an estimate's assumption only when it fits its 80-character

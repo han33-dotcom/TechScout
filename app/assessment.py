@@ -80,9 +80,10 @@ def shortlist(assessed, currency: str | None = None) -> Shortlist:
     cost never competes with a verified one, so it cannot appear as a cheaper delivered purchase.
 
     A total compares in the budget currency when the cost engine converted it, else as payable. The
-    ranking currency is currency, or else the one most recommendable offers share (ties: the
-    alphabetically first). A verified offer in another currency is kept as an uncertain alternative,
-    never ranked against amounts it cannot be compared with."""
+    ranking currency is currency, or else the one most recommendable offers share; a tie goes to a
+    currency of a domestic offer (Lebanon is the default market), then alphabetically. A verified
+    offer in another currency is kept as an uncertain alternative, never ranked against amounts it
+    cannot be compared with."""
     def comparable(cost):
         return cost.budget_conversion.quote if cost.budget_conversion is not None else cost.total
 
@@ -97,8 +98,9 @@ def shortlist(assessed, currency: str | None = None) -> Shortlist:
         else:
             uncertain.append(v2.UncertainAlternative(offer=offer, reasons=_doubts(assessment), cost=assessment.cost))
     counts = Counter(comparable(a.cost).currency for _, a in recommendable)
+    domestic = {comparable(a.cost).currency for _, a in recommendable if a.route_support is None}
     if currency is None and counts:
-        currency = min(counts, key=lambda code: (-counts[code], code))
+        currency = min(counts, key=lambda code: (-counts[code], code not in domestic, code))
     primary = []
     for offer, assessment in recommendable:
         total = comparable(assessment.cost)
