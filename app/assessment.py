@@ -3,6 +3,7 @@
 Deterministic rules make every decision; the planner only sees gaps, never seller text.
 Reasons use fixed wording plus normalized values, so they are safe to show the planner.
 """
+from dataclasses import dataclass
 from typing import Literal
 
 from pydantic import Field, StrictBool, model_validator
@@ -20,6 +21,8 @@ class FullProductAssessment(Model):
     eligibility: 'Eligibility'
     cost: v2.Cost
     within_maximum: StrictBool | None
+    # Set for international offers only (app.landed_costs): whether the route takes this item.
+    route_support: Literal['supported', 'unsupported', 'unresolved'] | None = None
 
     @model_validator(mode='after')
     def same_offer(self):
@@ -29,24 +32,78 @@ class FullProductAssessment(Model):
 
     @property
     def decision(self) -> Decision:
-        if self.eligibility.outcome=='fail' or self.within_maximum is False:
+        if self.eligibility.outcome=='fail' or self.within_maximum is False or self.route_support=='unsupported':
             return 'rejected'
-        if self.eligibility.outcome=='pass' and self.cost.status=='verified' and self.within_maximum is True:
+        if (self.eligibility.outcome=='pass' and self.cost.status=='verified' and self.within_maximum is True
+                and self.route_support in (None, 'supported')):
             return 'recommendable'
         return 'unresolved'
 
 
-def assess_full_product(request: v2.ShoppingRequest, offer: v2.Offer, *, fx=(), now=None, estimates=None):
+def assess_full_product(request: v2.ShoppingRequest, offer: v2.Offer, *, fx=(), now=None, estimates=None,
+                        route=None, run_started_at=None):
+    """Eligibility plus cost. A domestic offer uses the domestic engine (with explicit fee estimates);
+    an international one uses the landed-cost engine with its RouteInputs (route), whose estimates
+    arrive as estimated quote lines."""
     from app.costs import calculate_domestic_cost
     from app.eligibility import check_full_product
+    from app.landed_costs import calculate_landed_cost, requires_landed_cost
     eligibility = check_full_product(request,offer)
-    cost = calculate_domestic_cost(request,offer,fx=fx,now=now,estimates=estimates)
+    support = None
+    if requires_landed_cost(offer):
+        landed = calculate_landed_cost(request,offer,route,fx=fx,now=now,run_started_at=run_started_at)
+        cost, support = landed.cost, landed.support
+    else:
+        cost = calculate_domestic_cost(request,offer,fx=fx,now=now,estimates=estimates)
     within = None
     if cost.status=='verified':
         maximum = request.budget.maximum if request.budget else None
         total = cost.budget_conversion.quote if cost.budget_conversion else cost.total
         within = maximum is None or total.currency==maximum.currency and total.amount<=maximum.amount
-    return FullProductAssessment(offer_id=offer.offer_id,eligibility=eligibility,cost=cost,within_maximum=within)
+    return FullProductAssessment(offer_id=offer.offer_id,eligibility=eligibility,cost=cost,within_maximum=within,
+                                 route_support=support)
+
+
+@dataclass(frozen=True)
+class Shortlist:
+    """primary: recommendable offers, lowest comparable verified total first. uncertain: every
+    unresolved offer, however low its estimate or known subtotal. rejected: offer IDs."""
+    primary: tuple[tuple[v2.Offer, FullProductAssessment], ...]
+    uncertain: tuple[v2.UncertainAlternative, ...]
+    rejected: tuple[str, ...]
+
+
+def shortlist(assessed) -> Shortlist:
+    """Split (offer, assessment) pairs so only verified totals are ranked. An estimated or incomplete
+    cost never competes with a verified one, so it cannot appear as a cheaper delivered purchase.
+    Totals compare in the budget currency when converted, else as payable; one currency only."""
+    primary, uncertain, rejected = [], [], []
+    for offer, assessment in assessed:
+        if offer.offer_id != assessment.offer_id:
+            raise ValueError('Each assessment must cover its own offer')
+        if assessment.decision == 'recommendable':
+            primary.append((offer, assessment))
+        elif assessment.decision == 'rejected':
+            rejected.append(offer.offer_id)
+        else:
+            uncertain.append(v2.UncertainAlternative(offer=offer, reasons=_doubts(assessment), cost=assessment.cost))
+
+    def comparable(pair):
+        cost = pair[1].cost
+        return cost.budget_conversion.quote if cost.budget_conversion is not None else cost.total
+    if len({comparable(pair).currency for pair in primary}) > 1:
+        raise ValueError('Rank verified totals in one currency')
+    primary.sort(key=lambda pair: (comparable(pair).amount, pair[0].offer_id))
+    return Shortlist(tuple(primary), tuple(uncertain), tuple(rejected))
+
+
+def _doubts(assessment: FullProductAssessment) -> tuple[str, ...]:
+    reasons = [c.reason for c in assessment.eligibility.checks if c.outcome == 'unresolved']
+    reasons += {'estimated': ['payable total is only estimated'],
+                'incomplete': ['payable total is incomplete']}.get(assessment.cost.status, [])
+    if assessment.route_support == 'unresolved':
+        reasons.append('route support for this item is not established')
+    return tuple(dict.fromkeys(reasons)) or ('offer is unresolved',)
 
 
 class EvidenceGap(Model):

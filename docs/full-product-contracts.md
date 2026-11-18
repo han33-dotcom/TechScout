@@ -251,3 +251,17 @@ so the wire major and the JSON Schemas are unchanged. Its only consumer is
 `app/writer.py` (see [Grounded writer](writer.md)). That consumer also rejects a
 context whose recommendations were verified in another run, whose request
 revision differs from the run's, or which holds more than three recommendations.
+
+
+### Module interface revision: 2026-11-18 landed costs
+
+`FullProductAssessment` (`app/assessment.py`) gained an optional `route_support`
+field: `supported`, `unsupported` or `unresolved` for international offers, absent
+for domestic ones. An unsupported route makes the decision `rejected`. The new
+in-process `RouteInputs`, `RouteQuote` and `ItemFacts` models in `app/landed_costs.py`
+carry route quotes into the [landed-cost engine](landed-costs.md); results use the
+existing v2 `Cost` union. None of these is in the published schema bundle, so the
+wire major and the JSON Schemas are unchanged. Publishing an international
+`VerifiedOffer` will need a deliberate wire revision, because `Offer` evidence must
+come from the offer's own source and forwarder or customs receipts cannot be attached
+yet (see the limits in that document).
