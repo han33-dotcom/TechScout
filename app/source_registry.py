@@ -12,10 +12,24 @@ DEFAULT_REGISTRY = Path(__file__).resolve().parents[1] / 'config/sources.json'
 _CAPABILITY_RULES = TypeAdapter(tuple[EndpointCapability, ...])
 
 
-def get_active_source(source_id: str, registry_path: Path | str = DEFAULT_REGISTRY) -> dict:
+def load_registry(registry) -> dict:
+    """Read a registry document from the reviewed JSON file or from a registry object.
+
+    A registry object has read_registry() -> dict and raises OSError when its store is
+    unavailable. app.onboarding.ActivationRegistry uses this to add automatically
+    validated capabilities from the shared database; every read is fresh, so revocation
+    and suspension take effect on the next request.
+    """
+    reader = getattr(registry, 'read_registry', None)
+    if reader is not None:
+        return reader()
+    return json.loads(Path(registry).read_text(encoding='utf-8'))
+
+
+def get_active_source(source_id: str, registry_path=DEFAULT_REGISTRY) -> dict:
     """Read the current policy on every selection so revocation is not cached."""
     try:
-        registry = json.loads(Path(registry_path).read_text(encoding='utf-8'))
+        registry = load_registry(registry_path)
     except (OSError, ValueError) as exc:
         raise PermissionError('Source registry unavailable') from exc
     sources = registry.get('sources') if isinstance(registry, dict) else None
