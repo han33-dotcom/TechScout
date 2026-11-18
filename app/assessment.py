@@ -3,6 +3,7 @@
 Deterministic rules make every decision; the planner only sees gaps, never seller text.
 Reasons use fixed wording plus normalized values, so they are safe to show the planner.
 """
+from collections import Counter
 from dataclasses import dataclass
 from typing import Literal
 
@@ -67,33 +68,46 @@ def assess_full_product(request: v2.ShoppingRequest, offer: v2.Offer, *, fx=(), 
 @dataclass(frozen=True)
 class Shortlist:
     """primary: recommendable offers, lowest comparable verified total first. uncertain: every
-    unresolved offer, however low its estimate or known subtotal. rejected: offer IDs."""
+    unresolved offer, however low its estimate or known subtotal, and any verified offer whose total
+    cannot be compared in the ranking currency. rejected: offer IDs."""
     primary: tuple[tuple[v2.Offer, FullProductAssessment], ...]
     uncertain: tuple[v2.UncertainAlternative, ...]
     rejected: tuple[str, ...]
 
 
-def shortlist(assessed) -> Shortlist:
+def shortlist(assessed, currency: str | None = None) -> Shortlist:
     """Split (offer, assessment) pairs so only verified totals are ranked. An estimated or incomplete
     cost never competes with a verified one, so it cannot appear as a cheaper delivered purchase.
-    Totals compare in the budget currency when converted, else as payable; one currency only."""
-    primary, uncertain, rejected = [], [], []
+
+    A total compares in the budget currency when the cost engine converted it, else as payable. The
+    ranking currency is currency, or else the one most recommendable offers share (ties: the
+    alphabetically first). A verified offer in another currency is kept as an uncertain alternative,
+    never ranked against amounts it cannot be compared with."""
+    def comparable(cost):
+        return cost.budget_conversion.quote if cost.budget_conversion is not None else cost.total
+
+    recommendable, uncertain, rejected = [], [], []
     for offer, assessment in assessed:
         if offer.offer_id != assessment.offer_id:
             raise ValueError('Each assessment must cover its own offer')
         if assessment.decision == 'recommendable':
-            primary.append((offer, assessment))
+            recommendable.append((offer, assessment))
         elif assessment.decision == 'rejected':
             rejected.append(offer.offer_id)
         else:
             uncertain.append(v2.UncertainAlternative(offer=offer, reasons=_doubts(assessment), cost=assessment.cost))
-
-    def comparable(pair):
-        cost = pair[1].cost
-        return cost.budget_conversion.quote if cost.budget_conversion is not None else cost.total
-    if len({comparable(pair).currency for pair in primary}) > 1:
-        raise ValueError('Rank verified totals in one currency')
-    primary.sort(key=lambda pair: (comparable(pair).amount, pair[0].offer_id))
+    counts = Counter(comparable(a.cost).currency for _, a in recommendable)
+    if currency is None and counts:
+        currency = min(counts, key=lambda code: (-counts[code], code))
+    primary = []
+    for offer, assessment in recommendable:
+        total = comparable(assessment.cost)
+        if total.currency == currency:
+            primary.append((offer, assessment))
+        else:
+            uncertain.append(v2.UncertainAlternative(offer=offer, cost=assessment.cost, reasons=(
+                f'verified total in {total.currency} is not compared with totals in {currency}',)))
+    primary.sort(key=lambda pair: (comparable(pair[1].cost).amount, pair[0].offer_id))
     return Shortlist(tuple(primary), tuple(uncertain), tuple(rejected))
 
 

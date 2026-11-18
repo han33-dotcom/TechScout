@@ -134,6 +134,16 @@ class LandedCostTests(unittest.TestCase):
         self.assertEqual(self.part(result, 'retailer shipping to the forwarding address').sources,
                          ('forward:retailer', 'forward:forwarder'))
 
+    def test_separately_listed_other_charges_are_never_merged(self):
+        other = {'leg': 'forwarding', 'component': 'other', 'state': 'additional', 'amount': usd('5.00')}
+        self.quote('forward:forwarder')['lines'].append(other)
+        self.assertEqual(self.landed().cost.total.amount, Decimal('1020.00'))
+        second = deepcopy(self.quote('forward:forwarder')) | {'quote_id': 'forward:second', 'lines': [dict(other)]}
+        second['evidence'] = second['evidence'] | {'evidence_id': 'forward:second'}
+        self.case()['inputs']['quotes'].append(second)
+        # Two equal amounts may be one fee restated or two fees: never merged into one.
+        self.assert_open(self.landed(), 'other forwarder charge', reason='several other charges are listed separately')
+
     def test_retailer_cannot_settle_charges_beyond_the_forwarding_address(self):
         self.quote('forward:retailer')['lines'].append({'leg': 'final', 'component': 'delivery',
                                                         'state': 'included'})
@@ -200,10 +210,23 @@ class LandedCostTests(unittest.TestCase):
         self.assertIn('quote forward:forwarder service does not accept the item battery', result.reasons)
         self.assert_open(result, FREIGHT)
         self.assertEqual(self.assess().decision, 'rejected')
-        other = deepcopy(forwarder) | {'quote_id': 'forward:other-service', 'battery_accepted': True}
+        other = deepcopy(forwarder) | {'quote_id': 'forward:other-service', 'battery_accepted': True,
+                                       'service': 'synthetic-economy'}
         other['evidence'] = other['evidence'] | {'evidence_id': 'forward:other-service'}
         self.case()['inputs']['quotes'].append(other)
         self.assertEqual(self.landed().support, 'supported')
+        # Another service that only estimates its freight still might carry it: uncertain, not rejected.
+        other['lines'][0] = {'leg': 'forwarding', 'component': 'shipping', 'state': 'estimated',
+                             'lower': usd('55'), 'upper': usd('70'), 'note': 'Synthetic rate card'}
+        result = self.landed()
+        self.assertEqual((result.support, result.cost.status), ('unresolved', 'estimated'))
+        self.assertEqual(self.assess().decision, 'unresolved')
+        # The same service both refusing and accepting the item contradicts itself.
+        other['lines'][0] = deepcopy(forwarder['lines'][0])
+        other['service'] = forwarder['service']
+        result = self.landed()
+        self.assertEqual(result.support, 'unresolved')
+        self.assert_open(result, FREIGHT, reason='disagree on carrying the item')
         self.case()['inputs']['quotes'].pop()
         forwarder['battery_accepted'] = None
         result = self.landed()
@@ -223,6 +246,66 @@ class LandedCostTests(unittest.TestCase):
                 self.assert_open(result, FREIGHT, reason='service does not accept the item battery')
                 self.assertEqual(self.assess().decision, 'unresolved')
 
+    def test_retailer_refusal_is_not_overridden_by_its_listing(self):
+        listed = deepcopy(self.offers['laptop_direct_import']['costs'])  # includes listed shipping
+        self.case('direct')['offer_changes']['costs'] = listed
+        started = datetime.fromisoformat('2026-11-16T12:00:00+00:00')
+        self.assert_open(self.landed('direct', run_started_at=started), 'retailer shipping to Lebanon',
+                         reason='providers disagree')
+        self.quote('direct:checkout', 'direct')['battery_accepted'] = False
+        result = self.landed('direct', run_started_at=started)
+        self.assertEqual(result.support, 'unsupported')
+        self.assert_open(result, 'retailer shipping to Lebanon',
+                         reason='the listing does not show that the refused item is carried')
+        self.assertEqual(self.assess('direct', run_started_at=started).decision, 'rejected')
+
+    def test_two_listed_charges_on_one_slot_are_never_counted_once(self):
+        data = deepcopy(self.offers['laptop_forwarded'])
+        receipts = []
+        for leg in ('order', 'retailer'):
+            receipt = deepcopy(data['evidence'][0]) | {'evidence_id': f'book-forward:costs.{leg}.payment',
+                                                         'field_path': f'costs.{leg}.payment'}
+            receipts.append(receipt)
+        self.case()['offer_changes'].update(evidence=[*data['evidence'], *receipts], costs=[
+            {'schema_version': 2, 'leg': leg, 'kind': 'payment', 'state': 'additional', 'amount': usd('5'),
+             'evidence_ids': [f'book-forward:costs.{leg}.payment']} for leg in ('order', 'retailer')])
+        started = datetime.fromisoformat('2026-11-16T12:00:00+00:00')
+        self.assert_open(self.landed(run_started_at=started), 'payment fee',
+                         reason='several listed charges fall on the payment fee')
+        self.case()['offer_changes']['costs'].pop()
+        self.assertEqual(self.landed(run_started_at=started).cost.total.amount, Decimal('1020.00'))
+
+    def test_quote_naming_the_listing_is_still_checked_unless_it_is_the_retailer_receipt(self):
+        def opens(quote_id, changes, label, reason, evidence=None):
+            self.setUp()
+            quote = self.quote(quote_id)
+            quote.update(changes)
+            for key, value in (changes.get('_drop') or {}).items():
+                del quote[key]
+            quote.pop('_drop', None)
+            if evidence:
+                quote['evidence'] = quote['evidence'] | evidence
+            self.assert_open(self.landed(), label, reason=reason)
+        listing = {'seller_id': 'book-forward', 'source_variant_id': 'sku-book-forward'}
+        opens('route-book-forward:customs', listing | {'declared_value': usd('100.00')}, 'customs duty',
+              'declares less than the device price')
+        opens('forward:forwarder', listing | {'_drop': {'package': None}}, FREIGHT,
+              'does not state the package it priced')
+        opens('forward:retailer', {}, 'retailer shipping to the forwarding address', 'belongs to another listing',
+              evidence={'variant_id': 'another-sku'})
+        opens('forward:retailer', {}, 'sales tax on the order', "is not backed by the retailer's receipt",
+              evidence={'source_id': 'another-source', 'product_id': None, 'variant_id': None})
+        self.setUp()
+        seller = deepcopy(self.quote('forward:forwarder')) | listing | {
+            'quote_id': 'forward:seller', 'provider_id': 'book-forward', 'service': None,
+            'lines': [{'leg': 'final', 'component': 'delivery', 'state': 'included'}]}
+        seller['evidence'] = seller['evidence'] | {'evidence_id': 'forward:seller'}
+        forwarder = self.quote('forward:forwarder')
+        forwarder['lines'] = [l for l in forwarder['lines'] if l['leg'] != 'final']
+        self.case()['inputs']['quotes'].append(seller)
+        self.assert_open(self.landed(), 'final delivery in Lebanon',
+                         reason='is from the retailer, which ships only to the forwarding address')
+
     def test_battery_declaration_must_match_the_item(self):
         self.quote('forward:forwarder')['package']['battery'] = 'none'
         self.assert_open(self.landed(), FREIGHT, reason='declared a different battery configuration')
@@ -235,9 +318,11 @@ class LandedCostTests(unittest.TestCase):
         result = self.landed()
         self.assert_open(result, FREIGHT, reason='item dimensions are not established')
         self.assertEqual(result.cost.known_subtotal.amount, Decimal('930.00'))  # freight is not counted as 0
-        # Weight-only pricing with no size limit does not need the size.
         forwarder = self.quote('forward:forwarder')
-        del forwarder['package']['dimensions'], forwarder['limits']['max_dimension_sum_mm']
+        del forwarder['limits']['max_dimension_sum_mm']  # priced by size, no size limit: still open
+        self.assert_open(self.landed(), FREIGHT, reason='item dimensions are not established')
+        # Weight-only pricing with no size limit does not need the size.
+        del forwarder['package']['dimensions']
         self.assertEqual(self.landed().cost.status, 'verified')
         self.case()['inputs']['item']['weight_g'] = {'state': 'unknown', 'reason': 'not published'}
         self.assert_open(self.landed(), FREIGHT, reason='item weight is not established')
@@ -296,7 +381,6 @@ class LandedCostTests(unittest.TestCase):
                              reason='no current sourced exchange rate for the customs duty')
             self.assertEqual(result.cost.known_subtotal.amount, Decimal('3120.00'))
             self.assertNotIn('fx:usd-aed', [e for c in result.components for e in c.evidence_ids])
-        evidence = self.case('direct')['inputs']['evidence']
         rate = self.case('direct')['fx'][0]
         breaks(lambda: self.case('direct')['inputs'].update(
             evidence=[e for e in self.case('direct')['inputs']['evidence'] if e['evidence_id'] != 'fx:usd-aed']))
@@ -308,7 +392,10 @@ class LandedCostTests(unittest.TestCase):
         future = (NOW + timedelta(minutes=1)).isoformat()
         breaks(lambda: (self.case('direct')['fx'][0].update(observed_at=future),
                         self.record('fx:usd-aed', 'direct').update(observed_at=future)))
-        self.assertTrue(evidence and rate)
+        # A receipt backs one currency pair and one value: an inverted rate citing the other pair's
+        # receipt, or two values citing one receipt, are both unsourced.
+        breaks(lambda: self.case('direct').update(fx=[rate | {'rate': '0.27', 'evidence_id': 'fx:aed-usd'}]))
+        breaks(lambda: self.case('direct')['fx'].append(rate | {'rate': '3.50'}))
         with self.assertRaises(ValidationError):
             FxRate.model_validate(rate | {'observed_at': '2026-11-16T09:00:00'})  # naive time
         # The least favourable fresh sourced rate is used, so a choice of rates cannot lower a total.
@@ -339,6 +426,11 @@ class LandedCostTests(unittest.TestCase):
         result = self.landed()
         self.assertEqual((result.cost.status, result.support), ('verified', 'unresolved'))
         self.assertEqual(self.assess().decision, 'unresolved')
+        # Even with eligibility passing and a verified total, an unresolved route is never recommendable.
+        self.setUp()
+        passing = self.assess()
+        self.assertEqual(passing.decision, 'recommendable')
+        self.assertEqual(passing.model_copy(update={'route_support': 'unresolved'}).decision, 'unresolved')
 
     # Acceptance 3: estimated or missing required costs stay out of the verified primary ranking.
     def test_unknown_required_costs_stay_missing_never_zero(self):
@@ -393,6 +485,34 @@ class LandedCostTests(unittest.TestCase):
         self.assertEqual([item.cost.status for item in result.uncertain], ['estimated', 'incomplete'])
         self.assertIn('payable total is only estimated', result.uncertain[0].reasons)
         self.assertEqual(result.rejected, ('book-forward-refused',))
+
+    def test_shortlist_ranks_in_one_currency_cheapest_first(self):
+        domestic = v.Offer.model_validate(self.offers['laptop_verified'])
+        for key in ('direct', 'forwarded'):  # a target only: a preference, converted when a rate exists
+            self.case(key)['request_changes']['budget'] = {'target': usd('1000')}
+        pairs = [(self.offer(key), self.assess(key)) for key in ('direct', 'forwarded')]
+        pairs.append((domestic, assess_full_product(self.request(), domestic, now=NOW)))
+        conversion = pairs[0][1].cost.budget_conversion
+        self.assertEqual((conversion.quote.amount, conversion.evidence_id), (Decimal('1034.18'), 'fx:aed-usd'))
+        ranked = shortlist(pairs)
+        self.assertEqual([offer.offer_id for offer, _ in ranked.primary], ['book-local', 'book-forward', 'book-direct'])
+        # Without a budget currency the AED total is verified but cannot be ranked against USD totals.
+        for key in ('direct', 'forwarded'):
+            self.case(key)['request_changes']['budget'] = None
+        pairs = [(self.offer(key), self.assess(key)) for key in ('direct', 'forwarded')]
+        pairs.append((domestic, assess_full_product(self.request(), domestic, now=NOW)))
+        self.assertEqual(pairs[0][1].decision, 'recommendable')
+        ranked = shortlist(pairs)
+        self.assertEqual([offer.offer_id for offer, _ in ranked.primary], ['book-local', 'book-forward'])
+        self.assertEqual([item.offer.offer_id for item in ranked.uncertain], ['book-direct'])
+        self.assertEqual(ranked.uncertain[0].reasons, ('verified total in AED is not compared with totals in USD',))
+        self.assertEqual([offer.offer_id for offer, _ in shortlist(pairs, 'AED').primary], ['book-direct'])
+        # A hard maximum in another currency still needs a sourced conversion.
+        self.case('direct')['request_changes']['budget'] = {'maximum': usd('1100')}
+        self.case('direct')['fx'].pop()
+        self.assertEqual(self.landed('direct').cost.missing, ('current budget FX quote',))
+        self.case('direct')['request_changes']['budget'] = {'target': usd('1000')}
+        self.assertIsNone(self.landed('direct').cost.budget_conversion)
 
     def test_inputs_must_belong_to_the_offer_route(self):
         request, offer = self.request(), self.offer()

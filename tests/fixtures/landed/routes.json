@@ -131,13 +131,13 @@
           "evidence_id": "fx:usd-aed",
           "source_id": "example-fx",
           "scope": "source",
-          "field_path": "fx",
+          "field_path": "fx.USD.AED",
           "origin_url": "https://example-fx.example/fx/usd-aed",
           "final_url": "https://example-fx.example/fx/usd-aed",
           "observed_at": "2026-11-16T09:00:00Z",
           "response_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
           "adapter_version": "route-fixture-v1",
-          "excerpt": "Synthetic observation for fx",
+          "excerpt": "Synthetic observation for fx.USD.AED",
           "origin": "runtime",
           "corpus_version": "corpus-1"
         },
@@ -146,13 +146,13 @@
           "evidence_id": "fx:aed-usd",
           "source_id": "example-fx",
           "scope": "source",
-          "field_path": "fx",
+          "field_path": "fx.AED.USD",
           "origin_url": "https://example-fx.example/fx/aed-usd",
           "final_url": "https://example-fx.example/fx/aed-usd",
           "observed_at": "2026-11-16T09:00:00Z",
           "response_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
           "adapter_version": "route-fixture-v1",
-          "excerpt": "Synthetic observation for fx",
+          "excerpt": "Synthetic observation for fx.AED.USD",
           "origin": "runtime",
           "corpus_version": "corpus-1"
         }
@@ -259,6 +259,7 @@
         {
           "quote_id": "direct:courier",
           "provider_id": "example-courier",
+          "service": "synthetic-door",
           "route_id": "route-book-direct",
           "package": {
             "weight_g": 2500,
@@ -442,13 +443,13 @@
           "evidence_id": "fx:usd-aed",
           "source_id": "example-fx",
           "scope": "source",
-          "field_path": "fx",
+          "field_path": "fx.USD.AED",
           "origin_url": "https://example-fx.example/fx/usd-aed",
           "final_url": "https://example-fx.example/fx/usd-aed",
           "observed_at": "2026-11-16T09:00:00Z",
           "response_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
           "adapter_version": "route-fixture-v1",
-          "excerpt": "Synthetic observation for fx",
+          "excerpt": "Synthetic observation for fx.USD.AED",
           "origin": "runtime",
           "corpus_version": "corpus-1"
         },
@@ -457,13 +458,13 @@
           "evidence_id": "fx:aed-usd",
           "source_id": "example-fx",
           "scope": "source",
-          "field_path": "fx",
+          "field_path": "fx.AED.USD",
           "origin_url": "https://example-fx.example/fx/aed-usd",
           "final_url": "https://example-fx.example/fx/aed-usd",
           "observed_at": "2026-11-16T09:00:00Z",
           "response_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
           "adapter_version": "route-fixture-v1",
-          "excerpt": "Synthetic observation for fx",
+          "excerpt": "Synthetic observation for fx.AED.USD",
           "origin": "runtime",
           "corpus_version": "corpus-1"
         }
@@ -511,6 +512,7 @@
         {
           "quote_id": "forward:forwarder",
           "provider_id": "example-forwarder",
+          "service": "synthetic-express",
           "route_id": "route-book-forward",
           "package": {
             "weight_g": 2500,

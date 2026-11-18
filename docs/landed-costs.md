@@ -42,14 +42,17 @@ each missing charge named, even when no route inputs are given yet.
 |---|---|
 | `item` (`ItemFacts`) | The shipped item: lithium `battery` (`none`, `installed`, `packed_with`, `loose`), package `weight_g` and `dimensions` (mm). These are v2 `Fact`s, so each one is known with receipts, unknown with a reason, or conflicting. |
 | `quotes` (`RouteQuote`) | One record per provider statement for this route: a retailer checkout, a forwarder calculator result, a customs estimate or a courier price. |
-| `evidence` | The receipts for the item facts (field paths `package.battery`, `package.weight_g`, `package.dimensions`) and for each exchange rate (field path `fx`). |
+| `evidence` | The receipts for the item facts (field paths `package.battery`, `package.weight_g`, `package.dimensions`) and for each exchange rate (field path `fx.<BASE>.<QUOTE>`, for example `fx.USD.AED`). |
 
 A `RouteQuote` has:
+- `provider_id` and an optional `service` name (one carrier option of that provider).
 - `route_id` (the offer's route) and one route-scoped `evidence` record. Its `observed_at` is the
   quote's time.
 - `valid_until`, when the provider states it.
-- `seller_id` with `source_variant_id`, which makes it item-specific: a retailer quoting its own
-  listing.
+- `seller_id` with `source_variant_id`: the listing the quote was issued for. Retailer and order
+  charges need them. When the provider is the offer's `retailer_id` and the receipt comes from the
+  offer's own source for that listing, the quote is the retailer's own receipt, which speaks for the
+  item itself.
 - `package` (the weight, size and battery declaration the provider priced) and `battery_accepted`
   (whether the service takes that battery).
 - `limits` (maximum weight, longest side, length + width + height).
@@ -80,7 +83,8 @@ A charge already listed on the offer (`Offer.costs`) is read as the retailer's s
 - the order's tax goes to `order.sales_tax`;
 - any other kind becomes that leg's `other`.
 
-This way nothing listed is dropped.
+This way nothing listed is dropped. If two listed charges land in one slot (for example payment on
+the order and on the retailer leg), they are separate charges, so that slot stays open.
 
 ## Rules
 
@@ -89,7 +93,8 @@ This way nothing listed is dropped.
   all count as nothing extra. If a retailer prepays duty and the customs estimate states the same
   duty, the duty is added once.
   - Lines that disagree leave the slot open: different amounts, or "included" against "additional".
-  - Several separately listed `other` charges are never merged, as in the domestic engine.
+  - Several separately listed `other` charges are never merged, as in the domestic engine, and two
+    listed charges of the offer that land in one slot leave it open.
   - A current line outranks an estimate.
   - A listing that does not publish a charge gives way to any current line.
   - A current quote that states a charge as `unknown` (charged, amount not given) gives way only to a
@@ -99,39 +104,50 @@ This way nothing listed is dropped.
   `run_started_at`), following the full-product plan's freshness rule. Without `run_started_at`, an
   undated quote can only supply estimates.
 - **Scope.**
-  - An item-specific quote must name the offer's own seller and listing variant.
-  - A quote that is not item-specific cannot state retailer or order charges.
+  - A quote that names a listing must name the offer's own seller and listing variant. A quote
+    that names none cannot state retailer or order charges.
+  - A quote's receipt from the offer's own source must belong to the offer's listing.
+  - A quote from the retailer that names the listing must be backed by the retailer's receipt for it.
   - Forwarding lines must come from the route's forwarder.
-  - On a forwarded route the retailer ships only to the forwarding address. Its quotes (provider =
-    the offer's `retailer_id`) and the offer's listed charges settle only the `retailer` and `order`
-    legs, never freight, import charges or final delivery in Lebanon.
-  - Customs lines from a quote that is not item-specific need a declared value of at least the
-    device price, in the price currency.
+  - On a forwarded route the retailer ships only to the forwarding address. Quotes from the retailer
+    or the seller, and the offer's listed charges, settle only the `retailer` and `order` legs, never
+    freight, import charges or final delivery in Lebanon.
+  - Customs lines from any quote other than the retailer's own receipt need a declared value of at
+    least the device price, in the price currency. Naming the listing does not exempt a quote.
 - **The actual item.**
   - A quote that carries the item (forwarding or final delivery) must state the package it priced.
   - The item's evidenced weight must not exceed the quoted weight, and its size must fit the quoted
     size whenever the quote states a size.
-  - The declared battery must match the item's battery. A service that is not item-specific must
-    confirm it accepts that battery.
+  - The declared battery must match the item's battery. Any quote other than the retailer's own
+    receipt must confirm that the service accepts that battery.
   - Missing weight, size or battery leaves the charge open, never zero. Size is needed only when the
     quote prices by size or has a size limit.
 - **Unsupported routes.**
   - A provider that refuses the item (its battery is not accepted, or the item is over a weight or
     size limit) cannot price it.
   - If that refusal comes from a current quote for this seller and route, and no other current quote
-    carries that leg, the route is `unsupported` and `assess_full_product` rejects the offer.
+    that covers the item addresses that leg's carriage, the route is `unsupported` and
+    `assess_full_product` rejects the offer. Another service that only estimates its price, disagrees
+    with a third quote or states the charge without an amount still counts: the offer stays uncertain.
+  - The offer's listed charges never count as another carrier, and cannot settle carriage on a leg a
+    provider refused.
   - A refusal from an expired, undated or mismatched quote is only a doubt: the offer stays
     uncertain.
+  - Quotes from one service (same `provider_id` and `service`) that both refuse and accept the item
+    contradict each other. Neither settles anything, and the route stays unresolved.
   - A route eligibility fact that says no (`item_eligible` false) also makes the route unsupported.
 - **Exchange rates.**
-  - Only sourced rates convert: an `FxRate` whose evidence record has field path `fx` and the same
-    observation time, observed at most `FX_MAX_AGE` (24 hours) before now and never after it.
+  - Only sourced rates convert: an `FxRate` whose evidence record has the field path for its
+    currency pair (`fx.USD.AED`) and the same observation time, observed at most `FX_MAX_AGE`
+    (24 hours) before now and never after it. A receipt that two different rates cite backs neither.
   - As in the domestic budget check, the rate must be quoted in the needed direction. The least
     favourable fresh rate is used, and rounding is upward, so conversion never lowers a total.
   - A charge in another currency with no such rate stays open.
 - **Outcome.**
-  - `verified`: every slot settled from current quotes. The total is in the price currency, with a
-    budget conversion when the hard maximum uses another currency.
+  - `verified`: every slot settled from current quotes. The total is in the price currency. It is
+    also converted into the budget currency (the maximum's, or the target's when there is no
+    maximum) when that differs. A hard maximum in another currency needs a sourced conversion,
+    otherwise the cost is incomplete; a target alone is a preference, so the total stays verified.
   - `estimated`: some slot rests on an explicit estimate; the range and its assumptions are shown.
   - `incomplete`: anything else. It shows the known subtotal and names every missing charge, worded
     so the writer and history views can print it.
@@ -146,9 +162,12 @@ This way nothing listed is dropped.
 passes, the cost is verified and within any hard maximum, and the route is supported.
 
 `shortlist` splits assessed offers into three groups:
-- `primary`: recommendable offers, ranked by verified total in one comparison currency;
+- `primary`: recommendable offers, cheapest first, by verified total in one ranking currency. Each
+  total is compared in the budget currency when it was converted, otherwise as payable. The
+  ranking currency is the `currency` argument, or else the one most recommendable offers share.
 - `uncertain`: unresolved offers, as v2 `UncertainAlternative`s with fixed-wording reasons and their
-  cost;
+  cost. A verified offer whose total is in another currency also lands here, with a reason, rather
+  than being ranked against amounts it cannot be compared with.
 - `rejected`: offer IDs.
 
 An estimate or known subtotal that is lower than a verified domestic total still stays in
@@ -165,18 +184,21 @@ synthetic**; none is an observed fee.
 
 `tests/test_landed_costs.py` covers:
 - both totals;
-- a fee listed by two providers;
-- listed charges against quotes;
+- a fee listed by two providers, and two listed charges landing in one slot;
+- listed charges against quotes, and a retailer refusal that its own listing cannot override;
+- quotes that name the listing but are not the retailer's own receipt;
 - expired and undated quotes;
-- battery refusal, battery declaration and an unknown battery;
+- battery refusal (with another service priced, estimated or contradicting it), battery declaration
+  and an unknown battery;
 - missing dimensions and weight;
 - quotes that do not cover the item, seller or declared value;
 - weight and size limits;
-- exchange rates without evidence, with the wrong time, stale or from the future;
+- exchange rates without evidence, for another currency pair, sharing a receipt with another value,
+  with the wrong time, stale or from the future;
 - item-fact receipts;
 - route eligibility;
 - unknown required costs;
-- the primary ranking split;
+- the primary ranking split, its order and mixed currencies;
 - input validation.
 
 Every test runs offline.
@@ -200,3 +222,17 @@ Every test runs offline.
 - **Item-fact receipts.** The engine checks that each receipt is bound to the right field and, for
   the offer's own source, to the right listing. Matching a manufacturer's product to the listing is
   the producer's job, as in the identity module.
+- **One slot per fee kind.** Two different fees of one kind from two providers (for example a
+  broker's and a courier's clearance fee) share one slot. Equal amounts count once and different
+  amounts leave it open. A producer that knows two such fees apply should state their sum, or one of
+  them as an `other` charge.
+- **Exchange-rate receipts.** A receipt is bound to its currency pair and time, but its text is not
+  parsed for the rate value. Producers must record the observed rate exactly.
+- **Listed unknown charges.** An offer can be recommendable here although its own `Offer.costs`
+  still lists an unpublished charge that a quote later settled. `VerifiedOffer` rejects any unknown
+  listed charge, so publication must replace the listed charges with the settled slots (the contract
+  revision above).
+- **Explicit domestic estimates.** `assess_full_product(estimates=...)` applies to domestic offers
+  only. International estimates arrive as estimated quote lines.
+- **Assumption length.** The writer shows an estimate's assumption only when it fits its 80-character
+  limit (label plus note), and withholds longer ones.

@@ -10,21 +10,27 @@ read as the retailer's statements through a fixed mapping (_listing_slot); nothi
 A slot is settled from the lines that cover the actual item now:
 - A line counts only when its quote is current and covers the item. Current: before its stated
   valid_until, or, with no stated validity, read in this run (observed at or after run_started_at);
-  a quote that ended is never current. Covering: an item-specific quote names the offer's seller and
-  listing variant; any other quote that carries the item (forwarding leg or final delivery) states the
-  package it priced, and the item's evidenced weight, size and battery must fit it. Customs lines from
-  a quote that is not item-specific need a declared value of at least the device price. On a
-  forwarded route the retailer (its quotes and the offer's listed charges) ships only to the hub, so
-  its statements settle only the retailer leg and the order.
+  a quote that ended is never current. A receipt from the offer's own source must belong to its listing.
+- Covering: retailer and order charges need a quote that names the offer's seller and listing variant.
+  Only the retailer's own receipt for that listing (provider = retailer_id, receipt from the offer's
+  source for that listing) speaks for the item itself. Every other quote that carries the item
+  (forwarding leg or final delivery) states the package it priced, the item's evidenced weight, size
+  and battery must fit it, and it must confirm a battery it carries; its customs lines need a declared
+  value of at least the device price. On a forwarded route the retailer side (retailer or seller, and
+  the offer's listed charges) ships only to the hub, so it settles only the retailer leg and the order.
 - A provider that refuses the item (its service does not take the item's battery, or the item is over
-  its weight or size limit) cannot price it. A current quote for this seller and route that refuses,
-  when no other current quote covers that leg's carriage, makes the route unsupported: the offer is
-  rejected, not merely uncertain. A refusal from any other quote is only a doubt.
+  its weight or size limit) cannot price it. A current, matching quote that refuses makes the route
+  unsupported (the offer is rejected, not merely uncertain) unless another current quote that covers
+  the item addresses that leg's carriage, whether priced, estimated or stated without an amount; the
+  offer's listed charges never count as such a quote, and they cannot settle carriage on a refused leg.
+  Quotes from one service (provider and service name) that both refuse and accept the item contradict
+  each other, so neither settles anything. A refusal from any other quote is only a doubt.
 - Lines that agree count once, however many providers list them. Lines that disagree (other amounts,
   or included against additional) leave the slot open. Several separately listed 'other' charges are
-  never merged, as in the domestic engine. A verified line outranks an estimate. A listing that does
-  not publish a charge gives way to any current line; a current quote that states a charge without an
-  amount gives way only to a stated amount, never to another provider's included or not applicable.
+  never merged, as in the domestic engine, and two listed charges of the offer that fall on one slot
+  leave it open. A verified line outranks an estimate. A listing that does not publish a charge gives
+  way to any current line; a current quote that states a charge without an amount gives way only to a
+  stated amount, never to another provider's included or not applicable.
 - Required slots must settle for every route: retailer shipping, customs duty, import VAT, customs
   clearance, final delivery in Lebanon and sales tax on the order; a forwarded route adds forwarder
   freight, and a dangerous-goods charge unless the item is evidenced to carry no battery. Any other
@@ -32,15 +38,17 @@ A slot is settled from the lines that cover the actual item now:
   missing, never zero.
 
 Amounts in another currency convert to the price currency only through a sourced rate: an FxRate
-whose evidence record (field path 'fx', same observation time) is supplied and whose observation is
-within FX_MAX_AGE before now. As in the domestic budget check, the rate must be quoted in the needed
-direction, the least favourable fresh rate is used and rounding is upward, so conversion never
-lowers a total. The result is the shared v2 cost union:
+whose evidence record (field path 'fx.<base>.<quote>', same observation time, cited by no rate with
+another value) is supplied and whose observation is within FX_MAX_AGE before now. As in the domestic
+budget check, the rate must be quoted in the needed direction, the least favourable fresh rate is used
+and rounding is upward, so conversion never lowers a total. The result is the shared v2 cost union:
 verified only when every slot settled from current quotes; estimated when some slot rests on an
-explicit estimate; otherwise incomplete with its known subtotal and the missing charges by name. The
-total excludes any fee the buyer's own card issuer adds for paying in a foreign currency, as the
-domestic total excludes travel; a provider's stated currency or payment fee is a slot like any other.
-Reasons use fixed wording plus contract values (IDs, times), never provider text.
+explicit estimate; otherwise incomplete with its known subtotal and the missing charges by name. A
+verified total is also converted into the budget currency; a hard maximum in another currency needs
+that conversion. The total excludes any fee the buyer's own card issuer adds for paying in a foreign
+currency, as the domestic total excludes travel; a provider's stated currency or payment fee is a slot
+like any other. Reasons use fixed wording plus contract values (IDs, times); only an estimate's
+assumption carries the producer's own note.
 """
 from collections import defaultdict
 from collections.abc import Sequence
@@ -170,12 +178,14 @@ class QuoteLine(Model):
 class RouteQuote(Model):
     """One provider's statement for one route, backed by one route-scoped evidence record.
 
-    seller_id and source_variant_id make the quote item-specific (a retailer quoting its own listing).
-    Otherwise package states what was priced, battery_accepted whether the service takes the declared
-    battery, and declared_value what customs charges were computed on.
+    seller_id and source_variant_id name the listing the quote was issued for; retailer and order
+    charges need them. package states what was priced, battery_accepted whether the service takes the
+    declared battery, and declared_value what customs charges were computed on. Only the retailer's own
+    receipt for the listing may leave those out.
     """
     quote_id: Text
     provider_id: Text
+    service: Text | None = None  # the provider's service, e.g. one carrier option; None is one service
     route_id: Text
     seller_id: Text | None = None
     source_variant_id: Text | None = None
@@ -190,7 +200,7 @@ class RouteQuote(Model):
     @model_validator(mode='after')
     def bound_quote(self):
         if (self.seller_id is None) != (self.source_variant_id is None):
-            raise ValueError('An item-specific quote names both the seller and the listing variant')
+            raise ValueError('A quote names both the seller and the listing variant, or neither')
         slots = [(line.leg, line.component) for line in self.lines]
         if len(set(slots)) != len(slots):
             raise ValueError('A quote states each charge once')
@@ -201,7 +211,7 @@ class RouteQuote(Model):
         return self
 
     @property
-    def item_specific(self) -> bool:
+    def names_listing(self) -> bool:
         return self.seller_id is not None
 
 
@@ -311,7 +321,7 @@ def calculate_landed_cost(request: v2.ShoppingRequest, offer: v2.Offer, inputs: 
             raise ValueError('Forwarding charges require a forwarded route')
     pool = _pool(offer, inputs)
     item = _read_item(inputs.item, offer, pool, now)
-    rates = [rate for rate in map(FxRate.model_validate, fx) if _sourced(rate, pool)]
+    rates = _sourced_rates([FxRate.model_validate(rate) for rate in fx], pool)
     # The total is in the price currency. A price that is zero or observed after now is not a total's
     # base, but its currency still places the other charges.
     currency = offer.price.value.currency if offer.price.state == 'known' else None
@@ -319,11 +329,23 @@ def calculate_landed_cost(request: v2.ShoppingRequest, offer: v2.Offer, inputs: 
     if price is not None and any(record.observed_at > now for record in _records(offer.price.evidence_ids, pool)):
         price = None
 
-    found, doubts, unpriced, refusals = defaultdict(list), defaultdict(list), defaultdict(list), []
-    for quote in inputs.quotes:
-        refused, problems, undated = _check_quote(quote, offer, item, price, now, started)
+    checked = [(quote, *_check_quote(quote, offer, item, price, now, started)) for quote in inputs.quotes]
+    # One service (provider and service name) that both refuses and carries the item contradicts itself:
+    # neither statement settles carriage or rules the route out.
+    refusing = {(q.provider_id, q.service) for q, refused, _, _ in checked if refused}
+    carrying = {(q.provider_id, q.service) for q, refused, problems, _ in checked
+                if not refused and not problems and {line.leg for line in q.lines} & set(_CARRIES)}
+    found, doubts, unpriced = defaultdict(list), defaultdict(list), defaultdict(list)
+    refusals, refused_legs = [], set()
+    for quote, refused, problems, undated in checked:
+        legs = {line.leg for line in quote.lines}
+        if (quote.provider_id, quote.service) in refusing & carrying and legs & set(_CARRIES):
+            problems = problems + refused + [f'quotes for one service of {quote.provider_id} disagree on '
+                                             'carrying the item']
+            refused = []
         if refused:
-            refusals.append(({line.leg for line in quote.lines}, refused))
+            refusals.append((legs, refused))
+            refused_legs |= legs & set(_CARRIES)
         for line in quote.lines:
             slot = (line.leg, line.component)
             if refused or problems:
@@ -338,28 +360,40 @@ def calculate_landed_cost(request: v2.ShoppingRequest, offer: v2.Offer, inputs: 
             else:
                 found[slot].append(_Line(slot, line.state, line.amount, line.lower, line.upper, line.note,
                                          quote.quote_id, (quote.evidence.evidence_id,)))
+    listed, blocked = defaultdict(list), {}
     for slot, line, problem in _listing_lines(offer, pool, now, started, forwarded):
         if problem:
             doubts[slot].append(problem)
+        elif slot in {_CARRIES[leg] for leg in refused_legs}:
+            # A listing says nothing about the battery or size a provider refused.
+            doubts[slot].append('the listing does not show that the refused item is carried')
         else:
-            found[slot].append(line)
+            listed[slot].append(line)
+    for slot, lines in listed.items():
+        if len(lines) > 1:  # separate charges on the offer; one quote cannot settle both
+            blocked[slot] = f'several listed charges fall on the {_label(slot, forwarded)}'
+        else:
+            found[slot] += lines
 
     required = set(_ALWAYS) | ({('forwarding', 'shipping')} if forwarded else set())
     if forwarded and item.battery != 'none':
         required.add(('forwarding', 'dangerous_goods'))
     components = []
     for slot in _SLOTS:
-        if slot in required or found[slot] or doubts[slot]:
-            components.append(_settle(slot, _label(slot, forwarded), found[slot], doubts[slot], unpriced[slot],
-                                      currency,
-                                      rates, now))
+        if slot in required or found[slot] or doubts[slot] or slot in blocked:
+            label = _label(slot, forwarded)
+            components.append(
+                LandedComponent(leg=slot[0], component=slot[1], label=label, status='missing',
+                                reasons=(blocked[slot],)) if slot in blocked else
+                _settle(slot, label, found[slot], doubts[slot], unpriced[slot], currency, rates, now))
 
-    settled = {(c.leg, c.component): c for c in components}
     exclusions = []
     for legs, refused in refusals:
-        if any(leg in _CARRIES and settled[_CARRIES[leg]].status != 'verified' for leg in legs):
+        # Another current quote that covers the item may still carry the leg, priced or not.
+        if any(not ({line.source for line in found[_CARRIES[leg]]} - {'listing'}) and not unpriced[_CARRIES[leg]]
+               for leg in legs & set(_CARRIES)):
             exclusions += refused
-    eligible = ((route.retailer_leg.item_eligible, route.forwarding_leg.item_eligible) if forwarded
+    eligible =((route.retailer_leg.item_eligible, route.forwarding_leg.item_eligible) if forwarded
                 else (route.item_eligible,))
     if any(fact.state == 'known' and fact.value is False for fact in eligible):
         exclusions.append('route evidence says the item cannot take this route')
@@ -406,9 +440,23 @@ def _read_item(facts: ItemFacts, offer: v2.Offer, pool, now: datetime) -> _Item:
                  known(facts.dimensions, 'package.dimensions'))
 
 
-def _sourced(rate: FxRate, pool) -> bool:
-    record = pool.get(rate.evidence_id)
-    return record is not None and record.field_path == 'fx' and record.observed_at == rate.observed_at
+def _sourced_rates(rates: list[FxRate], pool) -> list[FxRate]:
+    """Rates whose receipt is supplied for that currency pair at that time and backs no other value."""
+    cited = defaultdict(set)
+    for rate in rates:
+        cited[rate.evidence_id].add((rate.base, rate.quote, rate.rate, rate.observed_at))
+    usable = []
+    for rate in rates:
+        record = pool.get(rate.evidence_id)
+        if (record is not None and record.field_path == f'fx.{rate.base}.{rate.quote}'
+                and record.observed_at == rate.observed_at and len(cited[rate.evidence_id]) == 1):
+            usable.append(rate)
+    return usable
+
+
+def _bound_to_listing(record: v2.Evidence, offer: v2.Offer) -> bool:
+    return record.source_id != offer.source_id or (record.product_id in (None, offer.source_product_id)
+                                                   and record.variant_id in (None, offer.source_variant_id))
 
 
 def _check_quote(quote: RouteQuote, offer: v2.Offer, item: _Item, price: Money | None, now: datetime,
@@ -418,30 +466,38 @@ def _check_quote(quote: RouteQuote, offer: v2.Offer, item: _Item, price: Money |
     name = f'quote {quote.quote_id}'
     legs = {line.leg for line in quote.lines}
     carries = legs & set(_CARRIES)
-    observed = quote.evidence.observed_at
+    record = quote.evidence
     refusals, problems = [], []
-    if observed > now:
+    if record.observed_at > now:
         problems.append(f'{name} was observed after this check')
     if quote.valid_until is not None and quote.valid_until <= now:
         problems.append(f'{name} expired at {quote.valid_until.isoformat()}')
     undated = None
-    if quote.valid_until is None and (started is None or observed < started):
+    if quote.valid_until is None and (started is None or record.observed_at < started):
         undated = f'{name} states no validity period and was not read in this run'
-    if quote.item_specific:
+    if not _bound_to_listing(record, offer):
+        problems.append(f'the receipt of {name} belongs to another listing')
+    if quote.names_listing:
         if (quote.seller_id, quote.source_variant_id) != (offer.seller.seller_id, offer.source_variant_id):
             problems.append(f'{name} was issued for another seller or listing')
-    elif legs & {'retailer', 'order'}:
+    elif legs & _RETAILER_LEGS:
         problems.append(f'{name} does not name the actual seller and listing')
+    # Only the retailer's own receipt for this listing speaks for the item without a package.
+    receipt = (quote.names_listing and quote.provider_id == offer.retailer_id
+               and record.source_id == offer.source_id and record.product_id == offer.source_product_id
+               and record.variant_id == offer.source_variant_id)
+    if quote.provider_id == offer.retailer_id and quote.names_listing and not receipt:
+        problems.append(f"{name} is not backed by the retailer's receipt for this listing")
     if 'forwarding' in legs and quote.provider_id != offer.route.forwarder_id:
         problems.append(f'{name} is not from the route forwarder')
-    if (isinstance(offer.route, v2.ForwardedRoute) and quote.provider_id == offer.retailer_id
-            and legs - _RETAILER_LEGS):
+    if (isinstance(offer.route, v2.ForwardedRoute) and legs - _RETAILER_LEGS
+            and quote.provider_id in (offer.retailer_id, offer.seller.seller_id)):
         problems.append(f'{name} is from the retailer, which ships only to the forwarding address')
     # Only a current quote for this seller and route can rule the route out; any other refusal is a doubt.
     refuse = refusals.append if not problems and undated is None else problems.append
 
     package = quote.package
-    if package is None and not quote.item_specific and carries:
+    if package is None and not receipt and carries:
         problems.append(f'{name} does not state the package it priced')
     if package is not None:
         if item.weight_g is None:
@@ -459,12 +515,12 @@ def _check_quote(quote: RouteQuote, offer: v2.Offer, item: _Item, price: Money |
             problems.append(f'{name} declared a different battery configuration')
 
     if carries:
-        # An item-specific quote without a package speaks for the listed item itself.
-        declared = package.battery if package is not None else item.battery if quote.item_specific else None
+        # The retailer's receipt without a package speaks for the listed item itself.
+        declared = package.battery if package is not None else item.battery if receipt else None
         if item.battery not in (None, 'none') and declared == item.battery:
             if quote.battery_accepted is False:
                 refuse(f'{name} service does not accept the item battery')
-            elif quote.battery_accepted is None and not quote.item_specific:
+            elif quote.battery_accepted is None and not receipt:
                 problems.append(f'{name} does not confirm that the item battery is accepted')
         limits = quote.limits
         if limits.max_weight_g is not None:
@@ -481,7 +537,7 @@ def _check_quote(quote: RouteQuote, offer: v2.Offer, item: _Item, price: Money |
                         or (limits.max_dimension_sum_mm is not None and sum(sides) > limits.max_dimension_sum_mm)):
                     refuse(f'item size is over the limit of {name}')
 
-    if 'import' in legs and not quote.item_specific:
+    if 'import' in legs and not receipt:
         value = quote.declared_value
         if value is None:
             problems.append(f'{name} does not state the declared value')
@@ -611,16 +667,19 @@ def _total(request: v2.ShoppingRequest, price: Money | None, components, rates, 
         return v2.EstimatedCost(status='estimated', lower=Money(amount=lower, currency=currency),
                                 upper=Money(amount=upper, currency=currency),
                                 assumptions=tuple(note for c in estimated for note in c.reasons))
-    maximum = request.budget.maximum if request.budget else None
+    budget = request.budget
+    limit = (budget.maximum or budget.target) if budget else None
     conversion = None
-    if maximum is not None and maximum.currency != currency:
-        rate = _rate(rates, currency, maximum.currency, now)
-        if rate is None:
-            return v2.IncompleteCost(status='incomplete', known_subtotal=known, missing=('current budget FX quote',))
-        converted = _context().multiply(subtotal, rate.rate)
-        if not converted.is_finite():
-            return v2.IncompleteCost(status='incomplete', known_subtotal=known, missing=('finite budget conversion',))
-        conversion = v2.FxConversion(base=known, quote=Money(amount=converted, currency=maximum.currency),
-                                     rate=rate.rate, evidence_id=rate.evidence_id, observed_at=rate.observed_at,
-                                     valid_until=rate.observed_at + FX_MAX_AGE)
+    if limit is not None and limit.currency != currency:
+        # A hard maximum needs the conversion; a target is a preference, so without a rate the
+        # verified total simply stays in its own currency.
+        rate = _rate(rates, currency, limit.currency, now)
+        converted = None if rate is None else _context().multiply(subtotal, rate.rate)
+        if converted is not None and converted.is_finite():
+            conversion = v2.FxConversion(base=known, quote=Money(amount=converted, currency=limit.currency),
+                                         rate=rate.rate, evidence_id=rate.evidence_id,
+                                         observed_at=rate.observed_at, valid_until=rate.observed_at + FX_MAX_AGE)
+        elif budget.maximum is not None:
+            missing = 'current budget FX quote' if rate is None else 'finite budget conversion'
+            return v2.IncompleteCost(status='incomplete', known_subtotal=known, missing=(missing,))
     return v2.VerifiedCost(status='verified', total=known, budget_conversion=conversion)
