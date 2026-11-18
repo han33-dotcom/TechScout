@@ -94,7 +94,7 @@ Note = Annotated[str, StringConstraints(strict=True, max_length=500)]
 Channel = Literal['tavily', 'directory', 'buyer']
 FailureCode = Literal['unsafe_scope', 'marketplace', 'blocked', 'transient', 'validation', 'identity',
                       'ambiguous_variant', 'no_samples', 'proposal', 'retry_limit', 'suspended',
-                      'suspended_scope', 'reviewed_registry']
+                      'suspended_scope', 'reviewed_registry', 'needs_samples']
 ACTIVE_OUTCOMES = {'activated', 'already_active', 'reactivated'}
 
 
@@ -353,16 +353,22 @@ class ActivationRegistry:
         return hosts
 
     def reviewed(self, key, hosts=None) -> Reviewed | None:
-        """The shop's own reviewed entry, or a parent domain's entry that is not pending."""
+        """The reviewed decision that governs a shop domain.
+
+        The shop's own entry when a teammate decided it (any status but 'pending'); otherwise
+        the nearest parent domain's decided entry, which also overrides a pending child entry;
+        otherwise the shop's own pending entry, if any.
+        """
         hosts = self.reviewed_hosts() if hosts is None else hosts
-        if key in hosts:
-            return hosts[key]
+        own = hosts.get(key)
+        if own is not None and own.status != 'pending':
+            return own
         labels = key.split('.')
         for index in range(1, len(labels) - 1):
             parent = hosts.get('.'.join(labels[index:]))
             if parent is not None and parent.status != 'pending':
                 return parent
-        return None
+        return own
 
     def source_id_for(self, key):
         """The ID an activation uses: a reviewed pending entry's ID, otherwise an automatic one."""
@@ -371,9 +377,11 @@ class ActivationRegistry:
 
     def _belongs(self, source_id, key, hosts):
         governing = self.reviewed(key, hosts)
-        if governing is not None:  # reviewed by a teammate, or an automatic ID beside a pending one
-            return governing.status == 'pending' and governing.source_id == source_id
-        return source_id == source_id_for(key)
+        if governing is not None and governing.status != 'pending':
+            return False  # a teammate decided this shop or a parent domain
+        # The shop's automatic ID, or the ID of its pending reviewed entry it stands in for. A
+        # pending entry added after an automatic activation does not take that activation down.
+        return source_id == source_id_for(key) or (governing is not None and governing.source_id == source_id)
 
     def _rows(self, *conditions):
         try:
@@ -463,9 +471,25 @@ class ActivationRegistry:
                     source_activations.c.source_id == record.source_id,
                     source_activations.c.capability_id == cap.capability_id)).all()
                 same = next((row for row in rows if row.version == cap.version), None)
+
+                def supersede(by, rows=rows, record=record):
+                    for row in rows:
+                        if row.status == 'active' and row.version != by:
+                            payload = dict(row.payload, status='superseded', changes=[
+                                *row.payload.get('changes', []), dict(status='superseded', at=now.isoformat(), by=by)])
+                            db.execute(update(source_activations).where(
+                                source_activations.c.source_id == row.source_id,
+                                source_activations.c.capability_id == row.capability_id,
+                                source_activations.c.version == row.version).values(
+                                status='superseded', changed_at=now, payload=payload))
+                            _event(db, plan.lead_id, 'superseded', now,
+                                   dict(capability_id=row.capability_id, version=row.version, by=by),
+                                   record.source_id)
+
                 if same is not None and same.status == 'suspended' and lease is not None:
                     suspended_at = datetime.fromisoformat(same.payload['changes'][-1]['at'])
                     if _sample_time(record) > suspended_at:
+                        supersede(cap.version)  # one active version per capability ID
                         payload = dict(record.model_dump(mode='json'), changes=[
                             *same.payload.get('changes', []), dict(status='reactivated', at=now.isoformat(),
                                                                    lead_id=plan.lead_id)])
@@ -486,18 +510,7 @@ class ActivationRegistry:
                            record.source_id)
                     results.append((cap.capability_id, cap.version, outcome))
                     continue
-                for row in rows:
-                    if row.status == 'active':
-                        payload = dict(row.payload, status='superseded', changes=[*row.payload.get('changes', []),
-                            dict(status='superseded', at=now.isoformat(), by=cap.version)])
-                        db.execute(update(source_activations).where(
-                            source_activations.c.source_id == row.source_id,
-                            source_activations.c.capability_id == row.capability_id,
-                            source_activations.c.version == row.version).values(
-                            status='superseded', changed_at=now, payload=payload))
-                        _event(db, plan.lead_id, 'superseded', now,
-                               dict(capability_id=row.capability_id, version=row.version, by=cap.version),
-                               record.source_id)
+                supersede(cap.version)
                 db.execute(insert(source_activations).values(
                     source_id=record.source_id, capability_id=cap.capability_id, version=cap.version,
                     status='active', activated_at=now, changed_at=now, payload=record.model_dump(mode='json')))
@@ -550,10 +563,35 @@ class ActivationRegistry:
             _event(db, lead_id, 'suspended', now, dict(capability_id=capability_id, version=row.version,
                                                        reason=reason, fetches=list(fetches)), source_id)
             lead = db.execute(select(onboarding_leads).where(onboarding_leads.c.lead_id == lead_id)).first()
-            if lead is not None and lead.status == 'active':
+            if lead is not None and lead.status != 'exception':
+                # A worker holding the lead loses it, so it cannot reactivate anything meanwhile.
                 urls = tuple(dict.fromkeys(str(s['url']) for s in row.payload.get('samples', [])))
                 failure = Failure(code='suspended', reason=f'{capability_id} suspended: {reason}'[:500],
                                   urls=urls[:MAX_CANDIDATE_URLS], fetches=fetches, evidence=receipts, recorded_at=now)
+                record = LeadRecord.model_validate(lead.payload).model_copy(
+                    update={'exception': failure, 'last_failure': failure, 'last_outcome': 'exception'})
+                db.execute(update(onboarding_leads).where(onboarding_leads.c.lead_id == lead_id).values(
+                    status='exception', lease_token=None, lease_until=None, updated_at=now,
+                    payload=record.model_dump(mode='json')))
+                _event(db, lead_id, 'exception', now, failure.model_dump(mode='json'), source_id)
+        return True
+
+    def needs_samples(self, source_id, *, urls, fetches=(), now=None):
+        """Recheck found its recorded listings removed: tell a teammate, keep the capabilities."""
+        now = now or _now(self.clock)
+        fetches = tuple(json.loads(json.dumps(f)) for f in fetches)[:MAX_TARGETS * 3]
+        with _guarded(self.storage) as db:
+            row = db.execute(select(source_activations.c.payload).where(
+                source_activations.c.source_id == source_id, source_activations.c.status == 'active')).first()
+            if row is None:
+                return False
+            lead_id = row.payload['lead_id']
+            _event(db, lead_id, 'needs_samples', now, dict(urls=list(urls), fetches=list(fetches)), source_id)
+            lead = db.execute(select(onboarding_leads).where(onboarding_leads.c.lead_id == lead_id)).first()
+            if lead is not None and lead.status == 'active':
+                failure = Failure(code='needs_samples', urls=tuple(urls)[:MAX_CANDIDATE_URLS], fetches=fetches,
+                                  recorded_at=now, reason='Recorded sample listings were removed (404/410); the '
+                                  'capabilities stay active but cannot be rechecked until new samples are validated.')
                 record = LeadRecord.model_validate(lead.payload).model_copy(
                     update={'exception': failure, 'last_failure': failure, 'last_outcome': 'exception'})
                 db.execute(update(onboarding_leads).where(onboarding_leads.c.lead_id == lead_id).values(
@@ -761,7 +799,7 @@ class OnboardingQueue:
         with _guarded(self.storage) as db:
             changed = db.execute(update(onboarding_leads).where(
                 onboarding_leads.c.lead_id == lease.lead_id, onboarding_leads.c.status == 'leased',
-                onboarding_leads.c.lease_token == lease.token, onboarding_leads.c.lease_until > now).values(
+                onboarding_leads.c.lease_token == lease.token).values(
                 lease_until=now + LEASE, updated_at=now)).rowcount
         if changed != 1:
             raise LeaseLost(lease.lead_id)
@@ -944,8 +982,9 @@ def read_page_facts(body: bytes) -> PageFacts:
                 if _category_text(item.get('category')):
                     categories.append((sku, _category_text(item.get('category'))))
                 for offer in offers:
-                    if 'seller' in offer:
-                        claims += [(sku, kind, value) for kind, value in _seller_claims(offer['seller'])]
+                    for field in ('seller', 'offeredBy'):  # schema.org names the seller either way
+                        if field in offer:
+                            claims += [(sku, kind, value) for kind, value in _seller_claims(offer[field])]
             if _types(item) & ORGANIZATION_TYPES and isinstance(item.get('name'), str) and item['name'].strip():
                 address = item.get('address')
                 country = _country(address.get('addressCountry')) if isinstance(address, dict) else None
@@ -970,6 +1009,7 @@ class ProductSummary(Model):
     sku: Short
     name: Short | None = None
     priced: StrictBool
+    category: Short | None = None  # the Product's stated category text, if any
 
 
 class PageSummary(Model):
@@ -1012,7 +1052,8 @@ def summarize(url, outcome: FetchOutcome, facts: PageFacts | None) -> PageSummar
     if outcome.status != 'ok' or facts is None:
         return PageSummary(url=url, status='failed', error=outcome.errors[0].code if outcome.errors else 'unread')
     return PageSummary(url=url, status='ok',
-        products=tuple(ProductSummary(sku=sku[:128], name=name, priced=priced)
+        products=tuple(ProductSummary(sku=sku[:128], name=name, priced=priced,
+                                      category=next((_clip(t) for c, t in facts.categories if c == sku), None))
                        for sku, name, priced in facts.products[:20]),
         sellers=tuple(dict.fromkeys(_clip(s) for _, s in facts.sellers if _clip(s)))[:5],
         organizations=tuple(dict.fromkeys(_clip(n) for n, _ in facts.organizations if _clip(n)))[:5])
@@ -1247,7 +1288,10 @@ class HeuristicProposer:
         operations = [OperationProposal(operation='product', path=path, trailing_slash=trailing)]
         if any(sum(s.url == u for s in samples) >= 2 for u in {s.url for s in samples}):
             operations.append(OperationProposal(operation='variant', path=path, trailing_slash=trailing))
-        category = view.categories[0] if view.categories else 'phone'
+        # The lead's category that the sampled products state most often; the first one otherwise.
+        stated = [c for page in ok for p in page.products if p.category
+                  for c in view.categories if CATEGORY_WORDS[c].search(p.category)]
+        category = max(view.categories, key=stated.count) if view.categories else 'phone'
         return ConfigurationProposal(name=name, category=category, samples=tuple(samples),
                                      operations=tuple(operations), reason='Shared structure of the sampled pages')
 
@@ -1650,6 +1694,9 @@ class OnboardingWorker:
                 self.registry.suspend(source_id, cap.capability_id, reason=reason[:500], fetches=fetches,
                                       evidence=validation.evidence if validation else (), now=_now(self.clock))
                 results.append((cap.capability_id, 'suspended'))
+            if any(outcome == 'needs_samples' for _, outcome in results):
+                self.registry.needs_samples(source_id, urls=[u for u, o in pages.items() if _gone(o)],
+                                            fetches=fetches, now=_now(self.clock))
             return tuple(results)
         except BudgetDenied:
             return tuple((a.capability.capability_id, 'deferred') for a in active)

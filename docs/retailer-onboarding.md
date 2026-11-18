@@ -38,13 +38,15 @@ shared extraction and shared ledger do all fetching, parsing and accounting.
    - Shared extraction binds a known price, currency and stock to each proposed SKU.
    - Each receipt cites that reply's hash, URL and SKU.
    - A conflicting price or stock is rejected as an ambiguous variant.
-   - Every seller a sampled offer states must be the shop. A plain-text seller counts, and an
-     `@id` reference must resolve to a name on the page; an unresolved reference fails.
+   - Every seller a sampled offer states (`seller` or `offeredBy`) must be the shop. A
+     plain-text seller counts, and an `@id` reference must resolve to a name on the page; an
+     unresolved reference fails.
    - Some sampled page must state the shop's name in schema.org data.
    - The market comes from the country domain or the stated organization address, must be
      in the lead's scope, and must fit the listing currency.
-   - The category comes from the lead. A sampled product whose stated category names only
-     other categories rejects the proposal. The scope records whether the category rests on
+   - The category comes from the lead; the heuristic picks the lead category that the sampled
+     products state most often. A sampled product whose stated category names only other
+     categories rejects the proposal. The scope records whether the category rests on
      the pages or only on the lead (`category_basis`).
    - Policy text from a proposed element is kept as source-scoped evidence. Shipping,
      warranty, returns and tax stay listed as unknown terms, never zero.
@@ -79,19 +81,24 @@ six per run. The reviewed file always wins:
 - Any other shop gets an automatic ID such as `auto-cedartech-example-7834a785`. The digest
   keeps similar domains apart.
 - Any other reviewed status for the shop's domain or a parent domain (active, paused,
-  revoked and so on) keeps onboarding away and hides an onboarded entry.
+  revoked and so on) keeps onboarding away and hides an onboarded entry. A decided parent
+  domain also overrides a pending entry for a subdomain.
+- A pending entry added after an automatic activation does not hide that shop.
 - Only records for the ID's own domain and host are admitted.
 - A directory record that already links a different reviewed source makes the lead a
   `reviewed_registry` exception.
 
 `suspend` stops admission at the next request. It keeps the record, evidence and event
-history, and turns the shop's lead into a `suspended` exception for a teammate.
+history, and turns the shop's lead into a `suspended` exception for a teammate. A worker that
+holds the lead at that moment loses it, so it cannot reactivate anything. Reactivating a
+version retires any other active version of the same capability.
 
 `OnboardingWorker.recheck` re-reads recorded samples through the live registry and suspends
 a capability that no longer validates or no longer reads within scope. It never suspends one
 for:
 - a transient failure or a budget refusal;
-- a removed listing (404/410). When too few listings remain, it answers `needs_samples`.
+- a removed listing (404/410). When too few listings remain, it answers `needs_samples`
+  and makes the lead a `needs_samples` exception. The capabilities stay active.
 
 ## Limits, retries and failures
 
@@ -107,7 +114,8 @@ international subset) and the project total.
 - The third failed attempt becomes a `retry_limit` exception. So does a lead whose worker
   stopped three times; an expired lease is resumed by the next claim.
 - The worker renews its lease before probing, before proposing and before writing. A worker
-  that lost its lead stops at the next of these points. Activation checks the lease again in
+  whose lead another worker took over, or whose lead was suspended, stops at the next of
+  these points. A slow worker whose lead nobody took keeps it. Activation checks the lease again in
   its own transaction.
 
 Unresolved failures stay in the lead record for teammate follow-up, with a code, reason,

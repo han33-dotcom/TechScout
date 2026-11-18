@@ -966,6 +966,94 @@ class ReviewRegressionTests(OnboardingCase):
         self.assertEqual(sorted(claimed), ['cedartech.example', 'cedartech.example', 'pinetech.example'])
 
 
+class SecondReviewRegressionTests(OnboardingCase):
+    """Findings from the re-review and the Codex review of PR #137."""
+
+    def reviewed(self, *entries, admitted=()):
+        self.base.write_text(json.dumps({'sources': list(entries),
+                                         'live_release': {'admitted_source_ids': list(admitted)}}), encoding='utf-8')
+
+    def test_a_decided_parent_domain_overrides_a_pending_child_entry(self):
+        child = 'https://shop.cedartech.example'
+        self.reviewed({'id': 'shop_child', 'origin': child, 'status': 'pending'},
+                      {'id': 'cedar_parent', 'origin': SHOP, 'status': 'revoked'})
+        result = self.queue.enqueue(child + '/product/x', channel='tavily', categories=('laptop',), reason='t')
+        self.assertEqual(result.status, 'excluded')
+        self.assertIsNone(next((r for r in [self.registry.reviewed('shop.cedartech.example')]
+                                if r.status == 'pending'), None))
+        self.assertFalse(self.registry._belongs('shop_child', 'shop.cedartech.example',
+                                                self.registry.reviewed_hosts()))
+
+    def test_reactivation_supersedes_a_newer_active_version(self):
+        self.onboard()
+        (product,) = [a for a in self.registry.activations(SOURCE_ID) if a.capability.operation == 'product']
+        self.registry.suspend(SOURCE_ID, 'product-page', reason='synthetic layout change')
+        other = product.capability.model_copy(update={'version': 'v1-teammate-fix'})
+        plan = ob.ActivationPlan(SOURCE_ID, 'cedartech.example', (product.model_copy(update={'capability': other}),))
+        self.assertEqual(self.registry.activate(plan)[0][2], 'activated')
+        self.queue.reopen('cedartech.example', note='layout fixed')
+        self.now += timedelta(hours=1)
+        (outcome,) = self.worker().run()
+        self.assertIn(('product-page', product.capability.version, 'reactivated'), outcome.capabilities)
+        active = [a for a in self.registry.activations(SOURCE_ID, 'active') if a.capability.operation == 'product']
+        self.assertEqual([a.capability.version for a in active], [product.capability.version])
+        policy = self.gate(self.registry).admitted_policy(SOURCE_ID)
+        ids = [c.capability_id for c in policy.endpoint_capabilities]
+        self.assertEqual(len(ids), len(set(ids)))
+
+    def test_a_new_pending_review_entry_does_not_take_an_automatic_shop_down(self):
+        self.onboard()
+        self.reviewed({'id': 'cedar', 'origin': SHOP, 'status': 'pending'})
+        self.assertIn(SOURCE_ID, self.registry.read_registry()['live_release']['admitted_source_ids'])
+        self.assertTrue(self.directory.select(DirectoryQuery(category='laptop'))[0].configured)
+
+    def test_a_suspension_during_a_running_attempt_stops_it(self):
+        self.onboard()
+        self.registry.suspend(SOURCE_ID, 'product-page', reason='first suspension')
+        self.queue.reopen('cedartech.example', note='retest')
+        self.now += timedelta(hours=1)
+        lease = self.queue.claim()
+        self.registry.suspend(SOURCE_ID, 'variant-page', reason='variant pages list marketplace sellers')
+        state = self.queue.get('cedartech.example')
+        self.assertEqual((state.status, state.record.exception.code), ('exception', 'suspended'))
+        self.assertEqual(self.worker().onboard(lease).status, 'lease_lost')
+        self.assertEqual(self.registry.activations(SOURCE_ID, 'active'), ())
+
+    def test_removed_listings_reach_a_teammate(self):
+        self.onboard()
+        self.shop.status = {SCOUT: 404, TRAIL: 410}
+        self.now += timedelta(hours=1)
+        self.assertEqual(set(o for _, o in self.worker().recheck(SOURCE_ID)), {'needs_samples'})
+        state = self.queue.get('cedartech.example')
+        self.assertEqual((state.status, state.record.exception.code), ('exception', 'needs_samples'))
+        self.assertEqual(set(state.record.exception.urls), {SCOUT, TRAIL})
+        self.assertEqual(len(self.registry.activations(SOURCE_ID, 'active')), 2)
+        self.assertIn('needs_samples', [e['kind'] for e in self.registry.history(source_id=SOURCE_ID)])
+
+    def test_a_two_category_lead_uses_the_category_its_pages_state(self):
+        self.queue.enqueue(SCOUT, channel='tavily', categories=('phone',), reason='t')
+        self.queue.enqueue(TRAIL, channel='tavily', categories=('laptop',), reason='t')
+        for url, sku in ((SCOUT, b'"sku":"SB-16-512",'), (SCOUT, b'"sku":"SB-32-1024",'), (TRAIL, b'"sku":"TB-8-256",')):
+            self.shop.pages[url] = self.shop.pages[url].replace(sku, sku + b'"category":"Laptops",')
+        (outcome,) = self.worker().run()
+        self.assertEqual(outcome.status, 'active', outcome.reason)
+        product = next(a for a in self.registry.activations(SOURCE_ID) if a.capability.operation == 'product')
+        self.assertEqual((product.category, product.scope['category_basis']), ('laptop', 'page'))
+
+    def test_a_slow_worker_keeps_a_lead_nobody_else_took(self):
+        self.enqueue(SCOUT, TRAIL)
+        lease = self.queue.claim()
+        self.now += ob.LEASE + timedelta(minutes=1)
+        self.assertEqual(self.worker().onboard(lease).status, 'active')
+
+    def test_an_offered_by_seller_is_checked_too(self):
+        self.shop.pages[TRAIL] = self.shop.pages[TRAIL].replace(
+            b'"seller":{"@type":"Organization","name":"Cedar Tech"}',
+            b'"offeredBy":{"@type":"Organization","name":"Vendor 42"}')
+        self.onboard()
+        self.assertEqual(self.queue.get('cedartech.example').record.exception.code, 'identity')
+
+
 class SnapshotRaceTests(OnboardingCase):
     def test_a_concurrent_save_of_the_same_page_is_not_an_error(self):
         from hashlib import sha256
