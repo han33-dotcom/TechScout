@@ -49,5 +49,19 @@ Offline tests cover stored-first reuse, foreign supporting evidence versus
 purchase offers, opt-in reuse, unseeded acquisition, simultaneous fetch sharing,
 cancellation, revision mismatch, source refusal, task exhaustion, model scope
 rejection, discovery leads and the shared page/extraction path. No live retailer
-or paid provider is used. Orchestrator planning and browser-to-live integration
-remain #68 and #75.
+or paid provider is used.
+
+## Evidence critique
+
+After research, the orchestrator matches known claims to current typed
+observations and scoped receipts. It reports unsupported claims, absent
+required specification fields, and contradictory specification values for the
+same configuration. Missing facts without a matching resource remain visible as
+issues. Model-fit selection receives only supported, undisputed specifications.
+
+The evaluator sees the structured issues and can select one existing
+resource/field pair. The controller runs a single stored-first research task for
+that pair with the same job and deadline, then reevaluates the evidence once.
+An unavailable evaluator or invalid selection marks the critique degraded while
+retaining deterministic findings. Eligibility, totals and live finalist
+verification remain downstream. Browser-to-live integration is tracked in #75.
