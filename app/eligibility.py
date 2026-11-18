@@ -412,6 +412,15 @@ def _market(request: ShoppingRequest, offer: Offer) -> tuple[Check, Open]:
                   ['fulfillment.country']), []
 
 
+def specification_requirements(request: v2.ShoppingRequest):
+    """Map explicit specification constraints to the fields that can settle them."""
+    for field, wanted in request.requirements.model_dump(exclude={'category'}).items():
+        if wanted is not None and wanted != ():
+            minimum = field.startswith('min_')
+            name = field[4:] if minimum else 'region' if field == 'regions' else field
+            yield field, name, minimum, wanted
+
+
 def check_full_product(request: v2.ShoppingRequest, offer: v2.Offer) -> Eligibility:
     """V2 hard constraints only; missing optional facts do not disqualify a buyer.
 
@@ -455,11 +464,7 @@ def check_full_product(request: v2.ShoppingRequest, offer: v2.Offer) -> Eligibil
         # matching a RAM number never proves an arbitrary application runs well.
         add('required software suitability','variant.specs',None)
     if product.category == req.category:
-        for field, wanted in req.model_dump().items():
-            if field == 'category' or wanted is None or wanted == ():
-                continue
-            minimum = field.startswith('min_')
-            name = field[4:] if minimum else 'region' if field == 'regions' else field
+        for field, name, minimum, wanted in specification_requirements(request):
             observed = getattr(specs,name)
             def matches(value, wanted=wanted, name=name, minimum=minimum, field=field):
                 if minimum:
