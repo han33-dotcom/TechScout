@@ -9,6 +9,7 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 ## Documents
 
 - [Held-out evaluation protocol](evaluation-protocol.md)
+- [Full-product failure matrix and threat model](full-product-failure-matrix.md)
 
 - [Architecture, API and reproducibility report: implemented checkpoint and remaining work](architecture-api-report.md)
 

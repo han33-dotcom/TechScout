@@ -307,13 +307,19 @@ def _aware(now: datetime | None) -> datetime:
     return now.astimezone(timezone.utc)
 
 
+def supports_domestic_cost(offer) -> bool:
+    from app import contracts_v2 as v2
+
+    return (offer.seller.market == 'LB' and not isinstance(offer.route, v2.ForwardedRoute)
+            and (not isinstance(offer.route, v2.DirectRoute) or offer.route.origin_country == 'LB'))
+
+
 def calculate_domestic_cost(request, offer, *, fx: Sequence[FxRate] = (), now=None, estimates=None):
     """V2 cost union; explicit fee estimates never verify an offer."""
     from types import SimpleNamespace
     from app import contracts_v2 as v2
     now, estimates = _aware(now), estimates or {}
-    if (offer.seller.market != 'LB' or isinstance(offer.route,v2.ForwardedRoute)
-            or isinstance(offer.route,v2.DirectRoute) and offer.route.origin_country != 'LB'):
+    if not supports_domestic_cost(offer):
         return v2.IncompleteCost(status='incomplete',missing=('international cost evaluation required',))
     price = offer.price.value if offer.price.state == 'known' else None
     if price is None or price.amount <= 0:
@@ -330,7 +336,7 @@ def calculate_domestic_cost(request, offer, *, fx: Sequence[FxRate] = (), now=No
     order = SimpleNamespace(payment_basis=payment,fulfillment=SimpleNamespace(city=city or ''))
     for charge in offer.costs:
         path = f'costs.{charge.leg}.{charge.kind}'
-        if charge.state=='unknown' or charge.valid_until is not None and charge.valid_until < now:
+        if charge.state=='unknown' or charge.valid_until is not None and charge.valid_until <= now:
             missing.append(path)
             continue
         receipts = [e for e in offer.evidence if e.evidence_id in charge.evidence_ids]

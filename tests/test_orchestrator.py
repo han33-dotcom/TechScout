@@ -3,10 +3,11 @@ from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from unittest.mock import Mock
 
+from app.accounting import Charge, Ledger
 from app.contract_interfaces import PlanningContext
 from app.contracts_v2 import AgentFinding, FindingClaim, ShoppingRequest
 from app.evidence_critique import CritiqueChoice
-from app.model_provider import ModelResult
+from app.model_provider import ModelResult, OpenAIProvider
 from app.orchestrator import Proposal, Selection, investigate
 import test_research_workers as fixtures
 
@@ -160,5 +161,60 @@ class OrchestratorTests(unittest.TestCase):
         self.assertIsNone(issue.resource_index)
         self.assertFalse(result.critique.follow_up_attempted)
         self.assertEqual(result.critique.reason, 'invalid follow-up selection')
+        self.fixture.reader.assert_not_called()
+
+    def test_evaluator_cannot_dispatch_against_a_shared_in_flight_reservation(self):
+        self.fixture.seed()
+        target = self.work.resources[0].key.variant_id
+        proposal = Proposal(investigations=[dict(question='Check RAM', resources=[0])], clarification=None)
+        client = Mock()
+        evaluator = OpenAIProvider(client=client)
+        other_ledger = Ledger(self.fixture.storage, 'research-fixture', fixture=True)
+        other_owner = other_ledger.open_job(self.fixture.job.run_id)
+        hold = other_owner.reserve('model', Charge(Decimal('.75')), 30)
+        self.addCleanup(hold.release)
+
+        def respond(prompt, data, schema, **options):
+            if schema is CritiqueChoice:
+                reply = evaluator.generate(prompt, data, schema, **options)
+                self.assertEqual(reply.status, 'budget_denied')
+                return reply
+            value = proposal if schema is Proposal else Selection(
+                candidates=[dict(target_id=target, claim_indexes=[0])])
+            return ModelResult('completed', value, {})
+
+        self.provider.generate.side_effect = respond
+        result = investigate(self.context, job=self.fixture.job, workers=self.fixture.workers,
+            provider=self.provider, resources=self.work.resources, processing=self.work.processing,
+            deadline=datetime.now(timezone.utc) + timedelta(seconds=80))
+        self.assertEqual(result.critique.reason, 'evaluator response unavailable')
+        self.assertEqual(len(result.candidates), 1)
+        client.assert_not_called()
+        self.fixture.reader.assert_not_called()
+
+    def test_cancellation_discards_late_critique_and_stops_new_research(self):
+        self.fixture.seed()
+        first = self.work.resources[0]
+        second = first.model_copy(update={'key': first.key.model_copy(update={'representation': 'alternate'})})
+        proposal = Proposal(investigations=[dict(question='Check RAM', resources=[0])], clarification=None)
+
+        def respond(_prompt, data, schema, *, budget, cancelled):
+            if schema is Proposal:
+                return ModelResult('completed', proposal, {})
+            self.assertIs(schema, CritiqueChoice)
+            self.assertTrue(data['can_follow_up'])
+            budget.job.cancel()
+            self.assertTrue(cancelled())
+            return ModelResult('completed', CritiqueChoice(issue_index=0), {})
+
+        self.provider.generate.side_effect = respond
+        result = investigate(self.context, job=self.fixture.job, workers=self.fixture.workers,
+            provider=self.provider, resources=(first, second), processing=self.work.processing,
+            deadline=datetime.now(timezone.utc) + timedelta(seconds=80))
+        self.assertEqual(result.critique.reason, 'deadline or cancellation')
+        self.assertFalse(result.critique.follow_up_attempted)
+        self.assertEqual(result.candidates, ())
+        self.assertEqual(len(result.reports), 1)
+        self.assertEqual(self.provider.generate.call_count, 2)
         self.fixture.reader.assert_not_called()
 

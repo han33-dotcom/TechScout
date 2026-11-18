@@ -8,11 +8,12 @@ from unittest.mock import Mock
 import httpx2
 from sqlalchemy import select
 
+from app.corpus import Corpus
 from app.corpus_contracts import Extraction, PassageDraft
 from app.embeddings import EmbeddingService, OpenAIEmbeddings
 from app.freshness import FreshnessContext
 from app.retrieval import EvidenceQuery, EvidenceRetrieval, MODEL, DIMENSIONS
-from app.storage import embedding_calls
+from app.storage import Storage, embedding_calls
 import test_corpus as fixtures
 from test_corpus import START, SOURCE, citation, extract
 
@@ -96,6 +97,28 @@ class RetrievalTests(unittest.TestCase):
         receipt = citation(capture,'resource.availability','Discontinued')
         self.corpus.record_retirement(capture,receipt,status='discontinued')
         self.assertEqual(EvidenceRetrieval(self.corpus).retrieve(self.query(),vector=vector()),())
+
+    def test_deleted_evidence_and_stale_vectors_stay_out_after_reopen(self):
+        older = self.add('RAM original receipt')
+        current = self.add('RAM corrected receipt', second=60)
+        self.add('RAM different configuration', variant='book-32')
+        key = self.key.model_copy(update={'representation':'fixture-book-16-None'})
+        retrieval = EvidenceRetrieval(self.corpus)
+        self.assertEqual([hit.passage for hit in retrieval.retrieve(self.query(), vector=vector())],
+                         [current])
+        self.corpus.delete_resource(key)
+
+        reopened = Storage(self.url, self.storage.snapshots.root)
+        self.addCleanup(reopened.engine.dispose)
+        corpus = Corpus(reopened)
+        retrieval = EvidenceRetrieval(corpus)
+        self.assertIsNone(corpus.get_evidence(older.evidence.evidence_id))
+        self.assertIsNone(corpus.get_evidence(current.evidence.evidence_id))
+        self.assertEqual(retrieval.retrieve(self.query()), ())
+        self.assertEqual(retrieval.retrieve(self.query(), vector=vector()), ())
+        neighboring = self.query(context=FreshnessContext(
+            now=START+timedelta(seconds=300), product_id='book', variant_id='book-32'))
+        self.assertEqual(len(retrieval.retrieve(neighboring, vector=vector())), 1)
 
     def service(self,provider):
         from app.accounting import Ledger
