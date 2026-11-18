@@ -36,6 +36,7 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 - [Direct OpenAI model boundary](model-provider.md) and the [optional OpenRouter adapter](openrouter.md)
 - [Grounded writer and deterministic fallback](writer.md)
 - [Full-product eligibility and domestic costs](full-product-assessment.md)
+- [International landed costs](landed-costs.md)
 - [Owned buyer API and worker lifecycle](buyer-api.md)
 - [Buyer request, comparison and refinement UI](buyer-ui.md)
 - [Bounded Class Cellulars discovery and live-access limits](class-catalog.md)

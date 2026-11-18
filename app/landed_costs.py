@@ -61,7 +61,7 @@ from pydantic import Field, StrictBool, model_validator
 
 from app import contracts_v2 as v2
 from app.contracts import Fact, Model, Money, PositiveInt, Text, UtcTime
-from app.costs import FX_MAX_AGE, FxRate, _aware, _context, _rate, _sum
+from app.costs import FX_MAX_AGE, FxRate, _aware, _context, _rate, _sum, supports_domestic_cost
 
 Leg = Literal['retailer', 'forwarding', 'import', 'final', 'order']
 Component = Literal['shipping', 'consolidation', 'handling', 'storage', 'insurance', 'dangerous_goods',
@@ -298,9 +298,7 @@ class _Item:
 
 def requires_landed_cost(offer: v2.Offer) -> bool:
     """True for an overseas seller or origin: the exact complement of the domestic cost engine."""
-    route = offer.route
-    return (offer.seller.market != 'LB' or isinstance(route, v2.ForwardedRoute)
-            or (isinstance(route, v2.DirectRoute) and route.origin_country != 'LB'))
+    return not supports_domestic_cost(offer)
 
 
 def calculate_landed_cost(request: v2.ShoppingRequest, offer: v2.Offer, inputs: RouteInputs | None = None, *,

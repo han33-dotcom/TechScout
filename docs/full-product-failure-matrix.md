@@ -19,8 +19,12 @@ cost engine and verifier govern what can become a recommendation.
 | Simultaneous reservations or exhausted allowance | The shared ledger meters in-flight reservations across owners. An evaluator cannot reach the model when another reservation exhausts the research allowance. | [Concurrent ledger reservations](../tests/test_accounting.py), [evaluator dispatch](../tests/test_orchestrator.py) |
 | Stale vector results, private corpus data or deleted evidence | Retrieval filters by exact scope and current document. Private input is rejected by the public corpus. Deleted passages and vectors cannot reappear after a reopen, and evidence for another configuration stays available. | [Retrieval](../tests/test_retrieval.py), [retention](../tests/test_corpus.py) |
 
+| International route charges: expired or undated quote, refused battery, missing package size or weight, a quote for another item or seller, a fee listed twice, an unsourced or stale exchange rate | Each charge counts once. A quote that is not current, or does not cover the actual item, settles nothing, and a missing charge is never zero. A route that refuses the item is rejected. An estimated or incomplete landed cost stays among uncertain alternatives, outside the verified ranking. | [Landed costs](../tests/test_landed_costs.py) with [synthetic route fixtures](../tests/fixtures/landed/routes.json) |
+
 The fixtures demonstrate these outcomes with local databases, synthetic evidence,
 and provider substitutes. Live source availability and the integrated browser
-flow are tracked in #75 and #76. International landed-cost verification is
-tracked in #63. Production limits still depend on configuration and on external
-providers honoring their documented contracts.
+flow are tracked in #75 and #76. International landed costs are exercised with
+synthetic route quotes (#63); live route quotes depend on #61 and #62, and
+publishing an international verified offer needs the contract revision described
+in [landed costs](landed-costs.md). Production limits still depend on configuration
+and on external providers honoring their documented contracts.
