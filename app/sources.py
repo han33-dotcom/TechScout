@@ -25,7 +25,7 @@ import httpx2
 from app.contracts import SourceLimits, SourcePolicy, ToolError, ToolResult
 from app.source_capabilities import ACTION_PATH_DENYLIST as ACTION_PATH_DENYLIST
 from app.source_capabilities import CapabilityRef, Expect, safe_endpoint
-from app.source_registry import DEFAULT_REGISTRY, get_active_source
+from app.source_registry import DEFAULT_REGISTRY, get_active_source, load_registry
 
 MAX_RESPONSE_BYTES = 2 * 1024 * 1024
 MAX_WIRE_BYTES = MAX_RESPONSE_BYTES + 256 * 1024  # the body cap plus room for headers and framing
@@ -518,7 +518,7 @@ class SourceGate:
         """Re-read the registry each attempt; an unselected or unsafe entry disables the source."""
         try:
             entry = get_active_source(source_id, self._registry_path)
-            registry = json.loads(Path(self._registry_path).read_text(encoding='utf-8'))
+            registry = load_registry(self._registry_path)
             # Both reads must show the same entry, so a file edited in between cannot mix versions.
             entries = registry['sources']
             unchanged = (all(isinstance(s, dict) for s in entries)

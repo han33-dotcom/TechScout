@@ -30,6 +30,7 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 - [Full-product contracts v2](full-product-contracts.md) and [MVP contract v1](mvp-spec.md)
 - [Evidence freshness and retrieval services](evidence-services.md)
 - [Persistent retailer directory](retailer-directory.md)
+- [Automatic retailer onboarding](retailer-onboarding.md)
 - [Shared accounting and bounded research](shared-accounting.md)
 - [Direct OpenAI model boundary](model-provider.md) and the [optional OpenRouter adapter](openrouter.md)
 - [Grounded writer and deterministic fallback](writer.md)

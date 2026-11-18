@@ -57,7 +57,7 @@ from app.planner import (
     DEFAULT_CONFIG, NoInvestigationPlanner, Planner, PlannerAction, PlannerDecision, PlannerState, RulePlanner,
     request_constraints,
 )
-from app.source_registry import DEFAULT_REGISTRY, get_active_source
+from app.source_registry import DEFAULT_REGISTRY, get_active_source, load_registry
 from app.sources import CALL_TIMEOUT_S, SourceGate
 from app.storage import MAX_RUN_SECONDS, RUN_LEASE, Storage
 from app.tracing import Tracer
@@ -856,7 +856,7 @@ class _Run:
     def _select_sources(self) -> list[str]:
         """Admitted, active stores that have a reader, in registry order; registered in storage."""
         try:
-            registry = json.loads(Path(self.deps.registry_path).read_text(encoding='utf-8'))
+            registry = load_registry(self.deps.registry_path)
             admitted = registry['live_release']['admitted_source_ids']
         except (OSError, ValueError, LookupError, TypeError):
             return []
