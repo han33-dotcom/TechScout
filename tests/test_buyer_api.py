@@ -13,6 +13,7 @@ from pydantic import ValidationError
 from sqlalchemy import select
 
 from app import contracts_v2 as v
+from app.assessment import assess_full_product
 from app.buyer_runs import BuyerRunService, RunError, session_hash
 from app.main import create_app
 from app.run_worker import execute_one
@@ -135,6 +136,78 @@ class BuyerApiTests(unittest.TestCase):
         self.service.publish(claim,status='complete',phase='write',stop_reason='Verified one seller',
             coverage={'discovered':1,'attempted':1,'retrieved':1,'qualifying':1},recommendations=[{'primary':checked}])
         self.assertEqual(len(self.read(snapshot).current.recommendations),1)
+
+    def test_worker_publication_checks_conditional_charges_against_the_buyer_request(self):
+        request = self.request.model_dump(mode='json')
+        request['fulfillment'] = {'mode': 'pickup', 'destination': {'city': 'Beirut'}}
+        self.request = v.ShoppingRequest.model_validate(request)
+        snapshot = self.start()
+        claim = self.service.claim()
+        self.now += timedelta(seconds=2)
+        offer = deepcopy(fixture('offers')['phone_pickup'])
+        for evidence in offer['evidence']:
+            if evidence['field_path'] in {'price', 'stock'}:
+                evidence.update(run=claim.run.model_dump(mode='json'),
+                                observed_at=self.now.isoformat(), origin='runtime')
+        offer['costs'][0].update(state='additional', amount={'amount':'30', 'currency':'USD'})
+        checked = {'offer':offer, 'cost':{'status':'verified','total':{'amount':'900','currency':'USD'}},
+                   'verification':{'checked_at':self.now,'run':claim.run}}
+
+        def publish():
+            self.service.publish(claim, status='complete', phase='write', stop_reason='Fixture result',
+                coverage={'discovered':1,'attempted':1,'retrieved':1,'qualifying':1},
+                recommendations=[{'primary':checked}])
+
+        for condition in ('city:Beirut', 'city:Tripoli'):
+            with self.subTest(condition=condition):
+                offer['costs'][0]['conditions'] = [condition]
+                with self.assertRaisesRegex(ValueError, 'domestic cost'):
+                    publish()
+                current = self.read(snapshot).current
+                self.assertEqual(current.status, 'running')
+                self.assertEqual(current.recommendations, ())
+
+        offer['costs'][0]['conditions'] = ['city:Beirut']
+        checked['cost']['total']['amount'] = '930'
+        publish()
+        self.assertEqual(str(self.read(snapshot).current.recommendations[0].primary.cost.total.amount), '930')
+
+    def test_shipping_quote_must_match_the_route_and_still_be_valid(self):
+        request = self.request.model_dump(mode='json')
+        request['allowed_conditions'] = ['used']
+        self.request = v.ShoppingRequest.model_validate(request)
+        snapshot = self.start()
+        claim = self.service.claim()
+        self.now += timedelta(seconds=2)
+        offer = deepcopy(fixture('offers')['phone_equivalent'])
+        for evidence in offer['evidence']:
+            if evidence['field_path'] in {'price', 'stock'}:
+                evidence.update(run=claim.run.model_dump(mode='json'),
+                                observed_at=self.now.isoformat(), origin='runtime')
+        quote = next(e for e in offer['evidence'] if e['field_path']=='costs.order.shipping')
+        quote['route_id'] = 'another-delivery-route'
+        with self.assertRaisesRegex(ValidationError, 'Route evidence must match'):
+            v.Offer.model_validate(offer)
+        quote['route_id'] = offer['route']['route_id']
+
+        shipping = next(charge for charge in offer['costs'] if charge['kind']=='shipping')
+        shipping['valid_until'] = self.now.isoformat()
+        assessment = assess_full_product(self.request, v.Offer.model_validate(offer), now=self.now)
+        self.assertEqual(assessment.cost.status, 'incomplete')
+        self.assertIn('costs.order.shipping', assessment.cost.missing)
+        checked = {'offer':offer, 'cost':{'status':'verified','total':{'amount':'910','currency':'USD'}},
+                   'verification':{'checked_at':self.now,'run':claim.run}}
+        def publish():
+            self.service.publish(claim, status='complete', phase='write', stop_reason='Fixture result',
+                coverage={'discovered':1,'attempted':1,'retrieved':1,'qualifying':1},
+                recommendations=[{'primary':checked}])
+
+        with self.assertRaisesRegex(ValueError, 'Decisive cost quotes must be current'):
+            publish()
+        self.assertEqual(self.read(snapshot).current.recommendations, ())
+        shipping['valid_until'] = (self.now + timedelta(seconds=1)).isoformat()
+        publish()
+        self.assertEqual(str(self.read(snapshot).current.recommendations[0].primary.cost.total.amount), '910')
 
     def test_clarification_preserves_active_time_and_rejects_old_revision(self):
         snapshot=self.start()

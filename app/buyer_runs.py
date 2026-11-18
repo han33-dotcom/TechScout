@@ -14,6 +14,7 @@ import uuid
 from sqlalchemy import select, insert, update, delete, func
 
 from app import contracts_v2 as v
+from app.costs import FxRate, calculate_domestic_cost, supports_domestic_cost
 from app.storage import buyer_guard, buyer_sessions, buyer_runs
 from app.buyer_history import HistoryEntry, HistoryList, HistoricalWorkspace, DeletionResult
 
@@ -322,6 +323,19 @@ class BuyerRunService:
                     for checked in group.offers():
                         if check_full_product(snapshot.request,checked.offer).outcome!='pass':
                             raise ValueError('Recommendation does not meet the buyer hard requirements')
+                        if any(charge.valid_until is not None and charge.valid_until <= checked.verification.checked_at
+                               for charge in checked.offer.costs):
+                            raise ValueError('Decisive cost quotes must be current')
+                        if supports_domestic_cost(checked.offer):
+                            conversion = checked.cost.budget_conversion
+                            rates = () if conversion is None else (FxRate(
+                                base=conversion.base.currency, quote=conversion.quote.currency,
+                                rate=conversion.rate, observed_at=conversion.observed_at,
+                                evidence_id=conversion.evidence_id),)
+                            calculated = calculate_domestic_cost(snapshot.request, checked.offer,
+                                fx=rates, now=checked.verification.checked_at)
+                            if calculated.status != 'verified' or calculated.total != checked.cost.total:
+                                raise ValueError('Recommendation does not match the verified domestic cost')
             fields={}
             if status!='running':
                 fields.update(active_ms=self._used(row,now),active_since=None,lease_token=None,lease_until=None)
