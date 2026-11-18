@@ -1,0 +1,657 @@
+{
+  "_synthetic": "All providers, prices, fees, rates, limits and dates here are synthetic test values, not observed fees. The component structure follows the quote components recorded for #60 in docs/international-source-audit.md: merchant shipping to the forwarding warehouse, international freight, handling/consolidation, battery charges, insurance, duties/tax/brokerage, payment or currency fees and final delivery. Offers come from tests/fixtures/v2/offers.json with the listed changes.",
+  "now": "2026-11-16T12:05:00Z",
+  "direct": {
+    "offer_fixture": "laptop_direct_import",
+    "offer_changes": {
+      "price": {
+        "state": "known",
+        "value": {
+          "amount": "3000.00",
+          "currency": "AED"
+        },
+        "evidence_ids": [
+          "book-direct:price"
+        ]
+      },
+      "costs": []
+    },
+    "request_changes": {
+      "intent": {
+        "kind": "needs",
+        "description": "Synthetic: a 16 GB laptop"
+      },
+      "market_scope": {
+        "include_international": true
+      },
+      "budget": {
+        "maximum": {
+          "amount": "1100",
+          "currency": "USD"
+        }
+      }
+    },
+    "fx": [
+      {
+        "base": "USD",
+        "quote": "AED",
+        "rate": "3.70",
+        "observed_at": "2026-11-16T09:00:00Z",
+        "evidence_id": "fx:usd-aed"
+      },
+      {
+        "base": "AED",
+        "quote": "USD",
+        "rate": "0.28",
+        "observed_at": "2026-11-16T09:00:00Z",
+        "evidence_id": "fx:aed-usd"
+      }
+    ],
+    "inputs": {
+      "item": {
+        "battery": {
+          "state": "known",
+          "value": "installed",
+          "evidence_ids": [
+            "maker:package.battery"
+          ]
+        },
+        "weight_g": {
+          "state": "known",
+          "value": 2400,
+          "evidence_ids": [
+            "book-direct:package.weight_g"
+          ]
+        },
+        "dimensions": {
+          "state": "known",
+          "value": {
+            "length_mm": 360,
+            "width_mm": 250,
+            "height_mm": 80
+          },
+          "evidence_ids": [
+            "book-direct:package.dimensions"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "schema_version": 2,
+          "evidence_id": "maker:package.battery",
+          "source_id": "example-maker",
+          "scope": "product",
+          "field_path": "package.battery",
+          "origin_url": "https://example-maker.example/maker/package.battery",
+          "final_url": "https://example-maker.example/maker/package.battery",
+          "observed_at": "2026-11-16T12:01:00Z",
+          "response_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "adapter_version": "route-fixture-v1",
+          "excerpt": "Synthetic observation for package.battery",
+          "origin": "runtime",
+          "corpus_version": "corpus-1",
+          "product_id": "maker-scout-book"
+        },
+        {
+          "schema_version": 2,
+          "evidence_id": "book-direct:package.weight_g",
+          "source_id": "source-book-direct",
+          "scope": "variant",
+          "field_path": "package.weight_g",
+          "origin_url": "https://source-book-direct.example/book-direct/package.weight_g",
+          "final_url": "https://source-book-direct.example/book-direct/package.weight_g",
+          "observed_at": "2026-11-16T12:01:00Z",
+          "response_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "adapter_version": "route-fixture-v1",
+          "excerpt": "Synthetic observation for package.weight_g",
+          "origin": "runtime",
+          "corpus_version": "corpus-1",
+          "product_id": "listing-book-direct",
+          "variant_id": "sku-book-direct"
+        },
+        {
+          "schema_version": 2,
+          "evidence_id": "book-direct:package.dimensions",
+          "source_id": "source-book-direct",
+          "scope": "variant",
+          "field_path": "package.dimensions",
+          "origin_url": "https://source-book-direct.example/book-direct/package.dimensions",
+          "final_url": "https://source-book-direct.example/book-direct/package.dimensions",
+          "observed_at": "2026-11-16T12:01:00Z",
+          "response_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "adapter_version": "route-fixture-v1",
+          "excerpt": "Synthetic observation for package.dimensions",
+          "origin": "runtime",
+          "corpus_version": "corpus-1",
+          "product_id": "listing-book-direct",
+          "variant_id": "sku-book-direct"
+        },
+        {
+          "schema_version": 2,
+          "evidence_id": "fx:usd-aed",
+          "source_id": "example-fx",
+          "scope": "source",
+          "field_path": "fx.USD.AED",
+          "origin_url": "https://example-fx.example/fx/usd-aed",
+          "final_url": "https://example-fx.example/fx/usd-aed",
+          "observed_at": "2026-11-16T09:00:00Z",
+          "response_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "adapter_version": "route-fixture-v1",
+          "excerpt": "Synthetic observation for fx.USD.AED",
+          "origin": "runtime",
+          "corpus_version": "corpus-1"
+        },
+        {
+          "schema_version": 2,
+          "evidence_id": "fx:aed-usd",
+          "source_id": "example-fx",
+          "scope": "source",
+          "field_path": "fx.AED.USD",
+          "origin_url": "https://example-fx.example/fx/aed-usd",
+          "final_url": "https://example-fx.example/fx/aed-usd",
+          "observed_at": "2026-11-16T09:00:00Z",
+          "response_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "adapter_version": "route-fixture-v1",
+          "excerpt": "Synthetic observation for fx.AED.USD",
+          "origin": "runtime",
+          "corpus_version": "corpus-1"
+        }
+      ],
+      "quotes": [
+        {
+          "quote_id": "direct:checkout",
+          "provider_id": "retailer-book-direct",
+          "route_id": "route-book-direct",
+          "seller_id": "book-direct",
+          "source_variant_id": "sku-book-direct",
+          "valid_until": "2026-11-17T12:00:00Z",
+          "lines": [
+            {
+              "leg": "retailer",
+              "component": "shipping",
+              "state": "additional",
+              "amount": {
+                "amount": "120.00",
+                "currency": "AED"
+              }
+            },
+            {
+              "leg": "order",
+              "component": "sales_tax",
+              "state": "not_applicable",
+              "note": "Synthetic: export order, no origin tax charged"
+            }
+          ],
+          "evidence": {
+            "schema_version": 2,
+            "evidence_id": "direct:checkout",
+            "source_id": "source-book-direct",
+            "scope": "route",
+            "field_path": "route.quote",
+            "origin_url": "https://source-book-direct.example/direct/checkout",
+            "final_url": "https://source-book-direct.example/direct/checkout",
+            "observed_at": "2026-11-16T12:01:00Z",
+            "response_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "adapter_version": "route-fixture-v1",
+            "excerpt": "Synthetic observation for route.quote",
+            "origin": "runtime",
+            "corpus_version": "corpus-1",
+            "route_id": "route-book-direct",
+            "product_id": "listing-book-direct",
+            "variant_id": "sku-book-direct"
+          }
+        },
+        {
+          "quote_id": "route-book-direct:customs",
+          "provider_id": "example-customs-estimator",
+          "route_id": "route-book-direct",
+          "declared_value": {
+            "amount": "3000.00",
+            "currency": "AED"
+          },
+          "valid_until": "2026-11-17T12:00:00Z",
+          "lines": [
+            {
+              "leg": "import",
+              "component": "duty",
+              "state": "additional",
+              "amount": {
+                "amount": "40.00",
+                "currency": "USD"
+              }
+            },
+            {
+              "leg": "import",
+              "component": "import_vat",
+              "state": "additional",
+              "amount": {
+                "amount": "90.00",
+                "currency": "USD"
+              }
+            },
+            {
+              "leg": "import",
+              "component": "clearance",
+              "state": "additional",
+              "amount": {
+                "amount": "20.00",
+                "currency": "USD"
+              }
+            }
+          ],
+          "evidence": {
+            "schema_version": 2,
+            "evidence_id": "route-book-direct:customs",
+            "source_id": "example-customs",
+            "scope": "route",
+            "field_path": "route.quote",
+            "origin_url": "https://example-customs.example/route-book-direct/customs",
+            "final_url": "https://example-customs.example/route-book-direct/customs",
+            "observed_at": "2026-11-16T12:01:00Z",
+            "response_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "adapter_version": "route-fixture-v1",
+            "excerpt": "Synthetic observation for route.quote",
+            "origin": "runtime",
+            "corpus_version": "corpus-1",
+            "route_id": "route-book-direct"
+          }
+        },
+        {
+          "quote_id": "direct:courier",
+          "provider_id": "example-courier",
+          "service": "synthetic-door",
+          "route_id": "route-book-direct",
+          "package": {
+            "weight_g": 2500,
+            "battery": "installed",
+            "dimensions": {
+              "length_mm": 400,
+              "width_mm": 300,
+              "height_mm": 100
+            }
+          },
+          "battery_accepted": true,
+          "limits": {
+            "max_weight_g": 30000
+          },
+          "valid_until": "2026-11-17T12:00:00Z",
+          "lines": [
+            {
+              "leg": "final",
+              "component": "delivery",
+              "state": "additional",
+              "amount": {
+                "amount": "5.00",
+                "currency": "USD"
+              }
+            }
+          ],
+          "evidence": {
+            "schema_version": 2,
+            "evidence_id": "direct:courier",
+            "source_id": "example-courier",
+            "scope": "route",
+            "field_path": "route.quote",
+            "origin_url": "https://example-courier.example/direct/courier",
+            "final_url": "https://example-courier.example/direct/courier",
+            "observed_at": "2026-11-16T12:01:00Z",
+            "response_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "adapter_version": "route-fixture-v1",
+            "excerpt": "Synthetic observation for route.quote",
+            "origin": "runtime",
+            "corpus_version": "corpus-1",
+            "route_id": "route-book-direct"
+          }
+        }
+      ]
+    },
+    "expected": {
+      "status": "verified",
+      "total": {
+        "amount": "3693.50",
+        "currency": "AED"
+      }
+    }
+  },
+  "forwarded": {
+    "offer_fixture": "laptop_forwarded",
+    "offer_changes": {
+      "price": {
+        "state": "known",
+        "value": {
+          "amount": "800.00",
+          "currency": "USD"
+        },
+        "evidence_ids": [
+          "book-forward:price"
+        ]
+      },
+      "costs": []
+    },
+    "request_changes": {
+      "intent": {
+        "kind": "needs",
+        "description": "Synthetic: a 16 GB laptop"
+      },
+      "market_scope": {
+        "include_international": true
+      },
+      "budget": {
+        "maximum": {
+          "amount": "1100",
+          "currency": "USD"
+        }
+      }
+    },
+    "fx": [
+      {
+        "base": "USD",
+        "quote": "AED",
+        "rate": "3.70",
+        "observed_at": "2026-11-16T09:00:00Z",
+        "evidence_id": "fx:usd-aed"
+      },
+      {
+        "base": "AED",
+        "quote": "USD",
+        "rate": "0.28",
+        "observed_at": "2026-11-16T09:00:00Z",
+        "evidence_id": "fx:aed-usd"
+      }
+    ],
+    "inputs": {
+      "item": {
+        "battery": {
+          "state": "known",
+          "value": "installed",
+          "evidence_ids": [
+            "maker:package.battery"
+          ]
+        },
+        "weight_g": {
+          "state": "known",
+          "value": 2400,
+          "evidence_ids": [
+            "book-forward:package.weight_g"
+          ]
+        },
+        "dimensions": {
+          "state": "known",
+          "value": {
+            "length_mm": 360,
+            "width_mm": 250,
+            "height_mm": 80
+          },
+          "evidence_ids": [
+            "book-forward:package.dimensions"
+          ]
+        }
+      },
+      "evidence": [
+        {
+          "schema_version": 2,
+          "evidence_id": "maker:package.battery",
+          "source_id": "example-maker",
+          "scope": "product",
+          "field_path": "package.battery",
+          "origin_url": "https://example-maker.example/maker/package.battery",
+          "final_url": "https://example-maker.example/maker/package.battery",
+          "observed_at": "2026-11-16T12:01:00Z",
+          "response_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "adapter_version": "route-fixture-v1",
+          "excerpt": "Synthetic observation for package.battery",
+          "origin": "runtime",
+          "corpus_version": "corpus-1",
+          "product_id": "maker-scout-book"
+        },
+        {
+          "schema_version": 2,
+          "evidence_id": "book-forward:package.weight_g",
+          "source_id": "source-book-forward",
+          "scope": "variant",
+          "field_path": "package.weight_g",
+          "origin_url": "https://source-book-forward.example/book-forward/package.weight_g",
+          "final_url": "https://source-book-forward.example/book-forward/package.weight_g",
+          "observed_at": "2026-11-16T12:01:00Z",
+          "response_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "adapter_version": "route-fixture-v1",
+          "excerpt": "Synthetic observation for package.weight_g",
+          "origin": "runtime",
+          "corpus_version": "corpus-1",
+          "product_id": "listing-book-forward",
+          "variant_id": "sku-book-forward"
+        },
+        {
+          "schema_version": 2,
+          "evidence_id": "book-forward:package.dimensions",
+          "source_id": "source-book-forward",
+          "scope": "variant",
+          "field_path": "package.dimensions",
+          "origin_url": "https://source-book-forward.example/book-forward/package.dimensions",
+          "final_url": "https://source-book-forward.example/book-forward/package.dimensions",
+          "observed_at": "2026-11-16T12:01:00Z",
+          "response_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "adapter_version": "route-fixture-v1",
+          "excerpt": "Synthetic observation for package.dimensions",
+          "origin": "runtime",
+          "corpus_version": "corpus-1",
+          "product_id": "listing-book-forward",
+          "variant_id": "sku-book-forward"
+        },
+        {
+          "schema_version": 2,
+          "evidence_id": "fx:usd-aed",
+          "source_id": "example-fx",
+          "scope": "source",
+          "field_path": "fx.USD.AED",
+          "origin_url": "https://example-fx.example/fx/usd-aed",
+          "final_url": "https://example-fx.example/fx/usd-aed",
+          "observed_at": "2026-11-16T09:00:00Z",
+          "response_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "adapter_version": "route-fixture-v1",
+          "excerpt": "Synthetic observation for fx.USD.AED",
+          "origin": "runtime",
+          "corpus_version": "corpus-1"
+        },
+        {
+          "schema_version": 2,
+          "evidence_id": "fx:aed-usd",
+          "source_id": "example-fx",
+          "scope": "source",
+          "field_path": "fx.AED.USD",
+          "origin_url": "https://example-fx.example/fx/aed-usd",
+          "final_url": "https://example-fx.example/fx/aed-usd",
+          "observed_at": "2026-11-16T09:00:00Z",
+          "response_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "adapter_version": "route-fixture-v1",
+          "excerpt": "Synthetic observation for fx.AED.USD",
+          "origin": "runtime",
+          "corpus_version": "corpus-1"
+        }
+      ],
+      "quotes": [
+        {
+          "quote_id": "forward:retailer",
+          "provider_id": "retailer-book-forward",
+          "route_id": "route-book-forward",
+          "seller_id": "book-forward",
+          "source_variant_id": "sku-book-forward",
+          "valid_until": "2026-11-17T12:00:00Z",
+          "lines": [
+            {
+              "leg": "retailer",
+              "component": "shipping",
+              "state": "included"
+            },
+            {
+              "leg": "order",
+              "component": "sales_tax",
+              "state": "not_applicable",
+              "note": "Synthetic: no sales tax at the forwarding address"
+            }
+          ],
+          "evidence": {
+            "schema_version": 2,
+            "evidence_id": "forward:retailer",
+            "source_id": "source-book-forward",
+            "scope": "route",
+            "field_path": "route.quote",
+            "origin_url": "https://source-book-forward.example/forward/retailer",
+            "final_url": "https://source-book-forward.example/forward/retailer",
+            "observed_at": "2026-11-16T12:01:00Z",
+            "response_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "adapter_version": "route-fixture-v1",
+            "excerpt": "Synthetic observation for route.quote",
+            "origin": "runtime",
+            "corpus_version": "corpus-1",
+            "route_id": "route-book-forward",
+            "product_id": "listing-book-forward",
+            "variant_id": "sku-book-forward"
+          }
+        },
+        {
+          "quote_id": "forward:forwarder",
+          "provider_id": "example-forwarder",
+          "service": "synthetic-express",
+          "route_id": "route-book-forward",
+          "package": {
+            "weight_g": 2500,
+            "battery": "installed",
+            "dimensions": {
+              "length_mm": 400,
+              "width_mm": 300,
+              "height_mm": 100
+            }
+          },
+          "battery_accepted": true,
+          "limits": {
+            "max_weight_g": 30000,
+            "max_dimension_sum_mm": 1500
+          },
+          "valid_until": "2026-11-17T12:00:00Z",
+          "lines": [
+            {
+              "leg": "forwarding",
+              "component": "shipping",
+              "state": "additional",
+              "amount": {
+                "amount": "60.00",
+                "currency": "USD"
+              }
+            },
+            {
+              "leg": "forwarding",
+              "component": "consolidation",
+              "state": "additional",
+              "amount": {
+                "amount": "3.00",
+                "currency": "USD"
+              }
+            },
+            {
+              "leg": "forwarding",
+              "component": "dangerous_goods",
+              "state": "additional",
+              "amount": {
+                "amount": "10.00",
+                "currency": "USD"
+              }
+            },
+            {
+              "leg": "forwarding",
+              "component": "insurance",
+              "state": "additional",
+              "amount": {
+                "amount": "12.00",
+                "currency": "USD"
+              }
+            },
+            {
+              "leg": "final",
+              "component": "delivery",
+              "state": "included"
+            }
+          ],
+          "evidence": {
+            "schema_version": 2,
+            "evidence_id": "forward:forwarder",
+            "source_id": "example-forwarder-calculator",
+            "scope": "route",
+            "field_path": "route.quote",
+            "origin_url": "https://example-forwarder-calculator.example/forward/forwarder",
+            "final_url": "https://example-forwarder-calculator.example/forward/forwarder",
+            "observed_at": "2026-11-16T12:01:00Z",
+            "response_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "adapter_version": "route-fixture-v1",
+            "excerpt": "Synthetic observation for route.quote",
+            "origin": "runtime",
+            "corpus_version": "corpus-1",
+            "route_id": "route-book-forward"
+          }
+        },
+        {
+          "quote_id": "route-book-forward:customs",
+          "provider_id": "example-customs-estimator",
+          "route_id": "route-book-forward",
+          "declared_value": {
+            "amount": "800.00",
+            "currency": "USD"
+          },
+          "valid_until": "2026-11-17T12:00:00Z",
+          "lines": [
+            {
+              "leg": "import",
+              "component": "duty",
+              "state": "additional",
+              "amount": {
+                "amount": "30.00",
+                "currency": "USD"
+              }
+            },
+            {
+              "leg": "import",
+              "component": "import_vat",
+              "state": "additional",
+              "amount": {
+                "amount": "85.00",
+                "currency": "USD"
+              }
+            },
+            {
+              "leg": "import",
+              "component": "clearance",
+              "state": "additional",
+              "amount": {
+                "amount": "15.00",
+                "currency": "USD"
+              }
+            }
+          ],
+          "evidence": {
+            "schema_version": 2,
+            "evidence_id": "route-book-forward:customs",
+            "source_id": "example-customs",
+            "scope": "route",
+            "field_path": "route.quote",
+            "origin_url": "https://example-customs.example/route-book-forward/customs",
+            "final_url": "https://example-customs.example/route-book-forward/customs",
+            "observed_at": "2026-11-16T12:01:00Z",
+            "response_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "adapter_version": "route-fixture-v1",
+            "excerpt": "Synthetic observation for route.quote",
+            "origin": "runtime",
+            "corpus_version": "corpus-1",
+            "route_id": "route-book-forward"
+          }
+        }
+      ]
+    },
+    "expected": {
+      "status": "verified",
+      "total": {
+        "amount": "1015.00",
+        "currency": "USD"
+      }
+    }
+  }
+}
