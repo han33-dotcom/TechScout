@@ -227,6 +227,13 @@ class LandedCostTests(unittest.TestCase):
         result = self.landed()
         self.assertEqual(result.support, 'unresolved')
         self.assert_open(result, FREIGHT, reason='disagree on carrying the item')
+        # A stale acceptance (undated, not read in this run) cannot contradict a current refusal.
+        del other['valid_until']
+        self.assertEqual(self.landed().support, 'unsupported')
+        self.assertEqual(self.assess().decision, 'rejected')
+        result = self.landed(run_started_at=datetime.fromisoformat('2026-11-16T12:00:00+00:00'))
+        self.assertEqual(result.support, 'unresolved')  # read in this run, it does contradict
+        other['valid_until'] = forwarder['valid_until']
         # The same service carrying only another leg does not contradict a freight refusal.
         other['lines'] = [line for line in forwarder['lines'] if line['leg'] == 'final']
         forwarder['lines'] = [line for line in forwarder['lines'] if line['leg'] != 'final']

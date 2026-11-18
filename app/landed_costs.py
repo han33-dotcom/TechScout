@@ -330,10 +330,14 @@ def calculate_landed_cost(request: v2.ShoppingRequest, offer: v2.Offer, inputs: 
     checked = [(quote, *_check_quote(quote, offer, item, price, now, started)) for quote in inputs.quotes]
     # One service (provider and service name) that both refuses and carries the item on one leg
     # contradicts itself: neither statement settles that carriage or rules the route out.
-    def carried(quote):
-        return {(quote.provider_id, quote.service, line.leg) for line in quote.lines if line.leg in _CARRIES}
+    def carried(quote, lines=None):
+        return {(quote.provider_id, quote.service, line.leg) for line in (quote.lines if lines is None else lines)
+                if line.leg in _CARRIES}
     refusing = set().union(*(carried(q) for q, refused, _, _ in checked if refused))
-    carrying = set().union(*(carried(q) for q, refused, problems, _ in checked if not refused and not problems))
+    # Only an acceptance that could itself settle a charge contradicts a refusal: an undated quote not
+    # read in this run can supply estimates only.
+    carrying = set().union(*(carried(q, [line for line in q.lines if undated is None or line.state == 'estimated'])
+                             for q, refused, problems, undated in checked if not refused and not problems))
     found, doubts, unpriced = defaultdict(list), defaultdict(list), defaultdict(list)
     refusals, refused_legs = [], set()
     for quote, refused, problems, undated in checked:
