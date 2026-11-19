@@ -190,7 +190,7 @@ flowchart LR
 | Final verifier | Refresh decisive facts and check replacements | No primary recommendation from an unverified cached offer |
 | Storage and traces | Validated records, snapshots, actions, measured usage, prompt/model versions | Raw pages and secrets never become unrestricted public output |
 
-The selected initial reasoning model is OpenAI GPT-6.1 Sol (`gpt-6.1-sol`) across the orchestrator, researchers, evaluator, and writing step. Give each role a separate prompt, output schema, and allowed tools; record their versions and the model version used. Validate account access, structured-tool behavior, latency, and cost during integration. An interface allows substitution and deterministic test fakes. Alternative models are optional evaluation configurations, not additional production integrations or prerequisites for implementation.
+Use OpenRouter for inference across the orchestrator, researchers, evaluator, and writer. GPT-6.1 Sol is the intended model, subject to access through the issued keys. Give each role a separate prompt, output schema, and allowed tools. Record their versions and the model version used. The provider interface supports offline tests with deterministic fakes.
 
 Run the API and buyer execution worker as separate processes from the shared backend codebase. The [owned buyer API](buyer-api.md) persists session ownership, request revisions, run snapshots, active time and worker leases in the database. It bounds global and per-session admission across processes; excess work is visibly queued or rejected. Concurrent AI research roles remain tasks within the controller, subject to its separate researcher and shared-resource limits. Cancellation/refinement revokes worker writes, and an expired lease records a partial outcome rather than silently retrying stale work. Waiting for clarification pauses active execution time without replenishing it. The worker entry point is ready for controller integration in #67/#68; queued API acceptance alone does not demonstrate a completed shopping flow.
 
@@ -214,7 +214,7 @@ The evidence store is shared durable product knowledge, distinct from private se
 | Shipping, warranty, payment, FX, and import evidence | Scope to destination, route, condition, currency, and applicable dates; refresh decisive facts according to explicit source policy and final verification requirements |
 | Previous answers and private requests | Session-owned history only; regenerate decisions for the current request from underlying evidence |
 
-Use structured SQL for model IDs, money, variants, and hard constraints. Combine keyword and semantic passage retrieval for suitability questions, with metadata filtering and bounded result sizes. Use pgvector within PostgreSQL and the selected OpenAI `text-embedding-3-small` embedding model. Validate retrieval with representative English/Arabic requests, exact-model distractors, latency, and cost. Record embedding model/dimensions and chunking versions; do not mix incompatible vectors. Embed new or changed passages and incoming semantic queries, not entire unchanged sites on every request. Citation links resolve to retained source excerpts, not just vectors or generated summaries.
+Use structured SQL for model IDs, money, variants, and hard constraints. Combine keyword and semantic passage retrieval for suitability questions, with metadata filtering and bounded result sizes. Use pgvector within PostgreSQL and the planned `text-embedding-3-small` embedding model. Provider and credential access for embeddings remain open until the keys arrive. Validate retrieval with representative English/Arabic requests, exact-model distractors, latency, and cost. Record embedding model/dimensions and chunking versions; do not mix incompatible vectors. Embed new or changed passages and incoming semantic queries, not entire unchanged sites on every request. Citation links resolve to retained source excerpts, not just vectors or generated summaries.
 
 Define configurable freshness policies by fact type and source. Retention duration is not freshness: a retained record can remain useful historically while requiring a refresh for a current decision. Price and stock checks for finalists occur during the current run; bypass provider caches where necessary and inspect the actual selected variant and page state. Expired, superseded, contradictory, or unsupported facts cannot qualify an offer. A failed refresh preserves a labelled historical/unresolved result.
 
@@ -294,15 +294,15 @@ Track changes per scoped resource (product/variant page, policy page, catalog en
 
 Offline acceptance cases cover conditional unchanged responses, sources without validators, irrelevant HTML changes, price-only changes, policy/specification changes, processing-version changes, new listings, temporary failures versus supported removal, and restart/concurrent-update behavior. These rules refine tasks #46, #47, #87 and #88; they do not add a separate ingestion implementation.
 
-### Confirmed model access: direct OpenAI primary, OpenRouter optional
+### Primary inference provider
 
-Direct OpenAI is the primary model-provider path for the selected GPT-6.1 Sol agent roles; OpenAI embeddings remain direct. Add OpenRouter as an optional, explicitly configured adapter behind the same model-provider interface for selected comparisons or approved alternatives. The default application must run without an OpenRouter key or account; the optional adapter does not gate core delivery or required evaluation. OpenRouter is a model-access gateway, not the research orchestrator or a replacement for Tavily, Firecrawl or stored evidence.
+Use OpenRouter for live agent inference and the main evaluation. The adapter from [#89](https://github.com/han33-dotcom/TechScout/issues/89) implements the shared model-provider interface. [The first live integration (#75)](https://github.com/han33-dotcom/TechScout/issues/75) will wire it into the buyer-run worker, including the writer with its own prompt version and token allowance. Keep `OPENROUTER_API_KEY` in backend configuration.
 
-Configure explicit model IDs and approved serving-provider/endpoint choices. Require tool/structured-output capabilities at the selected endpoint and locally validate results; API compatibility does not establish identical behavior. Keep automatic model substitution disabled by default and during the main evaluation. A permitted fallback must be explicitly configured, traced and subject to the existing shared deadline, cancellation, retry and spend limits; no cheapest-model autorouting or silent degradation. Optional model/provider experiments remain separately labelled.
+Use an explicit model and serving endpoint that support the required tool calls and structured outputs. Validate role outputs locally. Pin one route across the model-driven evaluation configurations, with provider fallbacks and model substitution disabled. Any alternative route belongs to a separately labelled experiment with its own settings and the same deadline, cancellation and spend controls.
 
-Record the requested and actual model, serving provider and endpoint/version identifiers where available, capabilities/routing configuration, retries/fallbacks, usage, latency and spend. Missing provider metadata or uncertain billing stays explicit. Compare direct versus routed behavior before making reliability, quality or speed claims. Configure data-policy filters deliberately and keep credentials in backend configuration.
+Record the requested and reported model, serving provider and endpoint/version identifiers when available, routing settings, retries, usage, latency and spend. Mark missing metadata and uncertain charges explicitly. Include the data-policy settings in the route configuration.
 
-Count applicable gateway/payment fees, subscriptions or BYOK charges within the shared $500 allowance, using current account/provider pricing at setup. Do not double count prepaid credit purchase and its consumption. Creating the optional adapter task does not buy credits, configure an account or launch paid calls. Preserve performance-first model selection; optimize cost without assuming cheaper routing improves recommendation quality.
+Count inference usage and applicable gateway or payment fees within the shared $500 allowance. Use the issued account's pricing and limits when reserving spend, and count prepaid credits once.
 
 ### Model and service selection with reuse
 
@@ -310,9 +310,9 @@ The following initial stack is confirmed, with a USD 500 total development/evalu
 
 | Layer | Selected implementation | Use |
 |---|---|---|
-| Reasoning and agent roles | Direct OpenAI with GPT-6.1 Sol (model ID: gpt-6.1-sol). Verify access from the project account during setup. | Orchestration, focused research, evaluation, and final writing |
+| Reasoning and agent roles | OpenRouter with an explicit serving route. Verify access to the intended GPT-6.1 Sol model when the keys arrive. | Orchestration, focused research, evaluation, and final writing |
 | Structured and searchable evidence | PostgreSQL, full-text search, and pgvector | Exact facts and relationships alongside searchable source passages |
-| Embeddings | OpenAI `text-embedding-3-small` | Index changed passages and embed semantic retrieval queries |
+| Embeddings | Planned model `text-embedding-3-small`, 1,536 dimensions. Provider and credential access remain open until the keys arrive. | Index changed passages and embed semantic retrieval queries |
 | External discovery | Tavily Search API | Find missing products, evidence, and sellers beyond the stored catalog |
 | Primary page retrieval | Direct retailer integrations through the source gate | Fetch known pages and preserve variant-specific source evidence |
 | Managed retrieval fallback | Firecrawl Scrape API | Retrieve supported pages when direct retrieval is insufficient |
@@ -334,7 +334,7 @@ The comparison exercised seven paired offline cases. Public Firecrawl probes ret
 
 ### Provider setup
 
-Provider accounts for TechScout still need configuration. Set up a project on the OpenAI API platform for GPT-6.1 Sol and embeddings. OpenAI manages ChatGPT and API billing separately. The OpenAI model catalog lists gpt-6.1-sol, with function calling and structured outputs on the Responses API. Check project access and applicable API credits or billing during setup. [OpenAI API quickstart](https://developers.openai.com/api/docs/quickstart) · [GPT-6.1 Sol model documentation](https://developers.openai.com/api/docs/models/gpt-6.1-sol) · [OpenAI billing](https://help.openai.com/en/articles/9039756-managing-billing-for-chatgpt-and-the-api-platform)
+When the OpenRouter keys arrive, confirm access to the intended model, serving endpoint, required capabilities, pricing and account limits. Use one bounded development call as evidence for [calibration (#80)](https://github.com/han33-dotcom/TechScout/issues/80). If the intended route is unavailable, record the limitation and choose a supported route explicitly before calibration. Separately confirm how the team can access embeddings for both indexing and queries. Record the embedding decision once access is known.
 
 Create backend API credentials for Tavily Search and the Firecrawl retrieval fallback. Store the keys in local backend configuration. Run a bounded credential and capability smoke test after account and budget configuration. Use fixture clients for implementation and routine tests. [Tavily setup](https://docs.tavily.com/) · [Firecrawl setup](https://docs.firecrawl.dev/introduction)
 
@@ -574,6 +574,8 @@ Confirmed evaluation scope (November 15): 30 unseen shopping requests across all
 
 Path A is an application project, but evidence of usefulness remains a core deliverable. Begin the evaluation harness with the first integrated run. Reuse the same adapters, cost rules, final verifier, and aggregate budgets for the fixed heuristic and single-agent configurations. Use the same base model for the single-agent comparison so we can measure whether delegation and critique improve quality enough to justify their latency and cost. Report measured outcomes without assuming multiple agents perform better.
 
+Before calibration, #80 will version the evaluation protocol and replace the direct OpenAI route in `eval/models.json` and `config/evaluation.json`. Update the associated tests and protocol hashes. Pin the same validated OpenRouter model and serving route for full-warm, full-cold and single-agent-warm. Record final settings and smoke-check evidence in the pre-run freeze before any held-out trial.
+
 Prepare at least 30 held-out requests across categories, exact/use-case searches, domestic/international scope, feasible/no-match cases, and missing-cost/variant traps. Keep development calibration requests separate. Finalize the protocol and intended claims before seeing held-out outputs.
 
 | Comparison | Question answered |
@@ -657,7 +659,7 @@ Rehearse the complete live flow on the actual demonstration computer and network
 
 **Confirmed on November 15:** persistent reuse of source-backed product knowledge and agentic RAG, with selective live research and fresh finalist verification, are part of the full-product architecture.
 
-**Confirmed initial stack:** PostgreSQL with SQL/full-text retrieval and pgvector; explicit relational links with no separate graph database; GPT-6.1 Sol through direct OpenAI as the primary provider for all agent roles; optional OpenRouter adapter with explicit model/provider routing; direct OpenAI `text-embedding-3-small`; Tavily Search; direct retailer retrieval with Firecrawl fallback. OpenRouter is optional and never silently substitutes a model in the main evaluation.
+**Initial stack.** Use PostgreSQL with SQL, full-text retrieval and pgvector, explicit relational links, OpenRouter for agent inference, Tavily Search, and direct retailer retrieval with Firecrawl fallback. GPT-6.1 Sol is the intended inference model pending a route check. Embedding provider and credential access are open until the keys arrive.
 
 **Confirmed operating limits:** up to two minutes of active execution per search and USD 500 total for development/evaluation, shared across all teammates, services, and associated maintenance work.
 
@@ -677,7 +679,7 @@ Rehearse the complete live flow on the actual demonstration computer and network
 
 **Operational configuration still needed:** per-buyer-run call/spend calibration settings, provider service tiers and account access, retention periods, and source-specific tuning. Initial collection is capped at $50 including $15 international; daily maintenance at $3 including $1 international, within the shared $500 total. Collection workload limits and initial refresh priorities are confirmed above; allocate remaining development/evaluation spend using measured costs. Local deployment is confirmed; optional cloud hosting is not a blocker. Freshness defaults are confirmed; later source-specific tuning should follow measured behavior. No subscriptions have been purchased or paid runs started by this plan.
 
-**Delivery follow-up:** confirm the submission cutoff time and live-demo slot. Configure the OpenAI, Tavily, and Firecrawl accounts and verify project access before paid execution. Track the proposal's Moodle verification and rehearsal on both demo machines under [release task #85](https://github.com/han33-dotcom/TechScout/issues/85).
+**Delivery follow-up:** confirm the submission cutoff time and live-demo slot. Configure the issued OpenRouter keys and the Tavily and Firecrawl accounts and verify project access before paid execution. Track the proposal's Moodle verification and rehearsal on both demo machines under [release task #85](https://github.com/han33-dotcom/TechScout/issues/85).
 
 The largest risks are breadth of live retailer coverage, missing international charges, multi-agent latency/cost and duplicated work, a late first integration, and evaluation workload. Keep task scopes focused and agent counts adaptive, and measure the extra coordination against the single-agent configuration. A smaller number of technically usable sources can still support a complete product experience, provided supported coverage is explicit. More feature names or a larger store list do not substitute for retrieved, verified results.
 
