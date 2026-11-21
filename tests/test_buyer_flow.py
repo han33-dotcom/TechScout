@@ -29,10 +29,10 @@ from app.accounting import Charge, Ledger
 from app.buyer_flow import FlowDependencies, ResearchSetup, execute, listing_resources
 from app.buyer_runs import BuyerRunService
 from app.buyer_sources import (
-    NO_ITEM_ELIGIBILITY, NOT_ROUTE_EVIDENCE, ClassCellularsSource, DeliveryChoice,
+    NO_ITEM_ELIGIBILITY, NOT_ROUTE_EVIDENCE, ClassCellularsSource, DeadlineBudget, DeliveryChoice, gate_fetcher,
 )
 from app.collection_contracts import RetailerDirectoryEntry
-from app.contracts import SourcePolicy
+from app.contracts import SourcePolicy, ToolError
 from app.corpus_contracts import ProcessingVersion
 from app.directory import CategoryCoverage, Directory, DirectoryRecord
 from app.inference import (
@@ -218,7 +218,7 @@ class FlowCase(unittest.TestCase):
     def deps(self, *, config=None, source=None, synthetic=False, research=True):
         inference = build_inference(config or inference_config(), api_key=KEY,
                                     transport=httpx2.MockTransport(self.openrouter))
-        source = source or ClassCellularsSource(lambda job: self.fetch, storage=self.storage)
+        source = source or ClassCellularsSource(lambda job, room=None: self.fetch, storage=self.storage)
         if synthetic:
             source = SyntheticRouteFacts(source)
         setup = ResearchSetup(ResearchWorkers(self.directory, self.corpus, Mock(), {}), self.processing,
@@ -481,7 +481,7 @@ class LimitTests(FlowCase):
     def test_re_read_citing_an_earlier_reply_of_this_run_is_not_verified(self):
         # The v2 contract accepts any current-run evidence; only the #70 re-check rule notices that
         # a "re-read" copy still cites the discovery replies (for example a reader's cached copy).
-        source = SyntheticRouteFacts(ClassCellularsSource(lambda job: self.fetch, storage=self.storage))
+        source = SyntheticRouteFacts(ClassCellularsSource(lambda job, room=None: self.fetch, storage=self.storage))
         inner_refresh = source.refresh
 
         def cached(*args, earlier, **kwargs):
@@ -495,7 +495,7 @@ class LimitTests(FlowCase):
         self.assertEqual(set(self.trace(run)['verify']['outcomes'].values()), {'not_current'})
 
     def test_listings_that_cannot_be_converted_are_a_named_data_gap(self):
-        source = SyntheticRouteFacts(ClassCellularsSource(lambda job: self.fetch, storage=self.storage))
+        source = SyntheticRouteFacts(ClassCellularsSource(lambda job, room=None: self.fetch, storage=self.storage))
         inner_discover = source.discover
 
         def unreadable(*args, **kwargs):
@@ -557,7 +557,7 @@ class LimitTests(FlowCase):
         self.assertEqual(self.trace(run)['stopped_by'], [])
 
     def test_failed_final_re_read_verifies_nothing_and_does_not_crash(self):
-        source = SyntheticRouteFacts(ClassCellularsSource(lambda job: self.fetch, storage=self.storage))
+        source = SyntheticRouteFacts(ClassCellularsSource(lambda job, room=None: self.fetch, storage=self.storage))
         source.refresh = Mock(side_effect=RuntimeError('store unreachable'))
         _, run = self.browse(self.deps(source=source))
         self.assertEqual((run.status, run.stop_reason), ('abstained', buyer_flow.NONE_VERIFIED))
@@ -574,6 +574,8 @@ class LimitTests(FlowCase):
         self.assertEqual(self.fetch.calls, [])
         self.assertEqual(self.openrouter.requests, [])
         self.assertIn('deadline', self.trace(run)['stopped_by'])
+        # Reaching the deadline closes the ledger job, so nothing can reserve after it.
+        self.assertTrue(self.ledger.snapshot()['jobs'][run.run.run_id]['cancelled'])
 
     def test_provider_timeout_is_recorded_and_writer_respects_the_final_deadline(self):
         self.openrouter.delay = {'plan': 1.5}
@@ -807,7 +809,7 @@ class FreshDatabaseTests(unittest.TestCase):
     def test_first_live_read_registers_the_reviewed_source_and_keeps_the_listings(self):
         self.assertIsNone(self.storage.load_source('class_cellulars'))
         run = v.RunReference(run_id='fresh', run_revision=1, request_id='flow-1', request_revision=1)
-        source = ClassCellularsSource(lambda job: LiveFetch(STORE), storage=self.storage)
+        source = ClassCellularsSource(lambda job, room=None: LiveFetch(STORE), storage=self.storage)
         read = source.discover(v.ShoppingRequest.model_validate(REQUEST), DeliveryChoice('Beirut'), None, run)
         self.assertEqual((read.mode, len(read.offers), read.errors), ('live', 4, ()))
         self.assertEqual(self.storage.load_source('class_cellulars').status, 'active')
@@ -816,7 +818,7 @@ class FreshDatabaseTests(unittest.TestCase):
 
     def test_a_storage_failure_never_discards_a_successful_read(self):
         run = v.RunReference(run_id='fresh', run_revision=1, request_id='flow-1', request_revision=1)
-        source = ClassCellularsSource(lambda job: LiveFetch(STORE), storage=self.storage)
+        source = ClassCellularsSource(lambda job, room=None: LiveFetch(STORE), storage=self.storage)
         with patch.object(self.storage, 'save_offer', side_effect=ValueError('disk full')):
             read = source.discover(v.ShoppingRequest.model_validate(REQUEST), DeliveryChoice('Beirut'), None, run)
         self.assertEqual(len(read.offers), 4)
@@ -824,10 +826,45 @@ class FreshDatabaseTests(unittest.TestCase):
 
 
 class SourceAndRoleTests(FlowCase):
+    def test_every_gate_attempt_is_held_to_the_run_deadline(self):
+        # The gate reserves each attempt (retries and redirect hops included). A retry that would
+        # outlast the run's own deadline is refused unsent, even though the ledger's later
+        # 90/120-second job limits would still allow it.
+        left = [30.0]
+
+        class RetryingGate:
+            sent = []
+
+            def fetch(self, budget, source_id, url, *, expect, capability=None):
+                for attempt in range(3):
+                    reservation = budget.reserve_call(source_id, 25)
+                    if reservation is None:
+                        return FetchOutcome(source_id, url, (url,), attempt, 0, (ToolError(
+                            code='NETWORK_ERROR', message='class_cellulars: connection reset', retryable=True), ToolError(
+                            code='BUDGET_EXHAUSTED', message='refused', retryable=False)))
+                    self.sent.append(attempt)
+                    reservation.still_wanted()
+                    reservation.commit(0.01)
+                    left[0] -= 12  # the failed attempt used part of the run's time
+                raise AssertionError('a third attempt must never be reserved')
+        gate = RetryingGate()
+        job = self.ledger.open_job('deadline-attempts')
+        fetch = gate_fetcher(gate)(job, lambda: left[0])
+        outcome = fetch('class_cellulars', CLASS_API, expect='json')
+        self.assertEqual(gate.sent, [0])
+        self.assertEqual(outcome.errors[-1].code, 'BUDGET_EXHAUSTED')
+        attempts = [a for a in self.ledger.snapshot()['attempts'].values() if a['job'] == 'deadline-attempts']
+        self.assertEqual(len(attempts), 1)  # the refused retry never reached the ledger
+        budget = DeadlineBudget(job.source_budget(DEFAULT_REGISTRY), lambda: 24.9)
+        self.assertIsNone(budget.reserve_call('class_cellulars', 25))
+        self.assertEqual(budget.refused, 1)
+        self.assertIsNotNone(DeadlineBudget(job.source_budget(DEFAULT_REGISTRY), None).reserve_call(
+            'class_cellulars', 25))
+
     def test_conversion_keeps_unknowns_and_binds_run_only_to_this_runs_replies(self):
         run = v.RunReference(run_id='convert', run_revision=1, request_id='flow-1', request_revision=1)
         request = v.ShoppingRequest.model_validate(REQUEST)
-        source = ClassCellularsSource(lambda job: self.fetch)
+        source = ClassCellularsSource(lambda job, room=None: self.fetch)
         read = source.discover(request, DeliveryChoice('Beirut'), None, run)
         self.assertEqual((read.mode, len(read.offers), read.skipped), ('live', 4, ()))
         offer = read.offers[0]
@@ -838,7 +875,7 @@ class SourceAndRoleTests(FlowCase):
         self.assertTrue(all(e.run == run and e.origin == 'runtime' for e in offer.evidence))
         self.assertEqual(str(offer.listing_url), CLASS_PAGE)
         # Listings stored by an earlier run come back without this run's reference.
-        source = ClassCellularsSource(lambda job: self.fetch, storage=self.storage)
+        source = ClassCellularsSource(lambda job, room=None: self.fetch, storage=self.storage)
         source.discover(request, DeliveryChoice('Beirut'), None, run)
         later = run.model_copy(update={'run_id': 'later'})
         stored = source.discover(request, DeliveryChoice('Beirut'), None, later)

@@ -16,6 +16,7 @@ finalist: the final re-read always goes to the store.
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
+import functools
 import re
 from typing import Literal
 
@@ -103,6 +104,9 @@ class _Recorder:
         outcome = self.fetch(source_id, url, expect=expect, **kwargs)
         if outcome.response_sha256 is not None and outcome.observed_at is not None:
             self.replies.add((outcome.response_sha256, outcome.observed_at))
+        elif (outcome.errors and outcome.errors[-1].code == 'BUDGET_EXHAUSTED'
+              and self.room is not None and self.room() < FETCH_ROOM_S):
+            self.refused += 1  # a retry or redirect the run deadline refused (DeadlineBudget)
         self.entries.append(dict(url=str(url)[:300], expect=expect,
                                  status='ok' if not outcome.errors else 'error',
                                  error_code=outcome.errors[0].code if outcome.errors else None,
@@ -110,6 +114,28 @@ class _Recorder:
                                  response_sha256=outcome.response_sha256,
                                  observed_at=None if outcome.observed_at is None else outcome.observed_at.isoformat()))
         return outcome
+
+
+class DeadlineBudget:
+    """The ledger's source budget for one run, refused when one gate attempt could outlast the
+    run's own deadline. The gate reserves every attempt, retries and redirect hops included, so
+    each one is checked here, not only the first; the ledger's 90/120-second job limits are
+    later than the run's own deadline and do not bound it."""
+    def __init__(self, budget, room=None):
+        self.budget, self.room, self.run_id, self.refused = budget, room, budget.run_id, 0
+
+    def reserve_call(self, source_id, max_seconds):
+        if self.room is not None and self.room() < max_seconds:
+            self.refused += 1
+            return None
+        return self.budget.reserve_call(source_id, max_seconds)
+
+
+def gate_fetcher(gate, registry_path=DEFAULT_REGISTRY):
+    """Production fetcher: the gate fetch bound to the run's ledger job and its deadline."""
+    def fetcher(job, room=None):
+        return functools.partial(gate.fetch, DeadlineBudget(job.source_budget(registry_path), room))
+    return fetcher
 
 
 def _evidence(record: v1.Evidence, path: str, run: v2.RunReference | None) -> v2.Evidence:
@@ -251,7 +277,7 @@ def query_for(request: v2.ShoppingRequest, route: DeliveryChoice) -> CandidateQu
 
 
 class ClassCellularsSource:
-    """The one source of this flow. ``fetcher(job)`` returns the gate fetch bound to the run's
+    """The one source of this flow. ``fetcher(job, room)`` returns the gate fetch bound to the run's
     ledger job (fake source HTTP in tests). ``storage`` keeps raw replies and listings so a
     later run can reuse them for discovery; ``reuse_for`` bounds how old a reused listing may be."""
     source_id = 'class_cellulars'
@@ -318,7 +344,7 @@ class ClassCellularsSource:
         """Listings for the requested model: reused from storage when recent ones exist,
         otherwise read live. The FAQ policy page is always read in this run."""
         query = query_for(request, route)
-        recorder = _Recorder(self.fetcher(job), room)
+        recorder = _Recorder(self.fetcher(job, room), room)
         errors = []
         stored = self._stored(query) if reuse else []
         if stored:
@@ -341,7 +367,7 @@ class ClassCellularsSource:
                 earlier: SourceRead, room=None) -> SourceRead:
         """The final re-read of the finalists' listings in this run, with this run's policy pages."""
         query = query_for(request, route)
-        recorder = _Recorder(self.fetcher(job), room)
+        recorder = _Recorder(self.fetcher(job, room), room)
         result = self.adapter.fetch_offers(recorder, list(offer_ids), query)
         errors = [f'{e.code}: {e.message}' for e in result.tool_result.errors]
         self._keep(result, errors=errors)

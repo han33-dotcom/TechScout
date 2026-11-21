@@ -27,7 +27,6 @@ from collections.abc import Callable
 from dataclasses import dataclass, field, replace
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
-import functools
 import hashlib
 import json
 import logging
@@ -42,7 +41,9 @@ from app import verification
 from app.accounting import BudgetDenied
 from app.assessment import _doubts, assess_full_product
 from app.buyer_runs import RunError
-from app.buyer_sources import CORPUS_VERSION, FETCH_ROOM_S, ClassCellularsSource, DeliveryChoice, SourceRead
+from app.buyer_sources import (
+    CORPUS_VERSION, FETCH_ROOM_S, ClassCellularsSource, DeliveryChoice, SourceRead, gate_fetcher,
+)
 from app.contract_interfaces import PlanningContext, WritingContext
 from app.inference import (
     ROOT, CallLog, InferenceUnavailable, TracedProvider, build_inference, config_path, load_env_file,
@@ -181,8 +182,7 @@ def production_dependencies() -> FlowDependencies:
     ledger = Ledger.configured()
     storage = Storage()
     gate = SourceGate(DEFAULT_REGISTRY)
-    source = ClassCellularsSource(lambda job: functools.partial(gate.fetch, job.source_budget(DEFAULT_REGISTRY)),
-                                  storage=storage)
+    source = ClassCellularsSource(gate_fetcher(gate, DEFAULT_REGISTRY), storage=storage)
     # No reviewed shared extraction profile reads Class Cellulars pages yet, so the research
     # workers read only what the public corpus already holds for these listings; a field they
     # cannot settle stays an explicit gap, and they make no model call to pick a page to fetch.
@@ -281,9 +281,19 @@ class _Flow:
     def stopped(self) -> bool:
         """True once the buyer cancelled or the run's own deadline passed (each recorded)."""
         if not self.stop.is_set() and self.elapsed() >= self.final_by:
-            self.limits.add('deadline')
-            self.stop.set()
+            self._halt('deadline')
         return self.stop.is_set()
+
+    def _halt(self, cause: str) -> None:
+        """Record why the run stopped, stop every role and close the ledger job to new spend,
+        so no retry, redirect or model call can start after the stop."""
+        self.limits.add(cause)
+        self.stop.set()
+        if self.job is not None:
+            try:
+                self.job.cancel()
+            except Exception:  # noqa: BLE001 - the ledger's own job deadline still applies
+                pass
 
     def cancelled(self) -> bool:
         """The run was stopped from outside: no publication can succeed any more."""
@@ -318,13 +328,7 @@ class _Flow:
             if self.done.is_set():  # the result was published while this check ran
                 return
             if gone:
-                self.limits.add(self._stop_cause())
-                self.stop.set()
-                if self.job is not None:
-                    try:
-                        self.job.cancel()
-                    except Exception:  # noqa: BLE001
-                        pass
+                self._halt(self._stop_cause())
                 return
             if self.stopped():
                 return
@@ -383,6 +387,7 @@ class _Flow:
             self.job.cancel()
             raise Stopped()
         if self.stopped():
+            self.job.cancel()  # the deadline passed before the job existed to be closed
             return self._finish('partial', LIMIT.format('deadline'))
 
         # Discover: listings through the gate and the ledger (or stored by an earlier run).
