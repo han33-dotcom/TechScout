@@ -315,6 +315,8 @@ class _Flow:
                 gone = failures >= 2
                 if not gone:
                     continue
+            if self.done.is_set():  # the result was published while this check ran
+                return
             if gone:
                 self.limits.add(self._stop_cause())
                 self.stop.set()
@@ -461,6 +463,7 @@ class _Flow:
                       **results)
         self.phase('publish', status=status)
         snapshot = self.publish(**{k: v for k, v in fields.items() if v is not None})
+        self.done.set()  # the run is finished; its closed state is not a stop to record
         return status, reason, snapshot
 
     def _research(self, read: SourceRead):

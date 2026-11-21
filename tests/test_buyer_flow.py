@@ -245,6 +245,11 @@ class FlowCase(unittest.TestCase):
                 finished.set()
         self.assertTrue(execute_one(self.service, controller))
         self.assertTrue(finished.wait(30))
+        # The runner's thread makes one last run check after the controller returns; let it
+        # finish so no database connection outlives the test.
+        for thread in threading.enumerate():
+            if thread.name == 'buyer-controller':
+                thread.join(10)
 
     def read(self, snapshot):
         response = self.client.get('/api/runs/' + snapshot.run.run_id)
@@ -343,6 +348,9 @@ class BrowserFlowTests(FlowCase):
         roles = next(c for c in trace['model_calls'] if c['role'] == 'orchestrator')
         self.assertEqual((roles['prompt_version'], roles['usage']['reserved_usd']), ('roles-v1', str(ROLES_BOUND)))
         self.assertEqual(trace['writer']['prompt_version'], 'writer-v1')
+        # Publishing the result closes the run; that is never recorded as a stop.
+        self.assertEqual(trace['stopped_by'], [])
+        self.assertFalse(self.ledger.snapshot()['jobs'][run.run.run_id]['cancelled'])
 
     def test_repeat_reuses_stored_listings_and_still_re_reads_finalists(self):
         _, first = self.browse(self.deps(synthetic=True))
