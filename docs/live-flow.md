@@ -84,12 +84,21 @@ The configuration lives outside git: `var/inference.json`, or the path in
 | `purpose` | Always `buyer`: one pinned route, no fallback, no experiment label. |
 
 **Failures are explicit.** Any of the following makes the worker publish an `error`
-run that names the problem, before anything is reserved or sent:
+run, before anything is reserved or sent:
 
 - no configuration file;
 - an invalid configuration;
 - an unknown key (for example an `api_key` field in the file);
 - a missing `OPENROUTER_API_KEY`.
+
+The buyer sees "The buyer worker is not configured for live searches". The worker's
+log names the exact problem.
+
+**Built once per worker.** The worker builds its database connections, source gate
+and providers on its first run. After changing `var/inference.json`, restart the
+worker. On a fresh database the worker registers the reviewed Class Cellulars source
+from `config/sources.json` the first time it keeps listings. `load-fixtures` is not
+needed for this.
 
 **The key stays in the backend.** `OPENROUTER_API_KEY` is read only by the buyer
 worker process. A worker started on the host also reads it from the repository-root
@@ -122,7 +131,10 @@ starting new work after it:
 - the writer is called only when at least 5 seconds remain; otherwise the
   deterministic summary is used and the run is `partial`.
 
-A provider timeout keeps that call's full reservation as uncertain spend.
+A store request starts only if one full gate request (a 10-second queue wait plus
+the 15-second call timeout) still fits before the run's own deadline. Otherwise it is
+refused unsent, and the final re-read is skipped. A provider timeout keeps that call's
+full reservation as uncertain spend.
 
 **Cancellation.** A buyer's cancellation, or a lost worker lease, does three things:
 
