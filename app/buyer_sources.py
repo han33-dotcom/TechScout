@@ -25,9 +25,16 @@ from app import contracts as v1
 from app import contracts_v2 as v2
 from app.adapters.base import CandidateQuery, PolicyDocument, Snapshot
 from app.adapters.class_cellulars import ADAPTER as CLASS_ADAPTER
+from app.contracts import SourcePolicy, ToolError
 from app.devices import match_model
+from app.source_registry import DEFAULT_REGISTRY, get_active_source
+from app.sources import CALL_TIMEOUT_S, MAX_WAIT_S, FetchOutcome
 
 CORPUS_VERSION = 'buyer-run-v1'
+# A request starts only when the run's own deadline leaves room for a full queue wait and
+# call timeout at the gate; otherwise it is refused unsent.
+FETCH_ROOM_S = CALL_TIMEOUT_S + MAX_WAIT_S
+NO_ROOM = 'the run deadline leaves no room for this request'
 POLICY_ID = 'faq'
 # v1 evidence field -> v2 offer field. Facts without a v2 field (manufacturer/model text,
 # device or travel cost lines) are not carried over.
@@ -71,14 +78,27 @@ class SourceRead:
     fetches: tuple[dict, ...] = ()  # sanitized gate entries for the trace
     errors: tuple[str, ...] = ()  # fixed-wording tool errors
     skipped: tuple[str, ...] = ()  # offers that could not be converted, with the reason
+    refused: int = 0  # requests refused unsent because the run deadline left no room
+
+    def skipped_ids(self) -> set[str]:
+        return {entry.split(': ', 1)[0] for entry in self.skipped}
 
 
 class _Recorder:
-    """Wraps one gate fetch: records every reply this run received and a sanitized entry."""
-    def __init__(self, fetch):
-        self.fetch, self.replies, self.entries = fetch, set(), []
+    """Wraps one gate fetch: records every reply this run received and a sanitized entry.
+    ``room()`` gives the seconds left before the run's own deadline; a request that might not
+    finish inside it is refused unsent."""
+    def __init__(self, fetch, room=None):
+        self.fetch, self.room, self.replies, self.entries, self.refused = fetch, room, set(), [], 0
 
     def __call__(self, source_id, url, *, expect, capability=None):
+        if self.room is not None and self.room() < FETCH_ROOM_S:
+            self.refused += 1
+            self.entries.append(dict(url=str(url)[:300], expect=expect, status='refused',
+                                     error_code='BUDGET_EXHAUSTED', attempts=0, duration_ms=0,
+                                     response_sha256=None, observed_at=None))
+            return FetchOutcome(source_id, url, (url,), 0, 0, (ToolError(
+                code='BUDGET_EXHAUSTED', message=f'{source_id}: {NO_ROOM}', retryable=False),))
         kwargs = {} if capability is None else {'capability': capability}
         outcome = self.fetch(source_id, url, expect=expect, **kwargs)
         if outcome.response_sha256 is not None and outcome.observed_at is not None:
@@ -247,11 +267,23 @@ class ClassCellularsSource:
     def adapter_version(self) -> str:
         return self.adapter.adapter_version
 
-    def _keep(self, result) -> None:
+    def _keep(self, result, offers=(), errors=None) -> None:
+        """Keep raw replies, and listings for reuse. A storage failure never discards a
+        successful read; it only means a later run cannot reuse these listings."""
         if self.storage is None:
             return
-        for snapshot in result.snapshots:
-            self.storage.save_snapshot(snapshot.body, snapshot.media_type)
+        try:
+            for snapshot in result.snapshots:
+                self.storage.save_snapshot(snapshot.body, snapshot.media_type)
+            if offers and self.storage.load_source(self.source_id) is None:
+                # A fresh database has no source row yet: register the reviewed registry policy.
+                self.storage.save_source(SourcePolicy.model_validate(
+                    get_active_source(self.source_id, DEFAULT_REGISTRY)))
+            for offer in offers:  # raw reader output, before this run's policy pages
+                self.storage.save_offer(offer)
+        except Exception as exc:  # noqa: BLE001 - recorded by type only
+            if errors is not None:
+                errors.append(f'listings could not be stored for reuse ({type(exc).__name__})')
 
     def _stored(self, query: CandidateQuery) -> list[v1.Offer]:
         if self.storage is None:
@@ -280,13 +312,13 @@ class ClassCellularsSource:
                 skipped.append(f'{offer.offer_id}: {_reason(exc)}')
         return SourceRead(mode=mode, offers=tuple(converted), originals=originals, policies=tuple(policies),
                           replies=frozenset(recorder.replies), fetches=tuple(recorder.entries),
-                          errors=tuple(errors), skipped=tuple(skipped))
+                          errors=tuple(errors), skipped=tuple(skipped), refused=recorder.refused)
 
-    def discover(self, request, route: DeliveryChoice, job, run, *, reuse=True) -> SourceRead:
+    def discover(self, request, route: DeliveryChoice, job, run, *, reuse=True, room=None) -> SourceRead:
         """Listings for the requested model: reused from storage when recent ones exist,
         otherwise read live. The FAQ policy page is always read in this run."""
         query = query_for(request, route)
-        recorder = _Recorder(self.fetcher(job))
+        recorder = _Recorder(self.fetcher(job), room)
         errors = []
         stored = self._stored(query) if reuse else []
         if stored:
@@ -294,31 +326,28 @@ class ClassCellularsSource:
         else:
             mode = 'live'
             result = self.adapter.search_candidates(recorder, query)
-            self._keep(result)
             errors += [f'{e.code}: {e.message}' for e in result.tool_result.errors]
             offers = list(result.offers)
-            if self.storage is not None:
-                for offer in offers:  # raw reader output, before this run's policy pages
-                    self.storage.save_offer(offer)
+            self._keep(result, offers, errors)
         policies = []
         if offers:
             policy = self.adapter.fetch_policy(recorder, POLICY_ID)
-            self._keep(policy)
+            self._keep(policy, errors=errors)
             errors += [f'{e.code}: {e.message}' for e in policy.tool_result.errors]
             policies = list(policy.policies)
         return self._convert(offers, run, set(recorder.replies), route, mode, recorder, policies, errors)
 
     def refresh(self, request, route: DeliveryChoice, job, run, offer_ids: Sequence[str], *,
-                earlier: SourceRead) -> SourceRead:
+                earlier: SourceRead, room=None) -> SourceRead:
         """The final re-read of the finalists' listings in this run, with this run's policy pages."""
         query = query_for(request, route)
-        recorder = _Recorder(self.fetcher(job))
+        recorder = _Recorder(self.fetcher(job), room)
         result = self.adapter.fetch_offers(recorder, list(offer_ids), query)
-        self._keep(result)
+        errors = [f'{e.code}: {e.message}' for e in result.tool_result.errors]
+        self._keep(result, errors=errors)
         wanted = set(offer_ids)
         offers = [o for o in result.offers if o.offer_id in wanted]
         current = set(recorder.replies) | set(earlier.replies)
-        errors = [f'{e.code}: {e.message}' for e in result.tool_result.errors]
         return self._convert(offers, run, current, route, 'refresh', recorder, earlier.policies, errors)
 
 

@@ -470,6 +470,84 @@ class LimitTests(FlowCase):
         plan = trace['model_calls'][0]
         self.assertEqual((plan['status'], plan['usage']['spend']), ('cancelled', 'uncertain'))
 
+    def test_re_read_citing_an_earlier_reply_of_this_run_is_not_verified(self):
+        # The v2 contract accepts any current-run evidence; only the #70 re-check rule notices that
+        # a "re-read" copy still cites the discovery replies (for example a reader's cached copy).
+        source = SyntheticRouteFacts(ClassCellularsSource(lambda job: self.fetch, storage=self.storage))
+        inner_refresh = source.refresh
+
+        def cached(*args, earlier, **kwargs):
+            fresh = inner_refresh(*args, earlier=earlier, **kwargs)  # real requests, real final replies
+            return replace(fresh, offers=earlier.offers, originals=earlier.originals)
+        source.refresh = cached
+        _, run = self.browse(self.deps(source=source))
+        self.assertEqual(run.recommendations, ())
+        rechecked = [u for u in run.uncertain if buyer_flow.REASON_RECHECK_FAILED in u.reasons]
+        self.assertEqual(len(rechecked), 3)
+        self.assertEqual(set(self.trace(run)['verify']['outcomes'].values()), {'not_current'})
+
+    def test_listings_that_cannot_be_converted_are_a_named_data_gap(self):
+        source = SyntheticRouteFacts(ClassCellularsSource(lambda job: self.fetch, storage=self.storage))
+        inner_discover = source.discover
+
+        def unreadable(*args, **kwargs):
+            read = inner_discover(*args, **kwargs)
+            return replace(read, offers=(), skipped=tuple(f'{o.offer_id}: invalid offer' for o in read.offers))
+        source.discover = unreadable
+        _, run = self.browse(self.deps(source=source))
+        self.assertEqual((run.status, run.stop_reason), ('abstained', buyer_flow.UNREADABLE))
+        self.assertEqual((run.source_outcomes[0].status, run.source_outcomes[0].reason),
+                         ('failed', buyer_flow.UNREADABLE))
+        self.assertEqual(len(self.trace(run)['source']['skipped']), 4)
+
+    def test_requests_that_would_outlast_the_run_deadline_are_refused_unsent(self):
+        with patch.object(buyer_flow, 'FINAL_BY', 20):  # less than one full gate request needs
+            _, run = self.browse(self.deps())
+        self.assertEqual((run.status, run.stop_reason), ('partial', buyer_flow.LIMIT.format('deadline')))
+        self.assertEqual(self.fetch.calls, [])
+        trace = self.trace(run)
+        self.assertGreaterEqual(trace['source']['refused'], 1)
+        self.assertEqual(trace['source']['fetches'][0]['status'], 'refused')
+
+    def test_final_re_read_is_skipped_when_one_request_no_longer_fits(self):
+        with patch.object(buyer_flow, 'FETCH_ROOM_S', 1000):
+            _, run = self.browse(self.deps(synthetic=True))
+        self.assertEqual((run.status, run.stop_reason), ('partial', buyer_flow.LIMIT.format('deadline')))
+        self.assertEqual(run.recommendations, ())
+        self.assertEqual(self.fetch.calls, [CLASS_API, CLASS_PAGE, CLASS_FAQ])
+        self.assertEqual(sum(buyer_flow.REASON_NOT_RECHECKED in u.reasons for u in run.uncertain), 4)
+
+    def test_writer_lease_and_wait_fit_the_time_left(self):
+        with patch.object(buyer_flow, 'FINAL_BY', 30):
+            _, run = self.browse(self.deps(synthetic=True))
+        writer = self.trace(run)['writer']
+        self.assertLess(writer['lease_seconds'], 29)
+        self.assertGreaterEqual(writer['final_deadline_left_s'], 0)
+        call = next((c for c in self.trace(run)['model_calls'] if c['role'] == 'writer'), None)
+        if call is not None:
+            self.assertLessEqual(call['wall_ms'], writer['lease_seconds'] * 1000)
+
+    def test_one_failed_run_check_is_retried_not_treated_as_cancellation(self):
+        failures = []
+
+        def flaky(context):
+            check = context.cancelled
+
+            def once():
+                # Only the flow's watcher sees the blip; the worker runner's own loop is unaffected.
+                if not failures and threading.current_thread().name == 'buyer-flow-watch':
+                    failures.append('database blip')
+                    raise RuntimeError('transient')
+                return check()
+            context.cancelled = once
+        snapshot = self.start()
+        self.work(self.deps(synthetic=True), before=flaky)
+        _, run = self.read(snapshot)
+        self.assertEqual(failures, ['database blip'])
+        self.assertEqual(run.status, 'complete')
+        self.assertFalse(self.ledger.snapshot()['jobs'][run.run.run_id]['cancelled'])
+        self.assertEqual(self.trace(run)['stopped_by'], [])
+
     def test_failed_final_re_read_verifies_nothing_and_does_not_crash(self):
         source = SyntheticRouteFacts(ClassCellularsSource(lambda job: self.fetch, storage=self.storage))
         source.refresh = Mock(side_effect=RuntimeError('store unreachable'))
@@ -480,7 +558,8 @@ class LimitTests(FlowCase):
         self.assertEqual(self.trace(run)['verify_failure'], 'RuntimeError')
 
     def test_run_deadline_stops_before_any_external_call(self):
-        with patch.object(buyer_flow, 'FINAL_BY', 0):
+        # The per-request room check is switched off so only the run's own deadline can stop it.
+        with patch.object(buyer_flow, 'FINAL_BY', 0), patch('app.buyer_sources.FETCH_ROOM_S', float('-inf')):
             _, run = self.browse(self.deps())
         self.assertEqual(run.status, 'partial')
         self.assertEqual(run.stop_reason, buyer_flow.LIMIT.format('deadline'))
@@ -557,21 +636,42 @@ class ScopeAndConfigurationTests(FlowCase):
 
     def test_unconfigured_worker_publishes_an_explicit_error(self):
         snapshot = self.start()
-        for problem in (InferenceUnavailable('OpenRouter inference requires a backend OPENROUTER_API_KEY'),):
-            with patch.object(buyer_flow, 'production_dependencies', side_effect=problem):
-                finished = threading.Event()
+        problem = InferenceUnavailable('OpenRouter inference requires a backend OPENROUTER_API_KEY')
+        with patch.object(buyer_flow, '_PRODUCTION', None), \
+                patch.object(buyer_flow, 'production_dependencies', side_effect=problem), \
+                self.assertLogs('techscout.buyer_flow', 'WARNING') as logs:
+            finished = threading.Event()
 
-                def controller(context):
-                    try:
-                        buyer_flow.run(context)
-                    finally:
-                        finished.set()
-                execute_one(self.service, controller)
-                self.assertTrue(finished.wait(10))
+            def controller(context):
+                try:
+                    buyer_flow.run(context)
+                finally:
+                    finished.set()
+            execute_one(self.service, controller)
+            self.assertTrue(finished.wait(10))
         _, run = self.read(snapshot)
-        self.assertEqual(run.status, 'error')
-        self.assertTrue(run.stop_reason.startswith(buyer_flow.NOT_CONFIGURED))
-        self.assertIn('OPENROUTER_API_KEY', run.stop_reason)
+        self.assertEqual((run.status, run.stop_reason), ('error', buyer_flow.NOT_CONFIGURED))
+        self.assertIn('OPENROUTER_API_KEY', '\n'.join(logs.output))  # the operator's detail stays in the log
+
+    def test_production_wiring_uses_openrouter_without_an_openai_key(self):
+        path = Path(self.storage.snapshots.root).parent / 'inference.json'
+        path.write_text(json.dumps({'inference': inference_config().model_dump(mode='json')}), encoding='utf-8')
+        environ = {k: v for k, v in os.environ.items() if k not in ('OPENAI_API_KEY', 'OPENROUTER_API_KEY')}
+        environ.update(TECHSCOUT_INFERENCE_CONFIG=str(path), OPENROUTER_API_KEY=KEY, DATABASE_URL=self.url)
+        with patch.object(buyer_flow, 'load_env_file', return_value=()), patch.dict(os.environ, environ, clear=True), \
+                patch('app.accounting.Ledger.configured', return_value=self.ledger), \
+                patch('app.model_provider.OpenAIProvider.__init__', side_effect=AssertionError('direct OpenAI')):
+            deps = buyer_flow.production_dependencies()
+        self.addCleanup(deps.source.storage.engine.dispose)
+        from app.openrouter import OpenRouterProvider
+        self.assertIsInstance(deps.inference.roles, OpenRouterProvider)
+        self.assertEqual(deps.inference.roles.settings.purpose, 'buyer')
+        self.assertEqual(deps.inference.writer(30).settings.prompt_version, 'writer-v1')
+        self.assertEqual(deps.research.workers.profiles, {})
+        self.assertIsNone(deps.research.workers.provider)  # the flow injects the traced OpenRouter provider
+        self.assertEqual(deps.versions['source']['adapter_version'], 'class_cellulars/1')
+        self.assertEqual(len(deps.versions['inference_config_sha256']), 64)
+        self.assertNotIn(KEY, repr(deps))
 
     def test_production_wiring_fails_before_anything_without_config_or_key(self):
         missing = Path(self.storage.snapshots.root).parent / 'missing.json'
@@ -667,7 +767,8 @@ class LiveCheckTests(FlowCase):
         path.write_text(json.dumps({'inference': inference_config().model_dump(mode='json')}), encoding='utf-8')
         environ = dict(TECHSCOUT_INFERENCE_CONFIG=str(path), TECHSCOUT_ACCOUNTING_URL='postgresql://ledger',
                        TECHSCOUT_ACCOUNTING_PROJECT='techscout-december-2026')
-        with patch('app.provider_http.post_json', side_effect=AssertionError('nothing may be sent')):
+        with patch('app.openrouter.post_json', side_effect=AssertionError('nothing may be sent')), \
+                patch('app.model_provider.post_json', side_effect=AssertionError('nothing may be sent')):
             ready, lines = check(environ=environ, root=root)
         text = chr(10).join(lines)
         self.assertFalse(ready)  # no application database is configured here
@@ -689,6 +790,29 @@ class LiveCheckTests(FlowCase):
         self.assertEqual(summary['discovery']['mode'], 'live')
         self.assertEqual(summary['final_recheck']['finalists'], 3)
         self.assertNotIn(KEY, json.dumps(summary))
+
+
+class FreshDatabaseTests(unittest.TestCase):
+    def setUp(self):
+        corpus_fixtures.CorpusTests.setUp(self)  # migrated, with no class_cellulars source row
+
+    def test_first_live_read_registers_the_reviewed_source_and_keeps_the_listings(self):
+        self.assertIsNone(self.storage.load_source('class_cellulars'))
+        run = v.RunReference(run_id='fresh', run_revision=1, request_id='flow-1', request_revision=1)
+        source = ClassCellularsSource(lambda job: LiveFetch(STORE), storage=self.storage)
+        read = source.discover(v.ShoppingRequest.model_validate(REQUEST), DeliveryChoice('Beirut'), None, run)
+        self.assertEqual((read.mode, len(read.offers), read.errors), ('live', 4, ()))
+        self.assertEqual(self.storage.load_source('class_cellulars').status, 'active')
+        self.assertEqual(len(self.storage.recent_offers('class_cellulars', datetime.now(timezone.utc)
+                                                        - timedelta(minutes=5))), 4)
+
+    def test_a_storage_failure_never_discards_a_successful_read(self):
+        run = v.RunReference(run_id='fresh', run_revision=1, request_id='flow-1', request_revision=1)
+        source = ClassCellularsSource(lambda job: LiveFetch(STORE), storage=self.storage)
+        with patch.object(self.storage, 'save_offer', side_effect=ValueError('disk full')):
+            read = source.discover(v.ShoppingRequest.model_validate(REQUEST), DeliveryChoice('Beirut'), None, run)
+        self.assertEqual(len(read.offers), 4)
+        self.assertIn('listings could not be stored for reuse (ValueError)', read.errors)
 
 
 class SourceAndRoleTests(FlowCase):

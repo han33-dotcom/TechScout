@@ -42,7 +42,7 @@ from app import verification
 from app.accounting import BudgetDenied
 from app.assessment import _doubts, assess_full_product
 from app.buyer_runs import RunError
-from app.buyer_sources import CORPUS_VERSION, ClassCellularsSource, DeliveryChoice, SourceRead
+from app.buyer_sources import CORPUS_VERSION, FETCH_ROOM_S, ClassCellularsSource, DeliveryChoice, SourceRead
 from app.contract_interfaces import PlanningContext, WritingContext
 from app.inference import (
     ROOT, CallLog, InferenceUnavailable, TracedProvider, build_inference, config_path, load_env_file,
@@ -71,6 +71,8 @@ NO_PICKUP = 'Choosing a pickup branch is not supported yet; search for delivery 
 NOT_CONFIGURED = 'The buyer worker is not configured for live searches'
 SOURCE_FAILED = 'Class Cellulars could not be read in this run'
 NO_LISTING = 'Class Cellulars lists no matching phone for this request'
+UNREADABLE = ('Class Cellulars listed matching phones, but none could be read into the comparison '
+              'format; the run trace names each listing and why')
 NOTHING_ELIGIBLE = 'No listing at Class Cellulars meets the hard requirements'
 NONE_VERIFIED = 'No offer could be verified in this run; each candidate lists what is still unknown'
 VERIFIED = 'The final re-check confirmed {} offer(s) in this run'
@@ -80,6 +82,11 @@ REASON_NOT_RECHECKED = 'not verified: no final re-check fit within the limits'
 REASON_NOT_RETURNED = 'not verified: the final re-check did not return this listing'
 REASON_RECHECK_FAILED = 'not verified: the final re-check did not confirm this offer'
 REASON_STALE = 'not verified: evidence was not observed during this run'
+REASON_UNREADABLE = 'not verified: the re-read listing could not be read into the comparison format'
+# What stopped a run early, as recorded in the trace.
+STOP_CAUSES = {'cancelled': 'cancelled or superseded by the buyer',
+               'run_stopped': 'the run was closed by its active-time limit or the worker lost its lease',
+               'deadline': "the flow's own deadline", 'spend': 'a ledger spend or call cap'}
 
 
 class Stopped(Exception):
@@ -142,6 +149,21 @@ def _sha256(path: Path) -> str | None:
         return None
 
 
+_PRODUCTION: FlowDependencies | None = None
+_PRODUCTION_LOCK = threading.Lock()
+
+
+def worker_dependencies() -> FlowDependencies:
+    """Built once per worker process (database engines, gate, providers); a failed build is
+    retried on the next run, so fixing the configuration needs no restart. Changing a working
+    configuration does: restart the worker."""
+    global _PRODUCTION
+    with _PRODUCTION_LOCK:
+        if _PRODUCTION is None:
+            _PRODUCTION = production_dependencies()
+        return _PRODUCTION
+
+
 def production_dependencies() -> FlowDependencies:
     """The worker's wiring from its backend environment. Raises InferenceUnavailable or
     BudgetDenied, naming what is missing, before anything is reserved or sent."""
@@ -190,24 +212,26 @@ def listing_resources(request, read: SourceRead) -> tuple:
                                                ('variant.specs.storage_gb', offer.variant.specs.storage_gb),
                                                ('variant.color', offer.variant.color))
                        if fact is None or fact.state != 'known']
+        if not open_fields:  # nothing left to research on this listing
+            continue
         url = str(offer.listing_url)
         key = ResourceKey(source_id=offer.source_id, url=url, representation='html',
                           product_id=offer.source_product_id, variant_id=offer.source_variant_id)
         capability = None if url in fixed else CapabilityRef(capability_id='class-product', version='1')
         resources.append(Resource(retailer_id=offer.retailer_id, key=key, content='listing',
-                                  fields=tuple(open_fields or ('variant.specs.storage_gb',)),
-                                  capability=capability))
+                                  fields=tuple(open_fields), capability=capability))
     return tuple(resources)
 
 
 def run(context) -> None:
     """Entry point for ``python -m app.run_worker --controller app.buyer_flow:run``."""
     try:
-        deps = production_dependencies()
+        deps = worker_dependencies()
     except (InferenceUnavailable, BudgetDenied) as exc:
+        # The operator reads the detail in the worker log; the buyer sees a fixed message.
         log.warning('Buyer worker is not configured: %s', exc)
         try:
-            context.publish(status='error', stop_reason=f'{NOT_CONFIGURED}: {exc}'[:500])
+            context.publish(status='error', stop_reason=NOT_CONFIGURED)
         except (RunError, ValueError):
             pass
         return
@@ -262,17 +286,37 @@ class _Flow:
         return self.stop.is_set()
 
     def cancelled(self) -> bool:
-        return 'cancelled' in self.limits
+        """The run was stopped from outside: no publication can succeed any more."""
+        return bool({'cancelled', 'run_stopped'} & self.limits)
+
+    def _stop_cause(self) -> str:
+        """'cancelled' when the buyer cancelled or refined the run; otherwise 'run_stopped'
+        (active-time limit, lost lease or expired session)."""
+        try:
+            from sqlalchemy import select
+            from app.storage import buyer_runs
+            with self.context.service.storage.engine.connect() as db:
+                status = db.execute(select(buyer_runs.c.status).where(
+                    buyer_runs.c.run_id == self.run_ref.run_id)).scalar_one_or_none()
+        except Exception:  # noqa: BLE001 - an unreadable cause is not blamed on the buyer
+            status = None
+        return 'cancelled' if status == 'cancelled' else 'run_stopped'
 
     def _watch(self):
-        """Poll the owned run; cancellation or a lost lease stops every role and the ledger job."""
+        """Poll the owned run; cancellation or a lost lease stops every role and the ledger job.
+        One failed check is retried before the run is treated as stopped."""
+        failures = 0
         while not self.done.wait(.2):
             try:
                 gone = self.context.cancelled()
-            except Exception:  # noqa: BLE001 - an unreadable run is a stopped run
-                gone = True
+                failures = 0
+            except Exception:  # noqa: BLE001 - a second consecutive failure is a stopped run
+                failures += 1
+                gone = failures >= 2
+                if not gone:
+                    continue
             if gone:
-                self.limits.add('cancelled')
+                self.limits.add(self._stop_cause())
                 self.stop.set()
                 if self.job is not None:
                     try:
@@ -304,7 +348,8 @@ class _Flow:
         try:
             status, reason, snapshot = self._run()
         except Stopped:
-            status, reason = ('cancelled', 'Cancelled by buyer') if self.cancelled() else ('partial', 'Run stopped')
+            status = 'cancelled' if 'cancelled' in self.limits else 'stopped'
+            reason = STOP_CAUSES['cancelled'] if status == 'cancelled' else STOP_CAUSES['run_stopped']
         except Exception as exc:  # noqa: BLE001 - recorded by type only, then published as an error
             self.trace['failure'] = type(exc).__name__
             log.exception('Buyer flow failed')
@@ -340,16 +385,22 @@ class _Flow:
 
         # Discover: listings through the gate and the ledger (or stored by an earlier run).
         self.publish(status='running', phase='discover')
-        read = self.deps.source.discover(request, route, self.job, self.run_ref)
+        read = self.deps.source.discover(request, route, self.job, self.run_ref,
+                                         room=lambda: self.left(self.nonfinal_by))
         self.trace['source'] = dict(source_id=self.deps.source.source_id, mode=read.mode,
                                     fetches=list(read.fetches), errors=list(read.errors),
-                                    skipped=list(read.skipped), offers=len(read.offers))
+                                    skipped=list(read.skipped), refused=read.refused, offers=len(read.offers))
         self.phase('discover', mode=read.mode, offers=len(read.offers), errors=len(read.errors))
-        outcome = v2.SourceOutcome(source_id=self.deps.source.source_id, name=self.deps.source.name,
-                                   status='checked' if read.offers or not read.errors else 'failed',
-                                   reason=None if read.offers or not read.errors else SOURCE_FAILED)
-        self.outcomes = (outcome,)
+        if read.refused:
+            self.limits.add('deadline')
+        failed = None if read.offers else (UNREADABLE if read.skipped else SOURCE_FAILED if read.errors else None)
+        self.outcomes = (v2.SourceOutcome(source_id=self.deps.source.source_id, name=self.deps.source.name,
+                                          status='failed' if failed else 'checked', reason=failed),)
         if not read.offers:
+            if read.refused:
+                return self._finish('partial', LIMIT.format('deadline'))
+            if read.skipped:  # listings exist but none could be read: a source-data gap, not "none"
+                return self._finish('abstained', UNREADABLE)
             if read.errors:
                 return self._finish('error', SOURCE_FAILED)
             return self._finish('abstained', NO_LISTING)
@@ -461,7 +512,9 @@ class _Flow:
         except BudgetDenied:
             pass
         self.publish(status='running', phase='verify')
-        if self.stopped() or self.left(self.final_by) <= 2:
+        # A re-read starts only while one full gate request (queue wait plus call timeout)
+        # still fits before the flow's own final deadline.
+        if self.stopped() or self.left(self.final_by) < FETCH_ROOM_S:
             if not self.stopped():
                 self.limits.add('deadline')
             self.phase('verify', outcome='skipped')
@@ -469,10 +522,14 @@ class _Flow:
                         for o, a in finalists]
         ids = [o.offer_id for o, _ in finalists]
         try:
-            fresh = self.deps.source.refresh(request, route, self.job, run, ids, earlier=read)
+            fresh = self.deps.source.refresh(request, route, self.job, run, ids, earlier=read,
+                                             room=lambda: self.left(self.final_by))
         except Exception as exc:  # noqa: BLE001 - a failed re-read verifies nothing; it is not a crash
             self.trace['verify_failure'] = type(exc).__name__
             fresh = SourceRead(mode='refresh', errors=(f'final re-read failed ({type(exc).__name__})',))
+        if fresh.refused:
+            self.limits.add('deadline')
+        unreadable = fresh.skipped_ids()
         checked_at = self.deps.wall_clock()
         run_replies = set(read.replies) | set(fresh.replies)
         policy_replies = {(p.response_sha256, p.observed_at) for p in read.policies}
@@ -481,8 +538,9 @@ class _Flow:
         for offer, held in finalists:
             again = returned.get(offer.offer_id)
             if again is None:
-                outcomes[offer.offer_id] = 'not_returned'
-                uncertain.append(v2.UncertainAlternative(offer=offer, reasons=(*_doubts(held), REASON_NOT_RETURNED),
+                missing = REASON_UNREADABLE if offer.offer_id in unreadable else REASON_NOT_RETURNED
+                outcomes[offer.offer_id] = 'unreadable' if offer.offer_id in unreadable else 'not_returned'
+                uncertain.append(v2.UncertainAlternative(offer=offer, reasons=(*_doubts(held), missing),
                                                          cost=held.cost))
                 continue
             problem = verification.recheck_problem(fresh.originals[offer.offer_id], run_replies=run_replies,
@@ -508,7 +566,8 @@ class _Flow:
             uncertain.append(v2.UncertainAlternative(offer=again, cost=assessment.cost,
                                                      reasons=(*_doubts(assessment), *((reason,) if reason else ()))))
         self.trace['verify'] = dict(finalists=ids, outcomes=outcomes, fetches=list(fresh.fetches),
-                                    errors=list(fresh.errors), checked_at=checked_at.isoformat())
+                                    errors=list(fresh.errors), skipped=list(fresh.skipped), refused=fresh.refused,
+                                    checked_at=checked_at.isoformat())
         self.phase('verify', verified=len(recommendations), rechecked=len(ids))
         return recommendations, uncertain
 
@@ -526,7 +585,9 @@ class _Flow:
         provider = TracedProvider(self.deps.inference.writer(seconds), self.calls, role='writer')
         writer = OpenAIWriter.for_job(self.job, seconds=seconds, provider=provider, cancelled=self.stopped)
         result = asyncio.run(writer.explain(context))
-        self.trace['writer'] = result.trace_data()
+        # The writer's ledger lease and provider wait both equal this, inside the final deadline.
+        self.trace['writer'] = dict(result.trace_data(), lease_seconds=round(seconds, 3),
+                                    final_deadline_left_s=round(self.left(self.final_by), 3))
         self._note_denials()
         self.phase('write', source=result.source, status=result.status)
         return v2.RunExplanation(text=result.explanation.text, evidence_ids=result.explanation.evidence_ids,
