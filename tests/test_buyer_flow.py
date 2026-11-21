@@ -577,6 +577,17 @@ class LimitTests(FlowCase):
         # Reaching the deadline closes the ledger job, so nothing can reserve after it.
         self.assertTrue(self.ledger.snapshot()['jobs'][run.run.run_id]['cancelled'])
 
+    def test_deadline_reached_mid_run_closes_the_ledger_job(self):
+        self.openrouter.delay = {'plan': 8}
+        with patch.object(buyer_flow, 'FINAL_BY', 5), patch('app.buyer_sources.FETCH_ROOM_S', float('-inf')):
+            _, run = self.browse(self.deps())
+        self.assertEqual((run.status, run.stop_reason), ('partial', buyer_flow.LIMIT.format('deadline')))
+        self.assertEqual(self.fetch.calls, [CLASS_API, CLASS_PAGE, CLASS_FAQ])  # no final re-read after it
+        plan = self.trace(run)['model_calls'][0]
+        self.assertIn(plan['status'], ('cancelled', 'timeout'))
+        self.assertLess(plan['wall_ms'], 7000)
+        self.assertTrue(self.ledger.snapshot()['jobs'][run.run.run_id]['cancelled'])
+
     def test_provider_timeout_is_recorded_and_writer_respects_the_final_deadline(self):
         self.openrouter.delay = {'plan': 1.5}
         config = inference_config(roles=dict(max_input_tokens=16384, max_output_tokens=2048, timeout_seconds=0.5))

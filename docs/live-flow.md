@@ -133,8 +133,10 @@ starting new work after it:
 
 A store request starts only if one full gate request (a 10-second queue wait plus
 the 15-second call timeout) still fits before the run's own deadline. Otherwise it is
-refused unsent, and the final re-read is skipped. A provider timeout keeps that call's
-full reservation as uncertain spend.
+refused unsent, and the final re-read is skipped. The same check applies to every
+attempt the gate makes, including retries and redirect hops. Reaching the run's
+deadline closes its ledger job, so nothing can reserve after it. A provider timeout
+keeps that call's full reservation as uncertain spend.
 
 **Cancellation.** A buyer's cancellation, or a lost worker lease, does three things:
 
