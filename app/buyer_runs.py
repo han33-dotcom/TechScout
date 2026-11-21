@@ -118,6 +118,8 @@ class BuyerRunService:
         data.update(status=status,updated_at=now,finished_at=now,stop_reason=reason,clarification=None)
         if status not in {'complete','partial'}:
             data['recommendations']=[]
+        if status not in {'complete','partial','abstained'}:
+            data['explanation']=None
         snapshot=v.RunSnapshot.model_validate(data)
         self._write(db,row,snapshot,active_ms=self._used(row,now),active_since=None,lease_token=None,lease_until=None)
         return snapshot
@@ -304,7 +306,8 @@ class BuyerRunService:
                 self._finish(db,row,now,'partial','Controller stopped or active execution allowance exhausted')
 
     def publish(self,claim,*,status='running',phase=None,coverage=None,provisional=None,
-                uncertain=None,recommendations=None,clarification=None,stop_reason=None):
+                uncertain=None,recommendations=None,clarification=None,stop_reason=None,
+                source_outcomes=None,explanation=None):
         if status not in {'running','clarification','complete','partial','abstained','error'}:
             raise RunError(422,'Worker status is invalid')
         with self._transaction() as (db,now):
@@ -313,7 +316,8 @@ class BuyerRunService:
             data.update(status=status,updated_at=now,finished_at=now if status in TERMINAL else None,
                         clarification=clarification,stop_reason=stop_reason)
             for key,value in dict(phase=phase,coverage=coverage,provisional=provisional,
-                                  uncertain=uncertain,recommendations=recommendations).items():
+                                  uncertain=uncertain,recommendations=recommendations,
+                                  source_outcomes=source_outcomes,explanation=explanation).items():
                 if value is not None:
                     data[key]=value
             snapshot=v.RunSnapshot.model_validate(data)

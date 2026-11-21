@@ -613,6 +613,17 @@ class Storage:
             row = db.execute(select(offers.c.payload).where(offers.c.offer_id == offer_id)).first()
         return None if row is None else Offer.model_validate(row.payload)
 
+    def recent_offers(self, source_id, stored_after, *, limit=50) -> list[Offer]:
+        """Offers of one source stored at or after a time, for stored-evidence discovery (#75).
+
+        Their evidence keeps its original observation times; a caller must still re-read
+        a finalist before treating any of its price or stock as current."""
+        with self.engine.connect() as db:
+            rows = db.execute(select(offers.c.payload).where(
+                offers.c.source_id == source_id, offers.c.stored_at >= stored_after)
+                .order_by(offers.c.offer_id).limit(limit)).all()
+        return [Offer.model_validate(row.payload) for row in rows]
+
     def offer_price(self, offer_id) -> Money | None:
         with self.engine.connect() as db:
             row = db.execute(select(offers.c.price_amount, offers.c.price_currency)

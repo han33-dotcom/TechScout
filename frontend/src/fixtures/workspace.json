@@ -1035,7 +1035,8 @@
           ]
         }
       }
-    ]
+    ],
+    "explanation": null
   },
   "previous": {
     "schema_version": 2,
@@ -1507,6 +1508,7 @@
       }
     ],
     "recommendations": [],
-    "uncertain": []
+    "uncertain": [],
+    "explanation": null
   }
 }

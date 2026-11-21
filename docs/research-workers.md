@@ -12,7 +12,9 @@ content purpose, fields and optional source capability. The persistent directory
 prioritizes configured sources and exposes unconfigured leads. Controller-scoped
 URLs can be absent from the seed corpus, but every fetch still passes the current
 source gate. Profiles must support the exact source/configuration; missing
-profiles or unsupported extraction remain gaps.
+profiles or unsupported extraction remain gaps. A resource whose source has no
+profile is never offered to the model as a fetch choice, so no paid call is spent on
+it (#75); its missing fields stay explicit gaps.
 
 Workers read structured observations and bounded lexical evidence retrieval
 before external work. Processing versions and field freshness govern reuse.

@@ -642,6 +642,17 @@ class SourceOutcome(Model):
         return self
 
 
+class RunExplanation(Model):
+    """The writer's grounded explanation of a finished run (#71), shown to the buyer since #75.
+
+    Plain text under the writer's fixed headings, built only from checked claims; render it as
+    text, never as HTML or Markdown. source says whether the model ordered the claims ('model',
+    or 'mixed' when code added required claims it left out) or the deterministic summary was used."""
+    text: Text
+    evidence_ids: tuple[Text, ...] = ()
+    source: Literal['model', 'mixed', 'fallback']
+
+
 class RunSnapshot(Contract):
     run: RunReference
     request: ShoppingRequest
@@ -658,6 +669,8 @@ class RunSnapshot(Contract):
     provisional: tuple[ProvisionalCandidate, ...] = ()
     recommendations: Annotated[tuple[Recommendation, ...], Field(max_length=3)] = ()
     uncertain: tuple[UncertainAlternative, ...] = ()
+    # Additive since #75; older snapshots without it stay readable.
+    explanation: RunExplanation | None = None
 
     @model_validator(mode='after')
     def coherent_results(self):
@@ -676,6 +689,8 @@ class RunSnapshot(Contract):
         if ((self.status == 'complete' and not self.recommendations)
                 or (self.status not in {'complete', 'partial'} and self.recommendations)):
             raise ValueError('Recommendations require a complete or partial outcome')
+        if self.explanation is not None and self.status not in {'complete', 'partial', 'abstained'}:
+            raise ValueError('An explanation belongs to a finished, non-cancelled run')
         verified = [offer for group in self.recommendations for offer in group.offers()]
         if len({item.offer.retailer_id for item in verified}) > self.coverage.qualifying:
             raise ValueError('Recommended retailers must be counted as qualifying')

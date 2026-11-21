@@ -1,8 +1,9 @@
 """Optional OpenRouter gateway adapter behind the ModelProvider interface (T53, #89).
 
-Direct OpenAI (app.model_provider.OpenAIProvider) stays the default for every role
-and for the main evaluation. Nothing selects this adapter automatically: it exists
-only when a configuration file sets ``enabled: true`` and the backend supplies
+The buyer worker (app.inference, #75) builds it for every model-driven role from an
+explicit runtime configuration; the main evaluation still uses the frozen direct
+OpenAI route until #80 versions the protocol. Nothing selects this adapter
+automatically: it exists only when a configuration enables it and the backend supplies
 OPENROUTER_API_KEY; the caller then passes it to a role as its ``provider``.
 
 Every attempt is pinned to one configured model ID and one approved serving
@@ -79,7 +80,9 @@ class Route(Model):
 class OpenRouterConfig(Model):
     provider: Literal['openrouter'] = 'openrouter'
     enabled: StrictBool = False
-    purpose: Literal['evaluation', 'experiment'] = 'evaluation'
+    # evaluation: the pinned main-evaluation route. buyer: the same pinning for live buyer runs
+    # (app.inference, #75). experiment: an optional, separately labelled comparison.
+    purpose: Literal['evaluation', 'buyer', 'experiment'] = 'evaluation'
     experiment: Label | None = None
     endpoint: Literal[ENDPOINTS] = ENDPOINTS[0]
     routes: tuple[Route, ...] = Field(default=(), max_length=3)
@@ -104,8 +107,8 @@ class OpenRouterConfig(Model):
         if self.allow_fallback and (len(self.routes) < 2 or not self.fallback_on
                                     or len(set(self.fallback_on)) != len(self.fallback_on)):
             raise ValueError('An explicit fallback needs at least two routes and distinct triggers')
-        if self.purpose == 'evaluation' and (self.allow_fallback or self.experiment is not None):
-            raise ValueError('The main evaluation pins one route, with no fallback or experiment label')
+        if self.purpose in ('evaluation', 'buyer') and (self.allow_fallback or self.experiment is not None):
+            raise ValueError('Evaluation and buyer runs pin one route, with no fallback or experiment label')
         if self.purpose == 'experiment' and self.experiment is None:
             raise ValueError('An optional experiment needs its own label')
         if self.enabled:

@@ -214,6 +214,12 @@ class ResearchWorkers:
         if not resources:
             gaps.append('No permitted resource scope; return leads or refine the research task')
         pending = [(r,missing) for r,missing in pending if missing]
+        # A source without a reviewed extraction profile cannot be fetched, so no model call
+        # (and no spend) is made to choose it; its missing fields stay explicit gaps (#75).
+        for resource, missing in [(r,m) for r,m in pending if r.key.source_id not in self.profiles]:
+            gaps.extend(f'{resource.key.source_id}: {field} has no reviewed extraction to fetch'
+                        for field in sorted(missing))
+        pending = [(r,missing) for r,missing in pending if r.key.source_id in self.profiles]
         for _ in range(work.max_turns):
             if not pending or job.cancelled or 'fetch' not in permitted:
                 break

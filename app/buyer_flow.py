@@ -1,0 +1,581 @@
+"""Trusted buyer controller for the first live browser-to-result flow (#75, T39).
+
+Start it as the buyer worker's controller, in its own backend process:
+
+    python -m app.run_worker --controller app.buyer_flow:run
+
+Scope: one source (Class Cellulars) and one product type (an exact-model phone search,
+delivered in Lebanon). Other requests end as an honest abstention that says so.
+
+The run goes: interpret the request; read the listings (live, or listings stored by an
+earlier run); let the orchestrator plan research over the listings the research workers can
+actually read (the workers and the evidence critique run inside it); assess eligibility and
+cost with the fixed rules; enter the final phase and re-read the finalists live; write the
+explanation; publish. Models only choose: which listings to investigate, which resource to
+read next, which evidence issue deserves one follow-up, and which checked claims to show.
+Code decides eligibility, cost and verification, and only a finalist whose price and stock
+come from the final re-read can be recommended (app.verification).
+
+Every model call uses the OpenRouter route in app.inference and reserves in the shared
+ledger before it is sent. The direct OpenAI provider is never constructed and no fallback
+route exists. The run stops at the buyer's cancellation, the active-time allowance and the
+ledger's per-run spend and call caps. A sanitized trace (models, providers, usage, latency,
+spend, versions; never prompts, answers or keys) is written under var/traces.
+"""
+import asyncio
+from collections.abc import Callable
+from dataclasses import dataclass, field, replace
+from datetime import datetime, timedelta, timezone
+from decimal import Decimal
+import functools
+import hashlib
+import json
+import logging
+import os
+from pathlib import Path
+import subprocess
+import threading
+import time
+
+from app import contracts_v2 as v2
+from app import verification
+from app.accounting import BudgetDenied
+from app.assessment import _doubts, assess_full_product
+from app.buyer_runs import RunError
+from app.buyer_sources import CORPUS_VERSION, ClassCellularsSource, DeliveryChoice, SourceRead
+from app.contract_interfaces import PlanningContext, WritingContext
+from app.inference import (
+    ROOT, CallLog, InferenceUnavailable, TracedProvider, build_inference, config_path, load_env_file,
+    load_inference_config,
+)
+from app.orchestrator import investigate
+from app.writer import OpenAIWriter, deterministic_explanation
+
+log = logging.getLogger('techscout.buyer_flow')
+
+TRACE_VERSION = 1
+MAX_FINALISTS = 3
+MAX_UNCERTAIN = 6
+# Seconds after the flow starts. app.accounting refuses a buyer job's non-final reservations
+# that would end after 90 s and final-phase ones after 120 s; these leave a margin inside both.
+RESEARCH_BY = 60
+NONFINAL_BY = 85
+FINAL_BY = 118
+MIN_WRITER_SECONDS = 5
+
+# Fixed buyer-facing stop reasons.
+OUT_OF_SCOPE = ('This first live flow covers exact-model phone searches delivered in Lebanon, '
+                'checked at Class Cellulars only')
+NEEDS_CITY = 'Add a delivery city so the delivery route and its charges can be checked'
+NO_PICKUP = 'Choosing a pickup branch is not supported yet; search for delivery instead'
+NOT_CONFIGURED = 'The buyer worker is not configured for live searches'
+SOURCE_FAILED = 'Class Cellulars could not be read in this run'
+NO_LISTING = 'Class Cellulars lists no matching phone for this request'
+NOTHING_ELIGIBLE = 'No listing at Class Cellulars meets the hard requirements'
+NONE_VERIFIED = 'No offer could be verified in this run; each candidate lists what is still unknown'
+VERIFIED = 'The final re-check confirmed {} offer(s) in this run'
+LIMIT = 'Stopped at the run limit ({}) before the search finished'
+# Fixed reasons for finalists that were not verified.
+REASON_NOT_RECHECKED = 'not verified: no final re-check fit within the limits'
+REASON_NOT_RETURNED = 'not verified: the final re-check did not return this listing'
+REASON_RECHECK_FAILED = 'not verified: the final re-check did not confirm this offer'
+REASON_STALE = 'not verified: evidence was not observed during this run'
+
+
+class Stopped(Exception):
+    """The buyer cancelled, the lease was lost or the publication was refused."""
+
+
+def _utc_now():
+    return datetime.now(timezone.utc)
+
+
+@dataclass(frozen=True)
+class ResearchSetup:
+    """What the orchestrator may dispatch: the research workers, their processing version and
+    the menu of resources they can actually read for this run's listings."""
+    workers: object
+    processing: object
+    resources: Callable  # (request, SourceRead) -> tuple[Resource, ...]
+
+
+@dataclass
+class FlowDependencies:
+    ledger: object
+    inference: object  # app.inference.BuyerInference
+    source: object  # app.buyer_sources.ClassCellularsSource or a test double
+    research: ResearchSetup | None = None
+    traces: Path | None = None
+    versions: dict = field(default_factory=dict)
+    wall_clock: Callable[[], datetime] = _utc_now
+
+
+def supported(request: v2.ShoppingRequest) -> str | None:
+    """None when the request is in this flow's scope, else the buyer-facing reason."""
+    if request.intent.kind != 'exact_model' or request.requirements.category != 'phone':
+        return OUT_OF_SCOPE
+    if request.fulfillment.mode == 'pickup':
+        return NO_PICKUP
+    if not request.fulfillment.destination.city:
+        return NEEDS_CITY
+    return None
+
+
+def _code_version() -> str:
+    explicit = os.environ.get('TECHSCOUT_CODE_VERSION', '').strip()
+    if explicit:
+        return explicit[:80]
+    try:
+        head = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT, capture_output=True, text=True,
+                              timeout=3, check=True).stdout.strip()
+        dirty = subprocess.run(['git', 'status', '--porcelain', '--untracked-files=no'], cwd=ROOT,
+                               capture_output=True, text=True, timeout=3, check=True).stdout.strip()
+        return head + ('+uncommitted' if dirty else '')
+    except (OSError, subprocess.SubprocessError):
+        return 'unknown'
+
+
+def _sha256(path: Path) -> str | None:
+    try:
+        return hashlib.sha256(path.read_bytes()).hexdigest()
+    except OSError:
+        return None
+
+
+def production_dependencies() -> FlowDependencies:
+    """The worker's wiring from its backend environment. Raises InferenceUnavailable or
+    BudgetDenied, naming what is missing, before anything is reserved or sent."""
+    from app.accounting import Ledger
+    from app.corpus import Corpus
+    from app.corpus_contracts import ProcessingVersion
+    from app.directory import Directory
+    from app.research_workers import ResearchWorkers
+    from app.source_registry import DEFAULT_REGISTRY
+    from app.sources import SourceGate
+    from app.storage import Storage
+    load_env_file()  # a worker started on the host reads OPENROUTER_API_KEY from the repository .env
+    path = config_path()
+    inference = build_inference(load_inference_config(path))
+    ledger = Ledger.configured()
+    storage = Storage()
+    gate = SourceGate(DEFAULT_REGISTRY)
+    source = ClassCellularsSource(lambda job: functools.partial(gate.fetch, job.source_budget(DEFAULT_REGISTRY)),
+                                  storage=storage)
+    # No reviewed shared extraction profile reads Class Cellulars pages yet, so the research
+    # workers read only what the public corpus already holds for these listings; a field they
+    # cannot settle stays an explicit gap, and they make no model call to pick a page to fetch.
+    workers = ResearchWorkers(Directory(storage), Corpus(storage), gate, {})
+    processing = ProcessingVersion(corpus_version=CORPUS_VERSION, index_version=CORPUS_VERSION,
+                                   extraction_version=source.adapter_version(), chunk_version='none')
+    research = ResearchSetup(workers, processing, listing_resources)
+    versions = dict(code=_code_version(), inference_config_sha256=_sha256(path),
+                    source_registry_sha256=_sha256(Path(DEFAULT_REGISTRY)),
+                    source=dict(source_id=source.source_id, adapter_version=source.adapter_version()))
+    return FlowDependencies(ledger=ledger, inference=inference, source=source, research=research,
+                            traces=ROOT / 'var' / 'traces', versions=versions)
+
+
+def listing_resources(request, read: SourceRead) -> tuple:
+    """One research resource per discovered listing, naming the fields still open on it."""
+    from app.corpus_contracts import ResourceKey
+    from app.research_workers import Resource
+    from app.source_capabilities import CapabilityRef
+    from app.adapters.class_cellulars import CONFIG
+    fixed = {p.page_url for p in CONFIG.products}
+    resources = []
+    for offer in read.offers[:20]:
+        open_fields = [path for path, fact in (('condition', offer.condition),
+                                               ('variant.specs.region', offer.variant.specs.region),
+                                               ('variant.specs.sim', offer.variant.specs.sim),
+                                               ('variant.specs.storage_gb', offer.variant.specs.storage_gb),
+                                               ('variant.color', offer.variant.color))
+                       if fact is None or fact.state != 'known']
+        url = str(offer.listing_url)
+        key = ResourceKey(source_id=offer.source_id, url=url, representation='html',
+                          product_id=offer.source_product_id, variant_id=offer.source_variant_id)
+        capability = None if url in fixed else CapabilityRef(capability_id='class-product', version='1')
+        resources.append(Resource(retailer_id=offer.retailer_id, key=key, content='listing',
+                                  fields=tuple(open_fields or ('variant.specs.storage_gb',)),
+                                  capability=capability))
+    return tuple(resources)
+
+
+def run(context) -> None:
+    """Entry point for ``python -m app.run_worker --controller app.buyer_flow:run``."""
+    try:
+        deps = production_dependencies()
+    except (InferenceUnavailable, BudgetDenied) as exc:
+        log.warning('Buyer worker is not configured: %s', exc)
+        try:
+            context.publish(status='error', stop_reason=f'{NOT_CONFIGURED}: {exc}'[:500])
+        except (RunError, ValueError):
+            pass
+        return
+    execute(context, deps)
+
+
+def execute(context, deps: FlowDependencies) -> None:
+    _Flow(context, deps).run()
+
+
+class _Flow:
+    def __init__(self, context, deps: FlowDependencies):
+        self.context, self.deps = context, deps
+        self.request: v2.ShoppingRequest = context.request
+        self.run_ref: v2.RunReference = context.claim.run
+        self.started = time.monotonic()
+        self.started_at = deps.wall_clock()
+        allowance = max(0.0, float(context.remaining_seconds()))
+        self.final_by = min(FINAL_BY, allowance)
+        self.nonfinal_by = min(NONFINAL_BY, self.final_by)
+        self.stop, self.done = threading.Event(), threading.Event()
+        self.calls = CallLog()
+        self.roles = TracedProvider(deps.inference.roles, self.calls)
+        self.job = None
+        self.limits: set[str] = set()
+        self.trace = dict(trace_version=TRACE_VERSION, run=self.run_ref.model_dump(mode='json'),
+                          request=dict(request_id=self.request.request_id, revision=self.request.revision,
+                                       intent=self.request.intent.kind,
+                                       category=self.request.requirements.category,
+                                       model=getattr(self.request.intent, 'model', None)),
+                          started_at=self.started_at.isoformat(),
+                          limits=dict(active_seconds=round(allowance, 3), nonfinal_by_s=self.nonfinal_by,
+                                      final_by_s=self.final_by, finalists=MAX_FINALISTS,
+                                      ledger_buyer_caps=dict(spend_usd='1', research_spend_usd='0.75',
+                                                             calls=40, seconds=120)),
+                          versions=dict(deps.versions, inference=deps.inference.versions()),
+                          phases=[], source=None, research=None, offers=None, writer=None)
+
+    # Time, cancellation and publication
+
+    def elapsed(self) -> float:
+        return time.monotonic() - self.started
+
+    def left(self, by: float) -> float:
+        return by - self.elapsed()
+
+    def stopped(self) -> bool:
+        """True once the buyer cancelled or the run's own deadline passed (each recorded)."""
+        if not self.stop.is_set() and self.elapsed() >= self.final_by:
+            self.limits.add('deadline')
+            self.stop.set()
+        return self.stop.is_set()
+
+    def cancelled(self) -> bool:
+        return 'cancelled' in self.limits
+
+    def _watch(self):
+        """Poll the owned run; cancellation or a lost lease stops every role and the ledger job."""
+        while not self.done.wait(.2):
+            try:
+                gone = self.context.cancelled()
+            except Exception:  # noqa: BLE001 - an unreadable run is a stopped run
+                gone = True
+            if gone:
+                self.limits.add('cancelled')
+                self.stop.set()
+                if self.job is not None:
+                    try:
+                        self.job.cancel()
+                    except Exception:  # noqa: BLE001
+                        pass
+                return
+            if self.stopped():
+                return
+
+    def publish(self, **changes):
+        if self.cancelled():
+            raise Stopped()
+        try:
+            return self.context.publish(**changes)
+        except RunError as exc:
+            self.stop.set()
+            raise Stopped() from exc
+
+    def phase(self, name: str, **data):
+        self.trace['phases'].append(dict(name=name, at_ms=round(self.elapsed() * 1000), **data))
+
+    # The run
+
+    def run(self):
+        watcher = threading.Thread(target=self._watch, name='buyer-flow-watch', daemon=True)
+        watcher.start()
+        status, reason, snapshot = 'error', 'Shopping controller failed', None
+        try:
+            status, reason, snapshot = self._run()
+        except Stopped:
+            status, reason = ('cancelled', 'Cancelled by buyer') if self.cancelled() else ('partial', 'Run stopped')
+        except Exception as exc:  # noqa: BLE001 - recorded by type only, then published as an error
+            self.trace['failure'] = type(exc).__name__
+            log.exception('Buyer flow failed')
+            try:
+                self.publish(status='error', stop_reason='Shopping controller failed')
+            except Stopped:
+                pass
+        finally:
+            self.done.set()
+            watcher.join(5)  # its last run check finishes before the controller returns
+            self.trace.update(status=status, stop_reason=reason, latency_ms=round(self.elapsed() * 1000),
+                              finished_at=self.deps.wall_clock().isoformat(),
+                              stopped_by=sorted(self.limits), model_calls=self.calls.entries(),
+                              spend=self._spend())
+            self._write_trace()
+        return snapshot
+
+    def _run(self):
+        request = self.request
+        self.publish(status='running', phase='interpret')
+        problem = supported(request)
+        if problem is not None:
+            self.phase('interpret', outcome='out_of_scope')
+            return self._finish('abstained', problem)
+        self.phase('interpret', outcome='in_scope')
+        route = DeliveryChoice(request.fulfillment.destination.city)
+        self.job = self.deps.ledger.open_job(self.run_ref.run_id)
+        if self.cancelled():
+            self.job.cancel()
+            raise Stopped()
+        if self.stopped():
+            return self._finish('partial', LIMIT.format('deadline'))
+
+        # Discover: listings through the gate and the ledger (or stored by an earlier run).
+        self.publish(status='running', phase='discover')
+        read = self.deps.source.discover(request, route, self.job, self.run_ref)
+        self.trace['source'] = dict(source_id=self.deps.source.source_id, mode=read.mode,
+                                    fetches=list(read.fetches), errors=list(read.errors),
+                                    skipped=list(read.skipped), offers=len(read.offers))
+        self.phase('discover', mode=read.mode, offers=len(read.offers), errors=len(read.errors))
+        outcome = v2.SourceOutcome(source_id=self.deps.source.source_id, name=self.deps.source.name,
+                                   status='checked' if read.offers or not read.errors else 'failed',
+                                   reason=None if read.offers or not read.errors else SOURCE_FAILED)
+        self.outcomes = (outcome,)
+        if not read.offers:
+            if read.errors:
+                return self._finish('error', SOURCE_FAILED)
+            return self._finish('abstained', NO_LISTING)
+        # A provisional candidate shows when its price was originally observed (stored listings
+        # keep their earlier time even though this run re-read the policy page).
+        provisional = tuple(v2.ProvisionalCandidate(offer=o, observed_at=min(
+            e.observed_at for e in o.evidence if e.evidence_id in set(o.price.evidence_ids) or not o.price.evidence_ids))
+            for o in read.offers[:MAX_UNCERTAIN])
+        self.coverage = v2.CoverageCounts(discovered=1, attempted=1, retrieved=1)
+        self.publish(status='running', phase='research', coverage=self.coverage, provisional=provisional,
+                     source_outcomes=self.outcomes)
+
+        # Research: the orchestrator plans over the listings the workers can read.
+        self._research(read)
+
+        # Evaluate with the fixed rules, then choose the finalists.
+        self.publish(status='running', phase='evaluate')
+        now = self.deps.wall_clock()
+        assessed = [(o, assess_full_product(request, o, now=now)) for o in read.offers]
+        rejected = [o.offer_id for o, a in assessed if a.decision == 'rejected']
+        candidates = [(o, a) for o, a in assessed if a.decision != 'rejected']
+        candidates.sort(key=_rank)
+        self.trace['offers'] = dict(discovered=len(read.offers), rejected=rejected,
+                                    held_decisions={o.offer_id: a.decision for o, a in assessed})
+        self.phase('evaluate', candidates=len(candidates), rejected=len(rejected))
+        if not candidates:
+            return self._finish('abstained', NOTHING_ELIGIBLE, provisional=())
+
+        # Verify: the final phase re-reads the finalists live.
+        finalists = candidates[:MAX_FINALISTS]
+        recommendations, uncertain = self._verify(read, route, finalists)
+        uncertain += [v2.UncertainAlternative(offer=o, reasons=(*_doubts(a), REASON_NOT_RECHECKED), cost=a.cost)
+                      for o, a in candidates[MAX_FINALISTS:]]
+        uncertain = uncertain[:MAX_UNCERTAIN]
+        self.coverage = v2.CoverageCounts(discovered=1, attempted=1, retrieved=1,
+                                          qualifying=1 if recommendations else 0)
+
+        # Write: one tool-free writer call over the checked claims (or the deterministic summary).
+        explanation = self._write(recommendations, uncertain)
+        limit = self._limit()
+        if recommendations:
+            status, reason = ('partial', LIMIT.format(limit)) if limit else ('complete', VERIFIED.format(
+                sum(len(r.offers()) for r in recommendations)))
+        else:
+            status, reason = ('partial', LIMIT.format(limit)) if limit else ('abstained', NONE_VERIFIED)
+        return self._finish(status, reason, recommendations=tuple(recommendations), uncertain=tuple(uncertain),
+                            provisional=(), explanation=explanation)
+
+    def _limit(self) -> str | None:
+        for name in ('cancelled', 'deadline', 'spend'):
+            if name in self.limits:
+                return name
+        return None
+
+    def _finish(self, status, reason, **results):
+        fields = dict(status=status, stop_reason=reason, phase='write' if 'explanation' in results else None,
+                      source_outcomes=getattr(self, 'outcomes', None), coverage=getattr(self, 'coverage', None),
+                      **results)
+        self.phase('publish', status=status)
+        snapshot = self.publish(**{k: v for k, v in fields.items() if v is not None})
+        return status, reason, snapshot
+
+    def _research(self, read: SourceRead):
+        setup = self.deps.research
+        resources = setup.resources(self.request, read) if setup is not None else ()
+        budget_left = self.left(min(RESEARCH_BY, self.nonfinal_by))
+        record = dict(resources=len(resources))
+        self.trace['research'] = record
+        if self.stopped() or budget_left <= 1:
+            if not self.stopped():
+                self.limits.add('deadline')
+            record['skipped'] = 'deadline or cancellation'
+            self.phase('research', outcome='skipped')
+            return None
+        workers = setup.workers if setup is not None else None
+        if workers is not None and hasattr(workers, 'provider'):
+            workers = replace(workers, provider=self.roles)
+        deadline = self.deps.wall_clock() + timedelta(seconds=budget_left)
+        try:
+            result = investigate(PlanningContext(run=self.run_ref, request=self.request), job=self.job,
+                                 workers=workers, provider=self.roles, resources=resources,
+                                 processing=setup.processing if setup is not None else None,
+                                 deadline=deadline)
+        except Exception as exc:  # noqa: BLE001 - research never decides an offer; record and go on
+            record['failure'] = type(exc).__name__
+            self.phase('research', outcome='failed')
+            return None
+        record.update(reports=len(result.reports), gaps=list(result.gaps)[:40],
+                      critique=None if result.critique is None else dict(
+                          status=result.critique.status, issues=len(result.critique.issues),
+                          follow_up_attempted=result.critique.follow_up_attempted,
+                          reason=result.critique.reason),
+                      trace=[dict(action=s.action, status=s.status, source_id=s.source_id)
+                             for r in result.reports for s in r.trace][:40])
+        if any('deadline' in g.lower() for g in result.gaps):
+            self.limits.add('deadline')
+        self._note_denials()
+        self.phase('research', outcome='completed', reports=len(result.reports))
+        return result
+
+    def _note_denials(self):
+        if any(c['status'] == 'budget_denied' for c in self.calls.entries()):
+            self.limits.add('spend')
+
+    def _verify(self, read: SourceRead, route, finalists):
+        request, run = self.request, self.run_ref
+        try:
+            self.job.enter_final_phase()
+        except BudgetDenied:
+            pass
+        self.publish(status='running', phase='verify')
+        if self.stopped() or self.left(self.final_by) <= 2:
+            if not self.stopped():
+                self.limits.add('deadline')
+            self.phase('verify', outcome='skipped')
+            return [], [v2.UncertainAlternative(offer=o, reasons=(*_doubts(a), REASON_NOT_RECHECKED), cost=a.cost)
+                        for o, a in finalists]
+        ids = [o.offer_id for o, _ in finalists]
+        try:
+            fresh = self.deps.source.refresh(request, route, self.job, run, ids, earlier=read)
+        except Exception as exc:  # noqa: BLE001 - a failed re-read verifies nothing; it is not a crash
+            self.trace['verify_failure'] = type(exc).__name__
+            fresh = SourceRead(mode='refresh', errors=(f'final re-read failed ({type(exc).__name__})',))
+        checked_at = self.deps.wall_clock()
+        run_replies = set(read.replies) | set(fresh.replies)
+        policy_replies = {(p.response_sha256, p.observed_at) for p in read.policies}
+        returned = {o.offer_id: o for o in fresh.offers}
+        recommendations, uncertain, outcomes = [], [], {}
+        for offer, held in finalists:
+            again = returned.get(offer.offer_id)
+            if again is None:
+                outcomes[offer.offer_id] = 'not_returned'
+                uncertain.append(v2.UncertainAlternative(offer=offer, reasons=(*_doubts(held), REASON_NOT_RETURNED),
+                                                         cost=held.cost))
+                continue
+            problem = verification.recheck_problem(fresh.originals[offer.offer_id], run_replies=run_replies,
+                                                   final_replies=set(fresh.replies), policy_replies=policy_replies,
+                                                   now=checked_at)
+            assessment = assess_full_product(request, again, now=checked_at)
+            if problem is None and assessment.decision == 'recommendable' and len(recommendations) < MAX_FINALISTS:
+                try:
+                    verified = v2.VerifiedOffer(offer=again, cost=assessment.cost,
+                                                verification=v2.Verification(checked_at=checked_at, run=run))
+                except ValueError:
+                    problem = 'contract'
+                else:
+                    outcomes[offer.offer_id] = 'verified'
+                    recommendations.append(v2.Recommendation(primary=verified))
+                    continue
+            if assessment.decision == 'rejected':
+                outcomes[offer.offer_id] = 'rejected_on_recheck'
+                continue
+            reason = (REASON_STALE if problem == verification.STALE
+                      else REASON_RECHECK_FAILED if problem is not None else None)
+            outcomes[offer.offer_id] = 'unresolved' if reason is None else problem
+            uncertain.append(v2.UncertainAlternative(offer=again, cost=assessment.cost,
+                                                     reasons=(*_doubts(assessment), *((reason,) if reason else ()))))
+        self.trace['verify'] = dict(finalists=ids, outcomes=outcomes, fetches=list(fresh.fetches),
+                                    errors=list(fresh.errors), checked_at=checked_at.isoformat())
+        self.phase('verify', verified=len(recommendations), rechecked=len(ids))
+        return recommendations, uncertain
+
+    def _write(self, recommendations, uncertain):
+        context = WritingContext(run=self.run_ref, recommendations=tuple(recommendations), request=self.request,
+                                 coverage=self.coverage, uncertain=tuple(uncertain))
+        seconds = min(30.0, self.left(self.final_by) - 1)
+        self.publish(status='running', phase='write')
+        if self.stopped() or seconds < MIN_WRITER_SECONDS:
+            if not self.stopped():
+                self.limits.add('deadline')
+            explanation = deterministic_explanation(context)
+            self.trace['writer'] = dict(source='fallback', reason='no time left for the writer', status='not_called')
+            return v2.RunExplanation(text=explanation.text, evidence_ids=explanation.evidence_ids, source='fallback')
+        provider = TracedProvider(self.deps.inference.writer(seconds), self.calls, role='writer')
+        writer = OpenAIWriter.for_job(self.job, seconds=seconds, provider=provider, cancelled=self.stopped)
+        result = asyncio.run(writer.explain(context))
+        self.trace['writer'] = result.trace_data()
+        self._note_denials()
+        self.phase('write', source=result.source, status=result.status)
+        return v2.RunExplanation(text=result.explanation.text, evidence_ids=result.explanation.evidence_ids,
+                                 source=result.source)
+
+    # Trace
+
+    def _spend(self) -> dict:
+        """This run's ledger attempts: known spend, uncertain bounds kept, calls and fetches."""
+        if self.job is None:
+            return dict(ledger='not_opened')
+        try:
+            state = self.deps.ledger.snapshot()
+        except Exception as exc:  # noqa: BLE001
+            return dict(ledger='unreadable', error=type(exc).__name__)
+        known, uncertain, held, counts = Decimal(0), Decimal(0), Decimal(0), {}
+        for attempt in state['attempts'].values():
+            if attempt['job'] != self.run_ref.run_id:
+                continue
+            counts[attempt['kind']] = counts.get(attempt['kind'], 0) + (attempt['status'] != 'released')
+            amount = Decimal(str(attempt['values'][3]))
+            if attempt['status'] == 'completed':
+                known += amount
+            elif attempt['status'] == 'uncertain':
+                uncertain += amount
+            elif attempt['status'] in ('held', 'sent'):
+                held += amount
+        return dict(ledger='read', known_usd=str(known), uncertain_usd=str(uncertain),
+                    still_held_usd=str(held), attempts=counts,
+                    note='uncertain amounts are full reservations kept because the cost was not reported')
+
+    def _write_trace(self):
+        directory = self.deps.traces
+        if directory is None:
+            return
+        try:
+            directory.mkdir(parents=True, exist_ok=True)
+            name = f'{self.run_ref.run_id}-r{self.run_ref.run_revision}.json'
+            (directory / name).write_text(json.dumps(self.trace, indent=2, sort_keys=True, default=str),
+                                          encoding='utf-8')
+        except OSError:
+            log.warning('Could not write the run trace')
+
+
+def _rank(pair):
+    """Recommendable on held evidence first (lowest verified total), then the lowest known price."""
+    offer, assessment = pair
+    price = offer.price.value.amount if offer.price.state == 'known' else Decimal('Infinity')
+    if assessment.decision == 'recommendable':
+        total = assessment.cost.budget_conversion.quote if assessment.cost.budget_conversion else assessment.cost.total
+        return (0, total.amount, offer.offer_id)
+    return (1, price, offer.offer_id)

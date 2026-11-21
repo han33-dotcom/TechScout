@@ -1,12 +1,14 @@
-# Optional OpenRouter adapter
+# OpenRouter adapter
 
-`app.openrouter.OpenRouterProvider` is an optional gateway behind the same
+`app.openrouter.OpenRouterProvider` is a gateway behind the same
 `ModelProvider.generate(instructions, data, OutputModel, budget=..., cancelled=...)`
-boundary as the [direct OpenAI adapter](model-provider.md). Direct OpenAI remains
-the default for every agent role and for the main evaluation. This adapter does
-not gate core delivery or the required evaluation, and nothing selects it
-automatically. Building it did not create an account, buy credits or make a paid
-call; all tests use offline fake clients.
+boundary as the [direct OpenAI adapter](model-provider.md). Since #142 it is the
+planned inference provider. The buyer worker builds it for every model-driven role
+from one pinned runtime route (`purpose: "buyer"`, see the
+[first live flow](live-flow.md), #75). The frozen main evaluation keeps its direct
+OpenAI route until [#80](https://github.com/han33-dotcom/TechScout/issues/80) versions
+the protocol. Nothing selects the adapter automatically. Building it did not create
+an account, buy credits or make a paid call; all tests use offline fake clients.
 
 ## Off by default
 
@@ -78,7 +80,7 @@ provider's endpoint on OpenRouter during setup. Unknown keys are rejected.
 | `routes[].provider` | The single approved serving provider for that route. |
 | `routes[].supported_parameters` | Must include `response_format`, `structured_outputs` and `max_tokens` (and `reasoning` when `effort` is set). Otherwise the call returns `unsupported_parameters` without sending or reserving. |
 | `routes[].rates` | Decimal strings. An enabled route needs positive input and output rates: an unknown cost is never zero. |
-| `purpose` | `evaluation` (default) pins exactly one route with no fallback. `experiment` requires an `experiment` label starting with `exp-`. |
+| `purpose` | `evaluation` (default) pins exactly one route with no fallback. `buyer` applies the same pinning to live buyer runs (built by `app.inference`). `experiment` requires an `experiment` label starting with `exp-`. |
 | `allow_fallback`, `fallback_on` | Off by default. Only an experiment may list up to three routes and turn this on (see below). |
 | `data_collection`, `zdr` | Data-policy filters sent to OpenRouter. `deny` is the default. |
 | `effort` | Optional `reasoning.effort`; omitted by default. |
