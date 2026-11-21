@@ -7,11 +7,13 @@ bridge. The CLI's default remains the offline rule baseline; `none` remains the
 no-investigation baseline. The old Anthropic planner/configuration stays available
 for explicitly selected historical evaluations, with no automatic substitution.
 
-Backend workers supply `OPENAI_API_KEY`. Startup, offline tests, and the React
-bundle require no provider credentials. OpenRouter is optional, off by default and
-never required: the [OpenRouter adapter](openrouter.md) implements the same
-`ModelProvider.generate` boundary with its own pinned routes, provider/model
-attribution and pricing, so agent roles can use it without changing orchestration.
+Startup, offline tests, and the React bundle require no provider credentials. The
+[OpenRouter adapter](openrouter.md) implements the same `ModelProvider.generate`
+boundary with its own pinned routes, provider/model attribution and pricing. Since #75
+the buyer worker uses it for every model-driven role and never builds this direct
+provider ([first live flow](live-flow.md)). This direct route remains in the frozen
+evaluation configuration until #80 versions the protocol; its callers supply
+`OPENAI_API_KEY`.
 
 Full-product roles call `generate(instructions, data, OutputModel,
 budget=JobBudget(job), cancelled=...)`. The output is validated with the supplied

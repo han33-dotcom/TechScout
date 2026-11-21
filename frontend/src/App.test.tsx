@@ -55,6 +55,12 @@ describe('buyer interactions',()=>{
   const {container}=render(<Progress snapshot={s} busy={false} cancel={vi.fn()} clarify={vi.fn()}/>);
   expect(screen.getByText('Checking · not verified')).toBeTruthy();expect(screen.getByText(/Originally observed/)).toBeTruthy();expect(container.querySelector('img')).toBeNull();
  });
+ it('shows the writer explanation as plain text with its source',()=>{
+  const s={...snap('abstained'),finished_at:'2026-11-17T10:00:02Z',stop_reason:'No offer could be verified in this run',explanation:{text:['No offer was verified in this run.','Not verified, shown separately:','- <img src=x onerror=alert(1)>'].join('\n'),evidence_ids:[],source:'fallback'}} as RunSnapshot;
+  const {container}=render(<Progress snapshot={s} busy={false} cancel={vi.fn()} clarify={vi.fn()}/>);
+  expect(screen.getByLabelText('Explanation of these results').textContent).toContain('No offer was verified in this run.');
+  expect(screen.getByText('Standard summary')).toBeTruthy();expect(container.querySelector('img')).toBeNull();
+ });
  it('does not retry an ambiguous create failure',async()=>{
   const transport=api();vi.mocked(transport.start).mockRejectedValue(new Error('Connection lost'));render(<App transport={transport}/>);
   fireEvent.change(screen.getByLabelText('What are you looking for?'),{target:{value:'laptop'}});fireEvent.click(screen.getByRole('button',{name:/Find my options/}));

@@ -1,0 +1,22 @@
+{
+  "inference": {
+    "provider": "openrouter",
+    "route": {
+      "model": "<author/slug confirmed on OpenRouter for the issued key>",
+      "provider": "<approved serving-provider slug>",
+      "supported_parameters": ["max_tokens", "response_format", "structured_outputs"],
+      "rates": {
+        "input": "<USD per 1M prompt tokens>",
+        "cached": "<USD per 1M cached prompt tokens>",
+        "cache_write": "<USD per 1M cache-write tokens>",
+        "output": "<USD per 1M completion tokens>",
+        "request": "0"
+      }
+    },
+    "pricing_checked_on": "<YYYY-MM-DD the rates were copied>",
+    "data_collection": "deny",
+    "zdr": false,
+    "roles": {"max_input_tokens": 16384, "max_output_tokens": 2048, "timeout_seconds": 30},
+    "writer": {"max_input_tokens": 32768, "max_output_tokens": 4096, "timeout_seconds": 30}
+  }
+}

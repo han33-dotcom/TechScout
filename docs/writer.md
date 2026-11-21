@@ -153,9 +153,13 @@ unknown cost keeps the reservation as its upper bound.
 
 ## Integration and limits
 
-The writer is not wired into a run yet. The orchestrated controller (#68) builds the
-`WritingContext` after final verification, and the comparison UI (#73) or the first
-live flow (#75) shows it. Showing it to buyers needs an additive `RunSnapshot` field.
+Since #75 the buyer controller (`app.buyer_flow`, see [the first live flow](live-flow.md))
+builds the `WritingContext` after final verification. It calls
+`OpenAIWriter.for_job` with an OpenRouter provider that keeps `writer-v1` and the
+writer's own token allowance. It publishes the result as the additive
+`RunSnapshot.explanation` field, which the browser shows as plain text. With no
+verified offer, the writer makes no model call and the deterministic summary is
+published.
 
 The live v1 controller produces v1 recommendations, so today the writer is
 demonstrated with the v2 fixtures and offline tests only. No live model call has been

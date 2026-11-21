@@ -67,9 +67,9 @@ Its integration must preserve a single run resource allowance across clarificati
 resumes; the API active-time counter does not itself authorize paid calls. A Python
 thread cannot forcibly terminate a remote request already dispatched.
 
-The real shopping controller/roles are integrated in #67/#68 and subsequent role
-tasks. This slice demonstrates lifecycle and publication with offline controllers.
-Without a configured buyer worker, API runs stay honestly queued. The existing
+The first trusted controller is `app.buyer_flow:run` (#75, [first live flow](live-flow.md)):
+one source and exact-model phone searches. Publication accepts `source_outcomes` and the
+additive `explanation`. Without a configured buyer worker, API runs stay honestly queued. The existing
 Compose `worker` runs ingestion; it does not impersonate a shopping controller.
 
 ## React and validation
