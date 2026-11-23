@@ -102,8 +102,15 @@ def _usage(reply, rate):
     return details, reported if byok is False else None
 
 
-def _vectors(reply, count):
-    if reply.get('error') or reply.get('model') != ROUTED_MODEL:
+def _vectors(reply, count, serving_provider):
+    provider = (serving_provider or '').lower()
+    if provider and provider != 'openai':
+        raise EmbeddingUnavailable('unexpected serving provider')
+    # OpenRouter can return the upstream model name when OpenAI serves the request.
+    model = reply.get('model')
+    if provider == 'openai' and model == ROUTED_MODEL.removeprefix('openai/'):
+        model = ROUTED_MODEL
+    if reply.get('error') or model != ROUTED_MODEL:
         raise EmbeddingUnavailable('refused or unexpected embedding model')
     rows = reply.get('data')
     if not isinstance(rows, list) or len(rows) != count:
@@ -177,9 +184,7 @@ class EmbeddingService:
             usage, actual = _usage(reply, self.rate)
             tokens = usage['tokens']
             receipt.update(usage)
-            vectors = _vectors(reply, len(texts))
-            if receipt['serving_provider'] and receipt['serving_provider'].lower() != 'openai':
-                raise EmbeddingUnavailable('unexpected serving provider')
+            vectors = _vectors(reply, len(texts), receipt['serving_provider'])
             receipt['result'] = 'validated'
             return vectors
         except EmbeddingUnavailable as exc:

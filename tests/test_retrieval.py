@@ -208,7 +208,7 @@ class RetrievalTests(unittest.TestCase):
     def test_bounded_route_check_records_reported_cost_even_when_billing_is_uncertain(self):
         def reply(request):
             self.assertEqual(json.loads(request.content)['input'], ['TechScout'])
-            return httpx2.Response(200, json=dict(model=ROUTED_MODEL,
+            return httpx2.Response(200, json=dict(model='text-embedding-3-small',
                 openrouter_metadata={'endpoints':{'available':[
                     {'provider':'OpenAI','name':'fixture-route','selected':True}]}},
                 usage={'total_tokens':2,'cost':0.00000004},
@@ -222,9 +222,23 @@ class RetrievalTests(unittest.TestCase):
         self.assertEqual((Decimal(receipt['reported_cost_usd']), receipt['is_byok']),
                          (Decimal('.00000004'), None))
         self.assertEqual((receipt['serving_provider'], receipt['serving_endpoint']), ('OpenAI','fixture-route'))
+        self.assertEqual(receipt['reported_model'], 'text-embedding-3-small')
+        self.assertEqual(receipt['requested_model'], ROUTED_MODEL)
         self.assertLessEqual(Decimal(receipt['reserved_usd']), Decimal('.000001'))
         self.assertNotIn('secret', repr(receipt))
         self.assertEqual(len(ledger.snapshot()['attempts']), 1)
+
+    def test_model_and_provider_mismatches_cannot_use_the_routed_index(self):
+        for model, provider in (('text-embedding-3-small', None),
+                                ('text-embedding-3-small', 'Azure'),
+                                (ROUTED_MODEL, 'Azure'),
+                                ('text-embedding-3-large', 'OpenAI'),
+                                ('other/text-embedding-3-small', 'OpenAI')):
+            with self.subTest(model=model, provider=provider):
+                reply = dict(self.response(['text']), model=model, provider=provider)
+                with self.assertRaises(EmbeddingUnavailable):
+                    self.service(lambda _: reply).embed(['text'], owner_id='run', purpose='query',
+                        index_version='i', max_spend_usd=Decimal('1'))
 
     def test_simultaneous_refresh_and_resume_only_send_one_index_batch(self):
         document = self.corpus.ingest(self.capture(), extract).document_id

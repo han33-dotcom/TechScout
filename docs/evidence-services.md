@@ -66,4 +66,6 @@ From a backend shell with the migrated application database, the shared accounti
 python -m app.embeddings --check-route
 ```
 
-Each explicit invocation sends at most one request with the public text `TechScout`, a maximum spend of USD 0.000001, and an 18-second response deadline. The JSON report identifies the durable bootstrap job and contains sanitized receipt fields. A `validated` result confirms the exact model and vector shape. Billing can still be uncertain. Record the report and date on #80 when the issued account is available. The offline suite injects a mock HTTP transport and does not establish account access.
+Each explicit invocation sends at most one request with the public text `TechScout`, a maximum spend of USD 0.000001, and an 18-second response deadline. The JSON report identifies the durable bootstrap job and contains sanitized receipt fields. A `validated` result confirms the model and vector shape. Billing can still be uncertain.
+
+On 23 November 2026, the issued team key returned a 1,536-dimensional vector. OpenRouter reported the serving provider as `OpenAI` and the model as `text-embedding-3-small`. The validator accepts this upstream name when OpenRouter identifies OpenAI as the serving provider. Index and query receipts retain the full requested slug and the original reported name. [Calibration receipt and billed usage](https://github.com/han33-dotcom/TechScout/issues/80#issuecomment-7110917208)
