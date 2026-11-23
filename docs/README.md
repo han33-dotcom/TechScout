@@ -8,6 +8,8 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 
 ## Documents
 
+- [Approved domestic search pipelines, model access and operating defaults](domestic-search-design.md)
+
 - [Held-out evaluation protocol](evaluation-protocol.md)
 - [Full-product failure matrix and threat model](full-product-failure-matrix.md)
 
@@ -33,7 +35,7 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 - [Persistent retailer directory](retailer-directory.md)
 - [Automatic retailer onboarding](retailer-onboarding.md)
 - [Shared accounting and bounded research](shared-accounting.md)
-- [Direct OpenAI model boundary](model-provider.md) and the [OpenRouter adapter](openrouter.md)
+- [OpenRouter inference adapter](openrouter.md) and [historical direct-provider implementation](model-provider.md)
 - [First browser-to-result flow and live-run runbook](live-flow.md)
 - [Grounded writer and deterministic fallback](writer.md)
 - [Full-product eligibility and domestic costs](full-product-assessment.md)
