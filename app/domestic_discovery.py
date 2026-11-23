@@ -328,3 +328,10 @@ class DomesticDiscovery:
             raise ValueError('Rotation requires a nonnegative cursor and 1–5 channels')
         channels = [CHANNELS[(cursor + i) % len(CHANNELS)] for i in range(count)]
         return self._run(objective, job, channels, rotate=True, cursor=cursor // len(CHANNELS))
+
+    def survey(self, objective, job, channels):
+        """Measure each requested connector once, preserving attribution across the whole objective."""
+        channels = tuple(channels)
+        if not channels or len(set(channels)) != len(channels) or any(c not in CHANNELS for c in channels):
+            raise ValueError('Select distinct discovery channels')
+        return self._run(objective, job, channels, rotate=True)

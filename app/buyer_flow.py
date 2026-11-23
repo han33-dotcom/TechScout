@@ -190,7 +190,7 @@ def _configured_inference(path, *, required):
         return None
 
 
-def production_dependencies(*, require_inference=True) -> FlowDependencies:
+def production_dependencies(*, require_inference=True, registry_base=None, inference=None) -> FlowDependencies:
     """Wire the backend. The single-source checkpoint explicitly requires its inference route."""
     from app.accounting import Ledger
     from app.corpus import Corpus
@@ -205,10 +205,11 @@ def production_dependencies(*, require_inference=True) -> FlowDependencies:
     from app.storage import Storage
     load_env_file(names=('OPENROUTER_API_KEY', RATE_VARIABLE))
     path = config_path()
-    inference = _configured_inference(path, required=require_inference)
+    if inference is None:
+        inference = _configured_inference(path, required=require_inference)
     ledger = Ledger.configured()
     storage = Storage()
-    registry = ActivationRegistry(storage)
+    registry = ActivationRegistry(storage, base=registry_base or DEFAULT_REGISTRY)
     directory = Directory(storage, registry_path=registry)
     gate = SourceGate(registry)
     source = ClassCellularsSource(gate_fetcher(gate, registry), storage=storage)
@@ -223,7 +224,7 @@ def production_dependencies(*, require_inference=True) -> FlowDependencies:
     workers.domestic_tools = DomesticDiscovery.from_env(gate, workers.directory, directory_defaults=reviewed['manufacturer_pages'])
     research = ResearchSetup(workers, processing, listing_resources)
     versions = dict(code=_code_version(), inference_config_sha256=_sha256(path),
-                    source_registry_sha256=_sha256(Path(DEFAULT_REGISTRY)),
+                    source_registry_sha256=_sha256(Path(registry_base or DEFAULT_REGISTRY)),
                     source=dict(source_id=source.source_id, adapter_version=source.adapter_version()))
     return FlowDependencies(ledger=ledger, inference=inference, source=source, research=research,
                             traces=ROOT / 'var' / 'traces', versions=versions,

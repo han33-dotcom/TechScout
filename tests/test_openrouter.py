@@ -131,7 +131,7 @@ class OpenRouterTests(unittest.TestCase):
 
     # Off by default, keys and configuration
 
-    def test_disabled_by_default_and_direct_openai_stays_the_default(self):
+    def test_explicit_evaluation_route_and_legacy_direct_entry_points(self):
         settings = load_openrouter_config()
         self.assertFalse(settings.enabled)
         with patch.dict('os.environ', {'OPENROUTER_API_KEY': KEY}, clear=True):
@@ -143,8 +143,11 @@ class OpenRouterTests(unittest.TestCase):
                 OpenRouterProvider(settings, client=lambda payload: reply())
         raw = json.loads((ROOT / 'config' / 'evaluation.json').read_text(encoding='utf-8'))
         self.assertEqual(raw['model_provider']['provider'], 'openai')
-        self.assertFalse(raw.get('openrouter', {}).get('enabled', False))
-        # The default model paths need only the direct OpenAI key, never an OpenRouter key.
+        self.assertEqual(raw['evaluation_inference']['route']['model'], 'openai/gpt-6.1-sol')
+        from eval.deployment import pinned_inference
+        with patch.dict('os.environ', {'OPENROUTER_API_KEY':KEY}, clear=True):
+            self.assertIsInstance(pinned_inference().roles, OpenRouterProvider)
+        # Existing explicit v1 direct entry points retain their configuration.
         with patch.dict('os.environ', {'OPENAI_API_KEY': 'synthetic-openai-key'}, clear=True):
             from app.runs import _planner
             from app.writer import OpenAIWriter
