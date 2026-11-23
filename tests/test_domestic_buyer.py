@@ -208,6 +208,7 @@ class DomesticBuyerTests(FlowCase):
         self.assertFalse(self.search.calls)
         self.assertEqual([u for u, _, _ in self.sources.calls], [str(left.listing_url)])
         self.assertEqual((run.status, run.coverage.retrieved, len(run.uncertain)), ('abstained', 0, 1))
+        self.assertEqual(run.uncertain[0].cost.status, 'incomplete')
 
     def test_unknown_link_is_queued_without_substituting_a_seller(self):
         url = 'https://unregistered.example/laptop'
@@ -250,6 +251,8 @@ class DomesticBuyerTests(FlowCase):
         run = self.run_buyer([offer], [offer])
         self.assertFalse(run.recommendations)
         self.assertIn('Dispatch from Lebanon is unverified', ' '.join(run.uncertain[0].reasons))
+        self.assertEqual(run.uncertain[0].cost.status, 'incomplete')
+        self.assertFalse(any('duty' in r or 'customs' in r for r in run.uncertain[0].reasons))
 
     def test_same_identifier_with_conflicting_ram_does_not_make_a_seller_comparison(self):
         left, right = laptop('shop-a'), laptop('shop-b')

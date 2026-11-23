@@ -6,7 +6,7 @@ from urllib.parse import unquote, urlsplit
 
 from app import contracts_v2 as v2
 from app.accounting import BudgetDenied, SourceBudget
-from app.assessment import assess_full_product, shortlist
+from app.assessment import FullProductAssessment, assess_full_product, shortlist
 from app.buyer_flow import MAX_UNCERTAIN, MIN_WRITER_SECONDS, _Flow
 from app.buyer_sources import FETCH_ROOM_S
 from app.directory import DirectoryQuery
@@ -79,6 +79,17 @@ def candidate(request, offer):
     checked = check_full_product(request, offer)
     return not any(c.outcome == 'fail' and (c.name in {'category', 'model', 'manufacturer', 'condition', 'color'}
                    or any(p.startswith('variant.specs.') for p in c.field_paths)) for c in checked.checks)
+
+
+def domestic_assessment(request, offer, now):
+    if isinstance(offer.route, v2.DirectRoute) and offer.route.origin_country == 'ZZ':
+        # Unresolved local dispatch cannot turn a domestic search into an import quote.
+        missing = ['Dispatch from Lebanon is unverified for this listing and configuration.']
+        missing.extend(f'{charge.kind} is unpublished for the selected route.'
+                       for charge in offer.costs if charge.state == 'unknown')
+        return FullProductAssessment(offer_id=offer.offer_id, eligibility=check_full_product(request, offer),
+                                     cost=v2.IncompleteCost(status='incomplete', missing=tuple(missing)), within_maximum=None)
+    return assess_full_product(request, offer, now=now)
 
 
 def current_problem(offer, assessment, read, run, started_at, now):
@@ -451,7 +462,7 @@ class DomesticBuyerFlow(_Flow):
             self.uncertain.pop(oid, None)
             self.assessed.pop(oid, None)
             now = self.deps.wall_clock()
-            assessment = assess_full_product(self.request, offer, now=now)
+            assessment = domestic_assessment(self.request, offer, now)
             if assessment.decision == 'rejected':
                 continue
             problem = current_problem(offer, assessment, read, self.run_ref, self.started_at, now)
@@ -467,7 +478,10 @@ class DomesticBuyerFlow(_Flow):
             reasons = [c.reason for c in assessment.eligibility.checks if c.outcome == 'unresolved']
             if assessment.cost.status != 'verified':
                 reasons.extend(getattr(assessment.cost, 'missing', ()) or ('The payable total is unverified.',))
-            self.uncertain[oid] = v2.UncertainAlternative(offer=offer, cost=assessment.cost,
+            cost = assessment.cost
+            if problem and cost.status == 'verified':
+                cost = v2.IncompleteCost(status='incomplete', missing=(problem,))
+            self.uncertain[oid] = v2.UncertainAlternative(offer=offer, cost=cost,
                 reasons=tuple(dict.fromkeys([*reasons, *([problem] if problem else [])])))
             self.retries.append(Listing(listing.url, offer.source_id, offer))
 
