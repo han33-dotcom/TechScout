@@ -22,7 +22,7 @@ scheme/host forwarding. There is no cross-origin API configuration.
 
 | Endpoint | Input | Result |
 | --- | --- | --- |
-| `POST /api/runs` | v2 `ShoppingRequest`, new request ID, revision 1 | 202 queued `RunSnapshot` |
+| `POST /api/runs` | v2 `DomesticShoppingRequest`, new request ID, revision 1 | 202 queued `RunSnapshot` |
 | `GET /api/runs/{id}` | Owner cookie | `ComparisonWorkspace`, latest revision and previous snapshot |
 | `POST /api/runs/{id}/clarify` | `run`, `clarification_id`, `answer` | 202 resumed snapshot, incremented run revision |
 | `POST /api/runs/{id}/cancel` | `run` | Cancelled snapshot; terminal cancellation is idempotent |
@@ -87,7 +87,7 @@ maximum can still trigger a recheck. The controller starts with known listings a
 directory product URLs. For a gap in comparative coverage it can issue one targeted
 multi-channel search, immediately read a new in-scope listing, and queue a new shop for
 background onboarding. An unknown shop from a buyer-supplied link contributes its public
-origin and category only. The run stays domestic even for a request with international opt-in.
+origin and category only. New searches and refinements accept only domestic offers. Omit `market_scope` or send `include_international: false` and an empty market list. An international opt-in or overseas market returns HTTP 422. Saved v2 snapshots retain their original scope.
 
 Up to three workers can read independent sources concurrently. They share the run ledger
 and return their findings to one controller. Every external action records the missing fact,

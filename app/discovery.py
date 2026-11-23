@@ -37,8 +37,6 @@ def search_query(request: ShoppingRequest):
             if value:
                 parts.append(f'{label} {value.amount} {value.currency}')
     parts.append('Lebanon')
-    if request.market_scope.include_international:
-        parts.append('international ' + ' '.join(request.market_scope.international_markets))
     query = ' '.join(parts)
     if len(query) > 1800:
         raise ValueError('Search scope is too large; clarify instead of dropping buyer constraints')
@@ -57,10 +55,8 @@ class Tavily:
         payload = dict(query=search_query(request), search_depth='basic', topic='general',
             max_results=max_results, auto_parameters=False, include_answer=False,
             include_raw_content=False, include_images=False, include_usage=True)
-        if not request.market_scope.include_international:
-            payload['country'] = 'lebanon'  # ranking hint, not proof of seller market
-        attempt = job.reserve('search', Charge(self.rate), 20,
-                              international=request.market_scope.include_international)
+        payload['country'] = 'lebanon'  # ranking hint, not proof of seller market
+        attempt = job.reserve('search', Charge(self.rate), 20)
         started = time.monotonic()
         attempt.dispatch()
         try:
@@ -171,7 +167,7 @@ class Discovery:
             market = record.source_country
             row = RetailerProgress(entry.retailer_id,record.source_id,market or '',lead)
             report.retailers[entry.retailer_id] = row
-            if market is None or not request.market_scope.allows(market):
+            if market != 'LB':
                 row.reason = 'market not opted in or unresolved'
                 continue
             if request.requirements.category not in entry.categories or lead.relevance < min_relevance:
@@ -200,7 +196,7 @@ class Discovery:
             candidates.append((lead.relevance + (.05 if untested else 0),row,capability,expect))
         candidates.sort(key=lambda c:(-c[0],c[1].retailer_id))
         for _,row,capability,expect in candidates[:max_sources]:
-            outcome = self.gate.fetch(job.source_budget(self.directory.registry_path,international=row.market!='LB'),
+            outcome = self.gate.fetch(job.source_budget(self.directory.registry_path),
                 row.source_id,row.lead.url,expect=expect,capability=capability)
             row.outcome = outcome
             row.status = 'checked' if outcome.status == 'ok' else 'failed' if outcome.attempts else 'unchecked'

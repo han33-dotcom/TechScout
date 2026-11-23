@@ -162,8 +162,7 @@ class ResearchWorkers:
         resources = []
         # Directory planning is bounded and does not activate unconfigured leads.
         selected = self.directory.select(DirectoryQuery(category=request.requirements.category,
-            purchase_markets=('LB', *request.market_scope.international_markets) if request.market_scope.international_markets else ('LB','US','AE') if request.market_scope.include_international else ('LB',),
-            allow_international=request.market_scope.include_international, include_unconfigured=True,
+            include_unconfigured=True,
             limit=20))
         for selection in selected:
             if not selection.configured:
@@ -176,7 +175,7 @@ class ResearchWorkers:
                     or record.entry.discovery_status == 'retired'
                     or request.requirements.category not in record.entry.categories
                     or (support and not allowed_fields)
-                    or (not support and (not record.source_country or not request.market_scope.allows(record.source_country)))):
+                    or (not support and record.source_country != 'LB')):
                 trace.append(Step(action='scope',status='excluded market or resource scope',source_id=resource.key.source_id))
                 continue
             resources.append(resource)
@@ -191,10 +190,8 @@ class ResearchWorkers:
         semantic_gap = route.unavailable if 'model' in permitted else 'model tool outside task scope'
         query_vector = None
 
-        def service(resource):
-            foreign = resource.content == 'listing' and self.directory.get(resource.retailer_id).source_country != 'LB'
-            return EmbeddingService(self.corpus, route.provider, usd_per_million=route.rate, job=job,
-                                    international=foreign)
+        embedder = None if semantic_gap else EmbeddingService(
+            self.corpus, route.provider, usd_per_million=route.rate, job=job)
 
         def stored(resource):
             nonlocal query_vector, semantic_gap
@@ -225,7 +222,7 @@ class ResearchWorkers:
                 if retrieval.has_routed_vectors(query):
                     try:
                         if query_vector is None:
-                            query_vector, = service(resource).embed([query.text], owner_id=job.run_id,
+                            query_vector, = embedder.embed([query.text], owner_id=job.run_id,
                                 purpose='query', index_version=query.index_version,
                                 max_spend_usd=task.spend_allowance_usd)
                         vector = query_vector
@@ -282,23 +279,20 @@ class ResearchWorkers:
                     nonlocal semantic_gap
                     if job.cancelled:
                         raise BudgetDenied('Research cancelled')
-                    international = resource.content == 'listing' and self.directory.get(resource.retailer_id).source_country != 'LB'
-                    if self.domestic_tools is not None and not international:
+                    if self.domestic_tools is not None:
                         page = self.domestic_tools.read(job, key, profile, work.processing,
                             origin='runtime', capability=resource.capability)
                     else:
                         page = self.page_reader(self.gate, job, key, profile, work.processing,
-                            origin='runtime', capability=resource.capability, fallback=self.fallback,
-                            international=international)
+                            origin='runtime', capability=resource.capability, fallback=self.fallback)
                     if page.capture is None or page.extraction is None:
                         raise ValueError('No usable source response')
                     if job.cancelled:
                         raise BudgetDenied('Research cancelled before ingestion')
                     refreshed = self.corpus.ingest(page.capture,lambda _:page.extraction)
                     if refreshed.document_id and not semantic_gap:
-                        indexer = service(resource)
                         try:
-                            while indexer.index_document(refreshed.document_id, owner_id=job.run_id,
+                            while embedder.index_document(refreshed.document_id, owner_id=job.run_id,
                                                          max_spend_usd=task.spend_allowance_usd):
                                 pass
                         except (EmbeddingUnavailable, EmbeddingAllowanceExceeded, BudgetDenied) as exc:
@@ -314,7 +308,7 @@ class ResearchWorkers:
             gaps.extend(f'{resource.key.source_id}: {field} not investigated' for field in sorted(missing))
         discovery_report = None
         can_search = gaps and {'corpus', 'discover'} <= permitted and not job.cancelled
-        if can_search and self.domestic_tools is not None and work.search is not None and not request.market_scope.include_international:
+        if can_search and self.domestic_tools is not None and work.search is not None:
             alternatives = tuple(c for c in CHANNELS if c != work.search.channel)
             discovery_report = self.domestic_tools.search(work.search, job, alternatives=alternatives)
             leads.extend(lead.url for lead in discovery_report.leads)

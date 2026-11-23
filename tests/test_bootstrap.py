@@ -12,7 +12,7 @@ from pathlib import Path
 from unittest import TestCase
 from unittest.mock import Mock, patch
 
-from app.accounting import BudgetDenied, Charge, Ledger
+from app.accounting import Ledger
 from app.bootstrap import Manifest, Seed, collect, main
 from app.embeddings import RATE_VARIABLE
 from app.retrieval import ROUTED_MODEL, DIMENSIONS
@@ -120,28 +120,13 @@ class BootstrapTests(TestCase):
         self.assertEqual(self.gate.fetch.call_count, 1)
         self.assertEqual(reports[-1]['all']['paid'], 2)
 
-    def test_new_manifest_respects_existing_campaign_category_allocation(self):
-        seed = Seed.model_validate({**self.manifest.seeds[0].model_dump(),
-            'source_id':'amazon', 'url':'https://www.amazon.com/dp/example',
-            'category':'tablet', 'format':'html', 'capability':None,
-        })
-        manifest = self.manifest.model_copy(update={
-            'manifest_id':'international-allocation-test', 'seeds':(seed,),
-            'international_limits':self.manifest.limits,
-        })
-        with self.ledger._transaction() as (state, _):
-            state['international_seed_urls'] = {'amazon':{
-                f'https://www.amazon.com/dp/fixture{i}':'tablet' for i in range(10)
-            }}
-        def fetch(budget, source, url, **options):
-            with self.assertRaisesRegex(BudgetDenied, 'category allocation exhausted'):
-                budget.reserve('retrieval', Charge(Decimal(0)), 1, international=True)
-            raise ValueError('Denied before dispatch')
-        self.gate.fetch.side_effect = fetch
-        with patch('app.bootstrap.get_active_source', return_value={}):
-            run = collect(manifest, ledger=self.ledger, corpus=self.corpus, gate=self.gate)
-        self.assertEqual(run['pages'][str(seed.url)]['error'], 'Denied before dispatch')
-        self.assertEqual(len(self.ledger.snapshot()['international_seed_urls']['amazon']), 10)
+    def test_retired_import_manifest_stops_before_accounting_or_retrieval(self):
+        seed = self.manifest.seeds[0].model_copy(update={'source_id':'amazon'})
+        manifest = self.manifest.model_copy(update={'seeds':(*self.manifest.seeds, seed)})
+        with self.assertRaisesRegex(ValueError, 'International retailer collection is retired'):
+            collect(manifest, ledger=self.ledger, corpus=self.corpus, gate=self.gate)
+        self.gate.fetch.assert_not_called()
+        self.assertFalse(self.ledger.snapshot()['jobs'])
 
     def test_budget_denial_survives_resume(self):
         m = self.manifest.model_copy(update={'limits':self.manifest.limits.model_copy(update={'max_fetch_attempts':1})})

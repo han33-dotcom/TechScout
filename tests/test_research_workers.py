@@ -92,11 +92,10 @@ class ResearchWorkerTests(unittest.TestCase):
         self.assertTrue(any(t.action=='scope' for t in excluded.trace))
         self.reader.assert_not_called()
 
-    def test_opt_in_reuses_foreign_corpus_but_cached_price_never_becomes_verified(self):
+    def test_legacy_opt_in_cannot_reuse_cached_foreign_listings(self):
         self.seed();self.foreign()
         report=self.run_work(self.work(international=True,fields=('variant.specs.ram_gb','price'),tools=('corpus',)))
-        self.assertEqual({r.observation.evidence[0].field_path:r.freshness for r in report.observations},
-                         {'price':'historical','variant.specs.ram_gb':'fresh'})
+        self.assertEqual(report.observations, ())
         self.assertTrue(report.finding.gaps)
         self.reader.assert_not_called()
 

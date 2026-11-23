@@ -27,9 +27,9 @@ python -m app.contract_schema > techscout-v2.schema.json
 - Request intents are exact model, product link, or needs. The category discriminator selects
   the supported hard specification fields. Needs input carries the use case and, where
   applicable, required software. Retailer links remain discovery leads until source validation.
-- Lebanon and new condition are defaults. Explicit market and condition selections are carried
-  in the request. The international switch filters purchase offers across all results. Technical
-  evidence can be sourced independently of the purchase market.
+- Buyer writes use the domestic-only request in the [buyer API](buyer-api.md). New condition is
+  the default. Stored v2 snapshots can still carry earlier market selections and import routes.
+  Technical evidence can be sourced independently of the purchase market.
 - Enter approximate budgets as budget.target and hard ceilings as budget.maximum. A request can
   carry either or both. ShoppingRequest.refine keeps the request ID and advances the revision.
   Budget edits can set either field independently or use null to remove it. Edits to other
@@ -44,7 +44,7 @@ python -m app.contract_schema > techscout-v2.schema.json
   and fall inside that run's timestamps. Pickup binds stock to the actual branch and variant.
   Shipping and import charges bind to the selected route. Foreign currency and promotion terms
   are resolved by the deterministic cost engine. Money is serialized as decimal strings.
-- An import can use direct delivery or two legs joined at a forwarding hub. Route eligibility,
+- Historical import records can represent direct delivery or two legs joined at a forwarding hub. Route eligibility,
   package assumptions, quote expiry and charge evidence are recorded separately. Estimated
   ranges and incomplete subtotals have their own discriminators.
 

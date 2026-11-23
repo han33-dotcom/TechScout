@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
-import type { BuyerApi, HistoryList, HistoricalWorkspace, ShoppingRequest } from './api';
+import type { BuyerApi, HistoryList, HistoricalWorkspace, RunSnapshot } from './api';
 import Comparison from './Comparison';
 import { categories } from './request';
 
@@ -12,7 +12,7 @@ function download(text: string) {
 }
 
 export default function History({api, onRecheck, onDeleted}: {
-  api: HistoryTransport; onRecheck: (request: ShoppingRequest) => void; onDeleted: (requestId: string) => void;
+  api: HistoryTransport; onRecheck: (request: RunSnapshot['request']) => void; onDeleted: (requestId: string) => void;
 }) {
   const [open,setOpen]=useState(false), [busy,setBusy]=useState(false), [error,setError]=useState('');
   const [list,setList]=useState<HistoryList>(), [saved,setSaved]=useState<HistoricalWorkspace>();
@@ -43,7 +43,7 @@ export default function History({api, onRecheck, onDeleted}: {
       {busy&&<p role="status">Loading history…</p>}{error&&<p role="alert">{error}. This action was not retried. Cancel any active search before deleting it.</p>}
       {list&&!list.items.length&&<p>No saved searches in this session.</p>}
       <ul className="history-list">{list?.items.map(item=><li key={item.run_id}><div><strong>{categories[item.category]} · revision {item.revision}</strong><small>{item.status} · {new Date(item.updated_at).toLocaleString()}</small></div><button disabled={busy} onClick={()=>void reopen(item.run_id)}>View saved search</button></li>)}</ul>
-      {saved&&<section className="saved-search" aria-label="Saved search"><h3>Historical snapshot · revision {saved.workspace.current.request.revision}</h3><p>Prices and availability belong to the saved search. Recheck to start a new search with these requirements.</p>
+      {saved&&<section className="saved-search" aria-label="Saved search"><h3>Historical snapshot · revision {saved.workspace.current.request.revision}</h3><p>Prices and availability belong to the saved search. Recheck to search local sellers with these requirements.</p>
         <div className="history-toolbar"><button className="primary" disabled={busy} onClick={()=>onRecheck(saved.workspace.current.request)}>Recheck these requirements</button><label><input type="checkbox" checked={includeEvidence} onChange={e=>setIncludeEvidence(e.target.checked)}/> Include evidence links in export</label><button disabled={busy} onClick={()=>void perform(async()=>download(await api.exportHistory(saved.workspace.current.run.run_id,includeEvidence)))}>Export comparison</button></div>
         <p className="muted">The text export omits your request, preferences and session identifiers. Evidence links omit URL query strings and fragments.</p>
         <Comparison workspace={saved.workspace} historical/>

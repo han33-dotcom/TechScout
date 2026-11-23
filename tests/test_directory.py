@@ -10,7 +10,7 @@ from pydantic import ValidationError
 from app.collection_contracts import RetailerDirectoryEntry
 from app.directory import (
     CategoryCoverage, Directory, DirectoryPort, DirectoryQuery, DirectoryRecord,
-    import_audit, import_international,
+    import_audit,
 )
 from app.source_capabilities import CapabilityRef
 import test_corpus as fixtures
@@ -52,7 +52,6 @@ class DirectoryTests(unittest.TestCase):
         self.assertEqual(self.directory.select(DirectoryQuery(category='phone')),())
         with self.assertRaises(ValidationError):
             DirectoryQuery(category='laptop',purchase_markets=('US',))
-        self.assertEqual(self.directory.select(DirectoryQuery(category='laptop',purchase_markets=('US',),allow_international=True)),())
 
     def test_disabled_unconfigured_and_wrong_capability_stay_leads(self):
         record = self.record()
@@ -119,17 +118,11 @@ class DirectoryTests(unittest.TestCase):
         self.assertEqual(self.directory.get('ayoub_computers').seller_identity,'marketplace')
         self.assertTrue(all(not h.configured for h in self.directory.select(DirectoryQuery(category='laptop',include_unconfigured=True))))
 
-    def test_international_targets_are_unverified_and_require_market_opt_in(self):
-        self.assertEqual(import_international(self.directory),6)
-        self.assertEqual(import_international(self.directory),0)
-        self.assertEqual(self.directory.get('myus').role,'forwarder_primary')
-        self.assertEqual(self.directory.get('stackry').role,'forwarder_backup')
-        self.assertFalse(self.directory.get('shop_and_ship').background_collection)
-        self.assertEqual(self.directory.select(DirectoryQuery(category='phone',include_unconfigured=True)),())
-        hits = self.directory.select(DirectoryQuery(category='phone',purchase_markets=('US','AE'),
-            allow_international=True,include_unconfigured=True))
-        self.assertEqual(len(hits),6)
-        self.assertTrue(all(not h.configured and not h.record.observations for h in hits))
-        collection = self.directory.select(DirectoryQuery(category='phone',purchase_markets=('US','AE'),
-            purpose='collection',include_unconfigured=True))
-        self.assertEqual(len(collection),5)
+    def test_old_foreign_entries_are_excluded_from_research_and_collection(self):
+        record = self.record()
+        foreign = record.model_copy(update={'entry': record.entry.model_copy(update={'markets': ('US',)})})
+        self.directory.upsert(foreign)
+        for purpose in ('runtime', 'collection'):
+            self.assertEqual(self.directory.select(DirectoryQuery(category='laptop', purpose=purpose)), ())
+            with self.assertRaises(ValidationError):
+                DirectoryQuery(category='laptop', purpose=purpose, purchase_markets=('US',))

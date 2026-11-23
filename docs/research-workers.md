@@ -19,10 +19,7 @@ it (#75); its missing fields stay explicit gaps.
 Workers read structured observations and bounded lexical evidence retrieval
 before external work. Processing versions and field freshness govern reuse.
 Foreign specifications/reviews can support a domestic request; only
-specification/policy fields may use that exception. Foreign listing facts are
-excluded unless their market is opted in. The toggle does not start ingestion.
-International directory planning defaults to US/UAE; explicit request markets and
-controller-scoped resources can cover other configured markets.
+specification/policy fields may use that exception. Research excludes foreign purchase listings, including cached observations from earlier searches.
 
 Only corpus, fetch, discover and model are permitted tool names. Corpus access is
 required before acquisition. An optional ModelProvider chooses an index in the
@@ -48,7 +45,7 @@ timestamps. Research does not attach current-run verification receipts to price
 or stock, even after fetching. Finalist verification remains authoritative.
 
 Offline tests cover stored-first reuse, foreign supporting evidence versus
-purchase offers, opt-in reuse, unseeded acquisition, simultaneous fetch sharing,
+purchase offers, legacy opt-in exclusion, unseeded acquisition, simultaneous fetch sharing,
 cancellation, revision mismatch, source refusal, task exhaustion, model scope
 rejection, discovery leads and the shared page/extraction path. No live retailer
 or paid provider is used.

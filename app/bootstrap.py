@@ -1,6 +1,5 @@
 """Collect a bounded, resumable public corpus before the first buyer search."""
 import argparse
-from collections import Counter
 from datetime import datetime, timezone
 from decimal import Decimal
 from hashlib import sha256
@@ -60,12 +59,12 @@ class Manifest(Model):
     manifest_id: Text
     processing: ProcessingVersion
     limits: CollectionLimits
+    # Keep the original serialized shape so domestic checkpoints retain their digest.
     international_limits: CollectionLimits | None = None
     seeds: tuple[Seed, ...] = Field(min_length=1, max_length=3000)
 
     @model_validator(mode='after')
     def check_targets(self):
-        counts = Counter()
         seen = set()
         for seed in self.seeds:
             if (seed.source_id, str(seed.url)) in seen:
@@ -74,27 +73,15 @@ class Manifest(Model):
             if seed.dispatch_for and (seed.listing or seed.url==seed.dispatch_for.listing_url):
                 raise ValueError('Dispatch membership needs a separate collection resource')
             if (seed.listing or seed.dispatch_for) and (seed.format != 'html' or seed.content != 'listing'
-                    or not seed.product_id or not seed.sku or seed.source_id in INTERNATIONAL):
+                    or not seed.product_id or not seed.sku or seed.source_id in RETIRED_IMPORT_SOURCES):
                 raise ValueError('Domestic listing seeds require a domestic HTML product, SKU and retailer')
             if seed.format == 'catalog' and (not seed.category_slugs or seed.content != 'listing'):
                 raise ValueError('Catalog seeds need reviewed categories')
-            if seed.source_id in INTERNATIONAL:
-                if seed.format=='catalog':
-                    raise ValueError('International listing allocations require individual product URLs')
-                if self.international_limits is None:
-                    raise ValueError('International targets require a nested allowance')
-                counts[seed.source_id if seed.content == 'listing' else
-                       'policy' if seed.content == 'policy' else 'support'] += 1
-        if self.international_limits and any(
-                getattr(self.international_limits, key) > getattr(self.limits, key)
-                for key in CollectionLimits.model_fields):
-            raise ValueError('International limits exceed the overall manifest')
-        if any(counts[k] > v for k,v in {**INTERNATIONAL,'policy':30,'support':100}.items()):
-            raise ValueError('International seed allocation exceeded')
         return self
 
 
-INTERNATIONAL = {'microless':300, 'bh':300, 'amazon':100}
+RETIRED_IMPORT_SOURCES = {'microless', 'microless_uae', 'bh', 'bh_us', 'amazon', 'amazon_us',
+                         'myus', 'stackry', 'shop_and_ship'}
 DOMESTIC = {'mojitech','beytech','class_cellulars','pcandparts','ayoub_computers','abed_tahan'}
 
 
@@ -104,7 +91,6 @@ class SeedBudget:
         self.job, self.run_id, self.registry = job, job.run_id, registry
         self.ledger = job.ledger
         self.manifest, self.seed, self.token = manifest, seed, token
-        self.foreign = seed.source_id in INTERNATIONAL
 
     @property
     def cancelled(self):
@@ -116,37 +102,20 @@ class SeedBudget:
             record = state['bootstrap_manifests'][self.run_id]
             if record.get('owner') != self.token or now >= record['lease_until']:
                 raise BudgetDenied('Bootstrap lease expired')
-            allocations = [('all', self.manifest.limits)]
-            if self.foreign:
-                allocations.append(('international', self.manifest.international_limits))
-            for scope, limits in allocations:
-                used = record[scope]
-                if (used['fetch'] + is_fetch > limits.max_fetch_attempts
-                        or used['paid'] + int(charge.total > 0) > limits.max_paid_calls
-                        or Decimal(used['usd']) + charge.total > limits.max_spend_usd
-                        or used['ms'] + int(seconds * 1000) > limits.max_elapsed_ms):
-                    raise BudgetDenied('Manifest allowance exhausted')
-                used['fetch'] += is_fetch
-                used['paid'] += int(charge.total > 0)
-                used['usd'] = str(Decimal(used['usd']) + charge.total)
-                used['ms'] += int(seconds * 1000)
+            used, limits = record['all'], self.manifest.limits
+            if (used['fetch'] + is_fetch > limits.max_fetch_attempts
+                    or used['paid'] + int(charge.total > 0) > limits.max_paid_calls
+                    or Decimal(used['usd']) + charge.total > limits.max_spend_usd
+                    or used['ms'] + int(seconds * 1000) > limits.max_elapsed_ms):
+                raise BudgetDenied('Manifest allowance exhausted')
+            used['fetch'] += is_fetch
+            used['paid'] += int(charge.total > 0)
+            used['usd'] = str(Decimal(used['usd']) + charge.total)
+            used['ms'] += int(seconds * 1000)
             if is_fetch:
                 key = str(self.seed.url)
-                if self.foreign:
-                    bucket = (self.seed.source_id if self.seed.content=='listing' else
-                              'policy' if self.seed.content=='policy' else 'support')
-                    allocation = state.setdefault('international_seed_urls',{}).setdefault(bucket,{})
-                    caps = {**INTERNATIONAL,'policy':30,'support':100}
-                    if key not in allocation:
-                        if len(allocation) >= caps[bucket]:
-                            raise BudgetDenied('International seed URL ceiling reached')
-                        if self.seed.content=='listing':
-                            share = 35 if self.seed.category in {'phone','laptop'} else 10
-                            if sum(c==self.seed.category for c in allocation.values()) >= caps[bucket]*share//100:
-                                raise BudgetDenied('International seed category allocation exhausted')
-                        allocation[key] = self.seed.category
                 tries = record['tries'].get(key,0)
-                if tries >= 1 + min(l.max_retries_per_resource for _,l in allocations):
+                if tries >= 1 + limits.max_retries_per_resource:
                     raise BudgetDenied('Resource attempt ceiling reached')
                 record['tries'][key] = tries + 1
         return self.job.reserve(kind, charge, seconds, **kwargs)
@@ -154,11 +123,10 @@ class SeedBudget:
     def reserve_call(self, source_id, max_seconds):
         policy = SourcePolicy.model_validate(get_active_source(source_id,self.registry))
         limits = policy.limits.model_copy(update={'concurrency':1,'requests_per_minute':min(
-            policy.limits.requests_per_minute, self.manifest.limits.max_requests_per_source_minute,
-            self.manifest.international_limits.max_requests_per_source_minute if self.foreign else 6)})
+            policy.limits.requests_per_minute, self.manifest.limits.max_requests_per_source_minute, 6)})
         try:
             return SourceAttempt(self.reserve('retrieval',Charge(Decimal(0)),max_seconds,
-                source=source_id,limits=limits,international=self.foreign))
+                source=source_id,limits=limits))
         except BudgetDenied:
             return None
 
@@ -197,14 +165,15 @@ def catalog(capture, outcome, seed, cap):
 
 
 def index_pending(corpus, document_id, embedder, rate, budget):
-    service = EmbeddingService(corpus,embedder,usd_per_million=rate,job=budget,
-                               international=budget.foreign)
+    service = EmbeddingService(corpus,embedder,usd_per_million=rate,job=budget)
     while service.index_document(document_id,owner_id=budget.run_id,
             max_spend_usd=budget.manifest.limits.max_spend_usd):
         pass
 
 
 def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None, embedding_gap=None):
+    if any(seed.source_id in RETIRED_IMPORT_SOURCES for seed in manifest.seeds):
+        raise ValueError('International retailer collection is retired')
     busy_gap = None
 
     def index(document_id, budget):
@@ -222,8 +191,7 @@ def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None, embeddi
                 # will index the pending passages without another source read.
                 embedding_gap = str(exc)
 
-    job = ledger.open_job('bootstrap:'+manifest.manifest_id,'bootstrap',
-                          international=any(s.source_id in INTERNATIONAL for s in manifest.seeds))
+    job = ledger.open_job('bootstrap:'+manifest.manifest_id,'bootstrap')
     fingerprint = sha256(manifest.model_dump_json().encode()).hexdigest()
     token = uuid4().hex
     with ledger._transaction() as (state, now):
@@ -263,17 +231,14 @@ def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None, embeddi
                 reusable = (profile_error is None and page.get('status') in {'indexed','empty'} and previous and
                             previous.processing == processing and previous.raw_sha256 == page.get('sha256'))
                 if not reusable:
-                    allocations = [(record['all'],manifest.limits)]
-                    if seed.source_id in INTERNATIONAL:
-                        allocations.append((record['international'],manifest.international_limits))
-                    bytes_left = min(l.max_response_bytes-u['bytes'] for u,l in allocations)
-                    rows_left = min(l.max_records-u['records'] for u,l in allocations)
+                    usage = record['all']
+                    bytes_left = manifest.limits.max_response_bytes - usage['bytes']
+                    rows_left = manifest.limits.max_records - usage['records']
                     if rows_left <= 0 or bytes_left < MAX_RESPONSE_BYTES:
                         break
                     row_hold = min(100, rows_left) if seed.format == 'catalog' else 1
-                    for usage, _ in allocations:
-                        usage['records'] += row_hold
-                        usage['bytes'] += MAX_RESPONSE_BYTES
+                    usage['records'] += row_hold
+                    usage['bytes'] += MAX_RESPONSE_BYTES
             budget = SeedBudget(job,manifest,seed,token,gate._registry_path)
             if reusable:
                 index(previous.document_id, budget)
@@ -284,7 +249,7 @@ def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None, embeddi
             try:
                 if profile_error:
                     raise profile_error
-                if not profile and seed.source_id not in DOMESTIC | INTERNATIONAL.keys():
+                if not profile and seed.source_id not in DOMESTIC:
                     raise ValueError('Unknown source market')
                 policy = get_active_source(seed.source_id,gate._registry_path)
                 outcome = gate.fetch(budget,seed.source_id,url,expect='json' if seed.format=='catalog' else 'html',
@@ -328,9 +293,8 @@ def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None, embeddi
                 if record['owner'] != token:
                     raise BudgetDenied('Bootstrap lease lost')
                 record['pages'][url] = result
-                for scope in (('all','international') if budget.foreign else ('all',)):
-                    record[scope]['bytes'] -= MAX_RESPONSE_BYTES - size
-                    record[scope]['records'] -= row_hold - min(row_hold, rows)
+                record['all']['bytes'] -= MAX_RESPONSE_BYTES - size
+                record['all']['records'] -= row_hold - min(row_hold, rows)
             if result['status']=='indexed':
                 index(receipt.document_id, budget)
     except (BudgetDenied, EmbeddingAllowanceExceeded) as exc:

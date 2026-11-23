@@ -59,6 +59,36 @@ class BuyerApiTests(unittest.TestCase):
         self.assertEqual(response.status_code,200,response.text)
         return v.ComparisonWorkspace.model_validate(response.json())
 
+    def test_international_writes_rejected_without_superseding_active_run(self):
+        payload = self.request.model_dump(mode='json')
+        for scope in ({'include_international': True}, {'international_markets': ['US']},
+                      {'include_international': True, 'international_markets': ['AE']}):
+            with self.subTest(scope=scope):
+                response = self.client.post('/api/runs', json={**payload, 'market_scope':scope},
+                                            headers=self.headers)
+                self.assertEqual(response.status_code, 422)
+        current = self.start()
+        response = self.command(current, 'refine', request={**payload, 'revision':2,
+                                'market_scope':{'include_international':True}})
+        self.assertEqual(response.status_code, 422)
+        self.assertEqual(self.read(current).current, current)
+
+    def test_legacy_scope_remains_readable_and_can_be_refined_domestically(self):
+        old = self.start().model_dump(mode='json')
+        old['request']['market_scope'] = {'include_international':True, 'international_markets':['US']}
+        run_id = old['run']['run_id']
+        with self.storage.engine.begin() as db:
+            db.execute(buyer_runs.update().where(buyer_runs.c.run_id == run_id).values(snapshot=old))
+        self.assertIsNone(self.service.claim())
+        saved = self.client.get('/api/history/' + run_id).json()['workspace']['current']
+        self.assertEqual(saved['request'], old['request'])
+        self.assertEqual(saved['status'], 'cancelled')
+        request = self.request.refine({}).model_dump(mode='json')
+        result = self.command(v.RunSnapshot.model_validate(saved), 'refine', request=request)
+        self.assertEqual(result.status_code, 202, result.text)
+        self.assertFalse(result.json()['current']['request']['market_scope']['include_international'])
+        self.assertEqual(result.json()['previous']['request'], old['request'])
+
     def test_queued_creation_polling_and_session_cookie_security(self):
         snapshot=self.start()
         self.assertEqual(snapshot.status,'queued')
@@ -116,6 +146,15 @@ class BuyerApiTests(unittest.TestCase):
                 recommendations=[{'primary':{'offer':offer,'cost':{'status':'verified','total':offer.price.value},
                     'verification':{'checked_at':self.now,'run':claim.run}}}])
         self.assertEqual(self.read(snapshot).current.status,'running')
+
+    def test_local_seller_shipping_from_abroad_cannot_publish_a_candidate(self):
+        self.start()
+        claim = self.service.claim()
+        offer = deepcopy(fixture('offers')['phone_different'])
+        offer['route']['origin_country'] = 'AE'
+        candidate = v.ProvisionalCandidate(offer=offer, observed_at=offer['evidence'][0]['observed_at'])
+        with self.assertRaisesRegex(ValueError, 'local fulfillment'):
+            self.service.publish(claim, provisional=[candidate])
 
     def test_current_run_verification_can_publish_checked_result(self):
         snapshot=self.start()

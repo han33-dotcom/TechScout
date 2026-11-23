@@ -18,7 +18,7 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 - [PC and Parts exact-listing retrieval and live-access limitations](pcandparts.md)
 - [Local accounting setup and later hosted migration](local-accounting.md)
 
-- [International source audit and initial ingestion manifest](international-source-audit.md)
+- [Historical international source audit and retired ingestion manifest](international-source-audit.md)
 
 - [Beytech catalog and policy evidence](beytech-catalog.md)
 
@@ -39,7 +39,7 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 - [First browser-to-result flow and live-run runbook](live-flow.md)
 - [Grounded writer and deterministic fallback](writer.md)
 - [Full-product eligibility and domestic costs](full-product-assessment.md)
-- [International landed costs](landed-costs.md)
+- [Historical international landed-cost contracts](landed-costs.md)
 - [Owned buyer API and worker lifecycle](buyer-api.md)
 - [Buyer request, comparison and refinement UI](buyer-ui.md)
 - [Bounded Class Cellulars discovery and live-access limits](class-catalog.md)

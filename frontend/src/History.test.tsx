@@ -31,7 +31,7 @@ describe('private session history',()=>{
     fireEvent.click(screen.getByRole('button',{name:'Recheck these requirements'}));
     expect(recheck).toHaveBeenCalledWith(workspace().current.request);
   });
-  it('rechecks with a new request identity while preserving all requirements',async()=>{
+  it('rechecks domestic offers with a new identity and the saved product requirements',async()=>{
     const api=history(),w=workspace();
     const transport:Transport={start:vi.fn().mockImplementation(async(request:ShoppingRequest)=>({...w.current,request,run:{...w.current.run,request_id:request.request_id,request_revision:1,run_id:'fresh-run'},recommendations:[],uncertain:[]})),read:vi.fn(),cancel:vi.fn(),clarify:vi.fn(),refine:vi.fn()};
     render(<App transport={transport} historyTransport={api}/>);await open();
@@ -39,7 +39,8 @@ describe('private session history',()=>{
     await waitFor(()=>expect(transport.start).toHaveBeenCalledTimes(1));
     const request=vi.mocked(transport.start).mock.calls[0][0];
     expect(request.request_id).not.toBe(w.current.request.request_id);
-    expect(request).toEqual({...w.current.request,request_id:request.request_id,revision:1});
+    expect(w.current.request.market_scope?.include_international).toBe(true);
+    expect(request).toEqual({...w.current.request,market_scope:{include_international:false,international_markets:[]},request_id:request.request_id,revision:1});
     expect(transport.refine).not.toHaveBeenCalled();
   });
   it('requires explicit deletion confirmation and clears the matching workspace',async()=>{

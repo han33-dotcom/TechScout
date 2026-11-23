@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, renderHook, act } from '@testing-library/react';
 import App, { Progress } from './App';
-import { toRequest, fromRequest, initialDraft, examples } from './request';
+import { toRequest, fromRequest, domesticScope, initialDraft, examples } from './request';
 import { useWorkspace, type Transport } from './useWorkspace';
 import type { RunSnapshot, ComparisonWorkspace } from './api';
-import fixture from '../../tests/fixtures/v2/workspace.json';
+import fixture from './fixtures/workspace.json';
 
 const request = () => toRequest(examples[0].draft);
 function snap(status: RunSnapshot['status'] = 'running'): RunSnapshot {
@@ -23,6 +23,14 @@ describe('request boundaries',()=>{
   expect(toRequest({...initialDraft,text:'https://retailer.example/device'}).intent.kind).toBe('product_link');
   expect(()=>toRequest({...initialDraft,text:'http://retailer.example/device'})).toThrow();
  });
+ it('refines a saved international comparison as a domestic request',()=>{
+  const saved = (fixture.current as unknown as RunSnapshot).request;
+  expect(saved.market_scope?.include_international).toBe(true);
+  const revised = toRequest(fromRequest(saved),saved);
+  expect(revised.market_scope).toEqual({ include_international:false, international_markets:[] });
+  expect(revised.request_id).toBe(saved.request_id);
+  expect(revised.revision).toBe(saved.revision + 1);
+ });
  it('preserves unedited requirements through refinement',()=>{
   const base=request();base.requirements={category:'laptop',min_ram_gb:16,cpu:'Required CPU'};base.allowed_colors=['Black'];
   const r=toRequest({...examples[0].draft,maximum:'1100'},base);
@@ -39,6 +47,7 @@ describe('request boundaries',()=>{
 describe('buyer interactions',()=>{
  it('submits without a mandatory confirmation and renders a truthful queue',async()=>{
   const transport=api(snap('queued'));render(<App transport={transport}/>);
+  expect(screen.queryByLabelText(/include international/i)).toBeNull();
   fireEvent.click(screen.getByRole('button',{name:/Study & everyday/}));
   fireEvent.click(screen.getByRole('button',{name:/Find my options/}));
   await screen.findByText('Waiting to start');expect(transport.start).toHaveBeenCalledTimes(1);
@@ -72,9 +81,9 @@ describe('revision races',()=>{
   vi.useFakeTimers();const s=snap(),transport=api(s);let resolve!:(w:ComparisonWorkspace)=>void;
   vi.mocked(transport.read).mockImplementation(()=>new Promise(r=>{resolve=r}));
   const {result}=renderHook(()=>useWorkspace(transport));
-  await act(async()=>{await result.current.submit(s.request)});
+  await act(async()=>{await result.current.submit({...s.request,market_scope:domesticScope})});
   await act(async()=>{await vi.advanceTimersByTimeAsync(1200)});
-  await act(async()=>{if(kind==='cancel') await result.current.cancel();else await result.current.submit({...s.request,revision:2})});
+  await act(async()=>{if(kind==='cancel') await result.current.cancel();else await result.current.submit({...s.request,market_scope:domesticScope,revision:2})});
   await act(async()=>{resolve(workspace({...s,status:'complete'}))});
   expect(kind==='cancel'?result.current.workspace?.current.status:result.current.workspace?.current.request.revision).toBe(kind==='cancel'?'cancelled':2);
  });

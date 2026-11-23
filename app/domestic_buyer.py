@@ -71,8 +71,7 @@ def configuration(offer):
 
 def candidate(request, offer):
     """A past price, availability or surcharge is never a permanent exclusion."""
-    if (offer.seller.market != 'LB' or isinstance(offer.route, v2.ForwardedRoute)
-            or isinstance(offer.route, v2.DirectRoute) and offer.route.origin_country not in ('LB', 'ZZ')):
+    if not offer.locally_fulfillable(allow_unknown_origin=True):
         return False
     if request.intent.kind == 'product_link' and offer.listing_url != request.intent.url:
         return False

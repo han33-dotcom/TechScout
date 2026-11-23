@@ -2,7 +2,7 @@
 
 Recent searches reuse the private `buyer_sessions` / `buyer_runs` tables. They are never indexed into the shared evidence corpus. `GET /api/history` returns at most 20 searches (latest revision of each request, most recently updated first); `limit` accepts 1–20. The list exposes only category, revision, status, time and the owned run reference. `GET /api/history/{run_id}` reopens that exact revision with `historical: true`, including its previous revision where present. All reads require the same unexpired, HttpOnly browser session cookie; another session receives 404 for a guessed run ID. Responses are not cached.
 
-The UI loads history on demand and labels reopened comparisons historical, including their verification badges. Recheck these requirements starts a new request/run with revision 1 and preserves the saved requirements. It does not reuse an old verification receipt as current evidence. Existing admission rules reject starting another run while this session has an active search. Reopening a saved snapshot does not resume its worker or poll it automatically.
+The UI loads history on demand and labels reopened comparisons historical, including their verification badges. Recheck these requirements starts a new request/run with revision 1 with the saved product and fulfillment requirements in the domestic market. It does not reuse an old verification receipt as current evidence. Existing admission rules reject starting another run while this session has an active search. Reopening a saved snapshot does not resume its worker or poll it automatically.
 
 ## Expiry and deletion
 

@@ -44,8 +44,8 @@ ambiguous calls retain the quote. No implicit retries run. An explicit retry is 
 new billed attempt. Reported overcharges stop the campaign.
 
 The query preserves intent, category requirements, allowed conditions, and the
-distinction between a budget target and maximum. Lebanon is the default country
-boost. International search is opt-in. The country parameter is only a search
+distinction between a budget target and maximum. Search uses the Lebanon country
+boost. The country parameter is only a search
 ranking hint: trusted retailer market checks still apply before retrieval.
 
 `Discovery(provider, directory, gate).discover(request, job)` selects up to three
@@ -70,6 +70,6 @@ Snippets have no evidence IDs and cannot become purchase facts. This module does
 not rank offers or claim that the returned model satisfies every buyer constraint.
 
 Offline tests exercise 20 synthetic sellers, three selected sources, newly reviewed
-retailers beyond the initial sample, unknown/aggregator leads, opt-in, exhausted
+retailers beyond the initial sample, unknown/aggregator leads, foreign-store exclusion, exhausted
 budget, mid-run revocation, provider failures, overcharges and response bounds.
 The domestic implementation and validation evidence above describe the current search interface.

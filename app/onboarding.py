@@ -15,7 +15,7 @@ cannot add a fetch target, widen a scope or change a budget.
 import argparse
 from contextlib import contextmanager
 import copy
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 import hashlib
@@ -50,7 +50,7 @@ from app.storage import (
     Storage, directory_entries, onboarding_events, onboarding_guard, onboarding_leads, source_activations,
 )
 
-CONFIGURED_MARKETS = ('LB', 'US', 'AE')
+CONFIGURED_MARKETS = ('LB',)
 MAX_URL_LENGTH = 2048
 MAX_CANDIDATE_URLS = 10
 MAX_ENQUEUE = 20
@@ -603,14 +603,6 @@ class ActivationRegistry:
 # Lead intake and leases
 
 
-def _request_markets(request: ShoppingRequest):
-    scope = request.market_scope
-    if not scope.include_international:
-        return ('LB',)
-    foreign = scope.international_markets or ('US', 'AE')
-    return tuple(dict.fromkeys(m for m in ('LB', *foreign) if m in CONFIGURED_MARKETS))
-
-
 class OnboardingQueue:
     """Durable lead queue: deduplicated by shop domain, prioritized, leased, retried, surfaced."""
 
@@ -636,7 +628,7 @@ class OnboardingQueue:
                     continue
                 try:
                     counts[(category, market)] = len(self.directory.select(DirectoryQuery(
-                        category=category, purchase_markets=(market,), allow_international=market != 'LB',
+                        category=category, purchase_markets=(market,),
                         limit=20, candidate_limit=200)))
                 except (ValueError, SQLAlchemyError):
                     counts[(category, market)] = 0
@@ -695,7 +687,7 @@ class OnboardingQueue:
                     candidate_urls=list(dict.fromkeys((*old.candidate_urls, url)))[:MAX_CANDIDATE_URLS],
                     channels=list(dict.fromkeys((*old.channels, *channels))),
                     categories=list(dict.fromkeys((*old.categories, *categories))),
-                    markets=list(dict.fromkeys((*old.markets, *markets))),
+                    markets=markets,
                     mentions=old.mentions + 1, relevance=max(old.relevance, float(relevance)),
                     reasons=list(dict.fromkeys((*old.reasons, reason)))[:10],
                     retailer_id=old.retailer_id or retailer_id, name_hint=old.name_hint or name_hint))
@@ -739,7 +731,7 @@ class OnboardingQueue:
 
     def enqueue_tavily(self, leads, request: ShoppingRequest):
         """Tavily results for a request: snippets stay leads, never offer evidence."""
-        category, markets = request.requirements.category, _request_markets(request)
+        category, markets = request.requirements.category, CONFIGURED_MARKETS
         counts = self._coverage((category,), markets)
         return tuple(self.enqueue(lead.url, channel='tavily', categories=(category,), markets=markets,
                                   relevance=lead.relevance, reason='Tavily search lead', counts=counts)
@@ -747,7 +739,7 @@ class OnboardingQueue:
 
     def enqueue_buyer(self, urls, request: ShoppingRequest):
         """Unconfigured shop URLs a buyer search could not check. No buyer text is stored."""
-        category, markets = request.requirements.category, _request_markets(request)
+        category, markets = request.requirements.category, CONFIGURED_MARKETS
         counts = self._coverage((category,), markets)
         return tuple(self.enqueue(str(url), channel='buyer', categories=(category,), markets=markets,
                                   reason='Buyer search coverage gap', counts=counts)
@@ -1365,9 +1357,9 @@ class ModelProposer:
 
 
 @contextmanager
-def _local_work(job, international):
+def _local_work(job):
     """Meter local parsing/validation as active worker time (shared accounting)."""
-    attempt = job.reserve('work', Charge(Decimal(0)), LOCAL_WORK_S, international=international)
+    attempt = job.reserve('work', Charge(Decimal(0)), LOCAL_WORK_S)
     started = time.monotonic()
     attempt.dispatch()
     try:
@@ -1415,7 +1407,7 @@ class OnboardingWorker:
     """Background onboarding. Each run() claims due leads and finishes each one.
 
     Schedule run() from the background runner (#88) with a maintenance-day ledger. Each claim
-    is its own maintenance job, so the daily maintenance, international and project limits,
+    is its own maintenance job, so the daily maintenance and project limits,
     the probe's source limits and the shared source leases all apply. The worker renews its
     lease before probing, before proposing and before writing anything, and stops as soon as
     another worker has taken the lead over.
@@ -1444,22 +1436,24 @@ class OnboardingWorker:
     def onboard(self, lease: Lease) -> LeadOutcome:
         record = lease.record
         now = _now(self.clock)
-        international = any(market != 'LB' for market in record.markets)
         try:
+            if 'LB' not in record.markets:
+                return self.queue.fail(lease, self._failure(lease, 'unsafe_scope',
+                    'Retailer onboarding is limited to Lebanon', now))
+            if record.markets != CONFIGURED_MARKETS:
+                lease = replace(lease, record=record.model_copy(update={'markets': CONFIGURED_MARKETS}))
             try:
-                # One job per claim: per-run source counts never carry over from a deferred try,
-                # and a lead whose markets grew opens a job with the matching scope.
-                scope = 'international' if international else 'domestic'
+                # Each claim gets its own per-run source counts after a deferral.
                 job = self.ledger.open_job(f'onboarding:{record.lead_id}:{lease.attempt}:{now.date().isoformat()}:'
-                                           f'{scope}:{lease.token[:8]}', 'maintenance', international=international)
-                return self._onboard(lease, job, international, now)
+                                           f'domestic:{lease.token[:8]}', 'maintenance')
+                return self._onboard(lease, job, now)
             except BudgetDenied as exc:
                 return self.queue.defer(lease, f'Shared budget refused onboarding work: {exc}',
-                                        until=self._resume_at(now, international))
+                                        until=self._resume_at(now))
         except LeaseLost:
             return LeadOutcome(lease.lead_id, 'lease_lost', 'Another worker resumed this lead', record.source_id)
 
-    def _resume_at(self, now, international):
+    def _resume_at(self, now):
         """The next UTC day when today's maintenance or the project allowance is spent or the
         campaign is stopped; otherwise a short pause, because a busy slot or source lease frees up."""
         tomorrow = (now + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
@@ -1468,8 +1462,6 @@ class OnboardingWorker:
             return tomorrow
         base = 'maintenance:' + now.date().isoformat()
         scopes = [('project', 'project'), (base, 'maintenance')]
-        if international:
-            scopes.append((base + ':international', 'maintenance:international'))
         # The next probe needs one fetch and up to 15 s; local work needs 10 s of the active-time cap.
         need = (1, 0, 15_000, Decimal('0.01'), 0)
         for key, profile in scopes:
@@ -1493,7 +1485,7 @@ class OnboardingWorker:
         return (self.directory.get(record.retailer_id) if record.retailer_id else None) \
             or self.directory.get(source_id)
 
-    def _onboard(self, lease, job, international, now):
+    def _onboard(self, lease, job, now):
         record = lease.record
         source_id = self.registry.source_id_for(record.lead_id)
         existing = self._directory_record(record, source_id)
@@ -1530,8 +1522,7 @@ class OnboardingWorker:
         try:
             for url in targets:
                 try:
-                    outcome = retrieve_page(gate, job, source_id, url, fallback=fallback,
-                                            international=international)
+                    outcome = retrieve_page(gate, job, source_id, url, fallback=fallback)
                 except BudgetDenied:
                     raise
                 except Exception as exc:  # the managed fallback raises; its attempt is already metered
@@ -1553,7 +1544,7 @@ class OnboardingWorker:
             return self.queue.retry(lease, failure) if transient else self.queue.fail(lease, failure)
         facts = {}
         for url, outcome in ok.items():
-            with _local_work(job, international):
+            with _local_work(job):
                 facts[url] = read_page_facts(outcome.body)
         summaries = tuple(summarize(url, pages[url], facts.get(url)) for url in targets)
         partial = any(_transient(o) for o in pages.values())
@@ -1564,7 +1555,7 @@ class OnboardingWorker:
             failure = self._failure(lease, 'proposal', exc, now, targets, pages)
             passing = partial or isinstance(exc, ProposalUnavailable)
             return self.queue.retry(lease, failure) if passing else self.queue.fail(lease, failure)
-        with _local_work(job, international):
+        with _local_work(job):
             validation = validate_configuration(proposal, pages, source_id=source_id, host=host,
                                                 market_hints=record.markets, categories=record.categories,
                                                 processing=self.processing)
@@ -1641,7 +1632,7 @@ class OnboardingWorker:
             seller_identity='retailer', capabilities=[], coverage=coverage, observations=observations,
             product_urls=list(dict.fromkeys([*base.get('product_urls', []),
                                              *(s['url'] for s in validation.samples)]))[:20],
-            background_collection=True, role='domestic' if validation.market == 'LB' else 'direct_international')))
+            background_collection=True, role='domestic')))
 
     def recheck(self, source_id) -> tuple[tuple[str, str], ...]:
         """Re-read recorded samples through the live registry and suspend what no longer validates.
@@ -1650,21 +1641,20 @@ class OnboardingWorker:
         'deferred'. Transient failures, budget refusals and removed listings (404/410) never
         suspend a capability; too few remaining samples ask for re-sampling instead.
         """
-        active = self.registry.activations(source_id=source_id, status='active')
+        active = [a for a in self.registry.activations(source_id=source_id, status='active') if a.market == 'LB']
         if not active:
             return ()
         now = _now(self.clock)
-        international = active[0].market != 'LB'
         try:
             job = self.ledger.open_job(f'onboarding-recheck:{source_id}:{uuid.uuid4().hex[:8]}:'
-                                       f'{now.date().isoformat()}', 'maintenance', international=international)
+                                       f'{now.date().isoformat()}', 'maintenance')
             samples = list({(s['url'], s['sku']): s for a in active for s in a.samples}.values())[:MAX_SAMPLES]
             gate = self.gate_factory(self.registry)
             pages = {}
             for url in dict.fromkeys(s['url'] for s in samples):
                 rule = next((a.capability for a in active if a.capability.matches(url)), None)
                 if rule is not None:
-                    pages[url] = gate.fetch(job.source_budget(self.registry, international=international),
+                    pages[url] = gate.fetch(job.source_budget(self.registry),
                                             source_id, url, expect='html', capability=CapabilityRef(
                                                 capability_id=rule.capability_id, version=rule.version))
             if any(_budget_refused(o) for o in pages.values()):
@@ -1692,7 +1682,7 @@ class OnboardingWorker:
                         operations=(OperationProposal(operation=cap.operation, path=cap.path,
                                                       trailing_slash=cap.trailing_slash, query=cap.query),),
                         policy_element_id=activation.scope.get('policy_element_id'))
-                    with _local_work(job, international):
+                    with _local_work(job):
                         validation = validate_configuration(
                             proposal, pages, source_id=source_id, host=cap.host, market_hints=(activation.market,),
                             categories=(activation.category,), processing=self.processing)

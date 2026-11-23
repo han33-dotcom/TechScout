@@ -4,8 +4,7 @@ Existing stores, CLI runs and stored records use this version. New consumers can
 
 Task 2 defines the shared data format; the shopping workflow built on it is described
 under [Shopping workflow](#shopping-workflow). The first workflow is exact **new smartphones in Lebanon**, with
-pickup or domestic delivery. Wider electronics and international comparison remain
-the product vision. Public website retrieval is assumed unrestricted for this project.
+pickup or domestic delivery. The current product covers five electronics categories in the same domestic market. Public website retrieval is assumed unrestricted for this project.
 
 The buyer specifies manufacturer/model, storage, allowed colors, SIM configuration,
 regions, budget/currency, payment basis and city. `any` explicitly means no preference

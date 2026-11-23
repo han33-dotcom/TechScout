@@ -97,7 +97,6 @@ class DirectoryRecord(Model):
 class DirectoryQuery(Model):
     category: Category
     purchase_markets: Annotated[tuple[Country,...],Field(min_length=1,max_length=10)] = ('LB',)
-    allow_international: bool = False
     purpose: Literal['runtime','collection'] = 'runtime'
     include_unconfigured: bool = False
     price_band: Literal['budget','midrange','premium'] | None = None
@@ -108,8 +107,8 @@ class DirectoryQuery(Model):
 
     @model_validator(mode='after')
     def explicit_market_scope(self):
-        if self.purpose == 'runtime' and not self.allow_international and any(m != 'LB' for m in self.purchase_markets):
-            raise ValueError('Foreign purchase markets require explicit opt-in')
+        if self.purchase_markets != ('LB',):
+            raise ValueError('Retailer selection is limited to Lebanon')
         if self.limit > self.candidate_limit:
             raise ValueError('Result bound exceeds candidate bound')
         return self
@@ -266,31 +265,6 @@ def import_audit(directory: Directory, *, seed_path=ROOT/'config/retailer-direct
     return changed
 
 
-def import_international(directory: Directory) -> int:
-    """Confirmed planning targets only; no retrieval or eligibility claim."""
-    targets = (
-        ('microless_uae','Microless UAE','https://global.microless.com','AE','direct_international'),
-        ('bh_us','B&H US','https://www.bhphotovideo.com','US','direct_international'),
-        ('amazon_us','Amazon US','https://www.amazon.com','US','forwarding_market'),
-        ('myus','MyUS','https://www.myus.com','US','forwarder_primary'),
-        ('stackry','Stackry','https://www.stackry.com','US','forwarder_backup'),
-        ('shop_and_ship','Shop & Ship','https://www.shopandship.com','AE','candidate'),
-    )
-    changed = 0
-    for retailer_id,name,origin,country,role in targets:
-        forwarder = role.startswith('forwarder') or retailer_id=='shop_and_ship'
-        entry = RetailerDirectoryEntry(retailer_id=retailer_id,name=name,origin=origin,
-            markets=(country,),categories=('phone','laptop','tablet','monitor','audio'),
-            discovery_status='discovered',coverage_gaps=('Planning target; retrieval, seller/route eligibility and quotes unverified.',))
-        changed += directory.upsert(DirectoryRecord(entry=entry,updated_at='2026-11-15T00:00:00Z',
-            source_id=retailer_id,source_country=country,seller_id=None if forwarder or retailer_id=='amazon_us' else retailer_id,
-            seller_identity='forwarder' if forwarder else 'marketplace' if retailer_id=='amazon_us' else 'retailer',
-            marketplace_id=retailer_id if retailer_id=='amazon_us' else None,
-            catalog_urls=() if forwarder else (origin,),policy_urls=(origin,) if forwarder else (),
-            background_collection=role!='candidate',role=role))
-    return changed
-
-
 def import_domestic_listings(directory: Directory) -> int:
     path = ROOT / 'config/domestic-listing-sellers.json'
     records = json.loads(path.read_text(encoding='utf-8'))
@@ -314,7 +288,7 @@ def main():
     storage = Storage()
     try:
         directory = Directory(storage)
-        changed = import_audit(directory) + import_domestic_listings(directory) + import_international(directory)
+        changed = import_audit(directory) + import_domestic_listings(directory)
         print(f'Imported/updated {changed} directory records; source configuration unchanged')
     finally:
         storage.engine.dispose()

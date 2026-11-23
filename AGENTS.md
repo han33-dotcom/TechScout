@@ -7,8 +7,8 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md) and the applicable task and repository i
 
 TechScout compares electronics for buyers in Lebanon. The full-product scope covers phones,
 laptops, tablets, monitors, and headphones and earbuds. Buyers can search by model or product
-link or describe their needs. Lebanon and new condition are defaults. International offers
-and other conditions require explicit opt-in. Buying takes place on the retailer's site.
+link or describe their needs. Compare offers from sellers in Lebanon for local pickup or dispatch from inside Lebanon.
+New condition is the default and other conditions require explicit opt-in. Buying takes place on the retailer's site.
 
 The [full-product backlog](https://github.com/han33-dotcom/TechScout/issues/36) defines
 implementation work and dependencies. The [v1 specification](docs/mvp-spec.md) documents

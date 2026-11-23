@@ -79,8 +79,8 @@ class DiscoveryTests(unittest.TestCase):
         foreign = request(market_scope={'include_international':True,'international_markets':['US']})
         job = self.ledger.open_job('foreign',international=True)
         provider.search(foreign,job)
-        self.assertNotIn('country',captured[1])
-        self.assertIn('US',captured[1]['query'])
+        self.assertEqual(captured[1]['country'],'lebanon')
+        self.assertEqual(captured[0]['query'],captured[1]['query'])
 
     def test_query_keeps_hard_and_preference_budget_distinct(self):
         q = search_query(request(budget={'maximum':{'amount':'1000','currency':'USD'},
@@ -111,13 +111,14 @@ class DiscoveryTests(unittest.TestCase):
         self.assertEqual(report.retailers['store-22'].status,'unchecked')
         self.assertEqual(report.coverage.qualifying,0)
 
-    def test_foreign_store_requires_opt_in_even_if_snippet_claims_lebanon(self):
+    def test_foreign_store_stays_out_of_scope_even_with_old_opt_in(self):
         lead = self.seller(market='US')
         report = self.run_discovery([lead])
         self.assertEqual(report.coverage.retrieved,0)
         self.job = self.ledger.open_job('foreign',international=True)
         report = self.run_discovery([lead],request(market_scope={'include_international':True,'international_markets':['US']}))
-        self.assertEqual(report.coverage.retrieved,1)
+        self.assertEqual(report.coverage.attempted,0)
+        self.assertEqual(self.seen,[])
 
     def test_covered_low_relevance_and_wrong_category_are_not_queried(self):
         first,second = self.seller(1),self.seller(2,score=.1)
