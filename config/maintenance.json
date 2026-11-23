@@ -1,0 +1,8 @@
+{
+  "discovery": {"interval_seconds": 86400, "pages": 2, "calls": 6, "seconds": 120, "usd": "0.25"},
+  "catalog": {"interval_seconds": 21600, "pages": 3, "calls": 8, "seconds": 180, "usd": "0.02"},
+  "offers": {"interval_seconds": 3600, "pages": 4, "calls": 10, "seconds": 240, "usd": "0.02"},
+  "manufacturer_pages": [
+    {"brand": "ASUS", "source_id": "asus_directory", "url": "https://www.asus.com/me-en/content/where-to-buy/", "section_id": "lebanon", "link_class": "partner-link"}
+  ]
+}

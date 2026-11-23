@@ -568,11 +568,14 @@ class AccountedRunBudget(RunBudget):
         self.model_seconds = model_seconds
 
     def reserve_call(self, source_id, max_seconds):
+        return self.reserve_resource(source_id, None, max_seconds)
+
+    def reserve_resource(self, source_id, url, max_seconds):
         local = super().reserve_call(source_id, max_seconds)
         if local is None:
             return None
         try:
-            shared = self.source_budget.reserve_call(source_id, max_seconds)
+            shared = self.source_budget.reserve_resource(source_id, url, max_seconds)
         except Exception:
             local.release()
             raise

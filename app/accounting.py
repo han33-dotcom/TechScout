@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from decimal import Decimal
 import math
+from hashlib import sha256
 import os
 import uuid
 
@@ -95,21 +96,30 @@ class Ledger:
                 return
             state.update(project=self.project, blocked=False, scopes={}, jobs={}, attempts={}, credits={})
 
-    def open_job(self, job_id, kind='buyer', *, international=False):
+    def open_job(self, job_id, kind='buyer', *, international=False, envelope=None):
         if not isinstance(job_id, str) or not job_id.strip() or kind not in {'buyer', 'bootstrap', 'maintenance'}:
             raise ValueError('A stable job ID and supported job kind are required')
         if type(international) is not bool:
             raise ValueError('International opt-in must be explicit')
+        if envelope is not None:
+            if (kind != 'maintenance' or set(envelope) != {'calls', 'seconds', 'usd'}
+                    or any(type(envelope[k]) is not int or envelope[k] < 1 for k in ('calls', 'seconds'))):
+                raise ValueError('Maintenance jobs need positive call and time limits')
+            envelope = {**envelope, 'usd': str(money(Decimal(envelope['usd'])))}
         with self._transaction() as (state, now):
             jobs = state['jobs']
             if job_id in jobs:
                 job = jobs[job_id]
                 if job['kind'] != kind or job['international'] != international:
                     raise BudgetDenied('A job cannot reset its scope on resume or clarification')
+                if envelope is not None and job.get('envelope') != envelope:
+                    raise BudgetDenied('A maintenance job cannot change its envelope')
             else:
                 day = datetime.fromtimestamp(now, timezone.utc).date().isoformat()
                 jobs[job_id] = dict(kind=kind, international=international, day=day,
                                     started=now, cancelled=False, final=False)
+                if envelope is not None:
+                    jobs[job_id]['envelope'] = envelope
         return Job(self, job_id)
 
     def _scope_keys(self, job_id, job, international):
@@ -123,7 +133,7 @@ class Ledger:
                 keys.append((base + ':international', job['kind'] + ':international'))
         return keys
 
-    def reserve(self, job_id, kind, charge, seconds, *, source=None, limits=None, international=False):
+    def reserve(self, job_id, kind, charge, seconds, *, source=None, limits=None, international=False, resource=None):
         if kind not in KINDS or not isinstance(charge, Charge):
             raise ValueError('A typed call kind and all-inclusive charge are required')
         cost = charge.total
@@ -154,6 +164,17 @@ class Ledger:
                     raise BudgetDenied('The 14 maintenance days are exhausted')
             attempts = state['attempts']
             live = [a for a in attempts.values() if a['status'] in {'held', 'sent'} and a['expires'] > now]
+            envelope = job.get('envelope')
+            if envelope:
+                consumed = [a for a in attempts.values() if a['job'] == job_id and a['status'] != 'released']
+                if (now + seconds > job['started'] + envelope['seconds']
+                        or sum(a['values'][4] for a in consumed) + values[4] > envelope['calls']
+                        or sum(Decimal(a['values'][3]) for a in consumed) + cost > Decimal(envelope['usd'])):
+                    raise BudgetDenied('Maintenance job envelope exhausted')
+            # The digest coordinates in-flight work without keeping buyer-supplied URLs in the ledger.
+            resource_id = sha256((source + '\n' + resource).encode()).hexdigest() if resource and source else None
+            if resource_id and any(a.get('resource') == resource_id for a in live):
+                raise BudgetDenied('Another process is fetching this resource')
             if kind == 'worker' and sum(a['kind'] == 'worker' and a['job'] == job_id for a in live) >= 3:
                 raise BudgetDenied('Three research workers already own this run')
             # Background work cannot occupy all provider slots; two slots and the
@@ -187,6 +208,8 @@ class Ledger:
                 status='held', owner=uuid.uuid4().hex, scopes=[key for key, _ in keys], values=values,
                 background=job['kind'] != 'buyer', fees={k: str(getattr(charge, k)) for k in ('provider','gateway','payment','byok')})
             owner = attempts[token]['owner']
+            if resource_id:
+                attempts[token]['resource'] = resource_id
         return Attempt(self, token, owner)
 
     @staticmethod
@@ -325,12 +348,15 @@ class SourceBudget:
         self.run_id = job.run_id
 
     def reserve_call(self, source_id, max_seconds):
+        return self.reserve_resource(source_id, None, max_seconds)
+
+    def reserve_resource(self, source_id, url, max_seconds):
         from app.contracts import SourcePolicy
         from app.source_registry import get_active_source
         policy = SourcePolicy.model_validate(get_active_source(source_id, self.registry_path))
         try:
             return SourceAttempt(self.job.reserve('retrieval', Charge(Decimal(0)), max_seconds,
-                source=source_id, limits=policy.limits, international=self.international))
+                source=source_id, limits=policy.limits, international=self.international, resource=url))
         except BudgetDenied:
             return None
 

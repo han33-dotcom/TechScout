@@ -200,6 +200,15 @@ class Corpus:
                     raise TypeError('Corpus extraction must return validated observations and passages')
                 extraction = Extraction.model_validate(extraction.model_dump(mode='json'))
                 self._validate_receipts(capture, extraction, raw)
+                for item in extraction.observations:
+                    receipt = item.evidence[0]
+                    if (receipt.field_path == 'resource.availability' and item.fact.state == 'known'
+                            and item.fact.value == 'discontinued' and receipt.scope == 'variant'
+                            and capture.key.product_id and receipt.product_id == capture.key.product_id
+                            and capture.key.variant_id and receipt.variant_id == capture.key.variant_id):
+                        db.execute(insert(corpus_retirements).values(resource_id=resource_id,
+                                   observed_at=receipt.observed_at, status='discontinued',
+                                   evidence=receipt.model_dump(mode='json')))
                 if not set(revalidate_fields) <= {item.evidence[0].field_path for item in extraction.observations}:
                     raise ValueError('Revalidation requires scoped extracted evidence for every named field')
                 previous = head.document_id if same_extractor else None

@@ -78,6 +78,7 @@ for field in ('catalog.delivery_country', 'route.origin_country'):
     _FACT_TYPES[field] = [TypeAdapter(Fact[Country])]
 _FACT_TYPES['costs.order.tax'] = [TypeAdapter(Fact[Literal['included']])]
 _FACT_TYPES['route.item_eligible'] = [TypeAdapter(Fact[bool])]
+_FACT_TYPES['resource.availability'] = [TypeAdapter(Fact[Literal['discontinued']])]
 _FACT_TYPES['costs.order.shipping'] = [TypeAdapter(Fact[Money])]
 
 
@@ -93,7 +94,8 @@ class FieldObservation(Model):
                 or any(binding(item) != binding(first) for item in self.evidence)):
             raise ValueError('Each fact needs receipts for its own uniquely scoped field')
 
-        scopes = {'price': {'variant'}, 'stock': {'variant', 'branch'}, 'purchasable': {'variant'}}
+        scopes = {'price': {'variant'}, 'stock': {'variant', 'branch'}, 'purchasable': {'variant'},
+                  'resource.availability': {'variant'}}
         if first.field_path in scopes and (
             first.scope not in scopes[first.field_path] or not first.variant_id or not first.product_id
         ):

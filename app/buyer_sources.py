@@ -125,10 +125,14 @@ class DeadlineBudget:
         self.budget, self.room, self.run_id, self.refused = budget, room, budget.run_id, 0
 
     def reserve_call(self, source_id, max_seconds):
+        return self.reserve_resource(source_id, None, max_seconds)
+
+    def reserve_resource(self, source_id, url, max_seconds):
         if self.room is not None and self.room() < max_seconds:
             self.refused += 1
             return None
-        return self.budget.reserve_call(source_id, max_seconds)
+        reserve = getattr(type(self.budget), 'reserve_resource', None)
+        return reserve(self.budget, source_id, url, max_seconds) if reserve else self.budget.reserve_call(source_id, max_seconds)
 
 
 def gate_fetcher(gate, registry_path=DEFAULT_REGISTRY):
