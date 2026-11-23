@@ -13,6 +13,14 @@ describe('comparison evidence boundaries',()=>{
   render(<Comparison workspace={workspace}/>);
   expect(screen.getAllByText('Pickup timing: Unknown').length).toBeGreaterThan(0);
  });
+ it('shows an unconfirmed dispatch origin without classifying it as international',()=>{
+  const workspace=data(),offer=workspace.current.uncertain[0].offer;
+  offer.route={kind:'direct',route_id:'unknown-origin',origin_country:'ZZ',destination:{country:'LB',city:'Beirut'},
+               item_eligible:{state:'unknown',reason:'Destination unconfirmed',evidence_ids:[]}};
+  render(<Comparison workspace={workspace}/>);
+  expect(screen.getByText(/Delivery requested to Beirut · Dispatch origin unknown/)).toBeTruthy();
+  expect(screen.queryByText(/International delivery · ZZ/)).toBeNull();
+ });
  it('sorts exact decimals including exponent notation without rounding',()=>{expect(compareDecimal('1E+3','1000.00')).toBe(0);expect(compareDecimal('1000.00000000000001','1000')).toBe(1);expect(compareDecimal('0.01','0.1')).toBe(-1)});
  it('keeps one verified result, uncertainty and previous provisional separate',()=>{
   const w=data();render(<Comparison workspace={w}/>);

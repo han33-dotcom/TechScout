@@ -555,10 +555,20 @@ class TermsTests(WriterCase):
                       'in this run at 16 Nov 2026 12:00 UTC, reported in stock at that branch when checked; not '
                       'reserved.', text)
         self.assertIn('verified total USD 925 = price USD 925; tax included; travel to the branch not included.', text)
+        self.assertIn('pickup time not published', text)
         self.assertIn('Book-Two has the lowest (USD 925); these offers differ in purchase terms: pickup or delivery.',
                       text)
         self.assertNotIn('Book-Local (Lebanon): direct delivery from Lebanon to Beirut; condition new; price and stock '
                          'checked in this run at 16 Nov 2026 12:00 UTC, reported in stock at that branch', text)
+
+    def test_unknown_dispatch_origin_is_identified_for_an_uncertain_offer(self):
+        data = snapshot()
+        offer = clone(primary(data), 'unconfirmed', name='Other shop')['offer']
+        offer['route']['origin_country'] = 'ZZ'
+        data['uncertain'] = [dict(offer=offer, reasons=['Dispatch origin was not published'])]
+        text = deterministic_explanation(context(data)).text
+        self.assertIn('delivery requested to Beirut, dispatch origin unknown', text)
+        self.assertNotIn('from ZZ', text)
 
     def test_sellers_in_different_currencies_are_not_ranked(self):
         data = snapshot()
