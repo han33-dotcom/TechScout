@@ -18,6 +18,7 @@ from app.domestic_discovery import DISCOVERY_ENV, DomesticDiscovery
 from app.embeddings import RATE_VARIABLE
 from app.inference import load_env_file
 from app.main import create_app
+from app.onboarding import ActivationRegistry
 from app.run_worker import execute_one
 from app.storage import Storage
 from eval import freeze
@@ -34,10 +35,10 @@ def cases():
     return domestic
 
 
-def priority_registry(path):
+def priority_registry(path, storage):
     audit = json.loads((ROOT/'docs/retailer-audit-2026-11-16.json').read_bytes())
     priority = {s['retailer_id'] for s in audit['retailers'] if s['priority_audit']}
-    registry = json.loads((ROOT/'config/sources.json').read_bytes())
+    registry = ActivationRegistry(storage).read_registry()
     for source in registry['sources']:
         if source['id'] not in priority and source['status'] == 'active':
             source['status'] = 'paused'
@@ -49,14 +50,17 @@ def trial(directory, request, arm, parallelism):
     registry = None
     if arm == 'priority':
         registry = directory/'priority-sources.json'
-        priority_registry(registry)
-    deps = production_dependencies(registry_base=registry,inference=pinned_inference())
+        storage = Storage()
+        try:
+            priority_registry(registry, storage)
+        finally:
+            storage.engine.dispose()
+    deps = production_dependencies(fixed_registry_path=registry,inference=pinned_inference())
     deps.research_parallelism = parallelism
     deps.versions['inference_config_sha256'] = freeze.digest(ROOT/'config/evaluation.json')
     deps.traces = directory/'traces'
     if arm == 'priority':
         deps.research.workers.domestic_tools = None
-        deps.onboarding = None
     if arm == 'outage':
         # Keep the direct source gate live. Empty search transports simulate provider loss.
         sources = deps.domestic_sources

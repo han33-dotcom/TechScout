@@ -12,7 +12,7 @@ from app.contracts_v2 import RunReference, ShoppingRequest, VerifiedOffer
 from app.directory import Directory
 from app.domestic_buyer import current_problem, domestic_assessment
 from app.domestic_buyer_sources import DomesticBuyerSources
-from app.domestic_discovery import CHANNELS, DISCOVERY_ENV, DomesticDiscovery, SearchObjective
+from app.domestic_discovery import CHANNELS, CHANNEL_LIMITS, DISCOVERY_ENV, DomesticDiscovery, SearchObjective
 from app.inference import load_env_file
 from app.onboarding import ActivationRegistry
 from app.sources import SourceGate
@@ -27,10 +27,15 @@ PAIRS = (
 )
 
 
-def measure(ledger, discovery, reader, category, model, city, query, lang, series, channels=CHANNELS):
+def measurement_id(series, category, lang, channels):
     job_id = 'development-channels:'+series+':'+category+':'+lang
     if tuple(channels) != CHANNELS:
         job_id += ':' + '-'.join(channels)
+    return job_id
+
+
+def measure(ledger, discovery, reader, category, model, city, query, lang, series, channels=CHANNELS):
+    job_id = measurement_id(series, category, lang, channels)
     job = ledger.open_job(job_id,'maintenance',envelope=dict(calls=9,seconds=110,usd='0.25'))
     with ledger._transaction() as (state, stamp):
         marks = state.setdefault('channel_calibration',{})
@@ -79,6 +84,8 @@ def main():
     args=parser.parse_args()
     if not args.series.isascii() or not args.series.replace('-','').isalnum() or len(args.series)>40:
         raise ValueError('Use a short public series identifier')
+    if len(set(args.channels)) != len(args.channels):
+        parser.error('select each discovery channel once')
     load_env_file(names=DISCOVERY_ENV)
     storage,ledger=Storage(),Ledger.configured()
     try:
@@ -89,14 +96,23 @@ def main():
         discovery=DomesticDiscovery.from_env(gate,directory,directory_defaults=defaults)
         reader=DomesticBuyerSources(storage,gate,directory)
         args.output.mkdir(parents=True,exist_ok=True)
+        # Spread paired objectives over the shared source windows, even on a paid-only rerun.
+        per_minute = 2 if 'manufacturer' in args.channels else CHANNEL_LIMITS.requests_per_minute
+        delay_seconds = 60 / per_minute + 1
+        for category, *_ in PAIRS:
+            for lang in ('en', 'ar'):
+                path = args.output / f'{category}-{lang}.json'
+                if path.exists() and json.loads(path.read_bytes()).get('job_id') != measurement_id(
+                        args.series, category, lang, args.channels):
+                    raise ValueError('Use a separate output directory for each channel series')
         for category,model,city,arabic_city in PAIRS:
             for lang,query in [('en',f'{model} retailer {city} Lebanon'),('ar',f'{model} متجر {arabic_city} لبنان')]:
                 out=args.output/(category+'-'+lang+'.json')
                 result=measure(ledger,discovery,reader,category,model,city,query,lang,args.series,args.channels)
                 out.write_text(json.dumps(result,indent=2,ensure_ascii=False),encoding='utf-8')
                 print(category,lang,[(a['channel'],a['status']) for a in result['channels']],flush=True)
-                if 'manufacturer' in args.channels and (category,lang)!=('audio','ar'):
-                    time.sleep(31)  # Reviewed ASUS limit is two reads per minute across all jobs.
+                if (category,lang) != (PAIRS[-1][0], 'ar'):
+                    time.sleep(delay_seconds)
     finally:
         storage.engine.dispose()
         ledger.storage.engine.dispose()
