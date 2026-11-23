@@ -9,6 +9,7 @@ from contextlib import redirect_stdout
 from tempfile import TemporaryDirectory
 import threading
 import unittest
+from unittest.mock import Mock, patch
 
 import httpx2
 from sqlalchemy import event
@@ -154,6 +155,40 @@ class LeadIntakeTests(OnboardingCase):
         self.assertEqual(set(state.record.hosts), {'cedartech.example', 'www.cedartech.example'})
         self.assertEqual(state.record.source_id, SOURCE_ID)
         self.assertNotIn('Scout Book', json.dumps(state.record.model_dump(mode='json')))  # no buyer text kept
+
+    def test_background_rotation_preserves_channel_attribution_in_the_onboarding_queue(self):
+        from app import discover_retailers
+        from app.domestic_discovery import DomesticDiscovery
+        from app.search_connectors import Hit, Response
+
+        connectors = {}
+        for name in ('firecrawl', 'tavily'):
+            connector = Mock(rate=Decimal('0.001'))
+            connector.quote.return_value = connector.rate
+            connector.fetch.return_value = Response((Hit(SCOUT, 'Public listing', score=.8),),
+                                                    request_id=name + '-request', units=1)
+            connectors[name] = connector
+        tools = DomesticDiscovery(self.gate(self.registry), self.directory, connectors)
+        output = io.StringIO()
+        with patch.object(discover_retailers, 'load_env_file'), \
+                patch.object(discover_retailers, 'Storage', return_value=self.storage), \
+                patch.object(discover_retailers.Ledger, 'configured', return_value=self.ledger), \
+                patch.object(discover_retailers.DomesticDiscovery, 'from_env', return_value=tools), \
+                redirect_stdout(output):
+            status = discover_retailers.main(['--job-id', 'domestic-cycle', '--query', 'حاسوب محمول',
+                '--objective', 'Find a second seller', '--language', 'ar', '--category', 'laptop',
+                '--cursor', '4', '--count', '2'])
+        self.assertEqual(status, 0)
+        result = json.loads(output.getvalue())
+        self.assertEqual(result['next_cursor'], 6)
+        self.assertEqual([a['channel'] for a in result['report']['attempts']], ['firecrawl', 'tavily'])
+        (state,) = self.queue.leads()
+        self.assertEqual(state.record.mentions, 1)
+        self.assertEqual(set(state.record.channels), {'firecrawl', 'tavily'})
+        self.assertEqual(state.record.markets, ('LB',))
+        self.assertNotIn('Find a second seller', state.record.model_dump_json())
+        self.assertEqual(self.ledger.snapshot()['jobs']['domestic-cycle']['kind'], 'maintenance')
+        self.assertFalse(self.registry.activations(status='active'))
 
     def test_unsafe_urls_are_rejected_before_storage(self):
         for url in ('http://cedartech.example/p', 'https://127.0.0.1/p', 'https://localhost.localhost/p',

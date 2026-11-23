@@ -23,7 +23,7 @@ import json
 import re
 import sys
 import time
-from typing import Annotated, Literal
+from typing import Annotated, Literal, get_args
 from urllib.parse import urlsplit
 import uuid
 
@@ -91,7 +91,7 @@ Url = Annotated[str, StringConstraints(strict=True, min_length=1, max_length=MAX
 Short = Annotated[str, StringConstraints(strict=True, strip_whitespace=True, min_length=1, max_length=200)]
 Host = Annotated[str, StringConstraints(strict=True, min_length=1, max_length=253)]
 Note = Annotated[str, StringConstraints(strict=True, max_length=500)]
-Channel = Literal['tavily', 'directory', 'buyer']
+Channel = Literal['tavily', 'serpapi', 'brave', 'manufacturer', 'firecrawl', 'directory', 'buyer']
 FailureCode = Literal['unsafe_scope', 'marketplace', 'blocked', 'transient', 'validation', 'identity',
                       'ambiguous_variant', 'no_samples', 'proposal', 'retry_limit', 'suspended',
                       'suspended_scope', 'reviewed_registry', 'needs_samples']
@@ -650,10 +650,11 @@ class OnboardingQueue:
                 + 15 * ('buyer' in record.channels) + 10 * ('directory' in record.channels))
 
     def enqueue(self, url, *, channel: Channel, categories, markets=('LB',), relevance=0.0,
-                reason, retailer_id=None, name_hint=None, counts=None) -> EnqueueResult:
+                reason, retailer_id=None, name_hint=None, counts=None, also_from=()) -> EnqueueResult:
         """Add or merge one lead. counts: configured sources per (category, market), when a
         batch already measured them; otherwise the directory is asked."""
-        if channel not in ('tavily', 'directory', 'buyer'):
+        channels = tuple(dict.fromkeys((channel, *also_from)))
+        if any(name not in get_args(Channel) for name in channels):
             raise ValueError('Unknown lead channel')
         canon = canonical(url)
         if canon is None:
@@ -692,7 +693,7 @@ class OnboardingQueue:
                 record = LeadRecord.model_validate(dict(old.model_dump(mode='json'),
                     hosts=list(dict.fromkeys((*old.hosts, host)))[:4],
                     candidate_urls=list(dict.fromkeys((*old.candidate_urls, url)))[:MAX_CANDIDATE_URLS],
-                    channels=list(dict.fromkeys((*old.channels, channel))),
+                    channels=list(dict.fromkeys((*old.channels, *channels))),
                     categories=list(dict.fromkeys((*old.categories, *categories))),
                     markets=list(dict.fromkeys((*old.markets, *markets))),
                     mentions=old.mentions + 1, relevance=max(old.relevance, float(relevance)),
@@ -704,7 +705,7 @@ class OnboardingQueue:
                 return EnqueueResult('merged', key, f'deduplicated with the {row.status} lead for this shop')
             record = LeadRecord(lead_id=key, source_id=self.registry.source_id_for(key), hosts=(host,),
                 candidate_urls=(url,),
-                channels=(channel,), categories=categories, markets=markets, retailer_id=retailer_id,
+                channels=channels, categories=categories, markets=markets, retailer_id=retailer_id,
                 name_hint=name_hint, relevance=float(relevance), reasons=(reason,))
             status = 'queued'
             if marketplace:
@@ -721,6 +722,20 @@ class OnboardingQueue:
         if marketplace:
             return EnqueueResult('excluded', key, 'marketplace or forwarder; recorded for a teammate')
         return EnqueueResult('queued', key, 'queued for background onboarding')
+
+    def enqueue_domestic(self, report, category):
+        """Queue public leads with their channels. A lead never grants source access."""
+        markets = ('LB',)
+        counts = self._coverage((category,), markets)
+        results = []
+        for lead in report.leads[:MAX_ENQUEUE]:
+            channels = tuple(dict.fromkeys(hit.channel for hit in lead.attribution))
+            score = max((hit.score for hit in lead.attribution
+                         if hit.score is not None and 0 <= hit.score <= 1), default=0.0)
+            results.append(self.enqueue(lead.url, channel=channels[0], also_from=channels[1:],
+                categories=(category,), markets=markets, counts=counts, relevance=score,
+                reason='Domestic retailer discovery'))
+        return tuple(results)
 
     def enqueue_tavily(self, leads, request: ShoppingRequest):
         """Tavily results for a request: snippets stay leads, never offer evidence."""
