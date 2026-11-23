@@ -218,7 +218,8 @@ def production_dependencies(*, require_inference=True) -> FlowDependencies:
     processing = ProcessingVersion(corpus_version=CORPUS_VERSION, index_version=CORPUS_VERSION,
                                    extraction_version=source.adapter_version(), chunk_version='none')
     load_env_file(names=DISCOVERY_ENV)
-    workers.domestic_tools = DomesticDiscovery.from_env(gate, workers.directory)
+    reviewed = json.loads((DEFAULT_REGISTRY.parent/'maintenance.json').read_text(encoding='utf-8'))
+    workers.domestic_tools = DomesticDiscovery.from_env(gate, workers.directory, directory_defaults=reviewed['manufacturer_pages'])
     research = ResearchSetup(workers, processing, listing_resources)
     versions = dict(code=_code_version(), inference_config_sha256=_sha256(path),
                     source_registry_sha256=_sha256(Path(DEFAULT_REGISTRY)),

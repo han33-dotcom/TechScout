@@ -261,6 +261,36 @@ class LeadIntakeTests(OnboardingCase):
 
 
 class ActivationTests(OnboardingCase):
+    def test_newly_activated_shop_can_supply_a_domestic_finalist_without_a_registry_edit(self):
+        from app.domestic_buyer import current_problem, domestic_assessment
+        from app.domestic_buyer_sources import DomesticBuyerSources
+        outcome, = self.onboard()
+        self.assertEqual(outcome.status,'active')
+        url = SHOP+'/product/new-book'
+        page = {'@type':'Product','name':'Scout Book','brand':'Example','model':'Scout Book',
+                'category':'laptop','sku':'SB-NEW','productID':'scout-new','url':url,
+                'additionalProperty':[{'name':'RAM','value':'16 GB'},{'name':'Purchasable','value':True}],
+                'offers':{'@type':'Offer','price':'900.25','priceCurrency':'USD',
+                    'availability':'https://schema.org/InStock','itemCondition':'https://schema.org/NewCondition',
+                    'seller':{'name':'Cedar Tech'},'priceSpecification':{'valueAddedTaxIncluded':True},
+                    'shippingDetails':{'shippingOrigin':{'addressCountry':'LB'},'shippingDestination':{'addressCountry':'LB'},
+                                       'shippingRate':{'currency':'USD','value':'10'}}}}
+        self.shop.pages[url] = ('<script type="application/ld+json">'+json.dumps(page)+'</script>').encode()
+        self.now += timedelta(minutes=2)
+        job = self.ledger.open_job('later-finalist')
+        job.enter_final_phase()
+        req = request(intent=dict(kind='product_link',url=url))
+        run = RunReference(run_id=job.run_id,run_revision=1,request_id=req.request_id,request_revision=req.revision)
+        reader = DomesticBuyerSources(self.storage,self.gate(self.registry),self.directory)
+        read = reader.read(req,url,job,run,room=lambda:30)
+        self.assertEqual(read.status,'ok',read.reason)
+        offer, = read.offers
+        assessment = domestic_assessment(req,offer,self.now)
+        self.assertIsNone(current_problem(offer,assessment,read,run,self.now,self.now))
+        verified = VerifiedOffer(offer=offer,cost=assessment.cost,verification=dict(run=run,checked_at=self.now))
+        self.assertEqual(str(verified.cost.total.amount),'910.25')
+        self.assertEqual(json.loads(self.base.read_bytes())['sources'],[])
+
     def test_tavily_lead_activates_and_a_later_buyer_search_verifies_its_offer(self):
         # A buyer search finds only an unconfigured lead and queues it for background onboarding.
         tavily_calls = []
