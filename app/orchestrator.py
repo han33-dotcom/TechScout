@@ -8,6 +8,7 @@ from pydantic import Field
 from app.contract_interfaces import AgentTask, PlanningContext, ResearchContext
 from app.contracts import Model, Text
 from app.contracts_v2 import Clarification, FindingClaim
+from app.domestic_discovery import SearchObjective
 from app.evidence_critique import Critique, CritiqueChoice, PROMPT as CRITIQUE_PROMPT, inspect_evidence
 from app.model_provider import JobBudget
 from app.research_workers import Report, Work
@@ -15,6 +16,7 @@ from app.research_workers import Report, Work
 
 class Investigation(Model):
     question: Text
+    search: SearchObjective | None = None
     resources: Annotated[list[Annotated[int, Field(strict=True, ge=0)]], Field(max_length=20)]
 
 
@@ -54,6 +56,11 @@ Preserve every hard constraint, approximate budget, preference and purchase mark
 Ask a clarification only when its answer changes the candidate set. For an engineering
 laptop ask about software only when unknown software compatibility changes suitability.
 Use available answers. On a follow-up investigate only material gaps or conflicting facts.
+For a domestic evidence gap that warrants web discovery, supply a short public search query,
+its objective, channel and language. Use null when the catalog or a direct read suffices.
+Start with Tavily. Use previous search attempts and seller leads to change the query,
+language or channel when coverage repeats. A discovered seller still needs verification.
+Exclude private buyer details from queries.
 Return an empty investigation list when additional research would not help."""
 
 
@@ -101,6 +108,10 @@ def investigate(context: PlanningContext, *, job, workers, provider, resources, 
             answers=list(answers), remaining_tasks=3-used,
             findings=[f.model_dump(mode='json') for f in findings],
             worker_gaps=list(gaps),
+            previous_searches=[dict(
+                attempts=[(a.channel, a.status) for a in r.discovery_report.attempts],
+                sellers=[lead.seller_key for lead in r.discovery_report.leads[:20]])
+                for r in reports if r.discovery_report is not None],
             resources=[r.model_dump(mode='json') for r in resources]), Proposal)
         if proposal is None:
             break
@@ -123,7 +134,7 @@ def investigate(context: PlanningContext, *, job, workers, provider, resources, 
                 permitted_tools=('corpus', 'discover', 'fetch', 'model'))
             batch.append(Work(context=ResearchContext(task=task, request=request),
                 resources=tuple(resources[i] for i in dict.fromkeys(inquiry.resources)),
-                processing=processing))
+                processing=processing, search=inquiry.search))
         timeout = min(60, remaining())
         if not batch or timeout <= 0 or job.cancelled:
             break

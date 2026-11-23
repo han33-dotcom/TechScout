@@ -1,6 +1,6 @@
 """Evidence-first research roles. The controller supplies scope; models only order it."""
 from concurrent.futures import Future
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from decimal import Decimal
 from threading import Lock
@@ -8,6 +8,7 @@ from typing import Annotated, Literal
 
 from pydantic import Field
 
+from app.domestic_discovery import CHANNELS, DomesticDiscovery, SearchObjective, SearchReport
 from app.accounting import BudgetDenied, SourceBudget
 from app.contract_interfaces import ResearchContext
 from app.contracts import Model, Text
@@ -36,6 +37,7 @@ class Work(Model):
     context: ResearchContext
     resources: Annotated[tuple[Resource, ...], Field(max_length=20)]
     processing: ProcessingVersion
+    search: SearchObjective | None = None
     max_turns: Annotated[int, Field(strict=True, ge=1, le=6)] = 3
 
 
@@ -58,6 +60,7 @@ class Report(Model):
     evidence: tuple[Evidence, ...] = ()
     leads: tuple[Text, ...] = ()
     trace: tuple[Step, ...] = ()
+    discovery_report: SearchReport | None = None
 
 
 class Choice(Model):
@@ -127,6 +130,7 @@ class ResearchWorkers:
     gate: object
     profiles: dict[str, PageProfile]
     provider: object = None
+    domestic_tools: DomesticDiscovery | None = field(default=None, kw_only=True)
     discovery: object = None  # Tavily-compatible search port; results remain leads.
     fallback: object = None
     page_reader: object = read_page
@@ -278,9 +282,14 @@ class ResearchWorkers:
                     nonlocal semantic_gap
                     if job.cancelled:
                         raise BudgetDenied('Research cancelled')
-                    page = self.page_reader(self.gate,job,key,profile,work.processing,
-                        origin='runtime',capability=resource.capability,fallback=self.fallback,
-                        international=resource.content=='listing' and self.directory.get(resource.retailer_id).source_country!='LB')
+                    international = resource.content == 'listing' and self.directory.get(resource.retailer_id).source_country != 'LB'
+                    if self.domestic_tools is not None and not international:
+                        page = self.domestic_tools.read(job, key, profile, work.processing,
+                            origin='runtime', capability=resource.capability)
+                    else:
+                        page = self.page_reader(self.gate, job, key, profile, work.processing,
+                            origin='runtime', capability=resource.capability, fallback=self.fallback,
+                            international=international)
                     if page.capture is None or page.extraction is None:
                         raise ValueError('No usable source response')
                     if job.cancelled:
@@ -303,7 +312,15 @@ class ResearchWorkers:
                 gaps.append(f'{key.source_id}: acquisition failed ({type(exc).__name__})')
         for resource, missing in pending:
             gaps.extend(f'{resource.key.source_id}: {field} not investigated' for field in sorted(missing))
-        if gaps and self.discovery and 'discover' in permitted and not job.cancelled:
+        discovery_report = None
+        can_search = gaps and {'corpus', 'discover'} <= permitted and not job.cancelled
+        if can_search and self.domestic_tools is not None and work.search is not None and not request.market_scope.include_international:
+            alternatives = tuple(c for c in CHANNELS if c != work.search.channel)
+            discovery_report = self.domestic_tools.search(work.search, job, alternatives=alternatives)
+            leads.extend(lead.url for lead in discovery_report.leads)
+            for attempt in discovery_report.attempts:
+                trace.append(Step(action='discover', status=attempt.status, source_id=attempt.channel))
+        elif can_search and self.discovery:
             try:
                 leads.extend(lead.url for lead in self.discovery.search(request,job,max_results=20))
                 trace.append(Step(action='discover',status='leads only; technical configuration required'))
@@ -323,4 +340,4 @@ class ResearchWorkers:
         return Report(finding=AgentFinding(finding_id=task.task_id+':research',task_id=task.task_id,
             run=task.run,role='researcher',claims=tuple(claims),gaps=tuple(dict.fromkeys(gaps))),
             observations=tuple(observations.values()),evidence=tuple(receipts.values()),
-            leads=tuple(dict.fromkeys(leads))[:20],trace=tuple(trace))
+            leads=tuple(dict.fromkeys(leads))[:20],trace=tuple(trace), discovery_report=discovery_report)

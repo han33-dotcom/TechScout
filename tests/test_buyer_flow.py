@@ -700,6 +700,7 @@ class ScopeAndConfigurationTests(FlowCase):
         from app.embeddings import OpenRouterEmbeddings
         self.assertIsInstance(deps.research.workers.embeddings.provider, OpenRouterEmbeddings)
         self.assertEqual(deps.research.workers.profiles, {})
+        self.assertIs(deps.research.workers.domestic_tools.directory, deps.research.workers.directory)
         self.assertIsNone(deps.research.workers.provider)  # the flow injects the traced OpenRouter provider
         self.assertEqual(deps.versions['source']['adapter_version'], 'class_cellulars/1')
         self.assertEqual(len(deps.versions['inference_config_sha256']), 64)

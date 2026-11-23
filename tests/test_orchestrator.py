@@ -6,6 +6,8 @@ from unittest.mock import Mock
 from app.accounting import Charge, Ledger
 from app.contract_interfaces import PlanningContext
 from app.contracts_v2 import AgentFinding, FindingClaim, ShoppingRequest
+from app.domestic_discovery import DomesticDiscovery
+from app.search_connectors import Hit, Response
 from app.evidence_critique import CritiqueChoice
 from app.model_provider import ModelResult, OpenAIProvider
 from app.orchestrator import Proposal, Selection, investigate
@@ -39,6 +41,30 @@ class OrchestratorTests(unittest.TestCase):
         self.assertTrue(result.candidates[0].supporting_specifications[0].fact.evidence_ids)
         self.assertEqual(len(result.reports),1)
         self.assertIn('Candidate lacks matching specification evidence',result.gaps)
+
+    def test_planner_can_revise_domestic_query_language_and_channel_from_previous_results(self):
+        workers = self.fixture.workers
+        connectors = {}
+        for channel in ('tavily', 'brave'):
+            connector = Mock(rate=Decimal('0.001'))
+            connector.quote.return_value = connector.rate
+            connector.fetch.return_value = Response((Hit('https://shop.example/laptop', 'Laptop'),),
+                                                     request_id=channel + '-id', units=1)
+            connectors[channel] = connector
+        workers.domestic_tools = DomesticDiscovery(workers.gate, workers.directory, connectors)
+        first = Proposal(investigations=[dict(question='Who sells this laptop?', resources=[],
+            search=dict(query='Lebanon university laptop', objective='Find a domestic seller'))],
+            clarification=None)
+        second = Proposal(investigations=[dict(question='Is there a second seller?', resources=[],
+            search=dict(query='حاسوب محمول بيروت', objective='Find another seller',
+                        channel='brave', language='ar'))], clarification=None)
+        result = self.investigate(first, second, CritiqueChoice(issue_index=None), resources=())
+        previous = self.provider.generate.call_args_list[1].args[1]['previous_searches']
+        self.assertEqual(previous, [dict(attempts=[('tavily', 'ok')], sellers=['host:shop.example'])])
+        self.assertEqual([r.discovery_report.attempts[0].channel for r in result.reports], ['tavily', 'brave'])
+        self.assertEqual(connectors['brave'].fetch.call_args.args[0].language, 'ar')
+        self.assertFalse(result.candidates)
+        self.assertTrue(all(not report.finding.claims for report in result.reports))
 
     def test_clarification_only_for_unanswered_needs(self):
         request = ShoppingRequest(request_id=self.context.run.request_id,

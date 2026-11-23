@@ -17,9 +17,39 @@ def post_json(endpoint, api_key, payload, *, transport=None, seconds=15, max_byt
         if not isinstance(name, str) or not isinstance(value, str) or name.lower() in _RESERVED_HEADERS:
             raise ValueError('Extra headers cannot replace credentials or encoding')
         sent[name] = value
+    body, _ = request_json('POST', endpoint, headers=sent, payload=payload, transport=transport,
+                           seconds=seconds, max_bytes=max_bytes, parse_float=parse_float)
+    return body
+
+
+class _QueryTransport(httpx2.BaseTransport):
+    """Apply secret or buyer-derived query parameters only to the on-wire request.
+
+    The client logs its own request URL at INFO, including a SerpApi key supplied there.
+    Its request, exceptions and redirect history should see only the fixed endpoint.
+    """
+    def __init__(self, inner, params):
+        self.inner = inner if inner is not None else httpx2.HTTPTransport()
+        self.params = params
+
+    def handle_request(self, request):
+        wire = httpx2.Request(request.method, request.url.copy_merge_params(self.params),
+                              headers=request.headers, stream=request.stream, extensions=request.extensions)
+        return self.inner.handle_request(wire)
+
+    def close(self):
+        self.inner.close()
+
+
+def request_json(method, endpoint, *, headers, payload=None, params=None, transport=None,
+                 seconds=15, max_bytes=2_097_152, parse_float=None):
+    """Bound a single provider exchange and expose its response headers for attribution."""
+    sent = {**headers, 'Accept-Encoding': 'identity'}
     deadline = time.monotonic() + seconds
+    if params is not None:
+        transport = _QueryTransport(transport, params)
     with httpx2.Client(transport=transport, timeout=min(5, seconds), follow_redirects=False) as client:
-        with client.stream('POST', endpoint, headers=sent, json=payload) as response:
+        with client.stream(method, endpoint, headers=sent, json=payload) as response:
             response.raise_for_status()
             if response.headers.get('content-encoding', 'identity') != 'identity':
                 raise ValueError('Unexpected provider response encoding')
@@ -34,5 +64,6 @@ def post_json(endpoint, api_key, payload, *, transport=None, seconds=15, max_byt
                     raise ValueError('Provider response exceeded its size bound')
             if time.monotonic() >= deadline:
                 raise TimeoutError('Provider deadline exceeded')
-            return json.loads(body, parse_float=parse_float,
+            data = json.loads(body, parse_float=parse_float,
                               parse_constant=lambda _: (_ for _ in ()).throw(ValueError('Nonfinite JSON')))
+            return data, response.headers
