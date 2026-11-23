@@ -18,13 +18,15 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app import contracts_v2 as v2
 from app.accounting import BudgetDenied, Charge
+from app.adapters.woocommerce import read_page as read_woo_page
 from app.buyer_sources import DeadlineBudget
 from app.corpus_contracts import DocumentCapture, ProcessingVersion, ResourceKey
 from app.directory import DirectoryRecord
 from app.domestic_catalog import DomesticCatalog, exact_variant_key, extract_listing
-from app.domestic_retailer_profiles import extract_dispatch_membership
+from app.domestic_retailer_profiles import HOSTS as SHOPIFY_VARIANT_STORES, extract_dispatch_membership
 from app.extraction import _HTML, _objects, _unique_pairs
 from app.firecrawl import retrieve_page
+from app.identity import changed_listing_configuration
 from app.onboarding import CATEGORY_WORDS, canonical
 from app.source_capabilities import CapabilityRef
 from app.source_registry import load_registry
@@ -171,43 +173,98 @@ def _text(value):
     return value.strip() if isinstance(value, str) and 0 < len(value.strip()) <= 256 else None
 
 
-def _page_listings(outcome, record, category):
-    """Select the product described by this URL, never a recommendation embedded alongside it."""
+def _product_nodes(outcome):
     parser = _HTML(None)
     parser.feed(outcome.body.decode('utf-8'))
     if len(parser.scripts) > 50:
-        return ()
-    found = {}
+        return
     for script in parser.scripts:
         try:
             block = json.loads(script, parse_float=Decimal, object_pairs_hook=_unique_pairs)
-            products = [p for _, p in _objects(block) if p.get('@type') == 'Product']
+            yield from (p for _, p in _objects(block) if p.get('@type') in ('Product', 'ProductGroup'))
         except (ValueError, RecursionError):
             continue
-        for product in products:
-            urls = [value for field in ('url', '@id') if isinstance(value := product.get(field), str)]
-            if not urls or any(urldefrag(u).url not in (outcome.origin_url, outcome.final_url) for u in urls):
-                continue
-            stated = _text(product.get('category')) or ''
-            if {key for key, pattern in CATEGORY_WORDS.items() if pattern.search(stated)} != {category}:
-                continue
+
+
+def _linked_skus(outcome, products):
+    """Derive all current selections for the supplied link, independently of any seeded SKU."""
+    urls = {outcome.origin_url, outcome.final_url}
+    bare = not urlsplit(outcome.origin_url).query
+    found = set()
+
+    def identifies_page(ref):
+        if not isinstance(ref, str):
+            return False
+        target = urldefrag(ref).url
+        return target in urls or (bare and target.partition('?')[0] in urls)
+
+    def collect(product):
+        if not isinstance(product, dict):
+            found.add(None)
+            return
+        offers = product.get('offers', ())
+        offers = offers if isinstance(offers, list) else [offers]
+        if outcome.source_id in SHOPIFY_VARIANT_STORES:
+            matched = False
+            for offer in offers:
+                url = offer.get('url') if isinstance(offer, dict) else None
+                if identifies_page(url):
+                    key, _, value = urlsplit(url).query.partition('=')
+                    found.add(value if key == 'variant' and value.isdecimal() else None)
+                    matched = True
+            if bare and not matched:
+                found.add(None)
+        else:
             sku = product.get('sku')
-            maker = _text(product.get('brand', product.get('manufacturer')))
-            model = _text(product.get('model')) or _text(product.get('name'))
-            if type(sku) not in (str, int) or not 0 < len(str(sku).strip()) <= 128 or not maker or not model:
-                continue
-            sku = str(sku).strip()
-            product_id = product.get('productID', sku)
-            if type(product_id) not in (str, int) or not 0 < len(str(product_id).strip()) <= 128:
-                continue
-            item = _Listing(record.source_id, record.entry.retailer_id, record.seller_id, record.entry.name,
-                            tuple(record.entry.aliases), outcome.origin_url, str(product_id).strip(),
-                            sku, category, maker, model)
-            if sku in found and found[sku] != item:
-                return ()
-            found[sku] = item
-            if len(found) > 20:
-                return ()
+            found.add(str(sku).strip() if type(sku) in (str, int) and str(sku).strip() else None)
+            found.update(str(offer['sku']) for offer in offers if isinstance(offer, dict)
+                         and offer.get('sku') is not None and (bare or identifies_page(offer.get('url'))))
+
+    for product in products:
+        offers = product.get('offers', ())
+        offers = offers if isinstance(offers, list) else [offers]
+        refs = [product.get('url'), product.get('@id'),
+                *(offer.get('url') for offer in offers if isinstance(offer, dict))]
+        if not any(identifies_page(ref) for ref in refs):
+            continue
+        if product.get('@type') == 'ProductGroup':
+            members = product.get('hasVariant')
+            for member in members if isinstance(members, list) else [members]:
+                collect(member)
+        else:
+            collect(product)
+    return found
+
+
+def _page_listings(outcome, record, category, products):
+    """Select the product described by this URL, never a recommendation embedded alongside it."""
+    found = {}
+    for product in products:
+        if product.get('@type') != 'Product':
+            continue
+        urls = [value for field in ('url', '@id') if isinstance(value := product.get(field), str)]
+        if not urls or any(urldefrag(u).url not in (outcome.origin_url, outcome.final_url) for u in urls):
+            continue
+        stated = _text(product.get('category')) or ''
+        if {key for key, pattern in CATEGORY_WORDS.items() if pattern.search(stated)} != {category}:
+            continue
+        sku = product.get('sku')
+        maker = _text(product.get('brand', product.get('manufacturer')))
+        model = _text(product.get('model')) or _text(product.get('name'))
+        if type(sku) not in (str, int) or not 0 < len(str(sku).strip()) <= 128 or not maker or not model:
+            continue
+        sku = str(sku).strip()
+        product_id = product.get('productID', sku)
+        if type(product_id) not in (str, int) or not 0 < len(str(product_id).strip()) <= 128:
+            continue
+        item = _Listing(record.source_id, record.entry.retailer_id, record.seller_id, record.entry.name,
+                        tuple(record.entry.aliases), outcome.origin_url, str(product_id).strip(),
+                        sku, category, maker, model)
+        if sku in found and found[sku] != item:
+            return ()
+        found[sku] = item
+        if len(found) > 20:
+            return ()
     return tuple(found.values())
 
 
@@ -302,9 +359,22 @@ class DomesticBuyerSources:
             started = time.monotonic()
             work.dispatch()
             try:
-                listings = selected or _page_listings(outcome, owner, category)
+                is_link = isinstance(request.intent, v2.LinkIntent)
+                products = tuple(_product_nodes(outcome)) if is_link or not selected else ()
+                linked = _linked_skus(outcome, products) if is_link else None
+                listings = selected or _page_listings(outcome, owner, category, products)
                 offers = []
                 for item in listings:
+                    if (is_link and not urlsplit(url).query and linked == {item.sku}
+                            and b'variations_form' in outcome.body):
+                        page, problem = read_woo_page(outcome, item.product_id)
+                        choices = page.items or {}
+                        if (problem or len(choices) != 1 or not all(
+                                item.sku in (variant_id, entry.data.get('sku'))
+                                for variant_id, entries in choices.items() for entry in entries)):
+                            linked.add(None)
+                    if linked is not None and linked != {item.sku}:
+                        continue
                     if (item.source_id, item.seller_id, item.retailer_id) != (
                             source_id, owner.seller_id, owner.entry.retailer_id):
                         continue
@@ -317,7 +387,7 @@ class DomesticBuyerSources:
                             'variant.product.manufacturer', 'variant.product.model')):
                         continue
                     offer = _offer(item, fields, request.fulfillment.destination, current=True)
-                    if earlier and self._changed_variant(earlier, offer):
+                    if earlier and changed_listing_configuration(earlier, offer):
                         continue
                     if all(e.run == run and (e.response_sha256, e.observed_at) in replies for e in offer.evidence):
                         offers.append(offer)
@@ -329,11 +399,11 @@ class DomesticBuyerSources:
         except (ValueError, ArithmeticError, RecursionError, httpx2.HTTPError, TimeoutError):
             return ReadResult(source_id, replies=replies, status='failed',
                               reason='The listing could not be read for the selected product')
+        if is_link and (len(linked) != 1 or None in linked):
+            return ReadResult(source_id, replies=replies, status='failed',
+                              reason='The current product link does not identify one SKU. Select a variant on the retailer page.')
         if not offers:
             return ReadResult(source_id, replies=replies, status='failed', reason='No matching SKU on the current listing')
-        if isinstance(request.intent, v2.LinkIntent) and earlier is None and len(offers) > 1:
-            return ReadResult(source_id, replies=replies, status='failed',
-                              reason='The product link does not select one of the available SKUs')
         offers, dispatch_replies = self._dispatch(selected, offers, bounded, run, room)
         return ReadResult(source_id, tuple(offers), replies | dispatch_replies, dispatch_replies=dispatch_replies)
 
@@ -390,22 +460,3 @@ class DomesticBuyerSources:
         except (PermissionError, ValueError, httpx2.HTTPError, TimeoutError):
             pass
         return offers, frozenset()
-
-    @staticmethod
-    def _changed_variant(previous, current):
-        """An unchanged shop SKU cannot override a newly conflicting model or configuration."""
-        first, second = previous.variant, current.variant
-        if first.variant_id != second.variant_id and any(
-                marker in first.variant_id and marker in second.variant_id for marker in (':gtin:', ':mpn:', ':configuration:')):
-            return True
-        if (first.product.manufacturer.casefold(), first.product.model.casefold()) != (
-                second.product.manufacturer.casefold(), second.product.model.casefold()):
-            return True
-        for name in ('color', *type(first.specs).model_fields):
-            if name == 'category':
-                continue
-            left = first.color if name == 'color' else getattr(first.specs, name)
-            right = second.color if name == 'color' else getattr(second.specs, name, None)
-            if left and right and left.state == right.state == 'known' and left.value != right.value:
-                return True
-        return False

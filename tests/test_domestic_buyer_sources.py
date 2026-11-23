@@ -94,7 +94,7 @@ class DomesticBuyerSourceTests(unittest.TestCase):
         shipping, = (cost for cost in offer.costs if cost.kind == 'shipping')
         self.assertEqual(str(shipping.amount.amount), '5.40')
 
-    def test_current_sku_refresh_never_reuses_an_earlier_price_or_stock(self):
+    def seed_laptop(self):
         descriptor = _Listing('store-0', 'store-0', 'store-0', 'store-0', (), self.new_url,
                               'X', 'X-16', 'laptop', 'Lenovo', 'ThinkPad')
         old_body = self.page(self.product)
@@ -105,6 +105,28 @@ class DomesticBuyerSourceTests(unittest.TestCase):
             visibility='public', origin='bootstrap', observed_at=START, checked_at=START, body=old_body,
             relevant_content=old_body, processing=_RUNTIME)
         self.corpus.ingest(capture, lambda page: extract_listing(page, descriptor, destination=destination))
+        return old_body
+
+    def test_bare_product_link_with_one_seed_cannot_select_among_multiple_live_skus(self):
+        self.seed_laptop()
+        self.request = fixtures.request(intent={'kind':'product_link', 'url':self.new_url})
+        historical, = self.sources.lookup(self.request)
+        other = dict(self.product, sku='X-32')
+        # The other SKU is still a choice when it lacks a price or enough facts to build an offer.
+        other.pop('brand')
+        other.pop('offers')
+        for earlier in (None, historical):
+            with self.subTest(held_catalog_sku=bool(earlier)):
+                self.sequence.append(self.page([self.product, other]))
+                result = self.read(earlier=earlier)
+                self.assertEqual((result.status, result.offers), ('failed', ()))
+                self.assertIn('Select a variant', result.reason)
+        self.sequence.append(self.page(self.product) +
+            b'<form class="variations_form" data-product_id="X" data-product_variations="false"></form>')
+        self.assertIn('Select a variant', self.read(earlier=historical).reason)
+
+    def test_current_sku_refresh_never_reuses_an_earlier_price_or_stock(self):
+        old_body = self.seed_laptop()
         historical, = self.sources.lookup(self.request)
         self.assertTrue(all(e.run is None for e in historical.evidence))
         self.assertEqual(self.seen, [])
