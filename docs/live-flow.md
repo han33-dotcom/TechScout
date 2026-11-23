@@ -1,12 +1,21 @@
 # First browser-to-result flow and live-run runbook
 
 Issue [#75](https://github.com/han33-dotcom/TechScout/issues/75) (T39) connects the
-existing pieces into one buyer flow. This page describes what is wired and how it was
-checked offline. It also gives the exact steps for the one bounded live run that is
-still open.
+existing pieces into one buyer flow. On 23 November 2026 the live checkpoint ran
+twice from Chrome with the same request for an iPhone 17, 256 GB, delivered to Beirut.
 
-**Status:** the offline wiring is done and tested. No live or paid call has been made.
-The live boxes on #75 stay open until the run below is performed and recorded.
+| Browser submission | Discovery | Final check | Elapsed | Model spend |
+| --- | --- | --- | ---: | ---: |
+| First | Four offers from three live reads | Three finalists across two live reads | 20.094 s | USD 0.013705 |
+| Repeat | Four stored offers and one current policy read | Three finalists across two live reads | 21.235 s | USD 0.015102 |
+
+Both runs showed zero verified recommendations. Class Cellulars supplied listing
+prices, while condition and item-specific delivery eligibility remained unresolved.
+The browser showed the known subtotals and marked the payable totals incomplete.
+OpenRouter reported OpenAI serving `openai/gpt-6.1-sol` for all eight validated
+responses. The shared ledger settled USD 0.028807 with zero uncertain or held spend.
+The remaining live acceptance item in #75 is a qualifying recommendation supported
+by current seller evidence. [Dated traces, versions and per-call usage](https://github.com/han33-dotcom/TechScout/issues/75#issuecomment-7113100350).
 
 ## What the flow does
 
@@ -204,7 +213,7 @@ the real clock. It covers:
 - configuration failures;
 - the dry-run check.
 
-## Live run (not yet performed)
+## Live checkpoint procedure
 
 **What it needs.**
 
