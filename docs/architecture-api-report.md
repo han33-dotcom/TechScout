@@ -1,5 +1,7 @@
 # Architecture, API and reproducibility report
 
+**23 November planning update.** The provider descriptions below are a dated implementation checkpoint. See the [approved design](domestic-search-design.md) for the OpenRouter-only model gateway and the [first buyer flow](live-flow.md) for subsequent integration.
+
 Implementation checkpoint: **17 November 2026**. This report describes the code
 through the PC and Parts implementation in [PR #126](https://github.com/han33-dotcom/TechScout/pull/126),
 whose implementation commit is `87b08ae23561a57cee12431616561c1b1bdeac0b`.
