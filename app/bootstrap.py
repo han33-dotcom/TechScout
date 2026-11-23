@@ -29,6 +29,14 @@ from app.sources import MAX_RESPONSE_BYTES, SourceGate
 from app.storage import Storage
 
 
+class ListingSeed(Model):
+    retailer_id: Text
+
+
+class DispatchSeed(ListingSeed):
+    listing_url: HttpsUrl
+
+
 class Seed(Model):
     source_id: Text
     url: HttpsUrl
@@ -41,6 +49,9 @@ class Seed(Model):
     policy_element_id: Text | None = None
     policy_statements: tuple[Text, ...] = ()
     policy_field: Literal['policy.shipping','policy.warranty','policy.returns','policy.payment'] = 'policy.shipping'
+    # Preserve serialized digests of legacy manifests/checkpoints without a listing.
+    listing: ListingSeed | None = Field(default=None, exclude_if=lambda value: value is None)
+    dispatch_for: DispatchSeed | None = Field(default=None, exclude_if=lambda value: value is None)
     # Category slugs reviewed for this source. Search text alone is insufficient.
     category_slugs: tuple[Text, ...] = ()
 
@@ -60,6 +71,11 @@ class Manifest(Model):
             if (seed.source_id, str(seed.url)) in seen:
                 raise ValueError('Duplicate seed URL')
             seen.add((seed.source_id, str(seed.url)))
+            if seed.dispatch_for and (seed.listing or seed.url==seed.dispatch_for.listing_url):
+                raise ValueError('Dispatch membership needs a separate collection resource')
+            if (seed.listing or seed.dispatch_for) and (seed.format != 'html' or seed.content != 'listing'
+                    or not seed.product_id or not seed.sku or seed.source_id in INTERNATIONAL):
+                raise ValueError('Domestic listing seeds require a domestic HTML product, SKU and retailer')
             if seed.format == 'catalog' and (not seed.category_slugs or seed.content != 'listing'):
                 raise ValueError('Catalog seeds need reviewed categories')
             if seed.source_id in INTERNATIONAL:
@@ -225,6 +241,15 @@ def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None, embeddi
             url = str(seed.url)
             key = ResourceKey(source_id=seed.source_id,url=url,representation=seed.format,
                               product_id=seed.product_id,variant_id=seed.sku)
+            profile = profile_error = None
+            if seed.listing or seed.dispatch_for:
+                from app.domestic_catalog import DomesticCatalog, dispatch_representation, extract_listing
+                try:
+                    profile = DomesticCatalog(corpus.storage,registry_path=gate._registry_path).seed_profile(seed)
+                    key = key.model_copy(update={'representation':dispatch_representation(profile)
+                        if seed.dispatch_for else profile.representation})
+                except (ValueError, PermissionError) as exc:
+                    profile_error = exc
             recipe = sha256(seed.model_dump_json().encode()).hexdigest()[:16]
             processing = manifest.processing.model_copy(update={
                 'extraction_version': f'{manifest.processing.extraction_version}/{recipe}'})
@@ -235,7 +260,7 @@ def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None, embeddi
                     raise BudgetDenied('Bootstrap lease lost')
                 record['lease_until'] = now+120
                 page = record['pages'].get(url,{})
-                reusable = (page.get('status') in {'indexed','empty'} and previous and
+                reusable = (profile_error is None and page.get('status') in {'indexed','empty'} and previous and
                             previous.processing == processing and previous.raw_sha256 == page.get('sha256'))
                 if not reusable:
                     allocations = [(record['all'],manifest.limits)]
@@ -257,15 +282,18 @@ def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None, embeddi
                           checked_at=datetime.now(timezone.utc).isoformat())
             size = rows = 0
             try:
-                if seed.source_id not in DOMESTIC | INTERNATIONAL.keys():
+                if profile_error:
+                    raise profile_error
+                if not profile and seed.source_id not in DOMESTIC | INTERNATIONAL.keys():
                     raise ValueError('Unknown source market')
                 policy = get_active_source(seed.source_id,gate._registry_path)
                 outcome = gate.fetch(budget,seed.source_id,url,expect='json' if seed.format=='catalog' else 'html',
-                                     capability=seed.capability)
+                                     capability=seed.capability or (profile.capability if seed.listing and profile else None))
                 if outcome.errors:
                     result['errors'] = [e.code for e in outcome.errors]
                 else:
                     size = len(outcome.body)
+                    result['checked_at'] = outcome.observed_at.isoformat()
                     capture = DocumentCapture(key=key,body=outcome.body,relevant_content=outcome.body,
                         origin='bootstrap',checked_at=outcome.observed_at,observed_at=outcome.observed_at,
                         final_url=outcome.final_url,visibility='public',processing=processing)
@@ -276,8 +304,14 @@ def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None, embeddi
                         extraction = catalog(capture,outcome,seed,rows_left)
                     else:
                         rows = 1
-                        extraction = extract_page(capture,PageProfile(seed.source_id,policy['origin'],
-                            sku=seed.sku,policy_element_id=seed.policy_element_id,policy_field=seed.policy_field))
+                        if seed.dispatch_for:
+                            from app.domestic_retailer_profiles import extract_dispatch_membership
+                            extraction = extract_dispatch_membership(capture,profile)
+                        elif profile:
+                            extraction = extract_listing(capture,profile)
+                        else:
+                            extraction = extract_page(capture,PageProfile(seed.source_id,policy['origin'],
+                                sku=seed.sku,policy_element_id=seed.policy_element_id,policy_field=seed.policy_field))
                         if seed.content == 'policy':
                             passages = tuple(p for p in extraction.passages if p.text in seed.policy_statements)
                             extraction = Extraction(passages=passages)

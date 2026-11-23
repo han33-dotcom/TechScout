@@ -742,12 +742,18 @@ class Storage:
         return recovered
 
 
-def load_fixtures(storage: Storage, sources_path=ROOT / 'config' / 'sources.json',
-                  contracts_path=ROOT / 'tests' / 'fixtures' / 'contracts.json'):
-    """Load the reviewed source registry and the synthetic contract example."""
+def load_sources(storage: Storage, sources_path=ROOT / 'config' / 'sources.json'):
+    """Load the reviewed source policies into a corpus database."""
     registry = json.loads(Path(sources_path).read_text(encoding='utf-8'))
     for entry in registry['sources']:
         storage.save_source(SourcePolicy.model_validate(entry))
+    return len(registry['sources'])
+
+
+def load_fixtures(storage: Storage, sources_path=ROOT / 'config' / 'sources.json',
+                  contracts_path=ROOT / 'tests' / 'fixtures' / 'contracts.json'):
+    """Load the reviewed source registry and the synthetic contract example."""
+    count = load_sources(storage, sources_path)
     example = json.loads(Path(contracts_path).read_text(encoding='utf-8'))
     offer = Offer.model_validate(example['offer'])
     if storage.load_source(offer.source_id) is None:
@@ -758,13 +764,16 @@ def load_fixtures(storage: Storage, sources_path=ROOT / 'config' / 'sources.json
             allowed_endpoints=[], limits=dict(requests_per_minute=0, concurrency=0,
                                               max_requests_per_run=0)))
     storage.save_offer(offer)
-    return len(registry['sources']), 1
+    return count, 1
 
 
 def main(argv=None):
     argv = sys.argv[1:] if argv is None else argv
+    if argv == ['load-sources']:
+        print(f'Loaded {load_sources(Storage())} reviewed source policies')
+        return 0
     if argv != ['load-fixtures']:
-        print('usage: python -m app.storage load-fixtures', file=sys.stderr)
+        print('usage: python -m app.storage load-sources | load-fixtures', file=sys.stderr)
         return 2
     count, offers_loaded = load_fixtures(Storage())
     print(f'Loaded {count} sources and {offers_loaded} synthetic offer')

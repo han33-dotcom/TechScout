@@ -1,0 +1,64 @@
+[
+  {
+    "entry": {
+      "retailer_id": "outgeeked",
+      "name": "OutGeeked",
+      "origin": "https://outgeeked.net",
+      "markets": [
+        "LB"
+      ],
+      "categories": [
+        "audio"
+      ],
+      "discovery_status": "audited",
+      "retrieval_method": "direct",
+      "last_checked_at": "2026-11-23T19:19:00Z",
+      "coverage_gaps": [
+        "Destination-specific delivery eligibility and mandatory charges require separate evidence."
+      ]
+    },
+    "updated_at": "2026-11-23T19:19:00Z",
+    "source_id": "outgeeked",
+    "source_country": "LB",
+    "seller_id": "outgeeked",
+    "seller_identity": "retailer",
+    "product_urls": [
+      "https://outgeeked.net/products/anker-soundcore-space-h30i?variant=47452782133506"
+    ],
+    "catalog_urls": [],
+    "role": "domestic",
+    "background_collection": true
+  },
+  {
+    "entry": {
+      "retailer_id": "wincell",
+      "name": "Win Cell",
+      "origin": "https://wincell.store",
+      "markets": [
+        "LB"
+      ],
+      "categories": [
+        "audio"
+      ],
+      "discovery_status": "audited",
+      "retrieval_method": "direct",
+      "last_checked_at": "2026-11-23T19:19:00Z",
+      "coverage_gaps": [
+        "Destination-specific delivery eligibility and mandatory charges require separate evidence."
+      ]
+    },
+    "updated_at": "2026-11-23T19:23:00Z",
+    "source_id": "wincell",
+    "source_country": "LB",
+    "seller_id": "wincell",
+    "seller_identity": "retailer",
+    "product_urls": [
+      "https://wincell.store/products/anker-soundcore-h30i-wireless-on-ear-headphones-black?variant=53481525805354"
+    ],
+    "policy_urls": [
+      "https://wincell.store/collections/vendors?q=Soundcore"
+    ],
+    "role": "domestic",
+    "background_collection": true
+  }
+]

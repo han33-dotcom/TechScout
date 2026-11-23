@@ -1,15 +1,17 @@
 {
   "schema_version": 1,
-  "reviewed_at": "2026-10-12",
+  "reviewed_at": "2026-11-23",
   "live_release": {
     "minimum_admitted_sources": 3,
     "decision": "source_gate_met",
     "development_data": "tests/fixtures/synthetic_offers.json",
-    "reason": "Three technically checked public sources selected: Class Cellulars, Mojitech and Beytech. Source access is ready; runtime collection, adapters and final offer verification are later MVP tasks.",
+    "reason": "Class Cellulars, Mojitech and Beytech have reviewed WooCommerce readers. OutGeeked and WinCell have narrowly reviewed domestic catalog endpoints. Each source's endpoint list, capabilities and limits govern access.",
     "admitted_source_ids": [
       "class_cellulars",
       "mojitech",
-      "beytech"
+      "beytech",
+      "outgeeked",
+      "wincell"
     ]
   },
   "sources": [
@@ -730,6 +732,56 @@
           "trailing_slash": true
         }
       ]
+    },
+    {
+      "id": "outgeeked",
+      "name": "OutGeeked",
+      "origin": "https://outgeeked.net",
+      "status": "active",
+      "reviewed_at": "2026-11-23",
+      "admission": {
+        "basis": "Reviewed public HTTPS GETs for the domestic exact-variant catalog comparison (#150).",
+        "evidence": [
+          "https://outgeeked.net/products/anker-soundcore-space-h30i?variant=47452782133506"
+        ],
+        "reviewed_at": "2026-11-23T19:19:00Z",
+        "scope": "One exact product variant with first-party price, stock and dispatch evidence."
+      },
+      "allowed_endpoints": [
+        "https://outgeeked.net/products/anker-soundcore-space-h30i?variant=47452782133506"
+      ],
+      "limits": {
+        "requests_per_minute": 4,
+        "concurrency": 1,
+        "max_requests_per_run": 4
+      },
+      "adapter_version": "shopify-domestic/1"
+    },
+    {
+      "id": "wincell",
+      "name": "Win Cell",
+      "origin": "https://wincell.store",
+      "status": "active",
+      "reviewed_at": "2026-11-23",
+      "admission": {
+        "basis": "Reviewed public HTTPS GETs for the domestic exact-variant catalog comparison (#150).",
+        "evidence": [
+          "https://wincell.store/products/anker-soundcore-h30i-wireless-on-ear-headphones-black?variant=53481525805354",
+          "https://wincell.store/collections/vendors?q=Soundcore"
+        ],
+        "reviewed_at": "2026-11-23T19:19:00Z",
+        "scope": "One exact product variant and the reviewed Soundcore collection used for dispatch evidence."
+      },
+      "allowed_endpoints": [
+        "https://wincell.store/products/anker-soundcore-h30i-wireless-on-ear-headphones-black?variant=53481525805354",
+        "https://wincell.store/collections/vendors?q=Soundcore"
+      ],
+      "limits": {
+        "requests_per_minute": 4,
+        "concurrency": 1,
+        "max_requests_per_run": 4
+      },
+      "adapter_version": "shopify-domestic/1"
     }
   ],
   "access_assumption": "Treat obtaining data from public websites as unrestricted for this project, as explicitly instructed by the user. Retailer permission emails are not required."
