@@ -10,9 +10,7 @@ import psycopg
 from psycopg import sql
 
 from eval.runners import trial_request
-
-ROOT = Path(__file__).resolve().parent
-BASELINES = json.loads((ROOT/'baselines.json').read_text(encoding='utf-8'))
+from eval.scope import BASELINES
 
 
 def clone_database(admin_url, template, evidence, output):
@@ -36,8 +34,6 @@ def manual_capture(case, side):
     trial_request(case,side,1)
     if conf['cases']=='local_external' and case['market']!='domestic':
         raise ValueError('Local comparison sessions require domestic cases')
-    if case['case_id'].startswith('H') and case['case_id'] not in BASELINES['subsets'][conf['cases']]:
-        raise ValueError('Case is outside the frozen subset')
     procedure = {'external_service':'external_service','external_assistant':'assistant',
                  'manual':'manual_shopping'}[conf['kind']]
     record = {k:None for k in BASELINES['capture_record']['fields']}

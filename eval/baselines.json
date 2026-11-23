@@ -1,12 +1,12 @@
 {
-  "version": "1.0.0",
+  "version": "1.2.0",
   "issue": "https://github.com/han33-dotcom/TechScout/issues/78",
   "status": "Frozen before results. Defines who runs what, on which cases, how often and in what order.",
   "configurations": [
     {
       "id": "full-warm",
       "kind": "automated",
-      "cases": "all",
+      "cases": "domestic",
       "repetitions": 3,
       "corpus": "warm",
       "description": "TechScout full system: AI orchestrator, up to three research workers, AI evaluator and writer under the deterministic controller."
@@ -14,7 +14,7 @@
     {
       "id": "single-agent-warm",
       "kind": "automated",
-      "cases": "all",
+      "cases": "domestic",
       "repetitions": 3,
       "corpus": "warm",
       "description": "One agent with the same tools, adapters, evidence, verifier, cost engine, budgets and base model; no separate workers or evaluator."
@@ -22,7 +22,7 @@
     {
       "id": "fixed-heuristic-warm",
       "kind": "automated",
-      "cases": "all",
+      "cases": "domestic",
       "repetitions": 3,
       "corpus": "warm",
       "description": "Fixed search, filter and recheck path (the existing rule planner) through the same adapters, verifier, cost engine and budgets; no model planning."
@@ -30,7 +30,7 @@
     {
       "id": "full-cold",
       "kind": "automated",
-      "cases": "all",
+      "cases": "domestic",
       "repetitions": 1,
       "corpus": "cold",
       "description": "TechScout full system starting from the empty corpus."
@@ -117,13 +117,11 @@
       "H12",
       "H15",
       "H17",
-      "H24",
-      "H11",
-      "H30"
+      "H24"
     ],
     "rationale": {
       "local_external": "10 domestic cases, 9 of them phones or laptops: exact-variant traps (H01, H03, H06, H10, H15, H17), needs-based selection (H04, H12, H24), missing-cost traps (H02, H04, H10, H12, H15, H17, H24), availability traps (H03, H15), designed no-match (H06), and Arabic (H02, H17) and Arabizi (H03) inputs.",
-      "assistant": "The local subset plus two international cases (H11, H30). Assistants can attempt international purchases, while LebTech and One Souq are domestic services. H11 and H30 are scored only in the international capability table, never in paired price outcomes or domestic success comparisons."
+      "assistant": "The ten originally selected domestic assistant cases. H11 and H30 were retired under #155."
     }
   },
   "subset_inputs": {
@@ -176,20 +174,10 @@
       "buyer_text": "27-inch 1440p gaming monitor, at least 165Hz, around $250, delivered to Tyre.",
       "fixed_requirements": "listed diagonal at least 26.5 inches; at least 2560 x 1440 resolution; at least 165 Hz; budget around 250 USD (flexible); new condition; delivered to Tyre; only sellers in Lebanon.",
       "destination": "Tyre"
-    },
-    "H11": {
-      "buyer_text": "MacBook Pro 14-inch M5, 16GB, 512GB",
-      "fixed_requirements": "Apple M5 processor; at least 16 GB RAM; at least 512 GB storage; new condition; delivered to Beirut; sellers in Lebanon and also in the US and the UAE with shipping to Lebanon.",
-      "destination": "Beirut"
-    },
-    "H30": {
-      "buyer_text": "Over-ear noise-cancelling headphones for long flights, around $350. Include US and UAE offers, delivered to Beirut.",
-      "fixed_requirements": "headphones; active noise cancellation; budget around 350 USD (flexible); new condition; delivered to Beirut; sellers in Lebanon and also in the US and the UAE with shipping to Lebanon.",
-      "destination": "Beirut"
     }
   },
   "repetition_budget": {
-    "worst_case_rule": "Before the first held-out run, multiply the planned automated runs (30 x 3 x 3 warm runs + 30 cold runs = 300) by the per-run spend cap recorded in eval/run-freeze.json, and compare with the remaining project allowance minus the demo reserve.",
+    "worst_case_rule": "Before the first held-out run, multiply the planned automated runs (23 x 3 x 3 warm runs + 23 cold runs = 230) by the per-run spend cap recorded in eval/run-freeze.json, and compare with the remaining project allowance minus the demo reserve.",
     "reduction_order": [
       "fixed-heuristic-warm: 3 repetitions to 1",
       "full-warm and single-agent-warm together: 3 repetitions to 2",
@@ -199,17 +187,13 @@
   },
   "run_order": {
     "unit": "A block is one case: the repetition-r runs of every automated warm configuration for that case, run back to back, then one verification pass.",
-    "algorithm": "Python: order = sorted(case_ids); random.Random(seed).shuffle(order). Warm repetition r uses seed 77 + r; the cold pass uses seed 178.",
+    "algorithm": "Python: order = sorted(case_ids); random.Random(seed).shuffle(order). Warm repetition r uses seed 77 + r; the cold pass uses seed 178. Remove the seven retired international IDs after shuffling the original thirty. Preserve the relative order of the remaining blocks.",
     "warm_repetition_1": [
       "H23",
-      "H11",
       "H15",
       "H20",
-      "H26",
       "H17",
       "H08",
-      "H30",
-      "H18",
       "H06",
       "H03",
       "H12",
@@ -224,23 +208,15 @@
       "H21",
       "H02",
       "H14",
-      "H09",
       "H24",
-      "H22",
       "H10",
       "H04",
-      "H07",
       "H27"
     ],
     "warm_repetition_2": [
       "H10",
-      "H11",
       "H02",
-      "H09",
-      "H22",
-      "H18",
       "H13",
-      "H26",
       "H14",
       "H17",
       "H27",
@@ -249,11 +225,9 @@
       "H24",
       "H19",
       "H04",
-      "H07",
       "H01",
       "H28",
       "H03",
-      "H30",
       "H16",
       "H23",
       "H25",
@@ -265,9 +239,7 @@
       "H05"
     ],
     "warm_repetition_3": [
-      "H11",
       "H21",
-      "H26",
       "H15",
       "H06",
       "H16",
@@ -276,13 +248,10 @@
       "H19",
       "H20",
       "H10",
-      "H30",
       "H03",
       "H04",
-      "H07",
       "H02",
       "H08",
-      "H22",
       "H27",
       "H01",
       "H24",
@@ -292,9 +261,7 @@
       "H12",
       "H14",
       "H23",
-      "H18",
-      "H13",
-      "H09"
+      "H13"
     ],
     "cold": [
       "H14",
@@ -302,30 +269,23 @@
       "H05",
       "H27",
       "H02",
-      "H22",
       "H01",
       "H19",
-      "H07",
       "H24",
       "H23",
       "H20",
       "H13",
-      "H30",
       "H17",
-      "H09",
       "H29",
-      "H26",
       "H28",
       "H03",
       "H06",
       "H10",
       "H16",
-      "H11",
       "H25",
       "H08",
       "H21",
       "H15",
-      "H18",
       "H04"
     ],
     "configuration_order_in_block": "Block k (counting from 0) runs the three warm configurations rotated by k: [full-warm, single-agent-warm, fixed-heuristic-warm] shifted left by k mod 3. Exception: in a paired session (local subset, repetition 1), full-warm runs in the techscout slot and the other two run right after it, unattended, in the rotated order.",
@@ -436,14 +396,6 @@
         "claude-browsing"
       ],
       "H24": [
-        "claude-browsing",
-        "chatgpt-browsing"
-      ],
-      "H11": [
-        "chatgpt-browsing",
-        "claude-browsing"
-      ],
-      "H30": [
         "claude-browsing",
         "chatgpt-browsing"
       ]

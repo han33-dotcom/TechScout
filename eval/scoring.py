@@ -11,6 +11,7 @@ from typing import Literal
 from pydantic import Field, model_validator
 
 from app.contracts import Amount, Model, Text
+from eval.scope import check_slot, study_plan, summary
 
 
 class Verdict(Model):
@@ -76,6 +77,18 @@ def score(trials, *, acquisition_usd, maintenance_usd):
             raise ValueError('Duplicate case, side and repetition')
         seen.add(identity)
         grouped[r.side].append(r)
+    heldout_ids = {case_id for case_id, _, _ in seen if case_id.startswith('H')}
+    if heldout_ids and any(case_id not in heldout_ids for case_id, _, _ in seen):
+        raise ValueError('Score development and held-out records separately')
+    scope = None
+    if heldout_ids:
+        plan = study_plan()
+        for case_id, side, repetition in seen:
+            check_slot(plan, case_id, side, repetition)
+        scope = summary(plan)
+        scope['missing_automated_runs'] = {
+            side: sum((case_id, side, rep) not in seen for case_id, rep in plan[side])
+            for side in ('full-warm', 'full-cold', 'fixed-heuristic-warm', 'single-agent-warm')}
     classes = defaultdict(set)
     for rows in grouped.values():
         for r in rows:
@@ -101,7 +114,10 @@ def score(trials, *, acquisition_usd, maintenance_usd):
             verified_seconds=percentiles([r.verified_seconds for r in rows if r.adjudicated_class=='answerable']),
             marginal_spend_usd=str(spend),cost_per_success_usd=str(spend/successes) if successes else None,
             needs_fit=Counter(r.needs_fit for r in primary if r.needs_fit))
-    return dict(configurations=scores,acquisition_usd=str(acquisition_usd),maintenance_usd=str(maintenance_usd))
+    report = dict(configurations=scores,acquisition_usd=str(acquisition_usd),maintenance_usd=str(maintenance_usd))
+    if scope is not None:
+        report['heldout_scope'] = scope
+    return report
 
 
 class PriceSide(Model):
@@ -148,10 +164,17 @@ def main():
     report=score(trials,acquisition_usd=args.acquisition_usd,maintenance_usd=args.maintenance_usd)
     if args.pairs:
         pairs = []
+        plan = study_plan() if 'heldout_scope' in report else None
         for line in args.pairs.read_text(encoding='utf-8').splitlines():
             if not line.strip():
                 continue
             record=json.loads(line)
+            if record['case_id'].startswith('H') != (plan is not None):
+                raise ValueError('Paired records must use the same study cohort as the trials')
+            if plan is not None:
+                check_slot(plan, record['case_id'], record['side'], 1)
+                if record['market'] != 'domestic':
+                    raise ValueError('A domestic held-out pair must use the domestic market')
             left,right=(PriceSide.model_validate(record[k]) for k in ('techscout','baseline'))
             outcome=compare_price(left,right,market=record['market'],equivalence=record['equivalence'],
                 same_case=record['same_case'],access_failure=record.get('access_failure',False))

@@ -11,6 +11,7 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 - [Approved domestic search pipelines, model access and operating defaults](domestic-search-design.md)
 
 - [Held-out evaluation protocol](evaluation-protocol.md)
+- [Domestic evaluation scope, planned comparisons and measurement status](evaluation-report.md)
 - [Full-product failure matrix and threat model](full-product-failure-matrix.md)
 
 - [Architecture, API and reproducibility report: implemented checkpoint and remaining work](architecture-api-report.md)

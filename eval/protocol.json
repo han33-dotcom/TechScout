@@ -1,6 +1,6 @@
 {
   "protocol": "TechScout held-out evaluation protocol",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "frozen_on": "2026-11-17",
   "issue": "https://github.com/han33-dotcom/TechScout/issues/78",
   "specification": "docs/evaluation-protocol.md",
@@ -9,6 +9,14 @@
     "heldout": "eval/heldout.json",
     "calibration": "eval/calibration.json",
     "development_glob": "eval/development/*.json"
+  },
+  "evaluation_scope": {
+    "market": "domestic",
+    "active_case_count": 23,
+    "retired_case_ids": ["H07", "H09", "H11", "H18", "H22", "H26", "H30"],
+    "decision": "https://github.com/han33-dotcom/TechScout/issues/155",
+    "archive": "3be08f4ea285aa61c0dc4063cf3defacc6ebf255",
+    "prior_protocol_sha256": "279a40a9e74ea2f735358bf42c8e7f481e4005be8d0030d2a46d2b715534fda9"
   },
   "dataset_mix": {
     "heldout_total": 30,
@@ -86,7 +94,7 @@
       "question": "Are the offers TechScout presents as verified recommendations actually valid?",
       "unit": "offer",
       "numerator": "Selected offers of main recommendations judged valid by human verification.",
-      "denominator": "All selected offers of main recommendations (at most three per run) presented in repetition-1 runs of the configuration, over all 30 held-out cases. Unverifiable offers stay in the denominator.",
+      "denominator": "All selected offers of main recommendations (at most three per run) presented in repetition-1 runs of the configuration, over the 23 domestic held-out cases. Unverifiable offers stay in the denominator.",
       "aggregation": "Ratio of totals, with a case-clustered bootstrap interval.",
       "target": {"operator": ">=", "value": "0.95"},
       "target_rule": "Reported as met when the point estimate is at least 0.95; described as met with confidence only when the 95% interval's lower bound is also at least 0.95; not assessed when the denominator is below 20.",
@@ -97,7 +105,7 @@
       "question": "How often does a run end with the right outcome for the case?",
       "unit": "run",
       "numerator": "Successful runs. On an answerable case: at least one valid selected offer, no invalid selected offer, finished within the time limit, no scope or constraint violation. On a no_match_observed case: no main recommendation, a stated reason naming the blocking constraint or missing facts, and no invented offer (labelled uncertain alternatives are allowed).",
-      "denominator": "All runs of the configuration on all 30 cases, including errors, timeouts and cancellations.",
+      "denominator": "All runs of the configuration on the 23 domestic cases, including errors, timeouts and cancellations.",
       "aggregation": "Mean of per-case success fractions, so each case weighs the same; case-clustered bootstrap interval."
     },
     {
@@ -141,7 +149,7 @@
         "retrieved": "Attempted retailers with at least one usable response that produced a product record in the requested category.",
         "qualifying": "Retrieved retailers with at least one offer that passed eligibility and current-run verification (main recommendation, additional verified seller or expandable qualifying result)."
       },
-      "denominator": "Per run; aggregated as median and interquartile range per configuration and as the union of distinct retailers over the set, domestic and international reported separately.",
+      "denominator": "Per run; aggregated as median and interquartile range per configuration and as the union of distinct retailers over the active domestic set.",
       "consistency": "discovered >= attempted >= retrieved >= qualifying, as in CoverageCounts. Retailers consulted only through stored corpus evidence are reported separately as corpus_consulted."
     },
     {
@@ -194,7 +202,7 @@
       "id": "constraint_preservation",
       "question": "Does the run keep the buyer's constraints and default scope?",
       "unit": "run",
-      "numerator": "Runs with no silent relaxation (budget maximum, condition, storage or other hard field changed without the buyer choosing it) and no scope violation (a foreign purchase offer on a domestic case, or domestic results dropped on an international case when they exist).",
+      "numerator": "Runs with no silent relaxation (budget maximum, condition, storage or other hard field changed without the buyer choosing it) and no scope violation (a foreign purchase offer on a domestic case).",
       "denominator": "All runs.",
       "target": {"operator": "==", "value": "1"},
       "target_rule": "Every violation is listed individually."
@@ -205,7 +213,7 @@
       "unit": "case pair",
       "categories": ["win", "tie", "loss", "techscout_only_valid", "baseline_only_valid", "neither_valid", "not_comparable", "inconclusive"],
       "rule": "Win, tie and loss only when both sides have a valid offer for the identical configuration with price-comparable verified totals. Every other pair is counted in its own category.",
-      "scope": "Domestic cases only. International cases, including H11 and H30 in the assistant subset, are reported in international_capability for every side and never enter paired price outcomes or domestic success comparisons.",
+      "scope": "Domestic cases only, within the predeclared subset for each baseline.",
       "savings": "Among win, tie and loss pairs: the per-pair difference in USD (median and mean).",
       "test": "Exact two-sided sign test on wins versus losses; descriptive only at this sample size."
     },
@@ -225,6 +233,7 @@
     },
     {
       "id": "international_capability",
+      "status": "retired",
       "question": "What can the configuration do for international requests?",
       "unit": "run on an international case",
       "report": [
@@ -234,7 +243,7 @@
         "estimated or incomplete offers wrongly placed in main recommendations (each one is also an invalid offer)",
         "foreign offers wrongly described as cheaper than a verified domestic total"
       ],
-      "denominator": "Runs on the 7 international cases; reported apart from domestic comparisons."
+      "denominator": "No runs are planned. List the seven retired IDs separately as outside the product scope."
     },
     {
       "id": "external_outcome_distribution",
@@ -287,7 +296,7 @@
       "full-warm versus fixed-heuristic-warm: the same measures",
       "full-warm versus full-cold: validity, coverage, freshness (age of the oldest decisive fact at verification), latency and cost per successful request",
       "TechScout versus LebTech, One Souq and manual shopping on the local subset: paired price outcomes, request success, latency and buyer effort",
-      "TechScout versus browsing-enabled ChatGPT and Claude on the 10 domestic cases of the assistant subset: the same measures; H11 and H30 are reported only in international_capability"
+      "TechScout versus browsing-enabled ChatGPT and Claude on the 10 domestic cases of the assistant subset: the same measures"
     ],
     "exploratory_rule": "Any other comparison is labelled exploratory.",
     "hypotheses": [

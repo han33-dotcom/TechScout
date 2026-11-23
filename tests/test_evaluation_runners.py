@@ -2,8 +2,9 @@ from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 import json
 from pathlib import Path
+from tempfile import TemporaryDirectory
 import unittest
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 from app.contract_interfaces import PlanningContext
 from app.model_provider import ModelResult
@@ -11,10 +12,57 @@ from app.orchestrator import Proposal, Selection
 from eval.runners import run_strategy, trial_request
 from eval.scoring import PriceSide, Trial, compare_price, score
 from eval.session import manual_capture
+from eval.scope import check_slot, study_plan, summary
 import test_research_workers as fixtures
 
 
 class BaselineTests(unittest.TestCase):
+    def test_domestic_schedule_preserves_original_cohort_and_external_subsets(self):
+        rows = json.loads(Path('eval/heldout.json').read_bytes())['cases']
+        domestic = {row['case_id'] for row in rows if row['market'] == 'domestic'}
+        retired = {row['case_id'] for row in rows if row['market'] == 'international'}
+        with patch('eval.freeze.load', return_value={'pre_run':None}), patch('eval.freeze.problems', return_value=[]):
+            plan = study_plan()
+        details = summary(plan)
+        self.assertEqual(set(details['retired_case_ids']), retired)
+        self.assertEqual(details['domestic_cases'], len(domestic))
+        self.assertEqual(details['planned_per_configuration'], {
+            'full-warm':69, 'single-agent-warm':69, 'fixed-heuristic-warm':69, 'full-cold':23,
+            'lebtech':10, 'onesouq':10, 'manual-shopping':10, 'chatgpt-browsing':10, 'claude-browsing':10})
+        self.assertEqual({case for case, _ in plan['full-cold']}, domestic)
+        for side in ('onesouq','manual-shopping','chatgpt-browsing','claude-browsing'):
+            self.assertEqual(plan[side], plan['lebtech'])
+        with self.assertRaisesRegex(ValueError, 'outside'):
+            check_slot(plan, 'H01', 'full-cold', 2)
+        # Exercise the entry-point refusals with no running deployment or external session.
+        with patch('eval.scope.study_plan', return_value=plan):
+            for side in ('full-warm','chatgpt-browsing'):
+                with self.assertRaisesRegex(ValueError, 'retired'):
+                    if side == 'full-warm':
+                        trial_request({'case_id':'H07'}, side, 1)
+                    else:
+                        manual_capture({'case_id':'H07'}, side)
+            with self.assertRaisesRegex(ValueError, 'differs'):
+                trial_request({'case_id':'H01'}, 'full-warm', 1)
+
+    def test_scope_uses_the_recorded_pre_run_budget_reduction(self):
+        with TemporaryDirectory() as directory, patch('eval.scope.ROOT', Path(directory)), \
+                patch('eval.freeze.problems', return_value=[]), \
+                patch('eval.freeze.load', return_value={'version':'1.2.0', 'pre_run':{'recorded_at':'fixture'}}):
+            repeats = {'full-warm':2, 'single-agent-warm':2, 'fixed-heuristic-warm':1, 'full-cold':1}
+            settings = dict(protocol_version='1.2.0', repetitions=repeats)
+            path = Path(directory) / 'run-freeze.json'
+            path.write_text(json.dumps(settings))
+            plan = study_plan(require_pre_run=True)
+            self.assertEqual(len(plan['full-warm']), 46)
+            self.assertEqual(len(plan['fixed-heuristic-warm']), 23)
+            with self.assertRaisesRegex(ValueError, 'outside'):
+                check_slot(plan, 'H01', 'full-warm', 3)
+            repeats['single-agent-warm'] = 3
+            path.write_text(json.dumps(settings))
+            with self.assertRaisesRegex(ValueError, 'budget rule'):
+                study_plan()
+
     def test_controlled_strategies_share_evidence_and_charge_no_model_to_fixed(self):
         fixture=fixtures.ResearchWorkerTests()
         fixture.setUp()
@@ -61,7 +109,6 @@ class BaselineTests(unittest.TestCase):
         self.assertIn(case['buyer_text'],capture['assistant_prompt'])
         self.assertIn('extra_verification',capture['timing_minutes'])
         self.assertIsNone(capture['record']['outcome'])
-        from unittest.mock import patch
         with patch('eval.freeze.load',return_value={'pre_run':None}),self.assertRaises(ValueError):
             trial_request(dict(case,case_id='H00'),'full-warm',1)
 
@@ -74,6 +121,17 @@ class BaselineTests(unittest.TestCase):
         failed=valid.model_copy(update=dict(case_id='C02',run_id='trial-2',outcome='timeout',selected=(),
             first_useful_seconds=None,verified_seconds=None,timely=False))
         stats=score([valid,failed],acquisition_usd=Decimal(1),maintenance_usd=Decimal(0))['configurations'][valid.side]
+        active = valid.model_copy(update=dict(case_id='H01'))
+        retired = valid.model_copy(update=dict(case_id='H07'))
+        costs = dict(acquisition_usd=Decimal(0), maintenance_usd=Decimal(0))
+        with self.assertRaisesRegex(ValueError, 'retired'):
+            score([retired], **costs)
+        with self.assertRaisesRegex(ValueError, 'separately'):
+            score([valid, active], **costs)
+        scope = score([active], **costs)['heldout_scope']
+        self.assertEqual(scope['missing_automated_runs']['single-agent-warm'],
+                         scope['planned_per_configuration']['single-agent-warm'] - 1)
+        self.assertEqual(scope['missing_automated_runs']['full-cold'], 23)
         self.assertEqual(stats['request_success_rate'],.5)
         self.assertEqual(stats['valid_offer_rate'],1)
         self.assertIsNone(stats['verified_seconds']['p95'])

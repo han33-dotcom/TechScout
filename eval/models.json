@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "issue": "https://github.com/han33-dotcom/TechScout/issues/78",
   "main_evaluation": {
     "label": "main",
@@ -71,7 +71,7 @@
   "unavailable_metadata_rule": "A field the provider does not return is recorded as not_reported, never guessed, and the count of not_reported fields is published with the results.",
   "optional_experiments": {
     "declared": [],
-    "status": "No alternative route or model experiment declared for protocol 1.1.0.",
+    "status": "No alternative route or model experiment declared for protocol 1.2.0.",
     "rules": [
       "An experiment is declared here, with a protocol version bump, before it runs.",
       "Its label starts with exp- and its results are stored and reported apart from the main evaluation; they never enter the main tables.",
