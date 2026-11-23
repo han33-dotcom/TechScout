@@ -1,0 +1,154 @@
+{
+  "manifest_id": "domestic-seller-coverage-20261123-v2",
+  "processing": {
+    "corpus_version": "domestic-coverage-v1",
+    "index_version": "domestic-coverage-v1",
+    "extraction_version": "domestic-listings-v1",
+    "chunk_version": "source-fields-1"
+  },
+  "limits": {
+    "max_fetch_attempts": 15,
+    "max_elapsed_ms": 1000000,
+    "max_records": 120,
+    "max_response_bytes": 33554432,
+    "max_paid_calls": 12,
+    "max_spend_usd": "0.002",
+    "max_concurrent_sources": 1,
+    "max_requests_per_source_minute": 6,
+    "max_concurrent_per_source": 1,
+    "max_retries_per_resource": 1
+  },
+  "seeds": [
+    {
+      "source_id": "outgeeked",
+      "url": "https://outgeeked.net/products/anker-soundcore-space-h30i?variant=47452782133506",
+      "product_id": "9289094463746",
+      "sku": "47452782133506",
+      "listing": {
+        "retailer_id": "outgeeked"
+      },
+      "category": "audio",
+      "content": "listing",
+      "format": "html"
+    },
+    {
+      "source_id": "wincell",
+      "url": "https://wincell.store/products/anker-soundcore-h30i-wireless-on-ear-headphones-black?variant=53481525805354",
+      "product_id": "10419360727338",
+      "sku": "53481525805354",
+      "listing": {
+        "retailer_id": "wincell"
+      },
+      "category": "audio",
+      "content": "listing",
+      "format": "html"
+    },
+    {
+      "source_id": "wincell",
+      "url": "https://wincell.store/collections/vendors?q=Soundcore",
+      "product_id": "10419360727338",
+      "sku": "53481525805354",
+      "dispatch_for": {
+        "retailer_id": "wincell",
+        "listing_url": "https://wincell.store/products/anker-soundcore-h30i-wireless-on-ear-headphones-black?variant=53481525805354"
+      },
+      "category": "audio",
+      "content": "listing",
+      "format": "html"
+    },
+    {
+      "source_id": "beytech",
+      "url": "https://beytech.com.lb/wp-json/wc/store/v1/products?search=iPhone&per_page=10&page=1",
+      "category": "phone",
+      "category_slugs": [
+        "mobiles",
+        "smartphones",
+        "mobile-phones"
+      ],
+      "content": "listing",
+      "format": "catalog",
+      "capability": {
+        "capability_id": "beytech-search",
+        "version": "1"
+      }
+    },
+    {
+      "source_id": "beytech",
+      "url": "https://beytech.com.lb/wp-json/wc/store/v1/products?search=Galaxy%20A&per_page=10&page=1",
+      "category": "phone",
+      "category_slugs": [
+        "mobiles",
+        "smartphones",
+        "mobile-phones"
+      ],
+      "content": "listing",
+      "format": "catalog",
+      "capability": {
+        "capability_id": "beytech-search",
+        "version": "1"
+      }
+    },
+    {
+      "source_id": "beytech",
+      "url": "https://beytech.com.lb/wp-json/wc/store/v1/products?search=laptop&per_page=10&page=1",
+      "category": "laptop",
+      "category_slugs": [
+        "laptops",
+        "gaming-laptops",
+        "notebooks",
+        "laptops-notebooks"
+      ],
+      "content": "listing",
+      "format": "catalog",
+      "capability": {
+        "capability_id": "beytech-search",
+        "version": "1"
+      }
+    },
+    {
+      "source_id": "beytech",
+      "url": "https://beytech.com.lb/wp-json/wc/store/v1/products?search=Lenovo&per_page=10&page=1",
+      "category": "laptop",
+      "category_slugs": [
+        "laptops",
+        "gaming-laptops",
+        "notebooks",
+        "laptops-notebooks"
+      ],
+      "content": "listing",
+      "format": "catalog",
+      "capability": {
+        "capability_id": "beytech-search",
+        "version": "1"
+      }
+    },
+    {
+      "source_id": "beytech",
+      "url": "https://beytech.com.lb/wp-json/wc/store/v1/products?search=monitor&per_page=10&page=1",
+      "category": "monitor",
+      "category_slugs": [
+        "monitors"
+      ],
+      "content": "listing",
+      "format": "catalog",
+      "capability": {
+        "capability_id": "beytech-search",
+        "version": "1"
+      }
+    },
+    {
+      "source_id": "beytech",
+      "url": "https://beytech.com.lb/wp-json/wc/store/v1/products?search=Galaxy%20Tab&per_page=10&page=1",
+      "category": "tablet",
+      "category_slugs": [
+        "ipad-tablets"
+      ],
+      "content": "listing",
+      "format": "catalog",
+      "capability": {
+        "capability_id": "beytech-search",
+        "version": "1"
+      }
+    }
+  ]
+}

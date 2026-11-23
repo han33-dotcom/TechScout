@@ -16,7 +16,7 @@ The November 23 manifest binds the selected source product, source SKU, category
 
 ```sh
 alembic upgrade head
-python -m app.storage load-fixtures
+python -m app.storage load-sources
 python -m app.directory import-seeds
 python -m app.bootstrap config/domestic-seller-coverage.json
 python -m app.domestic_catalog --category audio --query "H30i" --limit 5
@@ -32,3 +32,13 @@ The catalog queries the current documents in the shared corpus. Generic first-pa
 Each result carries the observed positive price and currency, applicable stock, source URLs, field-specific timestamps and evidence IDs. Dispatch in Lebanon and delivery to a particular destination have separate fields. Missing dispatch, delivery, tax, shipping or stock stays explicit. An unknown buyer payable total cannot qualify a finalist.
 
 Repeat the same manifest to resume outstanding indexing. A new bounded manifest ID requests another source check. On a price change the corpus preserves the original price observation and records the new one. Stable specification passages keep their IDs and routed vectors. From a fresh process, `DomesticCatalog(storage).lookup(category=..., listing_url=...)` returns historical candidates. `price_history(listing)` returns dated observations newest first. Buyer workers must acquire current-run evidence before ranking a verified offer.
+
+## Domestic validation on 23 November 2026
+
+The seven-day snapshot contained one recently priced, exact configuration and two independent local sellers for it. OutGeeked listed the black Anker Soundcore H30i at USD 20.00 at 19:20:40 UTC. WinCell listed it at USD 40.00 at 19:20:42 UTC. Both selected variants showed online stock. OutGeeked identified Beirut as its dispatch point on the product page. WinCell described delivery from its shelves in Kaslik on its Soundcore collection. The collection card contained the same product link, product ID and variant ID as the listing. The WinCell dispatch finding depends on that collection membership. Neither source supplied a complete payable total or confirmed delivery to a particular buyer address. [Dated receipts and source URLs](domestic-seller-coverage-2026-11-23.json)
+
+The bounded seed also collected nine phone names, sixteen laptop names, three tablets and four monitors from Beytech. Two phone queries and two laptop queries supplied the deeper samples. These names support discovery. Only the two exact headphone listings contributed to the cross-seller count. The final manifest indexed all nine pages within each source's limits. Its predecessor reached Beytech's per-run allowance on a redundant seventh query. The final manifest omits that query and uses the verified headphone listings for audio coverage. [November 18 five-category sample](domestic-bootstrap-validation.json)
+
+The first routed indexing pass used eight calls and 781 tokens. The fresh query used eleven tokens and retrieved a seeded passage through both keyword and vector search. The settled cost of those nine calls was USD 0.00001584. The unchanged replay yielded the same checkpoint, 46 observations, 34 vectors and zero additional requests. This database contained zero buyer sessions and zero buyer runs when the lookup returned both listings.
+
+An isolated synthetic price-change demonstration used the live OpenRouter route. Initial indexing took one call and stored four vectors. Changing only the price from USD 100 to USD 125 added one dated observation, preserved the earlier price and reused all four vectors without calling the provider. That separate demonstration used 24 tokens and cost USD 0.00000048. [Usage and price history](domestic-seller-coverage-2026-11-23.json)
