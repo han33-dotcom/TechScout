@@ -10,10 +10,10 @@ The live boxes on #75 stay open until the run below is performed and recorded.
 
 ## What the flow does
 
-The buyer worker runs the controller `app.buyer_flow:run`:
+The buyer worker runs the controller `app.buyer_flow:run_checkpoint`:
 
 ```text
-python -m app.run_worker --controller app.buyer_flow:run
+python -m app.run_worker --controller app.buyer_flow:run_checkpoint
 ```
 
 **Scope.** One source (Class Cellulars) and one product type: an exact-model phone
@@ -257,7 +257,7 @@ step 1 again first in each new terminal.
 3. Start the buyer worker. This is the only process that reads the key.
 
    ```powershell
-   .venv/Scripts/python.exe -m app.run_worker --controller app.buyer_flow:run
+   .venv/Scripts/python.exe -m app.run_worker --controller app.buyer_flow:run_checkpoint
    ```
 
 4. In the browser at `http://127.0.0.1:8000`, run one search:

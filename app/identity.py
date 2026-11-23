@@ -821,6 +821,49 @@ def _terms(offer: v2.Offer) -> dict[str, Fact | None]:
     return terms
 
 
+def model_identity(offer: v2.Offer) -> tuple:
+    """Identify a model across retailers with source-specific product IDs."""
+    product = offer.variant.product
+    return product.category, _identity_value('manufacturer', product.manufacturer), _identity_value('model', product.model)
+
+
+def _configuration_values(offer):
+    specs = offer.variant.specs
+    facts = {name: getattr(specs, name) for name in type(specs).model_fields if name != 'category'}
+    facts['color'] = offer.variant.color
+    values = {name: _identity_value(name, fact.value) for name, fact in facts.items()
+              if fact is not None and fact.state == 'known'}
+    values['model_identity'] = model_identity(offer)
+    return values, any(f is not None and f.state == 'conflict' for f in facts.values())
+
+
+def changed_listing_configuration(previous: v2.Offer, current: v2.Offer) -> bool:
+    """An unchanged retailer SKU can gain an identifier, but cannot override different hardware."""
+    old_id, new_id = previous.variant.variant_id, current.variant.variant_id
+    if old_id != new_id and any(marker in old_id and marker in new_id
+                                for marker in (':gtin:', ':mpn:', ':configuration:')):
+        return True
+    previous_values, _ = _configuration_values(previous)
+    current_values, _ = _configuration_values(current)
+    return any(previous_values[k] != current_values[k] for k in previous_values.keys() & current_values.keys())
+
+
+def conflicting_configurations(offers) -> set:
+    """Detect collisions before trusting a shared part number or configuration ID."""
+    observed, collisions = {}, set()
+    for offer in offers:
+        key = (offer.variant.product.product_id, offer.variant.variant_id)
+        fields = observed.setdefault(key, {})
+        values, conflict = _configuration_values(offer)
+        if conflict:
+            collisions.add(key)
+        for name, value in values.items():
+            if name in fields and fields[name] != value:
+                collisions.add(key)
+            fields[name] = value
+    return collisions
+
+
 def compare_offers(left: v2.Offer, right: v2.Offer) -> OfferComparison:
     """Compare supported evidenced hardware, separately exposing purchase-term differences.
 

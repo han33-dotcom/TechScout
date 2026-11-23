@@ -4,7 +4,10 @@ Start it as the buyer worker's controller, in its own backend process:
 
     python -m app.run_worker --controller app.buyer_flow:run
 
-Scope: one source (Class Cellulars) and one product type (an exact-model phone search,
+The normal worker uses the catalog-first domestic controller in app.domestic_buyer.
+The following checkpoint remains available as app.buyer_flow:run_checkpoint.
+
+Checkpoint scope: one source (Class Cellulars) and one product type (an exact-model phone search,
 delivered in Lebanon). Other requests end as an honest abstention that says so.
 
 The run goes: interpret the request; read the listings (live, or listings stored by an
@@ -117,6 +120,8 @@ class FlowDependencies:
     traces: Path | None = None
     versions: dict = field(default_factory=dict)
     wall_clock: Callable[[], datetime] = _utc_now
+    domestic_sources: object | None = None
+    onboarding: object | None = None
 
 
 def supported(request: v2.ShoppingRequest) -> str | None:
@@ -155,24 +160,43 @@ _PRODUCTION: FlowDependencies | None = None
 _PRODUCTION_LOCK = threading.Lock()
 
 
-def worker_dependencies() -> FlowDependencies:
+def worker_dependencies(*, checkpoint=False) -> FlowDependencies:
     """Built once per worker process (database engines, gate, providers); a failed build is
     retried on the next run, so fixing the configuration needs no restart. Changing a working
     configuration does: restart the worker."""
     global _PRODUCTION
     with _PRODUCTION_LOCK:
         if _PRODUCTION is None:
-            _PRODUCTION = production_dependencies()
+            _PRODUCTION = production_dependencies(require_inference=checkpoint)
+        elif _PRODUCTION.inference is None:
+            # A missing route may have been configured between runs. Reuse the same
+            # gate, database engines and ledger when enabling the newly available route.
+            load_env_file(names=('OPENROUTER_API_KEY',))
+            path = config_path()
+            inference = _configured_inference(path, required=checkpoint)
+            if inference is not None:
+                versions = dict(_PRODUCTION.versions, inference_config_sha256=_sha256(path))
+                _PRODUCTION = replace(_PRODUCTION, inference=inference, versions=versions)
         return _PRODUCTION
 
 
-def production_dependencies() -> FlowDependencies:
-    """The worker's wiring from its backend environment. Raises InferenceUnavailable or
-    BudgetDenied, naming what is missing, before anything is reserved or sent."""
+def _configured_inference(path, *, required):
+    try:
+        return build_inference(load_inference_config(path))
+    except InferenceUnavailable:
+        if required:
+            raise
+        return None
+
+
+def production_dependencies(*, require_inference=True) -> FlowDependencies:
+    """Wire the backend. The single-source checkpoint explicitly requires its inference route."""
     from app.accounting import Ledger
     from app.corpus import Corpus
     from app.corpus_contracts import ProcessingVersion
     from app.directory import Directory
+    from app.domestic_buyer_sources import DomesticBuyerSources
+    from app.onboarding import ActivationRegistry, OnboardingQueue
     from app.embeddings import EmbeddingRoute, RATE_VARIABLE
     from app.research_workers import ResearchWorkers
     from app.source_registry import DEFAULT_REGISTRY
@@ -180,15 +204,17 @@ def production_dependencies() -> FlowDependencies:
     from app.storage import Storage
     load_env_file(names=('OPENROUTER_API_KEY', RATE_VARIABLE))
     path = config_path()
-    inference = build_inference(load_inference_config(path))
+    inference = _configured_inference(path, required=require_inference)
     ledger = Ledger.configured()
     storage = Storage()
-    gate = SourceGate(DEFAULT_REGISTRY)
-    source = ClassCellularsSource(gate_fetcher(gate, DEFAULT_REGISTRY), storage=storage)
+    registry = ActivationRegistry(storage)
+    directory = Directory(storage, registry_path=registry)
+    gate = SourceGate(registry)
+    source = ClassCellularsSource(gate_fetcher(gate, registry), storage=storage)
     # No reviewed shared extraction profile reads Class Cellulars pages yet, so the research
     # workers read only what the public corpus already holds for these listings; a field they
     # cannot settle stays an explicit gap, and they make no model call to pick a page to fetch.
-    workers = ResearchWorkers(Directory(storage), Corpus(storage), gate, {}, embeddings=EmbeddingRoute.configured())
+    workers = ResearchWorkers(directory, Corpus(storage), gate, {}, embeddings=EmbeddingRoute.configured())
     processing = ProcessingVersion(corpus_version=CORPUS_VERSION, index_version=CORPUS_VERSION,
                                    extraction_version=source.adapter_version(), chunk_version='none')
     load_env_file(names=DISCOVERY_ENV)
@@ -198,7 +224,10 @@ def production_dependencies() -> FlowDependencies:
                     source_registry_sha256=_sha256(Path(DEFAULT_REGISTRY)),
                     source=dict(source_id=source.source_id, adapter_version=source.adapter_version()))
     return FlowDependencies(ledger=ledger, inference=inference, source=source, research=research,
-                            traces=ROOT / 'var' / 'traces', versions=versions)
+                            traces=ROOT / 'var' / 'traces', versions=versions,
+                            domestic_sources=DomesticBuyerSources(storage, gate, directory,
+                                                                  fallback=workers.domestic_tools.fallback),
+                            onboarding=OnboardingQueue(storage, registry, directory=directory))
 
 
 def listing_resources(request, read: SourceRead) -> tuple:
@@ -229,8 +258,17 @@ def listing_resources(request, read: SourceRead) -> tuple:
 
 def run(context) -> None:
     """Entry point for ``python -m app.run_worker --controller app.buyer_flow:run``."""
+    _start(context, checkpoint=False)
+
+
+def run_checkpoint(context) -> None:
+    """Run the original single-source Class Cellulars live checkpoint (#75/#144)."""
+    _start(context, checkpoint=True)
+
+
+def _start(context, *, checkpoint):
     try:
-        deps = worker_dependencies()
+        deps = worker_dependencies(checkpoint=checkpoint)
     except (InferenceUnavailable, BudgetDenied) as exc:
         # The operator reads the detail in the worker log; the buyer sees a fixed message.
         log.warning('Buyer worker is not configured: %s', exc)
@@ -239,11 +277,18 @@ def run(context) -> None:
         except (RunError, ValueError):
             pass
         return
-    execute(context, deps)
+    execute(context, deps, checkpoint=checkpoint)
 
 
-def execute(context, deps: FlowDependencies) -> None:
-    _Flow(context, deps).run()
+def execute(context, deps: FlowDependencies, *, checkpoint=False) -> None:
+    if deps.domestic_sources is not None and not checkpoint:
+        from app.domestic_buyer import DomesticBuyerFlow
+        DomesticBuyerFlow(context, deps).run()
+    else:
+        if checkpoint and deps.research:
+            workers = replace(deps.research.workers, domestic_tools=None, discovery=None)
+            deps = replace(deps, research=replace(deps.research, workers=workers))
+        _Flow(context, deps).run()
 
 
 class _Flow:
@@ -258,7 +303,7 @@ class _Flow:
         self.nonfinal_by = min(NONFINAL_BY, self.final_by)
         self.stop, self.done = threading.Event(), threading.Event()
         self.calls = CallLog()
-        self.roles = TracedProvider(deps.inference.roles, self.calls)
+        self.roles = TracedProvider(deps.inference.roles, self.calls) if deps.inference is not None else None
         self.job = None
         self.limits: set[str] = set()
         self.trace = dict(trace_version=TRACE_VERSION, run=self.run_ref.model_dump(mode='json'),
@@ -271,7 +316,8 @@ class _Flow:
                                       final_by_s=self.final_by, finalists=MAX_FINALISTS,
                                       ledger_buyer_caps=dict(spend_usd='1', research_spend_usd='0.75',
                                                              calls=40, seconds=120)),
-                          versions=dict(deps.versions, inference=deps.inference.versions()),
+                          versions=dict(deps.versions, inference=deps.inference.versions() if deps.inference else
+                                        dict(provider='openrouter', status='unavailable', fallback='disabled')),
                           phases=[], source=None, research=None, offers=None, writer=None)
 
     # Time, cancellation and publication
@@ -601,11 +647,12 @@ class _Flow:
                                  coverage=self.coverage, uncertain=tuple(uncertain))
         seconds = min(30.0, self.left(self.final_by) - 1)
         self.publish(status='running', phase='write')
-        if self.stopped() or seconds < MIN_WRITER_SECONDS:
-            if not self.stopped():
+        if self.stopped() or seconds < MIN_WRITER_SECONDS or self.deps.inference is None:
+            if seconds < MIN_WRITER_SECONDS and not self.stopped():
                 self.limits.add('deadline')
+            reason = 'OpenRouter inference route unavailable' if self.deps.inference is None else 'no time left for the writer'
             explanation = deterministic_explanation(context)
-            self.trace['writer'] = dict(source='fallback', reason='no time left for the writer', status='not_called')
+            self.trace['writer'] = dict(source='fallback', reason=reason, status='not_called')
             return v2.RunExplanation(text=explanation.text, evidence_ids=explanation.evidence_ids, source='fallback')
         provider = TracedProvider(self.deps.inference.writer(seconds), self.calls, role='writer')
         writer = OpenAIWriter.for_job(self.job, seconds=seconds, provider=provider, cancelled=self.stopped)

@@ -15,9 +15,10 @@ an assertion that every planned feature is already operational.
 - The backend includes versioned source evidence, scoped full-text/vector retrieval,
   freshness, a retailer directory, shared resource accounting, bounded research
   workers, deterministic matching/cost checks, verification and grounded writing.
-- The buyer worker requires an explicitly configured trusted controller. Without
-  one, API runs remain queued. Full-product orchestration, initial collection,
-  scheduled refresh and automatic onboarding remain separate backlog tasks.
+- The domestic buyer worker verifies retailer links, compares exact configurations
+  across sellers and selects up to three models for needs-based requests. Start it
+  with `python -m app.run_worker --controller app.buyer_flow:run` alongside the API.
+  With no configured worker, buyer runs remain queued. [Buyer worker setup](docs/buyer-api.md)
 - Class Cellulars, Mojitech and Beytech have existing readers/catalog helpers.
   Coverage is field/category-specific and includes documented live-access gaps.
   The [PC and Parts reader](docs/pcandparts.md) is validated with synthetic fixtures;

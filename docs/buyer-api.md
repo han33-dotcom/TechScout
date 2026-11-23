@@ -67,10 +67,41 @@ Its integration must preserve a single run resource allowance across clarificati
 resumes; the API active-time counter does not itself authorize paid calls. A Python
 thread cannot forcibly terminate a remote request already dispatched.
 
-The first trusted controller is `app.buyer_flow:run` (#75, [first live flow](live-flow.md)):
-one source and exact-model phone searches. Publication accepts `source_outcomes` and the
-additive `explanation`. Without a configured buyer worker, API runs stay honestly queued. The existing
-Compose `worker` runs ingestion; it does not impersonate a shopping controller.
+Start the domestic buyer worker in the backend environment with the shared database, evidence
+volume, inference configuration and ledger used by the API.
+
+```text
+python -m app.run_worker --controller app.buyer_flow:run
+```
+
+The controller uses the domestic catalog for all five categories. A retailer link checks only
+the linked seller and selected configuration. An exact-model request seeks two independent
+sellers with the same configuration. A needs request can return three distinct models with
+seller offers grouped below each. OpenRouter selects suitable models from cited, current
+specifications. A requirement without supporting evidence stays unresolved. With no usable
+OpenRouter configuration or key, the worker can still verify domestic offers and report
+coverage. The writer uses its deterministic explanation and model suitability stays unresolved.
+
+Catalog prices retain their original observation dates. A historical price above the buyer's
+maximum can still trigger a recheck. The controller starts with known listings and reviewed
+directory product URLs. For a gap in comparative coverage it can issue one targeted
+multi-channel search, immediately read a new in-scope listing, and queue a new shop for
+background onboarding. An unknown shop from a buyer-supplied link contributes its public
+origin and category only. The run stays domestic even for a request with international opt-in.
+
+Up to three workers can read independent sources concurrently. They share the run ledger
+and return their findings to one controller. Every external action records the missing fact,
+its effect on the decision and the likely source. Research ends before the final 30 seconds.
+Verification and the writer share the remaining active time within the 120-second limit.
+Rechecks require actual response receipts for the selected SKU, local dispatch, delivery to
+the requested destination and mandatory charges. Alternatives can replace unavailable or
+over-budget offers. An evaluator can request one targeted reread. The final snapshot
+reports checked sellers and the qualifying coverage even when discovery is unavailable.
+
+The original one-source phone checkpoint is available as `app.buyer_flow:run_checkpoint`.
+Its independent runbook covers the inference configuration, ledger and bounded live check.
+Without a configured buyer worker, API runs remain queued. The Compose ingestion worker
+continues to serve its own queue. [Single-source live runbook](live-flow.md)
 
 ## React and validation
 
