@@ -1,6 +1,6 @@
 import type { components } from './api-schema';
 
-export type ShoppingRequest = components['schemas']['ShoppingRequest-Input'];
+export type ShoppingRequest = components['schemas']['DomesticShoppingRequest'];
 export type RunReference = components['schemas']['RunReference'];
 export type RunSnapshot = components['schemas']['RunSnapshot'];
 export type ComparisonWorkspace = components['schemas']['ComparisonWorkspace'];

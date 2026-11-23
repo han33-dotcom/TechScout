@@ -13,11 +13,7 @@ python -m alembic upgrade head
 python -m app.directory import-seeds
 ```
 
-The importer adds 20 Lebanese audit/lead entries and six confirmed international
-planning targets: Microless UAE and B&H US for direct-delivery investigation, Amazon
-US for forwarding investigation, MyUS first and Stackry backup for forwarding, and
-Shop & Ship as a candidate. These roles do not establish item delivery, price, stock,
-route acceptance or qualifying offers. Imports are idempotent, older updates cannot
+The importer loads the Lebanese audit and domestic listing sellers. Imports are idempotent, older updates cannot
 replace newer data, and equal-time conflicting revisions are rejected.
 
 Canonical directory/seller IDs, marketplace membership, origins, aliases, categories,
@@ -25,7 +21,7 @@ brands, purchase markets, routes, methods, capability references and dated polic
 links persist together. Alias lookup fails explicitly on ambiguity: two sellers on
 one marketplace must not be collapsed. Source country is separate from purchase
 markets and fulfillment role. A US evidence source can support a Lebanese offer;
-runtime selection of foreign purchase markets still requires explicit opt-in.
+runtime and collection queries select the Lebanese purchase market.
 
 Coverage has distinct discovered, category retrieval-tested and qualifying-offer
 levels. Tested/qualifying levels require dated evidence references. The audit's
@@ -51,6 +47,6 @@ time, including revocation, runtime budgets and redirect rules. No permission-em
 or teammate-review gate is introduced.
 
 Tests use synthetic registry data and the checked-in audit. They demonstrate aliases,
-marketplace separation, opt-in, disabled/missing capability handling, truthful
+marketplace separation, domestic selection, disabled/missing capability handling, truthful
 coverage, idempotent import and bounded category selection on SQLite/PostgreSQL.
 The directory does not itself start background ingestion or buyer research.

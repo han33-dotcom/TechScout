@@ -1,13 +1,14 @@
 """Thin same-origin JSON handlers over the durable buyer application service."""
 from datetime import datetime
+from typing import Literal
 
 from fastapi import APIRouter, Request, Response, Query
 from fastapi.responses import JSONResponse
-from pydantic import Field
+from pydantic import Field, field_validator
 
 from app.buyer_runs import RunError
 from app.contracts import Model, Text
-from app.contracts_v2 import ShoppingRequest, RunSnapshot, RunReference, ComparisonWorkspace
+from app.contracts_v2 import Country, MarketScope, ShoppingRequest, RunSnapshot, RunReference, ComparisonWorkspace
 from app.buyer_history import HistoryList, HistoricalWorkspace, DeletionResult, export_comparison
 
 COOKIE = 'techscout_session'
@@ -27,8 +28,25 @@ class ClarificationCommand(RunCommand):
     answer: str = Field(min_length=1,max_length=4000)
 
 
+class DomesticMarketScope(MarketScope):
+    """Accepted on writes. Saved v2 requests retain their original market scope."""
+    include_international: Literal[False] = False
+    international_markets: tuple[Country, ...] = Field(default=(), max_length=0)
+
+    @field_validator('include_international', mode='before')
+    @classmethod
+    def domestic_only(cls, value):
+        if value is not False:
+            raise ValueError('TechScout searches domestic offers in Lebanon only')
+        return value
+
+
+class DomesticShoppingRequest(ShoppingRequest):
+    market_scope: DomesticMarketScope = Field(default_factory=DomesticMarketScope)
+
+
 class RefinementCommand(RunCommand):
-    request: ShoppingRequest
+    request: DomesticShoppingRequest
 
 
 class BodyLimit:
@@ -87,7 +105,7 @@ def router(*,cookie_secure=True):
         return SessionInfo(csrf_token=csrf,expires_at=expires)
 
     @api.post('/runs',response_model=RunSnapshot,status_code=202)
-    def start(body:ShoppingRequest,request:Request):
+    def start(body:DomesticShoppingRequest,request:Request):
         return request.app.state.buyer_runs.start(owned(request,mutate=True),body)
 
     @api.get('/runs/{run_id}',response_model=ComparisonWorkspace)

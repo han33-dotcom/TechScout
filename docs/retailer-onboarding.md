@@ -102,10 +102,8 @@ for:
 
 ## Limits, retries and failures
 
-Each claim of a lead is its own `maintenance` ledger job, international when the lead's market
-scope is. Probe fetches, local parsing windows and model calls therefore count against the
-probe's source limits, the shared source leases, the daily maintenance allowance (and its
-international subset) and the project total.
+Each domestic lead claim gets its own `maintenance` ledger job. Probes, parsing and model
+calls count against source limits, shared leases, the daily maintenance allowance and the project total.
 - A ledger refusal defers the lead without using an attempt, and stops the worker run. The
   lead waits for the next UTC day when today's maintenance or project allowance is spent or
   the campaign is stopped. A busy shared slot only pauses it for five minutes.

@@ -392,6 +392,15 @@ class Offer(Contract):
     costs: tuple[Charge, ...] = ()
     evidence: tuple[Evidence, ...] = ()
 
+    def locally_fulfillable(self, *, allow_unknown_origin=False) -> bool:
+        if self.seller.market != 'LB':
+            return False
+        if isinstance(self.route, PickupRoute):
+            return True
+        return isinstance(self.route, DirectRoute) and (
+            self.route.origin_country == 'LB' or allow_unknown_origin and self.route.origin_country == 'ZZ'
+        )
+
     @model_validator(mode='after')
     def bind_offer_evidence(self):
         if isinstance(self.route, PickupRoute) and self.seller.market != 'LB':

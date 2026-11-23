@@ -1,6 +1,6 @@
 # Tech Scout
 
-Evidence-backed electronics comparison for buyers in Lebanon. FastAPI serves the React comparison workspace and owned run APIs; the full live shopping controller is still being integrated.
+TechScout compares electronics from local sellers for pickup or delivery from inside Lebanon. FastAPI serves the React comparison workspace and owned run APIs; the full live shopping controller is still being integrated.
 
 ## Current implementation
 
@@ -28,7 +28,7 @@ an assertion that every planned feature is already operational.
   for legacy search limitations and the [v2 contracts](docs/full-product-contracts.md).
 
 Live work requires the shared ledger described in [accounting](docs/shared-accounting.md).
-Its provisioning/reconciliation remains tracked in [#60](https://github.com/han33-dotcom/TechScout/issues/60).
+The [local accounting setup](docs/local-accounting.md) records provisioning and historical charges.
 Passing offline tests does not prove provider access, complete retailer coverage or
 qualified buyer recommendations. Retailer permission emails are not a dependency;
 the existing public-data assumption and technical source gates still apply.

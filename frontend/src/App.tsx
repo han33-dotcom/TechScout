@@ -1,6 +1,6 @@
 import { useState, useEffect, type FormEvent, type ReactNode } from 'react';
 import { BuyerApi, type RunSnapshot, type ComparisonWorkspace } from './api';
-import { categories, examples, initialDraft, specLabels, toRequest, fromRequest, type Draft } from './request';
+import { categories, domesticScope, examples, initialDraft, specLabels, toRequest, fromRequest, type Draft } from './request';
 import { active, useWorkspace, type Transport } from './useWorkspace';
 import './styles.css';
 import Comparison from './Comparison';
@@ -24,7 +24,7 @@ export function RequestForm({ draft, setDraft, onSubmit, busy, refining }: { dra
       <label>Condition<select value={draft.condition} onChange={e => field('condition', e.target.value as Draft['condition'])}><option value="new">New only</option><option value="used">Used only</option><option value="refurbished">Refurbished only</option></select></label>
       <label>Fulfillment<select value={draft.mode} onChange={e => field('mode', e.target.value as Draft['mode'])}><option value="any">Delivery or pickup</option><option value="delivery">Delivery</option><option value="pickup">Pickup</option></select></label>
       <label>Payment<select value={draft.payment} onChange={e => field('payment', e.target.value as Draft['payment'])}><option value="">No preference</option><option value="cash">Cash</option><option value="card">Card</option></select></label>
-    </div><label className="toggle"><input type="checkbox" checked={draft.international} onChange={e => field('international', e.target.checked)} /><span>Include international offers<small>Keep Lebanon results and compare supported overseas routes.</small></span></label><p className="muted">A target is a preference. Only a hard maximum is a price ceiling. Your original wording is kept for interpretation.</p></details>
+    </div><p className="muted">A target is a preference. Only a hard maximum is a price ceiling. Your original wording is kept for interpretation.</p></details>
   </form>;
 }
 export function Progress({ snapshot, busy, cancel, clarify }: { snapshot: RunSnapshot; busy: boolean; cancel: () => void; clarify: (answer: string) => void }) {
@@ -48,8 +48,8 @@ export default function App({ transport = api, historyTransport = api, renderRes
   useEffect(() => { if (state.workspace && !dirty && !state.busy && !state.error) setDraft(fromRequest(state.workspace.current.request)); }, [state.workspace, dirty, state.busy, state.error]);
   const submit = (e: FormEvent) => { e.preventDefault(); setValidation(''); try { const request = toRequest(draft, state.workspace?.current.request); setDirty(false); void state.submit(request); } catch (error) { setValidation(error instanceof Error ? error.message : 'Check your requirements.'); } };
   return <><header className="topbar"><a className="brand" href="/" aria-label="TechScout home"><span className="brand-mark">t↗</span>techscout<span className="brand-dot">.</span></a><span className="location">LB <span>Built for buying in Lebanon</span></span></header>
-    <main><section className="hero"><span className="eyebrow">LESS GUESSWORK. BETTER CHOICES.</span><h1>Find the right tech.<br/><span>Know what you’re buying.</span></h1><p>Tell us what matters. Compare configurations, sellers and the full cost, with evidence you can check.</p></section>
-      <History api={historyTransport} onDeleted={state.forget} onRecheck={request=>{setDirty(false);setValidation('');void state.startFresh({...request,request_id:crypto.randomUUID(),revision:1});}}/>
+    <main><section className="hero"><span className="eyebrow">LESS GUESSWORK. BETTER CHOICES.</span><h1>Find the right tech.<br/><span>Know what you’re buying.</span></h1><p>Tell us what matters. Compare configurations, local sellers and the full cost, with evidence you can check.</p></section>
+      <History api={historyTransport} onDeleted={state.forget} onRecheck={request=>{setDirty(false);setValidation('');void state.startFresh({...request,market_scope:domesticScope,request_id:crypto.randomUUID(),revision:1});}}/>
       <section className="panel request-panel" aria-label="Your search"><RequestForm draft={draft} setDraft={edit} onSubmit={submit} busy={state.busy} refining={!!state.workspace} />{validation && <p role="alert" className="error">{validation}</p>}</section>
       {!state.workspace && <div className="examples"><span>Try an example</span>{examples.map(example => <button key={example.label} onClick={() => edit(example.draft)}>{example.label} ↗</button>)}<small>These examples have preset requirements. General language interpretation happens during research.</small></div>}
       {state.error && <div role="alert" className="error panel"><p>{state.error}</p>{state.workspace && <button disabled={state.busy} onClick={() => void state.recover()}>Check latest status</button>}</div>}

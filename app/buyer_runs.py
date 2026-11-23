@@ -143,6 +143,8 @@ class BuyerRunService:
             raise RunError(409,'This session already has an active run; refine or cancel it')
 
     def _new(self,db,now,owner,request,previous=None):
+        if request.market_scope.include_international:
+            raise RunError(422, 'TechScout searches domestic offers in Lebanon only')
         self._admit(db,owner)
         run=v.RunReference(run_id=str(uuid.uuid4()),run_revision=1,request_id=request.request_id,request_revision=request.revision)
         snapshot=v.RunSnapshot(run=run,request=request,status='queued',phase='interpret',started_at=now,updated_at=now)
@@ -272,6 +274,9 @@ class BuyerRunService:
                     buyer_runs.c.run_id).limit(1)).mappings().first()
             if row is None:
                 return None
+            if row['snapshot']['request'].get('market_scope', {}).get('include_international'):
+                self._finish(db,row,now,'cancelled','International search retired; refine for domestic offers')
+                return None
             if row['active_ms']>=self.limit_ms:
                 self._finish(db,row,now,'partial','Active execution allowance exhausted')
                 return None
@@ -321,10 +326,15 @@ class BuyerRunService:
                 if value is not None:
                     data[key]=value
             snapshot=v.RunSnapshot.model_validate(data)
+            if any(not item.offer.locally_fulfillable(allow_unknown_origin=True)
+                   for item in (*snapshot.provisional, *snapshot.uncertain)):
+                raise ValueError('Buyer results require a domestic seller and local fulfillment')
             if snapshot.recommendations:
                 from app.eligibility import check_full_product
                 for group in snapshot.recommendations:
                     for checked in group.offers():
+                        if not checked.offer.locally_fulfillable():
+                            raise ValueError('Recommendations require local pickup or dispatch from Lebanon')
                         if check_full_product(snapshot.request,checked.offer).outcome!='pass':
                             raise ValueError('Recommendation does not meet the buyer hard requirements')
                         if any(charge.valid_until is not None and charge.valid_until <= now

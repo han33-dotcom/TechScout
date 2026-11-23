@@ -204,7 +204,9 @@ class LeadIntakeTests(OnboardingCase):
         self.assertEqual(self.queue.get('cedartech.example').record.markets, ('LB',))
         foreign = request(market_scope={'include_international': True, 'international_markets': ['US']})
         self.queue.enqueue_tavily([Lead('https://usshop.example/p/1', 't', 's', .5)], foreign)
-        self.assertEqual(self.queue.get('usshop.example').record.markets, ('LB', 'US'))
+        self.assertEqual(self.queue.get('usshop.example').record.markets, ('LB',))
+        self.assertEqual(self.queue.enqueue(SCOUT, channel='buyer', categories=('laptop',),
+            markets=('US',), reason='overseas only').status, 'rejected')
         unsupported = self.queue.enqueue(SCOUT, channel='tavily', categories=('toaster',), reason='t')
         self.assertEqual(unsupported.status, 'rejected')
 
@@ -705,7 +707,7 @@ class FailureTests(OnboardingCase):
         (outcome,) = self.worker().run()
         self.assertEqual(outcome.status, 'active')
 
-    def test_a_lead_whose_markets_grow_after_a_deferral_opens_a_new_ledger_job(self):
+    def test_old_scope_after_a_deferral_keeps_both_jobs_domestic(self):
         self.enqueue(SCOUT, TRAIL)
         other = self.ledger.open_job('other-maintenance', 'maintenance')
         held = [other.reserve('work', Charge(Decimal(0)), 60) for _ in range(2)]
@@ -718,7 +720,7 @@ class FailureTests(OnboardingCase):
         (outcome,) = self.worker().run()
         self.assertEqual(outcome.status, 'active', outcome.reason)
         jobs = [j for j in self.ledger.snapshot()['jobs'] if j.startswith('onboarding:cedartech.example:1:')]
-        self.assertEqual(sorted(j.split(':')[4] for j in jobs), ['domestic', 'international'])  # one job per claim
+        self.assertEqual(sorted(j.split(':')[4] for j in jobs), ['domestic', 'domestic'])  # one job per claim
 
     def test_project_stop_also_defers(self):
         self.enqueue(SCOUT, TRAIL)
