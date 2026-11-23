@@ -4,13 +4,16 @@ from collections import Counter
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from hashlib import sha256
+from itertools import groupby
 import json
 from pathlib import Path
 from uuid import uuid4
 
 from app.accounting import BudgetDenied, Ledger
 from app.adapters.woo_catalog import _records
-from app.bootstrap import DOMESTIC, RETIRED_IMPORT_SOURCES, Manifest, SeedBudget, extract_seed, seed_processing, seed_target
+from app.bootstrap import (RETIRED_IMPORT_SOURCES, ListingSeed, Manifest, Seed, SeedBudget,
+                           extract_seed, index_pending, seed_processing, seed_target)
+from app.embeddings import EmbeddingAllowanceExceeded, EmbeddingUnavailable
 from app.corpus import Corpus
 from app.corpus_contracts import DocumentCapture
 from app.directory import Directory
@@ -35,8 +38,6 @@ def target(seed, corpus, gate):
     if seed.source_id in RETIRED_IMPORT_SOURCES:
         raise ValueError('Retired international source')
     key, profile = seed_target(seed, corpus, gate._registry_path)
-    if not profile and seed.source_id not in DOMESTIC:
-        raise ValueError('Unknown domestic source')
     seller = seed.listing or seed.dispatch_for
     directory = Directory(corpus.storage, registry_path=gate._registry_path)
     record = directory.get(seller.retailer_id if seller else seed.source_id)
@@ -49,7 +50,7 @@ def target(seed, corpus, gate):
     return key, profile, options
 
 
-def plan(manifest, corpus, gate, *, now, limit, high_use=()):
+def plan(manifest, corpus, gate, *, now, limit, high_use=(), rotation=0):
     if now.utcoffset() is None or not 1 <= limit <= 100:
         raise ValueError('Use an aware planning time and a batch limit of 1–100')
     urls = {str(seed.url) for seed in manifest.seeds}
@@ -83,12 +84,44 @@ def plan(manifest, corpus, gate, *, now, limit, high_use=()):
                 row['state'] = 'due' if due <= now else 'deferred'
     candidates = sorted((row for row in rows if row['state'] in {'new', 'due', 'processing_due'}),
                         key=lambda row: (row['due_at'] or '', not row['high_use'], row['url']))
-    selected = [row['url'] for row in candidates[:limit]]
+    ordered = []
+    for _, group in groupby(candidates, key=lambda row: (row['due_at'], row['high_use'])):
+        peers = list(group)
+        offset = rotation % len(peers)
+        ordered.extend(peers[offset:] + peers[:offset])
+    selected = [row['url'] for row in ordered[:limit]]
     return dict(planned_at=now.isoformat(), resources=rows, selected=selected,
                 due=len(candidates), remaining_due=len(candidates) - len(selected))
 
 
-def check_page(seed, manifest, corpus, gate, budget, rows_left):
+def catalog_links(outcome, seed, corpus, gate, limit):
+    """A catalog URL is a lead. A separate scope check admits an exact listing revisit."""
+    from app.source_capabilities import safe_endpoint
+    links = {}
+    for row in _records(outcome, limit=limit):
+        if (row.get('parent') != 0 or row.get('type') not in ('simple', 'variable')
+                or not any(isinstance(cat, dict) and cat.get('slug') in seed.category_slugs
+                           for cat in (row.get('categories') or []))):
+            continue
+        url = row.get('permalink')
+        if not isinstance(url, str) or len(url) > 2048 or not safe_endpoint(url, seed.url.host):
+            continue
+        links[url] = None
+        if (row.get('type') != 'simple' or type(row.get('id')) is not int or row['id'] <= 0
+                or not isinstance(row.get('sku'), str) or not row['sku'].strip()):
+            continue
+        try:
+            candidate = Seed(source_id=seed.source_id, url=url, category=seed.category, content='listing',
+                             format='html', product_id=str(row['id']), sku=row['sku'],
+                             listing=ListingSeed(retailer_id=seed.source_id))
+            target(candidate, corpus, gate)
+        except (ValueError, PermissionError):
+            continue
+        links[url] = candidate.model_dump(mode='json')
+    return links
+
+
+def check_page(seed, manifest, corpus, gate, budget, rows_left, embedding=None):
     key, profile, options = target(seed, corpus, gate)
     policy = get_active_source(seed.source_id, gate._registry_path)
     previous = corpus.state(key)
@@ -147,6 +180,19 @@ def check_page(seed, manifest, corpus, gate, budget, rows_left):
         result['status'] = 'superseded'
         return result
     status = receipt.status
+    if seed.format == 'catalog':
+        result['product_links'] = catalog_links(outcome, seed, corpus, gate, min(100, rows_left))
+    if seed.listing:
+        current = corpus.state(key)
+        if current.retirement_status:
+            return dict(result, status='removed', sha256=outcome.response_sha256)
+        result['exact_listing_extracted'] = any(o.evidence[0].field_path == 'price' and o.fact.state == 'known'
+                                                for o in corpus.observations(receipt.document_id))
+    if embedding and embedding.provider and receipt.document_id:
+        try:
+            index_pending(corpus, receipt.document_id, embedding.provider, embedding.rate, budget)
+        except (EmbeddingUnavailable, EmbeddingAllowanceExceeded, BudgetDenied) as exc:
+            result['embedding_gap'] = str(exc)[:200]
     if status != 'new' and previous and (processing != previous.processing or previous.needs_processing):
         status = 'reprocessed'
     result.update(status=status, changed_fields=list(receipt.changed_fields),
@@ -154,19 +200,24 @@ def check_page(seed, manifest, corpus, gate, budget, rows_left):
     return result
 
 
-def refresh(manifest, *, ledger, corpus, gate, batch_id, limit, high_use=()):
+def refresh(manifest, *, ledger, corpus, gate, batch_id, limit, high_use=(), embedding=None, envelope=None,
+            rotation=0):
     """Freeze the first selection. A recovered lease never repeats an unacknowledged read."""
     if not batch_id.strip() or len(batch_id) > 100:
         raise ValueError('Provide a stable batch ID of 1–100 characters')
-    fingerprint = sha256(json.dumps([manifest.model_dump(mode='json'), limit, sorted(set(high_use))],
+    request = [manifest.model_dump(mode='json'), limit, sorted(set(high_use))]
+    if rotation:
+        request.append(rotation)
+    fingerprint = sha256(json.dumps(request,
                                     sort_keys=True).encode()).hexdigest()
-    job = ledger.open_job('refresh:' + batch_id, 'maintenance')
+    job = ledger.open_job('refresh:' + batch_id, 'maintenance', envelope=envelope)
     token = uuid4().hex
     # Planning reads the corpus outside the accounting transaction (they can be separate databases).
     with ledger._transaction() as (state, now):
         saved = state.get('refresh_batches', {}).get(job.run_id)
         planned_at = datetime.fromtimestamp(now, timezone.utc)
-    selection = saved['plan'] if saved else plan(manifest, corpus, gate, now=planned_at, limit=limit, high_use=high_use)
+    selection = saved['plan'] if saved else plan(manifest, corpus, gate, now=planned_at, limit=limit,
+                                                 high_use=high_use, rotation=rotation)
     with ledger._transaction() as (state, now):
         record = state.setdefault('refresh_batches', {}).setdefault(job.run_id, dict(
             digest=fingerprint, plan=selection, pages={}, tries={}, lease_until=0,
@@ -206,7 +257,7 @@ def refresh(manifest, *, ledger, corpus, gate, batch_id, limit, high_use=()):
                 record['pages'][url] = dict(status='in_flight')
             budget = SeedBudget(job, manifest, seed, token, gate._registry_path, checkpoints='refresh_batches')
             try:
-                page = check_page(seed, manifest, corpus, gate, budget, remaining)
+                page = check_page(seed, manifest, corpus, gate, budget, remaining, embedding)
             except (ValueError, PermissionError, BudgetDenied) as exc:
                 page = dict(status='skipped', reason=str(exc)[:200])
             with ledger._transaction() as (state, now):
@@ -230,8 +281,10 @@ def refresh(manifest, *, ledger, corpus, gate, batch_id, limit, high_use=()):
     spend = sum((Decimal(a['values'][3]) for a in attempts if a['status'] == 'completed'), Decimal(0))
     held = sum((Decimal(a['values'][3]) for a in attempts if a['status'] != 'completed'), Decimal(0))
     return dict(job_id=job.run_id, plan=record['plan'], pages=pages, counts=dict(counts),
-                source_attempts=len(attempts), extractions=sum(p.get('extractions', 0) for p in pages.values()),
-                embedding_calls=0, spend_usd=str(spend), unresolved_reservations_usd=str(held),
+                source_attempts=sum(a['kind'] == 'retrieval' for a in attempts),
+                extractions=sum(p.get('extractions', 0) for p in pages.values()),
+                embedding_calls=sum(a['kind'] == 'embedding' for a in attempts),
+                spend_usd=str(spend), unresolved_reservations_usd=str(held),
                 stop_reason=record.get('stop_reason'))
 
 

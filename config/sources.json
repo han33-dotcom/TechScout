@@ -11,10 +11,28 @@
       "mojitech",
       "beytech",
       "outgeeked",
-      "wincell"
+      "wincell",
+      "asus_directory"
     ]
   },
   "sources": [
+    {
+      "id": "asus_directory",
+      "name": "ASUS Middle East retailer directory",
+      "origin": "https://www.asus.com",
+      "status": "active",
+      "reviewed_at": "2026-11-23",
+      "admission": {
+        "basis": "Technical review of the public Lebanon retailer section on the manufacturer's site.",
+        "evidence": ["https://www.asus.com/me-en/content/where-to-buy/"],
+        "reviewed_at": "2026-11-23T20:47:15Z",
+        "scope": "GET the exact directory page. The Lebanon section yields leads only."
+      },
+      "allowed_endpoints": ["https://www.asus.com/me-en/content/where-to-buy/"],
+      "limits": {"requests_per_minute": 2, "concurrency": 1, "max_requests_per_run": 1},
+      "review_evidence": ["https://www.asus.com/me-en/content/where-to-buy/"],
+      "decision_reason": "Public HTTP 200. The lebanon section contains external partner-link anchors."
+    },
     {
       "id": "abed_tahan",
       "name": "Abed Tahan",

@@ -124,12 +124,15 @@ class SeedBudget:
         return self.job.reserve(kind, charge, seconds, **kwargs)
 
     def reserve_call(self, source_id, max_seconds):
+        return self.reserve_resource(source_id, str(self.seed.url), max_seconds)
+
+    def reserve_resource(self, source_id, url, max_seconds):
         policy = SourcePolicy.model_validate(get_active_source(source_id,self.registry))
         limits = policy.limits.model_copy(update={'concurrency':1,'requests_per_minute':min(
             policy.limits.requests_per_minute, self.manifest.limits.max_requests_per_source_minute, 6)})
         try:
             return SourceAttempt(self.reserve('retrieval',Charge(Decimal(0)),max_seconds,
-                source=source_id,limits=limits))
+                source=source_id,limits=limits,resource=url))
         except BudgetDenied:
             return None
 

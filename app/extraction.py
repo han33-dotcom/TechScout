@@ -197,6 +197,10 @@ def extract_structured(capture: DocumentCapture, profile: PageProfile, *, run: R
                          'http://schema.org/InStock':True, 'http://schema.org/OutOfStock':False}
                 if isinstance(offer.get('availability'),str) and offer['availability'] in stock:
                     add('stock',stock[offer['availability']],_excerpt(script,'availability',offer['availability']),suffix+'/availability')
+                if (profile.seller_names and capture.origin == 'maintenance' and
+                        offer.get('availability') in ('https://schema.org/Discontinued', 'http://schema.org/Discontinued')):
+                    add('resource.availability', 'discontinued', _excerpt(script, 'availability', offer['availability']),
+                        suffix + '/availability')
                 conditions = {'https://schema.org/NewCondition':'new','https://schema.org/UsedCondition':'used',
                               'https://schema.org/RefurbishedCondition':'refurbished'}
                 if isinstance(offer.get('itemCondition'),str) and offer['itemCondition'] in conditions:

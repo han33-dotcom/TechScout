@@ -367,6 +367,7 @@ class DomesticCatalog:
                     if not examples:
                         examples.append(dict(variant_key=key, listings=[i.summary() for i in list(sellers.values())[:2]]))
             by_category[category] = dict(listings=listing_count,recent_priced_variants=len(comparable),
+                recent_priced_domestic_sellers=len({item.seller_id for items in local.values() for item in items}),
                 recent_priced_variants_with_two_sellers=len(pairs),recent_priced_domestic_dispatch_variants=len(local),
                 domestic_variants_with_two_sellers=domestic_pairs,conflicting_variant_keys=len(recent)-len(comparable))
         totals = {name:sum(c[name] for c in by_category.values()) for name in next(iter(by_category.values()))}

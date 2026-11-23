@@ -493,7 +493,10 @@ class SourceGate:
         slot = self._limiter.acquire(budget.run_id, source_id, limits, self._clock(), wait)
         reservation, start = None, None
         try:
-            reservation = budget.reserve_call(source_id, slot.wait + CALL_TIMEOUT_S)
+            seconds = slot.wait + CALL_TIMEOUT_S
+            reserve_resource = getattr(type(budget), 'reserve_resource', None)
+            reservation = (reserve_resource(budget, source_id, url, seconds) if reserve_resource
+                           else budget.reserve_call(source_id, seconds))
             if reservation is None:
                 raise _Refusal('BUDGET_EXHAUSTED', source_id, 'the run budget refused the call')
             if slot.wait:

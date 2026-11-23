@@ -743,7 +743,11 @@ class ConfigurationTests(unittest.TestCase):
         registry = json.loads((ROOT / 'config' / 'sources.json').read_text(encoding='utf-8'))
         entries = {s['id']: s for s in registry['sources']}
         from app.domestic_retailer_profiles import HOSTS
-        self.assertEqual(set(adapters.ADAPTERS) | set(HOSTS), set(registry['live_release']['admitted_source_ids']))
+        settings = json.loads((ROOT / 'config/maintenance.json').read_text(encoding='utf-8'))
+        directories = {page['source_id'] for page in settings['manufacturer_pages']}
+        self.assertFalse(directories & (set(adapters.ADAPTERS) | set(HOSTS)))
+        self.assertEqual(set(adapters.ADAPTERS) | set(HOSTS) | directories,
+                         set(registry['live_release']['admitted_source_ids']))
         for source, adapter in adapters.ADAPTERS.items():
             with self.subTest(source=source):
                 config = adapter.config

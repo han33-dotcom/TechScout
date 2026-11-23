@@ -187,6 +187,9 @@ class DomesticBuyerFlow(_Flow):
             if dates:
                 provisional.append(v2.ProvisionalCandidate(offer=offer, observed_at=min(dates)))
         self.update_coverage()
+        from app.maintenance import signal
+        signal(self.deps.ledger, request.requirements.category, gap=not self.enough(self.catalog.values()),
+               catalog_urls=(offer.listing_url for offer in self.catalog.values()))
         self.publish(status='running', phase='research', coverage=self.coverage, source_outcomes=self.outcomes,
                      provisional=tuple(provisional[:MAX_UNCERTAIN]))
         if request.intent.kind != 'product_link' and not self.enough(self.catalog.values()):
