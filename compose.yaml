@@ -63,7 +63,10 @@ services:
       migrate:
         condition: service_completed_successfully
     command: ["python", "-m", "app.ingestion_worker"]
-    environment: *app-env
+    environment:
+      <<: *app-env
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      TECHSCOUT_EMBEDDING_USD_PER_MILLION: ${TECHSCOUT_EMBEDDING_USD_PER_MILLION:-}
     volumes:
       - evidence:/var/lib/techscout/evidence
     healthcheck:
