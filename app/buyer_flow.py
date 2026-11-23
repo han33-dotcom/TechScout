@@ -24,7 +24,7 @@ spend, versions; never prompts, answers or keys) is written under var/traces.
 """
 import asyncio
 from collections.abc import Callable
-from dataclasses import dataclass, field, replace
+from dataclasses import asdict, dataclass, field, replace
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 import hashlib
@@ -45,6 +45,7 @@ from app.buyer_sources import (
     CORPUS_VERSION, FETCH_ROOM_S, ClassCellularsSource, DeliveryChoice, SourceRead, gate_fetcher,
 )
 from app.contract_interfaces import PlanningContext, WritingContext
+from app.domestic_discovery import DISCOVERY_ENV, DomesticDiscovery
 from app.inference import (
     ROOT, CallLog, InferenceUnavailable, TracedProvider, build_inference, config_path, load_env_file,
     load_inference_config,
@@ -189,6 +190,8 @@ def production_dependencies() -> FlowDependencies:
     workers = ResearchWorkers(Directory(storage), Corpus(storage), gate, {})
     processing = ProcessingVersion(corpus_version=CORPUS_VERSION, index_version=CORPUS_VERSION,
                                    extraction_version=source.adapter_version(), chunk_version='none')
+    load_env_file(names=DISCOVERY_ENV)
+    workers.domestic_tools = DomesticDiscovery.from_env(gate, workers.directory)
     research = ResearchSetup(workers, processing, listing_resources)
     versions = dict(code=_code_version(), inference_config_sha256=_sha256(path),
                     source_registry_sha256=_sha256(Path(DEFAULT_REGISTRY)),
@@ -421,7 +424,12 @@ class _Flow:
                      source_outcomes=self.outcomes)
 
         # Research: the orchestrator plans over the listings the workers can read.
-        self._research(read)
+        research = self._research(read)
+        reports = research.reports if research is not None else ()
+        searches = [r.discovery_report for r in reports if r.discovery_report is not None]
+        if searches:
+            self.trace['discovery_channels'] = [dict(attempts=[asdict(a) for a in s.attempts],
+                                                     coverage=s.coverage(())) for s in searches]
 
         # Evaluate with the fixed rules, then choose the finalists.
         self.publish(status='running', phase='evaluate')
@@ -439,6 +447,14 @@ class _Flow:
         # Verify: the final phase re-reads the finalists live.
         finalists = candidates[:MAX_FINALISTS]
         recommendations, uncertain = self._verify(read, route, finalists)
+        if searches:
+            verified = tuple(offer for recommendation in recommendations for offer in recommendation.offers())
+            # The first buyer flow sources its finalists before web research. A rediscovered
+            # listing or retailer must not count as additional coverage from a search channel.
+            initial_ids = {offer.offer_id for offer in read.offers}
+            baseline = tuple(v for v in verified if v.offer.offer_id in initial_ids)
+            for search, record in zip(searches, self.trace['discovery_channels']):
+                record['coverage'] = search.coverage(verified, baseline=baseline)
         uncertain += [v2.UncertainAlternative(offer=o, reasons=(*_doubts(a), REASON_NOT_RECHECKED), cost=a.cost)
                       for o, a in candidates[MAX_FINALISTS:]]
         uncertain = uncertain[:MAX_UNCERTAIN]

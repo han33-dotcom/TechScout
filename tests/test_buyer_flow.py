@@ -537,15 +537,23 @@ class LimitTests(FlowCase):
 
     def test_one_failed_run_check_is_retried_not_treated_as_cancellation(self):
         failures = []
+        retried = threading.Event()
+        # Keep one fake provider call in flight until the watcher has actually
+        # retried. An otherwise complete offline run can take less than one poll.
+        self.openrouter.gate = lambda role: self.assertTrue(retried.wait(5))
 
         def flaky(context):
             check = context.cancelled
 
             def once():
                 # Only the flow's watcher sees the blip; the worker runner's own loop is unaffected.
-                if not failures and threading.current_thread().name == 'buyer-flow-watch':
-                    failures.append('database blip')
-                    raise RuntimeError('transient')
+                if threading.current_thread().name == 'buyer-flow-watch':
+                    if not failures:
+                        failures.append('database blip')
+                        raise RuntimeError('transient')
+                    stopped = check()
+                    retried.set()
+                    return stopped
                 return check()
             context.cancelled = once
         snapshot = self.start()
@@ -689,6 +697,7 @@ class ScopeAndConfigurationTests(FlowCase):
         self.assertEqual(deps.inference.roles.settings.purpose, 'buyer')
         self.assertEqual(deps.inference.writer(30).settings.prompt_version, 'writer-v1')
         self.assertEqual(deps.research.workers.profiles, {})
+        self.assertIs(deps.research.workers.domestic_tools.directory, deps.research.workers.directory)
         self.assertIsNone(deps.research.workers.provider)  # the flow injects the traced OpenRouter provider
         self.assertEqual(deps.versions['source']['adapter_version'], 'class_cellulars/1')
         self.assertEqual(len(deps.versions['inference_config_sha256']), 64)

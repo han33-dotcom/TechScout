@@ -43,7 +43,7 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 - [Owned buyer API and worker lifecycle](buyer-api.md)
 - [Buyer request, comparison and refinement UI](buyer-ui.md)
 - [Bounded Class Cellulars discovery and live-access limits](class-catalog.md)
-- [Direct Tavily discovery](discovery.md)
+- [Domestic discovery channels, source selection and accounting](discovery.md)
 - [Shared page extraction and Firecrawl fallback](shared-extraction.md)
 - [pr policy activation](pr-policy-activation.md)
 - [retailer access requests](retailer-access-requests.md)
