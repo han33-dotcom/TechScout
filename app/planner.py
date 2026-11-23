@@ -27,6 +27,7 @@ from app.contracts import Amount, Count, Model, Money, PositiveInt, ShoppingRequ
 from app.devices import canonical_manufacturer, match_model
 from app.storage import MAX_RUN_SECONDS
 from app.model_provider import ProviderConfig
+from app.inference import InferenceConfig
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_CONFIG = ROOT / 'config' / 'evaluation.json'
@@ -225,6 +226,7 @@ class EvaluationConfig(Model):
     # The prior Anthropic planner remains explicit historical evaluation config.
     # New operational model calls use this direct-provider configuration.
     model_provider: ProviderConfig | None = None
+    evaluation_inference: InferenceConfig | None = None
     caps: EvaluationCaps
     baselines: list[Literal['rule-planner', 'no-investigation']] = Field(min_length=1)
 

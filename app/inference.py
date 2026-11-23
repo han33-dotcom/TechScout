@@ -3,8 +3,8 @@
 Every model-driven buyer role (orchestrator planning, research ordering, evidence critique
 and the writer) gets an OpenRouterProvider built from this one configuration. It lives
 outside git (``var/inference.json`` by default, or the path in TECHSCOUT_INFERENCE_CONFIG)
-and is separate from the frozen evaluation files: ``config/evaluation.json`` and
-``eval/models.json`` keep their direct OpenAI route until #80 versions the protocol.
+and is separate from the evaluation configuration. The evaluation factory builds the same
+provider from the pinned route in config/evaluation.json.
 
 Nothing here constructs the direct OpenAI provider or reads OPENAI_API_KEY, and the route
 cannot name a fallback. A missing configuration, key or price fails explicitly with

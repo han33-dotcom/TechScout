@@ -1,6 +1,6 @@
 {
   "protocol": "TechScout held-out evaluation protocol",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "frozen_on": "2026-11-17",
   "issue": "https://github.com/han33-dotcom/TechScout/issues/78",
   "specification": "docs/evaluation-protocol.md",

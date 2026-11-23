@@ -122,6 +122,7 @@ class FlowDependencies:
     wall_clock: Callable[[], datetime] = _utc_now
     domestic_sources: object | None = None
     onboarding: object | None = None
+    research_parallelism: int = 3
 
 
 def supported(request: v2.ShoppingRequest) -> str | None:

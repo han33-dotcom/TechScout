@@ -1,5 +1,42 @@
 {
   "schema_version": 1,
+  "evaluation_inference": {
+    "route": {
+      "model": "openai/gpt-6.1-sol",
+      "provider": "openai",
+      "rates": {
+        "input": "2.000000",
+        "cached": "0.1000000",
+        "cache_write": "2.5000000",
+        "output": "10.00000"
+      },
+      "supported_parameters": [
+        "reasoning",
+        "include_reasoning",
+        "seed",
+        "max_tokens",
+        "response_format",
+        "structured_outputs",
+        "tools",
+        "tool_choice",
+        "verbosity",
+        "reasoning_effort"
+      ]
+    },
+    "pricing_checked_on": "2026-11-23",
+    "effort": "low",
+    "provider": "openrouter",
+    "roles": {
+      "max_input_tokens": 16384,
+      "max_output_tokens": 2048,
+      "timeout_seconds": 30
+    },
+    "writer": {
+      "max_input_tokens": 32768,
+      "max_output_tokens": 4096,
+      "timeout_seconds": 30
+    }
+  },
   "model_provider": {
     "provider": "openai",
     "model": "gpt-6.1-sol",

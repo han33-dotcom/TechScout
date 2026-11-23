@@ -154,7 +154,9 @@ class DomesticBuyerFlow(_Flow):
         self.verification_by = self.final_by - MIN_WRITER_SECONDS - 1
         self.read_by = self.verification_by - (8 if self.request.intent.kind == 'needs' else 0)
         self.nonfinal_by = max(0, min(self.nonfinal_by, self.final_by - 30, self.read_by - FETCH_ROOM_S - 2))
-        self.trace['limits'].update(nonfinal_by_s=self.nonfinal_by, concurrent_workers=3, recommendation_groups=3)
+        if deps.research_parallelism not in (1, 2, 3):
+            raise ValueError('Use one to three independent researchers')
+        self.trace['limits'].update(nonfinal_by_s=self.nonfinal_by, concurrent_workers=deps.research_parallelism, recommendation_groups=3)
         self.trace['limits'].pop('finalists')
         self.trace['controller'] = 'domestic'
         self.trace['actions'] = []
@@ -378,15 +380,14 @@ class DomesticBuyerFlow(_Flow):
             if self.enough(self.catalog.values()):
                 break
 
-    @staticmethod
-    def batches(listings):
+    def batches(self, listings):
         # Different sellers may be checked concurrently. Avoid spending two source slots
         # on the same shop in the same batch when its gate permits only one.
         pending = list(listings)
         while pending:
             sources, batch, rest = set(), [], []
             for listing in pending:
-                if len(batch) == 3 or listing.source_id in sources:
+                if len(batch) == self.deps.research_parallelism or listing.source_id in sources:
                     rest.append(listing)
                 else:
                     batch.append(listing)
