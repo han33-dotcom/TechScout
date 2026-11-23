@@ -24,7 +24,9 @@ class ResearchWorkerTests(unittest.TestCase):
     def setUp(self):
         directory_fixtures.DirectoryTests.setUp(self)
         self.directory.upsert(self.record(source_country='LB'))
-        self.ledger = Ledger(self.storage,'research-fixture',fixture=True)
+        # A one-second fake source lease must last a full second. SQLite's
+        # CURRENT_TIMESTAMP truncates subsecond times at the next second boundary.
+        self.ledger = Ledger(self.storage,'research-fixture',fixture=True,clock=lambda:datetime.now(timezone.utc))
         self.ledger.provision()
         self.job = self.ledger.open_job('research')
         self.gate = Mock()
