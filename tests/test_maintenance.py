@@ -78,13 +78,14 @@ class ScheduleTests(unittest.TestCase):
         lease.dispatch()
         code = """
 import sys
+import os
 from app.accounting import Ledger, BudgetDenied, Charge
 from app.contracts import SourceLimits
 from app.storage import Storage
 from datetime import datetime
 from decimal import Decimal
 db,project,now,url=sys.argv[1:]
-ledger=Ledger(Storage(db),project,fixture=True,clock=lambda:datetime.fromisoformat(now))
+ledger=Ledger(Storage(os.environ.get('TEST_DATABASE_URL') or db),project,fixture=True,clock=lambda:datetime.fromisoformat(now))
 job=ledger.open_job('buyer-api')
 try:
     job.reserve('retrieval',Charge(Decimal(0)),5,source='one',resource=url,
