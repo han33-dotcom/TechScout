@@ -6,6 +6,13 @@ import type { ComparisonWorkspace } from './api';
 import fixture from './fixtures/workspace.json';
 const data=()=>structuredClone(fixture) as ComparisonWorkspace;
 describe('comparison evidence boundaries',()=>{
+ it('labels an unknown pickup time at the selected branch',()=>{
+  const workspace=data(),offer=workspace.current.recommendations[0].primary.offer;
+  offer.route={kind:'pickup',route_id:'pickup-east-hamra',branch_id:'hamra',destination:{country:'LB',city:'Beirut'}};
+  offer.arrival={state:'unknown',reason:'No pickup window published',evidence_ids:[]};
+  render(<Comparison workspace={workspace}/>);
+  expect(screen.getAllByText('Pickup timing: Unknown').length).toBeGreaterThan(0);
+ });
  it('sorts exact decimals including exponent notation without rounding',()=>{expect(compareDecimal('1E+3','1000.00')).toBe(0);expect(compareDecimal('1000.00000000000001','1000')).toBe(1);expect(compareDecimal('0.01','0.1')).toBe(-1)});
  it('keeps one verified result, uncertainty and previous provisional separate',()=>{
   const w=data();render(<Comparison workspace={w}/>);

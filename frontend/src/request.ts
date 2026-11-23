@@ -4,8 +4,8 @@ export const domesticScope = { include_international: false as const, internatio
 type EditableRequest = ShoppingRequest | RunSnapshot['request'];
 export type Category = ShoppingRequest['requirements']['category'];
 export const categories: Record<Category, string> = { phone: 'Phones', laptop: 'Laptops', tablet: 'Tablets', monitor: 'Monitors', audio: 'Headphones & earbuds' };
-export interface Draft { text: string; kind: 'needs' | 'exact_model'; category: Category; target: string; maximum: string; currency: string; city: string; condition: 'new' | 'used' | 'refurbished'; mode: 'any' | 'delivery' | 'pickup'; payment: '' | 'cash' | 'card'; spec: string }
-export const initialDraft: Draft = { text: '', kind: 'needs', category: 'laptop', target: '', maximum: '', currency: 'USD', city: '', condition: 'new', mode: 'any', payment: '', spec: '' };
+export interface Draft { text: string; kind: 'needs' | 'exact_model'; category: Category; target: string; maximum: string; currency: string; city: string; branch: string; condition: 'new' | 'used' | 'refurbished'; mode: 'any' | 'delivery' | 'pickup'; payment: '' | 'cash' | 'card'; spec: string }
+export const initialDraft: Draft = { text: '', kind: 'needs', category: 'laptop', target: '', maximum: '', currency: 'USD', city: '', branch: '', condition: 'new', mode: 'any', payment: '', spec: '' };
 export const specFields = { phone: 'storage_gb', laptop: 'min_ram_gb', tablet: 'min_storage_gb', monitor: 'min_refresh_hz', audio: '' } as const;
 export const specLabels = { phone: 'Storage (GB)', laptop: 'Minimum RAM (GB)', tablet: 'Minimum storage (GB)', monitor: 'Minimum refresh rate (Hz)', audio: '' };
 export const examples: { label: string; draft: Draft }[] = [
@@ -40,7 +40,7 @@ export function toRequest(draft: Draft, base?: EditableRequest): ShoppingRequest
     intent, requirements: requirements as ShoppingRequest['requirements'], budget: target || maximum ? { target, maximum } : null,
     allowed_colors: base?.allowed_colors ?? [], preferences: base?.preferences ?? [], allowed_conditions: base?.allowed_conditions[0] === draft.condition ? base.allowed_conditions : [draft.condition], payment: draft.payment || null,
     market_scope: domesticScope,
-    fulfillment: { ...base?.fulfillment, mode: draft.mode, branch_id: draft.mode === 'pickup' ? base?.fulfillment?.branch_id : null,
+    fulfillment: { ...base?.fulfillment, mode: draft.mode, branch_id: draft.mode === 'pickup' ? draft.branch.trim() || null : null,
       destination: { ...base?.fulfillment?.destination, country: 'LB', city: draft.city.trim() || null } } };
 }
 
@@ -49,6 +49,7 @@ export function fromRequest(r: EditableRequest): Draft {
     kind: r.intent.kind === 'exact_model' ? 'exact_model' : 'needs', category: r.requirements.category,
     target: String(r.budget?.target?.amount ?? ''), maximum: String(r.budget?.maximum?.amount ?? ''),
     currency: r.budget?.target?.currency ?? r.budget?.maximum?.currency ?? 'USD', city: r.fulfillment?.destination?.city ?? '', mode: r.fulfillment?.mode ?? 'any',
+    branch: r.fulfillment?.branch_id ?? '',
     condition: r.allowed_conditions[0] ?? 'new', payment: r.payment ?? '',
     spec: String((r.requirements as unknown as Record<string, unknown>)[specFields[r.requirements.category]] ?? '') };
 }

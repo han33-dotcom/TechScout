@@ -40,7 +40,8 @@ function fieldTime(offer: Offer, field: string) {
 }
 function Arrival({ offer }: { offer: Offer }) {
   const arrival = offer.arrival;
-  return <span>{arrival?.state === 'known' && arrival.value ? `${arrival.value.basis === 'guaranteed' ? 'Guaranteed window' : 'Estimated window'}: ${date(arrival.value.earliest)} – ${date(arrival.value.latest)}` : `Delivery timing: ${fact(arrival)}`}</span>;
+  const timing = offer.route.kind === 'pickup' ? 'Pickup timing' : 'Delivery timing';
+  return <span>{arrival?.state === 'known' && arrival.value ? `${arrival.value.basis === 'guaranteed' ? 'Guaranteed window' : 'Estimated window'}: ${date(arrival.value.earliest)} – ${date(arrival.value.latest)}` : `${timing}: ${fact(arrival)}`}</span>;
 }
 function OfferDetails({ offer, cost }: { offer: Offer; cost?: Cost }) {
   return <div className="offer-details"><h4>Configuration & seller terms</h4><dl className="attributes">{specs(offer).map(([key,value]) => <div key={key}><dt>{labels[key] ?? key.replaceAll('_',' ')}</dt><dd>{fact(value)}</dd></div>)}{[['Color',offer.variant.color],['Condition',offer.condition],['Activation',offer.activation],['Payment',offer.payment],['Warranty provider',offer.warranty?.provider],['Warranty months',offer.warranty?.months],['Warranty territory',offer.warranty?.territory]].map(([key,value]) => <div key={String(key)}><dt>{String(key)}</dt><dd>{fact(value as Fact)}</dd></div>)}</dl>
