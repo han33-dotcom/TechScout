@@ -96,10 +96,10 @@ def current_problem(offer, assessment, read, run, started_at, now):
     def item_route(record):
         return selected(record) and record.scope == 'route' and record.route_id == offer.route.route_id
 
-    for fact in (offer.price, offer.stock, offer.purchasable):
+    for label, fact in (('Price', offer.price), ('Stock', offer.stock), ('Purchase availability', offer.purchasable)):
         if fact.state != 'known' or not fact.evidence_ids or not all(
                 current(records[e]) and selected(records[e]) for e in fact.evidence_ids):
-            return 'Price, stock or purchase availability lacks a current response for this exact configuration.'
+            return f'{label} lacks a current response for this exact configuration.'
     if isinstance(offer.route, v2.DirectRoute):
         origin = dispatch_receipts(offer, run, now)
         supporting_responses = getattr(read, 'dispatch_replies', ())
@@ -212,14 +212,15 @@ class DomesticBuyerFlow(_Flow):
                 coverage=self.search_report.coverage(finalists, baseline=[
                     v for v in finalists if v.offer.offer_id in self.initial_ids]))]
         uncertain = tuple(self.uncertain.values())[:MAX_UNCERTAIN]
-        self.action('A buyer-readable comparison of checked results', 'Explain qualifying offers and coverage',
-                    'OpenRouter writer')
+        if self.deps.inference is not None:
+            self.action('A buyer-readable comparison of checked results', 'Explain qualifying offers and coverage',
+                        'OpenRouter writer')
         explanation = self._write(groups, uncertain)
         checked = len(set(self.checked.values()))
         count = sum(len(g.offers()) for g in groups)
         reason = f'Checked {checked} independent domestic seller(s). {count} offer(s) qualified.'
         if request.intent.kind == 'exact_model' and count < 2:
-            reason += ' A two-seller comparison of the same configuration was unavailable.'
+            reason += ' A two-seller comparison of verified payable totals was unavailable.'
         if not groups and request.intent.kind == 'product_link':
             failed = next((o.reason for o in self.outcomes if o.status == 'failed' and o.reason), None)
             if failed:
@@ -471,6 +472,9 @@ class DomesticBuyerFlow(_Flow):
             self.retries.append(Listing(listing.url, offer.source_id, offer))
 
     def generate(self, instructions, payload, schema, by):
+        if self.roles is None:
+            self.trace['reasoning_failure'] = 'OpenRouter inference route unavailable'
+            return None
         seconds = min(12, self.left(by) - .5)
         if seconds <= 0 or self.stopped():
             return None
@@ -485,7 +489,7 @@ class DomesticBuyerFlow(_Flow):
         return None
 
     def evaluator_follow_up(self):
-        if not self.retries or self.stopped() or self.left(self.read_by) < FETCH_ROOM_S + 2:
+        if self.roles is None or not self.retries or self.stopped() or self.left(self.read_by) < FETCH_ROOM_S + 2:
             return
         if ((self.request.intent.kind == 'product_link' and self.assessed)
                 or self.enough(o for o, _, _ in self.assessed.values())):

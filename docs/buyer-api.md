@@ -78,7 +78,9 @@ The controller uses the domestic catalog for all five categories. A retailer lin
 the linked seller and selected configuration. An exact-model request seeks two independent
 sellers with the same configuration. A needs request can return three distinct models with
 seller offers grouped below each. OpenRouter selects suitable models from cited, current
-specifications. A requirement without supporting evidence stays unresolved.
+specifications. A requirement without supporting evidence stays unresolved. With no usable
+OpenRouter configuration or key, the worker can still verify domestic offers and report
+coverage. The writer uses its deterministic explanation and model suitability stays unresolved.
 
 Catalog prices retain their original observation dates. A historical price above the buyer's
 maximum can still trigger a recheck. The controller starts with known listings and reviewed

@@ -1,14 +1,19 @@
 """Domestic buyer runs through the owned API/worker with synthetic catalog and live responses."""
 from datetime import datetime, timezone
+import json
+import os
+from pathlib import Path
+from threading import Event
 from decimal import Decimal
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
 from app import contracts_v2 as v2
-from app import domestic_buyer
+from app import buyer_flow, domestic_buyer
 from app.accounting import BudgetDenied, Charge
 from app.domestic_discovery import Attribution, ChannelAttempt, SearchLead, SearchReport
-from test_buyer_flow import FlowCase, FakeOpenRouter
+from app.run_worker import RunContext
+from test_buyer_flow import FlowCase, FakeOpenRouter, inference_config
 from test_writer import clone, primary, snapshot
 
 
@@ -96,6 +101,47 @@ class DomesticBuyerTests(FlowCase):
         _, run = self.browse(deps, **dict(req, **changes))
         self.assertNotEqual(run.status, 'error', self.trace(run))
         return run
+
+    def test_production_entrypoint_without_chat_route_can_verify_or_report_missing_fit(self):
+        offer = laptop('shop-a')
+        sources = Sources([offer], [offer])
+        fixture_root = Path(self.storage.snapshots.root).parent
+        route = fixture_root / 'missing-inference.json'
+        environment = dict(TECHSCOUT_INFERENCE_CONFIG=str(route), TECHSCOUT_CODE_VERSION='test')
+        with (patch.dict(os.environ, environment, clear=True),
+              patch.object(buyer_flow, 'load_env_file', return_value=()),
+              patch.object(buyer_flow, '_PRODUCTION', None), patch.object(buyer_flow, 'ROOT', fixture_root),
+              patch('app.accounting.Ledger.configured', return_value=self.ledger),
+              patch('app.storage.Storage', return_value=self.storage),
+              patch('app.domestic_buyer_sources.DomesticBuyerSources', return_value=sources),
+              patch('app.openrouter.OpenRouterProvider', side_effect=AssertionError('unconfigured external call'))):
+            for kind in ('product_link', 'needs', 'checkpoint'):
+                if kind == 'needs':
+                    # A valid reviewed configuration with a missing API key degrades in the same way.
+                    route.write_text(json.dumps(dict(inference=inference_config().model_dump(mode='json'))))
+                intent = (dict(kind='needs', description='Engineering course laptop') if kind == 'needs'
+                          else dict(kind='product_link', url=str(offer.listing_url)))
+                submitted = self.start(request_id=kind, intent=intent, requirements=dict(category='laptop'))
+                context = RunContext(self.service, self.service.claim(), Event())
+                if kind == 'checkpoint':
+                    with self.assertLogs('techscout.buyer_flow', 'WARNING'):
+                        buyer_flow.run_checkpoint(context)
+                else:
+                    buyer_flow.run(context)
+                _, run = self.read(submitted)
+                if kind == 'checkpoint':
+                    self.assertEqual((run.status, run.stop_reason), ('error', buyer_flow.NOT_CONFIGURED))
+                    continue
+                self.assertEqual(run.explanation.source, 'fallback')
+                trace = json.loads((fixture_root / 'var' / 'traces' / f'{run.run.run_id}-r1.json').read_text())
+                self.assertEqual(trace['versions']['inference']['status'], 'unavailable')
+                self.assertEqual(trace['writer']['status'], 'not_called')
+                self.assertFalse(trace['model_calls'])
+                if kind == 'product_link':
+                    self.assertEqual((run.status, run.coverage.qualifying), ('complete', 1))
+                else:
+                    self.assertEqual(run.status, 'abstained')
+                    self.assertIn('suitability', run.uncertain[0].reasons[0])
 
     def test_sufficient_catalog_avoids_web_and_rechecks_above_old_maximum(self):
         left, right = laptop('shop-a', price='1200'), laptop('shop-b', price='922')

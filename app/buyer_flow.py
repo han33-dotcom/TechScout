@@ -160,20 +160,37 @@ _PRODUCTION: FlowDependencies | None = None
 _PRODUCTION_LOCK = threading.Lock()
 
 
-def worker_dependencies() -> FlowDependencies:
+def worker_dependencies(*, checkpoint=False) -> FlowDependencies:
     """Built once per worker process (database engines, gate, providers); a failed build is
     retried on the next run, so fixing the configuration needs no restart. Changing a working
     configuration does: restart the worker."""
     global _PRODUCTION
     with _PRODUCTION_LOCK:
         if _PRODUCTION is None:
-            _PRODUCTION = production_dependencies()
+            _PRODUCTION = production_dependencies(require_inference=checkpoint)
+        elif _PRODUCTION.inference is None:
+            # A missing route may have been configured between runs. Reuse the same
+            # gate, database engines and ledger when enabling the newly available route.
+            load_env_file(names=('OPENROUTER_API_KEY',))
+            path = config_path()
+            inference = _configured_inference(path, required=checkpoint)
+            if inference is not None:
+                versions = dict(_PRODUCTION.versions, inference_config_sha256=_sha256(path))
+                _PRODUCTION = replace(_PRODUCTION, inference=inference, versions=versions)
         return _PRODUCTION
 
 
-def production_dependencies() -> FlowDependencies:
-    """The worker's wiring from its backend environment. Raises InferenceUnavailable or
-    BudgetDenied, naming what is missing, before anything is reserved or sent."""
+def _configured_inference(path, *, required):
+    try:
+        return build_inference(load_inference_config(path))
+    except InferenceUnavailable:
+        if required:
+            raise
+        return None
+
+
+def production_dependencies(*, require_inference=True) -> FlowDependencies:
+    """Wire the backend. The single-source checkpoint explicitly requires its inference route."""
     from app.accounting import Ledger
     from app.corpus import Corpus
     from app.corpus_contracts import ProcessingVersion
@@ -187,7 +204,7 @@ def production_dependencies() -> FlowDependencies:
     from app.storage import Storage
     load_env_file(names=('OPENROUTER_API_KEY', RATE_VARIABLE))
     path = config_path()
-    inference = build_inference(load_inference_config(path))
+    inference = _configured_inference(path, required=require_inference)
     ledger = Ledger.configured()
     storage = Storage()
     registry = ActivationRegistry(storage)
@@ -251,7 +268,7 @@ def run_checkpoint(context) -> None:
 
 def _start(context, *, checkpoint):
     try:
-        deps = worker_dependencies()
+        deps = worker_dependencies(checkpoint=checkpoint)
     except (InferenceUnavailable, BudgetDenied) as exc:
         # The operator reads the detail in the worker log; the buyer sees a fixed message.
         log.warning('Buyer worker is not configured: %s', exc)
@@ -286,7 +303,7 @@ class _Flow:
         self.nonfinal_by = min(NONFINAL_BY, self.final_by)
         self.stop, self.done = threading.Event(), threading.Event()
         self.calls = CallLog()
-        self.roles = TracedProvider(deps.inference.roles, self.calls)
+        self.roles = TracedProvider(deps.inference.roles, self.calls) if deps.inference is not None else None
         self.job = None
         self.limits: set[str] = set()
         self.trace = dict(trace_version=TRACE_VERSION, run=self.run_ref.model_dump(mode='json'),
@@ -299,7 +316,8 @@ class _Flow:
                                       final_by_s=self.final_by, finalists=MAX_FINALISTS,
                                       ledger_buyer_caps=dict(spend_usd='1', research_spend_usd='0.75',
                                                              calls=40, seconds=120)),
-                          versions=dict(deps.versions, inference=deps.inference.versions()),
+                          versions=dict(deps.versions, inference=deps.inference.versions() if deps.inference else
+                                        dict(provider='openrouter', status='unavailable', fallback='disabled')),
                           phases=[], source=None, research=None, offers=None, writer=None)
 
     # Time, cancellation and publication
@@ -629,11 +647,12 @@ class _Flow:
                                  coverage=self.coverage, uncertain=tuple(uncertain))
         seconds = min(30.0, self.left(self.final_by) - 1)
         self.publish(status='running', phase='write')
-        if self.stopped() or seconds < MIN_WRITER_SECONDS:
-            if not self.stopped():
+        if self.stopped() or seconds < MIN_WRITER_SECONDS or self.deps.inference is None:
+            if seconds < MIN_WRITER_SECONDS and not self.stopped():
                 self.limits.add('deadline')
+            reason = 'OpenRouter inference route unavailable' if self.deps.inference is None else 'no time left for the writer'
             explanation = deterministic_explanation(context)
-            self.trace['writer'] = dict(source='fallback', reason='no time left for the writer', status='not_called')
+            self.trace['writer'] = dict(source='fallback', reason=reason, status='not_called')
             return v2.RunExplanation(text=explanation.text, evidence_ids=explanation.evidence_ids, source='fallback')
         provider = TracedProvider(self.deps.inference.writer(seconds), self.calls, role='writer')
         writer = OpenAIWriter.for_job(self.job, seconds=seconds, provider=provider, cancelled=self.stopped)
