@@ -136,6 +136,21 @@ class AccountingTests(unittest.TestCase):
         a.complete(D('.5'), 1)
         self.assertEqual(self.ledger.snapshot()['scopes']['project'][3], '5.5')
 
+    def test_maintenance_allowance_ends_after_fourteen_used_utc_days(self):
+        for day in range(14):
+            self.now = START + timedelta(days=day)
+            job = self.ledger.open_job(f'manual-{day}', 'maintenance')
+            attempt = job.reserve('search', Charge(D('3')), 10)
+            attempt.dispatch()
+            attempt.complete(D('3'), 1)
+            with self.assertRaises(BudgetDenied):
+                self.ledger.open_job(f'scheduled-{day}', 'maintenance').reserve('search', Charge(D('.01')), 1)
+        self.now += timedelta(days=1)
+        with self.assertRaisesRegex(BudgetDenied, '14 maintenance days'):
+            self.ledger.open_job('new-schedule', 'maintenance').reserve('search', Charge(D('.01')), 1)
+        self.assertEqual(D(self.ledger.snapshot()['scopes']['project'][3]), D('42'))
+        self.ledger.open_job('interactive', 'buyer').reserve('model', Charge(D('.1')), 1)
+
     def test_each_aggregate_bound_including_international_subset(self):
         # Seed immediately below each documented bound, then prove an atomic
         # reservation cannot cross it or silently reset on another job ID.

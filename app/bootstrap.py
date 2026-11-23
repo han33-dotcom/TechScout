@@ -87,10 +87,11 @@ DOMESTIC = {'mojitech','beytech','class_cellulars','pcandparts','ayoub_computers
 
 class SeedBudget:
     """Reserve every retry and redirect before dispatch, including after a restart."""
-    def __init__(self, job, manifest, seed, token, registry):
+    def __init__(self, job, manifest, seed, token, registry, *, checkpoints='bootstrap_manifests'):
         self.job, self.run_id, self.registry = job, job.run_id, registry
         self.ledger = job.ledger
         self.manifest, self.seed, self.token = manifest, seed, token
+        self.checkpoints = checkpoints
 
     @property
     def cancelled(self):
@@ -99,9 +100,11 @@ class SeedBudget:
     def reserve(self, kind, charge, seconds, **kwargs):
         is_fetch = kind == 'retrieval'
         with self.job.ledger._transaction() as (state, now):
-            record = state['bootstrap_manifests'][self.run_id]
+            record = state[self.checkpoints][self.run_id]
             if record.get('owner') != self.token or now >= record['lease_until']:
-                raise BudgetDenied('Bootstrap lease expired')
+                raise BudgetDenied('Collection lease expired')
+            if 'deadline' in record and now + seconds > record['deadline']:
+                raise BudgetDenied('Collection deadline reached')
             used, limits = record['all'], self.manifest.limits
             if (used['fetch'] + is_fetch > limits.max_fetch_attempts
                     or used['paid'] + int(charge.total > 0) > limits.max_paid_calls
@@ -157,7 +160,7 @@ def catalog(capture, outcome, seed, cap):
             source_id=seed.source_id, product_id=str(pid), scope='product',field_path='variant.product.model',
             origin_url=seed.url,final_url=outcome.final_url,observed_at=outcome.observed_at,
             response_sha256=outcome.response_sha256,adapter_version=capture.processing.extraction_version,
-            origin='bootstrap',corpus_version=capture.processing.corpus_version,json_pointer=locator,excerpt=excerpt)
+            origin=capture.origin,corpus_version=capture.processing.corpus_version,json_pointer=locator,excerpt=excerpt)
         observations.append(FieldObservation(fact=dict(state='known',value=name,evidence_ids=[evidence.evidence_id]),
                                              evidence=(evidence,)))
         passages.append(PassageDraft(locator=locator,text=name,evidence=evidence))
@@ -169,6 +172,39 @@ def index_pending(corpus, document_id, embedder, rate, budget):
     while service.index_document(document_id,owner_id=budget.run_id,
             max_spend_usd=budget.manifest.limits.max_spend_usd):
         pass
+
+
+def seed_target(seed, corpus, registry):
+    key = ResourceKey(source_id=seed.source_id, url=seed.url, representation=seed.format,
+                      product_id=seed.product_id, variant_id=seed.sku)
+    if not (seed.listing or seed.dispatch_for):
+        return key, None
+    from app.domestic_catalog import DomesticCatalog, dispatch_representation
+    profile = DomesticCatalog(corpus.storage, registry_path=registry).seed_profile(seed)
+    representation = dispatch_representation(profile) if seed.dispatch_for else profile.representation
+    return key.model_copy(update={'representation': representation}), profile
+
+
+def seed_processing(manifest, seed):
+    recipe = sha256(seed.model_dump_json().encode()).hexdigest()[:16]
+    return manifest.processing.model_copy(update={
+        'extraction_version': f'{manifest.processing.extraction_version}/{recipe}'})
+
+
+def extract_seed(capture, outcome, seed, profile, policy, rows_left):
+    if seed.format == 'catalog':
+        return catalog(capture, outcome, seed, rows_left)
+    if seed.dispatch_for:
+        from app.domestic_retailer_profiles import extract_dispatch_membership
+        return extract_dispatch_membership(capture, profile)
+    if profile:
+        from app.domestic_catalog import extract_listing
+        return extract_listing(capture, profile)
+    extraction = extract_page(capture, PageProfile(seed.source_id, policy['origin'], sku=seed.sku,
+                              policy_element_id=seed.policy_element_id, policy_field=seed.policy_field))
+    if seed.content == 'policy':
+        return Extraction(passages=tuple(p for p in extraction.passages if p.text in seed.policy_statements))
+    return extraction
 
 
 def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None, embedding_gap=None):
@@ -207,21 +243,14 @@ def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None, embeddi
             if job.cancelled:
                 break
             url = str(seed.url)
-            key = ResourceKey(source_id=seed.source_id,url=url,representation=seed.format,
-                              product_id=seed.product_id,variant_id=seed.sku)
-            profile = profile_error = None
-            if seed.listing or seed.dispatch_for:
-                from app.domestic_catalog import DomesticCatalog, dispatch_representation, extract_listing
-                try:
-                    profile = DomesticCatalog(corpus.storage,registry_path=gate._registry_path).seed_profile(seed)
-                    key = key.model_copy(update={'representation':dispatch_representation(profile)
-                        if seed.dispatch_for else profile.representation})
-                except (ValueError, PermissionError) as exc:
-                    profile_error = exc
-            recipe = sha256(seed.model_dump_json().encode()).hexdigest()[:16]
-            processing = manifest.processing.model_copy(update={
-                'extraction_version': f'{manifest.processing.extraction_version}/{recipe}'})
-            previous = corpus.state(key)
+            profile_error = None
+            try:
+                key, profile = seed_target(seed, corpus, gate._registry_path)
+                previous = corpus.state(key)
+            except (ValueError, PermissionError) as exc:
+                profile_error = exc
+                previous = None
+            processing = seed_processing(manifest, seed)
             with ledger._transaction() as (state, now):
                 record = state['bootstrap_manifests'][job.run_id]
                 if record['owner'] != token:
@@ -261,26 +290,16 @@ def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None, embeddi
                     result['checked_at'] = outcome.observed_at.isoformat()
                     capture = DocumentCapture(key=key,body=outcome.body,relevant_content=outcome.body,
                         origin='bootstrap',checked_at=outcome.observed_at,observed_at=outcome.observed_at,
-                        final_url=outcome.final_url,visibility='public',processing=processing)
+                        final_url=outcome.final_url,visibility='public',processing=processing,
+                        etag=outcome.validators.etag if outcome.validators else None,
+                        last_modified=outcome.validators.last_modified if outcome.validators else None)
                     if seed.format == 'catalog':
                         rows = len(_records(outcome,limit=100))
                         if rows > rows_left:
                             raise BudgetDenied('Catalog exceeds remaining record capacity')
-                        extraction = catalog(capture,outcome,seed,rows_left)
                     else:
                         rows = 1
-                        if seed.dispatch_for:
-                            from app.domestic_retailer_profiles import extract_dispatch_membership
-                            extraction = extract_dispatch_membership(capture,profile)
-                        elif profile:
-                            extraction = extract_listing(capture,profile)
-                        else:
-                            extraction = extract_page(capture,PageProfile(seed.source_id,policy['origin'],
-                                sku=seed.sku,policy_element_id=seed.policy_element_id,policy_field=seed.policy_field))
-                        if seed.content == 'policy':
-                            passages = tuple(p for p in extraction.passages if p.text in seed.policy_statements)
-                            extraction = Extraction(passages=passages)
-                    receipt = corpus.ingest(capture,lambda _:extraction)
+                    receipt = corpus.ingest(capture, lambda page: extract_seed(page, outcome, seed, profile, policy, rows_left))
                     stored_fields = len(corpus.observations(receipt.document_id))
                     stored_passages = len(corpus.passages(receipt.document_id))
                     result.update(status='indexed' if stored_fields or stored_passages else 'empty',

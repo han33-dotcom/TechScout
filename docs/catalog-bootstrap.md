@@ -1,5 +1,7 @@
 # Seed the evidence corpus
 
+For subsequent checks of due domestic resources, use the [manual refresh command](catalog-refresh.md).
+
 Apply the normal corpus migrations and load the active source policies into the product database. Load the existing shared accounting configuration. From the repository root run
 
     python -m app.bootstrap config/domestic-bootstrap-validation.json
