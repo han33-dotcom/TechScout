@@ -720,6 +720,28 @@ class ScopeAndConfigurationTests(FlowCase):
             with self.assertRaisesRegex(InferenceUnavailable, 'OPENROUTER_API_KEY'):
                 buyer_flow.production_dependencies()
 
+    def test_fixed_priority_pool_cannot_reintroduce_broader_activated_sources(self):
+        from eval.calibrate import priority_registry
+
+        outside = 'synthetic-activated-shop'
+        audited = json.loads((DEFAULT_REGISTRY.parent.parent / 'docs/retailer-audit-2026-11-16.json').read_bytes())
+        priority = next(row['retailer_id'] for row in audited['retailers'] if row['priority_audit'])
+        fixed = Path(self.storage.snapshots.root).parent / 'priority.json'
+        snapshot = dict(sources=[dict(id=priority, status='active'), dict(id=outside, status='active')],
+                        live_release=dict(admitted_source_ids=[priority, outside]))
+        with patch('app.onboarding.ActivationRegistry.read_registry', return_value=snapshot):
+            priority_registry(fixed, self.storage)
+        source_pool = json.loads(fixed.read_bytes())
+        self.assertEqual(source_pool['live_release']['admitted_source_ids'], [priority])
+        self.assertEqual(source_pool['sources'][1]['status'], 'paused')
+        with patch.dict(os.environ, dict(DATABASE_URL=self.url)), \
+                patch('app.accounting.Ledger.configured', return_value=self.ledger), \
+                patch('app.onboarding.ActivationRegistry', side_effect=AssertionError('unfiltered registry')):
+            deps = buyer_flow.production_dependencies(fixed_registry_path=fixed, inference=Mock())
+        self.addCleanup(deps.source.storage.engine.dispose)
+        self.assertEqual(deps.research.workers.directory.registry_path, fixed)
+        self.assertIsNone(deps.onboarding)
+
 
 class InferenceConfigTests(unittest.TestCase):
     def write(self, directory, data):

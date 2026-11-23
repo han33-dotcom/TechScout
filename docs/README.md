@@ -40,6 +40,7 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 - [Grounded writer and deterministic fallback](writer.md)
 - [Full-product eligibility and domestic costs](full-product-assessment.md)
 - [Domestic buyer demo and five-category coverage](domestic-buyer-demo.md)
+- [Domestic development calibration and per-request measurements](development-calibration.md)
 - [Historical international landed-cost contracts](landed-costs.md)
 - [Owned buyer API and worker lifecycle](buyer-api.md)
 - [Buyer request, comparison and refinement UI](buyer-ui.md)

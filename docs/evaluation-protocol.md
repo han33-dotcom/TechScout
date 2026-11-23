@@ -1,6 +1,6 @@
 # Held-out evaluation protocol
 
-Protocol version **1.0.0**, frozen on 17 November 2026 for
+Protocol version **1.1.0**, updated on 23 November 2026 for
 [#78](https://github.com/han33-dotcom/TechScout/issues/78). It fixes what we will measure and
 how, before anyone sees a held-out result. It contains no results and claims no performance.
 
@@ -482,10 +482,10 @@ A test checks these values when the file exists.
 ## 12. Model access
 
 [`eval/models.json`](../eval/models.json) freezes the main evaluation:
-- **Access path:** direct OpenAI through the Responses API.
-- **Model:** `gpt-6.1-sol` on the standard service tier, for every agent role.
+- **Access path:** OpenRouter chat completions pinned to the OpenAI serving provider.
+- **Model:** `openai/gpt-6.1-sol`, for every agent role.
 - **Same model:** the single-agent baseline and cold runs use the same model.
-- **Embeddings:** OpenAI `text-embedding-3-small` at 1,536 dimensions.
+- **Embeddings:** OpenRouter `openai/text-embedding-3-small` at 1,536 dimensions.
 
 A test checks that `config/evaluation.json` and `app.retrieval` still name these. Automatic
 model substitution, provider fallbacks and automatic retries are off.
@@ -504,7 +504,7 @@ A field the provider does not return is written `not_reported` and counted. A he
 that reports a different version, or none, is listed as a deviation. The historical
 Anthropic planner settings in `config/evaluation.json` are not used.
 
-**Optional experiments.** No OpenRouter or other model experiment is planned in 1.0.0. One
+**Optional experiments.** No alternative-model experiment is declared in 1.1.0. One
 must be declared in `eval/models.json` with a version bump before it runs:
 - its label starts with `exp-`;
 - it fixes the provider order with fallbacks off and states its cases and budget;

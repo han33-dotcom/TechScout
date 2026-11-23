@@ -10,15 +10,15 @@ import tempfile
 import unittest
 
 from app import contracts_v2 as v2
-from app.retrieval import MODEL as EMBEDDING_MODEL
+from app.retrieval import ROUTED_MODEL as EMBEDDING_MODEL
 
 ROOT = Path(__file__).resolve().parents[1]
 EVAL = ROOT / 'eval'
 DOC = ROOT / 'docs' / 'evaluation-protocol.md'
 
 # Changing any frozen file needs `python eval/freeze.py --bump X.Y.Z "reason"` and these two values.
-FROZEN_VERSION = '1.0.0'
-FROZEN_COMBINED_SHA256 = '09b6542e85143fcb0071ddddfc47c7b0adf4c3f8437aa49bbd94a48a29352275'
+FROZEN_VERSION = '1.1.0'
+FROZEN_COMBINED_SHA256 = '279a40a9e74ea2f735358bf42c8e7f481e4005be8d0030d2a46d2b715534fda9'
 HOW_TO_CHANGE = ('The evaluation protocol is frozen (#78). For a deliberate change before the pre-run freeze, run '
                  'python eval/freeze.py --bump X.Y.Z "reason" and update FROZEN_VERSION and FROZEN_COMBINED_SHA256 in '
                  'tests/test_eval_protocol.py; see docs/evaluation-protocol.md section 1.')
@@ -329,11 +329,13 @@ class MetricTests(unittest.TestCase):
 
 
 class ModelAndCorpusTests(unittest.TestCase):
-    def test_direct_openai_is_frozen_and_matches_the_app_configuration(self):
+    def test_openrouter_inference_and_embeddings_match_the_frozen_configuration(self):
         main = load('models.json')['main_evaluation']
-        config = json.loads((ROOT / 'config' / 'evaluation.json').read_text(encoding='utf-8'))['model_provider']
-        self.assertEqual(main['access_path'], 'openai-direct')
-        self.assertEqual((main['provider'], main['model']), (config['provider'], config['model']),
+        from eval.deployment import pinned_inference
+        config = pinned_inference(api_key='offline-only').versions()
+        self.assertEqual(main['access_path'], 'openrouter')
+        self.assertEqual((main['provider'], main['model'], main['serving_provider']),
+                         (config['provider'], config['model'], config['serving_provider']),
                          'config/evaluation.json no longer uses the frozen evaluation model. ' + HOW_TO_CHANGE)
         self.assertEqual(main['embedding']['model'], EMBEDDING_MODEL,
                          'app.retrieval no longer uses the frozen embedding model. ' + HOW_TO_CHANGE)
@@ -388,7 +390,7 @@ class FreezeTests(unittest.TestCase):
 
     def test_every_protocol_file_is_frozen(self):
         frozen = set(freeze_tool().load()['files'])
-        expected = {'docs/evaluation-protocol.md', 'eval/README.md'}
+        expected = {'docs/evaluation-protocol.md', 'eval/README.md','config/evaluation.json'}
         # Results (#82) and extra development cases (#80) are added later and are not frozen protocol files.
         expected |= {path.relative_to(ROOT).as_posix() for path in EVAL.rglob('*.json')
                      if path.name != 'freeze.json' and path.relative_to(EVAL).parts[0] not in {'results', 'development'}}
@@ -406,13 +408,13 @@ class FreezeTests(unittest.TestCase):
             target.write_bytes(target.read_bytes().replace(b'\r\n', b'\n').replace(b'\n', b'\r\n'))
             self.assertEqual(tool.problems(root), [], 'CRLF and LF checkouts hash the same')
             target.write_bytes(target.read_bytes().replace(b'Saida', b'Sidon'))
-            self.assertIn('protocol 1.0.0: eval/heldout.json changed since it was frozen', tool.problems(root))
+            self.assertIn(f'protocol {FROZEN_VERSION}: eval/heldout.json changed since it was frozen', tool.problems(root))
             with self.assertRaises(ValueError):
                 tool.bump('1.0.0', 'same version', root)
-            tool.bump('1.0.1', 'Test change', root, today='2026-11-17')
+            tool.bump('1.1.1', 'Test change', root, today='2026-11-17')
             self.assertEqual(tool.problems(root), [])
             self.assertEqual(tool.load(root)['changelog'][-1],
-                             {'version': '1.0.1', 'date': '2026-11-17', 'change': 'Test change'})
+                             {'version': '1.1.1', 'date': '2026-11-17', 'change': 'Test change'})
             with self.assertRaises(ValueError):
                 tool.pre_run(root)  # warm.json and run-freeze.json do not exist yet
             for name in tool.PRE_RUN_FILES:

@@ -1,0 +1,2619 @@
+{
+  "protocol": "1.1.0",
+  "protocol_hash": "279a40a9e74ea2f735358bf42c8e7f481e4005be8d0030d2a46d2b715534fda9",
+  "baseline": "November 23 domestic seed and one bounded refresh; a private application database and evidence copy for each development submission",
+  "corpus_counts": {
+    "corpus_resources": 13,
+    "corpus_documents": 16,
+    "corpus_observations": 68,
+    "corpus_passages": 50,
+    "corpus_embeddings": 48,
+    "source_activations": 0
+  },
+  "laptop": {
+    "cpu": "Intel Core i7-1360P",
+    "physical_cores": 12,
+    "logical_processors": 16,
+    "memory_bytes": 16891371520,
+    "python": "3.11.5",
+    "os": "Windows"
+  },
+  "freeze_inputs": {
+    "reported_model_at_smoke_check": "openai/gpt-6.1-sol",
+    "reported_system_fingerprint": null,
+    "model_settings": {
+      "provider": "openrouter",
+      "purpose": "buyer",
+      "model": "openai/gpt-6.1-sol",
+      "serving_provider": "openai",
+      "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+      "pricing_checked_on": "2026-11-23",
+      "rates": {
+        "input": "2.000000",
+        "cached": "0.1000000",
+        "cache_write": "2.5000000",
+        "output": "10.00000",
+        "request": "0"
+      },
+      "data_collection": "deny",
+      "zdr": false,
+      "fallback": "disabled",
+      "roles": {
+        "prompt_version": "roles-v1",
+        "route_fingerprint": "5250196f5e947ff1",
+        "reservation_usd": "0.0614400",
+        "max_input_tokens": 16384,
+        "max_output_tokens": 2048,
+        "timeout_seconds": 30.0
+      },
+      "writer": {
+        "prompt_version": "writer-v1",
+        "route_fingerprint": "a5519600e0fd430f",
+        "reservation_usd": "0.1228800",
+        "max_input_tokens": 32768,
+        "max_output_tokens": 4096,
+        "timeout_seconds": 30.0
+      }
+    },
+    "roles_route_fingerprint": "5250196f5e947ff1",
+    "writer_route_fingerprint": "a5519600e0fd430f",
+    "caps": {
+      "seconds": 120,
+      "external_calls": 40,
+      "planner_turns": 6,
+      "spend_usd": "1.00",
+      "reserve_seconds": 30,
+      "reserve_calls": 10,
+      "reserve_spend_usd": "0.25"
+    },
+    "source_registry_hash": "17eb443873926d43c55dce60c64f8f64c720aa031a0f4e669ac6608b9b19a9c4"
+  },
+  "metadata": {
+    "job": "development-route-metadata:c299a43cb9dc439dae930302f474a10f",
+    "at": "2026-11-23T21:17:14.714637+00:00",
+    "key": {
+      "http": 200,
+      "capped": true,
+      "positive_remaining": true,
+      "free_tier": false,
+      "rate_limit_reported": true
+    },
+    "inference": {
+      "http": 200,
+      "pricing": {
+        "prompt": "0.000001",
+        "completion": "0.000005",
+        "web_search": "0.01",
+        "input_cache_read": "0.00000005",
+        "input_cache_write": "0.00000125",
+        "discount": 0,
+        "overrides": [
+          {
+            "min_prompt_tokens": 272000,
+            "prompt": "0.000002",
+            "completion": "0.0000075",
+            "input_cache_read": "0.0000001",
+            "input_cache_write": "0.0000025"
+          }
+        ]
+      },
+      "parameters": [
+        "reasoning",
+        "include_reasoning",
+        "seed",
+        "max_tokens",
+        "response_format",
+        "structured_outputs",
+        "tools",
+        "tool_choice",
+        "verbosity",
+        "reasoning_effort"
+      ]
+    },
+    "embedding": {
+      "http": 200,
+      "pricing": {
+        "prompt": "0.00000002",
+        "completion": "0",
+        "discount": 0
+      },
+      "parameters": []
+    }
+  },
+  "bootstrap": [
+    {
+      "job": "bootstrap:domestic-seller-coverage-20261123",
+      "seconds_from_creation_to_last_metered_completion": 19.014,
+      "calls": {
+        "retrieval": 9,
+        "embedding": 8
+      },
+      "usd": "0.00001562"
+    },
+    {
+      "job": "bootstrap:domestic-seller-coverage-20261123-v2",
+      "seconds_from_creation_to_last_metered_completion": 9.622,
+      "calls": {
+        "retrieval": 9
+      },
+      "usd": "0"
+    }
+  ],
+  "refresh": [
+    {
+      "job_id": "discovery:discovery-155b9fffc6574037a98dce6637c57858",
+      "started_at": "2026-11-23T20:56:08.128826+00:00",
+      "finished_at": "2026-11-23T20:56:12.630555+00:00",
+      "calls": 2,
+      "spend_usd": "0.000884",
+      "unresolved_usd": "0"
+    },
+    {
+      "job_id": "refresh:catalog-9f303ada88e044feb6bd6b4ed54b8d47",
+      "started_at": "2026-11-23T20:56:16.510090+00:00",
+      "finished_at": "2026-11-23T20:56:22.715438+00:00",
+      "calls": 2,
+      "spend_usd": "0.00000224",
+      "unresolved_usd": "0"
+    },
+    {
+      "job_id": "refresh:offers-1621ac8af7d3485eab6ea8d89b1d93d6",
+      "started_at": "2026-11-23T20:56:26.110862+00:00",
+      "finished_at": "2026-11-23T20:56:33.835289+00:00",
+      "calls": 5,
+      "spend_usd": "7.4E-7",
+      "unresolved_usd": "0"
+    }
+  ],
+  "embeddings": [
+    {
+      "job": "bootstrap:domestic-seller-coverage-20261123",
+      "purpose": "index",
+      "requested_model": "openai/text-embedding-3-small",
+      "reported_model": "text-embedding-3-small",
+      "serving_provider": "OpenAI",
+      "dimensions": 1536,
+      "tokens": 7,
+      "latency_ms": 2125,
+      "reported_cost_usd": "1.4E-7"
+    },
+    {
+      "job": "embedding-check:eeb2d986d40742e28a80a1cb7383c631",
+      "purpose": "query",
+      "requested_model": "openai/text-embedding-3-small",
+      "reported_model": "text-embedding-3-small",
+      "serving_provider": "OpenAI",
+      "dimensions": 1536,
+      "tokens": 3,
+      "latency_ms": 2734,
+      "reported_cost_usd": "6E-8"
+    }
+  ],
+  "buyer_requests": [
+    {
+      "case_id": "C01",
+      "arm": "broader",
+      "parallelism": 3,
+      "run_id": "3bc58229-4603-4731-a818-619f8ee0cf0c",
+      "started_at": "2026-11-23T21:14:56.387255+00:00",
+      "status": "abstained",
+      "elapsed_ms": 3172,
+      "active_ms": 3078,
+      "coverage": {
+        "discovered": 8,
+        "attempted": 4,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "uncertain": 0,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "beytech",
+          "name": "beytech",
+          "status": "failed",
+          "reason": "No matching SKU on the current listing"
+        },
+        {
+          "source_id": "class_cellulars",
+          "name": "class_cellulars",
+          "status": "failed",
+          "reason": "No matching SKU on the current listing"
+        },
+        {
+          "source_id": "mojitech",
+          "name": "mojitech",
+          "status": "failed",
+          "reason": "Listing URL is outside the active source scope"
+        },
+        {
+          "source_id": "lead:ayoubcomputers.com",
+          "name": "ayoubcomputers.com",
+          "status": "unchecked",
+          "reason": "In background onboarding."
+        },
+        {
+          "source_id": "lead:beirutcart.com",
+          "name": "beirutcart.com",
+          "status": "unchecked",
+          "reason": "In background onboarding."
+        },
+        {
+          "source_id": "lead:gcscomputerpro.com",
+          "name": "gcscomputerpro.com",
+          "status": "unchecked",
+          "reason": "In background onboarding."
+        },
+        {
+          "source_id": "lead:macrotronics.net",
+          "name": "macrotronics.net",
+          "status": "unchecked",
+          "reason": "In background onboarding."
+        },
+        {
+          "source_id": "macrotronics",
+          "name": "macrotronics",
+          "status": "failed",
+          "reason": "No reviewed source for the shop"
+        }
+      ],
+      "semantic_hits": null,
+      "spend": {
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "retrieval": 4,
+          "work": 2,
+          "worker": 6
+        }
+      },
+      "channel_attempts": [
+        {
+          "channel": "tavily",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "serpapi",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "brave",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "manufacturer",
+          "status": "ok",
+          "latency_ms": 422
+        }
+      ],
+      "models": []
+    },
+    {
+      "case_id": "C01",
+      "arm": "priority",
+      "parallelism": 3,
+      "run_id": "d7f68537-6887-4c17-bf02-1356e03d6aa6",
+      "started_at": "2026-11-23T21:15:00.115218+00:00",
+      "status": "abstained",
+      "elapsed_ms": 1922,
+      "active_ms": 1828,
+      "coverage": {
+        "discovered": 3,
+        "attempted": 3,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "uncertain": 0,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "beytech",
+          "name": "beytech",
+          "status": "failed",
+          "reason": "No matching SKU on the current listing"
+        },
+        {
+          "source_id": "class_cellulars",
+          "name": "class_cellulars",
+          "status": "failed",
+          "reason": "No matching SKU on the current listing"
+        },
+        {
+          "source_id": "mojitech",
+          "name": "mojitech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        }
+      ],
+      "semantic_hits": null,
+      "spend": {
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "retrieval": 3,
+          "work": 2,
+          "worker": 3
+        }
+      },
+      "channel_attempts": [],
+      "models": []
+    },
+    {
+      "case_id": "C02",
+      "arm": "broader",
+      "parallelism": 3,
+      "run_id": "80777b56-269c-44f3-985a-1f70fc22bf4f",
+      "started_at": "2026-11-23T21:15:04.755679+00:00",
+      "status": "abstained",
+      "elapsed_ms": 3407,
+      "active_ms": 3312,
+      "coverage": {
+        "discovered": 8,
+        "attempted": 4,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "uncertain": 0,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "beytech",
+          "name": "beytech",
+          "status": "failed",
+          "reason": "No matching SKU on the current listing"
+        },
+        {
+          "source_id": "class_cellulars",
+          "name": "class_cellulars",
+          "status": "failed",
+          "reason": "No matching SKU on the current listing"
+        },
+        {
+          "source_id": "mojitech",
+          "name": "mojitech",
+          "status": "failed",
+          "reason": "Listing URL is outside the active source scope"
+        },
+        {
+          "source_id": "lead:ayoubcomputers.com",
+          "name": "ayoubcomputers.com",
+          "status": "unchecked",
+          "reason": "In background onboarding."
+        },
+        {
+          "source_id": "lead:beirutcart.com",
+          "name": "beirutcart.com",
+          "status": "unchecked",
+          "reason": "In background onboarding."
+        },
+        {
+          "source_id": "lead:gcscomputerpro.com",
+          "name": "gcscomputerpro.com",
+          "status": "unchecked",
+          "reason": "In background onboarding."
+        },
+        {
+          "source_id": "lead:macrotronics.net",
+          "name": "macrotronics.net",
+          "status": "unchecked",
+          "reason": "In background onboarding."
+        },
+        {
+          "source_id": "macrotronics",
+          "name": "macrotronics",
+          "status": "failed",
+          "reason": "No reviewed source for the shop"
+        }
+      ],
+      "semantic_hits": null,
+      "spend": {
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "retrieval": 4,
+          "work": 2,
+          "worker": 6
+        }
+      },
+      "channel_attempts": [
+        {
+          "channel": "tavily",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "serpapi",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "brave",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "manufacturer",
+          "status": "ok",
+          "latency_ms": 453
+        }
+      ],
+      "models": []
+    },
+    {
+      "case_id": "C02",
+      "arm": "priority",
+      "parallelism": 3,
+      "run_id": "4b88546f-8dd8-4c5e-b241-50ec51ea8882",
+      "started_at": "2026-11-23T21:15:02.577546+00:00",
+      "status": "abstained",
+      "elapsed_ms": 1828,
+      "active_ms": 1750,
+      "coverage": {
+        "discovered": 3,
+        "attempted": 3,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "uncertain": 0,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "beytech",
+          "name": "beytech",
+          "status": "failed",
+          "reason": "No matching SKU on the current listing"
+        },
+        {
+          "source_id": "class_cellulars",
+          "name": "class_cellulars",
+          "status": "failed",
+          "reason": "No matching SKU on the current listing"
+        },
+        {
+          "source_id": "mojitech",
+          "name": "mojitech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        }
+      ],
+      "semantic_hits": null,
+      "spend": {
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "retrieval": 3,
+          "work": 2,
+          "worker": 3
+        }
+      },
+      "channel_attempts": [],
+      "models": []
+    },
+    {
+      "case_id": "C03",
+      "arm": "broader",
+      "parallelism": 3,
+      "run_id": "5b568545-9081-4f9f-b111-8183e85ee04d",
+      "started_at": "2026-11-23T21:15:08.566040+00:00",
+      "status": "abstained",
+      "elapsed_ms": 2172,
+      "active_ms": 2094,
+      "coverage": {
+        "discovered": 3,
+        "attempted": 3,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "uncertain": 0,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "beytech",
+          "name": "beytech",
+          "status": "failed",
+          "reason": "No matching SKU on the current listing"
+        },
+        {
+          "source_id": "class_cellulars",
+          "name": "class_cellulars",
+          "status": "failed",
+          "reason": "No matching SKU on the current listing"
+        },
+        {
+          "source_id": "mojitech",
+          "name": "mojitech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        }
+      ],
+      "semantic_hits": null,
+      "spend": {
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "retrieval": 3,
+          "work": 2,
+          "worker": 4
+        }
+      },
+      "channel_attempts": [
+        {
+          "channel": "tavily",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "serpapi",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "brave",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "manufacturer",
+          "status": "rate_limited",
+          "latency_ms": 0
+        },
+        {
+          "channel": "firecrawl",
+          "status": "unavailable",
+          "latency_ms": null
+        }
+      ],
+      "models": []
+    },
+    {
+      "case_id": "C03",
+      "arm": "priority",
+      "parallelism": 3,
+      "run_id": "3877671c-0683-4e0d-8365-0ee172ad70a1",
+      "started_at": "2026-11-23T21:15:11.104308+00:00",
+      "status": "abstained",
+      "elapsed_ms": 812,
+      "active_ms": 735,
+      "coverage": {
+        "discovered": 3,
+        "attempted": 3,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "uncertain": 0,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "beytech",
+          "name": "beytech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "class_cellulars",
+          "name": "class_cellulars",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "mojitech",
+          "name": "mojitech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        }
+      ],
+      "semantic_hits": null,
+      "spend": {
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "worker": 3
+        }
+      },
+      "channel_attempts": [],
+      "models": []
+    },
+    {
+      "case_id": "C05",
+      "arm": "broader",
+      "parallelism": 3,
+      "run_id": "07318a5a-8daa-4d7b-b9c8-c028c63c4c4f",
+      "started_at": "2026-11-23T21:15:13.558003+00:00",
+      "status": "abstained",
+      "elapsed_ms": 1016,
+      "active_ms": 938,
+      "coverage": {
+        "discovered": 3,
+        "attempted": 3,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "uncertain": 0,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "beytech",
+          "name": "beytech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "class_cellulars",
+          "name": "class_cellulars",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "mojitech",
+          "name": "mojitech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        }
+      ],
+      "semantic_hits": null,
+      "spend": {
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "worker": 4
+        }
+      },
+      "channel_attempts": [
+        {
+          "channel": "tavily",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "serpapi",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "brave",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "manufacturer",
+          "status": "rate_limited",
+          "latency_ms": 16
+        },
+        {
+          "channel": "firecrawl",
+          "status": "unavailable",
+          "latency_ms": null
+        }
+      ],
+      "models": []
+    },
+    {
+      "case_id": "C05",
+      "arm": "priority",
+      "parallelism": 3,
+      "run_id": "2928196f-6d75-4c47-8ce6-28deb798104d",
+      "started_at": "2026-11-23T21:15:12.306775+00:00",
+      "status": "abstained",
+      "elapsed_ms": 907,
+      "active_ms": 828,
+      "coverage": {
+        "discovered": 3,
+        "attempted": 3,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "uncertain": 0,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "beytech",
+          "name": "beytech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "class_cellulars",
+          "name": "class_cellulars",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "mojitech",
+          "name": "mojitech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        }
+      ],
+      "semantic_hits": null,
+      "spend": {
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "worker": 3
+        }
+      },
+      "channel_attempts": [],
+      "models": []
+    },
+    {
+      "case_id": "C06",
+      "arm": "broader",
+      "parallelism": 3,
+      "run_id": "90399a56-e2ff-43d6-9d53-1390150ca04d",
+      "started_at": "2026-11-23T21:15:14.932874+00:00",
+      "status": "abstained",
+      "elapsed_ms": 1313,
+      "active_ms": 1219,
+      "coverage": {
+        "discovered": 3,
+        "attempted": 3,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "uncertain": 0,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "beytech",
+          "name": "beytech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "class_cellulars",
+          "name": "class_cellulars",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "mojitech",
+          "name": "mojitech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        }
+      ],
+      "semantic_hits": 0,
+      "spend": {
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "worker": 4
+        }
+      },
+      "channel_attempts": [
+        {
+          "channel": "tavily",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "serpapi",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "brave",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "manufacturer",
+          "status": "rate_limited",
+          "latency_ms": 16
+        },
+        {
+          "channel": "firecrawl",
+          "status": "unavailable",
+          "latency_ms": null
+        }
+      ],
+      "models": []
+    },
+    {
+      "case_id": "C06",
+      "arm": "priority",
+      "parallelism": 3,
+      "run_id": "a7c4577d-9c46-43da-96b9-b974b9515ab5",
+      "started_at": "2026-11-23T21:15:16.616095+00:00",
+      "status": "abstained",
+      "elapsed_ms": 875,
+      "active_ms": 813,
+      "coverage": {
+        "discovered": 3,
+        "attempted": 3,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "uncertain": 0,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "beytech",
+          "name": "beytech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "class_cellulars",
+          "name": "class_cellulars",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "mojitech",
+          "name": "mojitech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        }
+      ],
+      "semantic_hits": 0,
+      "spend": {
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "worker": 3
+        }
+      },
+      "channel_attempts": [],
+      "models": []
+    },
+    {
+      "case_id": "C07",
+      "arm": "broader",
+      "parallelism": 3,
+      "run_id": "d05a689a-9a9d-418a-ba2a-027b1a144806",
+      "started_at": "2026-11-23T21:15:19.269227+00:00",
+      "status": "abstained",
+      "elapsed_ms": 1016,
+      "active_ms": 953,
+      "coverage": {
+        "discovered": 3,
+        "attempted": 3,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "uncertain": 0,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "beytech",
+          "name": "beytech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "class_cellulars",
+          "name": "class_cellulars",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "mojitech",
+          "name": "mojitech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        }
+      ],
+      "semantic_hits": 0,
+      "spend": {
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "worker": 4
+        }
+      },
+      "channel_attempts": [
+        {
+          "channel": "tavily",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "serpapi",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "brave",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "manufacturer",
+          "status": "rate_limited",
+          "latency_ms": 0
+        },
+        {
+          "channel": "firecrawl",
+          "status": "unavailable",
+          "latency_ms": null
+        }
+      ],
+      "models": []
+    },
+    {
+      "case_id": "C07",
+      "arm": "priority",
+      "parallelism": 3,
+      "run_id": "b37183d4-f542-489c-bcd9-3ed521e0d440",
+      "started_at": "2026-11-23T21:15:17.879855+00:00",
+      "status": "abstained",
+      "elapsed_ms": 1000,
+      "active_ms": 937,
+      "coverage": {
+        "discovered": 3,
+        "attempted": 3,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "uncertain": 0,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "beytech",
+          "name": "beytech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "class_cellulars",
+          "name": "class_cellulars",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "mojitech",
+          "name": "mojitech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        }
+      ],
+      "semantic_hits": 0,
+      "spend": {
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "worker": 3
+        }
+      },
+      "channel_attempts": [],
+      "models": []
+    },
+    {
+      "case_id": "C08",
+      "arm": "broader",
+      "parallelism": 3,
+      "run_id": "c552b306-831e-4bdd-83a3-99226e3b305c",
+      "started_at": "2026-11-23T21:15:20.752792+00:00",
+      "status": "abstained",
+      "elapsed_ms": 1844,
+      "active_ms": 1765,
+      "coverage": {
+        "discovered": 3,
+        "attempted": 3,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "uncertain": 0,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "beytech",
+          "name": "beytech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "class_cellulars",
+          "name": "class_cellulars",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "mojitech",
+          "name": "mojitech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        }
+      ],
+      "semantic_hits": 0,
+      "spend": {
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "worker": 4
+        }
+      },
+      "channel_attempts": [
+        {
+          "channel": "tavily",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "serpapi",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "brave",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "manufacturer",
+          "status": "rate_limited",
+          "latency_ms": 0
+        },
+        {
+          "channel": "firecrawl",
+          "status": "unavailable",
+          "latency_ms": null
+        }
+      ],
+      "models": []
+    },
+    {
+      "case_id": "C08",
+      "arm": "priority",
+      "parallelism": 3,
+      "run_id": "c39bbc45-7ba1-42d2-bbc3-84a451520391",
+      "started_at": "2026-11-23T21:15:22.982277+00:00",
+      "status": "abstained",
+      "elapsed_ms": 1125,
+      "active_ms": 1031,
+      "coverage": {
+        "discovered": 3,
+        "attempted": 3,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "uncertain": 0,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "beytech",
+          "name": "beytech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "class_cellulars",
+          "name": "class_cellulars",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "mojitech",
+          "name": "mojitech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        }
+      ],
+      "semantic_hits": 0,
+      "spend": {
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "worker": 3
+        }
+      },
+      "channel_attempts": [],
+      "models": []
+    },
+    {
+      "case_id": "C10",
+      "arm": "broader",
+      "parallelism": 3,
+      "run_id": "597cf197-6745-4b58-8504-b7f6cbacb19e",
+      "started_at": "2026-11-23T21:15:25.749165+00:00",
+      "status": "abstained",
+      "elapsed_ms": 1454,
+      "active_ms": 1375,
+      "coverage": {
+        "discovered": 3,
+        "attempted": 3,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "uncertain": 0,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "beytech",
+          "name": "beytech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "class_cellulars",
+          "name": "class_cellulars",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "mojitech",
+          "name": "mojitech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        }
+      ],
+      "semantic_hits": 0,
+      "spend": {
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "worker": 4
+        }
+      },
+      "channel_attempts": [
+        {
+          "channel": "tavily",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "serpapi",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "brave",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "manufacturer",
+          "status": "rate_limited",
+          "latency_ms": 16
+        },
+        {
+          "channel": "firecrawl",
+          "status": "unavailable",
+          "latency_ms": null
+        }
+      ],
+      "models": []
+    },
+    {
+      "case_id": "C10",
+      "arm": "priority",
+      "parallelism": 3,
+      "run_id": "e2bb2314-a895-4c7b-bec7-4ade4da85823",
+      "started_at": "2026-11-23T21:15:24.512939+00:00",
+      "status": "abstained",
+      "elapsed_ms": 860,
+      "active_ms": 750,
+      "coverage": {
+        "discovered": 3,
+        "attempted": 3,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "uncertain": 0,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "beytech",
+          "name": "beytech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "class_cellulars",
+          "name": "class_cellulars",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "mojitech",
+          "name": "mojitech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        }
+      ],
+      "semantic_hits": 0,
+      "spend": {
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "worker": 3
+        }
+      },
+      "channel_attempts": [],
+      "models": []
+    },
+    {
+      "case_id": "C11",
+      "arm": "broader",
+      "parallelism": 3,
+      "run_id": "f466cc8e-c5fe-4759-bad1-f503f14a3af9",
+      "started_at": "2026-11-23T21:15:27.547240+00:00",
+      "status": "abstained",
+      "elapsed_ms": 875,
+      "active_ms": 796,
+      "coverage": {
+        "discovered": 2,
+        "attempted": 2,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "uncertain": 0,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "beytech",
+          "name": "beytech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "mojitech",
+          "name": "mojitech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        }
+      ],
+      "semantic_hits": 0,
+      "spend": {
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "worker": 3
+        }
+      },
+      "channel_attempts": [
+        {
+          "channel": "tavily",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "serpapi",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "brave",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "manufacturer",
+          "status": "rate_limited",
+          "latency_ms": 16
+        },
+        {
+          "channel": "firecrawl",
+          "status": "unavailable",
+          "latency_ms": null
+        }
+      ],
+      "models": []
+    },
+    {
+      "case_id": "C11",
+      "arm": "priority",
+      "parallelism": 3,
+      "run_id": "d4fa390f-4424-4cbd-9879-c03474a5515f",
+      "started_at": "2026-11-23T21:15:28.812776+00:00",
+      "status": "abstained",
+      "elapsed_ms": 734,
+      "active_ms": 672,
+      "coverage": {
+        "discovered": 2,
+        "attempted": 2,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "uncertain": 0,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "beytech",
+          "name": "beytech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "mojitech",
+          "name": "mojitech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        }
+      ],
+      "semantic_hits": 0,
+      "spend": {
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "worker": 2
+        }
+      },
+      "channel_attempts": [],
+      "models": []
+    },
+    {
+      "case_id": "C12",
+      "arm": "broader",
+      "parallelism": 1,
+      "run_id": "b91383cc-d6b7-4e47-a8df-8ce767a00851",
+      "started_at": "2026-11-23T21:18:03.911771+00:00",
+      "status": "abstained",
+      "elapsed_ms": 13141,
+      "active_ms": 13016,
+      "coverage": {
+        "discovered": 3,
+        "attempted": 3,
+        "retrieved": 2,
+        "qualifying": 0
+      },
+      "uncertain": 5,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "beytech",
+          "name": "Beytech",
+          "status": "checked",
+          "reason": null
+        },
+        {
+          "source_id": "wincell",
+          "name": "Win Cell",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "outgeeked",
+          "name": "OutGeeked",
+          "status": "checked",
+          "reason": null
+        }
+      ],
+      "semantic_hits": 0,
+      "spend": {
+        "known_usd": "0.001874",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "model": 1,
+          "retrieval": 5,
+          "work": 5,
+          "worker": 6
+        }
+      },
+      "channel_attempts": [],
+      "models": [
+        {
+          "schema": "CritiqueChoice",
+          "validated": true,
+          "requested_model": "openai/gpt-6.1-sol",
+          "actual_model": "openai/gpt-6.1-sol",
+          "serving_provider": "OpenAI",
+          "route_fingerprint": "5250196f5e947ff1",
+          "tokens": {
+            "input_tokens": 607,
+            "output_tokens": 66,
+            "total_tokens": 673
+          },
+          "latency_ms": 5125,
+          "actual_usd": "0.001874",
+          "fallback": {
+            "allowed": false,
+            "refused": null,
+            "triggers": [],
+            "used": false
+          },
+          "system_fingerprint": null
+        }
+      ]
+    },
+    {
+      "case_id": "C12",
+      "arm": "broader",
+      "parallelism": 3,
+      "run_id": "fee00844-6b0c-428a-bcf3-bf423956b8ba",
+      "started_at": "2026-11-23T21:15:31.499721+00:00",
+      "status": "abstained",
+      "elapsed_ms": 6531,
+      "active_ms": 6437,
+      "coverage": {
+        "discovered": 3,
+        "attempted": 3,
+        "retrieved": 1,
+        "qualifying": 0
+      },
+      "uncertain": 5,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "beytech",
+          "name": "Beytech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "wincell",
+          "name": "Win Cell",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        },
+        {
+          "source_id": "outgeeked",
+          "name": "OutGeeked",
+          "status": "checked",
+          "reason": null
+        }
+      ],
+      "semantic_hits": 0,
+      "spend": {
+        "known_usd": "0.000882",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "model": 1,
+          "retrieval": 2,
+          "work": 2,
+          "worker": 6
+        }
+      },
+      "channel_attempts": [],
+      "models": [
+        {
+          "schema": "CritiqueChoice",
+          "validated": true,
+          "requested_model": "openai/gpt-6.1-sol",
+          "actual_model": "openai/gpt-6.1-sol",
+          "serving_provider": "OpenAI",
+          "route_fingerprint": "5250196f5e947ff1",
+          "tokens": {
+            "input_tokens": 241,
+            "output_tokens": 40,
+            "total_tokens": 281
+          },
+          "latency_ms": 2734,
+          "actual_usd": "0.000882",
+          "fallback": {
+            "allowed": false,
+            "refused": null,
+            "triggers": [],
+            "used": false
+          },
+          "system_fingerprint": null
+        }
+      ]
+    },
+    {
+      "case_id": "C12",
+      "arm": "priority",
+      "parallelism": 3,
+      "run_id": "8c033869-30ab-4233-8e6d-d1b6fd7bb5e6",
+      "started_at": "2026-11-23T21:15:29.892198+00:00",
+      "status": "abstained",
+      "elapsed_ms": 1125,
+      "active_ms": 1032,
+      "coverage": {
+        "discovered": 1,
+        "attempted": 1,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "uncertain": 3,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "beytech",
+          "name": "Beytech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        }
+      ],
+      "semantic_hits": 0,
+      "spend": {
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "worker": 3
+        }
+      },
+      "channel_attempts": [],
+      "models": []
+    },
+    {
+      "case_id": "C13",
+      "arm": "broader",
+      "parallelism": 3,
+      "run_id": "a8cd44d7-8d32-43c3-a373-88784e8e4a69",
+      "started_at": "2026-11-23T21:15:38.439843+00:00",
+      "status": "abstained",
+      "elapsed_ms": 672,
+      "active_ms": 594,
+      "coverage": {
+        "discovered": 1,
+        "attempted": 1,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "uncertain": 0,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "mojitech",
+          "name": "mojitech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        }
+      ],
+      "semantic_hits": null,
+      "spend": {
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "worker": 1
+        }
+      },
+      "channel_attempts": [],
+      "models": []
+    },
+    {
+      "case_id": "C13",
+      "arm": "priority",
+      "parallelism": 3,
+      "run_id": "a46f3e86-e006-4eed-9e65-9885e6ef0955",
+      "started_at": "2026-11-23T21:15:39.510423+00:00",
+      "status": "abstained",
+      "elapsed_ms": 532,
+      "active_ms": 468,
+      "coverage": {
+        "discovered": 1,
+        "attempted": 1,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "uncertain": 0,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "mojitech",
+          "name": "mojitech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        }
+      ],
+      "semantic_hits": null,
+      "spend": {
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "worker": 1
+        }
+      },
+      "channel_attempts": [],
+      "models": []
+    },
+    {
+      "case_id": "D-H30i",
+      "arm": "broader",
+      "parallelism": 1,
+      "run_id": "99c0a95e-211c-46a7-bdf8-52bf2f9c72f9",
+      "started_at": "2026-11-23T21:17:51.994860+00:00",
+      "status": "abstained",
+      "elapsed_ms": 11266,
+      "active_ms": 11141,
+      "coverage": {
+        "discovered": 2,
+        "attempted": 2,
+        "retrieved": 2,
+        "qualifying": 0
+      },
+      "uncertain": 2,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "wincell",
+          "name": "Win Cell",
+          "status": "checked",
+          "reason": null
+        },
+        {
+          "source_id": "outgeeked",
+          "name": "OutGeeked",
+          "status": "checked",
+          "reason": null
+        }
+      ],
+      "semantic_hits": null,
+      "spend": {
+        "known_usd": "0.000922",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "model": 1,
+          "retrieval": 5,
+          "work": 5,
+          "worker": 3
+        }
+      },
+      "channel_attempts": [],
+      "models": [
+        {
+          "schema": "CritiqueChoice",
+          "validated": true,
+          "requested_model": "openai/gpt-6.1-sol",
+          "actual_model": "openai/gpt-6.1-sol",
+          "serving_provider": "OpenAI",
+          "route_fingerprint": "5250196f5e947ff1",
+          "tokens": {
+            "input_tokens": 296,
+            "output_tokens": 33,
+            "total_tokens": 329
+          },
+          "latency_ms": 3218,
+          "actual_usd": "0.000922",
+          "fallback": {
+            "allowed": false,
+            "refused": null,
+            "triggers": [],
+            "used": false
+          },
+          "system_fingerprint": null
+        }
+      ]
+    },
+    {
+      "case_id": "D-H30i",
+      "arm": "broader",
+      "parallelism": 3,
+      "run_id": "2579b7d2-6a86-41a7-9e6a-d3210e40bb53",
+      "started_at": "2026-11-23T21:14:47.499268+00:00",
+      "status": "abstained",
+      "elapsed_ms": 8360,
+      "active_ms": 8281,
+      "coverage": {
+        "discovered": 2,
+        "attempted": 2,
+        "retrieved": 2,
+        "qualifying": 0
+      },
+      "uncertain": 2,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "wincell",
+          "name": "Win Cell",
+          "status": "checked",
+          "reason": null
+        },
+        {
+          "source_id": "outgeeked",
+          "name": "OutGeeked",
+          "status": "checked",
+          "reason": null
+        }
+      ],
+      "semantic_hits": null,
+      "spend": {
+        "known_usd": "0.000952",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "model": 1,
+          "retrieval": 5,
+          "work": 5,
+          "worker": 3
+        }
+      },
+      "channel_attempts": [],
+      "models": [
+        {
+          "schema": "CritiqueChoice",
+          "validated": true,
+          "requested_model": "openai/gpt-6.1-sol",
+          "actual_model": "openai/gpt-6.1-sol",
+          "serving_provider": "OpenAI",
+          "route_fingerprint": "5250196f5e947ff1",
+          "tokens": {
+            "input_tokens": 296,
+            "output_tokens": 36,
+            "total_tokens": 332
+          },
+          "latency_ms": 4532,
+          "actual_usd": "0.000952",
+          "fallback": {
+            "allowed": false,
+            "refused": null,
+            "triggers": [],
+            "used": false
+          },
+          "system_fingerprint": null
+        }
+      ]
+    },
+    {
+      "case_id": "D-H30i",
+      "arm": "outage",
+      "parallelism": 3,
+      "run_id": "48423205-cb97-4107-9021-c345a73a9e90",
+      "started_at": "2026-11-23T21:18:46.203823+00:00",
+      "status": "abstained",
+      "elapsed_ms": 11157,
+      "active_ms": 11015,
+      "coverage": {
+        "discovered": 4,
+        "attempted": 4,
+        "retrieved": 1,
+        "qualifying": 0
+      },
+      "uncertain": 1,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "outgeeked",
+          "name": "OutGeeked",
+          "status": "checked",
+          "reason": null
+        },
+        {
+          "source_id": "beytech",
+          "name": "beytech",
+          "status": "failed",
+          "reason": "No matching SKU on the current listing"
+        },
+        {
+          "source_id": "class_cellulars",
+          "name": "class_cellulars",
+          "status": "failed",
+          "reason": "No matching SKU on the current listing"
+        },
+        {
+          "source_id": "mojitech",
+          "name": "mojitech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        }
+      ],
+      "semantic_hits": null,
+      "spend": {
+        "known_usd": "0.000774",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "model": 1,
+          "retrieval": 5,
+          "work": 4,
+          "worker": 6
+        }
+      },
+      "channel_attempts": [
+        {
+          "channel": "tavily",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "serpapi",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "brave",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "manufacturer",
+          "status": "unavailable",
+          "latency_ms": null
+        },
+        {
+          "channel": "firecrawl",
+          "status": "unavailable",
+          "latency_ms": null
+        }
+      ],
+      "models": [
+        {
+          "schema": "CritiqueChoice",
+          "validated": true,
+          "requested_model": "openai/gpt-6.1-sol",
+          "actual_model": "openai/gpt-6.1-sol",
+          "serving_provider": "OpenAI",
+          "route_fingerprint": "5250196f5e947ff1",
+          "tokens": {
+            "input_tokens": 217,
+            "output_tokens": 34,
+            "total_tokens": 251
+          },
+          "latency_ms": 3078,
+          "actual_usd": "0.000774",
+          "fallback": {
+            "allowed": false,
+            "refused": null,
+            "triggers": [],
+            "used": false
+          },
+          "system_fingerprint": null
+        }
+      ]
+    },
+    {
+      "case_id": "D-H30i",
+      "arm": "priority",
+      "parallelism": 3,
+      "run_id": "fb43535d-d850-473f-b5ba-d675d0b76627",
+      "started_at": "2026-11-23T21:14:44.515159+00:00",
+      "status": "abstained",
+      "elapsed_ms": 2469,
+      "active_ms": 2266,
+      "coverage": {
+        "discovered": 3,
+        "attempted": 3,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "uncertain": 0,
+      "verified_sellers": [],
+      "verified_models": [],
+      "verified_totals": [],
+      "source_outcomes": [
+        {
+          "source_id": "beytech",
+          "name": "beytech",
+          "status": "failed",
+          "reason": "No matching SKU on the current listing"
+        },
+        {
+          "source_id": "class_cellulars",
+          "name": "class_cellulars",
+          "status": "failed",
+          "reason": "No matching SKU on the current listing"
+        },
+        {
+          "source_id": "mojitech",
+          "name": "mojitech",
+          "status": "failed",
+          "reason": "Listing read unavailable"
+        }
+      ],
+      "semantic_hits": null,
+      "spend": {
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "retrieval": 3,
+          "work": 2,
+          "worker": 3
+        }
+      },
+      "channel_attempts": [],
+      "models": []
+    }
+  ],
+  "channel_pairs": [
+    {
+      "job_id": "development-channels:domestic-20261123-a:audio:ar",
+      "category": "audio",
+      "language": "ar",
+      "query": "Soundcore H30i متجر صيدا لبنان",
+      "started_at": "2026-11-23T21:21:39.350023+00:00",
+      "seller_keys": [
+        "host:gcscomputerpro.com",
+        "host:www.ayoubcomputers.com",
+        "host:www.beirutcart.com",
+        "seller:macrotronics",
+        "seller:mojitech"
+      ],
+      "direct_checks": [
+        {
+          "seller": "seller:macrotronics",
+          "status": "unconfigured"
+        },
+        {
+          "seller": "seller:mojitech",
+          "status": "out_of_scope"
+        }
+      ],
+      "channels": [
+        {
+          "channel": "tavily",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "serpapi",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "brave",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "manufacturer",
+          "status": "ok",
+          "latency_ms": 625,
+          "incremental_usable_sellers": 0,
+          "same_variant_pairs": 0
+        },
+        {
+          "channel": "firecrawl",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        }
+      ],
+      "actual_calls": 1,
+      "settled_usd": "0",
+      "unresolved_usd": "0"
+    },
+    {
+      "job_id": "development-channels:domestic-20261123-a:audio:en",
+      "category": "audio",
+      "language": "en",
+      "query": "Soundcore H30i retailer Sidon Lebanon",
+      "started_at": "2026-11-23T21:21:07.525529+00:00",
+      "seller_keys": [
+        "host:gcscomputerpro.com",
+        "host:www.ayoubcomputers.com",
+        "host:www.beirutcart.com",
+        "seller:macrotronics",
+        "seller:mojitech"
+      ],
+      "direct_checks": [
+        {
+          "seller": "seller:macrotronics",
+          "status": "unconfigured"
+        },
+        {
+          "seller": "seller:mojitech",
+          "status": "out_of_scope"
+        }
+      ],
+      "channels": [
+        {
+          "channel": "tavily",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "serpapi",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "brave",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "manufacturer",
+          "status": "ok",
+          "latency_ms": 484,
+          "incremental_usable_sellers": 0,
+          "same_variant_pairs": 0
+        },
+        {
+          "channel": "firecrawl",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        }
+      ],
+      "actual_calls": 1,
+      "settled_usd": "0",
+      "unresolved_usd": "0"
+    },
+    {
+      "job_id": "development-channels:domestic-20261123-a:laptop:ar",
+      "category": "laptop",
+      "language": "ar",
+      "query": "ASUS Zenbook 14 متجر بيروت لبنان",
+      "started_at": "2026-11-23T21:18:26.521074+00:00",
+      "seller_keys": [
+        "host:gcscomputerpro.com",
+        "host:www.ayoubcomputers.com",
+        "host:www.beirutcart.com",
+        "seller:macrotronics",
+        "seller:mojitech"
+      ],
+      "direct_checks": [
+        {
+          "seller": "seller:macrotronics",
+          "status": "unconfigured"
+        },
+        {
+          "seller": "seller:mojitech",
+          "status": "out_of_scope"
+        }
+      ],
+      "channels": [
+        {
+          "channel": "tavily",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "serpapi",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "brave",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "manufacturer",
+          "status": "ok",
+          "latency_ms": 468,
+          "incremental_usable_sellers": 0,
+          "same_variant_pairs": 0
+        },
+        {
+          "channel": "firecrawl",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        }
+      ],
+      "actual_calls": 1,
+      "settled_usd": "0",
+      "unresolved_usd": "0"
+    },
+    {
+      "job_id": "development-channels:domestic-20261123-a:laptop:en",
+      "category": "laptop",
+      "language": "en",
+      "query": "ASUS Zenbook 14 retailer Beirut Lebanon",
+      "started_at": "2026-11-23T21:17:54.414479+00:00",
+      "seller_keys": [
+        "host:gcscomputerpro.com",
+        "host:www.ayoubcomputers.com",
+        "host:www.beirutcart.com",
+        "seller:macrotronics",
+        "seller:mojitech"
+      ],
+      "direct_checks": [
+        {
+          "seller": "seller:macrotronics",
+          "status": "unconfigured"
+        },
+        {
+          "seller": "seller:mojitech",
+          "status": "out_of_scope"
+        }
+      ],
+      "channels": [
+        {
+          "channel": "tavily",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "serpapi",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "brave",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "manufacturer",
+          "status": "ok",
+          "latency_ms": 656,
+          "incremental_usable_sellers": 0,
+          "same_variant_pairs": 0
+        },
+        {
+          "channel": "firecrawl",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        }
+      ],
+      "actual_calls": 1,
+      "settled_usd": "0",
+      "unresolved_usd": "0"
+    },
+    {
+      "job_id": "development-channels:domestic-20261123-a:monitor:ar",
+      "category": "monitor",
+      "language": "ar",
+      "query": "ASUS ProArt PA278QV متجر بيروت لبنان",
+      "started_at": "2026-11-23T21:20:35.695072+00:00",
+      "seller_keys": [
+        "host:gcscomputerpro.com",
+        "host:www.ayoubcomputers.com",
+        "host:www.beirutcart.com",
+        "seller:macrotronics",
+        "seller:mojitech"
+      ],
+      "direct_checks": [
+        {
+          "seller": "seller:macrotronics",
+          "status": "unconfigured"
+        },
+        {
+          "seller": "seller:mojitech",
+          "status": "out_of_scope"
+        }
+      ],
+      "channels": [
+        {
+          "channel": "tavily",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "serpapi",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "brave",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "manufacturer",
+          "status": "ok",
+          "latency_ms": 469,
+          "incremental_usable_sellers": 0,
+          "same_variant_pairs": 0
+        },
+        {
+          "channel": "firecrawl",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        }
+      ],
+      "actual_calls": 1,
+      "settled_usd": "0",
+      "unresolved_usd": "0"
+    },
+    {
+      "job_id": "development-channels:domestic-20261123-a:monitor:en",
+      "category": "monitor",
+      "language": "en",
+      "query": "ASUS ProArt PA278QV retailer Beirut Lebanon",
+      "started_at": "2026-11-23T21:20:01.955959+00:00",
+      "seller_keys": [
+        "host:gcscomputerpro.com",
+        "host:www.ayoubcomputers.com",
+        "host:www.beirutcart.com",
+        "seller:macrotronics",
+        "seller:mojitech"
+      ],
+      "direct_checks": [
+        {
+          "seller": "seller:macrotronics",
+          "status": "unconfigured"
+        },
+        {
+          "seller": "seller:mojitech",
+          "status": "out_of_scope"
+        }
+      ],
+      "channels": [
+        {
+          "channel": "tavily",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "serpapi",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "brave",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "manufacturer",
+          "status": "ok",
+          "latency_ms": 2391,
+          "incremental_usable_sellers": 0,
+          "same_variant_pairs": 0
+        },
+        {
+          "channel": "firecrawl",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        }
+      ],
+      "actual_calls": 1,
+      "settled_usd": "0",
+      "unresolved_usd": "0"
+    },
+    {
+      "job_id": "development-channels:domestic-20261123-a:phone:ar",
+      "category": "phone",
+      "language": "ar",
+      "query": "iPhone 17 متجر بيروت لبنان",
+      "started_at": "2026-11-23T21:17:21.615161+00:00",
+      "seller_keys": [
+        "host:gcscomputerpro.com",
+        "host:www.ayoubcomputers.com",
+        "host:www.beirutcart.com",
+        "seller:macrotronics",
+        "seller:mojitech"
+      ],
+      "direct_checks": [
+        {
+          "seller": "seller:macrotronics",
+          "status": "unconfigured"
+        },
+        {
+          "seller": "seller:mojitech",
+          "status": "out_of_scope"
+        }
+      ],
+      "channels": [
+        {
+          "channel": "tavily",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "serpapi",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "brave",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "manufacturer",
+          "status": "ok",
+          "latency_ms": 1547,
+          "incremental_usable_sellers": 0,
+          "same_variant_pairs": 0
+        },
+        {
+          "channel": "firecrawl",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        }
+      ],
+      "actual_calls": 1,
+      "settled_usd": "0",
+      "unresolved_usd": "0"
+    },
+    {
+      "job_id": "development-channels:domestic-20261123-a:phone:en",
+      "category": "phone",
+      "language": "en",
+      "query": "iPhone 17 retailer Beirut Lebanon",
+      "started_at": "2026-11-23T21:16:48.920384+00:00",
+      "seller_keys": [
+        "host:gcscomputerpro.com",
+        "host:www.ayoubcomputers.com",
+        "host:www.beirutcart.com",
+        "seller:macrotronics",
+        "seller:mojitech"
+      ],
+      "direct_checks": [
+        {
+          "seller": "seller:macrotronics",
+          "status": "unconfigured"
+        },
+        {
+          "seller": "seller:mojitech",
+          "status": "out_of_scope"
+        }
+      ],
+      "channels": [
+        {
+          "channel": "tavily",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "serpapi",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "brave",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "manufacturer",
+          "status": "ok",
+          "latency_ms": 1360,
+          "incremental_usable_sellers": 0,
+          "same_variant_pairs": 0
+        },
+        {
+          "channel": "firecrawl",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        }
+      ],
+      "actual_calls": 1,
+      "settled_usd": "0",
+      "unresolved_usd": "0"
+    },
+    {
+      "job_id": "development-channels:domestic-20261123-a:tablet:ar",
+      "category": "tablet",
+      "language": "ar",
+      "query": "iPad Air متجر طرابلس لبنان",
+      "started_at": "2026-11-23T21:19:30.125621+00:00",
+      "seller_keys": [
+        "host:gcscomputerpro.com",
+        "host:www.ayoubcomputers.com",
+        "host:www.beirutcart.com",
+        "seller:macrotronics",
+        "seller:mojitech"
+      ],
+      "direct_checks": [
+        {
+          "seller": "seller:macrotronics",
+          "status": "unconfigured"
+        },
+        {
+          "seller": "seller:mojitech",
+          "status": "out_of_scope"
+        }
+      ],
+      "channels": [
+        {
+          "channel": "tavily",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "serpapi",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "brave",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "manufacturer",
+          "status": "ok",
+          "latency_ms": 469,
+          "incremental_usable_sellers": 0,
+          "same_variant_pairs": 0
+        },
+        {
+          "channel": "firecrawl",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        }
+      ],
+      "actual_calls": 1,
+      "settled_usd": "0",
+      "unresolved_usd": "0"
+    },
+    {
+      "job_id": "development-channels:domestic-20261123-a:tablet:en",
+      "category": "tablet",
+      "language": "en",
+      "query": "iPad Air retailer Tripoli Lebanon",
+      "started_at": "2026-11-23T21:18:58.313362+00:00",
+      "seller_keys": [
+        "host:gcscomputerpro.com",
+        "host:www.ayoubcomputers.com",
+        "host:www.beirutcart.com",
+        "seller:macrotronics",
+        "seller:mojitech"
+      ],
+      "direct_checks": [
+        {
+          "seller": "seller:macrotronics",
+          "status": "unconfigured"
+        },
+        {
+          "seller": "seller:mojitech",
+          "status": "out_of_scope"
+        }
+      ],
+      "channels": [
+        {
+          "channel": "tavily",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "serpapi",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "brave",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        },
+        {
+          "channel": "manufacturer",
+          "status": "ok",
+          "latency_ms": 453,
+          "incremental_usable_sellers": 0,
+          "same_variant_pairs": 0
+        },
+        {
+          "channel": "firecrawl",
+          "status": "unavailable",
+          "latency_ms": null,
+          "incremental_usable_sellers": null,
+          "same_variant_pairs": null
+        }
+      ],
+      "actual_calls": 1,
+      "settled_usd": "0",
+      "unresolved_usd": "0"
+    }
+  ],
+  "ledger": {
+    "as_of": "2026-11-23T21:23:03.397665+00:00",
+    "project_all_devices_accounted_usd": "3.03707574",
+    "allowance_usd": "500",
+    "recorded_credit_purchase_count": 0,
+    "development_buyer_spend_usd": "0.005404",
+    "development_buyer_unresolved_usd": "0"
+  }
+}

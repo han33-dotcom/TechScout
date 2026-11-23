@@ -1,8 +1,7 @@
 """Optional OpenRouter gateway adapter behind the ModelProvider interface (T53, #89).
 
 The buyer worker (app.inference, #75) builds it for every model-driven role from an
-explicit runtime configuration; the main evaluation still uses the frozen direct
-OpenAI route until #80 versions the protocol. Nothing selects this adapter
+explicit runtime configuration. The main evaluation uses its own frozen route. Nothing selects this adapter
 automatically: it exists only when a configuration enables it and the backend supplies
 OPENROUTER_API_KEY; the caller then passes it to a role as its ``provider``.
 
