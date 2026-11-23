@@ -273,6 +273,8 @@ def _route(offer: v2.Offer) -> str:
         return f'pickup at branch {branch}'
     if isinstance(route, v2.DirectRoute):
         city = safe_text(route.destination.city, 40) if route.destination.city else None
+        if route.origin_country == 'ZZ':
+            return f'delivery requested to {city or "Lebanon"}, dispatch origin unknown'
         return f'direct delivery from {country(route.origin_country)} to {city or "Lebanon"}'
     forwarder = safe_text(route.forwarder_id, 40) or 'a forwarding service'
     city = safe_text(route.forwarding_leg.destination.city, 40) if route.forwarding_leg.destination.city else None
@@ -415,17 +417,18 @@ def _arrival(verified: v2.VerifiedOffer, run: v2.RunReference) -> tuple[str | No
     """(claim text, open question, the question's evidence) for an offer's arrival window. Only a
     window observed in this run whose latest day has not passed is stated as a checked arrival."""
     fact = verified.offer.arrival
+    route_kind = 'pickup' if isinstance(verified.offer.route, v2.PickupRoute) else 'delivery'
     if fact is None or fact.state == 'unknown':
-        return None, 'delivery time not published', []
+        return None, f'{route_kind} time not published', []
     ids = list(fact.evidence_ids)
     if fact.state == 'conflict':
-        return None, 'delivery time: conflicting values reported', ids
+        return None, f'{route_kind} time: conflicting values reported', ids
     older = _stored(verified.offer, fact.evidence_ids, run)
     if older is not None:
-        return None, f'delivery time not checked in this run (stored record, observed {day(older)})', ids
+        return None, f'{route_kind} time not checked in this run (stored record, observed {day(older)})', ids
     window = fact.value
     if window.latest < verified.verification.checked_at:
-        return None, 'the published delivery window has already passed', ids
+        return None, f'the published {route_kind} window has already passed', ids
     basis = 'guaranteed by the seller' if window.basis == 'guaranteed' else 'an estimate, not a promise'
     return (f'between {lebanon_day(window.earliest, earliest=True)} and {lebanon_day(window.latest, earliest=False)} '
             f'(dates in Lebanon; {basis})'), None, []
@@ -529,8 +532,9 @@ def build_menu(context: WritingContext) -> Menu:
             window, question, question_ids = _arrival(verified, run)
             if window is not None:
                 evidenced.add('delivery')
+                timing = 'Pickup window' if isinstance(offer.route, v2.PickupRoute) else 'Arrival'
                 b.add('seller', 'arrival', f'G{g}', 'verified',
-                      f'Arrival for option {g} from {_seller(offer, s)}: {window}.', offer.arrival.evidence_ids,
+                      f'{timing} for option {g} from {_seller(offer, s)}: {window}.', offer.arrival.evidence_ids,
                       required='delivery' in preferences, tags=['delivery'])
             else:
                 gaps.append(question)

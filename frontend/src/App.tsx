@@ -22,7 +22,8 @@ export function RequestForm({ draft, setDraft, onSubmit, busy, refining }: { dra
       <label>City in Lebanon<input value={draft.city} placeholder="Any city" onChange={e => field('city', e.target.value)} /></label>
       {specLabels[draft.category] && <label>{specLabels[draft.category]}<input inputMode="numeric" value={draft.spec} placeholder="No requirement" onChange={e => field('spec', e.target.value)} /></label>}
       <label>Condition<select value={draft.condition} onChange={e => field('condition', e.target.value as Draft['condition'])}><option value="new">New only</option><option value="used">Used only</option><option value="refurbished">Refurbished only</option></select></label>
-      <label>Fulfillment<select value={draft.mode} onChange={e => field('mode', e.target.value as Draft['mode'])}><option value="any">Delivery or pickup</option><option value="delivery">Delivery</option><option value="pickup">Pickup</option></select></label>
+      <label>Fulfillment<select value={draft.mode} onChange={e => setDraft({ ...draft, mode: e.target.value as Draft['mode'], branch: '' })}><option value="any">Delivery or pickup</option><option value="delivery">Delivery</option><option value="pickup">Pickup</option></select></label>
+      {draft.mode === 'pickup' && <label>Pickup branch code (optional)<input value={draft.branch} placeholder="Branch code from the retailer" onChange={e => field('branch', e.target.value)} /></label>}
       <label>Payment<select value={draft.payment} onChange={e => field('payment', e.target.value as Draft['payment'])}><option value="">No preference</option><option value="cash">Cash</option><option value="card">Card</option></select></label>
     </div><p className="muted">A target is a preference. Only a hard maximum is a price ceiling. Your original wording is kept for interpretation.</p></details>
   </form>;

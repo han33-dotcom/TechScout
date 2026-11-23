@@ -45,6 +45,29 @@ describe('request boundaries',()=>{
  });
 });
 describe('buyer interactions',()=>{
+ it('submits a selected branch and removes the constraint when the buyer switches to delivery',async()=>{
+  const transport=api();
+  vi.mocked(transport.start).mockImplementation(async request=>{
+   const queued=snap('queued');
+   queued.request.fulfillment=request.fulfillment;
+   return queued;
+  });
+  render(<App transport={transport}/>);
+  fireEvent.change(screen.getByLabelText('What are you looking for?'),{target:{value:'Demo phone'}});
+  fireEvent.change(screen.getByLabelText('Fulfillment'),{target:{value:'pickup'}});
+  fireEvent.change(screen.getByLabelText(/pickup branch code/i),{target:{value:'  hamra  '}});
+  fireEvent.click(screen.getByRole('button',{name:/Find my options/}));
+  await screen.findByText('Waiting to start');
+  const saved=vi.mocked(transport.start).mock.calls[0][0];
+  expect(saved.fulfillment).toMatchObject({mode:'pickup',branch_id:'hamra'});
+  await waitFor(()=>expect((screen.getByLabelText(/pickup branch code/i) as HTMLInputElement).value).toBe('hamra'));
+  expect(toRequest(fromRequest(saved),saved).fulfillment?.branch_id).toBe('hamra');
+  fireEvent.change(screen.getByLabelText('Fulfillment'),{target:{value:'delivery'}});
+  expect(screen.queryByLabelText(/pickup branch code/i)).toBeNull();
+  fireEvent.click(screen.getByRole('button',{name:/Update search/}));
+  await waitFor(()=>expect(transport.refine).toHaveBeenCalled());
+  expect(vi.mocked(transport.refine).mock.calls[0][1].fulfillment).toMatchObject({mode:'delivery',branch_id:null});
+ });
  it('submits without a mandatory confirmation and renders a truthful queue',async()=>{
   const transport=api(snap('queued'));render(<App transport={transport}/>);
   expect(screen.queryByLabelText(/include international/i)).toBeNull();
