@@ -291,6 +291,12 @@ def import_international(directory: Directory) -> int:
     return changed
 
 
+def import_domestic_listings(directory: Directory) -> int:
+    path = ROOT / 'config/domestic-listing-sellers.json'
+    records = json.loads(path.read_text(encoding='utf-8'))
+    return sum(directory.upsert(DirectoryRecord.model_validate(record)) for record in records)
+
+
 class DirectoryPort:
     """Adapter for the async shared RetailerDirectory protocol without changing v2."""
     def __init__(self, directory: Directory):
@@ -308,7 +314,7 @@ def main():
     storage = Storage()
     try:
         directory = Directory(storage)
-        changed = import_audit(directory) + import_international(directory)
+        changed = import_audit(directory) + import_domestic_listings(directory) + import_international(directory)
         print(f'Imported/updated {changed} directory records; source configuration unchanged')
     finally:
         storage.engine.dispose()

@@ -19,6 +19,7 @@ class PageProfile:
     sku: str | None = None
     policy_element_id: str | None = None
     policy_field: str = 'policy.shipping'
+    seller_names: tuple[str, ...] = ()
 
 
 class _HTML(HTMLParser):
@@ -83,12 +84,46 @@ def _excerpt(script, key, value):
     # Keep the actual source spelling/whitespace, never a model-generated quote.
     pattern = re.escape(json.dumps(key)) + r'\s*:\s*' + re.escape(_literal(value))
     match = re.search(pattern,script)
+    if not match and isinstance(value, str):
+        strings = re.escape(json.dumps(key)) + r'\s*:\s*("(?:[^"\\]|\\.)*")'
+        match = next((m for m in re.finditer(strings,script) if json.loads(m.group(1))==value), None)
     if not match or len(match.group()) > 500:
         raise ValueError('No bounded original field excerpt')
     return match.group()
 
 
-def extract_structured(capture: DocumentCapture, profile: PageProfile, *, run: RunReference | None = None):
+def _selected_products(scripts, profile, capture):
+    from app.catalog_extraction import current_unrestricted_offer, matches_page, offer_seller_matches
+
+    selected = []
+    for index, script in enumerate(scripts):
+        try:
+            data = json.loads(script,parse_float=Decimal,object_pairs_hook=_unique_pairs,
+                parse_constant=lambda _: (_ for _ in ()).throw(ValueError('Nonfinite metadata')))
+        except (ValueError, RecursionError):
+            continue
+        for path, product in _objects(data):
+            if product.get('@type') != 'Product' or str(product.get('sku','')) != profile.sku:
+                continue
+            if profile.seller_names:
+                offers = product.get('offers')
+                if isinstance(offers,list):
+                    if len(offers)!=1:
+                        continue
+                    offers = offers[0]
+                if not (matches_page(product,capture) and isinstance(offers,dict) and offers.get('@type')=='Offer'
+                        and offers.get('sku') in (None,profile.sku) and matches_page(offers,capture)
+                        and offer_seller_matches(offers,profile.seller_names)
+                        and current_unrestricted_offer(offers,capture.observed_at)):
+                    continue
+                if selected:
+                    return ()  # Two presentations of the same SKU cannot supply complementary offer facts.
+            selected.append((script,f'/jsonld/{index}{path}',product))
+    return selected
+
+
+def extract_structured(capture: DocumentCapture, profile: PageProfile, *, run: RunReference | None = None,
+                       destination=None):
     origin = urlsplit(profile.origin)
     if (capture.key.source_id != profile.source_id or origin.scheme != 'https'
         or any((url.scheme,url.host,url.port) != ('https',origin.hostname,origin.port or 443)
@@ -104,13 +139,15 @@ def extract_structured(capture: DocumentCapture, profile: PageProfile, *, run: R
     digest = sha256(capture.body).hexdigest()
     fields = {}
 
-    def add(field, value, excerpt, pointer, *, source=False):
+    def add(field, value, excerpt, pointer, *, source=False, route=False):
         key = capture.key
         identity = json.dumps([digest,key.model_dump(mode='json'),capture.observed_at.isoformat(),
                                field,pointer,capture.processing.model_dump(),run.model_dump() if run else None],sort_keys=True)
         receipt = Evidence(evidence_id=sha256(identity.encode()).hexdigest(),source_id=key.source_id,
             product_id=None if source else key.product_id,variant_id=None if source else key.variant_id,
-            scope='source' if source else 'variant',field_path=field,origin_url=key.url,final_url=capture.final_url,
+            scope='source' if source else 'route' if route else 'variant',
+            route_id=(key.route_id or 'catalog-dispatch') if route else None,
+            field_path=field,origin_url=key.url,final_url=capture.final_url,
             observed_at=capture.observed_at,response_sha256=digest,adapter_version=capture.processing.extraction_version,
             json_pointer=pointer,excerpt=excerpt,origin=capture.origin,corpus_version=capture.processing.corpus_version,
             index_version=capture.processing.index_version,run=run)
@@ -124,55 +161,57 @@ def extract_structured(capture: DocumentCapture, profile: PageProfile, *, run: R
     if profile.sku:
         if not capture.key.product_id or capture.key.variant_id != profile.sku or capture.key.branch_id:
             raise ValueError('Listing extraction requires an explicit product/variant binding')
-        for index, script in enumerate(parsed.scripts):
-            try:
-                data = json.loads(script,parse_float=Decimal,object_pairs_hook=_unique_pairs,
-                    parse_constant=lambda _: (_ for _ in ()).throw(ValueError('Nonfinite metadata')))
-            except (ValueError, RecursionError):
-                continue  # unsupported blocks remain gaps
-            for path, product in _objects(data):
-                if product.get('@type') != 'Product' or str(product.get('sku','')) != profile.sku:
+        for script, prefix, product in _selected_products(parsed.scripts,profile,capture):
+            if profile.seller_names:
+                from app.catalog_extraction import product_identity, route_facts
+                product_identity(product,script,prefix,add)
+            for key, field in (('color','variant.color'),('model','variant.product.model')):
+                value = product.get(key)
+                if isinstance(value,str) and value.strip():
+                    add(field,value,_excerpt(script,key,value),prefix+'/'+key)
+            offers = product.get('offers',[])
+            offer_array = isinstance(offers,list)
+            offers = offers if isinstance(offers,list) else [offers]
+            for i, offer in enumerate(offers):
+                if not isinstance(offer,dict) or offer.get('@type') != 'Offer':
                     continue
-                prefix = f'/jsonld/{index}{path}'
-                for key, field in (('color','variant.color'),('model','variant.product.model')):
-                    value = product.get(key)
-                    if isinstance(value,str) and value.strip():
-                        add(field,value,_excerpt(script,key,value),prefix+'/'+key)
-                offers = product.get('offers',[])
-                offer_array = isinstance(offers,list)
-                offers = offers if isinstance(offers,list) else [offers]
-                for i, offer in enumerate(offers):
-                    if not isinstance(offer,dict) or offer.get('@type') != 'Offer':
-                        continue
-                    if offer.get('sku') not in (None,profile.sku) or offer.get('url') not in (None,str(capture.key.url),str(capture.final_url)):
-                        continue
-                    suffix = prefix + '/offers' + (f'/{i}' if offer_array else '')
-                    price, currency = offer.get('price'), offer.get('priceCurrency')
-                    if type(price) in (str,int,Decimal) and currency in {'USD','LBP','EUR','AED'}:
-                        try:
-                            amount = Decimal(price)
-                            if amount.is_finite() and amount > 0:
+                if not profile.seller_names and (offer.get('sku') not in (None,profile.sku)
+                        or offer.get('url') not in (None,str(capture.key.url),str(capture.final_url))):
+                    continue
+                suffix = prefix + '/offers' + (f'/{i}' if offer_array else '')
+                if profile.seller_names:
+                    route_facts(offer, script, suffix, add, destination)
+                price, currency = offer.get('price'), offer.get('priceCurrency')
+                if type(price) in (str,int,Decimal) and isinstance(currency,str) and currency in {'USD','LBP','EUR','AED'}:
+                    try:
+                        amount = Decimal(price)
+                        if amount.is_finite() and amount > 0:
+                            add('price',{'amount':str(amount),'currency':currency},
+                                _excerpt(script,'price',price),suffix+'/price')
+                            if profile.seller_names:
                                 add('price',{'amount':str(amount),'currency':currency},
-                                    _excerpt(script,'price',price),suffix+'/price')
-                        except (ValueError,ArithmeticError):
-                            pass
-                    stock = {'https://schema.org/InStock':True, 'https://schema.org/OutOfStock':False,
-                             'http://schema.org/InStock':True, 'http://schema.org/OutOfStock':False}
-                    if isinstance(offer.get('availability'),str) and offer['availability'] in stock:
-                        add('stock',stock[offer['availability']],_excerpt(script,'availability',offer['availability']),suffix+'/availability')
-                    conditions = {'https://schema.org/NewCondition':'new','https://schema.org/UsedCondition':'used',
-                                  'https://schema.org/RefurbishedCondition':'refurbished'}
-                    if isinstance(offer.get('itemCondition'),str) and offer['itemCondition'] in conditions:
-                        add('condition',conditions[offer['itemCondition']],_excerpt(script,'itemCondition',offer['itemCondition']),suffix+'/itemCondition')
-                properties = product.get('additionalProperty',[])
-                for i, prop in enumerate(properties if isinstance(properties,list) else []):
-                    if not isinstance(prop,dict):
-                        continue
-                    name = prop.get('name')
-                    field = {'RAM':'variant.specs.ram_gb','Storage':'variant.specs.storage_gb'}.get(name) if isinstance(name,str) else None
-                    raw = prop.get('value')
-                    if field and isinstance(raw,str) and re.fullmatch(r'[1-9][0-9]{0,5} GB',raw):
-                        add(field,int(raw.split()[0]),_excerpt(script,'value',raw),prefix+f'/additionalProperty/{i}/value')
+                                    _excerpt(script,'priceCurrency',currency),suffix+'/priceCurrency')
+                    except (ValueError,ArithmeticError):
+                        pass
+                stock = {'https://schema.org/InStock':True, 'https://schema.org/OutOfStock':False,
+                         'http://schema.org/InStock':True, 'http://schema.org/OutOfStock':False}
+                if isinstance(offer.get('availability'),str) and offer['availability'] in stock:
+                    add('stock',stock[offer['availability']],_excerpt(script,'availability',offer['availability']),suffix+'/availability')
+                conditions = {'https://schema.org/NewCondition':'new','https://schema.org/UsedCondition':'used',
+                              'https://schema.org/RefurbishedCondition':'refurbished'}
+                if isinstance(offer.get('itemCondition'),str) and offer['itemCondition'] in conditions:
+                    add('condition',conditions[offer['itemCondition']],_excerpt(script,'itemCondition',offer['itemCondition']),suffix+'/itemCondition')
+            properties = product.get('additionalProperty',[])
+            for i, prop in enumerate(properties if isinstance(properties,list) else []):
+                if not isinstance(prop,dict):
+                    continue
+                name = prop.get('name')
+                field = {'RAM':'variant.specs.ram_gb','Storage':'variant.specs.storage_gb'}.get(name) if isinstance(name,str) else None
+                raw = prop.get('value')
+                if profile.seller_names and name == 'Purchasable' and type(raw) is bool:
+                    add('purchasable',raw,_excerpt(script,'value',raw),prefix+f'/additionalProperty/{i}/value')
+                if field and isinstance(raw,str) and re.fullmatch(r'[1-9][0-9]{0,5} GB',raw):
+                    add(field,int(raw.split()[0]),_excerpt(script,'value',raw),prefix+f'/additionalProperty/{i}/value')
     observations, passages = [], []
     for field, values in fields.items():
         unique = []
@@ -184,6 +223,10 @@ def extract_structured(capture: DocumentCapture, profile: PageProfile, *, run: R
         fact.update(state='known',value=unique[0]) if len(unique)==1 else fact.update(
             state='conflict',alternatives=unique,reason='Structured page values disagree for this field and variant')
         observations.append(FieldObservation(fact=fact,evidence=receipts))
+        # Catalog prices, inventory and shipping rates are structured temporal
+        # observations. Only stable specification text belongs in the vector index.
+        if profile.seller_names and not field.startswith('variant.'):
+            continue
         for receipt in receipts:
             passages.append(PassageDraft(locator=receipt.json_pointer,text=receipt.excerpt,evidence=receipt))
     return Extraction(observations=tuple(observations),passages=tuple(passages))
