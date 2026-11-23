@@ -6,7 +6,7 @@ from pydantic import Field, JsonValue, StrictBytes, TypeAdapter, ValidationError
 from app.collection_contracts import CorpusVersion
 from app.contracts import Fact, HttpsUrl, Model, Money, Text, UtcTime
 from app.contracts_v2 import (
-    AudioSpecs, Country, Evidence, LaptopSpecs, MonitorSpecs, Offer, Origin, PhoneSpecs, TabletSpecs, Variant,
+    AudioSpecs, Country, EstimatedCost, Evidence, LaptopSpecs, MonitorSpecs, Offer, Origin, PhoneSpecs, TabletSpecs, Variant,
 )
 from app.sources import MAX_RESPONSE_BYTES
 
@@ -80,6 +80,7 @@ _FACT_TYPES['costs.order.tax'] = [TypeAdapter(Fact[Literal['included']])]
 _FACT_TYPES['route.item_eligible'] = [TypeAdapter(Fact[bool])]
 _FACT_TYPES['resource.availability'] = [TypeAdapter(Fact[Literal['discontinued']])]
 _FACT_TYPES['costs.order.shipping'] = [TypeAdapter(Fact[Money])]
+_FACT_TYPES['costs.order.shipping_range'] = [TypeAdapter(Fact[EstimatedCost])]
 
 
 class FieldObservation(Model):

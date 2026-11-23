@@ -20,6 +20,7 @@ class PageProfile:
     policy_element_id: str | None = None
     policy_field: str = 'policy.shipping'
     seller_names: tuple[str, ...] = ()
+    category: str | None = None
 
 
 class _HTML(HTMLParser):
@@ -212,6 +213,15 @@ def extract_structured(capture: DocumentCapture, profile: PageProfile, *, run: R
                 name = prop.get('name')
                 field = {'RAM':'variant.specs.ram_gb','Storage':'variant.specs.storage_gb'}.get(name) if isinstance(name,str) else None
                 raw = prop.get('value')
+                if profile.category == 'monitor' and name == 'Refresh Rate' and isinstance(raw, str):
+                    match = re.fullmatch(r'([1-9][0-9]{0,3}) Hz', raw)
+                    if match:
+                        add('variant.specs.refresh_hz', int(match[1]), _excerpt(script,'value',raw),
+                            prefix+f'/additionalProperty/{i}/value')
+                if profile.category == 'audio' and name == 'Form Factor' and isinstance(raw,str):
+                    if raw.casefold() in ('earbuds','headphones'):
+                        add('variant.specs.form_factor', raw.casefold(), _excerpt(script,'value',raw),
+                            prefix+f'/additionalProperty/{i}/value')
                 if profile.seller_names and name == 'Purchasable' and type(raw) is bool:
                     add('purchasable',raw,_excerpt(script,'value',raw),prefix+f'/additionalProperty/{i}/value')
                 if field and isinstance(raw,str) and re.fullmatch(r'[1-9][0-9]{0,5} GB',raw):

@@ -226,7 +226,7 @@ def production_dependencies(*, require_inference=True) -> FlowDependencies:
     return FlowDependencies(ledger=ledger, inference=inference, source=source, research=research,
                             traces=ROOT / 'var' / 'traces', versions=versions,
                             domestic_sources=DomesticBuyerSources(storage, gate, directory,
-                                                                  fallback=workers.domestic_tools.fallback),
+                                                                  fallback=workers.domestic_tools.fallback, embedding=workers.embeddings),
                             onboarding=OnboardingQueue(storage, registry, directory=directory))
 
 

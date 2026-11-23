@@ -114,7 +114,8 @@ def extract_listing(capture, listing, *, run=None, destination=None):
         raise ValueError('Listing identity does not match the capture')
     url = urlsplit(str(listing.listing_url))
     extraction = extract_structured(capture, PageProfile(listing.source_id, f'{url.scheme}://{url.netloc}',
-        sku=listing.sku, seller_names=(listing.seller_name,*listing.seller_aliases)), run=run, destination=destination)
+        sku=listing.sku, seller_names=(listing.seller_name,*listing.seller_aliases), category=listing.category),
+        run=run, destination=destination)
     from app.domestic_retailer_profiles import enrich_listing
     return enrich_listing(capture, listing, extraction, run=run, destination=destination)
 

@@ -80,7 +80,7 @@ def candidate(request, offer):
                    or any(p.startswith('variant.specs.') for p in c.field_paths)) for c in checked.checks)
 
 
-def domestic_assessment(request, offer, now):
+def domestic_assessment(request, offer, now, *, estimates=None):
     if isinstance(offer.route, v2.DirectRoute) and offer.route.origin_country == 'ZZ':
         # Unresolved local dispatch cannot turn a domestic search into an import quote.
         missing = ['Dispatch from Lebanon is unverified for this listing and configuration.']
@@ -88,7 +88,7 @@ def domestic_assessment(request, offer, now):
                        for charge in offer.costs if charge.state == 'unknown')
         return FullProductAssessment(offer_id=offer.offer_id, eligibility=check_full_product(request, offer),
                                      cost=v2.IncompleteCost(status='incomplete', missing=tuple(missing)), within_maximum=None)
-    return assess_full_product(request, offer, now=now)
+    return assess_full_product(request, offer, now=now, estimates=estimates)
 
 
 def current_problem(offer, assessment, read, run, started_at, now):
@@ -176,7 +176,12 @@ class DomesticBuyerFlow(_Flow):
         self.phase('interpret', intent=request.intent.kind, market='LB')
         self.job = self.deps.ledger.open_job(self.run_ref.run_id)
         self.publish(status='running', phase='discover')
-        initial = self.deps.domestic_sources.lookup(request, limit=20)
+        sources = self.deps.domestic_sources
+        if request.intent.kind == 'needs' and hasattr(type(sources), 'needs_lookup'):
+            initial, semantic_hits = sources.needs_lookup(request, PhaseJob(self.job, lambda: self.left(self.nonfinal_by)))
+            self.trace['catalog_semantic_hits'] = semantic_hits
+        else:
+            initial = sources.lookup(request, limit=20)
         self.remember(initial)
         self.initial_ids = set(self.catalog)
         self.phase('discover', catalog_offers=len(self.catalog))
@@ -464,7 +469,7 @@ class DomesticBuyerFlow(_Flow):
             self.uncertain.pop(oid, None)
             self.assessed.pop(oid, None)
             now = self.deps.wall_clock()
-            assessment = domestic_assessment(self.request, offer, now)
+            assessment = domestic_assessment(self.request, offer, now, estimates=getattr(read, 'estimates', {}).get(oid))
             if assessment.decision == 'rejected':
                 continue
             problem = current_problem(offer, assessment, read, self.run_ref, self.started_at, now)
