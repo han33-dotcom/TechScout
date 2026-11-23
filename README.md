@@ -1,11 +1,11 @@
 # Tech Scout
 
-TechScout compares electronics from local sellers for pickup or delivery from inside Lebanon. FastAPI serves the React comparison workspace and owned run APIs; the full live shopping controller is still being integrated.
+TechScout compares electronics from local sellers for pickup or delivery from inside Lebanon. FastAPI serves the React comparison workspace and owned run APIs. A separate buyer worker checks offers and publishes verified or uncertain results.
 
 ## Current implementation
 
 The [architecture, API and reproducibility report](docs/architecture-api-report.md)
-describes the implemented checkpoint, pending integration, API examples and validation.
+describes the domestic buyer and collection processes, measured coverage, API examples and remaining release checks.
 The [delivery plan](docs/full-product-plan.md) defines the target product; it is not
 an assertion that every planned feature is already operational.
 

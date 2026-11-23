@@ -1,39 +1,18 @@
 # Architecture, API and reproducibility report
 
-**23 November planning update.** The provider descriptions below are a dated implementation checkpoint. See the [approved design](domestic-search-design.md) for the OpenRouter-only model gateway and the [first buyer flow](live-flow.md) for subsequent integration.
-
-Implementation checkpoint: **17 November 2026**. This report describes the code
-through the PC and Parts implementation in [PR #126](https://github.com/han33-dotcom/TechScout/pull/126),
-whose implementation commit is `87b08ae23561a57cee12431616561c1b1bdeac0b`.
-It is the incremental report deliverable for
-[#83](https://github.com/han33-dotcom/TechScout/issues/83), not the final release
-evaluation. The [delivery plan](full-product-plan.md) describes the target product;
-the status table below identifies what this checkout actually provides.
+The implementation described here is the domestic buyer application at commit `e3e6aa7`. Evidence dates refer to the individual source checks. The final release commit and its rehearsal are tracked in #85. The [November 17 checkpoint](https://github.com/han33-dotcom/TechScout/blob/733dae7e4c1317e8da0f9b916f576eb6a16ba1f4/docs/architecture-api-report.md) preserves the earlier architecture. [Report issue](https://github.com/han33-dotcom/TechScout/issues/83)
 
 ## Product scope and implementation status
 
-TechScout compares electronics for buyers in Lebanon. The v2 contracts cover
-phones, laptops, tablets, monitors, headphones and earbuds, with exact-model,
-product-link and needs-based requests. Lebanon and new condition are defaults.
-Foreign purchase offers and other conditions require explicit buyer choices.
-Checkout, payments, seller messaging and retailer-account creation are outside
-the application. A foreign specification source is not a foreign purchase offer.
+TechScout supports phones, laptops, tablets, monitors and headphones or earbuds. A buyer can identify a model, paste a retailer listing or describe their needs. Purchase offers require local pickup or dispatch from inside Lebanon. New condition is the default. Other conditions require an explicit choice. Historical international comparisons remain available in private history. Purchases take place on the retailer's site. [Scope decision](https://github.com/han33-dotcom/TechScout/issues/155)
 
-| Area | Implemented at this checkpoint | Remaining boundary |
+| Component | Implemented behavior | Evidence and limits |
 | --- | --- | --- |
-| Buyer workspace | React request/filter, progress, clarification, comparison, refinement and history UI; typed FastAPI client | Complete live browser-to-result flow remains #75/#76 |
-| Owned API/worker | Durable sessions/runs, polling, cancellation, revisions, worker claims and guarded publication | Needs a trusted shopping controller; otherwise runs remain queued |
-| Evidence and research | Versioned public corpus, structured/full-text/vector retrieval, freshness, bounded research workers | Full orchestrator and evidence critique remain #68/#69; tablet identity #43 is still pending |
-| Retailer acquisition | Legacy readers, bounded Class/Mojitech/Beytech catalog helpers, shared extraction and PC and Parts fixture profile | Coverage is per source/category/field, with documented live gaps; #54 does not activate PC and Parts |
-| Cost and verification | Decimal contracts, domestic assessment, final-verification and explanation modules | International retrieval, quotes and landed-cost integration remain #61–#63 |
-| Public collection | Directory import, corpus persistence, accounting and worker process foundation | Initial ingestion #87, scheduled refresh #88 and automatic onboarding #99 are not implemented |
-| Providers | Direct OpenAI adapter and optional explicit Tavily/Firecrawl/embedding clients | Account access/live quality unverified; optional OpenRouter #89 is not integrated here |
-| Evaluation | Offline regression fixtures and CI | Frozen dataset, equivalent baselines, measured comparisons and user study remain #78–#82 |
-
-Passing parser or API tests demonstrates those contracts, not a working live
-shopping service, real coverage across five categories, or superiority to a
-baseline. The older v1 CLI and its phone-focused records coexist with the v2
-workspace. Neither automatically becomes the missing full-product controller.
+| Browser and API | Typed React workspace, owned runs, polling, cancellation, refinements, pickup branch selection and private history | A browser rehearsal with fixture retailers verified that changing only a branch could remove a pickup offer. The buyer walkthroughs require participant sessions. [Walkthroughs](buyer-walkthroughs.md) |
+| Buyer worker | A listing link follows one retailer and variant. Exact-model search seeks two independent sellers of one configuration. A needs search evaluates up to three distinct models and groups sellers within each model. | All five categories and both exact and needs entry passed offline. A live H30i request checked two local sellers in 9.235 seconds. Neither had sufficient evidence for a payable total. [Buyer demo](domestic-buyer-demo.md) |
+| Public corpus and acquisition | The bootstrap, three maintenance jobs and technical onboarding share source admission and accounting with buyer research. | One live maintenance batch added three listing prices. It added no qualifying domestic comparison. [Maintenance receipts](catalog-refresh.md) |
+| Model access and discovery | OpenRouter serves the buyer's model roles and the embedding route. Five discovery channels can supply leads. | In the paired language checks, only the manufacturer channel returned live results. The provider table below gives the measured coverage. [Calibration](development-calibration.md) |
+| Evaluation | Versioned cases, isolated baseline runners, adjudication and scoring. | The 27 development buyer requests all abstained. Held-out results and buyer-session observations are outstanding. [Protocol](evaluation-protocol.md) |
 
 ## Process and module boundaries
 
@@ -43,29 +22,34 @@ role calls are function calls, not internal HTTP services. The checked-in Compos
 stack runs PostgreSQL, a one-shot migration service, the API and an ingestion
 **heartbeat** process. The heartbeat checks database/evidence-volume availability;
 it does not claim or execute collection jobs. A buyer worker is a separate explicit
-entry point and is not started by that Compose worker service.
+entry point. Run the buyer worker and opt-in maintenance scheduler separately from the Compose heartbeat.
 
 ```mermaid
 flowchart TD
     UI[React comparison workspace] --> API[FastAPI owned JSON endpoints]
     API --> SERVICE[BuyerRunService transactions]
     SERVICE --> RUNS[(Private sessions and run snapshots)]
-    WORKER[Buyer worker: explicit trusted controller] --> RUNS
-    WORKER -. controller integration pending .-> ROLES[Research, assessment, verification, writer]
+    WORKER[Domestic buyer worker] --> RUNS
+    WORKER --> ROLES[Research, assessment, verification, writer]
     ROLES --> CORPUS[(Public source documents and observations)]
     ROLES --> GATE[Source gate and extraction]
     GATE --> RETAILER[Scoped public retailer endpoints]
-    ROLES --> PROVIDERS[Explicit hosted provider clients]
+    ROLES --> PROVIDERS[OpenRouter inference and embeddings]
     GATE --> LEDGER[(Shared campaign ledger)]
     PROVIDERS --> LEDGER
     DIRECTORY[Imported retailer directory] --> GATE
-    JOBS[Initial ingestion and refresh: pending] -. shared services .-> GATE
+    JOBS[Bootstrap and scheduled maintenance] --> GATE
+    JOBS --> CORPUS
+    JOBS --> LEDGER
+    ROLES --> SEARCH[Discovery channels]
+    SEARCH --> DIRECTORY
+    SEARCH --> LEDGER
 ```
 
 | Responsibility | Code and contract |
 | --- | --- |
 | HTTP admission and ownership | `app/buyer_api.py`, `app/buyer_runs.py`; handlers stay thin over service transactions |
-| Buyer execution | `app/run_worker.py`; trusted `module:function`, leased `RunContext`, guarded publication |
+| Buyer execution | `app/run_worker.py`; `app/buyer_flow.py` and `app/domestic_buyer.py` execute the leased `RunContext` |
 | v2 contracts and role interfaces | `app/contracts_v2.py`, `app/contract_interfaces.py`; request/run revisions and typed evidence |
 | Research | `app/research_workers.py`, `app/research.py`; stored evidence first, bounded scoped gaps and discovery |
 | Deterministic decisions | `app/identity.py`, `app/assessment.py`, `app/costs.py`, `app/verification.py` |
@@ -86,8 +70,7 @@ current exact-field, relational, text and vector queries.
 
 1. The browser constructs a v2 `ShoppingRequest` and exposes its interpreted
    constraints for editing. Approximate budgets remain preferences; explicit
-   maxima are hard limits. Browser form interpretation is not proof of the future
-   needs-based orchestrator's reasoning quality.
+   maxima are hard limits. A buyer can edit a city, fulfillment mode or pickup branch before submitting a revision.
 2. The API persists the owned request and queues a run. It returns immediately;
    polling retrieves durable state rather than holding an HTTP request open for
    the execution budget. A configured worker claims the run and receives its
@@ -111,16 +94,13 @@ current exact-field, relational, text and vector queries.
    from the current workspace; late callbacks cannot mutate cancelled or superseded
    results. Explanation modules cannot fill gaps with plausible prose.
 
-Steps 3–7 describe the implemented module contracts and intended integration;
-their complete orchestration is still pending. Offline worker/API tests exercise
-publication with controlled controllers, not a hidden production controller.
+In the live H30i example the seed corpus provided candidates, then the worker obtained current price and stock from both sellers. Dispatch evidence applied to the exact listings. Missing condition, purchasability, fees or destination eligibility kept their item prices outside the main recommendations. The seeded corpus, result rules and separate buyer process can be exercised together with the [domestic buyer scenarios](domestic-buyer-demo.md).
 
 ## Storage, provenance and freshness
 
 PostgreSQL is the supported database; SQLite provides an offline fixture path.
-Alembic revisions `0001`–`0008` add the original records, pgvector, public corpus,
-retirements, embedding usage, retailer directory, shared accounting and owned
-buyer sessions/runs. Contract JSON accompanies queryable relational columns.
+Alembic revisions `0001`–`0009` add the original records, pgvector, public corpus,
+retirements, embedding usage, retailer directory, shared accounting, owned buyer sessions/runs and retailer onboarding. Contract JSON accompanies queryable relational columns.
 Private buyer requests and history are not indexed into the public corpus.
 
 Public resources retain source URL, exact product/variant/branch/route scope,
@@ -220,90 +200,31 @@ reference is an error, not permission to overwrite newer work.
 
 ## Providers and shared accounting
 
-The configured primary hosted model is the direct OpenAI adapter behind
-`ModelProvider.generate`; the checkout pins its model, effort, prompt version,
-token/time ceilings and Decimal price table in `config/evaluation.json`. These
-are recorded configuration values, not a claim of current account access or
-freshly measured provider prices. Production must verify supported models,
-pricing and account access before paid execution. Locally validated structured
-outputs do not grant evidence or tool privileges.
+The domestic worker injects an OpenRouter provider for each model-driven role. It loads its approved settings from `var/inference.json` or `TECHSCOUT_INFERENCE_CONFIG`. The development series pinned `openai/gpt-6.1-sol` to the OpenAI serving provider, with distinct role and writer prompt versions. A development evaluator produced a schema-valid response. The same backend `OPENROUTER_API_KEY` reached `openai/text-embedding-3-small` for indexing and query embeddings at 1,536 dimensions. Stored vectors must match the routed index version. Structured and keyword retrieval remain available when vectors are missing. [Measured route and limits](development-calibration.md) · [Inference configuration](live-flow.md)
 
-OpenRouter is an optional future adapter (#89), not a prerequisite or enabled
-fallback. It must use the same interface with explicit provider/model allowlists,
-capability checks, requested/actual attribution, bounded fees and separately
-reserved attempts. No silent model substitution or cheapest-route selection is
-allowed. The legacy Anthropic implementation remains for explicit historical
-work; `--planner model` currently selects the OpenAI bridge. The CLI's default is
-the rule baseline, not a paid model. Provider/account data policies and retention
-settings require deployment verification; the application does not claim to
-configure or enforce provider-side retention.
+The historical direct-provider paths remain in the tree. The v1 `python -m app.runs search REQUEST.json --planner model` uses `OpenAIPlanner`. Constructing the standalone writer without an injected provider also defaults to `OpenAIProvider`. `AnthropicPlanner` remains in `app/planner.py`. The domestic worker constructs and passes its OpenRouter provider explicitly. Provider credentials stay in the backend.
 
-Keys remain backend-only (`OPENAI_API_KEY`, `TAVILY_API_KEY`, `FIRECRAWL_API_KEY`),
-never in `VITE_` variables, browser assets, exports or version control. Tavily
-returns discovery leads, not admitted sources. Firecrawl is an explicitly enabled
-fallback under source and budget checks, not a bypass for authentication or unsafe
-targets. Missing credentials or unpriced models fail explicitly.
+| Discovery channel | November 23 development measurement |
+| --- | --- |
+| Manufacturer directories | Ten gated reads of the reviewed ASUS page across paired Arabic and English objectives. Five distinct retailer identifiers, zero qualifying comparisons. |
+| Tavily | Ten query slots, zero provider calls. Credential and account rate unavailable. |
+| SerpApi | Ten query slots, zero provider calls. Credential and account rate unavailable. |
+| Brave Search | Ten query slots, zero provider calls. Credential and account rate unavailable. |
+| Firecrawl Search | Ten query slots, zero provider calls. Credential and account rate unavailable. |
 
-Every API/worker/developer client must use the same centrally provisioned
-`TECHSCOUT_ACCOUNTING_URL` and project identity; this is separate from its local
-`DATABASE_URL`. There is no operational local-ledger fallback. As recorded in
-[#60](https://github.com/han33-dotcom/TechScout/issues/60), local PostgreSQL access
-has been restored but no existing TechScout ledger was found there. Shared
-provisioning and reconciliation remain outstanding at this checkpoint. The
-checked-in Compose stack does not pass the accounting variables or provision that
-shared service; a deployment must explicitly wire them before live work.
+Each channel returns leads. A background technical check can admit a scoped capability, and an admitted retailer still needs current evidence for a buyer recommendation. Firecrawl's separately priced page-read fallback is distinct from Firecrawl Search. The search study records no latency or yield for the four unavailable services. [Discovery configuration](discovery.md) · [Channel receipts](development-calibration-2026-11-23.json)
 
-Reservations precede source/provider dispatch, retries and fallback. Unknown
-usage retains its full allowance; late/crashed owners cannot refund it. Database
-recovery releases expired concurrency ownership, never resets consumed money.
-The total campaign is capped at $500. Initial collection has shared all-market
-limits of 3,000 attempts, 200 paid calls, three worker-hours and $50; international
-work also fits its nested 1,000/60/one-hour/$15 envelope. Maintenance has shared
-UTC-day limits of 300/30/30 minutes/$3, with an international subset of
-100/10/15 minutes/$1. Buyer defaults are 40 calls, $1 and 120 seconds, including
-the final-verification reserve. These are ceilings, not measured consumption or
-authorization to spend automatically. See [accounting](shared-accounting.md).
+Metered processes use one provisioned PostgreSQL campaign ledger, configured through `TECHSCOUT_ACCOUNTING_URL`, independent of their application database. The Compose example supplies a local app stack. Configure the shared ledger separately for operational buyer and collection processes. Each external attempt reserves capacity before dispatch. Uncertain usage retains its allowance. The overall budget is USD 500. Initial collection is capped at USD 50 and maintenance at USD 3 per used UTC day, up to USD 42 over fourteen days. Buyer runs have a 120-second active limit, 40 external calls and a USD 1 ceiling. At the recorded calibration checkpoint the ledger accounted for USD 3.03707574 across devices. [Accounting deployment](local-accounting.md) · [Budget and workload rules](shared-accounting.md)
 
 ## Directory, collection and corpus reproduction
 
-After migrations, `python -m app.directory import-seeds` imports the checked-in
-Lebanese audit and international planning targets without network calls. Reimport
-is idempotent; older/equal-time conflicting updates cannot replace newer records.
-A discovered retailer, tested category and qualifying offer are distinct states.
-The directory cannot activate an endpoint or turn country coverage into delivery
-eligibility. See [directory](retailer-directory.md).
+Run `python -m app.directory import-seeds` after migration to import the domestic audit and known listing sellers offline. The directory records coverage and source identity. The registry governs each allowed endpoint, capability and workload. Automatically proposed retailers enter that same technical review. [Directory](retailer-directory.md) · [Onboarding](retailer-onboarding.md)
 
-There is **no initial-collection command or refresh scheduler yet**. The ingestion
-heartbeat process is not evidence that jobs run. #87 must supply manifest-driven
-collection/checkpoints; #88 must supply incremental scheduling/manual triggers,
-pause/resume, changed-content processing and lease recovery; #99 must supply
-automatic technical onboarding. Do not invent a CLI or claim these scenarios have
-been demonstrated. The committed international manifest is a planning/audit
-artifact, not a collected corpus or ledger transaction.
+For bounded collection, `python -m app.bootstrap config/domestic-bootstrap-validation.json` uses a versioned manifest with a stable job ID. Reuse the same application database, evidence directory, manifest and shared ledger to resume it. Keep its configuration hashes, source and variant IDs, page outcomes, observation times, corpus/index versions and actual spend with the run. The November 23 H30i seed had exact listings at two sellers. Names from other catalogs provide discovery leads. [Bootstrap instructions and receipts](catalog-bootstrap.md)
 
-The required future reproducibility manifest records selected source/capability
-versions, markets/categories, exact URLs and variants, page/attempt/paid-call/time/
-spend ceilings, job/campaign IDs, corpus/extraction/chunk/embedding/index versions,
-timestamps, checkpoints, usage and gaps. Reruns must preserve source observation
-ages, reuse unchanged documents/embeddings, and retain partial coverage without
-resetting aggregate allowances. Pause/resume must retain the same job identity;
-scheduled and manual jobs share daily/source limits. Public corpus artifacts must
-exclude private buyer requests and preferences. None of this is enabled merely by
-starting Compose, importing the directory or toggling international offers.
+The opt-in scheduler starts paused. `python -m app.maintenance status` inspects it. After explicit enablement, `python -m app.maintenance serve` runs discovery at startup and daily, rotates catalog scans every six hours and processes due offer checks. High-use offers rotate every 12–24 hours and other useful offers every 3–7 days. A manual trigger uses the same lease and campaign limits. Pause stops new dispatches. Conditional reads and changed-content checks preserve original observation times. An incomplete catalog alone cannot establish product removal. [Scheduler commands and recovery](catalog-refresh.md)
 
-Current reproducible corpus demonstrations are offline fixtures:
-
-```sh
-python -m unittest discover -s tests -p test_corpus.py -v
-python -m unittest discover -s tests -p test_retrieval.py -v
-python -m unittest discover -s tests -p test_research_workers.py -v
-python -m unittest discover -s tests -p test_pcandparts.py -v
-```
-
-They establish persistence/filtering/reuse mechanics. Live coverage, latency,
-recall, embedding quality and complete delivered offers require dated measurements
-after provisioning. Finalist price/stock, item eligibility and expiring route
-quotes remain runtime checks even after a public corpus exists.
+In the bounded November 23 run, three retailer leads entered validation, ten headphone product URLs were enumerated and three newly enumerated listings yielded exact prices. Nine external calls settled at USD 0.00088698. Three pages were still due. The schedule was paused after the demonstration. The buyer worker continues to check finalists during each request. [Job records](catalog-refresh.md)
 
 ## Setup, versions and validation
 
@@ -324,14 +245,7 @@ $env:TECHSCOUT_COOKIE_SECURE = '0'
 python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-Unset `DATABASE_URL` uses a local SQLite file for this lifecycle demonstration.
-Export a PostgreSQL URL for supported deployment; host commands do not load `.env`
-automatically. Compose does load its environment file. The API and buyer worker
-must share their application database. The worker command is
-`python -m app.run_worker --controller trusted.module:function`; the callable is
-deployment-supplied, never request-supplied. No production controller is supplied
-by this report. For development run Vite in another terminal; for production
-restart FastAPI after building assets so it mounts the compiled SPA.
+With `DATABASE_URL` unset, the host uses local SQLite. For PostgreSQL export the application DSN in the API and worker shells and use a shared `EVIDENCE_DIR`. The worker's normal entry point is `python -m app.run_worker --controller app.buyer_flow:run`. It loads named provider settings from the repository-root backend environment file. A live run also needs the central accounting settings. The earlier single-source demonstration uses `app.buyer_flow:run_checkpoint`. FastAPI serves built assets after restart. [Buyer API and worker setup](buyer-api.md)
 
 | Component | Pinned/configured checkpoint |
 | --- | --- |
@@ -340,8 +254,8 @@ restart FastAPI after building assets so it mounts the compiled SPA.
 | Database | PostgreSQL 17 / pgvector 0.8.2 image, digest pinned in Compose and CI |
 | Frontend | React 19.2.9, TypeScript 5.9.3, Vite 7.3.8; resolved tree in `frontend/package-lock.json` |
 | Node | Docker 24.14.1 digest-pinned; CI Node 22; package minimum 22.12 |
-| Model configuration | `config/evaluation.json`: direct OpenAI `gpt-6.1-sol`, low effort, `roles-v1`; pricing date recorded there |
-| Embeddings | Explicit `text-embedding-3-small`, 1536 dimensions, configured price and index version |
+| Model configuration | `config/evaluation.json`: evaluation inference pins OpenRouter `openai/gpt-6.1-sol` on OpenAI, `roles-v1` and `writer-v1` |
+| Embeddings | OpenRouter `openai/text-embedding-3-small`, 1,536 dimensions, configured price and index version |
 
 Record the actual commit, interpreter/package versions, image digests, configuration
 hashes and corpus/index versions with each evaluation. Pinned package lists do not
@@ -366,30 +280,8 @@ schema. The Docker rehearsal creates disposable projects; it does not validate
 live retailer/provider access. Record exact results and unavailable checks in the
 PR. No live network call is needed for ordinary fixtures.
 
-At this checkpoint, PR #126 passed all **756 local Python tests** and both
-[required CI checks](https://github.com/han33-dotcom/TechScout/actions/runs/44127999585)
-on implementation commit `87b08ae`. The report's PowerShell API example was
-executed against a localhost-only API with a disposable migrated SQLite database:
-session creation, queued creation/polling and persisted cancellation succeeded.
-No buyer worker, retailer calls or paid provider calls were involved. Local
-Markdown links were checked. These results validate the described checkpoint;
-they are not measurements of full-product recommendation quality or live coverage.
+The most recent buyer-UI checkpoint passed 1,099 Python tests on SQLite and again on PostgreSQL, 30 frontend tests and the Docker build/recovery checks. The PowerShell lifecycle example also ran against a fresh, migrated SQLite database with a loopback API and no buyer worker. It returned a queued run, polled its owned workspace and cancelled it. The operator browser rehearsal used synthetic source pages and model replies. The dated buyer demo and development calibration document the separate live observations. [CI evidence](https://github.com/han33-dotcom/TechScout/actions/runs/45275157051) · [Browser rehearsal](buyer-walkthroughs.md)
 
 ## Release handoff and remaining evidence
 
-This incremental report can be maintained while interfaces settle. Final release
-synchronization remains part of #85: check out the release commit, update this
-checkpoint/status matrix and API examples against that commit, regenerate OpenAPI
-types if needed, capture actual validation/evaluation artifacts, and record all
-source/model/config/corpus hashes in the release report. A final release commit
-does not exist at this checkpoint, so none is asserted here.
-
-The release report must distinguish implemented modules, demonstrated integrated
-flows, measured evaluation results and unresolved limitations. In particular it
-must revisit tablet identity/orchestration, international routes, initial and
-background collection, shared ledger deployment, provider account access and
-retailer coverage. Current blockers and source failures remain linked from the
-[board](https://github.com/users/han33-dotcom/projects/2), the
-[source audit](retailer-audit-2026-11-16.md), the
-[international audit](international-source-audit.md) and
-[PC and Parts evidence](pcandparts.md). No live success is inferred from a merged PR.
+At release, repeat the lifecycle example and offline checks on the exact release commit. Record the code and config hashes, model route, corpus and index versions, migration revision and backup/restore results. Update the five-channel table from the remaining calibration receipts and link the actual buyer sessions, held-out results and primary/recovery laptop rehearsals. The first qualifying live browser result also remains open. [First qualifying result](https://github.com/han33-dotcom/TechScout/issues/75) · [Calibration](https://github.com/han33-dotcom/TechScout/issues/80) · [Release rehearsal](https://github.com/han33-dotcom/TechScout/issues/85)
