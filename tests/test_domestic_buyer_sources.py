@@ -107,6 +107,50 @@ class DomesticBuyerSourceTests(unittest.TestCase):
         self.corpus.ingest(capture, lambda page: extract_listing(page, descriptor, destination=destination))
         return old_body
 
+    def test_pickup_only_one_branch_and_no_delivery_stock_substitution(self):
+        node = self.product['offers']
+        node.update(availableDeliveryMethod='https://schema.org/OnSitePickup',
+                    availableAtOrFrom={'@type':'Store', 'branchCode':'hamra',
+                                       'address':{'addressCountry':'LB','addressLocality':'Beirut'}})
+        self.request = fixtures.request(fulfillment=dict(mode='pickup', branch_id='hamra',
+                                                        destination=dict(country='LB',city='Beirut')))
+        self.sequence.append(self.page(self.product))
+        result = self.read()
+        offer, = result.offers
+        self.assertIsInstance(offer.route, v2.PickupRoute)
+        self.assertEqual((offer.route.branch_id, offer.stock.value), ('hamra', True))
+        receipts = [e for e in offer.evidence if e.evidence_id in offer.stock.evidence_ids]
+        self.assertTrue(all(e.branch_id == 'hamra' and e.scope == 'branch' and e.run == self.run for e in receipts))
+        self.assertIn('"branchCode": "hamra"', [e.excerpt for e in receipts])
+        for mutation in ('different branch','online only'):
+            if mutation == 'different branch':
+                node['availableAtOrFrom']['branchCode'] = 'other'
+            else:
+                del node['availableDeliveryMethod']
+            self.sequence.append(self.page(self.product))
+            self.assertEqual(self.read().offers, ())
+
+    def test_published_destination_range_is_an_estimate_and_missing_tax_stays_unknown(self):
+        from app.domestic_buyer import domestic_assessment
+        node = self.product['offers']
+        node.update(shippingDetails=dict(shippingOrigin=dict(addressCountry='LB'),
+                    shippingDestination=dict(addressCountry='LB',addressLocality='Beirut'),
+                    shippingRate=dict(currency='USD',minValue='2',maxValue='5')),
+                    priceSpecification=dict(valueAddedTaxIncluded=True))
+        self.sequence.append(self.page(self.product))
+        read = self.read()
+        offer, = read.offers
+        estimate = read.estimates[offer.offer_id]
+        assessed = domestic_assessment(self.request, offer, self.now, estimates=estimate)
+        self.assertEqual((assessed.cost.status,str(assessed.cost.lower.amount),str(assessed.cost.upper.amount)),
+                         ('estimated','102.75','105.75'))
+        del node['priceSpecification']
+        self.sequence.append(self.page(self.product))
+        read = self.read()
+        offer, = read.offers
+        self.assertEqual(domestic_assessment(self.request, offer, self.now,
+                         estimates=read.estimates[offer.offer_id]).cost.status, 'incomplete')
+
     def test_bare_product_link_with_one_seed_cannot_select_among_multiple_live_skus(self):
         self.seed_laptop()
         self.request = fixtures.request(intent={'kind':'product_link', 'url':self.new_url})

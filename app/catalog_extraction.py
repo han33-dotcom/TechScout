@@ -145,6 +145,22 @@ def route_facts(offer, script, prefix, add, destination):
     add('route.item_eligible', allowed, excerpt if allowed else _excerpt(script,'doesNotShip',True),
         pointer if allowed else path+'/doesNotShip', route=True)
     rate = shipping.get('shippingRate')
+    if (allowed and isinstance(rate, dict) and set(rate) <= {'@type','minValue','maxValue','currency'}
+            and rate.get('currency') == offer.get('priceCurrency') and rate.get('currency') in ('USD','LBP','EUR','AED')
+            and all(type(rate.get(k)) in (str, int, Decimal) for k in ('minValue','maxValue'))):
+        try:
+            low, high = Decimal(rate['minValue']), Decimal(rate['maxValue'])
+            if not low.is_finite() or not high.is_finite() or not 0 <= low <= high:
+                return
+        except ArithmeticError:
+            return
+        estimate = dict(status='estimated', lower=dict(amount=str(low), currency=rate['currency']),
+                        upper=dict(amount=str(high), currency=rate['currency']),
+                        assumptions=['Retailer shipping range for this item and destination; final fee unconfirmed.'])
+        for key in ('currency','minValue','maxValue'):
+            add('costs.order.shipping_range', estimate, _excerpt(script,key,rate[key]),
+                path + '/shippingRate/' + key, route=True)
+        return
     if (allowed and isinstance(rate, dict) and set(rate) <= {'@type','currency','value'}
             and isinstance(rate.get('currency'),str) and rate.get('currency') == offer.get('priceCurrency') and rate.get('currency') in {'USD','LBP','EUR','AED'}
             and type(rate.get('value')) in (str,int,Decimal)):

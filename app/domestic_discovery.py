@@ -181,7 +181,7 @@ class DomesticDiscovery:
         self.connectors, self.fallback = dict(connectors), fallback
 
     @classmethod
-    def from_env(cls, gate, directory, *, environ=None):
+    def from_env(cls, gate, directory, *, environ=None, directory_defaults=()):
         env = os.environ if environ is None else environ
         connectors = {}
         for name, factory, key, rate in CONNECTOR_CONFIG:
@@ -190,7 +190,7 @@ class DomesticDiscovery:
                     connectors[name] = factory(env[key], Decimal(env[rate]))
                 except (ValueError, InvalidOperation):
                     continue  # This connector is unavailable; the other channels remain independent.
-        pages = env.get('TECHSCOUT_MANUFACTURER_DIRECTORIES')
+        pages = env.get('TECHSCOUT_MANUFACTURER_DIRECTORIES', json.dumps(directory_defaults) if directory_defaults else None)
         if pages:
             try:
                 connectors['manufacturer'] = ManufacturerDirectories(

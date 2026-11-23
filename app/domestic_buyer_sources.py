@@ -3,8 +3,9 @@
 A catalog observation can select the listing and SKU for a recheck. Only the newly
 returned page supplies the fields and receipts of the resulting runtime offer.
 """
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
+from datetime import timezone
 from decimal import Decimal
 from hashlib import sha256
 import json
@@ -21,9 +22,14 @@ from app.accounting import BudgetDenied, Charge
 from app.adapters.woocommerce import read_page as read_woo_page
 from app.buyer_sources import DeadlineBudget
 from app.corpus_contracts import DocumentCapture, ProcessingVersion, ResourceKey
+from app.corpus import Corpus
+from app.embeddings import EmbeddingAllowanceExceeded, EmbeddingService, EmbeddingUnavailable
+from app.freshness import FreshnessContext
+from app.retrieval import EvidenceQuery, EvidenceRetrieval, ROUTED_MODEL
 from app.directory import DirectoryRecord
 from app.domestic_catalog import DomesticCatalog, exact_variant_key, extract_listing
 from app.domestic_retailer_profiles import HOSTS as SHOPIFY_VARIANT_STORES, extract_dispatch_membership
+from app.domestic_pickup import select_route
 from app.extraction import _HTML, _objects, _unique_pairs
 from app.firecrawl import retrieve_page
 from app.identity import changed_listing_configuration
@@ -42,6 +48,7 @@ class ReadResult:
     status: Literal['ok', 'unconfigured', 'out_of_scope', 'failed', 'refused'] = 'ok'
     reason: str | None = None
     dispatch_replies: frozenset[tuple[str, datetime]] = frozenset()
+    estimates: dict[str, dict[str, v2.EstimatedCost]] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -154,6 +161,7 @@ def _offer(listing, fields, destination, *, current=False):
     # The direct-route contract requires a country. ZZ is the ISO user-assigned
     # unknown territory. A positive domestic dispatch still needs its own receipt.
     country = known('route.origin_country') or 'ZZ'
+    bound('costs.order.shipping_range')
     return v2.Offer(
         offer_id=source_key, retailer_id=listing.retailer_id, source_id=listing.source_id,
         source_product_id=listing.product_id, source_variant_id=listing.sku,
@@ -284,9 +292,42 @@ class _ReadJob:
 
 
 class DomesticBuyerSources:
-    def __init__(self, storage, gate, directory, *, fallback=None):
+    def __init__(self, storage, gate, directory, *, fallback=None, embedding=None):
         self.storage, self.gate, self.directory, self.fallback = storage, gate, directory, fallback
         self.catalog = DomesticCatalog(storage, registry_path=directory.registry_path)
+        self.embedding = embedding
+
+    def needs_lookup(self, request, job):
+        """Rank catalog candidates by reusable scoped specification passages before current checks."""
+        items = self.catalog.lookup(category=request.requirements.category, limit=20)
+        corpus = Corpus(self.storage)
+        retrieval = EvidenceRetrieval(corpus)
+        route = self.embedding
+        service = EmbeddingService(corpus, route.provider, usd_per_million=route.rate, job=job) if route and route.provider else None
+        vector, ranked, semantic_hits = None, [], 0
+        text = request.intent.description[:1000]
+        for item in items:
+            if not item.manufacturer or not item.model:
+                continue
+            fields = tuple(k for k in item.observations if k.startswith('variant.specs.'))
+            hits = ()
+            if fields and not job.cancelled:
+                context = FreshnessContext(now=datetime.now(timezone.utc), product_id=item.product_id, variant_id=item.sku)
+                query = EvidenceQuery(text=text, source_ids=(item.source_id,), scope='variant', field_paths=fields[:20],
+                    context=context, corpus_version=item.processing.corpus_version, index_version=item.processing.index_version,
+                    chunk_version=item.processing.chunk_version, limit=3)
+                compatible = service and retrieval.has_routed_vectors(query)
+                if compatible and vector is None:
+                    try:
+                        vector, = service.embed([text], owner_id=job.run_id, purpose='query',
+                                                index_version=query.index_version, max_spend_usd=Decimal('.01'))
+                    except (EmbeddingUnavailable, EmbeddingAllowanceExceeded, BudgetDenied):
+                        service = None
+                hits = tuple(hit for hit in retrieval.retrieve(query, vector=vector if compatible else None,
+                             vector_model=ROUTED_MODEL) if hit.freshness.reusable)
+                semantic_hits += sum('vector' in hit.channels for hit in hits)
+            ranked.append((sum(hit.score for hit in hits), _offer(item, item.observations, request.fulfillment.destination)))
+        return tuple(o for _, o in sorted(ranked, key=lambda entry: -entry[0])), semantic_hits
 
     def lookup(self, request, *, limit=20):
         intent = request.intent
@@ -363,7 +404,7 @@ class DomesticBuyerSources:
                 products = tuple(_product_nodes(outcome)) if is_link or not selected else ()
                 linked = _linked_skus(outcome, products) if is_link else None
                 listings = selected or _page_listings(outcome, owner, category, products)
-                offers = []
+                offers, estimates = [], {}
                 for item in listings:
                     if (is_link and not urlsplit(url).query and linked == {item.sku}
                             and b'variations_form' in outcome.body):
@@ -387,10 +428,18 @@ class DomesticBuyerSources:
                             'variant.product.manufacturer', 'variant.product.model')):
                         continue
                     offer = _offer(item, fields, request.fulfillment.destination, current=True)
+                    offer = select_route(offer, capture, item, request.fulfillment)
+                    if offer is None:
+                        continue
                     if earlier and changed_listing_configuration(earlier, offer):
                         continue
                     if all(e.run == run and (e.response_sha256, e.observed_at) in replies for e in offer.evidence):
                         offers.append(offer)
+                        quote = fields.get('costs.order.shipping_range')
+                        if (quote and quote.fact.state == 'known' and isinstance(offer.route, v2.DirectRoute)
+                                and all(e.scope == 'route' and e.route_id == offer.route.route_id
+                                        and e in offer.evidence for e in quote.evidence)):
+                            estimates[offer.offer_id] = {'costs.order.shipping': v2.EstimatedCost.model_validate(quote.fact.value)}
             finally:
                 work.complete(Decimal(0), time.monotonic() - started)
         except BudgetDenied:
@@ -403,9 +452,13 @@ class DomesticBuyerSources:
             return ReadResult(source_id, replies=replies, status='failed',
                               reason='The current product link does not identify one SKU. Select a variant on the retailer page.')
         if not offers:
+            if request.fulfillment.mode == 'pickup':
+                return ReadResult(source_id, replies=replies, status='failed',
+                                  reason='No current stock evidence for this SKU at the requested pickup branch')
             return ReadResult(source_id, replies=replies, status='failed', reason='No matching SKU on the current listing')
         offers, dispatch_replies = self._dispatch(selected, offers, bounded, run, room)
-        return ReadResult(source_id, tuple(offers), replies | dispatch_replies, dispatch_replies=dispatch_replies)
+        return ReadResult(source_id, tuple(offers), replies | dispatch_replies, dispatch_replies=dispatch_replies,
+                          estimates=estimates)
 
     def _dispatch(self, listings, offers, bounded, run, room):
         """One additional exact, approved collection read can establish dispatch for its individual members."""
@@ -415,7 +468,7 @@ class DomesticBuyerSources:
             observation = item.observations.get('route.origin_country')
             page = _membership_url(observation, item)
             for index, offer in enumerate(offers):
-                if (page and offer.route.origin_country == 'ZZ'
+                if (page and isinstance(offer.route, v2.DirectRoute) and offer.route.origin_country == 'ZZ'
                         and not any(r.field_path == 'route.origin_country' for r in offer.evidence)
                         and (offer.source_product_id, offer.source_variant_id) == (item.product_id, item.sku)):
                     targets[index] = item
