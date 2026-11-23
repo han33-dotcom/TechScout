@@ -173,11 +173,12 @@ def production_dependencies() -> FlowDependencies:
     from app.corpus import Corpus
     from app.corpus_contracts import ProcessingVersion
     from app.directory import Directory
+    from app.embeddings import EmbeddingRoute, RATE_VARIABLE
     from app.research_workers import ResearchWorkers
     from app.source_registry import DEFAULT_REGISTRY
     from app.sources import SourceGate
     from app.storage import Storage
-    load_env_file()  # a worker started on the host reads OPENROUTER_API_KEY from the repository .env
+    load_env_file(names=('OPENROUTER_API_KEY', RATE_VARIABLE))
     path = config_path()
     inference = build_inference(load_inference_config(path))
     ledger = Ledger.configured()
@@ -187,7 +188,7 @@ def production_dependencies() -> FlowDependencies:
     # No reviewed shared extraction profile reads Class Cellulars pages yet, so the research
     # workers read only what the public corpus already holds for these listings; a field they
     # cannot settle stays an explicit gap, and they make no model call to pick a page to fetch.
-    workers = ResearchWorkers(Directory(storage), Corpus(storage), gate, {})
+    workers = ResearchWorkers(Directory(storage), Corpus(storage), gate, {}, embeddings=EmbeddingRoute.configured())
     processing = ProcessingVersion(corpus_version=CORPUS_VERSION, index_version=CORPUS_VERSION,
                                    extraction_version=source.adapter_version(), chunk_version='none')
     load_env_file(names=DISCOVERY_ENV)

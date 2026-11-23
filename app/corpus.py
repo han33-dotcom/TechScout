@@ -423,14 +423,17 @@ class Corpus:
             chunk_version=processing['chunk_version'],
         ) for row in rows)
 
-    def pending_embeddings(self, document_id: int, model: str, dimensions: int) -> tuple[int, ...]:
+    def pending_embeddings(self, document_id: int, model: str, dimensions: int,
+                           *, index_version: str | None = None) -> tuple[int, ...]:
         """Return the passages that still need an embedding in this document's index version."""
         links = corpus_document_passages
+        if index_version is None:
+            index_version = corpus_documents.c.processing['index_version'].as_string()
         indexed = select(1).where(
             corpus_embeddings.c.passage_id == links.c.passage_id,
             corpus_embeddings.c.model == model,
             corpus_embeddings.c.dimensions == dimensions,
-            corpus_embeddings.c.index_version == corpus_documents.c.processing['index_version'].as_string(),
+            corpus_embeddings.c.index_version == index_version,
         ).exists()
         query = (select(links.c.passage_id).join(corpus_documents)
                  .where(links.c.document_id == document_id, ~indexed).order_by(links.c.passage_id))

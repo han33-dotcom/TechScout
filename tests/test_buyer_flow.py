@@ -686,7 +686,8 @@ class ScopeAndConfigurationTests(FlowCase):
         path = Path(self.storage.snapshots.root).parent / 'inference.json'
         path.write_text(json.dumps({'inference': inference_config().model_dump(mode='json')}), encoding='utf-8')
         environ = {k: v for k, v in os.environ.items() if k not in ('OPENAI_API_KEY', 'OPENROUTER_API_KEY')}
-        environ.update(TECHSCOUT_INFERENCE_CONFIG=str(path), OPENROUTER_API_KEY=KEY, DATABASE_URL=self.url)
+        environ.update(TECHSCOUT_INFERENCE_CONFIG=str(path), OPENROUTER_API_KEY=KEY, DATABASE_URL=self.url,
+                       TECHSCOUT_EMBEDDING_USD_PER_MILLION='0.02')
         with patch.object(buyer_flow, 'load_env_file', return_value=()), patch.dict(os.environ, environ, clear=True), \
                 patch('app.accounting.Ledger.configured', return_value=self.ledger), \
                 patch('app.model_provider.OpenAIProvider.__init__', side_effect=AssertionError('direct OpenAI')):
@@ -696,6 +697,8 @@ class ScopeAndConfigurationTests(FlowCase):
         self.assertIsInstance(deps.inference.roles, OpenRouterProvider)
         self.assertEqual(deps.inference.roles.settings.purpose, 'buyer')
         self.assertEqual(deps.inference.writer(30).settings.prompt_version, 'writer-v1')
+        from app.embeddings import OpenRouterEmbeddings
+        self.assertIsInstance(deps.research.workers.embeddings.provider, OpenRouterEmbeddings)
         self.assertEqual(deps.research.workers.profiles, {})
         self.assertIs(deps.research.workers.domestic_tools.directory, deps.research.workers.directory)
         self.assertIsNone(deps.research.workers.provider)  # the flow injects the traced OpenRouter provider

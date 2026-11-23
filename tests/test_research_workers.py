@@ -2,7 +2,10 @@ from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 from threading import Event
 import time
+import json
 import unittest
+
+import httpx2
 from unittest.mock import Mock
 
 from app.accounting import Ledger, Charge
@@ -10,6 +13,8 @@ from app.contracts_v2 import ShoppingRequest
 from app.model_provider import ModelResult
 from app.page_extraction import PageResult, read_page
 from app.extraction import PageProfile
+from app.embeddings import EmbeddingRoute, RATE_VARIABLE
+from app.retrieval import DIMENSIONS, ROUTED_MODEL
 from app.research_workers import ResearchWorkers, Resource, Work, Choice
 from app.sources import FetchOutcome
 from test_corpus import SOURCE, URL, extract
@@ -139,6 +144,41 @@ class ResearchWorkerTests(unittest.TestCase):
         self.assertIn('Model selected an out-of-scope resource',report.finding.gaps)
         self.reader.assert_not_called()
         self.assertEqual(report.finding.claims,())
+
+    def test_refresh_query_and_outage_use_the_team_route_and_task_budget(self):
+        calls, unavailable = [], False
+        def transport(request):
+            self.assertEqual(str(request.url), 'https://openrouter.ai/api/v1/embeddings')
+            self.assertEqual(request.headers['Authorization'], 'Bearer routed-key')
+            payload = json.loads(request.content)
+            calls.append(payload['input'])
+            if unavailable:
+                return httpx2.Response(404, json={'error': {'code':404}})
+            return httpx2.Response(200, json=dict(model=ROUTED_MODEL, provider='OpenAI', id='fixture',
+                usage={'total_tokens':1, 'cost':0.00000002, 'is_byok':False},
+                data=[dict(index=i, embedding=[1.0]+[0.0]*(DIMENSIONS-1))
+                      for i in range(len(payload['input']))]))
+        self.workers.embeddings = EmbeddingRoute.configured(
+            environ={'OPENROUTER_API_KEY':'routed-key', RATE_VARIABLE:'0.02'},
+            transport=httpx2.MockTransport(transport))
+        report = self.run_work(self.work(tools=('corpus','model','fetch')))
+        self.assertEqual(calls, [['RAM: 16 GB'], ['RAM']])
+        self.assertTrue(any(step.status == 'hybrid retrieval' for step in report.trace))
+        entries = [a['provider_usage'] for a in self.ledger.snapshot()['attempts'].values()
+                   if a['kind'] == 'embedding']
+        self.assertEqual({e['purpose'] for e in entries}, {'index','query'})
+        for e in entries:
+            self.assertEqual((e['serving_provider'], e['dimensions'], Decimal(e['actual_usd'])),
+                             ('OpenAI', DIMENSIONS, Decimal('0.00000002')))
+        unavailable = True
+        report = self.run_work(self.work(task_id='outage', tools=('corpus','model')))
+        self.assertTrue(any('keyword only: OpenRouter HTTP 404' == step.status for step in report.trace))
+        self.assertTrue(report.observations)
+        self.assertTrue(report.evidence)
+        self.assertEqual(len(calls), 3)
+        report = self.run_work(self.work(task_id='empty-budget', tools=('corpus','model'), allowance=0))
+        self.assertTrue(any('allowance' in step.status for step in report.trace))
+        self.assertEqual(len(calls), 3)
 
     def test_cancellation_and_wrong_revision_never_dispatch(self):
         self.job.cancel()

@@ -15,12 +15,13 @@ from app.contracts import Model, Text
 from app.contracts_v2 import AgentFinding, Evidence, FindingClaim
 from app.corpus_contracts import FieldObservation, ProcessingVersion, ResourceKey
 from app.directory import DirectoryQuery
+from app.embeddings import EmbeddingAllowanceExceeded, EmbeddingRoute, EmbeddingService, EmbeddingUnavailable
 from app.extraction import PageProfile
 from app.freshness import FreshnessContext
 from app.model_provider import JobBudget
 from app.page_extraction import read_page
 from app.research import research
-from app.retrieval import EvidenceQuery, EvidenceRetrieval
+from app.retrieval import EvidenceQuery, EvidenceRetrieval, ROUTED_MODEL
 from app.source_capabilities import CapabilityRef
 
 
@@ -133,6 +134,7 @@ class ResearchWorkers:
     discovery: object = None  # Tavily-compatible search port; results remain leads.
     fallback: object = None
     page_reader: object = read_page
+    embeddings: EmbeddingRoute = EmbeddingRoute(unavailable='embeddings not configured')
 
     def execute(self, job, work, *, timeout=60):
         work = tuple(Work.model_validate(w.model_dump(mode='json')) for w in work)
@@ -184,7 +186,18 @@ class ResearchWorkers:
         resources.sort(key=lambda r:order.get(r.retailer_id,20))
         observations, receipts = {}, {}
 
+        retrieval = EvidenceRetrieval(self.corpus)
+        route = self.embeddings
+        semantic_gap = route.unavailable if 'model' in permitted else 'model tool outside task scope'
+        query_vector = None
+
+        def service(resource):
+            foreign = resource.content == 'listing' and self.directory.get(resource.retailer_id).source_country != 'LB'
+            return EmbeddingService(self.corpus, route.provider, usd_per_million=route.rate, job=job,
+                                    international=foreign)
+
         def stored(resource):
+            nonlocal query_vector, semantic_gap
             key = resource.key
             freshness = FreshnessContext(now=datetime.now(timezone.utc),product_id=key.product_id,
                 variant_id=key.variant_id,branch_id=key.branch_id,route_id=key.route_id)
@@ -206,9 +219,24 @@ class ResearchWorkers:
             query = EvidenceQuery(text=task.question[:1000],source_ids=(key.source_id,),context=freshness,
                 scope=scope,field_paths=resource.fields,corpus_version=work.processing.corpus_version,
                 index_version=work.processing.index_version,chunk_version=work.processing.chunk_version)
-            for hit in EvidenceRetrieval(self.corpus).retrieve(query):
+            vector = None
+            coverage = semantic_gap
+            if not coverage:
+                if retrieval.has_routed_vectors(query):
+                    try:
+                        if query_vector is None:
+                            query_vector, = service(resource).embed([query.text], owner_id=job.run_id,
+                                purpose='query', index_version=query.index_version,
+                                max_spend_usd=task.spend_allowance_usd)
+                        vector = query_vector
+                    except (EmbeddingUnavailable, EmbeddingAllowanceExceeded, BudgetDenied) as exc:
+                        coverage = semantic_gap = str(exc)
+                else:
+                    coverage = 'no compatible vectors for this scope'
+            for hit in retrieval.retrieve(query, vector=vector, vector_model=ROUTED_MODEL):
                 receipts[hit.passage.evidence.evidence_id] = hit.passage.evidence
-            trace.append(Step(action='stored',status='read before external work',source_id=key.source_id))
+            trace.append(Step(action='stored', status='keyword only: ' + coverage if coverage else 'hybrid retrieval',
+                              source_id=key.source_id))
             return set(resource.fields) - found
 
         if 'corpus' not in permitted:
@@ -251,6 +279,7 @@ class ResearchWorkers:
                 profile = self.profiles[key.source_id]
                 self.gate.check_scope(key.source_id,str(key.url),expect='html',capability=resource.capability)
                 def acquire():
+                    nonlocal semantic_gap
                     if job.cancelled:
                         raise BudgetDenied('Research cancelled')
                     international = resource.content == 'listing' and self.directory.get(resource.retailer_id).source_country != 'LB'
@@ -265,7 +294,15 @@ class ResearchWorkers:
                         raise ValueError('No usable source response')
                     if job.cancelled:
                         raise BudgetDenied('Research cancelled before ingestion')
-                    self.corpus.ingest(page.capture,lambda _:page.extraction)
+                    refreshed = self.corpus.ingest(page.capture,lambda _:page.extraction)
+                    if refreshed.document_id and not semantic_gap:
+                        indexer = service(resource)
+                        try:
+                            while indexer.index_document(refreshed.document_id, owner_id=job.run_id,
+                                                         max_spend_usd=task.spend_allowance_usd):
+                                pass
+                        except (EmbeddingUnavailable, EmbeddingAllowanceExceeded, BudgetDenied) as exc:
+                            semantic_gap = str(exc)
                 shared.once((task.run.model_dump_json(),key.model_dump_json(),work.processing.model_dump_json()),acquire,lambda:job.cancelled)
                 missing = stored(resource)
                 trace.append(Step(action='fetch',status='ingested; finalist recheck still required',source_id=key.source_id))

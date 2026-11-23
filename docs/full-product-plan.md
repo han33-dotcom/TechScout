@@ -300,7 +300,7 @@ Offline acceptance cases cover conditional unchanged responses, sources without 
 
 ### Primary inference provider
 
-OpenRouter is the sole gateway for background discovery and onboarding, buyer inference, the writer, evaluation model calls, and embeddings. Use the backend `OPENROUTER_API_KEY` for all of them. The team will have no direct OpenAI or Anthropic key. The inference adapter from [#89](https://github.com/han33-dotcom/TechScout/issues/89) is wired into the first buyer flow ([#75](https://github.com/han33-dotcom/TechScout/issues/75)). The existing direct embedding transport requires the migration in [#146](https://github.com/han33-dotcom/TechScout/issues/146).
+OpenRouter is the sole gateway for background discovery and onboarding, buyer inference, the writer, evaluation model calls, and embeddings. Use the backend `OPENROUTER_API_KEY` for all of them. The team will have no direct OpenAI or Anthropic key. The inference adapter from [#89](https://github.com/han33-dotcom/TechScout/issues/89) is wired into the first buyer flow ([#75](https://github.com/han33-dotcom/TechScout/issues/75)). The catalog and buyer research worker use the [OpenRouter embedding route](evidence-services.md#openrouter-vector-index-146) from [#146](https://github.com/han33-dotcom/TechScout/issues/146). The bounded account check records the live evidence for calibration.
 
 Use an explicit model and serving endpoint that support the required tool calls and structured outputs. Validate role outputs locally. Pin one route across the model-driven evaluation configurations, with provider fallbacks and model substitution disabled. Any alternative route belongs to a separately labelled experiment with its own settings and the same deadline, cancellation and spend controls.
 

@@ -18,7 +18,10 @@ from app.contracts import HttpsUrl, Model, SourcePolicy, Text
 from app.contracts_v2 import Evidence
 from app.corpus import Corpus
 from app.corpus_contracts import DocumentCapture, Extraction, FieldObservation, PassageDraft, ProcessingVersion, ResourceKey
-from app.embeddings import EmbeddingAllowanceExceeded, EmbeddingService, OpenAIEmbeddings
+from app.embeddings import (
+    EmbeddingAllowanceExceeded, EmbeddingIndexBusy, EmbeddingRoute, EmbeddingService,
+    EmbeddingUnavailable, RATE_VARIABLE,
+)
 from app.extraction import PageProfile, extract_page
 from app.source_capabilities import CapabilityRef
 from app.source_registry import get_active_source
@@ -86,6 +89,10 @@ class SeedBudget:
         self.ledger = job.ledger
         self.manifest, self.seed, self.token = manifest, seed, token
         self.foreign = seed.source_id in INTERNATIONAL
+
+    @property
+    def cancelled(self):
+        return self.job.cancelled
 
     def reserve(self, kind, charge, seconds, **kwargs):
         is_fetch = kind == 'retrieval'
@@ -181,7 +188,24 @@ def index_pending(corpus, document_id, embedder, rate, budget):
         pass
 
 
-def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None):
+def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None, embedding_gap=None):
+    busy_gap = None
+
+    def index(document_id, budget):
+        nonlocal embedding_gap, busy_gap
+        if embedder and document_id and embedding_gap is None:
+            try:
+                index_pending(corpus, document_id, embedder, rate, budget)
+            except EmbeddingIndexBusy as exc:
+                busy_gap = str(exc)
+            except (BudgetDenied, EmbeddingAllowanceExceeded) as exc:
+                embedding_gap = str(exc)
+                raise
+            except EmbeddingUnavailable as exc:
+                # Finish structured/keyword ingestion. Retrying this manifest later
+                # will index the pending passages without another source read.
+                embedding_gap = str(exc)
+
     job = ledger.open_job('bootstrap:'+manifest.manifest_id,'bootstrap',
                           international=any(s.source_id in INTERNATIONAL for s in manifest.seeds))
     fingerprint = sha256(manifest.model_dump_json().encode()).hexdigest()
@@ -227,8 +251,7 @@ def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None):
                         usage['bytes'] += MAX_RESPONSE_BYTES
             budget = SeedBudget(job,manifest,seed,token,gate._registry_path)
             if reusable:
-                if embedder and previous.document_id:
-                    index_pending(corpus, previous.document_id, embedder, rate, budget)
+                index(previous.document_id, budget)
                 continue
             result = dict(source=seed.source_id,category=seed.category,status='failed',
                           checked_at=datetime.now(timezone.utc).isoformat())
@@ -274,8 +297,8 @@ def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None):
                 for scope in (('all','international') if budget.foreign else ('all',)):
                     record[scope]['bytes'] -= MAX_RESPONSE_BYTES - size
                     record[scope]['records'] -= row_hold - min(row_hold, rows)
-            if embedder and result['status']=='indexed':
-                index_pending(corpus, receipt.document_id, embedder, rate, budget)
+            if result['status']=='indexed':
+                index(receipt.document_id, budget)
     except (BudgetDenied, EmbeddingAllowanceExceeded) as exc:
         with ledger._transaction() as (state, now):
             record = state['bootstrap_manifests'][job.run_id]
@@ -287,11 +310,15 @@ def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None):
             record = state['bootstrap_manifests'][job.run_id]
             if record.get('owner') == token:
                 record.update(owner=None,lease_until=0)
-    return ledger.snapshot()['bootstrap_manifests'][job.run_id]
+    report = ledger.snapshot()['bootstrap_manifests'][job.run_id]
+    if embedding_gap or busy_gap or not embedder:
+        report['semantic_gap'] = embedding_gap or busy_gap or 'embeddings not configured'
+    return report
 
 
 def main():
-    import os
+    from app.inference import load_env_file
+    load_env_file(names=('OPENROUTER_API_KEY', RATE_VARIABLE))
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('manifest',type=Path)
     parser.add_argument('--embedding-rate',type=Decimal,help='USD per million input tokens')
@@ -299,9 +326,9 @@ def main():
     manifest = Manifest.model_validate_json(args.manifest.read_bytes())
     ledger, storage = Ledger.configured(), Storage()
     try:
-        embed = OpenAIEmbeddings(os.environ['OPENAI_API_KEY']) if args.embedding_rate else None
+        route = EmbeddingRoute.configured(rate=args.embedding_rate)
         print(json.dumps(collect(manifest,ledger=ledger,corpus=Corpus(storage),gate=SourceGate(),
-                                 embedder=embed,rate=args.embedding_rate),indent=2))
+                                 embedder=route.provider,rate=route.rate,embedding_gap=route.unavailable),indent=2))
     finally:
         storage.engine.dispose()
         ledger.storage.engine.dispose()

@@ -1,5 +1,6 @@
 """Bounded public-corpus retrieval; exact identity is never inferred from similarity."""
 from dataclasses import dataclass
+from decimal import Decimal
 import math
 import re
 from typing import Annotated, Literal
@@ -19,6 +20,12 @@ from app.storage import (
 
 MODEL = 'text-embedding-3-small'
 DIMENSIONS = 1536
+ROUTED_MODEL = 'openai/text-embedding-3-small'
+
+
+def routed_index_version(document_index: str) -> str:
+    """Keep routed vectors independent of the legacy direct-provider space."""
+    return document_index + '/openrouter-v1'
 
 
 class EvidenceQuery(Model):
@@ -54,12 +61,18 @@ class EvidenceHit:
 
 
 def checked_vector(values):
-    if len(values) != DIMENSIONS or any(type(v) not in (int, float) or not math.isfinite(v) for v in values):
+    if len(values) != DIMENSIONS or any(type(v) not in (int, float, Decimal) for v in values):
         raise ValueError('Expected a finite 1536-dimensional embedding')
+    values = tuple(float(v) for v in values)
+    # pgvector stores float32. Reject coordinates that would overflow or a
+    # nonzero double vector that would be stored as all zeroes.
+    peak = max(abs(v) for v in values)
+    if peak > 3.4028234663852886e38 or peak <= 2.0**-150:
+        raise ValueError('Embedding exceeds pgvector numeric range')
     norm = math.sqrt(sum(v*v for v in values))
     if not math.isfinite(norm) or norm == 0:
         raise ValueError('Embedding must have a finite nonzero norm')
-    return tuple(float(v) for v in values)
+    return values
 
 
 class EvidenceRetrieval:
@@ -92,7 +105,24 @@ class EvidenceRetrieval:
             statement = statement.where(receipt[field].as_string() == requested)
         return statement
 
-    def retrieve(self, query: EvidenceQuery, *, vector=None) -> tuple[EvidenceHit, ...]:
+    @staticmethod
+    def _vector_profile(query, model):
+        if model == ROUTED_MODEL:
+            version = routed_index_version(query.index_version)
+        elif model == MODEL:
+            version = query.index_version  # explicitly supplied legacy vectors
+        else:
+            raise ValueError('Unknown embedding model')
+        return (embeddings.c.passage_id == passages.c.passage_id,
+                embeddings.c.index_version == version, embeddings.c.model == model,
+                embeddings.c.dimensions == DIMENSIONS)
+
+    def has_routed_vectors(self, query: EvidenceQuery) -> bool:
+        statement = self._eligible(query).where(*self._vector_profile(query, ROUTED_MODEL)).limit(1)
+        with self.corpus.storage.engine.connect() as db:
+            return db.execute(statement).first() is not None
+
+    def retrieve(self, query: EvidenceQuery, *, vector=None, vector_model=MODEL) -> tuple[EvidenceHit, ...]:
         vector = checked_vector(vector) if vector is not None else None
         base = self._eligible(query)
         token_words = re.findall(r'\w+', query.text.lower(), flags=re.UNICODE)
@@ -113,9 +143,7 @@ class EvidenceRetrieval:
                 keyword = db.execute(lexical.order_by(passages.c.passage_id).limit(query.candidate_limit)).all()
             semantic = []
             if vector is not None:
-                profile = (embeddings.c.passage_id == passages.c.passage_id,
-                           embeddings.c.index_version == query.index_version,
-                           embeddings.c.model == MODEL, embeddings.c.dimensions == DIMENSIONS)
+                profile = self._vector_profile(query, vector_model)
                 if db.dialect.name == 'postgresql':
                     distance = embeddings.c.embedding.cosine_distance(list(vector))
                     semantic = db.execute(base.add_columns(distance.label('distance')).where(*profile)
