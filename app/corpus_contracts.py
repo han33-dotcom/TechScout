@@ -4,9 +4,9 @@ from typing import Annotated, Literal
 from pydantic import Field, JsonValue, StrictBytes, TypeAdapter, ValidationError, model_validator
 
 from app.collection_contracts import CorpusVersion
-from app.contracts import Fact, HttpsUrl, Model, Text, UtcTime
+from app.contracts import Fact, HttpsUrl, Model, Money, Text, UtcTime
 from app.contracts_v2 import (
-    AudioSpecs, Evidence, LaptopSpecs, MonitorSpecs, Offer, Origin, PhoneSpecs, TabletSpecs, Variant,
+    AudioSpecs, Country, Evidence, LaptopSpecs, MonitorSpecs, Offer, Origin, PhoneSpecs, TabletSpecs, Variant,
 )
 from app.sources import MAX_RESPONSE_BYTES
 
@@ -72,6 +72,13 @@ for model in (PhoneSpecs, LaptopSpecs, TabletSpecs, MonitorSpecs, AudioSpecs):
         if field != 'category':
             _FACT_TYPES.setdefault('variant.specs.' + field, []).append(TypeAdapter(definition.annotation))
 _POLICY_TEXT = TypeAdapter(Fact[Text])
+for field in ('catalog.gtin', 'catalog.mpn', 'catalog.configuration_id', 'catalog.delivery_city'):
+    _FACT_TYPES[field] = [_POLICY_TEXT]
+for field in ('catalog.delivery_country', 'route.origin_country'):
+    _FACT_TYPES[field] = [TypeAdapter(Fact[Country])]
+_FACT_TYPES['costs.order.tax'] = [TypeAdapter(Fact[Literal['included']])]
+_FACT_TYPES['route.item_eligible'] = [TypeAdapter(Fact[bool])]
+_FACT_TYPES['costs.order.shipping'] = [TypeAdapter(Fact[Money])]
 
 
 class FieldObservation(Model):
@@ -92,6 +99,11 @@ class FieldObservation(Model):
         ):
             raise ValueError('Price, stock and purchasability require the observed configuration')
 
+        if first.field_path.startswith(('catalog.', 'route.', 'costs.order.')) and not (
+            first.product_id and first.variant_id and first.scope ==
+            ('route' if first.field_path.startswith(('route.', 'costs.order.shipping')) else 'variant')
+        ):
+            raise ValueError('Catalog facts require a selected item and its applicable route')
         validators = _FACT_TYPES.get(first.field_path, ())
         if first.field_path.startswith('policy.') and first.scope == 'source':
             validators = (_POLICY_TEXT,)
