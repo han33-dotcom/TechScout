@@ -2,6 +2,7 @@
 from dataclasses import replace
 from datetime import datetime, timezone
 from decimal import Decimal
+import json
 
 from app.assessment import EvidenceGap
 from app.contract_interfaces import AgentTask, ResearchContext
@@ -10,6 +11,7 @@ from app.model_provider import JobBudget
 from app.orchestrator import InvestigationResult, Proposal, investigate, select_candidates
 from app.planner import NoInvestigationPlanner, PlannerAction, PlannerState, RulePlanner
 from app.research_workers import Work
+from eval import scope
 
 
 def run_strategy(side, context, *, job, workers, provider, resources, processing, deadline, answers=()):
@@ -108,9 +110,11 @@ def run_strategy(side, context, *, job, workers, provider, resources, processing
 
 
 def trial_request(case, side, repetition):
-    from eval import freeze
-    if case['case_id'].startswith('H') and (not freeze.load().get('pre_run') or freeze.problems()):
-        raise ValueError('Held-out cases require the recorded and verified pre-run freeze')
+    if case['case_id'].startswith('H'):
+        scope.check_slot(scope.study_plan(require_pre_run=True), case['case_id'], side, repetition)
+        originals = json.loads((scope.ROOT / 'heldout.json').read_bytes())['cases']
+        if case != next(row for row in originals if row['case_id'] == case['case_id']):
+            raise ValueError('The submitted case differs from the frozen held-out record')
     request = ShoppingRequest.model_validate(case['request'])
     return ShoppingRequest.model_validate(dict(request.model_dump(mode='json'),
         request_id=f'{request.request_id}-{side}-r{repetition}',revision=1))

@@ -1,6 +1,6 @@
 # Held-out evaluation protocol
 
-Protocol version **1.1.0**, updated on 23 November 2026 for
+Protocol version **1.2.0**, amended for domestic-only evaluation under [#155](https://github.com/han33-dotcom/TechScout/issues/155). The original protocol was developed in
 [#78](https://github.com/han33-dotcom/TechScout/issues/78). It fixes what we will measure and
 how, before anyone sees a held-out result. It contains no results and claims no performance.
 
@@ -40,7 +40,7 @@ Linux line endings.
 
 The freeze has two stages:
 
-1. **Protocol freeze (now, version 1.0.0).** It covers the cases, rules, subsets and
+1. **Protocol freeze (current version 1.2.0).** It covers the cases, rules, subsets and
    procedures, the cold manifest and the templates.
 2. **Pre-run freeze (at the code freeze, before the first held-out run).** The plan
    schedules the code freeze for 29–30 November.
@@ -59,7 +59,9 @@ Change control:
   - A fix creates a new, labelled post-freeze version, and its results are reported apart from the original ones (plan, 3 December).
 - **No peeking:** nobody runs TechScout, a baseline or a manual search on a held-out case before the pre-run freeze. Smoke tests, demos and walkthroughs use calibration or development cases.
 
-## 2. The 30 held-out requests
+## 2. The original 30 held-out requests
+
+The archive retains all 30 requests verbatim. The active cohort contains the 23 domestic requests. The seven retired IDs and the archived protocol are listed in section 10.
 
 The cases were written on 17 November 2026:
 - **No runs:** TechScout and the baselines were not run on them.
@@ -220,13 +222,13 @@ denominator.
 
 | Metric | Unit | Numerator | Denominator |
 |---|---|---|---|
-| `valid_offer_rate` | offer | Selected main-recommendation offers judged valid by hand | All selected main-recommendation offers in repetition-1 runs over all 30 cases (at most three per run), unverifiable ones included |
+| `valid_offer_rate` | offer | Selected main-recommendation offers judged valid by hand | All selected main-recommendation offers in repetition-1 runs over the 23 domestic cases (at most three per run), unverifiable ones included |
 | `request_success_rate` | run | Runs with the right outcome: a valid offer and no invalid one on answerable cases; a reasoned abstention with no invented offer on no_match_observed cases; within time; no constraint or scope violation | All runs, including errors, timeouts and cancellations |
 | `useful_result_success_rate` | run | Successful runs on answerable cases | All runs on answerable cases. Abstaining there is a failure, so abstention cannot raise this rate |
 | `abstention_rate` | run | Runs with no main recommendation | All runs; also split into correct (no_match_observed) and unnecessary (answerable) abstention. Runs ending in error, timeout or cancellation are also counted separately |
 | `answer_coverage` | case | Answerable cases with a valid offer in repetition 1 | Answerable cases |
 | `pooled_offer_recall` | offer | Distinct valid seller offers the configuration found | Distinct valid seller offers found by any method (exploratory) |
-| `retailer_stage_counts` | retailer per run | Discovered, attempted, retrieved and qualifying retailers (definitions below) | Per run; median, interquartile range and union over the set, domestic and international separately |
+| `retailer_stage_counts` | retailer per run | Discovered, attempted, retrieved and qualifying retailers (definitions below) | Per run; median, interquartile range and union over the active domestic set |
 | `multi_seller_products` | run | Runs with at least one exact configuration offered by two or more distinct sellers, all verified and price-comparable | Runs on answerable cases |
 | `first_useful_display_seconds` | run or session | Time to the first display of a matching product with a price; provisional candidates count | All runs; never-shown runs are censored |
 | `verified_result_seconds` | run or session | Time to the first verified main recommendation (TechScout) or to the operator confirming every decisive fact (baselines) | Runs on answerable cases; censored as above |
@@ -237,7 +239,7 @@ denominator.
 | `paired_price_outcomes` | case pair | Win, tie, loss, techscout_only_valid, baseline_only_valid, neither_valid, not_comparable, inconclusive | Every planned pair |
 | `interpretation_accuracy` | check | Interpretation checks satisfied | All checks for the language group, reported separately for English, Arabic and Arabizi |
 | `clarification_count` | run | Clarification questions asked | Per run and case |
-| `international_capability` | run | Domestic results retained, foreign offers by route and cost state, and wrongly promoted or wrongly "cheaper" foreign offers | Runs on the 7 international cases |
+| `international_capability` | run | Domestic results retained, foreign offers by route and cost state, and wrongly promoted or wrongly "cheaper" foreign offers | Retired under #155. No runs scheduled |
 | `external_outcome_distribution` | session | Answered, no_results, unsupported_feature, access_failure, timeout | All planned sessions of each service |
 
 **The 95% target.** The valid-offer target is at least 95%:
@@ -299,12 +301,12 @@ Timestamps are ISO 8601 with an offset; durations come from one monotonic clock 
 
 | Configuration | Cases | Repetitions | Corpus |
 |---|---|---|---|
-| `full-warm`: orchestrator, up to three workers, evaluator and writer | all 30 | 3 | warm |
-| `single-agent-warm`: one agent with the same tools, evidence, verifier, cost engine, budgets and base model | all 30 | 3 | warm |
-| `fixed-heuristic-warm`: the existing rule planner's fixed search, filter and recheck path | all 30 | 3 | warm |
-| `full-cold`: the full system from the empty corpus | all 30 | 1 | cold |
+| `full-warm`: orchestrator, up to three workers, evaluator and writer | all 23 domestic | 3 | warm |
+| `single-agent-warm`: one agent with the same tools, evidence, verifier, cost engine, budgets and base model | all 23 domestic | 3 | warm |
+| `fixed-heuristic-warm`: the existing rule planner's fixed search, filter and recheck path | all 23 domestic | 3 | warm |
+| `full-cold`: the full system from the empty corpus | all 23 domestic | 1 | cold |
 | `lebtech`, `onesouq`, `manual-shopping` | local subset (10) | 1 | external |
-| `chatgpt-browsing`, `claude-browsing` | assistant subset (12) | 1 | external |
+| `chatgpt-browsing`, `claude-browsing` | assistant subset (10) | 1 | external |
 
 The automated configurations share everything except the agent design:
 - the code commit;
@@ -317,7 +319,7 @@ never called resource-equivalent, and no internal cost is invented for them. The
 declared in its own frozen file before it runs. It is never mixed into held-out metrics or
 called an official benchmark score.
 
-**Budget.** The 300 automated runs (270 warm, 30 cold) times the per-run spend cap are the
+**Budget.** The 230 automated runs (207 warm, 23 cold) times the per-run spend cap are the
 worst case. If that exceeds the remaining allowance minus the demo reserve, reduce
 repetitions in this order:
 
@@ -330,7 +332,7 @@ Cold runs are never dropped, and cases are never cut silently. Any reduction is 
 
 **Order.**
 - **Blocks:** runs go in case blocks. A block is one case's runs of every warm configuration, back to back, then one verification pass.
-- **Block order:** a seeded shuffle, using seeds 78, 79 and 80 for repetitions 1–3 and 178 for the cold pass. The resulting lists are in `eval/baselines.json`, and a test re-derives them.
+- **Block order:** a seeded shuffle, using seeds 78, 79 and 80 for repetitions 1–3 and 178 for the cold pass. The shuffle uses all 30 original IDs, then drops the retired IDs in place. The resulting domestic lists are in `eval/baselines.json`, and a test re-derives them.
 - **Configuration order:** the three warm configurations rotate by block. In a paired session,
   full-warm takes the TechScout slot and the other two run unattended right after it.
 - **Sequence:** warm repetition-1 blocks (including the paired sessions), then the cold pass,
@@ -349,10 +351,7 @@ H24. Nine of the ten are phones or laptops. They cover:
 - one designed no-match (H06);
 - Arabic (H02, H17) and Arabizi (H03) inputs.
 
-LebTech, One Souq and manual shopping run on this subset. **Assistant subset:** the local
-subset plus H11 and H30, for browsing-enabled ChatGPT and Claude, because assistants can
-attempt international purchases. H11 and H30 are scored only in the international capability
-table (section 10), never in paired price outcomes or domestic success comparisons.
+LebTech, One Souq, manual shopping, ChatGPT and Claude each use these same ten domestic cases. The original pairing orders for those cases are preserved.
 
 **Paired sessions.** For each local case, the four sides run one after another, within 90
 minutes:
@@ -418,34 +417,15 @@ phase (verification included), with the same records.
 
 #82 stores these under `eval/results/` without personal or account data.
 
-## 10. Domestic comparison versus international capability
+## 10. Domestic comparison and retired scenarios
 
-The 23 domestic cases form the common comparison. Every LebTech, One Souq and manual
-comparison, and every paired price outcome, uses domestic cases only, with matched
-constraints. The assistants' two international cases (H11 and H30) count only in the
-capability table below.
+All four automated configurations use the same 23 domestic cases. LebTech, One Souq, manual shopping and both browsing assistants use the ten predeclared domestic cases. Keep errors, access failures and inconclusive comparisons visible within their applicable denominators. A foreign offer violates the domestic purchase constraint. Silently relaxing a buyer constraint is a violation for every method. A price advantage requires a win on comparable verified offers.
 
-The 7 international cases (at least one per category) are reported as a separate capability
-table (`international_capability`). It shows, per run:
-- whether domestic results were kept;
-- which foreign offers were found, by market and route type;
-- the cost state of each foreign offer;
-- any estimated or incomplete offer wrongly promoted or wrongly called cheaper.
+| Retired international cases | Treatment |
+| --- | --- |
+| H07, H09, H11, H18, H22, H26, H30 | Outside the current purchase scope. Excluded from automated and external schedules, run outcomes, price pairs, capability wins and budget. |
 
-**Outcomes.**
-- **No invented outputs:** unsupported features, access failures and no-results are recorded
-  as explicit outcomes with their own denominators. They are never replaced by invented
-  outputs.
-- **No automatic wins:** LebTech or One Souq not offering international search is a
-  capability note, not a TechScout win.
-- **Superiority claims:** they need paired wins on comparable valid pairs.
-
-**Default scope and constraints.**
-- **Domestic cases:** keep `include_international` off (a test enforces it). Any foreign
-  purchase offer on a domestic case is a scope violation.
-- **International cases:** must keep available domestic results.
-- **Buyer constraints:** a silently relaxed constraint is a violation for every side,
-  baselines included.
+The historical `international_capability` metric has no measurements in this study. Market labels alone select the active cohort, before any outcomes are observed. The original records, inputs, schedules and hashes remain available in the [initial protocol](https://github.com/han33-dotcom/TechScout/tree/04fe150c755985d8de8ce7a2fc441104f140e1bc/eval) and [the last 30-case freeze](https://github.com/han33-dotcom/TechScout/tree/3be08f4ea285aa61c0dc4063cf3defacc6ebf255/eval).
 
 ## 11. Corpus isolation
 
@@ -504,7 +484,7 @@ A field the provider does not return is written `not_reported` and counted. A he
 that reports a different version, or none, is listed as a deviation. The historical
 Anthropic planner settings in `config/evaluation.json` are not used.
 
-**Optional experiments.** No alternative-model experiment is declared in 1.1.0. One
+**Optional experiments.** No alternative-model experiment is declared in 1.2.0. One
 must be declared in `eval/models.json` with a version bump before it runs:
 - its label starts with `exp-`;
 - it fixes the provider order with fallbacks off and states its cases and budget;
@@ -524,8 +504,7 @@ The predeclared comparisons are:
 2. full-warm versus the fixed heuristic;
 3. warm versus cold (validity, coverage, freshness, latency and cost per successful request);
 4. TechScout versus each local baseline on the local subset;
-5. TechScout versus each assistant on the 10 domestic cases of the assistant subset; H11 and
-   H30 are reported only in the international capability table.
+5. TechScout versus each assistant on the ten domestic cases of the assistant subset.
 
 Anything else is labelled exploratory. The broader-discovery experiment in #80, and any
 keyword-only versus hybrid retrieval comparison from plan section 10, run on development
@@ -537,7 +516,7 @@ cases and are reported apart from held-out outcomes; neither is part of this pro
   single-agent configuration and the two browsing assistants).
 
 **Claims we will not make:**
-- **Language:** the protocol includes 5 Arabic and 5 Arabizi cases. Results are reported per
+- **Language:** the protocol includes 5 Arabic and 4 Arabizi cases in the active cohort. Results are reported per
   language with these counts. We will not claim general Arabic or Arabizi support beyond the
   tested cases.
 - **Other limits:** we will not claim superiority from unsupported features or access
@@ -564,7 +543,7 @@ Change any of them with a version bump before the pre-run freeze.
    - Assistants: 8 + 10 minutes.
    - Verification within 60 minutes; paired sessions within 90 minutes.
 6. **Repetitions.** Warm configurations run 3 times and cold once, with the reduction order in section 8.
-7. **Subsets.** The local subset has 10 cases; the assistant subset has 12.
+7. **Subsets.** The local and assistant subsets each have the same 10 domestic cases.
 8. **Designed outcomes.** Designed no-match and uncertain cases rest on the author's product knowledge. The pooled adjudication rule decides the scored class.
 9. **Model version.** The model is pinned by ID and the reported version is recorded at the pre-run freeze. No dated snapshot ID is known yet.
 10. **Corpus isolation.** Each warm run gets its own copy of the snapshot.
@@ -574,7 +553,7 @@ Change any of them with a version bump before the pre-run freeze.
 - **Product knowledge:** the cases rest on general product knowledge as of November 2026. Some
   products may be renamed, unavailable or priced differently in Lebanon. Pooled adjudication
   scores what actually exists; the designed outcomes are not answers.
-- **Sample size:** thirty cases give wide intervals. Phones and laptops get most of the
+- **Sample size:** 23 domestic cases give wide intervals. Phones and laptops get most of the
   sample, so tablets, monitors and audio support only coarse conclusions.
 - **Links:** no held-out case uses a specific Lebanese retailer product link. Writing one
   would have required looking up listings.

@@ -17,8 +17,8 @@ EVAL = ROOT / 'eval'
 DOC = ROOT / 'docs' / 'evaluation-protocol.md'
 
 # Changing any frozen file needs `python eval/freeze.py --bump X.Y.Z "reason"` and these two values.
-FROZEN_VERSION = '1.1.0'
-FROZEN_COMBINED_SHA256 = '279a40a9e74ea2f735358bf42c8e7f481e4005be8d0030d2a46d2b715534fda9'
+FROZEN_VERSION = '1.2.0'
+FROZEN_COMBINED_SHA256 = '17f547b87a92b91392ad8934003521ad400b2017cbaaa07ebdf2f552c424e823'
 HOW_TO_CHANGE = ('The evaluation protocol is frozen (#78). For a deliberate change before the pre-run freeze, run '
                  'python eval/freeze.py --bump X.Y.Z "reason" and update FROZEN_VERSION and FROZEN_COMBINED_SHA256 in '
                  'tests/test_eval_protocol.py; see docs/evaluation-protocol.md section 1.')
@@ -273,7 +273,7 @@ class BaselineTests(unittest.TestCase):
             expected = sorted(BY_ID)
             random.Random(seed).shuffle(expected)
             with self.subTest(order=key):
-                self.assertEqual(order[key], expected)
+                self.assertEqual(order[key], [case_id for case_id in expected if BY_ID[case_id]['market'] == 'domestic'])
 
     def test_configurations_are_complete(self):
         configurations = {item['id']: item for item in BASELINES['configurations']}
@@ -284,9 +284,9 @@ class BaselineTests(unittest.TestCase):
         for item in configurations.values():
             with self.subTest(configuration=item['id']):
                 self.assertGreater(item['repetitions'], 0)
-                self.assertIn(item['cases'], {'all', *BASELINES['subsets']})
+                self.assertIn(item['cases'], {'domestic', *BASELINES['subsets']})
                 if item['kind'] == 'automated':
-                    self.assertEqual(item['cases'], 'all')
+                    self.assertEqual(item['cases'], 'domestic')
         self.assertEqual(configurations['full-cold']['corpus'], 'cold')
 
 
@@ -411,10 +411,10 @@ class FreezeTests(unittest.TestCase):
             self.assertIn(f'protocol {FROZEN_VERSION}: eval/heldout.json changed since it was frozen', tool.problems(root))
             with self.assertRaises(ValueError):
                 tool.bump('1.0.0', 'same version', root)
-            tool.bump('1.1.1', 'Test change', root, today='2026-11-17')
+            tool.bump('1.2.1', 'Test change', root, today='2026-11-17')
             self.assertEqual(tool.problems(root), [])
             self.assertEqual(tool.load(root)['changelog'][-1],
-                             {'version': '1.1.1', 'date': '2026-11-17', 'change': 'Test change'})
+                             {'version': '1.2.1', 'date': '2026-11-17', 'change': 'Test change'})
             with self.assertRaises(ValueError):
                 tool.pre_run(root)  # warm.json and run-freeze.json do not exist yet
             for name in tool.PRE_RUN_FILES:

@@ -1,22 +1,22 @@
 {
   "protocol": "TechScout held-out evaluation protocol",
   "issue": "https://github.com/han33-dotcom/TechScout/issues/78",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "hash_rule": "SHA-256 of each file with CRLF line endings normalized to LF. combined_sha256 is the SHA-256 of one line per file, \"<path>  <hash>\", sorted by path, each line ending in a newline. Check with: python eval/freeze.py",
   "files": {
-    "docs/evaluation-protocol.md": "3bc99a605116ba4eb5a8c59bd8696ab0a0e2d521ce90f920fd4dff0ff447b2b1",
-    "eval/README.md": "d315a46d9c92853c11a0a8886b43da30823aedb760579a4ba3fa0018cac7ef35",
-    "eval/baselines.json": "4cc60cc7438eef83cabea3be1964851bd3dc80f6de5fe57c3a5608d29f235a98",
+    "docs/evaluation-protocol.md": "f4a455fffb67c33245c1231061f25df32aa759c627168f6d424186567f8ae818",
+    "eval/README.md": "3f0cb5f774c151a19bba16a791bfb179a59549303addd8800a15141ebdd2c028",
+    "eval/baselines.json": "61b7b4614935d6b50de7c063f57e957ea8be9eb46c2655b3a0625a0aef0ae89f",
     "eval/calibration.json": "f71001089a6e91c2bc2613e613b768e888040bd6a54414b02b3e55ccfec4070e",
     "eval/corpus/cold.json": "e5acaca9f9a5dc5ee2e23b2164246ef059383a7e71da8ca34a115a419d867f85",
     "eval/corpus/warm.template.json": "dff5838d57fd110a56f70d2449263a208d030feeb1ccadc2c133e19156dcd113",
     "eval/heldout.json": "056311f115db956a4086c47ad0ef11deba3719d571ffbf29b779c4004c302f82",
-    "eval/models.json": "ec91a9e476776e5fc130e1d4cfc1711334d94a3ce0172f92c2c42a7c7ff76da8",
-    "eval/protocol.json": "b1c6c8a8d25fc6eb5ce69c92a4fd0f3f4db9ac061891c4fc6c9249ffcdfd1111",
-    "eval/run-freeze.template.json": "9a92871e950a2f2d8791c57aab5babc21ac64b94e9e4a8c74d5a86f7dddc0bf2",
+    "eval/models.json": "5d6483a27f953cbbd3232acbfdcd570a477f06879ad2227f239764bf7174a3e3",
+    "eval/protocol.json": "c9c6e195980d781f14fa3f6e138c0eaddaec81d0fd3319499c6b84e34ea81b8a",
+    "eval/run-freeze.template.json": "0c70719bea3b1af6f9312ccd62c0efbc7ab287030503f7bac21693f10f26f36d",
     "config/evaluation.json": "339047b96e225abfe502f03571416b3c9ce9fbbe0500b11b524cf5383e799031"
   },
-  "combined_sha256": "279a40a9e74ea2f735358bf42c8e7f481e4005be8d0030d2a46d2b715534fda9",
+  "combined_sha256": "17f547b87a92b91392ad8934003521ad400b2017cbaaa07ebdf2f552c424e823",
   "pre_run": null,
   "changelog": [
     {
@@ -28,6 +28,11 @@
       "version": "1.1.0",
       "date": "2026-11-23",
       "change": "Pin OpenRouter inference, serving provider, embedding model and evaluation settings before domestic development calibration (#80)."
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-11-23",
+      "change": "Apply the domestic-only scope before held-out measurements. Preserve all original case records, filter the seeded schedules, and retire seven international scenarios (#155, #82)."
     }
   ]
 }
