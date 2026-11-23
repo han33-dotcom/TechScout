@@ -12,6 +12,7 @@ import hashlib
 import ipaddress
 import json
 from pathlib import Path
+import re
 import socket
 import ssl
 import threading
@@ -105,6 +106,26 @@ class _Failure(_Stop):
 
 
 @dataclass(frozen=True)
+class CacheValidators:
+    """Validators from one exact final URL, for a subsequent read of that representation."""
+    url: str
+    etag: str | None
+    last_modified: str | None
+
+    def headers(self, url: str) -> dict[str, str]:
+        if url != self.url:
+            return {}
+        headers = {}
+        if self.etag and re.fullmatch(r'(?:W/)?"[!#-~]{0,250}"', self.etag):
+            headers['If-None-Match'] = self.etag
+        if self.last_modified and re.fullmatch(
+            r'[A-Z][a-z]{2}, [0-9]{2} [A-Z][a-z]{2} [0-9]{4} [0-9:]{8} GMT', self.last_modified
+        ):
+            headers['If-Modified-Since'] = self.last_modified
+        return headers
+
+
+@dataclass(frozen=True)
 class FetchOutcome:
     """One logical fetch. The body stays out of ToolResult; Evidence uses the metadata."""
     source_id: str
@@ -120,6 +141,7 @@ class FetchOutcome:
     body: bytes | None = None
     response_sha256: str | None = None
     observed_at: datetime | None = None
+    validators: CacheValidators | None = None
 
     @property
     def status(self) -> str:
@@ -348,10 +370,11 @@ class _GuardedStream(httpcore2.NetworkStream):
 
 
 class _Reply(NamedTuple):
-    content_type: str
+    content_type: str | None
     content_encoding: str | None
-    body: bytes
+    body: bytes | None
     observed_at: datetime
+    validators: CacheValidators | None = None
 
 
 def system_resolver(host: str, port: int) -> list[str]:
@@ -417,7 +440,7 @@ class SourceGate:
         return limits
 
     def fetch(self, budget: RunBudget, source_id: str, url: str, *, expect: Expect,
-              capability: CapabilityRef | None = None) -> FetchOutcome:
+              capability: CapabilityRef | None = None, validators: CacheValidators | None = None) -> FetchOutcome:
         """GET an exact endpoint or the scope named by a current capability reference."""
         if not isinstance(budget, RunBudget):
             raise TypeError('fetch needs the run budget handle')
@@ -425,13 +448,16 @@ class SourceGate:
             raise TypeError('source_id and url must be plain strings')
         if capability is not None and type(capability) is not CapabilityRef:
             raise TypeError('capability must be a CapabilityRef')
+        if validators is not None and type(validators) is not CacheValidators:
+            raise TypeError('validators must be scoped CacheValidators')
         if expect not in ACCEPT or (expect == 'xml' and capability is None):
             raise ValueError("expect must be 'json' or 'html', or 'xml' with a capability")
         started = self._clock()
         chain, attempts, retries, wait, failure = [url], 0, 0, 0.0, None
         while True:
             try:
-                reply = self._attempt(budget, source_id, chain[-1], expect, wait, capability)
+                conditional = validators.headers(chain[-1]) if validators else {}
+                reply = self._attempt(budget, source_id, chain[-1], expect, wait, capability, conditional)
             except _Refusal as stop:
                 errors = [stop.error] if failure is None else [failure, stop.error]
                 break
@@ -455,13 +481,14 @@ class SourceGate:
                 continue
             return FetchOutcome(
                 source_id, url, tuple(chain), attempts, self._duration_ms(started), final_url=chain[-1],
-                status_code=200, content_type=reply.content_type, content_encoding=reply.content_encoding,
-                body=reply.body, response_sha256=hashlib.sha256(reply.body).hexdigest(),
-                observed_at=reply.observed_at)
+                status_code=304 if reply.body is None else 200, content_type=reply.content_type,
+                content_encoding=reply.content_encoding, body=reply.body,
+                response_sha256=hashlib.sha256(reply.body).hexdigest() if reply.body is not None else None,
+                observed_at=reply.observed_at, validators=reply.validators)
         return FetchOutcome(source_id, url, tuple(chain), attempts, self._duration_ms(started), tuple(errors))
 
     def _attempt(self, budget: RunBudget, source_id: str, url: str, expect: Expect,
-                 wait: float, capability: CapabilityRef | None) -> str | _Reply:
+                 wait: float, capability: CapabilityRef | None, conditional: dict[str, str]) -> str | _Reply:
         allowed, limits = self._allowed(source_id, url, expect, capability)
         slot = self._limiter.acquire(budget.run_id, source_id, limits, self._clock(), wait)
         reservation, start = None, None
@@ -482,7 +509,7 @@ class SourceGate:
             if still_wanted is not None and not still_wanted():  # cancelled during the wait or lookup
                 raise _Refusal('BUDGET_EXHAUSTED', source_id, 'the run budget refused the call')
             self._limiter.mark_sent(slot, self._clock())
-            return self._exchange(source_id, url, address, expect, allowed, guard)
+            return self._exchange(source_id, url, address, expect, allowed, guard, conditional)
         except _Failure as stop:
             if (stop.retry_after or 0.0) > self._limiter.max_wait_s:  # before a queued request wakes
                 self._limiter.cool_down(source_id, self._clock(), stop.retry_after)
@@ -563,24 +590,30 @@ class SourceGate:
         return transport
 
     def _exchange(self, source_id: str, url: str, address: str, expect: Expect,
-                  allowed: Callable[[str], bool], guard: _AttemptGuard) -> str | _Reply:
+                  allowed: Callable[[str], bool], guard: _AttemptGuard, conditional: dict[str, str]) -> str | _Reply:
         # Straight to the transport: a client object would add a cookie jar and parse Location
         # headers itself (raising on some) even when it does not follow redirects.
-        request = httpx2.Request('GET', url, headers={**HEADERS, 'Accept': ', '.join(ACCEPT[expect])},
+        request = httpx2.Request('GET', url, headers={**HEADERS, 'Accept': ', '.join(ACCEPT[expect]), **conditional},
                                  extensions={'timeout': httpx2.Timeout(PHASE_TIMEOUT_S).as_dict()})
         with self._build_transport(address, guard) as transport:
             try:
                 response = transport.handle_request(request)
                 try:
-                    return self._reply(source_id, url, response, expect, allowed, guard)
+                    return self._reply(source_id, url, response, expect, allowed, guard, conditional)
                 finally:
                     response.close()
             except httpx2.HTTPError as exc:
                 raise _transport_failure(source_id, exc) from exc
 
     def _reply(self, source_id: str, url: str, response: httpx2.Response, expect: Expect,
-               allowed: Callable[[str], bool], guard: _AttemptGuard) -> str | _Reply:
+               allowed: Callable[[str], bool], guard: _AttemptGuard, conditional: dict[str, str]) -> str | _Reply:
         status = response.status_code
+        if status == 304 and conditional:
+            tag = response.headers.get('etag')
+            sent = conditional.get('If-None-Match')
+            if tag and sent and tag.removeprefix('W/') != sent.removeprefix('W/'):
+                raise _Failure('INVALID_SCHEMA', source_id, 'conflicting conditional response')
+            return _Reply(None, None, None, self._observed_now())
         if status in REDIRECTS:
             try:
                 target = str(httpx2.URL(url).join(response.headers['location']))
@@ -621,7 +654,10 @@ class SourceGate:
         if not body or (expect == 'json' and not _strict_json(body)):
             raise _Failure('INVALID_SCHEMA', source_id, f'empty or malformed {expect} body')
         # The checked media type only: the header's parameters are store text the planner would see.
-        return _Reply(content_type, ', '.join(encodings) or None, body, self._observed_now())
+        cached = CacheValidators(url, response.headers.get('etag'), response.headers.get('last-modified'))
+        safe = cached.headers(url)
+        validators = CacheValidators(url, safe.get('If-None-Match'), safe.get('If-Modified-Since')) if safe else None
+        return _Reply(content_type, ', '.join(encodings) or None, body, self._observed_now(), validators)
 
     def _read_body(self, source_id: str, response: httpx2.Response, layers: int, declared: int | None,
                    guard: _AttemptGuard) -> bytes:

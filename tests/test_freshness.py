@@ -87,6 +87,8 @@ class FreshnessTests(unittest.TestCase):
         receipt = citation(capture,'resource.availability','Product discontinued')
         self.corpus.record_retirement(capture,receipt,status='discontinued')
         self.corpus.record_failed_check(self.key,START+timedelta(seconds=120),status='denied')
+        self.assertEqual(self.corpus.state(self.key).retirement_status, 'discontinued')
+        self.assertIsNone(self.corpus.state(self.key).conditional_url)
         self.assertTrue(all(f.state=='retired' for o,f in self.corpus.assessed_observations(self.key,self.context(now=START+timedelta(seconds=120)))))
         self.assertEqual(len(self.corpus.observations(first)),2)
         with self.assertRaisesRegex(ValueError,'exact resource'):

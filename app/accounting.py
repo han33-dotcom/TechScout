@@ -147,6 +147,11 @@ class Ledger:
                 raise BudgetDenied('Run deadline includes final verification and writer')
             if job['kind'] == 'maintenance' and datetime.fromtimestamp(now, timezone.utc).date().isoformat() != job['day']:
                 raise BudgetDenied('A new UTC maintenance day requires a new job ID')
+            if job['kind'] == 'maintenance':
+                days = {key for key, usage in state['scopes'].items()
+                        if key.startswith('maintenance:') and key.count(':') == 1 and any(map(Decimal, usage))}
+                if 'maintenance:' + job['day'] not in days and len(days) >= 14:
+                    raise BudgetDenied('The 14 maintenance days are exhausted')
             attempts = state['attempts']
             live = [a for a in attempts.values() if a['status'] in {'held', 'sent'} and a['expires'] > now]
             if kind == 'worker' and sum(a['kind'] == 'worker' and a['job'] == job_id for a in live) >= 3:

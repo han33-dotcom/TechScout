@@ -10,7 +10,7 @@ from typing import Literal
 
 from pgvector import Vector
 from pydantic import TypeAdapter
-from sqlalchemy import delete, insert, literal, select, update
+from sqlalchemy import delete, func, insert, literal, select, update
 
 from app.collection_contracts import EvidencePassage
 from app.contracts import Money, SourcePolicy, Text, UtcTime
@@ -21,7 +21,7 @@ from app.corpus_contracts import (
 from app.storage import (
     SnapshotStore, Storage, corpus_document_observations, corpus_document_passages,
     corpus_documents, corpus_embeddings, corpus_guard, corpus_observations, corpus_passages,
-    corpus_receipts, corpus_resources, sources,
+    corpus_receipts, corpus_resources, corpus_retirements, sources,
 )
 
 _TIME = TypeAdapter(UtcTime)
@@ -52,6 +52,13 @@ def _linked(db, document_id, records, links):
                       .order_by(*records.primary_key)).all()
 
 
+def _retirement(db, resource_id, head):
+    query = select(corpus_retirements.c.status).where(corpus_retirements.c.resource_id == resource_id)
+    if head is not None:
+        query = query.where(corpus_retirements.c.observed_at >= head.observed_at)
+    return db.execute(query.order_by(corpus_retirements.c.observed_at.desc()).limit(1)).scalar_one_or_none()
+
+
 @dataclass(frozen=True)
 class ResourceState:
     document_id: int | None
@@ -65,12 +72,16 @@ class ResourceState:
     conditional_url: str | None
     etag: str | None
     last_modified: str | None
+    needs_processing: bool = False
+    retirement_status: str | None = None
 
 
 @dataclass(frozen=True)
 class IngestionResult:
     document_id: int | None
     status: Literal['new', 'changed', 'unchanged', 'stale']
+    changed_fields: tuple[str, ...] = ()
+    changed_passages: int = 0
 
 
 @dataclass(frozen=True)
@@ -133,7 +144,7 @@ class Corpus:
 
     def ingest(self, capture: DocumentCapture,
                extract: Callable[[DocumentCapture], Extraction], *,
-               revalidate_fields: tuple[str, ...] = ()) -> IngestionResult:
+               revalidate_fields: tuple[str, ...] = (), compare_extracted: bool = False) -> IngestionResult:
         """Persist a gated response using a deterministic local extractor."""
         if capture.visibility != 'public':
             raise ValueError('Private material cannot enter the shared corpus')
@@ -197,8 +208,15 @@ class Corpus:
                     previous = None
                 self._save_passages(db, document_id, previous, extraction)
 
+            fields, passages = (), 0
+            if compare_extracted:
+                fields, passages = self._document_changes(db, head.document_id if head else None, document_id)
+                if changed and same_extractor and not fields and not passages:
+                    changed = False
+                    db.execute(update(corpus_resources).where(corpus_resources.c.resource_id == resource_id)
+                               .values(content_changed_at=state.content_changed_at))
             status = 'new' if head is None else 'changed' if changed else 'unchanged'
-            return IngestionResult(document_id, status)
+            return IngestionResult(document_id, status, fields, passages)
 
     @staticmethod
     def _copy_links(db, table, item_column, previous, document_id):
@@ -298,17 +316,34 @@ class Corpus:
         with self._write() as db:
             state = self._state(db, resource_id)
             head = _head(db, resource_id)
+            retirement = _retirement(db, resource_id, head) if state else None
         if state is None:
             return None
-        conditional = (head is not None and head.snapshot_sha256 is not None and not state.needs_processing
+        conditional = (not retirement and head is not None and head.snapshot_sha256 is not None and not state.needs_processing
                        and (state.etag is not None or state.last_modified is not None))
         return ResourceState(
             head.document_id if head else None, state.checked_at, state.check_status, state.validated_at,
             state.content_changed_at, head.raw_sha256 if head else None, head.relevant_sha256 if head else None,
             ProcessingVersion.model_validate(head.processing) if head else None,
             head.final_url if conditional else None, state.etag if conditional else None,
-            state.last_modified if conditional else None,
+            state.last_modified if conditional else None, state.needs_processing, retirement,
         )
+
+    @staticmethod
+    def _document_changes(db, previous: int | None, current: int) -> tuple[tuple[str, ...], int]:
+        """Compare the stored observations and passages actually linked to two versions."""
+        def changed_values(links, table, identity, value):
+            # Reused immutable IDs occur in both documents. Changed or newly unlinked IDs occur once.
+            query = (select(value).select_from(links.join(table))
+                     .where(links.c.document_id.in_((previous, current)))
+                     .group_by(identity, value).having(func.count() == 1))
+            return set(db.execute(query).scalars())
+
+        fields = changed_values(corpus_document_observations, corpus_observations,
+                                corpus_observations.c.observation_id, corpus_observations.c.field_path)
+        passages = changed_values(corpus_document_passages, corpus_passages,
+                                  corpus_passages.c.passage_id, corpus_passages.c.passage_key)
+        return tuple(sorted(fields)), len(passages)
 
     def record_failed_check(self, key: ResourceKey, checked_at: datetime, *,
                             status: Literal['failed', 'denied', 'absent'] = 'failed') -> None:
@@ -329,7 +364,6 @@ class Corpus:
         captured excerpt and exact resource scope are retained for audit.
         """
         from app.corpus_contracts import PassageDraft
-        from app.storage import corpus_retirements
         if status not in {'removed', 'discontinued'} or capture.visibility != 'public':
             raise ValueError('Retirement requires a public supported removal')
         if receipt.field_path != 'resource.availability' or any(
@@ -352,20 +386,13 @@ class Corpus:
     def assessed_observations(self, key: ResourceKey, context, *, policy=None):
         """Read the current resource's observations with mandatory reuse decisions."""
         from app.freshness import FreshnessPolicy, assess_observation
-        from app.storage import corpus_retirements
         with self.storage.engine.connect() as db:
             resource_id = _resource_id(key)
             state = self._state(db, resource_id)
             head = _head(db, resource_id)
             if state is None or head is None:
                 return ()
-            retired = db.execute(select(corpus_retirements)
-                .where(corpus_retirements.c.resource_id == resource_id)
-                .order_by(corpus_retirements.c.observed_at.desc()).limit(1)).first()
-            status = state.check_status
-            # A conditional response cannot reverse a documented retirement.
-            if retired and retired.observed_at >= head.observed_at:
-                status = retired.status
+            status = _retirement(db, resource_id, head) or state.check_status
             rows = _linked(db, head.document_id, corpus_observations, corpus_document_observations)
             source = db.execute(select(sources.c.status).where(sources.c.id == key.source_id)).scalar_one()
         return tuple((item, assess_observation(item, context,
@@ -384,6 +411,7 @@ class Corpus:
             if (state is None or head is None or head.document_id != previous.document_id
                     or state.needs_processing or checked_at <= state.validated_at
                     or not head.snapshot_sha256 or not (state.etag or state.last_modified)
+                    or _retirement(db, resource_id, head)
                     or (head.final_url, state.etag, state.last_modified)
                     != (previous.conditional_url, previous.etag, previous.last_modified)):
                 return False
