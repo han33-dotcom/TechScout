@@ -4,7 +4,10 @@ Start it as the buyer worker's controller, in its own backend process:
 
     python -m app.run_worker --controller app.buyer_flow:run
 
-Scope: one source (Class Cellulars) and one product type (an exact-model phone search,
+The normal worker uses the catalog-first domestic controller in app.domestic_buyer.
+The following checkpoint remains available as app.buyer_flow:run_checkpoint.
+
+Checkpoint scope: one source (Class Cellulars) and one product type (an exact-model phone search,
 delivered in Lebanon). Other requests end as an honest abstention that says so.
 
 The run goes: interpret the request; read the listings (live, or listings stored by an
@@ -117,6 +120,8 @@ class FlowDependencies:
     traces: Path | None = None
     versions: dict = field(default_factory=dict)
     wall_clock: Callable[[], datetime] = _utc_now
+    domestic_sources: object | None = None
+    onboarding: object | None = None
 
 
 def supported(request: v2.ShoppingRequest) -> str | None:
@@ -173,6 +178,8 @@ def production_dependencies() -> FlowDependencies:
     from app.corpus import Corpus
     from app.corpus_contracts import ProcessingVersion
     from app.directory import Directory
+    from app.domestic_buyer_sources import DomesticBuyerSources
+    from app.onboarding import ActivationRegistry, OnboardingQueue
     from app.embeddings import EmbeddingRoute, RATE_VARIABLE
     from app.research_workers import ResearchWorkers
     from app.source_registry import DEFAULT_REGISTRY
@@ -183,12 +190,14 @@ def production_dependencies() -> FlowDependencies:
     inference = build_inference(load_inference_config(path))
     ledger = Ledger.configured()
     storage = Storage()
-    gate = SourceGate(DEFAULT_REGISTRY)
-    source = ClassCellularsSource(gate_fetcher(gate, DEFAULT_REGISTRY), storage=storage)
+    registry = ActivationRegistry(storage)
+    directory = Directory(storage, registry_path=registry)
+    gate = SourceGate(registry)
+    source = ClassCellularsSource(gate_fetcher(gate, registry), storage=storage)
     # No reviewed shared extraction profile reads Class Cellulars pages yet, so the research
     # workers read only what the public corpus already holds for these listings; a field they
     # cannot settle stays an explicit gap, and they make no model call to pick a page to fetch.
-    workers = ResearchWorkers(Directory(storage), Corpus(storage), gate, {}, embeddings=EmbeddingRoute.configured())
+    workers = ResearchWorkers(directory, Corpus(storage), gate, {}, embeddings=EmbeddingRoute.configured())
     processing = ProcessingVersion(corpus_version=CORPUS_VERSION, index_version=CORPUS_VERSION,
                                    extraction_version=source.adapter_version(), chunk_version='none')
     load_env_file(names=DISCOVERY_ENV)
@@ -198,7 +207,10 @@ def production_dependencies() -> FlowDependencies:
                     source_registry_sha256=_sha256(Path(DEFAULT_REGISTRY)),
                     source=dict(source_id=source.source_id, adapter_version=source.adapter_version()))
     return FlowDependencies(ledger=ledger, inference=inference, source=source, research=research,
-                            traces=ROOT / 'var' / 'traces', versions=versions)
+                            traces=ROOT / 'var' / 'traces', versions=versions,
+                            domestic_sources=DomesticBuyerSources(storage, gate, directory,
+                                                                  fallback=workers.domestic_tools.fallback),
+                            onboarding=OnboardingQueue(storage, registry, directory=directory))
 
 
 def listing_resources(request, read: SourceRead) -> tuple:
@@ -229,6 +241,15 @@ def listing_resources(request, read: SourceRead) -> tuple:
 
 def run(context) -> None:
     """Entry point for ``python -m app.run_worker --controller app.buyer_flow:run``."""
+    _start(context, checkpoint=False)
+
+
+def run_checkpoint(context) -> None:
+    """Run the original single-source Class Cellulars live checkpoint (#75/#144)."""
+    _start(context, checkpoint=True)
+
+
+def _start(context, *, checkpoint):
     try:
         deps = worker_dependencies()
     except (InferenceUnavailable, BudgetDenied) as exc:
@@ -239,11 +260,18 @@ def run(context) -> None:
         except (RunError, ValueError):
             pass
         return
-    execute(context, deps)
+    execute(context, deps, checkpoint=checkpoint)
 
 
-def execute(context, deps: FlowDependencies) -> None:
-    _Flow(context, deps).run()
+def execute(context, deps: FlowDependencies, *, checkpoint=False) -> None:
+    if deps.domestic_sources is not None and not checkpoint:
+        from app.domestic_buyer import DomesticBuyerFlow
+        DomesticBuyerFlow(context, deps).run()
+    else:
+        if checkpoint and deps.research:
+            workers = replace(deps.research.workers, domestic_tools=None, discovery=None)
+            deps = replace(deps, research=replace(deps.research, workers=workers))
+        _Flow(context, deps).run()
 
 
 class _Flow:

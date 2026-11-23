@@ -16,6 +16,7 @@ from app.contracts import SourceLimits
 from app.contracts_v2 import DirectRoute, VerifiedOffer
 from app.directory import DirectoryRecord
 from app.firecrawl import Firecrawl
+from app.identity import conflicting_configurations
 from app.page_extraction import read_page
 from app.search_connectors import (
     BraveSearch, DirectoryPage, FirecrawlSearch, ManufacturerDirectories, SearchFailure,
@@ -85,36 +86,56 @@ class ChannelAttempt:
     request_id: str | None = None
 
 
+def dispatch_receipts(offer, run, now):
+    """Listing dispatch or a reviewed collection's exact listing, product and variant membership."""
+    receipts = [e for e in offer.evidence if e.field_path == 'route.origin_country' and e.scope == 'route'
+                and e.source_id == offer.source_id and e.route_id == offer.route.route_id
+                and e.product_id == offer.source_product_id and e.variant_id == offer.source_variant_id
+                and e.run == run and e.observed_at <= now]
+    if any(e.conflicts for e in receipts):
+        return ()
+    listing = tuple(e for e in receipts if e.origin_url == offer.listing_url)
+    if listing:
+        return listing
+    pages = defaultdict(list)
+    listing_origin = urlsplit(str(offer.listing_url)).netloc
+    for receipt in receipts:
+        origin = urlsplit(str(receipt.origin_url))
+        if origin.scheme == 'https' and origin.netloc == listing_origin:
+            pages[(str(receipt.origin_url), receipt.response_sha256, receipt.observed_at)].append(receipt)
+    required = {f'/collection/dispatch/{part}' for part in ('statement', 'listing', 'variant', 'product')}
+    return next((group for group in pages.values() if required <= {e.json_pointer for e in group}), ())
+
+
 @dataclass(frozen=True)
 class SearchReport:
     run_id: str
     attempts: tuple[ChannelAttempt, ...]
     leads: tuple[SearchLead, ...]
 
-    def _domestic_offers(self, offers):
+    def _domestic_offers(self, offers, collisions):
         for item in offers:
             verified = VerifiedOffer.model_validate(item.model_dump(mode='json'))
             offer, run = verified.offer, verified.verification.run
             if (run.run_id != self.run_id or offer.seller.market != 'LB'
                     or not isinstance(offer.route, DirectRoute) or offer.route.origin_country != 'LB'):
                 continue
-            # A seller's country and the delivery destination cannot establish this item's origin.
-            if any(e.field_path == 'route.origin_country' and e.scope == 'route'
-                   and e.source_id == offer.source_id and e.route_id == offer.route.route_id
-                   and e.product_id == offer.source_product_id and e.variant_id == offer.source_variant_id
-                   and e.run == run and e.observed_at <= verified.verification.checked_at
-                   and not e.conflicts and e.origin_url == offer.listing_url for e in offer.evidence):
-                yield ('seller:' + offer.seller.seller_id, offer.source_id, str(offer.listing_url),
-                       (offer.variant.product.product_id, offer.variant.variant_id))
+            if dispatch_receipts(offer, run, verified.verification.checked_at):
+                variant = (offer.variant.product.product_id, offer.variant.variant_id)
+                if variant in collisions:
+                    variant = (*variant, offer.offer_id)
+                yield 'seller:' + offer.seller.seller_id, offer.source_id, str(offer.listing_url), variant
 
     def coverage(self, verified_offers, *, baseline=()):
         """Count incremental sellers and pairs against current-run verified baseline offers."""
+        verified_offers, baseline = tuple(verified_offers), tuple(baseline)
+        collisions = conflicting_configurations(v.offer for v in (*verified_offers, *baseline))
         sellers, variants = set(), defaultdict(set)
-        for seller, _, _, variant in self._domestic_offers(baseline):
+        for seller, _, _, variant in self._domestic_offers(baseline, collisions):
             sellers.add(seller)
             variants[variant].add(seller)
         eligible = defaultdict(set)
-        for seller, source, url, variant in self._domestic_offers(verified_offers):
+        for seller, source, url, variant in self._domestic_offers(verified_offers, collisions):
             eligible[(seller, source)].add((url, variant))
         output = {}
         for attempt in self.attempts:
