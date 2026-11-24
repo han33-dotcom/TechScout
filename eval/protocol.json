@@ -1,6 +1,6 @@
 {
   "protocol": "TechScout held-out evaluation protocol",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "frozen_on": "2026-11-17",
   "issue": "https://github.com/han33-dotcom/TechScout/issues/78",
   "specification": "docs/evaluation-protocol.md",
@@ -68,12 +68,13 @@
     "unverifiable_rule": "An offer the verifier cannot check (blocked page, bot check, login wall) counts as invalid in the primary rate and is excluded in a labelled sensitivity rate.",
     "drift_rule": "If the run's own evidence shows the presented price but the live page differs at verification, the reason is price_drift. It is still invalid in the primary rate and is reported separately."
   },
+  "operator_amendment": {"operator": "Codex", "prior_protocol": "https://github.com/han33-dotcom/TechScout/tree/362f1821a8449ea26329448052b43786b33681ee/eval", "human_shopping": "unmeasured", "independent_human_verification": "unmeasured", "human_buyer_effort": "unmeasured", "human_validity_hypothesis": "untested", "scheduled_external_sessions": 40, "interpretation": "Report timed software outcomes, retailer evidence reobserved by the agent, and inconclusive comparisons separately. Unobserved or inaccessible facts cannot establish validity, a price win or a market-wide no-match."},
   "verification_plan": {
-    "repetition_1": "Every selected offer of every main recommendation is verified by hand.",
-    "repetitions_2_and_3": "Automated re-observation of every selected offer plus human verification of a random 20% sample drawn with seed 78.",
-    "additional_sellers": "Automated re-observation plus the 20% human sample in every repetition; reported as a secondary validity figure.",
+    "repetition_1": "Reopen every selected offer and record dated source evidence using the delegated operator.",
+    "repetitions_2_and_3": "Use automated re-observation. The human sample is unmeasured.",
+    "additional_sellers": "Report automated re-observation for additional sellers separately.",
     "window_minutes": 60,
-    "verifier": "A teammate other than the operator of the run or session, where possible.",
+    "verifier": "Codex performs direct retailer rechecks. Independent human verification is unmeasured.",
     "forbidden": "No login, cart, checkout, seller contact or bot-check bypass. A cost shown only at checkout stays not shown."
   },
   "decisive_facts": [
@@ -93,12 +94,12 @@
       "id": "valid_offer_rate",
       "question": "Are the offers TechScout presents as verified recommendations actually valid?",
       "unit": "offer",
-      "numerator": "Selected offers of main recommendations judged valid by human verification.",
+      "numerator": "Unmeasured in version 1.3.0. Report a separately labelled agent-rechecked result only with direct evidence.",
       "denominator": "All selected offers of main recommendations (at most three per run) presented in repetition-1 runs of the configuration, over the 23 domestic held-out cases. Unverifiable offers stay in the denominator.",
       "aggregation": "Ratio of totals, with a case-clustered bootstrap interval.",
       "target": {"operator": ">=", "value": "0.95"},
       "target_rule": "Reported as met when the point estimate is at least 0.95; described as met with confidence only when the 95% interval's lower bound is also at least 0.95; not assessed when the denominator is below 20.",
-      "secondary": ["valid_offer_rate_excluding_unverifiable", "additional_seller_validity (automated re-observation plus a 20% human sample)", "validity by repetition"]
+      "secondary": ["valid_offer_rate_excluding_unverifiable", "additional_seller_validity (automated re-observation)", "validity by repetition"]
     },
     {
       "id": "request_success_rate",
@@ -259,7 +260,7 @@
     "same_basis": "Both totals cover the case's fulfillment (delivery to the case city, or pickup) and every mandatory charge.",
     "cost_state": "Only verified payable totals are compared. An estimated range or incomplete subtotal is never a win over a verified total.",
     "currency": "Compare in the shared currency. Different currencies are converted with one reference rate recorded per verification pass (Banque du Liban published rate, with URL and timestamp); if no rate is recorded, the pair is inconclusive.",
-    "time": "Both offers are verified in the same verification pass. For an automated block or a paired session, the pass is the set of independent verifier checks for that case, each within 60 minutes of the run or session that presented the offer and all finished within 60 minutes after the last run or side of the block or session.",
+    "time": "Both offers are verified in the same verification pass. For an automated block or a paired session, the pass is the set of direct operator rechecks for that case, each within 60 minutes of the run or session that presented the offer and all finished within 60 minutes after the last run or side of the block or session.",
     "warranty": "Differences in warranty terms do not block comparison but are listed with the pair.",
     "tie_rule": "A difference of at most the larger of USD 1.00 and 0.5% of the lower total is a tie.",
     "needs_based": "Different models are not price-compared. Needs-based fit and task success are reported separately from identical-item price outcomes."
@@ -274,8 +275,8 @@
     "external_service_phase_minutes": 8,
     "external_verification_phase_minutes": 10,
     "external_verification_phase_applies_to": ["lebtech", "onesouq", "chatgpt-browsing", "claude-browsing"],
-    "manual_shopping_minutes": 20,
-    "manual_shopping_rule": "One phase of at most 20 minutes, verification included.",
+    "manual_shopping_minutes": 0,
+    "manual_shopping_rule": "Unmeasured under the agent-operated design.",
     "assistant_reply_phase_minutes": 8,
     "assistant_follow_ups": 1,
     "verifier_pool_search_minutes": 10,
@@ -295,12 +296,12 @@
       "full-warm versus single-agent-warm: request success, useful-result success, valid-offer rate, paired price outcomes, latency, cost per successful request",
       "full-warm versus fixed-heuristic-warm: the same measures",
       "full-warm versus full-cold: validity, coverage, freshness (age of the oldest decisive fact at verification), latency and cost per successful request",
-      "TechScout versus LebTech, One Souq and manual shopping on the local subset: paired price outcomes, request success, latency and buyer effort",
+      "TechScout versus LebTech and One Souq on the local subset: paired price outcomes, request success, latency and operator time",
       "TechScout versus browsing-enabled ChatGPT and Claude on the 10 domestic cases of the assistant subset: the same measures"
     ],
     "exploratory_rule": "Any other comparison is labelled exploratory.",
     "hypotheses": [
-      "The valid-offer rate of full-warm is at least 0.95.",
+      "The original human-verified 0.95 threshold remains untested in this design.",
       "Full-warm has more paired price wins than losses against each AI baseline (single-agent-warm, chatgpt-browsing, claude-browsing).",
       "These are hypotheses to test, not claims; they are reported whichever way the results fall."
     ],

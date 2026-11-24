@@ -2,7 +2,7 @@
 
 This folder holds the frozen held-out evaluation protocol from
 [#78](https://github.com/han33-dotcom/TechScout/issues/78). The rules are explained in
-[docs/evaluation-protocol.md](../docs/evaluation-protocol.md). Nothing here is a result.
+[docs/evaluation-protocol.md](../docs/evaluation-protocol.md). Study version 1.3.0 schedules 230 automated runs and 40 external slots, of which 20 can be operated on the public comparison sites. Human shopping and independent human checks are unmeasured. Versioned results belong under `results/`.
 
 - `heldout.json`: the original 30 held-out requests. The schedule includes the 23 domestic cases. Seven international cases are retained as an archive. Do not run, tune on, demo or ingest them before the pre-run freeze.
 - `calibration.json`: 13 separate development cases for calibration and scorer checks.

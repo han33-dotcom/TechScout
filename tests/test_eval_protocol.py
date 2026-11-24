@@ -17,8 +17,8 @@ EVAL = ROOT / 'eval'
 DOC = ROOT / 'docs' / 'evaluation-protocol.md'
 
 # Changing any frozen file needs `python eval/freeze.py --bump X.Y.Z "reason"` and these two values.
-FROZEN_VERSION = '1.2.0'
-FROZEN_COMBINED_SHA256 = '17f547b87a92b91392ad8934003521ad400b2017cbaaa07ebdf2f552c424e823'
+FROZEN_VERSION = '1.3.0'
+FROZEN_COMBINED_SHA256 = 'bd1e43edfe97a5912e416e32a919966a9dc5ba6623693b34fc9676d04285f427'
 HOW_TO_CHANGE = ('The evaluation protocol is frozen (#78). For a deliberate change before the pre-run freeze, run '
                  'python eval/freeze.py --bump X.Y.Z "reason" and update FROZEN_VERSION and FROZEN_COMBINED_SHA256 in '
                  'tests/test_eval_protocol.py; see docs/evaluation-protocol.md section 1.')
@@ -258,7 +258,7 @@ class BaselineTests(unittest.TestCase):
                 city = (request.get('fulfillment') or {}).get('destination', {}).get('city')
                 self.assertEqual(inputs['destination'], city or 'Lebanon')
                 self.assertEqual('only sellers in Lebanon' in fixed, BY_ID[case_id]['market'] == 'domestic')
-        sides = {'techscout', 'lebtech', 'onesouq', 'manual-shopping'}
+        sides = {'techscout', 'lebtech', 'onesouq'}
         orders = BASELINES['paired_sessions']['orders']
         self.assertEqual(set(orders), set(local))
         for case_id, order in orders.items():
@@ -279,7 +279,7 @@ class BaselineTests(unittest.TestCase):
         configurations = {item['id']: item for item in BASELINES['configurations']}
         self.assertEqual(len(configurations), len(BASELINES['configurations']))
         for required in ('full-warm', 'single-agent-warm', 'fixed-heuristic-warm', 'full-cold',
-                         'lebtech', 'onesouq', 'manual-shopping', 'chatgpt-browsing', 'claude-browsing'):
+                         'lebtech', 'onesouq', 'chatgpt-browsing', 'claude-browsing'):
             self.assertIn(required, configurations)
         for item in configurations.values():
             with self.subTest(configuration=item['id']):
@@ -404,6 +404,10 @@ class FreezeTests(unittest.TestCase):
             for name in [*tool.load()['files'], tool.RECORD]:
                 (root / name).parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(ROOT / name, root / name)
+            # Exercise change control on a disposable pre-study record even after the real freeze.
+            fixture_record = tool.load(root)
+            fixture_record['pre_run'] = None
+            tool._write(fixture_record, root)
             target = root / 'eval' / 'heldout.json'
             target.write_bytes(target.read_bytes().replace(b'\r\n', b'\n').replace(b'\n', b'\r\n'))
             self.assertEqual(tool.problems(root), [], 'CRLF and LF checkouts hash the same')
@@ -411,10 +415,10 @@ class FreezeTests(unittest.TestCase):
             self.assertIn(f'protocol {FROZEN_VERSION}: eval/heldout.json changed since it was frozen', tool.problems(root))
             with self.assertRaises(ValueError):
                 tool.bump('1.0.0', 'same version', root)
-            tool.bump('1.2.1', 'Test change', root, today='2026-11-17')
+            tool.bump('1.3.1', 'Test change', root, today='2026-11-17')
             self.assertEqual(tool.problems(root), [])
             self.assertEqual(tool.load(root)['changelog'][-1],
-                             {'version': '1.2.1', 'date': '2026-11-17', 'change': 'Test change'})
+                             {'version': '1.3.1', 'date': '2026-11-17', 'change': 'Test change'})
             with self.assertRaises(ValueError):
                 tool.pre_run(root)  # warm.json and run-freeze.json do not exist yet
             for name in tool.PRE_RUN_FILES:
@@ -434,9 +438,8 @@ class FreezeTests(unittest.TestCase):
                 filled = fill_fixture(json.loads(template))
                 filled['state'] = 'frozen'
                 if 'schedule' in filled:
-                    filled.update(protocol_version='1.2.1')
-                    filled['schedule'] = dict(first_block_planned_at=None,
-                                              operators=['op1'], verifiers=[])
+                    filled.update(protocol_version='1.3.1')
+                    filled['schedule'].update(first_block_planned_at=None, operators=['op1'], verifiers=[])
                 else:
                     filled['attestations'] = filled['required_attestation_values'].copy()
                 (root / name).write_text(json.dumps(filled), encoding='utf-8')

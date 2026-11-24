@@ -1,5 +1,5 @@
 {
-  "version": "1.2.0",
+  "version": "1.3.0",
   "issue": "https://github.com/han33-dotcom/TechScout/issues/78",
   "status": "Frozen before results. Defines who runs what, on which cases, how often and in what order.",
   "configurations": [
@@ -41,7 +41,7 @@
       "cases": "local_external",
       "repetitions": 1,
       "corpus": "external",
-      "description": "LebTech price comparison (https://lebtechlb.com), operated by hand without an account."
+      "description": "LebTech price comparison (https://lebtechlb.com), operated in a logged-out browser."
     },
     {
       "id": "onesouq",
@@ -49,18 +49,11 @@
       "cases": "local_external",
       "repetitions": 1,
       "corpus": "external",
-      "description": "One Souq price comparison (https://onesouqlb.com), operated by hand without an account."
-    },
-    {
-      "id": "manual-shopping",
-      "kind": "manual",
-      "cases": "local_external",
-      "repetitions": 1,
-      "corpus": "external",
-      "description": "A teammate using a web search engine and retailer websites, as a buyer would."
+      "description": "One Souq price comparison (https://onesouqlb.com), operated in a logged-out browser."
     },
     {
       "id": "chatgpt-browsing",
+      "collection_status": "unmeasured_consumer_automation_restriction",
       "kind": "external_assistant",
       "cases": "assistant",
       "repetitions": 1,
@@ -69,6 +62,7 @@
     },
     {
       "id": "claude-browsing",
+      "collection_status": "unmeasured_consumer_automation_restriction",
       "kind": "external_assistant",
       "cases": "assistant",
       "repetitions": 1,
@@ -84,6 +78,10 @@
     {
       "id": "webmall",
       "reason": "Optional timeboxed supplemental benchmark. Its task subset must be declared and frozen in its own file before it runs; it is never mixed into held-out metrics or reported as an official full benchmark score."
+    },
+    {
+      "id": "manual-shopping",
+      "reason": "Human shopping is unmeasured in the agent-operated study."
     }
   ],
   "automated_equivalence": [
@@ -293,30 +291,26 @@
     "cold_pass": "Cold runs use their own empty-corpus databases, so cold and warm runs never share a database."
   },
   "paired_sessions": {
-    "what": "For each local_external case, the four sides run one after another in the listed order, within 90 minutes. The techscout slot is the full-warm repetition-1 run (at most 3 minutes); each external side is its service phase followed by its own verification phase (LebTech and One Souq at most 8 + 10 minutes, manual shopping at most 20 minutes), so the worst case is about 60 minutes. The other two warm configurations run unattended right after full-warm.",
-    "verification_pass": "The independent verifier checks each side's selected offers as soon as that side finishes, each within 60 minutes of it. These checks form the case's verification pass, which ends within 60 minutes after the last side; paired price outcomes use the totals from this pass, not the operators' own verification phases.",
-    "order_design": "Williams balanced Latin square: each side takes each position once and follows each other side once across every four cases.",
+    "what": "For each of the ten paired cases, run full-warm, LebTech and One Souq in their listed relative order within 90 minutes. The other warm controls follow full-warm. Use a fresh, isolated assistant chat for each fixed prompt.",
+    "verification_pass": "The delegated operator reopens retailer pages and records decisive facts and gaps within 60 minutes. Record direct source evidence and check time. Independent human verification is unmeasured.",
+    "order_design": "Keep the original seeded case and assistant orders; remove the manual-shopping slot from each local order.",
     "orders": {
       "H01": [
         "techscout",
         "lebtech",
-        "manual-shopping",
         "onesouq"
       ],
       "H02": [
         "lebtech",
         "onesouq",
-        "techscout",
-        "manual-shopping"
+        "techscout"
       ],
       "H03": [
         "onesouq",
-        "manual-shopping",
         "lebtech",
         "techscout"
       ],
       "H04": [
-        "manual-shopping",
         "techscout",
         "onesouq",
         "lebtech"
@@ -324,23 +318,19 @@
       "H06": [
         "techscout",
         "lebtech",
-        "manual-shopping",
         "onesouq"
       ],
       "H10": [
         "lebtech",
         "onesouq",
-        "techscout",
-        "manual-shopping"
+        "techscout"
       ],
       "H12": [
         "onesouq",
-        "manual-shopping",
         "lebtech",
         "techscout"
       ],
       "H15": [
-        "manual-shopping",
         "techscout",
         "onesouq",
         "lebtech"
@@ -348,14 +338,12 @@
       "H17": [
         "techscout",
         "lebtech",
-        "manual-shopping",
         "onesouq"
       ],
       "H24": [
         "lebtech",
         "onesouq",
-        "techscout",
-        "manual-shopping"
+        "techscout"
       ]
     },
     "assistant_orders": {
@@ -400,7 +388,7 @@
         "chatgpt-browsing"
       ]
     },
-    "operators": "Pseudonymous operators (op1, op2, op3). Where possible each external side of a case has a different operator, and nobody looks at TechScout output for a case before finishing their own session on it. Actual assignments are recorded per session."
+    "operators": "Codex operates the two public comparison sites. Consumer assistant slots are unmeasured under the published service terms. Use only the frozen case inputs for each search. Attribute all choices, access failures and direct retailer checks to that operator."
   },
   "procedures": {
     "external_service": [
@@ -415,11 +403,6 @@
       "Never add to a cart, start checkout or contact a seller. A cost shown only at checkout stays not shown.",
       "Outcome: answered, no_results, unsupported_feature, access_failure (retry once within the paired session; then record it) or timeout."
     ],
-    "manual_shopping": [
-      "Use a web search engine and retailer websites in a normal browser, logged out. Same no-cart, no-login, no-bypass rules.",
-      "One phase of at most 20 minutes. Record first useful display and verified result times as above, plus every site visited.",
-      "Choose up to three offers that meet the fixed_requirements and record the same fields."
-    ],
     "assistant": [
       "Start a new chat with web search enabled and memory and custom instructions off. Record the product, the plan tier and any model name the interface shows (or not_shown).",
       "Send the prompt template filled with the case inputs. Record the time the first reply that names a matching product with a price arrives (first useful display).",
@@ -428,7 +411,7 @@
       "Export or screenshot the conversation without account details."
     ],
     "verifier": [
-      "A teammate who did not operate the session, where possible, checks every selected offer within 60 minutes of the run or session that presented it.",
+      "Codex reopens the seller listing and applicable terms for every selected offer within 60 minutes. Record the public URL, checked facts, time and remaining uncertainty.",
       "Use a normal browser, logged out; no cart, checkout, seller contact or bot-check bypass.",
       "Confirm each decisive fact in eval/protocol.json and give the verdict and invalid reasons defined there. Take a sanitized screenshot of each retailer page.",
       "In each case's repetition-1 block, also spend up to 10 minutes on an independent search for valid offers (the verifier pool) used to adjudicate answerable versus no_match_observed.",

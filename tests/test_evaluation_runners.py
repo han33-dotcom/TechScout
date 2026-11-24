@@ -28,9 +28,9 @@ class BaselineTests(unittest.TestCase):
         self.assertEqual(details['domestic_cases'], len(domestic))
         self.assertEqual(details['planned_per_configuration'], {
             'full-warm':69, 'single-agent-warm':69, 'fixed-heuristic-warm':69, 'full-cold':23,
-            'lebtech':10, 'onesouq':10, 'manual-shopping':10, 'chatgpt-browsing':10, 'claude-browsing':10})
+            'lebtech':10, 'onesouq':10, 'chatgpt-browsing':10, 'claude-browsing':10})
         self.assertEqual({case for case, _ in plan['full-cold']}, domestic)
-        for side in ('onesouq','manual-shopping','chatgpt-browsing','claude-browsing'):
+        for side in ('onesouq','chatgpt-browsing','claude-browsing'):
             self.assertEqual(plan[side], plan['lebtech'])
         with self.assertRaisesRegex(ValueError, 'outside'):
             check_slot(plan, 'H01', 'full-cold', 2)
@@ -128,7 +128,10 @@ class BaselineTests(unittest.TestCase):
             score([retired], **costs)
         with self.assertRaisesRegex(ValueError, 'separately'):
             score([valid, active], **costs)
-        scope = score([active], **costs)['heldout_scope']
+        heldout = score([active], **costs)
+        scope = heldout['heldout_scope']
+        self.assertIsNone(heldout['configurations'][active.side]['valid_offer_rate'])
+        self.assertEqual(heldout['configurations'][active.side]['agent_rechecked_offer_rate'], 1)
         self.assertEqual(scope['missing_automated_runs']['single-agent-warm'],
                          scope['planned_per_configuration']['single-agent-warm'] - 1)
         self.assertEqual(scope['missing_automated_runs']['full-cold'], 23)
