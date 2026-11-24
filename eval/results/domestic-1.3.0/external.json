@@ -242,7 +242,7 @@
     "case_id": "H15",
     "side": "lebtech",
     "operator": "Codex",
-    "interface": "Chrome, isolated logged-out desktop browser",
+    "interface": "Chrome 157.0.8103.79, isolated logged-out Windows desktop browser",
     "service_version": "not_shown",
     "started_at": "2026-11-24T10:36:46.883Z",
     "queries": [
@@ -271,6 +271,15 @@
       "screenshots/H15/lebtech/exact.png"
     ],
     "notes": "No results or retailer links displayed.",
+    "navigation_timings": [
+      {
+        "query": "exact",
+        "start_at": "2026-11-24T10:36:46.883Z",
+        "result_observed_at": "2026-11-24T10:36:49.798Z",
+        "browser_elapsed_ms_including_screenshot": 2900
+      }
+    ],
+    "time_basis": "The per-query durations use the browser performance clock. The interval between the two One Souq submissions is included in its offset-aware wall-clock service duration.",
     "submitted": true,
     "timing": {
       "side": "lebtech",
@@ -287,7 +296,7 @@
     "case_id": "H15",
     "side": "onesouq",
     "operator": "Codex",
-    "interface": "Chrome, isolated logged-out desktop browser",
+    "interface": "Chrome 157.0.8103.79, isolated logged-out Windows desktop browser",
     "service_version": "not_shown",
     "started_at": "2026-11-24T10:35:55.751Z",
     "queries": [
@@ -340,6 +349,24 @@
     ],
     "notes": "No offer met the selection conditions. No selected retailer page or total was available for paired verification.",
     "access_deviation": "Two user-interface queries were submitted before checking the search path restriction. Data retained as a descriptive observation. Further automated sessions omitted.",
+    "navigation_timings": [
+      {
+        "query": "exact",
+        "start_at": "2026-11-24T10:35:55.751Z",
+        "result_observed_at": "2026-11-24T10:35:59.667Z",
+        "browser_elapsed_ms_including_screenshot": 4045
+      },
+      {
+        "query": "reformulated",
+        "start_at": "2026-11-24T10:36:27.584Z",
+        "result_observed_at": "2026-11-24T10:36:29.527Z",
+        "browser_elapsed_ms_including_screenshot": 2009
+      }
+    ],
+    "time_basis": "The per-query durations use the browser performance clock. The interval between the two One Souq submissions is included in its offset-aware wall-clock service duration.",
+    "automatic_filters_displayed": [
+      "Laptops and HP after the model-only reformulation"
+    ],
     "submitted": true,
     "timing": {
       "side": "onesouq",
