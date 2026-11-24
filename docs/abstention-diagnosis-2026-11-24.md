@@ -1,7 +1,7 @@
 # Why every recorded run abstained, 24 November 2026
 
 For [#75](https://github.com/han33-dotcom/TechScout/issues/75) (open box: a verified
-qualifying result where source facts support one) and the held-out freeze in
+qualifying result where source facts support one) and the held-out study in
 [#82](https://github.com/han33-dotcom/TechScout/issues/82). Offline analysis of the
 recorded receipts, the rule code at `7254524`, the store fixtures and eight manual
 page reads on 24 November. No TechScout run, paid service or held-out case was used.
@@ -248,7 +248,7 @@ C05 by design.
 
 | | Fix | Impact | Effort | Needs a team decision |
 | --- | --- | --- | --- | --- |
-| F1 | Record which limit refused a read (ledger workload limit, gate wait, per-run cap, store status) in source outcomes and receipts. Pace consecutive study trials below each shop's six requests per minute. | High for #82: 16 of 27 calibration runs measured TechScout's own throttling, not retrieval | S | No |
+| F1 | Record which limit refused a read (ledger workload limit, gate wait, per-run cap, store status) in source outcomes and receipts. Pace consecutive batch runs below each shop's six requests per minute. | High: 16 of 27 calibration runs measured TechScout's own throttling, not retrieval, and the study's 337 "Listing read unavailable" outcomes cannot be split | S | No |
 | F2 | Read purchasability from the selected variant's own signal: the add-to-cart form bound to the variant ID with an enabled submit (Shopify), or `is_purchasable` from the reviewed WooCommerce readers | Removes a blocker on every real page; alone it adds no verified result while condition is missing | S–M | Light: confirm the signal |
 | F3 | A dated `DeliveryAreaPolicy`, modelled on `NewOnlyPolicy`: explicit areas and exclusions, seller and category scope, re-read in the run, binds item eligibility and any stated fee with its conditions to the route. It never covers deadlines or checkout-calculated fees. | Clears delivery eligibility at all five admitted sellers and the fee at Class Cellulars | M | **Yes**: changes a rule that is stricter than AGENTS.md requires |
 | F4 | Use the reviewed WooCommerce readers inside the domestic controller, and seed shop reads by category and product, not the one audit sample URL | Lets the 6 A2 runs reach the fact checks (where condition still blocks) and stops wasted reads | M | No |
@@ -294,18 +294,27 @@ If no seller passes step 1 by the date the team sets, the evidence for box 2 is 
 recorded unresolved runs plus this diagnosis. Whether that satisfies "where source facts
 support one" is a team decision.
 
-## Consequences for the held-out freeze (#82)
+## Relation to the held-out study (#82)
 
-- **Run pacing.** With six requests per minute per shop shared across jobs, a long
-  consecutive series refuses reads before sending them. Decide F1 and the trial pacing
-  before the freeze. Otherwise retrieval failures in the study partly measure
-  TechScout's own limits.
-- **Expected outcome.** With today's admitted sellers and rules, every configuration
-  should abstain on every case, whatever the planner does. Before freezing, decide
-  whether to land F2–F5, or to freeze as-is and report abstention quality: correct
-  abstention, honest unresolved cases and cost.
-- **Rule changes after the freeze would be protocol deviations.** F3 and F7 need a team
-  decision before it, not after.
+The study was frozen in #173, the base commit of this analysis, and published in #174
+on 24 November. Its 230 trials on 23 domestic requests ended in 229 abstentions, one
+timeout and zero verified recommendations. The
+[study report](evaluation-report.md) lists the same three stage A causes as its most
+frequent failed source outcomes: "Listing read unavailable" (337), "No matching SKU on
+the current listing" (210) and "Listing URL is outside the active source scope" (106).
+Its operator search also found no checked offer that established the exact item,
+condition, stock, fulfillment and all mandatory charges together.
+
+- **This diagnosis explains that outcome; it changes no study result.** The protocol
+  keeps any held-out fix or rerun out of the results. So F1–F7 are post-study
+  development, and any later measurement is reported separately.
+- **The 337 "Listing read unavailable" outcomes mix two causes.** The text covers both
+  TechScout's own refusals and store failures (root cause 1). If the sanitized study
+  traces keep the gate's refusal codes, an offline re-count could separate them
+  without rerunning anything.
+- **Demo.** A live demo on today's admitted sellers will abstain, for the reasons
+  above. The offline test gives a reproducible verified path to show next to an
+  honest live abstention.
 
 ## Page reads on 24 November 2026
 
