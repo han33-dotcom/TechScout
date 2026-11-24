@@ -52,6 +52,7 @@ flowchart TD
 | Buyer execution | `app/run_worker.py`; `app/buyer_flow.py` and `app/domestic_buyer.py` execute the leased `RunContext` |
 | v2 contracts and role interfaces | `app/contracts_v2.py`, `app/contract_interfaces.py`; request/run revisions and typed evidence |
 | Research | `app/research_workers.py`, `app/research.py`; stored evidence first, bounded scoped gaps and discovery |
+| Domestic search planning | `app/domestic_search_plan.py` builds eligible queries for the remaining coverage gap. The pinned buyer model selects a query and a configured channel. The controller handles dispatch, outages and final checks. |
 | Deterministic decisions | `app/identity.py`, `app/assessment.py`, `app/costs.py`, `app/verification.py` |
 | Grounded explanation | `app/writer.py`; evidence-backed claims and deterministic fallback |
 | Acquisition | `app/sources.py`, `app/source_capabilities.py`, `app/page_extraction.py`, `app/adapters/` |
@@ -203,6 +204,8 @@ reference is an error, not permission to overwrite newer work.
 The domestic worker injects an OpenRouter provider for each model-driven role. It loads its approved settings from `var/inference.json` or `TECHSCOUT_INFERENCE_CONFIG`. The development series pinned `openai/gpt-6.1-sol` to the OpenAI serving provider, with distinct role and writer prompt versions. A development evaluator produced a schema-valid response. The same backend `OPENROUTER_API_KEY` reached `openai/text-embedding-3-small` for indexing and query embeddings at 1,536 dimensions. Stored vectors must match the routed index version. Structured and keyword retrieval remain available when vectors are missing. [Measured route and limits](development-calibration.md) · [Inference configuration](live-flow.md)
 
 The historical direct-provider paths remain in the tree. The v1 `python -m app.runs search REQUEST.json --planner model` uses `OpenAIPlanner`. Constructing the standalone writer without an injected provider also defaults to `OpenAIProvider`. `AnthropicPlanner` remains in `app/planner.py`. The domestic worker constructs and passes its OpenRouter provider explicitly. Provider credentials stay in the backend.
+
+On November 24 the production buyer and all four study configurations ran development case C02 on separate PostgreSQL clones. The configured model selected a localized Samsung Galaxy S25 query in the production, full and single-agent runs. The fixed baseline selected the default query through the rule planner. SerpApi returned leads after Tavily refused each request. All five runs abstained because no offer passed verification. The ledger recorded USD 0.003688 across the five runs. [Development run receipts](domestic-search-planning-2026-11-24.json)
 
 | Discovery channel | November 23–24 development measurements |
 | --- | --- |

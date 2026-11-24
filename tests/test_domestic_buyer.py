@@ -12,13 +12,21 @@ from app import contracts_v2 as v2
 from app import buyer_flow, domestic_buyer
 from app.accounting import BudgetDenied, Charge
 from app.domestic_discovery import Attribution, ChannelAttempt, SearchLead, SearchReport
-from app.run_worker import RunContext
+from app.run_worker import RunContext, execute_one
 from test_buyer_flow import FlowCase, FakeOpenRouter, inference_config
 from test_writer import clone, primary, snapshot
 
 
 class Router(FakeOpenRouter):
+    @staticmethod
+    def role(instructions):
+        if instructions.startswith('Plan one public search'):
+            return 'search_plan'
+        return FakeOpenRouter.role(instructions)
+
     def answer(self, role, data):
+        if role == 'search_plan':
+            return dict(query_index=2, channel='brave')
         if role == 'selection':
             targets = {}
             for index, claim in enumerate(data['specifications']):
@@ -148,6 +156,7 @@ class DomesticBuyerTests(FlowCase):
         run = self.run_buyer([left, right], [laptop('shop-a', price='899'), right])
         self.assertEqual(run.status, 'complete', run.stop_reason)
         self.assertEqual(self.search.calls, [])
+        self.assertNotIn('search_plan', self.openrouter.roles())
         self.assertEqual([v.offer.seller.seller_id for v in run.recommendations[0].offers()], ['shop-a', 'shop-b'])
         self.assertEqual(run.recommendations[0].primary.cost.total.amount, 909)
         self.assertEqual(run.coverage.qualifying, 2)
@@ -177,10 +186,83 @@ class DomesticBuyerTests(FlowCase):
         run = self.run_buyer([left], [left, right])
         self.assertEqual((len(self.search.calls), run.coverage.qualifying), (1, 2), run.stop_reason)
         self.assertIn('Scout Book', self.search.calls[0].query)
-        self.assertNotIn('private address', self.search.calls[0].query)
+        self.assertEqual((self.search.calls[0].channel, self.search.calls[0].language), ('brave', 'ar'))
+        self.assertEqual(self.trace(run)['search_plan']['method'], 'model')
         self.assertEqual(self.onboarding.enqueue_buyer.call_args.args[0], [unknown])
         self.assertEqual([url for url, _, _ in self.sources.calls].count(str(right.listing_url)), 2)
         self.assertEqual(self.trace(run)['discovery_channels'][0]['coverage']['tavily']['new_same_variant_comparisons'], 1)
+
+    def test_needs_plans_offer_product_terms_without_sending_addresses_or_buyer_notes(self):
+        from app.domestic_search_plan import search_options
+        request = v2.ShoppingRequest(request_id='dev-needs', intent=dict(kind='needs', description='private buyer notes'),
+            requirements=dict(category='laptop', min_ram_gb=16),
+            fulfillment=dict(mode='delivery', destination=dict(city='Beirut, private address')))
+        queries = [o.query for o in search_options(request, [laptop('shop-a')])]
+        self.assertTrue(all('private' not in q and 'Beirut' not in q and '16' in q for q in queries))
+        self.assertTrue(any('workstation' in q for q in queries))
+        self.assertTrue(any('Scout Book' in q for q in queries))
+
+    def test_invalid_plans_fall_back_to_an_available_channel(self):
+        offer = laptop('shop-a')
+        self.search.connectors = {'serpapi': object()}
+        answer = self.openrouter.answer
+        for index, choice in enumerate((dict(query_index=99, channel='serpapi'), dict(query_index=0, channel='brave'))):
+            with self.subTest(choice=choice), patch.object(self.openrouter, 'answer', side_effect=lambda role, data:
+                    choice if role == 'search_plan' else answer(role, data)):
+                run = self.run_buyer([offer], [offer], request_id=f'fallback-{index}')
+                self.assertEqual(self.trace(run)['search_plan']['method'], 'fallback')
+                self.assertEqual((self.search.calls[-1].channel, self.search.calls[-1].language), ('serpapi', 'en'))
+                self.assertEqual(run.coverage.qualifying, 1)
+
+    def test_controlled_workers_identify_their_side_and_share_final_verification(self):
+        from app.accounting import Ledger
+        from app.storage import Storage
+        from eval import deployment, run_trial
+        offer = laptop('shop-a')
+        case = dict(case_id='D-planning', request=dict(schema_version=2, request_id='dev-plan',
+                    intent=dict(kind='exact_model', model='Scout Book'), requirements=dict(category='laptop')))
+        for side in ('full-warm', 'full-cold', 'single-agent-warm', 'fixed-heuristic-warm'):
+            with self.subTest(side=side):
+                deps = self.deps()
+                deps.domestic_sources = Sources([offer], [offer])
+                worker_storage = Storage(self.url, self.storage.snapshots.root)
+                deps.domestic_sources.storage = worker_storage
+                deps.ledger = Ledger(worker_storage, 'flow-fixture', fixture=True)
+                deps.research.workers.domestic_tools = self.search
+                db = 'techscout_eval_' + 'a' * 32
+                env = dict(TECHSCOUT_EVAL_SIDE=side, DATABASE_URL='postgresql://localhost/' + db,
+                           EVIDENCE_DIR=str(self.traces.parent / 'evidence'))
+                def compose(*, inference, load_worker_inference):
+                    self.assertFalse(load_worker_inference)
+                    deps.inference = inference
+                    return deps
+                with (patch.dict(os.environ, env), patch.object(deployment, 'load_env_file'),
+                      patch.object(deployment, 'production_dependencies', side_effect=compose),
+                      patch.object(deployment, 'pinned_inference', return_value=deps.inference) as pinned):
+                    deployment.expose_binding(self.app, deployment.binding())
+                    record = run_trial.run(self.client, case, side, 1,
+                        sleep=lambda _: self.assertTrue(execute_one(self.service, deployment.run)))
+                    run_trial.attach_worker_trace(record, deployment.trace_directory())
+                    self.assertEqual(record['outcome'], 'recommended', record.get('worker_error'))
+                    trace = record['worker']
+                    self.assertEqual(trace['verify']['verified'], [offer.offer_id])
+                    self.assertEqual(trace['versions']['evaluation'], dict(side=side, database=db,
+                                     corpus='cold' if side == 'full-cold' else 'warm'))
+                    roles = {call['role'] for call in trace['model_calls']}
+                    if side == 'fixed-heuristic-warm':
+                        pinned.assert_not_called()
+                        self.assertEqual(roles, set())
+                        self.assertEqual(trace['search_plan']['method'], 'rule-planner')
+                    elif side == 'single-agent-warm':
+                        self.assertEqual(roles, {'single_agent'})
+                        self.assertEqual(trace['limits']['concurrent_workers'], 1)
+                    else:
+                        self.assertEqual(roles, {'orchestrator', 'writer'})
+                        self.assertEqual(trace['limits']['concurrent_workers'], 3)
+                    record['deployment'] = dict(record['deployment'], database='different')
+                    record.pop('worker')
+                    run_trial.attach_worker_trace(record, deployment.trace_directory())
+                    self.assertEqual(record['outcome'], 'error')
 
     def test_discovery_outage_keeps_direct_rechecks_and_single_seller_coverage(self):
         offer = laptop('shop-a')
@@ -206,6 +288,7 @@ class DomesticBuyerTests(FlowCase):
         sources.stale.add(str(left.listing_url))
         run = self.run_buyer([], [], intent=dict(kind='product_link', url=str(left.listing_url)), sources=sources)
         self.assertFalse(self.search.calls)
+        self.assertNotIn('search_plan', self.openrouter.roles())
         self.assertEqual([u for u, _, _ in self.sources.calls], [str(left.listing_url)])
         self.assertEqual((run.status, run.coverage.retrieved, len(run.uncertain)), ('abstained', 0, 1))
         self.assertEqual(run.uncertain[0].cost.status, 'incomplete')

@@ -190,7 +190,8 @@ def _configured_inference(path, *, required):
         return None
 
 
-def production_dependencies(*, require_inference=True, fixed_registry_path=None, inference=None) -> FlowDependencies:
+def production_dependencies(*, require_inference=True, fixed_registry_path=None, inference=None,
+                            load_worker_inference=True) -> FlowDependencies:
     """Wire the backend. The single-source checkpoint explicitly requires its inference route."""
     from app.accounting import Ledger
     from app.corpus import Corpus
@@ -205,7 +206,7 @@ def production_dependencies(*, require_inference=True, fixed_registry_path=None,
     from app.storage import Storage
     load_env_file(names=('OPENROUTER_API_KEY', RATE_VARIABLE))
     path = config_path()
-    if inference is None:
+    if inference is None and load_worker_inference:
         inference = _configured_inference(path, required=require_inference)
     ledger = Ledger.configured()
     storage = Storage()
@@ -295,6 +296,8 @@ def execute(context, deps: FlowDependencies, *, checkpoint=False) -> None:
 
 
 class _Flow:
+    model_writer = True
+
     def __init__(self, context, deps: FlowDependencies):
         self.context, self.deps = context, deps
         self.request: v2.ShoppingRequest = context.request
@@ -650,10 +653,12 @@ class _Flow:
                                  coverage=self.coverage, uncertain=tuple(uncertain))
         seconds = min(30.0, self.left(self.final_by) - 1)
         self.publish(status='running', phase='write')
-        if self.stopped() or seconds < MIN_WRITER_SECONDS or self.deps.inference is None:
+        if not self.model_writer or self.stopped() or seconds < MIN_WRITER_SECONDS or self.deps.inference is None:
             if seconds < MIN_WRITER_SECONDS and not self.stopped():
                 self.limits.add('deadline')
             reason = 'OpenRouter inference route unavailable' if self.deps.inference is None else 'no time left for the writer'
+            if not self.model_writer:
+                reason = 'Evaluation configuration uses a deterministic summary'
             explanation = deterministic_explanation(context)
             self.trace['writer'] = dict(source='fallback', reason=reason, status='not_called')
             return v2.RunExplanation(text=explanation.text, evidence_ids=explanation.evidence_ids, source='fallback')

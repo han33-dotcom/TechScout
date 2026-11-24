@@ -2,7 +2,7 @@
 from collections import Counter, defaultdict
 from dataclasses import asdict, dataclass
 from threading import Event
-from urllib.parse import unquote, urlsplit
+from urllib.parse import urlsplit
 
 from app import contracts_v2 as v2
 from app.accounting import BudgetDenied, SourceBudget
@@ -10,7 +10,8 @@ from app.assessment import FullProductAssessment, assess_full_product, shortlist
 from app.buyer_flow import MAX_UNCERTAIN, MIN_WRITER_SECONDS, _Flow
 from app.buyer_sources import FETCH_ROOM_S
 from app.directory import DirectoryQuery
-from app.domestic_discovery import CHANNELS, SearchObjective, dispatch_receipts
+from app.domestic_discovery import CHANNELS, dispatch_receipts
+from app.domestic_search_plan import choose_search, search_options
 from app.eligibility import check_full_product
 from app.evidence_critique import CritiqueChoice, PROMPT as EVALUATE
 from app.freshness import FreshnessContext, assess_evidence
@@ -232,7 +233,7 @@ class DomesticBuyerFlow(_Flow):
                 coverage=self.search_report.coverage(finalists, baseline=[
                     v for v in finalists if v.offer.offer_id in self.initial_ids]))]
         uncertain = tuple(self.uncertain.values())[:MAX_UNCERTAIN]
-        if self.deps.inference is not None:
+        if self.model_writer and self.deps.inference is not None:
             self.action('A buyer-readable comparison of checked results', 'Explain qualifying offers and coverage',
                         'OpenRouter writer')
         explanation = self._write(groups, uncertain)
@@ -313,25 +314,18 @@ class DomesticBuyerFlow(_Flow):
         tools = setup.workers.domestic_tools
         if tools is None:
             return
-        intent = self.request.intent
-        constraints = self.request.requirements.model_dump(exclude_defaults=True, exclude={'category'})
-        terms = [f"{name.replace('_', ' ')} {value}" for name, value in constraints.items()]
-        if intent.kind == 'exact_model':
-            product = ' '.join(t for t in (intent.manufacturer, intent.model) if t)
-            # Prefer a known part number when seeking the second seller. An arbitrary
-            # shop SKU has meaning only within that shop.
-            best = next(iter(self.catalog.values()), None)
-            if best and any(marker in best.variant.variant_id for marker in (':gtin:', ':mpn:')):
-                terms.insert(0, unquote(best.variant.variant_id.rsplit(':', 1)[-1]))
-            missing = 'An independent seller of the requested configuration'
-        else:
-            product = self.request.requirements.category
-            missing = 'A different domestic model meeting the requested specifications'
-        query = ' '.join((product, 'Lebanon retailer', *terms))
-        effect = 'Decide whether broader seller or model comparison is feasible'
-        self.action(missing, effect, 'domestic retailer discovery channels')
-        objective = SearchObjective(query=query[:400], objective=missing + '. ' + effect, limit=8)
+        options = search_options(self.request, tuple(self.catalog.values()))
+        configured = getattr(tools, 'connectors', CHANNELS)
+        channels = tuple(channel for channel in CHANNELS if channel in configured)
+        objective, method, index = self.plan_search(options, channels)
+        self.trace['search_plan'] = dict(method=method, channel=objective.channel,
+            language=objective.language, objective=objective.objective,
+            query_index=index)
+        self.action(objective.objective, 'Decide whether broader seller or model comparison is feasible',
+                    'domestic retailer discovery channels')
         room = lambda: self.left(self.nonfinal_by)
+        if self.stopped() or room() < 2:
+            return
         phase = PhaseJob(self.job, room)
         def discovery(_, job, stop):
             return tools.search(objective, job, alternatives=tuple(c for c in CHANNELS if c != objective.channel))
@@ -352,6 +346,14 @@ class DomesticBuyerFlow(_Flow):
                 known_urls.add(lead.url)
                 fresh.append(Listing(lead.url, lead.source_id))
         self.read_candidates(fresh[:6])
+
+    def plan_search(self, options, channels):
+        # Leave discovery time and the separate final verification/writing reserve intact.
+        def generate(instructions, data, schema):
+            return self.generate(instructions, data, schema, self.nonfinal_by - 2)
+        planner = generate if self.roles is not None and self.left(self.nonfinal_by) > 3 else None
+        return choose_search(options, channels, planner, self.request,
+                             len({offer.seller.seller_id for offer in self.catalog.values()}))
 
     def handoff(self, url):
         target = canonical(url)
@@ -536,8 +538,9 @@ class DomesticBuyerFlow(_Flow):
     def select_fit(self, items):
         if not items:
             return []
-        self.action('Which verified model specifications support the stated needs',
-                    'Limit recommendations to supported models', 'OpenRouter suitability selector')
+        if self.roles is not None:
+            self.action('Which verified model specifications support the stated needs',
+                        'Limit recommendations to supported models', 'OpenRouter suitability selector')
         gaps = []
         offers = [v.offer for v in items]
         collisions = conflicting_configurations(offers)
@@ -545,6 +548,8 @@ class DomesticBuyerFlow(_Flow):
         claims = supporting_claims(offers, self.deps.wall_clock(), targets)
         models = {targets[o.offer_id]: model_identity(o) for o in offers}
         def choose(prompt, data, schema):
+            if self.roles is None:
+                return None
             return self.generate(prompt + ' Choose distinct models using the supplied model identities.',
                                  dict(data, model_identities=models), schema, self.verification_by)
         result = select_candidates(self.request, self.context.answers, (), gaps, choose, specifications=claims)

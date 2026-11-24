@@ -5,12 +5,14 @@ import json
 from pathlib import Path
 import time
 from urllib.parse import urlsplit
+from uuid import UUID
 
 import httpx2
 
 from app.buyer_runs import TERMINAL
 from app.contracts_v2 import ComparisonWorkspace, RunSnapshot
 from eval.runners import trial_request
+from eval.deployment import trace_directory
 
 
 def run(client, case, side, repetition, *, clock=time.monotonic, sleep=time.sleep):
@@ -65,6 +67,28 @@ def run(client, case, side, repetition, *, clock=time.monotonic, sleep=time.slee
                 started_at=stamp,outcome=outcome,trace=trace,deployment=settings)
 
 
+def attach_worker_trace(record, directory, *, wait_seconds=8):
+    """The API declares its side before dispatch. Verify the worker that actually ran it."""
+    run = record['trace'][-1]['snapshot']['run']
+    path = directory / f"{UUID(run['run_id'])}-r{run['run_revision']}.json"
+    deadline = time.monotonic() + wait_seconds
+    while True:
+        try:
+            trace = json.loads(path.read_bytes())
+            break
+        except (FileNotFoundError, json.JSONDecodeError):
+            if time.monotonic() >= deadline:
+                record['worker_error'] = 'Missing completed worker trace'
+                if record['outcome'] not in {'timeout', 'cancelled', 'error'}:
+                    record['outcome'] = 'error'
+                return
+            time.sleep(.1)
+    if trace.get('run') != run or trace.get('versions', {}).get('evaluation') != record['deployment']:
+        record.update(outcome='error', worker_error='Worker trace differs from the API trial binding')
+        return
+    record['worker'] = trace
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('dataset',type=Path)
@@ -81,9 +105,11 @@ def main():
         parser.error('The frozen cold comparison has one repetition')
     case=next(c for c in json.loads(args.dataset.read_text(encoding='utf-8'))['cases'] if c['case_id']==args.case_id)
     trial_request(case,args.side,args.repetition)
+    directory = trace_directory()
     with args.output.open('x',encoding='utf-8') as out, httpx2.Client(base_url=args.origin,timeout=5) as client:
         try:
             record=run(client,case,args.side,args.repetition)
+            attach_worker_trace(record, directory)
         except (httpx2.HTTPError, ValueError) as exc:
             record=dict(case_id=args.case_id,side=args.side,repetition=args.repetition,
                         outcome='error',error=type(exc).__name__)
