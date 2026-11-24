@@ -419,6 +419,33 @@ class FreezeTests(unittest.TestCase):
                 tool.pre_run(root)  # warm.json and run-freeze.json do not exist yet
             for name in tool.PRE_RUN_FILES:
                 (root / name).write_text('{"state": "frozen"}', encoding='utf-8')
+            with self.assertRaisesRegex(ValueError, 'Missing pre-run value'):
+                tool.pre_run(root)
+            self.assertIsNone(tool.load(root)['pre_run'])
+            def fill_fixture(value):
+                if isinstance(value, dict):
+                    return {key: fill_fixture(item) for key, item in value.items()}
+                if isinstance(value, list):
+                    return [fill_fixture(item) for item in value]
+                return 'fixture' if value is None else value
+
+            for name in tool.PRE_RUN_FILES:
+                template = (root / name.replace('.json', '.template.json')).read_text(encoding='utf-8')
+                filled = fill_fixture(json.loads(template))
+                filled['state'] = 'frozen'
+                if 'schedule' in filled:
+                    filled.update(protocol_version='1.2.1')
+                    filled['schedule'] = dict(first_block_planned_at='2026-12-01T10:00:00+02:00',
+                                              operators=['op1'], verifiers=[])
+                else:
+                    filled['attestations'] = filled['required_attestation_values'].copy()
+                (root / name).write_text(json.dumps(filled), encoding='utf-8')
+            with self.assertRaisesRegex(ValueError, 'scheduled verifiers'):
+                tool.pre_run(root)
+            run_path = root / 'eval/run-freeze.json'
+            run = json.loads(run_path.read_bytes())
+            run['schedule']['verifiers'] = ['v1']
+            run_path.write_text(json.dumps(run), encoding='utf-8')
             tool.pre_run(root, now='2026-11-30T12:00:00+00:00')
             self.assertEqual(tool.problems(root), [])
             with self.assertRaises(ValueError):

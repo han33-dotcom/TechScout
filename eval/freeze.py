@@ -89,17 +89,54 @@ def bump(version: str, reason: str, root: Path = ROOT, today: str | None = None)
     return record
 
 
+def _require_filled(value, template, field):
+    if isinstance(template, dict):
+        if not isinstance(value, dict):
+            raise ValueError(f'{field} must be an object')
+        for key, expected in template.items():
+            if key not in {'instructions', 'issue', 'required_attestation_values'}:
+                _require_filled(value.get(key), expected, f'{field}.{key}')
+    elif isinstance(template, list):
+        if not isinstance(value, list):
+            raise ValueError(f'{field} must be a list')
+        if template:
+            for index, item in enumerate(value):
+                _require_filled(item, template[0], f'{field}[{index}]')
+    elif value is None or isinstance(value, str) and not value.strip():
+        if not field.endswith('.repetition_reduction_reason'):
+            raise ValueError(f'Missing pre-run value for {field}')
+
+
 def pre_run(root: Path = ROOT, now: str | None = None) -> dict:
     """Record the warm-corpus manifest and run settings once, before the first held-out run."""
     record = load(root)
     if record.get('pre_run') is not None:
         raise ValueError('The pre-run freeze is already recorded')
+    changes = problems(root)
+    if changes:
+        raise ValueError(changes[0])
     for name in PRE_RUN_FILES:
         if not (root / name).is_file():
             raise ValueError(f'{name} does not exist yet')
         data = json.loads((root / name).read_text(encoding='utf-8'))
         if data.get('state') != 'frozen':
             raise ValueError(f'{name} must have state "frozen"')
+        template = json.loads((root / name.replace('.json', '.template.json')).read_bytes())
+        _require_filled(data, template, name)
+        if name.endswith('/warm.json'):
+            for key, expected in template['required_attestation_values'].items():
+                if data['attestations'][key] is not expected:
+                    raise ValueError(f'Warm corpus attestation does not hold: {key}')
+        else:
+            if data['protocol_version'] != record['version']:
+                raise ValueError('Run settings belong to a different protocol version')
+            start = data['schedule']['first_block_planned_at']
+            if not isinstance(start, str) or datetime.fromisoformat(start).utcoffset() is None:
+                raise ValueError('The first paired block requires a time with a UTC offset')
+            for role in ('operators', 'verifiers'):
+                members = data['schedule'][role]
+                if not members or not all(isinstance(member, str) and member.strip() for member in members):
+                    raise ValueError(f'Record the scheduled {role} before the freeze')
     files = hashes(PRE_RUN_FILES, root)
     record['pre_run'] = {'recorded_at': now or datetime.now(timezone.utc).isoformat(timespec='seconds'),
                          'protocol_version': record['version'], 'files': files, 'combined_sha256': combined(files)}

@@ -1,5 +1,14 @@
 # Calibration and evaluation runners
 
+## First paired session
+
+Before the planned code freeze on November 29–30, agree on a start time with a UTC offset, the manual operator, an independent verifier and the browsing plans available. Record them in the run settings. The first paired case is H15, after the opening H23 automated block. Keep each operator's view clear of other methods' results until their own search is finished.
+
+1. After the pre-run freeze, prepare the manual sheet with `python -m eval.session capture eval/heldout.json H15 manual-shopping`. Give the operator the fixed request, requirements and destination. Keep the designed outcome private.
+2. The manual operator uses a logged-out browser and has 20 minutes. Record every site visited, the time of the first useful result, and each selected retailer URL with the exact variant, condition, stock scope and payable total. Record unresolved facts as unknown.
+3. The independent verifier checks the selected offers directly at the retailers within 60 minutes of each side finishing. Use the same verification pass for the paired price comparison. Keep operator checks and independent checks in separate records.
+4. For H15, run TechScout after the manual search, then One Souq and LebTech. Each comparison site gets up to eight minutes of search and ten minutes of operator verification. Complete the local paired sides within 90 minutes. Capture the two browsing-assistant sessions in their prescribed order, Claude followed by ChatGPT. [Frozen timing and procedures](../docs/evaluation-protocol.md)
+
 Use the calibration cases during development. The harness checks the recorded protocol hashes and pre-run freeze before submitting a held-out case. #82 owns the measured study.
 
 Run `python -m eval.scope` to inspect the domestic schedule offline. It lists the retired case IDs and planned sessions for each configuration. The four seeded ordering lists in `eval/baselines.json` retain the original relative order of domestic cases. The scorer rejects retired cases and mixed development/held-out inputs. For partial held-out results, its rates describe the submitted records. Check `heldout_scope.missing_automated_runs` for every configuration before publishing full-study rates. [Study population and reporting](../docs/evaluation-report.md)
