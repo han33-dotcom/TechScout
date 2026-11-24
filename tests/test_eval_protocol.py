@@ -435,18 +435,21 @@ class FreezeTests(unittest.TestCase):
                 filled['state'] = 'frozen'
                 if 'schedule' in filled:
                     filled.update(protocol_version='1.2.1')
-                    filled['schedule'] = dict(first_block_planned_at='2026-12-01T10:00:00+02:00',
+                    filled['schedule'] = dict(first_block_planned_at=None,
                                               operators=['op1'], verifiers=[])
                 else:
                     filled['attestations'] = filled['required_attestation_values'].copy()
                 (root / name).write_text(json.dumps(filled), encoding='utf-8')
             with self.assertRaisesRegex(ValueError, 'scheduled verifiers'):
-                tool.pre_run(root)
+                tool.pre_run(root, start_now=True)
             run_path = root / 'eval/run-freeze.json'
             run = json.loads(run_path.read_bytes())
+            self.assertIsNone(run['schedule']['first_block_planned_at'])
             run['schedule']['verifiers'] = ['v1']
             run_path.write_text(json.dumps(run), encoding='utf-8')
-            tool.pre_run(root, now='2026-11-30T12:00:00+00:00')
+            tool.pre_run(root, now='2026-11-30T12:00:00+00:00', start_now=True)
+            self.assertEqual(json.loads(run_path.read_bytes())['schedule']['first_block_planned_at'],
+                             '2026-11-30T12:00:00+00:00')
             self.assertEqual(tool.problems(root), [])
             with self.assertRaises(ValueError):
                 tool.pre_run(root)
