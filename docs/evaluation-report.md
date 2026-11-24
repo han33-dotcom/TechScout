@@ -21,4 +21,8 @@ H07, H09, H11, H18, H22, H26 and H30 require international purchase scope. They 
 
 ## Measurement status
 
+On November 24 both PostgreSQL study templates were restored and cloned on the primary laptop. Each has the same 28 directory entries and schema revision 0009. The warm copy holds 16 documents, 68 observations, 50 passages and 48 embeddings. The cold copy has zero of each. The warm dump restored with all 16 evidence files matching their recorded SHA-256 values. Test writes to each trial stayed outside its source template. Both templates exclude private buyer runs and sessions. The dated receipt records the dump hashes, evidence tree hashes and row counts. [Corpus preparation receipt](evaluation-corpus-2026-11-24.json)
+
+The first paired case in the frozen order is H15. Its local sequence is manual shopping, TechScout, One Souq and LebTech. The separate browsing-assistant sequence is Claude then ChatGPT. LebTech and One Souq both exposed public search inputs during preparation. No case query was submitted. [First-session instructions](../eval/runner-guide.md#first-paired-session)
+
 At the scope amendment, zero held-out trials and zero external baseline sessions had been performed. Success, abstentions, relative price, coverage, latency and cost remain unmeasured. The 27 earlier buyer submissions belong to the separate development calibration. After calibration and the pre-run freeze, report observed and missing sessions for each configuration, followed by the outcomes and their applicable denominators. [Development measurements](development-calibration.md) · [Study issue](https://github.com/han33-dotcom/TechScout/issues/82)

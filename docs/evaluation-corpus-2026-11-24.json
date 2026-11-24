@@ -1,0 +1,58 @@
+{
+  "checked_at": "2026-11-24T08:30:03.885246+00:00",
+  "postgres_image": "pgvector/pgvector:0.8.2-pg17-bookworm@sha256:feb68f4f15446397d8cac7f4fe48fe4586de83160d1fc48b46283312d1a33966",
+  "source": "November 23 domestic acquisition and maintenance corpus",
+  "templates": {
+    "warm": {
+      "revision": "0009",
+      "table_counts": {
+        "directory_entries": 28,
+        "source_activations": 0,
+        "sources": 5,
+        "corpus_resources": 13,
+        "directory_aliases": 45,
+        "directory_categories": 93,
+        "directory_markets": 28,
+        "corpus_documents": 16,
+        "corpus_retirements": 0,
+        "corpus_observations": 68,
+        "corpus_passages": 50,
+        "corpus_receipts": 76,
+        "corpus_document_observations": 82,
+        "corpus_document_passages": 52,
+        "corpus_embeddings": 48
+      },
+      "evidence_files": 16,
+      "evidence_tree_sha256": "05dcbd982758b62101fd81adf9116ed5840ebe3ce7a27e5131427ac070db7f3c",
+      "database_dump_sha256": "0cc10cbe6503af55cda9b12c020def31220ac69bc5e3dfba5e39c5ea971e4c3e",
+      "fresh_clone_verified": true
+    },
+    "cold": {
+      "revision": "0009",
+      "table_counts": {
+        "directory_entries": 28,
+        "source_activations": 0,
+        "sources": 5,
+        "directory_aliases": 45,
+        "directory_categories": 93,
+        "directory_markets": 28
+      },
+      "evidence_files": 0,
+      "evidence_tree_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "database_dump_sha256": "34847c7eb661e04912723f5db68343ba0744337bd89e6df9e9c5cf728c882a63",
+      "fresh_clone_verified": true
+    }
+  },
+  "protocol_pre_run_frozen": false,
+  "code_commit": "bb74726b4ec36cd92e920fa75e0dcd129c9e419b",
+  "directory_source_count": 28,
+  "public_service_access": {
+    "method": "Public landing page displayed a search input. No case query was submitted.",
+    "services": [
+      "https://lebtechlb.com/",
+      "https://onesouqlb.com/"
+    ],
+    "checked_on": "2026-11-24"
+  },
+  "isolation_check": "Each dump restored into its own PostgreSQL database. A trial clone from each restored template matched the source row counts and evidence digests. A write to the clone was absent from the template. Buyer runs and session rows were excluded from both."
+}
