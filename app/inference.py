@@ -214,7 +214,7 @@ def load_env_file(path=None, *, names=(KEY_VARIABLE,), environ=None) -> tuple[st
 
 # Run trace: what each model call reports, without prompts, answers or credentials.
 
-_ROLE_BY_SCHEMA = {'Proposal': 'orchestrator', 'Selection': 'orchestrator', 'CritiqueChoice': 'evaluator',
+_ROLE_BY_SCHEMA = {'DomesticSearchChoice': 'orchestrator', 'Proposal': 'orchestrator', 'Selection': 'orchestrator', 'CritiqueChoice': 'evaluator',
                    'Choice': 'researcher', '_Selection': 'writer'}
 _USAGE_KEYS = ('provider', 'purpose', 'route_fingerprint', 'endpoint', 'prompt_version', 'pricing_checked_on',
                'requested_model', 'actual_model', 'requested_provider', 'serving_provider', 'provider_verified',

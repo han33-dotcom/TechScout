@@ -1,0 +1,221 @@
+{
+  "issue": 169,
+  "case_id": "C02",
+  "purpose": "Development check before the held-out freeze",
+  "method": "Five separate PostgreSQL database and evidence clones, the session-owned API and a separately launched worker on loopback. The production run used app.buyer_flow:run. The other four used eval.deployment:run with matched API and worker traces.",
+  "model": "openai/gpt-6.1-sol",
+  "case": "Samsung Galaxy S25 256GB delivered to Beirut",
+  "heldout_runs": 0,
+  "known_usd": "0.003688",
+  "uncertain_usd": "0",
+  "runs": [
+    {
+      "side": "production",
+      "template": "warm",
+      "run": "636b72d8-0918-4442-8a62-c6d8ece0325e",
+      "started_at": "2026-11-24T08:56:33.300797+00:00",
+      "outcome": "abstained",
+      "active_ms": 17000,
+      "plan": {
+        "channel": "tavily",
+        "language": "en",
+        "method": "model",
+        "objective": "Find an independent Lebanese seller of the requested configuration with local fulfillment",
+        "query_index": 1
+      },
+      "worker_parallelism": 3,
+      "model_calls": [
+        {
+          "role": "orchestrator",
+          "schema": "DomesticSearchChoice",
+          "status": "completed",
+          "validated": true
+        }
+      ],
+      "discovery": [
+        {
+          "channel": "tavily",
+          "status": "refused"
+        },
+        {
+          "channel": "serpapi",
+          "status": "ok"
+        }
+      ],
+      "coverage": {
+        "discovered": 11,
+        "attempted": 5,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "verified_offers": 0,
+      "known_usd": "0.000922",
+      "uncertain_usd": "0"
+    },
+    {
+      "side": "full-warm",
+      "template": "warm",
+      "run": "705045f4-b96f-4cf8-afc7-4a793992f114",
+      "started_at": "2026-11-24T08:57:01.326395+00:00",
+      "outcome": "abstained",
+      "active_ms": 13766,
+      "plan": {
+        "channel": "tavily",
+        "language": "en",
+        "method": "model",
+        "objective": "Find an independent Lebanese seller of the requested configuration with local fulfillment",
+        "query_index": 1
+      },
+      "worker_parallelism": 3,
+      "model_calls": [
+        {
+          "role": "orchestrator",
+          "schema": "DomesticSearchChoice",
+          "status": "completed",
+          "validated": true
+        }
+      ],
+      "discovery": [
+        {
+          "channel": "tavily",
+          "status": "refused"
+        },
+        {
+          "channel": "serpapi",
+          "status": "ok"
+        }
+      ],
+      "coverage": {
+        "discovered": 11,
+        "attempted": 5,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "verified_offers": 0,
+      "known_usd": "0.000922",
+      "uncertain_usd": "0"
+    },
+    {
+      "side": "single-agent-warm",
+      "template": "warm",
+      "run": "3ff35c72-abf1-4c05-b065-6a1ccc0a9eef",
+      "started_at": "2026-11-24T08:57:50.977597+00:00",
+      "outcome": "abstained",
+      "active_ms": 17578,
+      "plan": {
+        "channel": "tavily",
+        "language": "en",
+        "method": "model",
+        "objective": "Find an independent Lebanese seller of the requested configuration with local fulfillment",
+        "query_index": 1
+      },
+      "worker_parallelism": 1,
+      "model_calls": [
+        {
+          "role": "single_agent",
+          "schema": "DomesticSearchChoice",
+          "status": "completed",
+          "validated": true
+        }
+      ],
+      "discovery": [
+        {
+          "channel": "tavily",
+          "status": "refused"
+        },
+        {
+          "channel": "serpapi",
+          "status": "ok"
+        }
+      ],
+      "coverage": {
+        "discovered": 11,
+        "attempted": 5,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "verified_offers": 0,
+      "known_usd": "0.000922",
+      "uncertain_usd": "0"
+    },
+    {
+      "side": "fixed-heuristic-warm",
+      "template": "warm",
+      "run": "b919218e-681d-4d43-9989-49811fc4ffb9",
+      "started_at": "2026-11-24T08:57:27.007381+00:00",
+      "outcome": "abstained",
+      "active_ms": 12469,
+      "plan": {
+        "channel": "tavily",
+        "language": "en",
+        "method": "rule-planner",
+        "objective": "Find an independent Lebanese seller of the requested configuration",
+        "query_index": 0
+      },
+      "worker_parallelism": 1,
+      "model_calls": [],
+      "discovery": [
+        {
+          "channel": "tavily",
+          "status": "refused"
+        },
+        {
+          "channel": "serpapi",
+          "status": "ok"
+        }
+      ],
+      "coverage": {
+        "discovered": 9,
+        "attempted": 3,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "verified_offers": 0,
+      "known_usd": "0",
+      "uncertain_usd": "0"
+    },
+    {
+      "side": "full-cold",
+      "template": "cold",
+      "run": "1e6d173a-15a7-465a-82aa-e0139e961fd7",
+      "started_at": "2026-11-24T08:58:19.092235+00:00",
+      "outcome": "abstained",
+      "active_ms": 12687,
+      "plan": {
+        "channel": "tavily",
+        "language": "en",
+        "method": "model",
+        "objective": "Find an independent Lebanese seller of the requested configuration with local fulfillment",
+        "query_index": 1
+      },
+      "worker_parallelism": 3,
+      "model_calls": [
+        {
+          "role": "orchestrator",
+          "schema": "DomesticSearchChoice",
+          "status": "completed",
+          "validated": true
+        }
+      ],
+      "discovery": [
+        {
+          "channel": "tavily",
+          "status": "refused"
+        },
+        {
+          "channel": "serpapi",
+          "status": "ok"
+        }
+      ],
+      "coverage": {
+        "discovered": 11,
+        "attempted": 5,
+        "retrieved": 0,
+        "qualifying": 0
+      },
+      "verified_offers": 0,
+      "known_usd": "0.000922",
+      "uncertain_usd": "0"
+    }
+  ]
+}
