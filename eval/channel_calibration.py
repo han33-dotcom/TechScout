@@ -66,15 +66,20 @@ def measure(ledger, discovery, reader, category, model, city, query, lang, serie
                 verified.append(VerifiedOffer(offer=offer,cost=assessed.cost,verification=dict(run=run,checked_at=now)))
     with ledger._transaction() as (state, now):
         attempts=[a for a in state['attempts'].values() if a['job']==job_id and a['status']!='released']
+        seller_keys = {lead.seller_key for lead in report.leads}
         result=dict(job_id=job_id,category=category,language=lang,query=query,started_at=start.isoformat(),
             channels=[asdict(a) for a in report.attempts],coverage=report.coverage(verified),direct_checks=checked,
             distinct_leads_by_channel={
                 channel: len({lead.seller_key for lead in report.leads
                               if any(attribution.channel == channel for attribution in lead.attribution)})
                 for channel in channels},
-            seller_keys=sorted({l.seller_key for l in report.leads}),calls=len(attempts),
+            distinct_lead_count=len(seller_keys),calls=len(attempts),
             spend_usd=str(sum((Decimal(a['values'][3]) for a in attempts if a['status']=='completed'),Decimal(0))),
             unresolved_usd=str(sum((Decimal(a['values'][3]) for a in attempts if a['status']!='completed'),Decimal(0))))
+        if 'brave' in channels:
+            result['direct_checks'] = [dict(status=check['status']) for check in checked]
+        else:
+            result['seller_keys'] = sorted(seller_keys)
         result=json.loads(json.dumps(result,default=str))
         state['channel_calibration'][job_id]=result
         return result
