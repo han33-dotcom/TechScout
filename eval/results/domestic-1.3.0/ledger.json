@@ -1,0 +1,8 @@
+{
+  "observed_at": "2026-11-24T10:51:27.209310+00:00",
+  "project_ceiling_usd": "500.00",
+  "project_used_including_reservations_usd": "3.12670974",
+  "demo_reserve_usd": "25.00",
+  "evaluation_run_ids_with_job_receipts": 43,
+  "study_automated_trials_recorded": 43
+}
