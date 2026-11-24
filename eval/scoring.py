@@ -117,6 +117,11 @@ def score(trials, *, acquisition_usd, maintenance_usd):
     report = dict(configurations=scores,acquisition_usd=str(acquisition_usd),maintenance_usd=str(maintenance_usd))
     if scope is not None:
         report['heldout_scope'] = scope
+        report['observation_method'] = 'Codex-operated retailer rechecks'
+        report['unmeasured'] = ['human_shopping', 'independent_human_verification', 'human_buyer_effort']
+        for item in scores.values():
+            item['agent_rechecked_offer_rate'] = item['valid_offer_rate']
+            item['valid_offer_rate'] = None
     return report
 
 

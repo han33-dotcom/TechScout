@@ -1,22 +1,22 @@
 {
   "protocol": "TechScout held-out evaluation protocol",
   "issue": "https://github.com/han33-dotcom/TechScout/issues/78",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "hash_rule": "SHA-256 of each file with CRLF line endings normalized to LF. combined_sha256 is the SHA-256 of one line per file, \"<path>  <hash>\", sorted by path, each line ending in a newline. Check with: python eval/freeze.py",
   "files": {
-    "docs/evaluation-protocol.md": "f4a455fffb67c33245c1231061f25df32aa759c627168f6d424186567f8ae818",
-    "eval/README.md": "3f0cb5f774c151a19bba16a791bfb179a59549303addd8800a15141ebdd2c028",
-    "eval/baselines.json": "61b7b4614935d6b50de7c063f57e957ea8be9eb46c2655b3a0625a0aef0ae89f",
+    "docs/evaluation-protocol.md": "b281c95013eb0e50a863590e1df492516fc433021e01bccfc8215dbfb967ff15",
+    "eval/README.md": "f37f9efe2917cd684747f911dcf4acc99cb7a646c0909608083aa3502afab546",
+    "eval/baselines.json": "8b69c27824e35e9761d5701a882bf8e34129ab9a1de6d8583a93d11691262ecb",
     "eval/calibration.json": "f71001089a6e91c2bc2613e613b768e888040bd6a54414b02b3e55ccfec4070e",
     "eval/corpus/cold.json": "e5acaca9f9a5dc5ee2e23b2164246ef059383a7e71da8ca34a115a419d867f85",
     "eval/corpus/warm.template.json": "dff5838d57fd110a56f70d2449263a208d030feeb1ccadc2c133e19156dcd113",
     "eval/heldout.json": "056311f115db956a4086c47ad0ef11deba3719d571ffbf29b779c4004c302f82",
     "eval/models.json": "5d6483a27f953cbbd3232acbfdcd570a477f06879ad2227f239764bf7174a3e3",
-    "eval/protocol.json": "c9c6e195980d781f14fa3f6e138c0eaddaec81d0fd3319499c6b84e34ea81b8a",
-    "eval/run-freeze.template.json": "0c70719bea3b1af6f9312ccd62c0efbc7ab287030503f7bac21693f10f26f36d",
+    "eval/protocol.json": "db36ebb4bae3862639a5be3d79fddee02a451ae607a2fd7a06f6ab35a4c63c52",
+    "eval/run-freeze.template.json": "e9d6c4614809ef622a05ccb919013e79157d8b1074f0632795365d48df777b0f",
     "config/evaluation.json": "339047b96e225abfe502f03571416b3c9ce9fbbe0500b11b524cf5383e799031"
   },
-  "combined_sha256": "17f547b87a92b91392ad8934003521ad400b2017cbaaa07ebdf2f552c424e823",
+  "combined_sha256": "bd1e43edfe97a5912e416e32a919966a9dc5ba6623693b34fc9676d04285f427",
   "pre_run": null,
   "changelog": [
     {
@@ -33,6 +33,11 @@
       "version": "1.2.0",
       "date": "2026-11-23",
       "change": "Apply the domestic-only scope before held-out measurements. Preserve all original case records, filter the seeded schedules, and retire seven international scenarios (#155, #82)."
+    },
+    {
+      "version": "1.3.0",
+      "date": "2026-11-24",
+      "change": "Owner approved Codex-operated domestic comparisons, retailer rechecks and on-demand operation. Report human measurements and consumer assistant arms as unmeasured."
     }
   ]
 }

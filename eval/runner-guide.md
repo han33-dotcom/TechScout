@@ -2,14 +2,9 @@
 
 ## First paired session
 
-Record the actual operators, human verifier and visible browsing plans in the run settings. To start on demand at the code freeze, leave `schedule.first_block_planned_at` null and run `python eval/freeze.py --pre-run --start-now` when the first block is ready. It records the UTC launch time before hashing the settings. A scheduled start with a UTC offset also works. Each trial and external session records its own times. The first paired case is H15, after the opening H23 automated block. Keep each operator's view clear of other methods' results until their own search is finished.
+Record Codex as operator and as the agent performing direct retailer rechecks. Record the signed-in browsing plans. For an immediate start, leave `schedule.first_block_planned_at` null and run `python eval/freeze.py --pre-run --start-now`. The runner records an offset-aware timestamp before hashing the settings.
 
-A delegated operator may enter the fixed prompts in the account owner's signed-in ChatGPT or Claude web session. Record who operated the interface and the plan it displayed. The manual-shopping comparison measures a person's own search. A Codex-operated search belongs in a separately labelled experiment. The independent offer checks and human sample still require human observations. [Verification and comparison procedures](../docs/evaluation-protocol.md)
-
-1. After the pre-run freeze, prepare the manual sheet with `python -m eval.session capture eval/heldout.json H15 manual-shopping`. Give the operator the fixed request, requirements and destination. Keep the designed outcome private.
-2. The manual operator uses a logged-out browser and has 20 minutes. Record every site visited, the time of the first useful result, and each selected retailer URL with the exact variant, condition, stock scope and payable total. Record unresolved facts as unknown.
-3. The independent verifier checks the selected offers directly at the retailers within 60 minutes of each side finishing. Use the same verification pass for the paired price comparison. Keep operator checks and independent checks in separate records.
-4. For H15, run TechScout after the manual search, then One Souq and LebTech. Each comparison site gets up to eight minutes of search and ten minutes of operator verification. Complete the local paired sides within 90 minutes. Capture the two browsing-assistant sessions in their prescribed order, Claude followed by ChatGPT. [Frozen timing and procedures](../docs/evaluation-protocol.md)
+The first paired case is H15 after the opening H23 automated block. On H15 run TechScout, One Souq and LebTech in that order. Record both consumer assistant slots as unmeasured. Each interface receives only its frozen inputs. Save the response, timing and dated retailer checks with the operator identity. Preserve unknown charges, blocked access and missing evidence. The ten human-shopping sessions and independent human judgments from the earlier protocol remain unmeasured. [Current procedures](../docs/evaluation-protocol.md)
 
 Use the calibration cases during development. The harness checks the recorded protocol hashes and pre-run freeze before submitting a held-out case. #82 owns the measured study.
 

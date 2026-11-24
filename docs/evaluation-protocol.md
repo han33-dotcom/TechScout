@@ -1,6 +1,6 @@
 # Held-out evaluation protocol
 
-Protocol version **1.2.0**, amended for domestic-only evaluation under [#155](https://github.com/han33-dotcom/TechScout/issues/155). The original protocol was developed in
+Protocol version **1.3.0**, amended for domestic-only evaluation under [#155](https://github.com/han33-dotcom/TechScout/issues/155). The original protocol was developed in
 [#78](https://github.com/han33-dotcom/TechScout/issues/78). It fixes what we will measure and
 how, before anyone sees a held-out result. It contains no results and claims no performance.
 
@@ -11,6 +11,16 @@ Later tasks build on it:
 - [#76](https://github.com/han33-dotcom/TechScout/issues/76) and [#81](https://github.com/han33-dotcom/TechScout/issues/81) use the same case types for integration demos and buyer walkthroughs, but never the held-out cases themselves.
 
 The scope follows section 10 of the [full-product plan](full-product-plan.md).
+
+## Agent-operated study amendment
+
+The owner approved a fully Codex-operated study before the first held-out run. All 23 domestic cases, four automated configurations, 230 automated trials, ten paired case IDs, prompts and budgets are retained. The external schedule has 40 sessions across LebTech, One Souq, ChatGPT and Claude. Delete the human shopping slot from each original paired order and preserve the relative order of the other sides. The study starts on demand after the code, settings and corpus freeze.
+
+Codex operates the public comparison sites and checks the selected offers directly at retailers. Capture source URLs, observation times, exact variant, stock scope, condition, fulfillment, mandatory charges and total. A search result or assistant assertion alone cannot establish those facts. Operator checks share an observer and are reported as agent observations. Human shopping, independent human verification, the 20% human sample, human buyer effort and the human-verified 95% validity hypothesis remain unmeasured. Dependent outcomes stay unmeasured or inconclusive when the observed evidence cannot adjudicate them. Report missing sessions separately from observed failures.
+
+The signed-in ChatGPT Pro and Claude Free consumer interfaces do not support this automated collection under their published access terms. Retain ten planned slots per assistant as unmeasured, record zero submitted prompts and exclude these slots from observed outcomes and statistical tests. An API uses a different interface and cannot supply these measurements. [OpenAI terms](https://openai.com/policies/terms-of-use/) · [Anthropic consumer terms](https://www.anthropic.com/legal/consumer-terms)
+
+The sections below also document the original human study design for interpretation of its metrics. The amendment and machine-readable version 1.3.0 govern execution and reporting wherever the historical human design differs. [Version 1.2.0 archive](https://github.com/han33-dotcom/TechScout/tree/362f1821a8449ea26329448052b43786b33681ee/eval)
 
 ## 1. What is frozen and how to check it
 
@@ -40,10 +50,9 @@ Linux line endings.
 
 The freeze has two stages:
 
-1. **Protocol freeze (current version 1.2.0).** It covers the cases, rules, subsets and
+1. **Protocol freeze (current version 1.3.0).** It covers the cases, rules, subsets and
    procedures, the cold manifest and the templates.
-2. **Pre-run freeze (at the code freeze, before the first held-out run).** The plan
-   schedules the code freeze for 29–30 November.
+2. **Pre-run freeze (at the code freeze, before the first held-out run).** The owner authorized an on-demand freeze for the agent-operated study.
    1. Build the warm corpus snapshot and copy `warm.template.json` to `eval/corpus/warm.json`.
    2. Copy `run-freeze.template.json` to `eval/run-freeze.json`.
    3. Fill every field in both files and set their state to `frozen`.
@@ -340,7 +349,7 @@ Cold runs are never dropped, and cases are never cut silently. Any reduction is 
 - **Cold runs:** they use their own empty-corpus databases.
 - **Repetitions:** they measure variation. Results are averaged per case first, and intervals resample cases.
 
-## 9. LebTech, One Souq, manual shopping and browsing assistants
+## 9. External procedures and the original manual comparator
 
 **Local subset (predeclared, domestic only).** H01, H02, H03, H04, H06, H10, H12, H15, H17,
 H24. Nine of the ten are phones or laptops. They cover:
@@ -523,7 +532,7 @@ cases and are reported apart from held-out outcomes; neither is part of this pro
   failures, resource equivalence with external services, an official benchmark score from an
   adapted subset, or a met target from a denominator below 20.
 
-## 14. Choices for the team to confirm
+## 14. Original design assumptions and subsequent amendments
 
 These choices were made in #78 so work would not block. Each is labelled here and in the PR.
 Change any of them with a version bump before the pre-run freeze.
