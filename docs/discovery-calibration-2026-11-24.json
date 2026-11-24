@@ -1,0 +1,968 @@
+{
+  "series": [
+    "configured-included-01",
+    "configured-base-01"
+  ],
+  "kind": "development discovery calibration",
+  "corpus": "Private copy of the November 23 domestic development SQLite corpus and its evidence directory",
+  "provider_account_observations": {
+    "serpapi": {
+      "plan": "Free Plan",
+      "monthly_search_allowance": 250,
+      "remaining_before": 249,
+      "remaining_after": 239,
+      "monthly_price_usd": "0",
+      "source": "https://serpapi.com/account-api"
+    },
+    "firecrawl": {
+      "monthly_plan_credits": 1000,
+      "remaining_before": 1025,
+      "remaining_after": 1005,
+      "pricing_basis": "1,000-credit free tier; paid overages apply only to paid plans",
+      "source": "https://docs.firecrawl.dev/api-reference/endpoint/credit-usage",
+      "pricing": "https://www.firecrawl.dev/pricing"
+    },
+    "tavily": {
+      "plan": "Free base plan, confirmed by operator",
+      "usage_endpoint_http_status": 403,
+      "account_usage_observed": false,
+      "source": "https://docs.tavily.com/documentation/api-credits"
+    },
+    "brave": {
+      "plan": "Base Search, confirmed by operator",
+      "per_search_reservation_usd": "0.005",
+      "per_search_charge_reported": false,
+      "source": "https://api-dashboard.search.brave.com/app/plans"
+    }
+  },
+  "channel_summaries": {
+    "serpapi": {
+      "dispatches": 10,
+      "outcomes": {
+        "ok": 9,
+        "timeout": 1
+      },
+      "median_attempt_latency_ms": 2882.5,
+      "sum_of_within_query_distinct_leads": 42
+    },
+    "firecrawl": {
+      "dispatches": 10,
+      "outcomes": {
+        "ok": 10
+      },
+      "median_attempt_latency_ms": 3305.0,
+      "sum_of_within_query_distinct_leads": 45
+    },
+    "tavily": {
+      "dispatches": 10,
+      "outcomes": {
+        "refused": 10
+      },
+      "median_attempt_latency_ms": 1422.0,
+      "sum_of_within_query_distinct_leads": 0
+    },
+    "brave": {
+      "dispatches": 10,
+      "outcomes": {
+        "ok": 10
+      },
+      "median_attempt_latency_ms": 2211.5,
+      "sum_of_within_query_distinct_leads": 41
+    }
+  },
+  "direct_check_outcomes": {
+    "out_of_scope": 16,
+    "unconfigured": 8
+  },
+  "ledger": {
+    "observed_at": "2026-11-24T08:27:19.083500+00:00",
+    "series_attempt_statuses": {
+      "uncertain": 30,
+      "completed": 10
+    },
+    "project_accounted_usd": "3.08707574",
+    "series_settled_usd": "0",
+    "series_unresolved_usd": "0.050"
+  },
+  "objectives": [
+    {
+      "job_id": "development-channels:configured-included-01:phone:en:serpapi-firecrawl",
+      "started_at": "2026-11-24T08:01:24.780642+00:00",
+      "category": "phone",
+      "language": "en",
+      "query": "iPhone 17 retailer Beirut Lebanon",
+      "coverage": {
+        "serpapi": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        },
+        "firecrawl": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        }
+      },
+      "distinct_leads_by_channel": {
+        "serpapi": 5,
+        "firecrawl": 5
+      },
+      "spend_usd": "0",
+      "unresolved_usd": "0",
+      "search_attempts": [
+        {
+          "channel": "serpapi",
+          "status": "ok",
+          "latency_ms": 2468,
+          "reserved_usd": "0",
+          "actual_usd": null,
+          "usage_units": null
+        },
+        {
+          "channel": "firecrawl",
+          "status": "ok",
+          "latency_ms": 3266,
+          "reserved_usd": "0",
+          "actual_usd": "0",
+          "usage_units": 2
+        }
+      ],
+      "direct_check_outcomes": {}
+    },
+    {
+      "job_id": "development-channels:configured-included-01:phone:ar:serpapi-firecrawl",
+      "started_at": "2026-11-24T08:01:41.734993+00:00",
+      "category": "phone",
+      "language": "ar",
+      "query": "iPhone 17 متجر بيروت لبنان",
+      "coverage": {
+        "serpapi": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        },
+        "firecrawl": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        }
+      },
+      "distinct_leads_by_channel": {
+        "serpapi": 5,
+        "firecrawl": 4
+      },
+      "spend_usd": "0",
+      "unresolved_usd": "0",
+      "search_attempts": [
+        {
+          "channel": "serpapi",
+          "status": "ok",
+          "latency_ms": 2062,
+          "reserved_usd": "0",
+          "actual_usd": null,
+          "usage_units": null
+        },
+        {
+          "channel": "firecrawl",
+          "status": "ok",
+          "latency_ms": 4156,
+          "reserved_usd": "0",
+          "actual_usd": "0",
+          "usage_units": 2
+        }
+      ],
+      "direct_check_outcomes": {
+        "out_of_scope": 2
+      }
+    },
+    {
+      "job_id": "development-channels:configured-included-01:laptop:en:serpapi-firecrawl",
+      "started_at": "2026-11-24T08:01:59.192627+00:00",
+      "category": "laptop",
+      "language": "en",
+      "query": "ASUS Zenbook 14 retailer Beirut Lebanon",
+      "coverage": {
+        "serpapi": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        },
+        "firecrawl": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        }
+      },
+      "distinct_leads_by_channel": {
+        "serpapi": 5,
+        "firecrawl": 5
+      },
+      "spend_usd": "0",
+      "unresolved_usd": "0",
+      "search_attempts": [
+        {
+          "channel": "serpapi",
+          "status": "ok",
+          "latency_ms": 2765,
+          "reserved_usd": "0",
+          "actual_usd": null,
+          "usage_units": null
+        },
+        {
+          "channel": "firecrawl",
+          "status": "ok",
+          "latency_ms": 2953,
+          "reserved_usd": "0",
+          "actual_usd": "0",
+          "usage_units": 2
+        }
+      ],
+      "direct_check_outcomes": {
+        "unconfigured": 2
+      }
+    },
+    {
+      "job_id": "development-channels:configured-included-01:laptop:ar:serpapi-firecrawl",
+      "started_at": "2026-11-24T08:02:16.123699+00:00",
+      "category": "laptop",
+      "language": "ar",
+      "query": "ASUS Zenbook 14 متجر بيروت لبنان",
+      "coverage": {
+        "serpapi": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        },
+        "firecrawl": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        }
+      },
+      "distinct_leads_by_channel": {
+        "serpapi": 5,
+        "firecrawl": 4
+      },
+      "spend_usd": "0",
+      "unresolved_usd": "0",
+      "search_attempts": [
+        {
+          "channel": "serpapi",
+          "status": "ok",
+          "latency_ms": 2312,
+          "reserved_usd": "0",
+          "actual_usd": null,
+          "usage_units": null
+        },
+        {
+          "channel": "firecrawl",
+          "status": "ok",
+          "latency_ms": 3328,
+          "reserved_usd": "0",
+          "actual_usd": "0",
+          "usage_units": 2
+        }
+      ],
+      "direct_check_outcomes": {
+        "unconfigured": 1
+      }
+    },
+    {
+      "job_id": "development-channels:configured-included-01:tablet:en:serpapi-firecrawl",
+      "started_at": "2026-11-24T08:02:33.000560+00:00",
+      "category": "tablet",
+      "language": "en",
+      "query": "iPad Air retailer Tripoli Lebanon",
+      "coverage": {
+        "serpapi": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        },
+        "firecrawl": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        }
+      },
+      "distinct_leads_by_channel": {
+        "serpapi": 5,
+        "firecrawl": 5
+      },
+      "spend_usd": "0",
+      "unresolved_usd": "0",
+      "search_attempts": [
+        {
+          "channel": "serpapi",
+          "status": "ok",
+          "latency_ms": 3000,
+          "reserved_usd": "0",
+          "actual_usd": null,
+          "usage_units": null
+        },
+        {
+          "channel": "firecrawl",
+          "status": "ok",
+          "latency_ms": 3718,
+          "reserved_usd": "0",
+          "actual_usd": "0",
+          "usage_units": 2
+        }
+      ],
+      "direct_check_outcomes": {
+        "out_of_scope": 2
+      }
+    },
+    {
+      "job_id": "development-channels:configured-included-01:tablet:ar:serpapi-firecrawl",
+      "started_at": "2026-11-24T08:02:50.957594+00:00",
+      "category": "tablet",
+      "language": "ar",
+      "query": "iPad Air متجر طرابلس لبنان",
+      "coverage": {
+        "serpapi": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        },
+        "firecrawl": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        }
+      },
+      "distinct_leads_by_channel": {
+        "serpapi": 5,
+        "firecrawl": 4
+      },
+      "spend_usd": "0",
+      "unresolved_usd": "0",
+      "search_attempts": [
+        {
+          "channel": "serpapi",
+          "status": "ok",
+          "latency_ms": 4078,
+          "reserved_usd": "0",
+          "actual_usd": null,
+          "usage_units": null
+        },
+        {
+          "channel": "firecrawl",
+          "status": "ok",
+          "latency_ms": 3188,
+          "reserved_usd": "0",
+          "actual_usd": "0",
+          "usage_units": 2
+        }
+      ],
+      "direct_check_outcomes": {
+        "out_of_scope": 2
+      }
+    },
+    {
+      "job_id": "development-channels:configured-included-01:monitor:en:serpapi-firecrawl",
+      "started_at": "2026-11-24T08:03:09.566748+00:00",
+      "category": "monitor",
+      "language": "en",
+      "query": "ASUS ProArt PA278QV retailer Beirut Lebanon",
+      "coverage": {
+        "serpapi": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        },
+        "firecrawl": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        }
+      },
+      "distinct_leads_by_channel": {
+        "serpapi": 5,
+        "firecrawl": 5
+      },
+      "spend_usd": "0",
+      "unresolved_usd": "0",
+      "search_attempts": [
+        {
+          "channel": "serpapi",
+          "status": "ok",
+          "latency_ms": 4719,
+          "reserved_usd": "0",
+          "actual_usd": null,
+          "usage_units": null
+        },
+        {
+          "channel": "firecrawl",
+          "status": "ok",
+          "latency_ms": 4407,
+          "reserved_usd": "0",
+          "actual_usd": "0",
+          "usage_units": 2
+        }
+      ],
+      "direct_check_outcomes": {}
+    },
+    {
+      "job_id": "development-channels:configured-included-01:monitor:ar:serpapi-firecrawl",
+      "started_at": "2026-11-24T08:03:30.279642+00:00",
+      "category": "monitor",
+      "language": "ar",
+      "query": "ASUS ProArt PA278QV متجر بيروت لبنان",
+      "coverage": {
+        "serpapi": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        },
+        "firecrawl": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        }
+      },
+      "distinct_leads_by_channel": {
+        "serpapi": 0,
+        "firecrawl": 3
+      },
+      "spend_usd": "0",
+      "unresolved_usd": "0",
+      "search_attempts": [
+        {
+          "channel": "serpapi",
+          "status": "timeout",
+          "latency_ms": 6453,
+          "reserved_usd": "0",
+          "actual_usd": null,
+          "usage_units": null
+        },
+        {
+          "channel": "firecrawl",
+          "status": "ok",
+          "latency_ms": 3282,
+          "reserved_usd": "0",
+          "actual_usd": "0",
+          "usage_units": 2
+        }
+      ],
+      "direct_check_outcomes": {}
+    },
+    {
+      "job_id": "development-channels:configured-included-01:audio:en:serpapi-firecrawl",
+      "started_at": "2026-11-24T08:03:51.265160+00:00",
+      "category": "audio",
+      "language": "en",
+      "query": "Soundcore H30i retailer Sidon Lebanon",
+      "coverage": {
+        "serpapi": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        },
+        "firecrawl": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        }
+      },
+      "distinct_leads_by_channel": {
+        "serpapi": 2,
+        "firecrawl": 5
+      },
+      "spend_usd": "0",
+      "unresolved_usd": "0",
+      "search_attempts": [
+        {
+          "channel": "serpapi",
+          "status": "ok",
+          "latency_ms": 2594,
+          "reserved_usd": "0",
+          "actual_usd": null,
+          "usage_units": null
+        },
+        {
+          "channel": "firecrawl",
+          "status": "ok",
+          "latency_ms": 3079,
+          "reserved_usd": "0",
+          "actual_usd": "0",
+          "usage_units": 2
+        }
+      ],
+      "direct_check_outcomes": {
+        "out_of_scope": 1,
+        "unconfigured": 1
+      }
+    },
+    {
+      "job_id": "development-channels:configured-included-01:audio:ar:serpapi-firecrawl",
+      "started_at": "2026-11-24T08:04:08.382824+00:00",
+      "category": "audio",
+      "language": "ar",
+      "query": "Soundcore H30i متجر صيدا لبنان",
+      "coverage": {
+        "serpapi": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        },
+        "firecrawl": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        }
+      },
+      "distinct_leads_by_channel": {
+        "serpapi": 5,
+        "firecrawl": 5
+      },
+      "spend_usd": "0",
+      "unresolved_usd": "0",
+      "search_attempts": [
+        {
+          "channel": "serpapi",
+          "status": "ok",
+          "latency_ms": 5625,
+          "reserved_usd": "0",
+          "actual_usd": null,
+          "usage_units": null
+        },
+        {
+          "channel": "firecrawl",
+          "status": "ok",
+          "latency_ms": 3703,
+          "reserved_usd": "0",
+          "actual_usd": "0",
+          "usage_units": 2
+        }
+      ],
+      "direct_check_outcomes": {
+        "unconfigured": 1
+      }
+    },
+    {
+      "job_id": "development-channels:configured-base-01:phone:en:tavily-brave",
+      "started_at": "2026-11-24T08:24:31.802367+00:00",
+      "category": "phone",
+      "language": "en",
+      "query": "iPhone 17 retailer Beirut Lebanon",
+      "coverage": {
+        "tavily": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        },
+        "brave": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        }
+      },
+      "distinct_leads_by_channel": {
+        "tavily": 0,
+        "brave": 1
+      },
+      "spend_usd": "0",
+      "unresolved_usd": "0.005",
+      "search_attempts": [
+        {
+          "channel": "tavily",
+          "status": "refused",
+          "latency_ms": 2812,
+          "reserved_usd": "0",
+          "actual_usd": null,
+          "usage_units": null
+        },
+        {
+          "channel": "brave",
+          "status": "ok",
+          "latency_ms": 4219,
+          "reserved_usd": "0.005",
+          "actual_usd": null,
+          "usage_units": null
+        }
+      ],
+      "within_query_distinct_leads": 1,
+      "direct_check_outcomes": {
+        "out_of_scope": 2
+      }
+    },
+    {
+      "job_id": "development-channels:configured-base-01:phone:ar:tavily-brave",
+      "started_at": "2026-11-24T08:24:50.188027+00:00",
+      "category": "phone",
+      "language": "ar",
+      "query": "iPhone 17 متجر بيروت لبنان",
+      "coverage": {
+        "tavily": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        },
+        "brave": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        }
+      },
+      "distinct_leads_by_channel": {
+        "tavily": 0,
+        "brave": 3
+      },
+      "spend_usd": "0",
+      "unresolved_usd": "0.005",
+      "search_attempts": [
+        {
+          "channel": "tavily",
+          "status": "refused",
+          "latency_ms": 1422,
+          "reserved_usd": "0",
+          "actual_usd": null,
+          "usage_units": null
+        },
+        {
+          "channel": "brave",
+          "status": "ok",
+          "latency_ms": 2282,
+          "reserved_usd": "0.005",
+          "actual_usd": null,
+          "usage_units": null
+        }
+      ],
+      "within_query_distinct_leads": 3,
+      "direct_check_outcomes": {
+        "out_of_scope": 2
+      }
+    },
+    {
+      "job_id": "development-channels:configured-base-01:laptop:en:tavily-brave",
+      "started_at": "2026-11-24T08:25:05.074014+00:00",
+      "category": "laptop",
+      "language": "en",
+      "query": "ASUS Zenbook 14 retailer Beirut Lebanon",
+      "coverage": {
+        "tavily": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        },
+        "brave": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        }
+      },
+      "distinct_leads_by_channel": {
+        "tavily": 0,
+        "brave": 4
+      },
+      "spend_usd": "0",
+      "unresolved_usd": "0.005",
+      "search_attempts": [
+        {
+          "channel": "tavily",
+          "status": "refused",
+          "latency_ms": 1422,
+          "reserved_usd": "0",
+          "actual_usd": null,
+          "usage_units": null
+        },
+        {
+          "channel": "brave",
+          "status": "ok",
+          "latency_ms": 2578,
+          "reserved_usd": "0.005",
+          "actual_usd": null,
+          "usage_units": null
+        }
+      ],
+      "within_query_distinct_leads": 4,
+      "direct_check_outcomes": {}
+    },
+    {
+      "job_id": "development-channels:configured-base-01:laptop:ar:tavily-brave",
+      "started_at": "2026-11-24T08:25:20.300692+00:00",
+      "category": "laptop",
+      "language": "ar",
+      "query": "ASUS Zenbook 14 متجر بيروت لبنان",
+      "coverage": {
+        "tavily": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        },
+        "brave": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        }
+      },
+      "distinct_leads_by_channel": {
+        "tavily": 0,
+        "brave": 4
+      },
+      "spend_usd": "0",
+      "unresolved_usd": "0.005",
+      "search_attempts": [
+        {
+          "channel": "tavily",
+          "status": "refused",
+          "latency_ms": 1296,
+          "reserved_usd": "0",
+          "actual_usd": null,
+          "usage_units": null
+        },
+        {
+          "channel": "brave",
+          "status": "ok",
+          "latency_ms": 2141,
+          "reserved_usd": "0.005",
+          "actual_usd": null,
+          "usage_units": null
+        }
+      ],
+      "within_query_distinct_leads": 4,
+      "direct_check_outcomes": {
+        "unconfigured": 2
+      }
+    },
+    {
+      "job_id": "development-channels:configured-base-01:tablet:en:tavily-brave",
+      "started_at": "2026-11-24T08:25:34.956367+00:00",
+      "category": "tablet",
+      "language": "en",
+      "query": "iPad Air retailer Tripoli Lebanon",
+      "coverage": {
+        "tavily": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        },
+        "brave": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        }
+      },
+      "distinct_leads_by_channel": {
+        "tavily": 0,
+        "brave": 5
+      },
+      "spend_usd": "0",
+      "unresolved_usd": "0.005",
+      "search_attempts": [
+        {
+          "channel": "tavily",
+          "status": "refused",
+          "latency_ms": 1984,
+          "reserved_usd": "0",
+          "actual_usd": null,
+          "usage_units": null
+        },
+        {
+          "channel": "brave",
+          "status": "ok",
+          "latency_ms": 2297,
+          "reserved_usd": "0.005",
+          "actual_usd": null,
+          "usage_units": null
+        }
+      ],
+      "within_query_distinct_leads": 5,
+      "direct_check_outcomes": {
+        "out_of_scope": 2
+      }
+    },
+    {
+      "job_id": "development-channels:configured-base-01:tablet:ar:tavily-brave",
+      "started_at": "2026-11-24T08:25:50.415914+00:00",
+      "category": "tablet",
+      "language": "ar",
+      "query": "iPad Air متجر طرابلس لبنان",
+      "coverage": {
+        "tavily": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        },
+        "brave": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        }
+      },
+      "distinct_leads_by_channel": {
+        "tavily": 0,
+        "brave": 4
+      },
+      "spend_usd": "0",
+      "unresolved_usd": "0.005",
+      "search_attempts": [
+        {
+          "channel": "tavily",
+          "status": "refused",
+          "latency_ms": 1891,
+          "reserved_usd": "0",
+          "actual_usd": null,
+          "usage_units": null
+        },
+        {
+          "channel": "brave",
+          "status": "ok",
+          "latency_ms": 2297,
+          "reserved_usd": "0.005",
+          "actual_usd": null,
+          "usage_units": null
+        }
+      ],
+      "within_query_distinct_leads": 4,
+      "direct_check_outcomes": {
+        "out_of_scope": 2
+      }
+    },
+    {
+      "job_id": "development-channels:configured-base-01:monitor:en:tavily-brave",
+      "started_at": "2026-11-24T08:26:05.815866+00:00",
+      "category": "monitor",
+      "language": "en",
+      "query": "ASUS ProArt PA278QV retailer Beirut Lebanon",
+      "coverage": {
+        "tavily": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        },
+        "brave": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        }
+      },
+      "distinct_leads_by_channel": {
+        "tavily": 0,
+        "brave": 5
+      },
+      "spend_usd": "0",
+      "unresolved_usd": "0.005",
+      "search_attempts": [
+        {
+          "channel": "tavily",
+          "status": "refused",
+          "latency_ms": 1437,
+          "reserved_usd": "0",
+          "actual_usd": null,
+          "usage_units": null
+        },
+        {
+          "channel": "brave",
+          "status": "ok",
+          "latency_ms": 1875,
+          "reserved_usd": "0.005",
+          "actual_usd": null,
+          "usage_units": null
+        }
+      ],
+      "within_query_distinct_leads": 5,
+      "direct_check_outcomes": {
+        "unconfigured": 1,
+        "out_of_scope": 1
+      }
+    },
+    {
+      "job_id": "development-channels:configured-base-01:monitor:ar:tavily-brave",
+      "started_at": "2026-11-24T08:26:20.357387+00:00",
+      "category": "monitor",
+      "language": "ar",
+      "query": "ASUS ProArt PA278QV متجر بيروت لبنان",
+      "coverage": {
+        "tavily": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        },
+        "brave": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        }
+      },
+      "distinct_leads_by_channel": {
+        "tavily": 0,
+        "brave": 5
+      },
+      "spend_usd": "0",
+      "unresolved_usd": "0.005",
+      "search_attempts": [
+        {
+          "channel": "tavily",
+          "status": "refused",
+          "latency_ms": 1109,
+          "reserved_usd": "0",
+          "actual_usd": null,
+          "usage_units": null
+        },
+        {
+          "channel": "brave",
+          "status": "ok",
+          "latency_ms": 1890,
+          "reserved_usd": "0.005",
+          "actual_usd": null,
+          "usage_units": null
+        }
+      ],
+      "within_query_distinct_leads": 5,
+      "direct_check_outcomes": {}
+    },
+    {
+      "job_id": "development-channels:configured-base-01:audio:en:tavily-brave",
+      "started_at": "2026-11-24T08:26:34.538503+00:00",
+      "category": "audio",
+      "language": "en",
+      "query": "Soundcore H30i retailer Sidon Lebanon",
+      "coverage": {
+        "tavily": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        },
+        "brave": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        }
+      },
+      "distinct_leads_by_channel": {
+        "tavily": 0,
+        "brave": 5
+      },
+      "spend_usd": "0",
+      "unresolved_usd": "0.005",
+      "search_attempts": [
+        {
+          "channel": "tavily",
+          "status": "refused",
+          "latency_ms": 1219,
+          "reserved_usd": "0",
+          "actual_usd": null,
+          "usage_units": null
+        },
+        {
+          "channel": "brave",
+          "status": "ok",
+          "latency_ms": 1953,
+          "reserved_usd": "0.005",
+          "actual_usd": null,
+          "usage_units": null
+        }
+      ],
+      "within_query_distinct_leads": 5,
+      "direct_check_outcomes": {}
+    },
+    {
+      "job_id": "development-channels:configured-base-01:audio:ar:tavily-brave",
+      "started_at": "2026-11-24T08:26:48.880601+00:00",
+      "category": "audio",
+      "language": "ar",
+      "query": "Soundcore H30i متجر صيدا لبنان",
+      "coverage": {
+        "tavily": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        },
+        "brave": {
+          "additional_usable_sellers": 0,
+          "new_same_variant_comparisons": 0
+        }
+      },
+      "distinct_leads_by_channel": {
+        "tavily": 0,
+        "brave": 5
+      },
+      "spend_usd": "0",
+      "unresolved_usd": "0.005",
+      "search_attempts": [
+        {
+          "channel": "tavily",
+          "status": "refused",
+          "latency_ms": 1375,
+          "reserved_usd": "0",
+          "actual_usd": null,
+          "usage_units": null
+        },
+        {
+          "channel": "brave",
+          "status": "ok",
+          "latency_ms": 1953,
+          "reserved_usd": "0.005",
+          "actual_usd": null,
+          "usage_units": null
+        }
+      ],
+      "within_query_distinct_leads": 5,
+      "direct_check_outcomes": {}
+    }
+  ],
+  "distinct_lead_identifiers_serpapi_firecrawl": 34
+}

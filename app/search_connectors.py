@@ -1,5 +1,6 @@
 """Read-only provider connectors for domestic discovery. No connector selects or ranks offers."""
 from dataclasses import dataclass
+from decimal import Decimal
 from html.parser import HTMLParser
 import math
 from urllib.parse import urlsplit
@@ -63,10 +64,14 @@ def _results(rows, limit, *, url='url', snippet='description', score=None):
 class PaidConnector:
     def __init__(self, key, unit_usd, *, transport=None):
         self.key = key
-        self.rate = money(unit_usd)
+        self.rate = Decimal(0) if unit_usd == 'included' else money(unit_usd)
         self.transport = transport
-        if not key.strip() or not self.rate:
-            raise ValueError('Provide a key and positive all-inclusive unit rate')
+        if not key.strip() or (not self.rate and unit_usd != 'included'):
+            raise ValueError('Provide a positive unit rate or explicitly confirmed included quota')
+
+    @classmethod
+    def from_config(cls, key, rate):
+        return cls(key, rate if rate == 'included' else Decimal(rate))
 
     def quote(self, search):
         return self.rate

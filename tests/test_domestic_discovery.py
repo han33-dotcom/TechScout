@@ -187,6 +187,22 @@ class DomesticDiscoveryTests(unittest.TestCase):
         self.assertIn('firecrawl', service.connectors)
         self.assertIsNone(service.fallback)
 
+    def test_included_quota_requires_an_explicit_setting_and_uses_a_call_slot(self):
+        env = dict(SERPAPI_API_KEY='fixture-only', SERPAPI_USD_PER_SEARCH='included',
+                   BRAVE_SEARCH_API_KEY='fixture-only', BRAVE_USD_PER_SEARCH='0')
+        service = DomesticDiscovery.from_env(self.gate, self.directory, environ=env)
+        self.assertEqual(set(service.connectors), {'serpapi'})
+        connector = service.connectors['serpapi']
+        self.assertEqual(connector.quote(self.objective), Decimal(0))
+        self.responses = {'serpapi.com': {'search_metadata': {'status': 'Success'}, 'organic_results': []}}
+        connector.transport = self.service().connectors['serpapi'].transport
+        result = service.survey(self.objective, self.job, ('serpapi',))
+        self.assertEqual(result.attempts[0].status, 'ok')
+        self.assertIsNone(result.attempts[0].usage_units)
+        self.assertIsNone(result.attempts[0].actual_usd)
+        usage = self.ledger.snapshot()['scopes']['project']
+        self.assertEqual((usage[0], Decimal(usage[3]), usage[4]), (1, Decimal(0), 1))
+
     def test_incremental_coverage_requires_current_item_dispatch_and_same_variant(self):
         first, second = self.seller(), self.seller(1)
         self.responses = {'api.tavily.com': dict(results=[dict(url=first)], usage=dict(credits=1)),

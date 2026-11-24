@@ -1,4 +1,4 @@
-# Domestic development calibration, 23 November 2026
+# Domestic development calibration, 23–24 November 2026
 
 The buyer completed 27 real development submissions. All ended in abstention. The paired comparison covered 12 requests, the eleven domestic cases from the calibration set plus the black Soundcore H30i comparison. Each arm used a separate copy of the same corpus and the same shared, operational ledger. The order of the two arms alternated by case. Two further submissions measured sequential reads and one exercised a controlled discovery outage. No held-out request was submitted. [Per-request receipts, source outcomes and route settings](development-calibration-2026-11-23.json)
 
@@ -19,15 +19,21 @@ On the H30i request, sequential and parallel runs each completed five retrievals
 
 Each category had the same exact-model and city objective expressed in Arabic and English. The ASUS directory returned ten successful reads with median latency 554.5 ms and zero provider charge. Its five distinct retailer identifiers recurred across the ten queries. The links were shop leads. None supplied a current payable comparison. The gate refused or could not configure the two known shop roots attempted per query.
 
-| Channel | Query slots | Actual provider reads | Result |
-| --- | ---: | ---: | --- |
-| Manufacturer directory | 10 | 10 | Five distinct lead identifiers, zero qualifying incremental sellers or pairs |
-| Tavily | 10 | 0 | Credential and account credit rate unavailable |
-| SerpApi | 10 | 0 | Credential and account search rate unavailable |
-| Brave Search | 10 | 0 | Credential and account search rate unavailable |
-| Firecrawl Search | 10 | 0 | Credential and account search-credit rate unavailable |
+| Channel | Searches dispatched | Successful responses | Median attempt latency |
+| --- | ---: | ---: | ---: |
+| Manufacturer directory | 10 | 10 | 554.5 ms |
+| SerpApi | 10 | 9 | 2,882.5 ms |
+| Firecrawl Search | 10 | 10 | 3,305 ms |
+| Tavily | 10 | 0 | 1,422 ms |
+| Brave Search | 10 | 10 | 2,211.5 ms |
 
-The four unavailable channels have no measured latency, results or marginal market coverage. Their slots are recorded individually in the receipts. A fresh series can run just those channels once the backend credentials and rates are present.
+On November 24 the two configured services received the same ten development queries against a private copy of the earlier domestic corpus. Firecrawl completed all ten. SerpApi timed out on the Arabic monitor query. Its account allowance fell by ten searches, including the interval containing the timeout. Its responses omitted per-request usage, so all ten corresponding ledger attempts retain that uncertainty. Firecrawl reported two credits per search and its balance fell by 20. The accounts' included allowances covered this series. The ledger recorded USD 0 in additional spend. [Per-query measurements and account balance changes](discovery-calibration-2026-11-24.json)
+
+Across both services the queries returned 34 distinct lead identifiers. Summing the distinct identifiers within each query gives 42 for SerpApi and 45 for Firecrawl. The two-check limit per query yielded twelve attempted retailer checks. Seven URLs fell outside approved source scope and five lacked an executable reader configuration. The series found zero additional verified domestic sellers and zero same-variant comparisons.
+
+The operator confirmed the free base plans. Tavily refused all ten search attempts, and its separate usage endpoint returned HTTP 403. Brave returned ten responses and 41 distinct lead identifiers summed within queries. Twelve follow-up checks encountered nine out-of-scope URLs and three missing reader configurations. Neither channel added a verified seller or same-variant comparison. The three series used the same objectives at different times. No search-result identifiers from Brave are retained. [Original manufacturer receipts](development-calibration-2026-11-23.json) · [Four-provider receipts](discovery-calibration-2026-11-24.json)
+
+The four API channels dispatched 40 searches, with 29 successful responses, ten refusals and one timeout. Each search reserved one source and request slot. The ten Brave reservations retained USD 0.050 because the responses omitted billed usage. The included-plan requests added no dollar reservation. Across these two series USD 0 settled and USD 0.050 remained uncertain. The project ledger accounted for USD 3.08707574 at 08:27 UTC, within the USD 500 cap. Preserve the source gates and buyer limits. Prioritize direct reads of eligible retailer listings and use the responding channels when the default refuses a query. The useful next coverage improvement is verified seller and fulfillment evidence. [Brave Search pricing](https://api-dashboard.search.brave.com/app/plans)
 
 ## Storage, workload and budget
 
@@ -45,7 +51,7 @@ Protocol 1.1.0 was committed before the series. It pins `openai/gpt-6.1-sol` on 
 
 The issued key's metadata returned HTTP 200, a positive remaining allowance and a key-level cap. At 21:17 UTC the endpoint advertised structured outputs and tool selection. The short-context advertised rates per million tokens were USD 1 input, USD 0.05 cached input, USD 1.25 cache write and USD 5 output. The protocol used conservative reservation ceilings of USD 2, USD 0.10, USD 2.50 and USD 10. Settlement uses the reported charge. The routed OpenAI embedding model returned 1,536 compatible dimensions at USD 0.02 per million tokens. The indexed seven-token sample took 2.125 seconds and cost USD 0.00000014. The three-token query took 2.734 seconds and cost USD 0.00000006. Sparse compatible specification passages limit hybrid retrieval on the development corpus. [OpenRouter key metadata](https://openrouter.ai/docs/api/reference/limits) · [Provider endpoint metadata](https://openrouter.ai/docs/api/api-reference/endpoints/list-all-endpoints-for-a-model)
 
-The machine-readable `freeze_inputs` contains the demonstrated model version, settings, pricing date, caps and route fingerprints for the eventual held-out pre-run freeze. Complete the pending channel measurements and release inputs before recording that freeze. The held-out study remains unopened. [Protocol](evaluation-protocol.md)
+The machine-readable `freeze_inputs` contains the demonstrated model version, settings, pricing date, caps and route fingerprints for the eventual held-out pre-run freeze. The channel measurements are complete. Prepare the isolated corpus, record operator and verifier assignments, and confirm external access and the first paired session before the pre-run freeze. The held-out study remains unopened. [Protocol](evaluation-protocol.md)
 
 ## Reproduce
 

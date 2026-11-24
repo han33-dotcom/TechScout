@@ -187,7 +187,7 @@ class DomesticDiscovery:
         for name, factory, key, rate in CONNECTOR_CONFIG:
             if env.get(key) and env.get(rate):
                 try:
-                    connectors[name] = factory(env[key], Decimal(env[rate]))
+                    connectors[name] = factory.from_config(env[key], env[rate])
                 except (ValueError, InvalidOperation):
                     continue  # This connector is unavailable; the other channels remain independent.
         pages = env.get('TECHSCOUT_MANUFACTURER_DIRECTORIES', json.dumps(directory_defaults) if directory_defaults else None)

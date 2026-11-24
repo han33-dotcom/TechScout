@@ -6,6 +6,8 @@ Both buyer research and background collection use `DomesticDiscovery`. A search 
 
 Set credentials and all-inclusive Decimal USD rates on the backend. Missing credentials or an invalid rate make that connector unavailable. The controller can still call the other channels. All four API connectors use direct HTTPS without redirects or automatic network retries.
 
+For searches covered by a verified free plan, use the literal `included` for that search rate. Check the account's free allowance against the maximum units for the series. Use this setting only when the provider enforces a hard stop before paid overages. Otherwise configure the applicable positive rate. Keep the account evidence and request counts with the calibration results. Blank and numeric-zero rates disable the connector. Included requests still reserve call slots, time and source capacity. Missing usage on a response stays unknown.
+
 | Channel | Connection and localization | Backend settings |
 | --- | --- | --- |
 | `tavily` (default) | Basic general search with Lebanon targeting, selected language, usage reporting, and snippets. [Tavily Search](https://docs.tavily.com/documentation/api-reference/endpoint/search) | `TAVILY_API_KEY`, `TAVILY_USD_PER_CREDIT` |
