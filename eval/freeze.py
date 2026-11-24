@@ -5,6 +5,7 @@ Run from the repository root:
     python eval/freeze.py                          check every recorded hash (exit 1 on a mismatch)
     python eval/freeze.py --bump 1.1.0 "reason"    re-record after a deliberate protocol change
     python eval/freeze.py --pre-run                record warm.json and run-freeze.json once, before held-out runs
+    python eval/freeze.py --pre-run --start-now    use the launch time when the first block is ready
 
 Hashes are SHA-256 over each file's bytes with CRLF line endings normalized to LF, so a
 Windows checkout and the Linux CI compute the same values. The combined hash covers the
@@ -15,6 +16,7 @@ import hashlib
 import json
 from pathlib import Path
 import sys
+from tempfile import NamedTemporaryFile
 
 ROOT = Path(__file__).resolve().parents[1]
 RECORD = 'eval/freeze.json'
@@ -107,7 +109,7 @@ def _require_filled(value, template, field):
             raise ValueError(f'Missing pre-run value for {field}')
 
 
-def pre_run(root: Path = ROOT, now: str | None = None) -> dict:
+def pre_run(root: Path = ROOT, now: str | None = None, *, start_now: bool = False) -> dict:
     """Record the warm-corpus manifest and run settings once, before the first held-out run."""
     record = load(root)
     if record.get('pre_run') is not None:
@@ -115,12 +117,19 @@ def pre_run(root: Path = ROOT, now: str | None = None) -> dict:
     changes = problems(root)
     if changes:
         raise ValueError(changes[0])
+    recorded_at = now or datetime.now(timezone.utc).isoformat(timespec='seconds')
+    launch_settings = None
     for name in PRE_RUN_FILES:
         if not (root / name).is_file():
             raise ValueError(f'{name} does not exist yet')
         data = json.loads((root / name).read_text(encoding='utf-8'))
         if data.get('state') != 'frozen':
             raise ValueError(f'{name} must have state "frozen"')
+        if start_now and name == 'eval/run-freeze.json':
+            schedule = data.get('schedule')
+            if isinstance(schedule, dict) and schedule.get('first_block_planned_at') is None:
+                schedule['first_block_planned_at'] = recorded_at
+                launch_settings = data
         template = json.loads((root / name.replace('.json', '.template.json')).read_bytes())
         _require_filled(data, template, name)
         if name.endswith('/warm.json'):
@@ -137,8 +146,17 @@ def pre_run(root: Path = ROOT, now: str | None = None) -> dict:
                 members = data['schedule'][role]
                 if not members or not all(isinstance(member, str) and member.strip() for member in members):
                     raise ValueError(f'Record the scheduled {role} before the freeze')
+    if launch_settings is not None:
+        path = root / 'eval/run-freeze.json'
+        with NamedTemporaryFile(mode='w', encoding='utf-8', dir=path.parent, delete=False) as stream:
+            json.dump(launch_settings, stream, ensure_ascii=False, indent=2)
+            stream.write('\n')
+        try:
+            Path(stream.name).replace(path)
+        finally:
+            Path(stream.name).unlink(missing_ok=True)
     files = hashes(PRE_RUN_FILES, root)
-    record['pre_run'] = {'recorded_at': now or datetime.now(timezone.utc).isoformat(timespec='seconds'),
+    record['pre_run'] = {'recorded_at': recorded_at,
                          'protocol_version': record['version'], 'files': files, 'combined_sha256': combined(files)}
     _write(record, root)
     return record
@@ -149,8 +167,8 @@ def main(argv: list[str]) -> int:
         if argv[:1] == ['--bump'] and len(argv) == 3:
             print(f"Recorded protocol {bump(argv[1], argv[2])['version']}")
             return 0
-        if argv == ['--pre-run']:
-            pre_run()
+        if argv in (['--pre-run'], ['--pre-run', '--start-now']):
+            pre_run(start_now='--start-now' in argv)
             print('Recorded the pre-run freeze')
             return 0
         if argv:

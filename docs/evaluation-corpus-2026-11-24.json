@@ -54,5 +54,93 @@
     ],
     "checked_on": "2026-11-24"
   },
-  "isolation_check": "Each dump restored into its own PostgreSQL database. A trial clone from each restored template matched the source row counts and evidence digests. A write to the clone was absent from the template. Buyer runs and session rows were excluded from both."
+  "isolation_check": "Each dump restored into its own PostgreSQL database. A trial clone from each restored template matched the source row counts and evidence digests. A write to the clone was absent from the template. Buyer runs and session rows were excluded from both.",
+  "warm_source_counts": [
+    {
+      "categories": [
+        "audio",
+        "laptop",
+        "monitor",
+        "phone",
+        "tablet"
+      ],
+      "documents": 10,
+      "observations": 54,
+      "passages": 48,
+      "source_id": "beytech",
+      "market": "LB",
+      "earliest_observed_at": "2026-11-23T19:20:46.115024+00:00",
+      "latest_observed_at": "2026-11-23T20:56:33.358776+00:00",
+      "ingestion_manifest_ids": [
+        "domestic-seller-coverage-20261123",
+        "domestic-seller-coverage-20261123-v2"
+      ]
+    },
+    {
+      "categories": [
+        "audio"
+      ],
+      "documents": 2,
+      "observations": 7,
+      "passages": 1,
+      "source_id": "outgeeked",
+      "market": "LB",
+      "earliest_observed_at": "2026-11-23T19:20:40.308271+00:00",
+      "latest_observed_at": "2026-11-23T19:22:36.534551+00:00",
+      "ingestion_manifest_ids": [
+        "domestic-seller-coverage-20261123",
+        "domestic-seller-coverage-20261123-v2"
+      ]
+    },
+    {
+      "categories": [
+        "audio"
+      ],
+      "documents": 4,
+      "observations": 7,
+      "passages": 1,
+      "source_id": "wincell",
+      "market": "LB",
+      "earliest_observed_at": "2026-11-23T19:20:42.948494+00:00",
+      "latest_observed_at": "2026-11-23T19:22:37.488893+00:00",
+      "ingestion_manifest_ids": [
+        "domestic-seller-coverage-20261123",
+        "domestic-seller-coverage-20261123-v2"
+      ]
+    }
+  ],
+  "warm_documents_by_category": {
+    "phone": 2,
+    "laptop": 2,
+    "tablet": 1,
+    "monitor": 1,
+    "audio": 10
+  },
+  "warm_acquisition_cost": {
+    "bootstrap": {
+      "spend_usd": "0.00001562",
+      "fetch_attempts": 43,
+      "paid_calls": 8,
+      "elapsed_ms": 37298,
+      "elapsed_basis": "sum of settled per-attempt milliseconds in the shared ledger",
+      "ledger_reference": [
+        "domestic-coverage-technical-review-20261123",
+        "bootstrap:domestic-seller-coverage-20261123",
+        "bootstrap:domestic-seller-coverage-20261123-v2"
+      ]
+    },
+    "maintenance_until_snapshot": {
+      "spend_usd": "0.00088698",
+      "fetch_attempts": 5,
+      "paid_calls": 4,
+      "elapsed_ms": 14426,
+      "elapsed_basis": "sum of settled per-attempt milliseconds in the shared ledger",
+      "ledger_reference": [
+        "discovery:discovery-155b9fffc6574037a98dce6637c57858",
+        "refresh:catalog-9f303ada88e044feb6bd6b4ed54b8d47",
+        "refresh:offers-1621ac8af7d3485eab6ea8d89b1d93d6"
+      ]
+    },
+    "scope": "Includes the source admission review and public corpus maintenance. The separate semantic lookup and synthetic price-change demo are development checks."
+  }
 }

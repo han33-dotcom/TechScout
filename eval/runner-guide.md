@@ -2,7 +2,9 @@
 
 ## First paired session
 
-Before the planned code freeze on November 29–30, agree on a start time with a UTC offset, the manual operator, an independent verifier and the browsing plans available. Record them in the run settings. The first paired case is H15, after the opening H23 automated block. Keep each operator's view clear of other methods' results until their own search is finished.
+Record the actual operators, human verifier and visible browsing plans in the run settings. To start on demand at the code freeze, leave `schedule.first_block_planned_at` null and run `python eval/freeze.py --pre-run --start-now` when the first block is ready. It records the UTC launch time before hashing the settings. A scheduled start with a UTC offset also works. Each trial and external session records its own times. The first paired case is H15, after the opening H23 automated block. Keep each operator's view clear of other methods' results until their own search is finished.
+
+A delegated operator may enter the fixed prompts in the account owner's signed-in ChatGPT or Claude web session. Record who operated the interface and the plan it displayed. The manual-shopping comparison measures a person's own search. A Codex-operated search belongs in a separately labelled experiment. The independent offer checks and human sample still require human observations. [Verification and comparison procedures](../docs/evaluation-protocol.md)
 
 1. After the pre-run freeze, prepare the manual sheet with `python -m eval.session capture eval/heldout.json H15 manual-shopping`. Give the operator the fixed request, requirements and destination. Keep the designed outcome private.
 2. The manual operator uses a logged-out browser and has 20 minutes. Record every site visited, the time of the first useful result, and each selected retailer URL with the exact variant, condition, stock scope and payable total. Record unresolved facts as unknown.
