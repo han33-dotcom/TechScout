@@ -17,7 +17,15 @@
     "config/evaluation.json": "339047b96e225abfe502f03571416b3c9ce9fbbe0500b11b524cf5383e799031"
   },
   "combined_sha256": "bd1e43edfe97a5912e416e32a919966a9dc5ba6623693b34fc9676d04285f427",
-  "pre_run": null,
+  "pre_run": {
+    "recorded_at": "2026-11-24T10:32:25+00:00",
+    "protocol_version": "1.3.0",
+    "files": {
+      "eval/corpus/warm.json": "06fcdce140a8ebd4bcfe0b1de2b180987ed7ee0874e3ae019b36a85d8718777e",
+      "eval/run-freeze.json": "55d1845869170ba94a2bee472331a02693d1e871ef77afdb0fea70270a541e8b"
+    },
+    "combined_sha256": "1058d751ef7ddd4fcae507f902fe182fd3f02ab418f4a69d4a221ff121f301cd"
+  },
   "changelog": [
     {
       "version": "1.0.0",
