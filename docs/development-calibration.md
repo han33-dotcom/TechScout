@@ -1,4 +1,4 @@
-# Domestic development calibration, 23 November 2026
+# Domestic development calibration, 23–24 November 2026
 
 The buyer completed 27 real development submissions. All ended in abstention. The paired comparison covered 12 requests, the eleven domestic cases from the calibration set plus the black Soundcore H30i comparison. Each arm used a separate copy of the same corpus and the same shared, operational ledger. The order of the two arms alternated by case. Two further submissions measured sequential reads and one exercised a controlled discovery outage. No held-out request was submitted. [Per-request receipts, source outcomes and route settings](development-calibration-2026-11-23.json)
 
@@ -19,15 +19,19 @@ On the H30i request, sequential and parallel runs each completed five retrievals
 
 Each category had the same exact-model and city objective expressed in Arabic and English. The ASUS directory returned ten successful reads with median latency 554.5 ms and zero provider charge. Its five distinct retailer identifiers recurred across the ten queries. The links were shop leads. None supplied a current payable comparison. The gate refused or could not configure the two known shop roots attempted per query.
 
-| Channel | Query slots | Actual provider reads | Result |
-| --- | ---: | ---: | --- |
-| Manufacturer directory | 10 | 10 | Five distinct lead identifiers, zero qualifying incremental sellers or pairs |
-| Tavily | 10 | 0 | Credential and account credit rate unavailable |
-| SerpApi | 10 | 0 | Credential and account search rate unavailable |
-| Brave Search | 10 | 0 | Credential and account search rate unavailable |
-| Firecrawl Search | 10 | 0 | Credential and account search-credit rate unavailable |
+| Channel | Searches dispatched | Successful responses | Median attempt latency |
+| --- | ---: | ---: | ---: |
+| Manufacturer directory | 10 | 10 | 554.5 ms |
+| SerpApi | 10 | 9 | 2,882.5 ms |
+| Firecrawl Search | 10 | 10 | 3,305 ms |
+| Tavily | 0 | — | — |
+| Brave Search | 0 | — | — |
 
-The four unavailable channels have no measured latency, results or marginal market coverage. Their slots are recorded individually in the receipts. A fresh series can run just those channels once the backend credentials and rates are present.
+On November 24 the two configured services received the same ten development queries against a private copy of the earlier domestic corpus. Firecrawl completed all ten. SerpApi timed out on the Arabic monitor query. Its account allowance fell by ten searches, including the interval containing the timeout. Its responses omitted per-request usage, so all ten corresponding ledger attempts retain that uncertainty. Firecrawl reported two credits per search and its balance fell by 20. The accounts' included allowances covered this series. The ledger recorded USD 0 in additional spend. [Per-query measurements and account balance changes](discovery-calibration-2026-11-24.json)
+
+Across both services the queries returned 34 distinct lead identifiers. Summing the distinct identifiers within each query gives 42 for SerpApi and 45 for Firecrawl. The two-check limit per query yielded twelve attempted retailer checks. Seven URLs fell outside approved source scope and five lacked an executable reader configuration. The series found zero additional verified domestic sellers and zero same-variant comparisons. The manufacturer, SerpApi and Firecrawl searches ran in two separate series. The counts do not establish a head-to-head ranking of all five channels.
+
+The Tavily account usage endpoint returned HTTP 403. The Brave key supplied no account price configuration. Search measurements for those two channels await confirmation of their account terms. [Original November 23 receipts](development-calibration-2026-11-23.json)
 
 ## Storage, workload and budget
 

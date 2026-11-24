@@ -11,7 +11,7 @@ TechScout supports phones, laptops, tablets, monitors and headphones or earbuds.
 | Browser and API | Typed React workspace, owned runs, polling, cancellation, refinements, pickup branch selection and private history | A browser rehearsal with fixture retailers verified that changing only a branch could remove a pickup offer. The buyer walkthroughs require participant sessions. [Walkthroughs](buyer-walkthroughs.md) |
 | Buyer worker | A listing link follows one retailer and variant. Exact-model search seeks two independent sellers of one configuration. A needs search evaluates up to three distinct models and groups sellers within each model. | All five categories and both exact and needs entry passed offline. A live H30i request checked two local sellers in 9.235 seconds. Neither had sufficient evidence for a payable total. [Buyer demo](domestic-buyer-demo.md) |
 | Public corpus and acquisition | The bootstrap, three maintenance jobs and technical onboarding share source admission and accounting with buyer research. | One live maintenance batch added three listing prices. It added no qualifying domestic comparison. [Maintenance receipts](catalog-refresh.md) |
-| Model access and discovery | OpenRouter serves the buyer's model roles and the embedding route. Five discovery channels can supply leads. | In the paired language checks, only the manufacturer channel returned live results. The provider table below gives the measured coverage. [Calibration](development-calibration.md) |
+| Model access and discovery | OpenRouter serves the buyer's model roles and the embedding route. Five discovery channels can supply leads. | The manufacturer directory, SerpApi and Firecrawl Search returned live results in the paired language checks. The provider table below gives the measured coverage. [Calibration](development-calibration.md) |
 | Evaluation | Versioned cases, isolated baseline runners, adjudication and scoring. | The 27 development buyer requests all abstained. Held-out results and buyer-session observations are outstanding. [Protocol](evaluation-protocol.md) |
 
 ## Process and module boundaries
@@ -204,15 +204,15 @@ The domestic worker injects an OpenRouter provider for each model-driven role. I
 
 The historical direct-provider paths remain in the tree. The v1 `python -m app.runs search REQUEST.json --planner model` uses `OpenAIPlanner`. Constructing the standalone writer without an injected provider also defaults to `OpenAIProvider`. `AnthropicPlanner` remains in `app/planner.py`. The domestic worker constructs and passes its OpenRouter provider explicitly. Provider credentials stay in the backend.
 
-| Discovery channel | November 23 development measurement |
+| Discovery channel | November 23–24 development measurements |
 | --- | --- |
 | Manufacturer directories | Ten gated reads of the reviewed ASUS page across paired Arabic and English objectives. Five distinct retailer identifiers, zero qualifying comparisons. |
-| Tavily | Ten query slots, zero provider calls. Credential and account rate unavailable. |
-| SerpApi | Ten query slots, zero provider calls. Credential and account rate unavailable. |
-| Brave Search | Ten query slots, zero provider calls. Credential and account rate unavailable. |
-| Firecrawl Search | Ten query slots, zero provider calls. Credential and account rate unavailable. |
+| Tavily | Search measurements pending. The account usage endpoint returned HTTP 403. |
+| SerpApi | Ten dispatched searches, nine successful responses and one timeout. The free account allowance decreased by ten searches. |
+| Brave Search | Search measurements pending confirmation of the account rate. |
+| Firecrawl Search | Ten successful searches using 20 included credits. |
 
-Each channel returns leads. A background technical check can admit a scoped capability, and an admitted retailer still needs current evidence for a buyer recommendation. Firecrawl's separately priced page-read fallback is distinct from Firecrawl Search. The search study records no latency or yield for the four unavailable services. [Discovery configuration](discovery.md) · [Channel receipts](development-calibration-2026-11-23.json)
+Each channel returns leads. A background technical check can admit a scoped capability, and an admitted retailer still needs current evidence for a buyer recommendation. Firecrawl's separately priced page-read fallback is distinct from Firecrawl Search. The SerpApi and Firecrawl series found 34 distinct lead identifiers and zero qualifying comparisons. Tavily and Brave search latency and yield remain unmeasured. [Discovery configuration](discovery.md) · [Channel receipts](development-calibration-2026-11-23.json)
 
 Metered processes use one provisioned PostgreSQL campaign ledger, configured through `TECHSCOUT_ACCOUNTING_URL`, independent of their application database. The Compose example supplies a local app stack. Configure the shared ledger separately for operational buyer and collection processes. Each external attempt reserves capacity before dispatch. Uncertain usage retains its allowance. The overall budget is USD 500. Initial collection is capped at USD 50 and maintenance at USD 3 per used UTC day, up to USD 42 over fourteen days. Buyer runs have a 120-second active limit, 40 external calls and a USD 1 ceiling. At the recorded calibration checkpoint the ledger accounted for USD 3.03707574 across devices. [Accounting deployment](local-accounting.md) · [Budget and workload rules](shared-accounting.md)
 
