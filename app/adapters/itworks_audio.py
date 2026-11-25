@@ -139,9 +139,12 @@ def read_offer(page, policy, request, owner, run, route_id):
     color_source = title
     if wired:
         description = product.get('description', '')
-        colors = re.findall(r'\bColor: ([A-Za-z]+)\b', description)
-        connectors = re.findall(r'\bConnector: (USB Type-[AC])\b', description)
-        if (wired[1] != maker or len(colors) != 1 or connectors != ['USB Type-A']
+        # These are the bounded fields of this retailer's plain-text specifications.
+        # A two-tone finish or a combined connector must not collapse to its first word.
+        colors = re.findall(r'\bColor: ([A-Za-z]+) Performance Audio Type:', description)
+        connectors = re.findall(r'\bConnector: (USB Type-[AC]) USB Protocol:', description)
+        if (wired[1] != maker or description.count('Color:') != 1 or description.count('Connector:') != 1
+                or len(colors) != 1 or connectors != ['USB Type-A']
                 or 'Connection Type: Wired Connector: USB Type-A' not in description):
             return None
         color = colors[0]

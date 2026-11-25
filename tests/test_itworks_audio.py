@@ -30,6 +30,8 @@ class ITWorksAudio(FlowCase):
         self.openrouter = Router()
         self.reads = []
         self.changed_stock = False
+        self.title = TITLE
+        self.description = ''
         self.delivery_fee = '2'
         self.listed_merchant = SELLER
         self.allowed_color = 'red'
@@ -46,11 +48,11 @@ class ITWorksAudio(FlowCase):
         if url == URL:
             amount = '20.55' if self.reads.count(URL) == 1 else '21.55'
             line = dict(merchandiseId=VARIANT, quantity=1, selectedVariant=dict(id=VARIANT, availableForSale=True,
-                title=TITLE, product=dict(title=TITLE,handle=HANDLE), selectedOptions=[],
+                title=self.title, product=dict(title=self.title,handle=HANDLE), selectedOptions=[],
                 price=dict(currencyCode='USD',amount=amount)))
             form = escape(json.dumps(dict(action='LinesAdd',inputs=dict(lines=[line]))), quote=True)
             stock = 'OutOfStock' if self.changed_stock and self.reads.count(URL) > 1 else 'InStock'
-            product = dict(name=TITLE, brand=dict(name='Studio'), itemCondition='https://schema.org/NewCondition',
+            product = dict(name=self.title, description=self.description, brand=dict(name='Studio'), itemCondition='https://schema.org/NewCondition',
                 offers=dict(url=URL, seller=dict(name=self.listed_merchant), price=amount, priceCurrency='USD',
                     availability='https://schema.org/'+stock, shippingDetails={'@type':'OfferShippingDetails',
                     'shippingDestination':{'@type':'DefinedRegion','addressCountry':'LB'},
@@ -85,6 +87,21 @@ class ITWorksAudio(FlowCase):
         self.assertEqual(verified.offer.route.origin_country, 'ZZ')
         self.assertEqual((verified.offer.source_id, str(verified.offer.listing_url)), (SOURCE, URL))
         self.assertEqual((self.reads.count(URL), self.reads.count(FAQ)), (2, 2))
+
+    def linked_wired_offer(self, finish):
+        self.title = 'Studio Headset X10'
+        self.description = (f'Color: {finish} Performance Audio Type: Stereo '
+                            'Connection Type: Wired Connector: USB Type-A USB Protocol: USB')
+        _, run = self.browse(self.buyer, intent=dict(kind='product_link',url=URL),
+            requirements=dict(category='audio'), fulfillment=dict(mode='delivery',destination=dict(city='Beirut')))
+        return run.recommendations
+
+    def test_wired_model_reads_single_selected_finish(self):
+        offer = self.linked_wired_offer('Black')[0].primary.offer
+        self.assertEqual((offer.variant.color.value, offer.variant.specs.connectivity.value), ('Black','wired'))
+
+    def test_wired_model_preserves_the_entire_selected_finish(self):
+        self.assertFalse(self.linked_wired_offer('Black and Red'))
 
     def test_final_stock_change_abstains(self):
         self.changed_stock = True
