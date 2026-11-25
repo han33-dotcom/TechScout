@@ -64,6 +64,34 @@ function Fit({ offer, request }: { offer: Offer; request: RunSnapshot['request']
 export function currentRecommendations(snapshot: RunSnapshot) {
   return snapshot.recommendations.filter(r => matchesRun(snapshot.run,r.primary.verification.run)).slice(0,3);
 }
+function UncertainOffer({ item, snapshot, historical }: {
+  item: RunSnapshot['uncertain'][number]; snapshot: RunSnapshot; historical: boolean;
+}) {
+  const { offer, cost, reasons } = item;
+  const link = safeLink(offer.listing_url);
+  const current = (field: string, value: Fact) => {
+    const ids = value.evidence_ids ?? [];
+    return !historical && ids.length > 0 && ids.every(id => offer.evidence.some(e =>
+      e.evidence_id === id && e.field_path === field && e.run && matchesRun(snapshot.run, e.run)));
+  };
+  const color = offer.variant.color;
+  const variant = specs(offer).filter(([, value]) => value?.state === 'known')
+    .map(([key, value]) => `${labels[key] ?? key}: ${fact(value)}`);
+  if (color?.state === 'known') variant.unshift(fact(color));
+  return <article>
+    <h3>{offer.variant.product.manufacturer} {offer.variant.product.model} · {offer.seller.name}</h3>
+    {variant.length > 0 && <p className="configuration">{variant.join(' · ')}</p>}
+    {offer.price.state === 'known' && offer.price.value &&
+      <p><strong>{money(offer.price.value)}</strong> · {current('price', offer.price) ? 'Current listed price' : 'Previously observed listed price'}</p>}
+    {offer.stock.state === 'known' && current('stock', offer.stock) &&
+      <p>{offer.stock.value ? 'In stock' : 'Out of stock'} · {offer.route.kind === 'pickup' ? 'Selected pickup branch' : 'Online listing'}</p>}
+    {link && <a className="retailer-link" href={link} target="_blank" rel="noopener noreferrer">View at {offer.seller.name} ↗</a>}
+    <ul>{reasons.map(reason => <li key={reason}>{reason}</li>)}</ul>
+    <p>{cost?.status === 'incomplete' && !cost.known_subtotal ? 'Payable total incomplete' : costText(cost)}</p>
+    <details><summary>Inspect configuration, costs & evidence</summary><OfferDetails offer={offer} cost={cost}/></details>
+  </article>;
+}
+
 function Identity({ offers }: { offers: Offer[] }) {
   if (offers.length < 2) return <p className="muted">Select at least two offers to inspect their differences.</p>;
   const [first] = offers;
@@ -90,7 +118,10 @@ export default function Comparison({ workspace, historical=false }: { workspace:
       </article>;
     })}</div>
     {comparison.length>0 && <section className="panel side-by-side" aria-label="Side-by-side comparison"><h3>Side by side <span className="badge">Up to 3 offers</span></h3><Identity offers={comparison.map(v=>v.offer)}/><div className="table-scroll"><table><thead><tr><th>Attribute</th>{comparison.map(v=><th key={v.offer.offer_id}>{v.offer.variant.product.model}<small>{v.offer.seller.name}</small></th>)}</tr></thead><tbody>{comparisonRows(comparison).map(([label,values])=><tr key={label}><th>{label}</th>{values.map((value,index)=><td key={comparison[index].offer.offer_id}>{value}</td>)}</tr>)}</tbody></table></div></section>}
-    <details className="panel uncertain" open={snapshot.uncertain.length>0}><summary>Uncertain / non-qualifying offers ({snapshot.uncertain.length})</summary><p className="muted">These do not occupy verified recommendation slots. Reasons are reported by the research process; missing charges are never zero.</p>{snapshot.uncertain.map(item=><article key={item.offer.offer_id}><h3>{item.offer.variant.product.manufacturer} {item.offer.variant.product.model} · {item.offer.seller.name}</h3><ul>{item.reasons.map(reason=><li key={reason}>{reason}</li>)}</ul><p>{costText(item.cost)}</p><details><summary>Inspect configuration, costs & evidence</summary><OfferDetails offer={item.offer} cost={item.cost}/></details></article>)}</details>
+    <details className="panel uncertain" open={snapshot.uncertain.length>0}>
+      <summary>Uncertain / non-qualifying offers ({snapshot.uncertain.length})</summary>
+      {snapshot.uncertain.map(item => <UncertainOffer key={item.offer.offer_id} item={item} snapshot={snapshot} historical={historical}/>)}
+    </details>
     <section className="panel source-coverage"><h3>Where the evidence came from</h3><p className="muted">Inventory and discovery counts do not mean every retailer was checked.</p>{snapshot.source_outcomes?.length ? <ul>{snapshot.source_outcomes.map(source=><li key={source.source_id}><strong>{source.name}</strong><span className={`source-${source.status}`}>{source.status}</span>{source.reason&&<p>{source.reason}</p>}</li>)}</ul> : <p>Per-retailer check details are not available yet. The progress counts above show reported coverage; no missing source is assumed checked.</p>}<p className="muted">{new Set(all.map(v=>v.offer.seller.seller_id)).size} qualifying sellers across {recommendations.length} displayed options. Multiple sellers are grouped under the same canonical configuration.</p></section>
   </section>;
 }

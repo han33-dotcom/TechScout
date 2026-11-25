@@ -1,5 +1,5 @@
 """Domestic buyer runs through the owned API/worker with synthetic catalog and live responses."""
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import json
 import os
 from pathlib import Path
@@ -13,7 +13,10 @@ from app import buyer_flow, domestic_buyer
 from app.accounting import BudgetDenied, Charge
 from app.domestic_discovery import Attribution, ChannelAttempt, SearchLead, SearchReport
 from app.run_worker import RunContext, execute_one
-from test_buyer_flow import FlowCase, FakeOpenRouter, inference_config
+from app.sources import SourceGate
+from adapters import CLASS_FAQ, fixture
+from adapters.test_class_catalog import API, PAGE, SEARCH, table
+from test_buyer_flow import FlowCase, FakeOpenRouter, LiveFetch, inference_config
 from test_writer import clone, primary, snapshot
 
 
@@ -150,6 +153,41 @@ class DomesticBuyerTests(FlowCase):
                 else:
                     self.assertEqual(run.status, 'abstained')
                     self.assertIn('suitability', run.uncertain[0].reasons[0])
+
+    def test_empty_catalog_exact_phone_shows_current_variants_with_unresolved_delivery(self):
+        seller = self.directory.get('class_cellulars')
+        self.directory.upsert(seller.model_copy(update={'role': 'domestic',
+                                                        'updated_at': seller.updated_at + timedelta(microseconds=1)}))
+        gate = SourceGate()
+
+        class ScopedFetch(LiveFetch):
+            def __call__(self, source_id, url, *, expect, capability=None):
+                gate.check_scope(source_id, url, expect=expect, capability=capability)
+                return super().__call__(source_id, url, expect=expect, capability=capability)
+
+        self.fetch = ScopedFetch({**table(), CLASS_FAQ: fixture('class_cellulars/faq.html')})
+        deps = self.deps()
+        deps.inference = None
+        deps.domestic_sources = Sources([], [])
+        deps.research.workers.domestic_tools = self.search
+        _, run = self.browse(deps, intent=dict(kind='exact_model', model='Apple iPhone 16'),
+                             fulfillment=dict(mode='delivery', destination=dict(city='Beirut')))
+
+        self.assertEqual(self.fetch.calls, [SEARCH, API, PAGE, CLASS_FAQ])
+        self.assertEqual((run.coverage.retrieved, run.coverage.qualifying), (1, 0))
+        self.assertFalse(run.recommendations)
+        self.assertEqual(len(run.uncertain), 4)
+        self.assertEqual(len({u.offer.listing_url for u in run.uncertain}), 4)
+        for item in run.uncertain:
+            offer = item.offer
+            self.assertEqual(offer.variant.product.model, 'iPhone 16')
+            self.assertEqual(offer.variant.specs.storage_gb.value, 256)
+            self.assertEqual(offer.price.value.amount, Decimal('1030.00'))
+            self.assertTrue(offer.stock.value)
+            self.assertTrue(str(offer.listing_url).startswith(PAGE + '?attribute_pa_'))
+            self.assertTrue(all(e.run == run.run for e in offer.evidence if e.field_path in ('price', 'stock')))
+            self.assertIn('shipping is unpublished for the selected route.', item.reasons)
+            self.assertEqual(item.cost.status, 'incomplete')
 
     def test_sufficient_catalog_avoids_web_and_rechecks_above_old_maximum(self):
         left, right = laptop('shop-a', price='1200'), laptop('shop-b', price='922')

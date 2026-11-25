@@ -13,12 +13,14 @@ this run. Listings stored by an earlier run can be reused for discovery ("stored
 their records keep their original times and no run reference, so they can never verify a
 finalist: the final re-read always goes to the store.
 """
+from collections import Counter
 from collections.abc import Callable, Sequence
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import datetime, timedelta, timezone
 import functools
 import re
 from typing import Literal
+from urllib.parse import urlencode, urlsplit
 
 from pydantic import ValidationError
 
@@ -27,7 +29,7 @@ from app import contracts_v2 as v2
 from app.adapters.base import CandidateQuery, PolicyDocument, Snapshot
 from app.adapters.class_cellulars import ADAPTER as CLASS_ADAPTER
 from app.contracts import SourcePolicy, ToolError
-from app.devices import match_model
+from app.devices import find_manufacturers, match_model
 from app.source_registry import DEFAULT_REGISTRY, get_active_source
 from app.sources import CALL_TIMEOUT_S, MAX_WAIT_S, FetchOutcome
 
@@ -156,6 +158,20 @@ def _listing_url(offer: v1.Offer) -> str:
         if '/wp-json/' not in url and '/product/' in url:
             return url
     raise ValueError('No product page evidence for this listing')
+
+
+def _selected_class_url(offer: v1.Offer, listing_url: str) -> str | None:
+    """Build a buyer link from the selected variation's live WooCommerce controls."""
+    parts = urlsplit(listing_url)
+    if parts.scheme != 'https' or parts.netloc != 'classcellulars.com' or parts.query or parts.fragment:
+        return None
+    attributes = offer.variant.raw_attributes.get('page_attributes')
+    if not isinstance(attributes, dict) or not attributes or not all(
+            isinstance(key, str) and re.fullmatch(r'attribute_pa_[a-z0-9_-]{1,60}', key) and
+            isinstance(value, str) and re.fullmatch(r'[a-z0-9][a-z0-9_-]{0,63}', value)
+            for key, value in attributes.items()):
+        return None
+    return listing_url + '?' + urlencode(sorted(attributes.items()))
 
 
 class _Binder:
@@ -366,6 +382,35 @@ class ClassCellularsSource:
             errors += [f'{e.code}: {e.message}' for e in policy.tool_result.errors]
             policies = list(policy.policies)
         return self._convert(offers, run, set(recorder.replies), route, mode, recorder, policies, errors)
+
+    def read_exact_phone(self, request, job, run, *, room) -> SourceRead:
+        """Read the scoped search and exact product pages for current, buyer-openable leads."""
+        route = DeliveryChoice(request.fulfillment.destination.city)
+        read = self.discover(request, route, job, run, reuse=False, room=room)
+        manufacturers = find_manufacturers(request.intent.model)
+        links = {offer.offer_id: _selected_class_url(read.originals[offer.offer_id], str(offer.listing_url))
+                 for offer in read.offers}
+        link_counts = Counter(links.values())
+        offers = []
+        for offer in read.offers:
+            maker = offer.variant.product.manufacturer
+            if manufacturers and manufacturers != {maker}:
+                continue
+            url = links[offer.offer_id]
+            records = {receipt.evidence_id: receipt for receipt in offer.evidence}
+            facts = (offer.price, offer.stock, offer.purchasable)
+            if url is None or link_counts[url] != 1 or not all(
+                    fact.state == 'known' and fact.value and fact.evidence_ids
+                    and all(records[key].run == run and not records[key].conflicts for key in fact.evidence_ids)
+                    and any(records[key].origin_url == offer.listing_url for key in fact.evidence_ids)
+                    for fact in facts):
+                continue
+            data = offer.model_dump()
+            data['listing_url'] = url
+            # The direct-delivery read doesn't establish dispatch origin or a payable route.
+            data['route']['origin_country'] = 'ZZ'
+            offers.append(v2.Offer.model_validate(data))
+        return replace(read, offers=tuple(offers))
 
     def refresh(self, request, route: DeliveryChoice, job, run, offer_ids: Sequence[str], *,
                 earlier: SourceRead, room=None) -> SourceRead:

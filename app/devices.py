@@ -10,7 +10,7 @@ KNOWN_MANUFACTURERS = ('Apple', 'Samsung', 'Google', 'Xiaomi', 'Huawei', 'Honor'
 # 'iPhone 17'.
 KNOWN_MODELS = ('iPhone 17 Pro Max', 'iPhone 17 Pro', 'iPhone 17e', 'iPhone Air', 'iPhone 17',
                 'iPhone 16 Pro Max', 'iPhone 16 Pro', 'iPhone 16 Plus', 'iPhone 16e', 'iPhone 16',
-                'Galaxy S25 Ultra', 'Galaxy S25 Plus', 'Galaxy S25',
+                'Galaxy S25 Ultra', 'Galaxy S25 Plus', 'Galaxy S25', 'Galaxy A27',
                 'Galaxy S24 Ultra', 'Galaxy S24 Plus', 'Galaxy S24',
                 'Pixel 9 Pro XL', 'Pixel 9 Pro', 'Pixel 9', 'Pixel 9a')
 # Other spellings stores use for one of KNOWN_MODELS. Apple sells one Air, the 'iPhone Air'.
