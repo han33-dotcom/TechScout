@@ -58,5 +58,11 @@
     "category": "tablet",
     "entry": "needs",
     "prompt": "I'd like a Wi-Fi tablet with at least 512 GB storage for my lecture notes, shipped to Tripoli."
+  },
+  {
+    "id": "D6",
+    "category": "phone",
+    "entry": "exact_model",
+    "prompt": "How much for a new teal iPhone 16 Plus with 128GB storage delivered to Batroun?"
   }
 ]

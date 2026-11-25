@@ -237,7 +237,7 @@ class DomesticBuyerTests(FlowCase):
             fulfillment=dict(mode='delivery', destination=dict(city='Beirut, private address')))
         queries = [o.query for o in search_options(request, [laptop('shop-a')])]
         self.assertTrue(all('private' not in q and 'Beirut' not in q and '16' in q for q in queries))
-        self.assertTrue(any('workstation' in q for q in queries))
+        self.assertFalse(any('workstation' in q for q in queries))
         self.assertTrue(any('Scout Book' in q for q in queries))
 
     def test_invalid_plans_fall_back_to_an_available_channel(self):

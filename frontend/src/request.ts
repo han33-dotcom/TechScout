@@ -30,7 +30,7 @@ export function toRequest(draft: Draft, base?: EditableRequest): ShoppingRequest
   } else if (draft.kind === 'exact_model') {
     const selection = /^(.+?)\s+in\s+(black|white|red|blue|green|yellow|purple|pink|silver|gold|gray|grey)$/i.exec(text);
     const model = selection ? selection[1].trim() : text;
-    if (selection) colors = [selection[2].toLowerCase()];
+    if (selection && (!base || fromRequest(base).text !== text)) colors = [selection[2].toLowerCase()];
     if (base?.intent.kind === 'exact_model' && base.intent.wording === text) intent = base.intent;
     else intent = { kind: 'exact_model', model, manufacturer: base?.intent.kind === 'exact_model' && base.intent.model === model ? base.intent.manufacturer : undefined };
   }

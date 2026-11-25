@@ -1,4 +1,4 @@
-"""Read Technodel's public headset selection, item offer and published COD charges."""
+"""Read Technodel search cards, selected single-SKU products and published delivery terms."""
 from decimal import Decimal
 from html.parser import HTMLParser
 import json
@@ -96,13 +96,14 @@ def listing_links(body, term, ranking, category):
         if path not in allowed or CATEGORIES.get((card.get('category') or {}).get('name')) != category:
             continue
         tokens = words(str(card.get('title', '')) + ' ' + path)
-        scored[path] = len(wanted & tokens), len(preferred & tokens)
+        if wanted & tokens:
+            scored[path] = len(wanted & tokens), len(preferred & tokens)
     if not scored and category == 'audio':
         return product_links(body, term)
     return tuple(ORIGIN + p for p in sorted(scored, key=scored.get, reverse=True)[:1])
 
 
-def selected_specs(category, fields, known):
+def selected_specs(category, fields, title, known):
     model = {'phone': v2.PhoneSpecs, 'laptop': v2.LaptopSpecs, 'monitor': v2.MonitorSpecs,
              'tablet': v2.TabletSpecs, 'audio': v2.AudioSpecs}[category]
     result = {key: dict(state='unknown', reason='The selected listing does not establish this specification')
@@ -117,6 +118,24 @@ def selected_specs(category, fields, known):
             if result.get(key, {}).get('state') == 'known' and result[key]['value'] != value:
                 raise ValueError('Conflicting memory specifications')
             add(key, label, value)
+    # A single selected laptop can spell out its installed memory and SSD in the
+    # purchase title. Never read an upgrade limit or a multi-drive capacity as installed.
+    if category == 'laptop' and not re.search(r'\b(?:up to|max(?:imum)?|supports?|expandable|optional)\b', title, re.I):
+        for label, key in (('RAM', 'ram_gb'), ('SSD', 'storage_gb')):
+            sizes = re.findall(r'(?<![\w.])(\d+)\s*(GB|TB)\s+' + label + r'\b', title, re.I)
+            if len(sizes) != 1:
+                continue
+            count, unit = sizes[0]
+            capacity = int(count) * (1024 if unit.upper() == 'TB' else 1)
+            existing = result.get(key)
+            if existing and existing['state'] == 'known' and existing['value'] != capacity:
+                raise ValueError('Title and selected specifications disagree')
+            if not existing or existing['state'] != 'known':
+                result[key] = known('variant.specs.' + key, capacity, title)
+            if label == 'SSD':
+                if fields.get('Storage type', 'SSD').upper() != 'SSD':
+                    raise ValueError('Title and storage type disagree')
+                result['storage_type'] = known('variant.specs.storage_type', 'SSD', title)
     for label, key in (('CPU', 'cpu'), ('Graphics', 'gpu'), ('Operating System', 'operating_system'),
                        ('Storage type', 'storage_type')):
         if fields.get(label):
@@ -146,7 +165,7 @@ def read_offer(page, policy, request, owner, run, route_id):
     match = WIRED_TITLE.fullmatch(title)
     category_name = listing['category']['name']
     category = CATEGORIES.get(category_name)
-    if (not category or category != getattr(getattr(request, 'requirements', None), 'category', 'audio')
+    if (not category or category != request.requirements.category
             or listing['slug'] != urlsplit(url).path.removeprefix('/product/')
             or listing['variants'] != []
             or product.get('category') != category_name or listing['isVisible'] is not True
@@ -163,6 +182,8 @@ def read_offer(page, policy, request, owner, run, route_id):
     maker = listing['brand']
     if (not maker or product['brand']['name'] != maker or fields.get('Brand', maker) != maker
             or fields.get('Condition', 'new').casefold() != 'new'):
+        return None
+    if fields.get('Colour') and fields.get('Color', fields['Colour']) != fields['Colour']:
         return None
     color = fields.get('Colour') or fields.get('Color')
     model = fields.get('Model') or title
@@ -234,7 +255,7 @@ def read_offer(page, policy, request, owner, run, route_id):
                    'No hidden fees — what you see is what you pay.'):
         tax = dict(kind='tax', state='included', evidence_ids=receipt('costs.order.tax',
             f'Displayed COD item price: USD {amount}') + receipt('costs.order.tax', payment, document=policy))
-    specs = selected_specs(category, fields, known)
+    specs = selected_specs(category, fields, title, known)
     if match:
         specs['form_factor'] = known('variant.specs.form_factor', 'headphones', title)
         specs['connectivity'] = known('variant.specs.connectivity', 'wired', 'Connectivity: Wired')

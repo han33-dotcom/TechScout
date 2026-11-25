@@ -63,7 +63,22 @@ function modelName(offer: Offer) {
 function specs(offer: Offer): [string, Fact][] {
   return Object.entries(offer.variant.specs).filter(([key]) => key !== 'category') as [string, Fact][];
 }
-const labels: Record<string,string> = { storage_gb:'Storage (GB)',ram_gb:'RAM (GB)',cpu:'CPU',gpu:'GPU',operating_system:'Operating system',sim:'SIM',region:'Region',connectivity:'Connectivity',stylus_support:'Stylus support',width_px:'Width (px)',height_px:'Height (px)',refresh_hz:'Refresh rate (Hz)',diagonal_inches:'Size (inches)',panel:'Panel',form_factor:'Form factor',active_noise_cancellation:'Noise cancellation' };
+const labels: Record<string,string> = { storage_type:'Storage type',storage_gb:'Storage (GB)',ram_gb:'RAM (GB)',cpu:'CPU',gpu:'GPU',operating_system:'Operating system',sim:'SIM',region:'Region',connectivity:'Connectivity',stylus_support:'Stylus support',width_px:'Width (px)',height_px:'Height (px)',refresh_hz:'Refresh rate (Hz)',diagonal_inches:'Size (inches)',panel:'Panel',form_factor:'Form factor',active_noise_cancellation:'Noise cancellation' };
+export function requestDescription(request: RunSnapshot['request']): string {
+  const product = request.intent.kind === 'exact_model' ? request.intent.model : request.requirements.category;
+  const criteria = Object.entries(request.requirements).flatMap(([key, value]) => {
+    if (key === 'category' || value == null || (Array.isArray(value) && !value.length)) return [];
+    const label = labels[key.replace(/^min_/, '')] ?? key.replaceAll('_', ' ');
+    return [`${label} ${key.startsWith('min_') ? 'at least ' : ''}${Array.isArray(value) ? value.join(', ') : value}`];
+  });
+  const destination = request.fulfillment?.destination?.city;
+  const fulfillment = request.fulfillment?.mode;
+  const budget = request.budget;
+  return [product, ...criteria, ...request.allowed_colors, ...request.allowed_conditions,
+    budget?.target && `around ${money(budget.target)}`, budget?.maximum && `up to ${money(budget.maximum)}`,
+    destination && `${fulfillment === 'pickup' ? 'pickup in' : fulfillment === 'delivery' ? 'delivery to' : 'in'} ${destination}`,
+    ...request.preferences.map(p => `prefers ${p}`)].filter(Boolean).join(' · ');
+}
 function fieldTime(offer: Offer, field: string) {
   const records = offer.evidence.filter(e => e.field_path === field);
   return records.length ? records.map(e => date(e.observed_at)).join('; ') : 'No observation supplied';

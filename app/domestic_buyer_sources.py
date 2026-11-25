@@ -369,9 +369,8 @@ class DomesticBuyerSources:
                 routes.append((reader.source_id, reader.search_url(term), 'json',
                                lambda body, r=reader: r.product_links(body, category)))
         if category == 'audio' and request.fulfillment.mode in ('any', 'delivery'):
-            for reader in (itworks_audio,):
-                url = reader.ORIGIN + '/search?' + urlencode({'q': term})
-                routes.append((reader.SOURCE, url, 'html', lambda body, r=reader: r.product_links(body, term)))
+            url = itworks_audio.ORIGIN + '/search?' + urlencode({'q': term})
+            routes.append((itworks_audio.SOURCE, url, 'html', lambda body: itworks_audio.product_links(body, term)))
         if category in technodel_audio.CATEGORIES.values() and request.fulfillment.mode != 'pickup':
             # The store searches its titles. Use a discriminating catalogue token for needs,
             # then rank the returned product slugs by all the original requirements.
@@ -450,15 +449,15 @@ class DomesticBuyerSources:
                               for e in outcome.errors)
                 return ReadResult(source_id, status='refused' if refused else 'failed', reason='Listing read unavailable')
             replies = frozenset({(outcome.response_sha256, outcome.observed_at)})
-            audio_reader = {itworks_audio.SOURCE: itworks_audio, technodel_audio.SOURCE: technodel_audio}.get(source_id)
-            if audio_reader:
-                if (audio_reader is itworks_audio and category != 'audio') or request.fulfillment.mode == 'pickup':
+            shop_reader = {itworks_audio.SOURCE: itworks_audio, technodel_audio.SOURCE: technodel_audio}.get(source_id)
+            if shop_reader:
+                if (shop_reader is itworks_audio and category != 'audio') or request.fulfillment.mode == 'pickup':
                     return ReadResult(source_id, status='out_of_scope', reason='No reviewed reader for the requested category or pickup route')
-                policy = retrieve_page(self.gate, bounded, source_id, audio_reader.FAQ)
+                policy = retrieve_page(self.gate, bounded, source_id, shop_reader.FAQ)
                 if policy.status == 'ok':
                     replies |= {(policy.response_sha256, policy.observed_at)}
                 try:
-                    offer = audio_reader.read_offer(outcome, policy, request, owner, run,
+                    offer = shop_reader.read_offer(outcome, policy, request, owner, run,
                                                      _route_id(request.fulfillment.destination))
                 except (KeyError, IndexError, ValueError, TypeError, AttributeError, InvalidOperation, RecursionError):
                     offer = None

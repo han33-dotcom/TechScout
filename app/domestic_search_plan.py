@@ -15,14 +15,11 @@ PUBLIC_CITIES = {city.casefold(): city for city in (
     'Byblos', 'Jbeil', 'Batroun', 'Baalbek', 'Nabatieh', 'بيروت', 'طرابلس',
     'صيدا', 'صور', 'زحلة', 'جونية', 'جبيل', 'البترون', 'بعلبك', 'النبطية')}
 
-# Suggestions for discovery only. Suitability is assessed from checked specifications.
-NEEDS_SEARCH_TERMS = {
-    'phone': ('camera', 'long battery life', 'gaming'),
-    'laptop': ('lightweight', 'workstation dedicated graphics', 'gaming high refresh'),
-    'tablet': ('active stylus note taking', 'cellular', 'keyboard'),
-    'monitor': ('color accurate', 'high refresh rate', 'office ergonomic'),
-    'audio': ('wireless earbuds', 'noise cancelling headphones', 'wired headset microphone'),
-}
+# Public product vocabulary, emitted only when it occurs in the buyer's wording.
+USE_TERMS = ('gaming', 'office', 'workstation', 'lightweight', 'portable', 'touchscreen',
+             'stylus', 'keyboard', 'camera', 'battery', 'microphone', 'Bluetooth',
+             'USB-C', 'USB-A', 'HDMI', 'DisplayPort', 'IPS', 'OLED', 'curved', 'ultrawide',
+             'Windows', 'Android', 'Linux', 'MacBook', 'iPad', 'Galaxy')
 
 
 class DomesticSearchChoice(Model):
@@ -50,12 +47,19 @@ def product_terms(request):
             terms.extend(str(v) for v in value)
         else:
             terms.append(str(value))
-    return terms
+    if request.intent.kind == 'needs':
+        for term in USE_TERMS:
+            if re.search(r'\b' + re.escape(term) + r'\b', request.intent.description, re.I):
+                terms.append(term)
+    return list(dict.fromkeys(terms))
 
 
 def retailer_query(request):
     if request.intent.kind == 'exact_model':
         model = request.intent.model
+        maker = request.intent.manufacturer
+        if maker and not model.casefold().startswith(maker.casefold() + ' '):
+            model = maker + ' ' + model
         # Scope accepts plain catalogue terms only. Never truncate into another model.
         if len(model) > 64 or re.search(r'[@/:?]|\b(?:address|street|deliver|please)\b', model, re.I):
             return None
@@ -98,8 +102,6 @@ def search_options(request, offers):
                 candidates.append(('en', [model.manufacturer or '', model.model, product, 'Lebanon', city, *terms],
                                    'Find competing domestic sellers for a candidate model'))
                 break
-        for focus in NEEDS_SEARCH_TERMS[requirements.category]:
-            candidates.append(('en', [product, focus, 'Lebanon', *terms], f'Find models for {focus}'))
     return tuple(SearchObjective(query=' '.join(filter(None, fields))[:400], objective=objective,
                                  language=language, limit=8) for language, fields, objective in candidates)
 

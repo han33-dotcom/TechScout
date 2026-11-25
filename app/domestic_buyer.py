@@ -3,6 +3,7 @@ from collections import Counter, defaultdict
 from dataclasses import asdict, dataclass
 from threading import Event
 from urllib.parse import urlsplit
+import re
 
 from app import contracts_v2 as v2
 from app.accounting import BudgetDenied, SourceBudget
@@ -11,7 +12,7 @@ from app.buyer_flow import MAX_UNCERTAIN, MIN_WRITER_SECONDS, _Flow, supported
 from app.buyer_sources import FETCH_ROOM_S
 from app.directory import DirectoryQuery
 from app.domestic_discovery import CHANNELS, dispatch_receipts
-from app.domestic_search_plan import choose_search, search_options
+from app.domestic_search_plan import choose_search, retailer_query, search_options
 from app.eligibility import check_full_product
 from app.evidence_critique import CritiqueChoice, PROMPT as EVALUATE
 from app.freshness import FreshnessContext, assess_evidence
@@ -303,6 +304,8 @@ class DomesticBuyerFlow(_Flow):
         directory = setup.workers.directory
         seen_sources = {o.source_id for o in self.catalog.values()}
         seeds = []
+        term = retailer_query(self.request)
+        words = set(re.findall(r'[a-z0-9]+', (term or '').lower()))
         sources = self.deps.domestic_sources
         if hasattr(type(sources), 'search_listings'):
             room = lambda: self.left(self.nonfinal_by)
@@ -311,7 +314,9 @@ class DomesticBuyerFlow(_Flow):
                 searches.append(search)
                 source_id = search['source_id']
                 seen_sources.add(source_id)
-                seeds.extend(Listing(url, source_id) for url in search['links'])
+                self.read_candidates([Listing(url, source_id) for url in search['links'][:2]])
+                if self.enough(self.catalog.values()):
+                    return
                 if search['reason']:
                     self.sources.setdefault(source_id, (directory.get(source_id).entry.name,
                                                         'failed', search['reason']))
@@ -322,7 +327,8 @@ class DomesticBuyerFlow(_Flow):
                 continue
             permitted = set(selection.permitted_urls)
             for url in record.product_urls:
-                if str(url) in permitted:
+                slug = set(re.findall(r'[a-z0-9]+', urlsplit(str(url)).path.lower()))
+                if str(url) in permitted and words and words <= slug:
                     seeds.append(Listing(str(url), record.source_id))
                     break
         self.read_candidates(seeds[:3])
@@ -360,7 +366,7 @@ class DomesticBuyerFlow(_Flow):
         for lead in report.leads:
             if not lead.source_id:
                 self.handoff(lead.url)
-            elif lead.url not in known_urls:
+            elif urlsplit(lead.url).path.strip('/') and lead.url not in known_urls:
                 known_urls.add(lead.url)
                 fresh.append(Listing(lead.url, lead.source_id))
         self.read_candidates(fresh[:6])
@@ -432,7 +438,7 @@ class DomesticBuyerFlow(_Flow):
                                                            earlier=item.earlier, room=room)
                 return None
             clients.append(client)
-        timeout = min(60.0, room() - .2)
+        timeout = min(45.0, room() - 1.0)
         results = research(phase_job, clients, None, timeout=timeout)
         resolved = []
         for item, outcome in zip(listings, results):
@@ -527,7 +533,10 @@ class DomesticBuyerFlow(_Flow):
             self.assessed.pop(oid, None)
             now = self.deps.wall_clock()
             assessment = domestic_assessment(self.request, offer, now, estimates=getattr(read, 'estimates', {}).get(oid))
-            if assessment.decision == 'rejected':
+            maximum = self.request.budget.maximum if self.request.budget else None
+            if (assessment.decision == 'rejected' or
+                    (maximum and offer.price.state == 'known' and offer.price.value.currency == maximum.currency
+                     and offer.price.value.amount > maximum.amount)):
                 continue
             problem = current_problem(offer, assessment, read, self.run_ref, self.started_at, now)
             if problem is None and assessment.decision == 'recommendable':
