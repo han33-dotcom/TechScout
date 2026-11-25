@@ -138,6 +138,37 @@ class WiredHeadsetTests(unittest.TestCase):
         self.listing['specs'] = [dict(label='Refresh Rate', value='165 kHz')]
         self.assertEqual(self.read('monitor').variant.specs.refresh_hz.state, 'unknown')
 
+    def test_merchandising_words_do_not_change_selected_model_or_checkout_evidence(self):
+        from app.domestic_buyer import candidate
+        from test_buyer_interpretation import form
+        title = 'Studio Wired X10 Headset with Inline Controls (Black) 123-456789'
+        self.listing['title'] = self.product['name'] = title
+        offer = self.read()
+        self.assertEqual(offer.variant.product.model, 'Studio X10')
+        self.assertEqual(offer.costs[0].state, 'unknown')
+        for model, color, expected in [('X10', 'black', True), ('X10', 'white', False), ('X10 Pro', 'black', False)]:
+            self.assertEqual(candidate(form(f'Find a new {color} Studio {model}', 'audio', 'exact_model'), offer), expected)
+        self.listing['specs'][-1]['value'] = 'White'
+        self.assertIsNone(self.read())
+
+    def test_selected_tablet_model_survives_merchandising_but_capacity_stays_exact(self):
+        from app.domestic_buyer import candidate
+        from test_buyer_interpretation import form
+        self.listing.update(category={'name':'Tablets'}, title='Studio M80 Tablet with Kickstand (Black)',
+            specs=[dict(label=k,value=v) for k,v in [('Brand','Studio'),('Colour','Black'),('Storage','128GB')]])
+        self.product.update(category='Tablets', name=self.listing['title'])
+        offer = self.read('tablet')
+        self.assertEqual(offer.variant.product.model, 'Studio M80')
+        for size, expected in [(128, True), (256, False)]:
+            request = form(f'Find a new Studio M80 with {size} GB storage', 'tablet', 'exact_model')
+            self.assertEqual(candidate(request, offer), expected)
+        self.product['model'] = 'M80 Pro'
+        self.assertIsNone(self.read('tablet'))
+        self.listing['title'] = self.product['name'] = 'Studio classroom tablet and kickstand'
+        self.assertEqual(self.read('tablet').variant.product.model, 'M80 Pro')
+        self.listing['specs'].append(dict(label='Model', value='M80'))
+        self.assertIsNone(self.read('tablet'))
+
     def test_tablet_reading_purpose_does_not_change_capacity_or_connectivity_eligibility(self):
         from app.domestic_buyer import candidate
         from test_buyer_interpretation import form

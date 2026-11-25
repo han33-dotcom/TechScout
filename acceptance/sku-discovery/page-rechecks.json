@@ -1,0 +1,697 @@
+[
+  {
+    "url": "https://technodel.net/product/logitech-logitech-wired-audio-jack-headset-h151-black-981-000587",
+    "cases": [
+      "D1"
+    ],
+    "discovery": "buyer search or card",
+    "status": 200,
+    "utc": "2026-11-25 23:04:00.663228+00:00",
+    "sha256": "80845c45b615769c162815cf788742045aba115aed652bbd60359aabe243c9f6",
+    "job": "sku-discovery-audit-97eb4126-cfb4-444e-a306-e60d25dff3a9",
+    "errors": [],
+    "title": "Logitech Wired Audio Jack Headset H151 (Black) 981-000587",
+    "sku": "RK-M2ND1CRV",
+    "listed": 16,
+    "currency": "USD",
+    "stock": "https://schema.org/InStock",
+    "seller": {
+      "@type": "Organization",
+      "name": "Technodel",
+      "url": "https://technodel.net"
+    },
+    "shipping": {
+      "@type": "OfferShippingDetails",
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "4",
+        "currency": "USD"
+      },
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": "LB"
+      },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "DAY"
+        },
+        "transitTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "DAY"
+        }
+      }
+    },
+    "condition": "https://schema.org/NewCondition",
+    "selected": {
+      "sku": "RK-M2ND1CRV",
+      "title": "Logitech Wired Audio Jack Headset H151 (Black) 981-000587",
+      "displayPrice": 16,
+      "currency": "USD",
+      "stock": 3,
+      "inStock": true,
+      "specs": [
+        {
+          "label": "Brand",
+          "value": "Logitech"
+        },
+        {
+          "label": "Colour",
+          "value": "Black"
+        },
+        {
+          "label": "Connectivity",
+          "value": "Wired"
+        },
+        {
+          "label": "Category",
+          "value": "Headsets"
+        }
+      ]
+    },
+    "variant_count": 0,
+    "outcome": "Same-URL public response"
+  },
+  {
+    "url": "https://shop.itworkslb.net/products/logitech-headset-h151-815513",
+    "cases": [
+      "D1"
+    ],
+    "discovery": "buyer search or card",
+    "status": 200,
+    "utc": "2026-11-25 23:04:12.987733+00:00",
+    "sha256": "8fb5b9884fd09831935a05f9f318f3e44a21ed85f064f2e774a7689c510c853b",
+    "job": "sku-discovery-audit-f50c38c3-8804-4159-bc29-b4854220a966",
+    "errors": [],
+    "title": "Logitech Headset H151",
+    "sku": null,
+    "listed": "28.0",
+    "currency": "USD",
+    "stock": "https://schema.org/InStock",
+    "seller": {
+      "@type": "Organization",
+      "name": "ITWorks Lebanon"
+    },
+    "shipping": {
+      "@type": "OfferShippingDetails",
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "5",
+        "currency": "USD"
+      },
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": "LB"
+      },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "DAY"
+        },
+        "transitTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 1,
+          "maxValue": 3,
+          "unitCode": "DAY"
+        }
+      }
+    },
+    "condition": "https://schema.org/NewCondition",
+    "purchase_forms": [
+      {
+        "action": "LinesAdd",
+        "inputs": {
+          "lines": [
+            {
+              "merchandiseId": "gid://shopify/ProductVariant/52683501961447",
+              "quantity": 1,
+              "selectedVariant": {
+                "id": "gid://shopify/ProductVariant/52683501961447",
+                "availableForSale": true,
+                "sku": null,
+                "price": {
+                  "amount": "28.0",
+                  "currencyCode": "USD"
+                },
+                "compareAtPrice": null,
+                "selectedOptions": [],
+                "title": "Logitech Headset H151",
+                "product": {
+                  "handle": "logitech-headset-h151-815513",
+                  "title": "Logitech Headset H151"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "outcome": "Same-URL public response"
+  },
+  {
+    "url": "https://technodel.net/product/apple-ipad-a16-11-inch-256gb-2025-wi-fi",
+    "cases": [
+      "D4"
+    ],
+    "discovery": "buyer search or card",
+    "status": 200,
+    "utc": "2026-11-25 23:04:25.435026+00:00",
+    "sha256": "212078f569f3b8bbc8893208b6fa015598a337b1099736a38cd957862530a649",
+    "job": "sku-discovery-audit-13cd88de-e4b7-4720-860f-ea8a047c061f",
+    "errors": [],
+    "title": "Apple iPad A16 11\" 256GB 2025 Wi-Fi",
+    "sku": "AZ-ZBSPJCXK",
+    "listed": 562,
+    "currency": "USD",
+    "stock": "https://schema.org/InStock",
+    "seller": {
+      "@type": "Organization",
+      "name": "Technodel",
+      "url": "https://technodel.net"
+    },
+    "shipping": {
+      "@type": "OfferShippingDetails",
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "0",
+        "currency": "USD"
+      },
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": "LB"
+      },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "DAY"
+        },
+        "transitTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "DAY"
+        }
+      }
+    },
+    "condition": "https://schema.org/NewCondition",
+    "selected": {
+      "sku": "AZ-ZBSPJCXK",
+      "title": "Apple iPad A16 11\" 256GB 2025 Wi-Fi",
+      "displayPrice": 562,
+      "currency": "USD",
+      "stock": 999,
+      "inStock": true,
+      "specs": [
+        {
+          "label": "Brand",
+          "value": "Apple"
+        },
+        {
+          "label": "Model",
+          "value": "iPad A16 11\""
+        },
+        {
+          "label": "Storage",
+          "value": "256GB"
+        },
+        {
+          "label": "Connectivity",
+          "value": "Wi-Fi"
+        },
+        {
+          "label": "Condition",
+          "value": "New"
+        }
+      ]
+    },
+    "variant_count": 0,
+    "outcome": "Same-URL public response"
+  },
+  {
+    "url": "https://technodel.net/product/logitech-logitech-wired-h540-headset-with-on-ear-controls-black-981-000480",
+    "cases": [
+      "D6"
+    ],
+    "discovery": "buyer search or card",
+    "status": 200,
+    "utc": "2026-11-25 23:04:37.767782+00:00",
+    "sha256": "17f0a83bd5996a26d65e8029f1dc6e4f1392743c274b26b358703c989d8c109e",
+    "job": "sku-discovery-audit-4644071d-fabb-4647-9d12-33785cb27c89",
+    "errors": [],
+    "title": "Logitech Wired H540 Headset with On-Ear Controls (Black) 981-000480",
+    "sku": "RK-95T7S1VA",
+    "listed": 36,
+    "currency": "USD",
+    "stock": "https://schema.org/InStock",
+    "seller": {
+      "@type": "Organization",
+      "name": "Technodel",
+      "url": "https://technodel.net"
+    },
+    "shipping": {
+      "@type": "OfferShippingDetails",
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "4",
+        "currency": "USD"
+      },
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": "LB"
+      },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "DAY"
+        },
+        "transitTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "DAY"
+        }
+      }
+    },
+    "condition": "https://schema.org/NewCondition",
+    "selected": {
+      "sku": "RK-95T7S1VA",
+      "title": "Logitech Wired H540 Headset with On-Ear Controls (Black) 981-000480",
+      "displayPrice": 36,
+      "currency": "USD",
+      "stock": 8,
+      "inStock": true,
+      "specs": [
+        {
+          "label": "Brand",
+          "value": "Logitech"
+        },
+        {
+          "label": "Colour",
+          "value": "Black"
+        },
+        {
+          "label": "Connectivity",
+          "value": "Wired"
+        },
+        {
+          "label": "Category",
+          "value": "Headsets"
+        }
+      ]
+    },
+    "variant_count": 0,
+    "outcome": "Same-URL public response"
+  },
+  {
+    "url": "https://shop.itworkslb.net/products/jbl-tune-510bt-wireless-on-ear-headphones-black-8842",
+    "cases": [
+      "S1"
+    ],
+    "discovery": "buyer search or card",
+    "status": 200,
+    "utc": "2026-11-25 23:04:50.103602+00:00",
+    "sha256": "7cd5fbed84c2165067bcbeec4d92c4c53eb12ac11ae7998f6db2a85e685c01f6",
+    "job": "sku-discovery-audit-63652ed7-e1ee-4f57-ac2e-56cc2283e751",
+    "errors": [],
+    "title": "JBL Tune 510BT Wireless On Ear Headphones – White",
+    "sku": null,
+    "listed": "38.22",
+    "currency": "USD",
+    "stock": "https://schema.org/InStock",
+    "seller": {
+      "@type": "Organization",
+      "name": "ITWorks Lebanon"
+    },
+    "shipping": {
+      "@type": "OfferShippingDetails",
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "5",
+        "currency": "USD"
+      },
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": "LB"
+      },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "DAY"
+        },
+        "transitTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 1,
+          "maxValue": 3,
+          "unitCode": "DAY"
+        }
+      }
+    },
+    "condition": "https://schema.org/NewCondition",
+    "purchase_forms": [
+      {
+        "action": "LinesAdd",
+        "inputs": {
+          "lines": [
+            {
+              "merchandiseId": "gid://shopify/ProductVariant/51991159963879",
+              "quantity": 1,
+              "selectedVariant": {
+                "id": "gid://shopify/ProductVariant/51991159963879",
+                "availableForSale": true,
+                "sku": null,
+                "price": {
+                  "amount": "38.22",
+                  "currencyCode": "USD"
+                },
+                "compareAtPrice": null,
+                "selectedOptions": [],
+                "title": "JBL Tune 510BT Wireless On Ear Headphones – White",
+                "product": {
+                  "handle": "jbl-tune-510bt-wireless-on-ear-headphones-black-8842",
+                  "title": "JBL Tune 510BT Wireless On Ear Headphones – White"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "outcome": "Same-URL public response"
+  },
+  {
+    "url": "https://technodel.net/product/samsung-galaxy-a16",
+    "cases": [
+      "S2"
+    ],
+    "discovery": "buyer search or card",
+    "status": 200,
+    "utc": "2026-11-25 23:05:02.809008+00:00",
+    "sha256": "746d7ce28edf83409c6acacbeca5c09f82b5bc3f95be0cdc65451b58b8110a06",
+    "job": "sku-discovery-audit-0ed391ed-5650-4b3b-b8c8-1ed3c6e07db1",
+    "errors": [],
+    "title": "Samsung Galaxy A16",
+    "sku": "DR-WM1QE62A",
+    "listed": "171.5",
+    "currency": "USD",
+    "stock": "https://schema.org/OutOfStock",
+    "seller": {
+      "@type": "Organization",
+      "name": "Technodel",
+      "url": "https://technodel.net"
+    },
+    "shipping": {
+      "@type": "OfferShippingDetails",
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "4",
+        "currency": "USD"
+      },
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": "LB"
+      },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "DAY"
+        },
+        "transitTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "DAY"
+        }
+      }
+    },
+    "condition": "https://schema.org/NewCondition",
+    "selected": {
+      "sku": "DR-WM1QE62A",
+      "title": "Samsung Galaxy A16",
+      "displayPrice": "171.5",
+      "currency": "USD",
+      "stock": 0,
+      "inStock": false,
+      "specs": [
+        {
+          "label": "Brand",
+          "value": "Samsung"
+        },
+        {
+          "label": "Display Type",
+          "value": "Super AMOLED"
+        },
+        {
+          "label": "Operating System",
+          "value": "Android 14"
+        },
+        {
+          "label": "Dimensions",
+          "value": "164.4 x 77.9 x 7.9 mm (6.47 x 3.07 x 0.31 in)"
+        },
+        {
+          "label": "Weight",
+          "value": "200 g (7.05 oz)"
+        },
+        {
+          "label": "Build",
+          "value": "Glass front, plastic back"
+        },
+        {
+          "label": "Announced",
+          "value": "2024, October 15"
+        }
+      ]
+    },
+    "variant_count": 0,
+    "outcome": "Same-URL public response"
+  },
+  {
+    "url": "https://technodel.net/product/apple-ipad-pro-11-inch-m5-wi-fi-1tb",
+    "cases": [
+      "S3"
+    ],
+    "discovery": "buyer search or card",
+    "status": 200,
+    "utc": "2026-11-25 23:05:15.109390+00:00",
+    "sha256": "5a42d43e5c23edd37a27e19bc4dc26cec02536fcb2dced1251eab4dc65da38f3",
+    "job": "sku-discovery-audit-0e89d487-f725-476a-9514-bbc7af90d40f",
+    "errors": [],
+    "title": "Apple iPad Pro 11\" M5 Wi-Fi 1TB",
+    "sku": "AZ-M2CRZ509",
+    "listed": 1701,
+    "currency": "USD",
+    "stock": "https://schema.org/InStock",
+    "seller": {
+      "@type": "Organization",
+      "name": "Technodel",
+      "url": "https://technodel.net"
+    },
+    "shipping": {
+      "@type": "OfferShippingDetails",
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "0",
+        "currency": "USD"
+      },
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": "LB"
+      },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "DAY"
+        },
+        "transitTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "DAY"
+        }
+      }
+    },
+    "condition": "https://schema.org/NewCondition",
+    "selected": {
+      "sku": "AZ-M2CRZ509",
+      "title": "Apple iPad Pro 11\" M5 Wi-Fi 1TB",
+      "displayPrice": 1701,
+      "currency": "USD",
+      "stock": 999,
+      "inStock": true,
+      "specs": [
+        {
+          "label": "Brand",
+          "value": "Apple"
+        },
+        {
+          "label": "Model",
+          "value": "iPad Pro 11\" M5"
+        },
+        {
+          "label": "Storage",
+          "value": "1TB"
+        },
+        {
+          "label": "Connectivity",
+          "value": "Wi-Fi"
+        },
+        {
+          "label": "Condition",
+          "value": "New"
+        }
+      ]
+    },
+    "variant_count": 0,
+    "outcome": "Same-URL public response"
+  },
+  {
+    "url": "https://technodel.net/product/lenovo-legion-r27qe-gen-2-27-qhd-200hz-ips-gaming-monitor-mvmioqh8",
+    "cases": [
+      "S4"
+    ],
+    "discovery": "buyer search or card",
+    "status": 200,
+    "utc": "2026-11-25 23:05:27.611745+00:00",
+    "sha256": "fb39acdc1e18cd0c3af51eb1f02be3dd55e3e77674aebb1357bfc22479e645e5",
+    "job": "sku-discovery-audit-f9b95241-41ce-44d8-a24a-422e25b5a18a",
+    "errors": [],
+    "title": "Lenovo Legion R27qe Gen 2 27\" QHD 200Hz IPS Gaming Monitor",
+    "sku": "AK-86FWTNMG",
+    "listed": 180,
+    "currency": "USD",
+    "stock": "https://schema.org/InStock",
+    "seller": {
+      "@type": "Organization",
+      "name": "Technodel",
+      "url": "https://technodel.net"
+    },
+    "shipping": {
+      "@type": "OfferShippingDetails",
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "4",
+        "currency": "USD"
+      },
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": "LB"
+      },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "DAY"
+        },
+        "transitTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "DAY"
+        }
+      }
+    },
+    "condition": "https://schema.org/NewCondition",
+    "selected": {
+      "sku": "AK-86FWTNMG",
+      "title": "Lenovo Legion R27qe Gen 2 27\" QHD 200Hz IPS Gaming Monitor",
+      "displayPrice": 180,
+      "currency": "USD",
+      "stock": 999,
+      "inStock": true,
+      "specs": []
+    },
+    "variant_count": 0,
+    "outcome": "Same-URL public response"
+  },
+  {
+    "url": "https://technodel.net/product/logitech-h110-stereo-headset-with-180-rotating-noise-reducing-microphone-dual-3-5mm-jacks-lightweigh-logitech-h",
+    "cases": [
+      "S5"
+    ],
+    "discovery": "buyer search or card",
+    "status": 200,
+    "utc": "2026-11-25 23:05:39.986874+00:00",
+    "sha256": "58227c2874f7d9bf12b754fd141972178a45086307907cdfa1a77d8ff7b26b76",
+    "job": "sku-discovery-audit-8c043d23-c6b2-4d8f-8a4d-36fb9c9829d8",
+    "errors": [],
+    "title": "Logitech H110 Stereo Headset With 180° Rotating Noise-Reducing Microphone, Dual 3.5mm Jacks, Lightweight Adjustable Headband, Stereo Sound | Dark Grey",
+    "sku": "AK-7RGCJT3V",
+    "listed": 9,
+    "currency": "USD",
+    "stock": "https://schema.org/InStock",
+    "seller": {
+      "@type": "Organization",
+      "name": "Technodel",
+      "url": "https://technodel.net"
+    },
+    "shipping": {
+      "@type": "OfferShippingDetails",
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "4",
+        "currency": "USD"
+      },
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": "LB"
+      },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "DAY"
+        },
+        "transitTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "DAY"
+        }
+      }
+    },
+    "condition": "https://schema.org/NewCondition",
+    "selected": {
+      "sku": "AK-7RGCJT3V",
+      "title": "Logitech H110 Stereo Headset With 180° Rotating Noise-Reducing Microphone, Dual 3.5mm Jacks, Lightweight Adjustable Headband, Stereo Sound | Dark Grey",
+      "displayPrice": 9,
+      "currency": "USD",
+      "stock": 999,
+      "inStock": true,
+      "specs": [
+        {
+          "label": "Colour",
+          "value": "Grey"
+        }
+      ]
+    },
+    "variant_count": 0,
+    "outcome": "Same-URL public response"
+  }
+]

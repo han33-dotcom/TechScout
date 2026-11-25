@@ -6,7 +6,7 @@ import json
 import httpx2
 
 from app.adapters.itworks_audio import FAQ, ORIGIN, SELLER, SOURCE
-from app.directory import import_domestic_listings
+from app.directory import import_audit, import_domestic_listings
 from app.domestic_buyer_sources import DomesticBuyerSources
 from app.source_registry import DEFAULT_REGISTRY
 from app.sources import SourceGate, SourceLimiter
@@ -80,6 +80,7 @@ class ITWorksAudio(FlowCase):
         return run
 
     def test_payable_total_uses_final_price_and_actual_merchant(self):
+        import_audit(self.directory)
         run = self.submit()
         self.assertEqual(run.status, 'complete', (run.stop_reason, run.source_outcomes))
         verified = run.recommendations[0].primary
@@ -87,6 +88,10 @@ class ITWorksAudio(FlowCase):
         self.assertEqual(verified.offer.route.origin_country, 'ZZ')
         self.assertEqual((verified.offer.source_id, str(verified.offer.listing_url)), (SOURCE, URL))
         self.assertEqual((self.reads.count(URL), self.reads.count(FAQ)), (2, 2))
+        # The first merchant returned no matching link. The worker searched the
+        # next admitted retailer and verified its selected item in the same run.
+        self.assertLess(self.reads.index('https://technodel.net/search?q=Studio+123'),
+                        self.reads.index(ORIGIN + '/search?q=Studio+123'))
 
     def linked_wired_offer(self, finish, connector='USB Type-A USB Protocol: USB'):
         self.title = 'Studio Headset X10'

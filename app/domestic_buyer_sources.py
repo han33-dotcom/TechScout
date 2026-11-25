@@ -372,15 +372,11 @@ class DomesticBuyerSources:
             url = itworks_audio.ORIGIN + '/search?' + urlencode({'q': term})
             routes.append((itworks_audio.SOURCE, url, 'html', lambda body: itworks_audio.product_links(body, term)))
         if category in technodel_audio.CATEGORIES.values() and request.fulfillment.mode != 'pickup':
-            # The store searches its titles. Use a discriminating catalogue token for needs,
-            # then rank the returned product slugs by all the original requirements.
             terms = product_terms(request)
-            query = term if request.intent.kind == 'exact_model' else next(
-                (t.split()[0] for t in terms if any(c.isdigit() for c in t)), term)
             rank = ' '.join([*terms, *request.allowed_colors])
-            url = technodel_audio.ORIGIN + '/search?' + urlencode({'q': query})
+            url = technodel_audio.ORIGIN + '/search?' + urlencode({'q': term})
             routes.insert(0, (technodel_audio.SOURCE, url, 'html',
-                              lambda body: technodel_audio.listing_links(body, query, rank, category)))
+                              lambda body: technodel_audio.listing_links(body, term, rank, category)))
         for source_id, url, expect, extract in routes:
             owner = self.directory.get(source_id)
             if (not owner or owner.source_id != source_id or owner.seller_identity != 'retailer'
@@ -464,6 +460,11 @@ class DomesticBuyerSources:
                 if offer is None:
                     return ReadResult(source_id, replies=replies, status='failed',
                                       reason='The current page did not establish an unambiguous product selection')
+                if earlier and (offer.source_product_id != earlier.source_product_id
+                                or offer.source_variant_id != earlier.source_variant_id
+                                or changed_listing_configuration(earlier, offer)):
+                    return ReadResult(source_id, replies=replies, status='failed',
+                                      reason='The selected configuration changed during verification')
                 return ReadResult(source_id, (offer,), replies)
             work = bounded.reserve('work', Charge(Decimal(0)), 5)
             started = time.monotonic()

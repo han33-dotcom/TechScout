@@ -21,6 +21,10 @@ WIRED_TITLE = re.compile(r'(?P<maker>[A-Za-z]+) Wired (?P<model>[A-Z]+[0-9]+[A-Z
                         r'(?: with Noise-Canceling Mic)? \((?P<color>[A-Za-z]+)\) (?P<part>\d{3}-\d{6})', re.I)
 HEADSET_FIRST = re.compile(r'(?P<maker>[A-Za-z]+) Wired (?:Audio Jack )?Headset (?P<model>[A-Z]+[0-9]+[A-Za-z]*)'
                           r'(?P<business> Stereo Business)? \((?P<color>[A-Za-z]+)\) (?P<part>\d{3}-\d{6})', re.I)
+DESCRIBED_MODEL = re.compile(
+    r'(?P<maker>[\w-]+) (?P<wired>Wired )?(?P<model>[A-Z]+[0-9]+[A-Z0-9-]*) '
+    r'(?P<kind>Headset|Monitor|Tablet|Laptop|Smartphone) with [\w -]+ '
+    r'\((?P<color>[A-Za-z ]+)\)(?: (?P<part>\d{3}-\d{6}))?', re.I)
 
 
 class Page(HTMLParser):
@@ -89,8 +93,13 @@ def listing_links(body, term, ranking, category):
     """Use the search component's category and links to rank reads, never as evidence."""
     page = Page(body)
     def words(value):
-        return set(re.findall(r'[a-z0-9]+', value.casefold()))
+        text = re.sub(r'\bwi[ -]fi\b', 'wifi', value.casefold())
+        text = re.sub(r'\b(\d+)\s+(gb|tb|hz)\b', r'\1\2', text)
+        return set(re.findall(r'[a-z0-9]+', text))
     wanted, preferred = words(term), words(ranking)
+    # Category membership is already checked below. Its repetition in marketing
+    # copy should not outrank storage or connectivity on an otherwise better lead.
+    distinctive = wanted - {category, 'headphones'}
     allowed = set(page.links)
     scored = {}
     for card in page.cards:
@@ -98,8 +107,8 @@ def listing_links(body, term, ranking, category):
         if path not in allowed or CATEGORIES.get((card.get('category') or {}).get('name')) != category:
             continue
         tokens = words(str(card.get('title', '')) + ' ' + path)
-        if wanted & tokens:
-            scored[path] = len(wanted & tokens), len(preferred & tokens)
+        if not distinctive or distinctive & tokens:
+            scored[path] = len(distinctive & tokens), len(preferred & tokens)
     if not scored and category == 'audio':
         return product_links(body, term)
     return tuple(ORIGIN + p for p in sorted(scored, key=scored.get, reverse=True)[:1])
@@ -170,7 +179,8 @@ def read_offer(page, policy, request, owner, run, route_id):
     sku = listing['sku']
     title = listing['title']
     reviewed_checkout = WIRED_TITLE.fullmatch(title)
-    match = reviewed_checkout or HEADSET_FIRST.fullmatch(title)
+    described = DESCRIBED_MODEL.fullmatch(title)
+    match = reviewed_checkout or HEADSET_FIRST.fullmatch(title) or described
     category_name = listing['category']['name']
     category = CATEGORIES.get(category_name)
     if (not category or category != request.requirements.category
@@ -194,19 +204,32 @@ def read_offer(page, policy, request, owner, run, route_id):
     if fields.get('Colour') and fields.get('Color', fields['Colour']) != fields['Colour']:
         return None
     color = fields.get('Colour') or fields.get('Color')
-    model = fields.get('Model') or title
+    # Both records above identify the same URL and SKU. Prefer an explicit model
+    # over parsing the display name and reject disagreement between the two records.
+    models = [v for v in (fields.get('Model'), product.get('model')) if v is not None]
+    if any(not isinstance(v, str) or not v.strip() for v in models):
+        return None
+    def model_name(value):
+        return value.casefold().strip().removeprefix(maker.casefold() + ' ')
+    if len({model_name(v) for v in models}) > 1:
+        return None
+    model = models[0] if models else title
     configuration = None
     if match:
         parsed_model = maker + ' ' + match['model']
-        if (category != 'audio' or match['maker'] != maker or fields.get('Brand') != maker
-                or fields.get('Connectivity') != 'Wired' or color != match['color']
-                or fields.get('Model', match['model']) not in (match['model'], parsed_model)):
+        title_category = ({'headset':'audio', 'smartphone':'phone'}.get(described['kind'].lower(),
+                          described['kind'].lower()) if described else 'audio')
+        wired = not described or bool(described['wired'])
+        if (category != title_category or match['maker'] != maker or fields.get('Brand') != maker
+                or (wired and fields.get('Connectivity') != 'Wired') or color != match['color']
+                or any(model_name(v) != model_name(parsed_model) for v in models)):
             return None
         if match.groupdict().get('business') and not listing.get('shortDescription', '').startswith(
                 parsed_model + ' wired stereo headset '):
             return None
         model = parsed_model
-        configuration = identify_headset(maker, match['model'], color, part=match['part'])
+        if category == 'audio' and wired:
+            configuration = identify_headset(maker, match['model'], color, part=match['part'])
     amount = Decimal(str(offer['price']))
     if (not amount.is_finite() or amount <= 0 or amount != amount.quantize(Decimal('0.01'))
             or amount != Decimal(str(listing['displayPrice'])) or offer['priceCurrency'] != 'USD'
@@ -221,7 +244,7 @@ def read_offer(page, policy, request, owner, run, route_id):
         evidence.append(v2.Evidence(evidence_id=eid, field_path=path, source_id=SOURCE, product_id=pid,
             variant_id=sku, scope='route' if route else 'variant', route_id=route_id if route else None,
             origin_url=document.origin_url, final_url=document.final_url, observed_at=document.observed_at,
-            response_sha256=document.response_sha256, adapter_version='technodel-listing/2',
+            response_sha256=document.response_sha256, adapter_version='technodel-listing/3',
             origin='runtime', corpus_version='domestic-buyer-1', run=run, excerpt=excerpt))
         return [eid]
 
@@ -231,8 +254,8 @@ def read_offer(page, policy, request, owner, run, route_id):
     receipt('seller.name', SELLER)
     receipt('seller.market', f"{SELLER}: {store['address']['addressLocality']}, LB")
     receipt('variant.product.manufacturer', maker)
-    receipt('variant.product.model', fields.get('Model') or title)
-    if match:
+    receipt('variant.product.model', models[0] if models else title)
+    if match and match['part']:
         receipt('catalog.mpn', match['part'])
     if configuration:
         receipt('catalog.configuration_id', title)
@@ -268,9 +291,10 @@ def read_offer(page, policy, request, owner, run, route_id):
         tax = dict(kind='tax', state='included', evidence_ids=receipt('costs.order.tax',
             f'Displayed COD item price: USD {amount}') + receipt('costs.order.tax', payment, document=policy))
     specs = selected_specs(category, fields, title, known)
-    if match:
+    if match and category == 'audio':
         specs['form_factor'] = known('variant.specs.form_factor', 'headphones', title)
-        specs['connectivity'] = known('variant.specs.connectivity', 'wired', 'Connectivity: Wired')
+        if fields.get('Connectivity') == 'Wired':
+            specs['connectivity'] = known('variant.specs.connectivity', 'wired', 'Connectivity: Wired')
     return v2.Offer(offer_id=source_key, retailer_id=owner.entry.retailer_id, source_id=SOURCE,
         source_product_id=pid, source_variant_id=sku, seller=dict(seller_id=owner.seller_id, name=SELLER, market='LB'),
         listing_url=url, variant=dict(variant_id=configuration.variant_id if configuration else source_key,
