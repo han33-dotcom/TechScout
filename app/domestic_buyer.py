@@ -7,7 +7,7 @@ from urllib.parse import urlsplit
 from app import contracts_v2 as v2
 from app.accounting import BudgetDenied, SourceBudget
 from app.assessment import FullProductAssessment, assess_full_product, shortlist
-from app.buyer_flow import MAX_UNCERTAIN, MIN_WRITER_SECONDS, _Flow
+from app.buyer_flow import MAX_UNCERTAIN, MIN_WRITER_SECONDS, _Flow, supported
 from app.buyer_sources import FETCH_ROOM_S
 from app.directory import DirectoryQuery
 from app.domestic_discovery import CHANNELS, dispatch_receipts
@@ -15,7 +15,7 @@ from app.domestic_search_plan import choose_search, search_options
 from app.eligibility import check_full_product
 from app.evidence_critique import CritiqueChoice, PROMPT as EVALUATE
 from app.freshness import FreshnessContext, assess_evidence
-from app.identity import changed_listing_configuration, conflicting_configurations, model_identity
+from app.identity import changed_listing_configuration, conflicting_configurations, known_model, model_identity
 from app.model_provider import JobBudget
 from app.onboarding import canonical
 from app.orchestrator import select_candidates
@@ -211,6 +211,8 @@ class DomesticBuyerFlow(_Flow):
         if request.intent.kind == 'product_link':
             pending = [Listing(str(request.intent.url))]  # A held SKU cannot select a variant on the buyer's behalf.
         self.verify_listings(pending)
+        if not self.catalog:
+            self.read_exact_phone_leads()
         self.evaluator_follow_up()
         rows = list(self.assessed.values())
         budget = request.budget
@@ -250,7 +252,7 @@ class DomesticBuyerFlow(_Flow):
             reason += ' New retailer leads were handed to background onboarding.'
         if self._limit():
             reason += f' Stopped at the {self._limit()} limit.'
-        if not groups and not self.unknown and not self.catalog:
+        if not groups and not self.unknown and not self.catalog and not uncertain:
             reason += ' No in-scope listing could be verified.'
         status = ('partial' if self._limit() else 'complete') if groups else (
             'partial' if self._limit() else 'abstained')
@@ -451,6 +453,42 @@ class DomesticBuyerFlow(_Flow):
                 if not any(item.earlier and item.earlier.offer_id not in self.reread
                            and model_identity(item.earlier) in selected_models for item in listings):
                     break
+
+    def read_exact_phone_leads(self):
+        """Recover current partial offers through the reviewed phone search on a catalog miss."""
+        request, source = self.request, self.deps.source
+        room = lambda: self.left(self.read_by)
+        if (supported(request) or request.fulfillment.mode != 'delivery' or not known_model(request.intent.model)
+                or self.stopped() or room() < FETCH_ROOM_S or self.deps.research is None):
+            return
+        record = self.deps.research.workers.directory.get(source.retailer_id)
+        if (record is None or record.source_id != source.source_id or record.seller_id != source.source_id
+                or record.seller_identity != 'retailer' or record.role != 'domestic' or record.source_country != 'LB'
+                or 'LB' not in record.entry.markets or 'phone' not in record.entry.categories
+                or record.entry.discovery_status == 'retired'):
+            return
+        self.action('Current exact phone variants, prices and online stock',
+                    'Show a priced listing when a verified payable offer is unavailable', source.source_id)
+        read = source.read_exact_phone(request, PhaseJob(self.job, room), self.run_ref, room=room)
+        self.trace['exact_phone_read'] = dict(source_id=source.source_id, fetches=read.fetches, variants=[])
+        maximum = request.budget.maximum if request.budget else None
+        for offer in read.offers:
+            if maximum and offer.price.value.currency == maximum.currency and offer.price.value.amount > maximum.amount:
+                continue
+            assessment = domestic_assessment(request, offer, self.deps.wall_clock())
+            if assessment.decision == 'rejected':
+                continue
+            reasons = [check.reason for check in assessment.eligibility.checks if check.outcome == 'unresolved']
+            self.uncertain[offer.offer_id] = v2.UncertainAlternative(
+                offer=offer, cost=assessment.cost, reasons=tuple(dict.fromkeys([*reasons, *assessment.cost.missing])))
+            self.trace['exact_phone_read']['variants'].append(dict(
+                id=offer.source_variant_id, url=str(offer.listing_url), model=offer.variant.product.model,
+                color=offer.variant.color.value, price=offer.price.value.model_dump(mode='json'), stock=offer.stock.value))
+        if read.offers:
+            self.sources[source.source_id] = (record.entry.name, 'checked', None)
+            self.checked[source.source_id] = record.seller_id
+        elif self.sources.get(source.source_id, ('', '', None))[1] != 'checked':
+            self.sources[source.source_id] = (record.entry.name, 'failed', 'No current priced variant from the retailer search.')
 
     def record_verification(self, listing, read):
         earlier = listing.earlier

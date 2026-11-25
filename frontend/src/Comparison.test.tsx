@@ -29,6 +29,23 @@ describe('comparison evidence boundaries',()=>{
   expect(screen.getAllByText('Verified in this search')).toHaveLength(1);
   expect(screen.getByText(/This is not a complete payable total/)).toBeTruthy();
  });
+ it('shows current listing facts and the exact link beside missing charges',()=>{
+  const workspace=data(), item=workspace.current.uncertain[0];
+  item.offer=structuredClone(workspace.current.recommendations[0].primary.offer);
+  item.offer.listing_url='https://example.com/product/scout-book/?variant=black';
+  item.reasons=['The delivery fee for Beirut is unknown.'];
+  for (const receipt of item.offer.evidence) receipt.run=workspace.current.run;
+  workspace.current.recommendations=[];
+  const {rerender}=render(<Comparison workspace={workspace}/>);
+  const price=screen.getByText(/Current listed price/);
+  const card=within(price.closest('article')!);
+  expect(card.getByRole('link', {name:/View at/}).getAttribute('href')).toBe(item.offer.listing_url);
+  expect(card.getByText(/In stock · Online listing/)).toBeTruthy();
+  expect(card.getByText(item.reasons[0])).toBeTruthy();
+  rerender(<Comparison workspace={workspace} historical/>);
+  expect(screen.getByText(/Previously observed listed price/)).toBeTruthy();
+  expect(screen.queryByText(/In stock · Online listing/)).toBeNull();
+ });
  it('drops an old verification receipt and never pads zero results',()=>{
   const w=data();w.current.recommendations[0].primary.verification.run.run_revision++;
   expect(currentRecommendations(w.current)).toHaveLength(0);render(<Comparison workspace={w}/>);
