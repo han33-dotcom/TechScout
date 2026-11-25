@@ -1,0 +1,21 @@
+{
+  "purpose": "Second supplemental pool for #178. The first pass through guest checkouts resolved several formerly missing charges. These new pickup requests are locked before researching their listings or branch inventory. Keep both held out regardless of outcome.",
+  "cases": [
+    {
+      "id": "B42",
+      "category": "tablet",
+      "entry": "needs",
+      "mode": "pickup",
+      "destination": "Tripoli",
+      "prompt": "I need a new Android tablet with at least 8 GB of RAM and a screen of 11 inches or larger. Can I collect one at a specific shop in Tripoli? What will it cost?"
+    },
+    {
+      "id": "B43",
+      "category": "phone",
+      "entry": "exact",
+      "mode": "pickup",
+      "destination": "Beirut",
+      "prompt": "Can I pick up a new black 128 GB iPhone 15 at a specific Beirut branch? Tell me the price and whether that branch has it."
+    }
+  ]
+}
