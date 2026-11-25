@@ -326,11 +326,14 @@ class DomesticBuyerFlow(_Flow):
             if not selection.configured or record.source_country != 'LB' or record.source_id in seen_sources:
                 continue
             permitted = set(selection.permitted_urls)
-            for url in record.product_urls:
-                slug = set(re.findall(r'[a-z0-9]+', urlsplit(str(url)).path.lower()))
-                if str(url) in permitted and words and words <= slug:
-                    seeds.append(Listing(str(url), record.source_id))
-                    break
+            urls = [str(url) for url in record.product_urls if str(url) in permitted]
+            if urls:
+                # A relevant slug can order the reads. Opaque reviewed URLs are
+                # still valid leads; only the selected product page decides identity.
+                def relevance(url):
+                    tokens = re.findall(r'[a-z0-9]+', urlsplit(url).path.lower())
+                    return len(words.intersection(tokens))
+                seeds.append(Listing(max(urls, key=relevance), record.source_id))
         self.read_candidates(seeds[:3])
         if self.enough(self.catalog.values()) or self.stopped() or self.left(self.nonfinal_by) < 2:
             return

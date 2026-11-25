@@ -29,6 +29,10 @@ class BuyerInterpretationTests(unittest.TestCase):
                          (8, 256, 'SSD'))
         self.assertIsNone(r.requirements.min_ram_gb)
         self.assertEqual(r.intent.model, 'Scout Book X')
+        other = form("Could you tell me what's the price of the Scout X Pro Max in blue?", 'phone', 'exact_model')
+        self.assertEqual(other.intent.model, 'Scout X Pro Max')
+        bounded = form('I would like a tablet with at least 12 GB of RAM.', 'tablet')
+        self.assertEqual(bounded.requirements.min_ram_gb, 12)
 
     def test_queries_and_evidence_use_the_same_minima(self):
         for ram in (8, 64):

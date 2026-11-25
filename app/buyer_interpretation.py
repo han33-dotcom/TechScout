@@ -19,12 +19,15 @@ COLORS = sorted({*COLOR_ALIASES, 'graphite', 'midnight'}, key=len, reverse=True)
 COLOR = r'\b(' + '|'.join(map(re.escape, COLORS)) + r')\b'
 BUDGET = (r'\b(around|about|roughly|under|below|up to|at most|no more than|maximum(?: of)?|ceiling(?: is)?)'
           r'\s*(?:USD\s*|\$\s*)(\d+(?:,\d{3})*(?:\.\d{1,2})?)(?![\d.,]\d)')
-OPENING = (r"^(?:please\s+)?(?:(?:can|could|would) you\s+)?(?:"
+OPENING = (r"^(?:please\s+)?(?:(?:can|could|would) you\s+)?(?:tell me\s+)?(?:"
+           r"(?:what(?:'s| is)|I'd like to know) (?:the |a )?(?:best |delivered )?price (?:of|for)|"
+           r"what (?:does|would) it cost (?:to (?:get|buy) )?|do you have|can I (?:get|buy)|"
+           r"I'm after|I'm interested in|what are (?:my|the) options for|"
            r"what (?:would|does|is)|how much (?:would|is|for|does)|where can I (?:find|buy)|"
            r"I(?:'m| am) looking for|I(?:'d like| need| want)|compare(?: prices)?(?: for)?|"
            r"price|find(?: me)?|show me|buy)\s+")
-SOFT = re.compile(r'\b(?:prefer(?:ably)?|ideally|around|roughly|about|nice to have|would like)\b', re.I)
-NEGATIVE = re.compile(r'\b(?:without|except|avoid|not|less than|at most|up to|no more than)\b', re.I)
+SOFT = re.compile(r'\b(?:prefer(?:ably)?|ideally|around|roughly|about|nice to have)\b', re.I)
+NEGATIVE = re.compile(r"\b(?:without|except|avoid|not|never|no|don't|less than|at most|up to|no more than)\b", re.I)
 
 
 def interpret(request, wording):
@@ -32,7 +35,7 @@ def interpret(request, wording):
     if not wording or request.intent.kind == 'product_link':
         return v2.ShoppingRequest.model_validate(data)
     original = wording.strip()
-    text = original
+    text = original.replace('\u2019', "'")
     exact = request.intent.kind == 'exact_model'
     req = data['requirements']
     category = req['category']
@@ -144,7 +147,7 @@ def interpret(request, wording):
         text = re.sub(r'[.?!]\s*(?:what(?:\'s| is) the total|which seller is cheaper overall|'
                       r'can you compare (?:prices|sellers|the same part at two shops)|compare sellers if possible|what (?:would|will) (?:it|I) (?:cost|pay))\s*[.?!]*$',
                       '', text, flags=re.I)
-        text = re.sub(r'\b(?:cost(?: me)?|in|with|and)\s*[.?!, ]*$', '', text, flags=re.I)
+        text = re.sub(r'\b(?:(?:would )?cost(?: me)?|in|with|and)\s*[.?!, ]*$', '', text, flags=re.I)
         parts = re.split(r'\s*(?:[;!?]|\.(?:\s|$)|,\s*|\b(?:with|but|must|that has)\b)\s*', text, flags=re.I)
         parts = [p.strip(' .,?!') for p in parts if p.strip(' .,?!')]
         if not parts:

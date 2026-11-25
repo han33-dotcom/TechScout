@@ -28,6 +28,8 @@ class Contract(Model):
 
 class PhoneRequirements(Model):
     category: Literal['phone']
+    min_ram_gb: PositiveInt | None = None
+    min_storage_gb: PositiveInt | None = None
     storage_gb: PositiveInt | None = None
     ram_gb: PositiveInt | None = None
     sim: Sim | None = None
@@ -48,6 +50,7 @@ class LaptopRequirements(Model):
 
 class TabletRequirements(Model):
     category: Literal['tablet']
+    min_ram_gb: PositiveInt | None = None
     ram_gb: PositiveInt | None = None
     storage_gb: PositiveInt | None = None
     min_storage_gb: PositiveInt | None = None
