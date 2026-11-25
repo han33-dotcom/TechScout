@@ -97,6 +97,23 @@ function OfferDetails({ offer, cost }: { offer: Offer; cost?: Cost }) {
     <h4>Evidence</h4><div className="evidence-list">{offer.evidence.map(item => <div key={item.evidence_id}><strong>{item.field_path}</strong><span>{date(item.observed_at)} · {item.scope}</span>{safeLink(item.origin_url) ? <a href={safeLink(item.origin_url)} target="_blank" rel="noopener noreferrer">View source ↗</a> : <span>Source link unavailable</span>}{item.excerpt && <p>{item.excerpt}</p>}</div>)}</div>
   </div>;
 }
+function UseAdvice({ offer, request }: { offer: Offer; request: RunSnapshot['request'] }) {
+  if (request.intent.kind !== 'needs') return null;
+  const description = request.intent.description;
+  const specs = offer.variant.specs;
+  if (specs.category === 'tablet' && /\b(?:reading|read)\b/i.test(description)) {
+    return <p>For reading, check that the screen shows a full page at a comfortable size.
+      {specs.storage_gb?.state === 'known' && ` The listed ${specs.storage_gb.value} GB gives you space for downloaded material.`}</p>;
+  }
+  if (specs.category === 'monitor' && /\b(?:gaming|games)\b/i.test(description) && specs.refresh_hz.state === 'known') {
+    return <p>For games, the listed {specs.refresh_hz.value} Hz sets the maximum refresh rate. Check that your graphics output supports it at the resolution you use.</p>;
+  }
+  if (specs.category === 'laptop' && /\b(?:Surface Pro|detachable)\b/i.test(offer.variant.product.model)) {
+    return <p>For laptop use, check whether a keyboard is included and what it costs separately.</p>;
+  }
+  return null;
+}
+
 function Fit({ offer, request }: { offer: Offer; request: RunSnapshot['request'] }) {
   const mapping: Record<string,string> = { min_ram_gb:'ram_gb',min_storage_gb:'storage_gb',min_refresh_hz:'refresh_hz',min_width_px:'width_px',min_height_px:'height_px',min_diagonal_inches:'diagonal_inches' };
   const values = offer.variant.specs as unknown as Record<string,Fact>;
@@ -124,6 +141,7 @@ function UncertainOffer({ item, snapshot, historical }: {
   if (color?.state === 'known') variant.unshift(fact(color));
   return <article>
     <h3>{modelName(offer)} · {offer.seller.name}</h3>
+    <UseAdvice offer={offer} request={snapshot.request}/>
     {variant.length > 0 && <p className="configuration">{variant.join(' · ')}</p>}
     {offer.price.state === 'known' && offer.price.value &&
       <p><strong>{money(offer.price.value)}</strong> · {current('price', offer.price) ? 'Current listed price' : 'Previously observed listed price'}</p>}
@@ -157,7 +175,7 @@ export default function Comparison({ workspace, historical=false }: { workspace:
       const item=rec.primary,offer=item.offer;
       const sellers=[item,...rec.additional_sellers.filter(v=>matchesRun(snapshot.run,v.verification.run))];
       const verdict = priceComparison(sellers);
-      return <article className="panel recommendation" key={offer.variant.variant_id}><div className="card-top"><span className="option-index">{String(index+1).padStart(2,'0')}</span><span className="verified-badge">{historical ? "Verified for earlier request" : "Verified in this search"}</span></div><h3>{modelName(offer)}{offer.variant.color?.state === 'known' ? ` · ${offer.variant.color.value}` : ''}</h3><p className="configuration">{specs(offer).slice(0,4).map(([key,value])=>`${labels[key]??key}: ${fact(value)}`).join(' · ')}</p><Fit offer={offer} request={snapshot.request}/><div className="price-line"><strong>{money(item.cost.total)}</strong><span>Verified payable total</span></div><p>{offer.seller.name} · {route(offer)}<br/><Arrival offer={offer}/></p><p className="muted">Price and stock verified {date(item.verification.checked_at)}</p>
+      return <article className="panel recommendation" key={offer.variant.variant_id}><div className="card-top"><span className="option-index">{String(index+1).padStart(2,'0')}</span><span className="verified-badge">{historical ? "Verified for earlier request" : "Verified in this search"}</span></div><h3>{modelName(offer)}{offer.variant.color?.state === 'known' ? ` · ${offer.variant.color.value}` : ''}</h3><p className="configuration">{specs(offer).slice(0,4).map(([key,value])=>`${labels[key]??key}: ${fact(value)}`).join(' · ')}</p><Fit offer={offer} request={snapshot.request}/><UseAdvice offer={offer} request={snapshot.request}/><div className="price-line"><strong>{money(item.cost.total)}</strong><span>Verified payable total</span></div><p>{offer.seller.name} · {route(offer)}<br/><Arrival offer={offer}/></p><p className="muted">Price and stock verified {date(item.verification.checked_at)}</p>
         {safeLink(offer.listing_url) && <a className="retailer-link" href={safeLink(offer.listing_url)} target="_blank" rel="noopener noreferrer">View at {offer.seller.name} ↗</a>}
         <div className="seller-list"><h4>{sellers.length} qualifying {sellers.length===1?'seller':'sellers'} for this configuration</h4>{verdict && <p>{verdict}</p>}{sellers.map(seller=><div key={seller.offer.offer_id} className="seller-row"><div><strong>{seller.offer.seller.name}</strong><span>{money(seller.cost.total)} · {fact(seller.offer.condition)}</span></div><label><input type="checkbox" checked={selected.includes(seller.offer.offer_id)} disabled={!selected.includes(seller.offer.offer_id)&&comparison.length>=3} onChange={()=>toggle(seller.offer.offer_id)}/> Compare</label><details open={expanded.includes(seller.offer.offer_id)} onToggle={e=>{const open=e.currentTarget.open;setExpanded(old=>open?[...new Set([...old,seller.offer.offer_id])]:old.filter(x=>x!==seller.offer.offer_id))}}><summary>Costs, terms & evidence</summary><OfferDetails offer={seller.offer} cost={seller.cost}/></details>{safeLink(seller.offer.listing_url)&&<a href={safeLink(seller.offer.listing_url)} target="_blank" rel="noopener noreferrer">Open product page ↗</a>}</div>)}</div>
       </article>;

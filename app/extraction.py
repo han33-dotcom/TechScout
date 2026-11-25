@@ -72,6 +72,13 @@ def _literal(value):
     return str(value) if isinstance(value,Decimal) else json.dumps(value,ensure_ascii=False)
 
 
+def refresh_hz(label, value):
+    if not isinstance(label, str) or label.strip().casefold() != 'refresh rate' or not isinstance(value, str):
+        return None
+    match = re.fullmatch(r'([1-9][0-9]{0,3})\s*Hz', value.strip(), re.I)
+    return int(match[1]) if match else None
+
+
 def _unique_pairs(pairs):
     result = {}
     for key,value in pairs:
@@ -213,11 +220,9 @@ def extract_structured(capture: DocumentCapture, profile: PageProfile, *, run: R
                 name = prop.get('name')
                 field = {'RAM':'variant.specs.ram_gb','Storage':'variant.specs.storage_gb'}.get(name) if isinstance(name,str) else None
                 raw = prop.get('value')
-                if profile.category == 'monitor' and name == 'Refresh Rate' and isinstance(raw, str):
-                    match = re.fullmatch(r'([1-9][0-9]{0,3}) Hz', raw)
-                    if match:
-                        add('variant.specs.refresh_hz', int(match[1]), _excerpt(script,'value',raw),
-                            prefix+f'/additionalProperty/{i}/value')
+                if profile.category == 'monitor' and (hz := refresh_hz(name, raw)):
+                    add('variant.specs.refresh_hz', hz, _excerpt(script,'value',raw),
+                        prefix+f'/additionalProperty/{i}/value')
                 if profile.category == 'audio' and name == 'Form Factor' and isinstance(raw,str):
                     if raw.casefold() in ('earbuds','headphones'):
                         add('variant.specs.form_factor', raw.casefold(), _excerpt(script,'value',raw),

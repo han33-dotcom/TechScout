@@ -88,10 +88,10 @@ class ITWorksAudio(FlowCase):
         self.assertEqual((verified.offer.source_id, str(verified.offer.listing_url)), (SOURCE, URL))
         self.assertEqual((self.reads.count(URL), self.reads.count(FAQ)), (2, 2))
 
-    def linked_wired_offer(self, finish):
+    def linked_wired_offer(self, finish, connector='USB Type-A USB Protocol: USB'):
         self.title = 'Studio Headset X10'
         self.description = (f'Color: {finish} Performance Audio Type: Stereo '
-                            'Connection Type: Wired Connector: USB Type-A USB Protocol: USB')
+                            f'Connection Type: Wired Connector: {connector}')
         _, run = self.browse(self.buyer, intent=dict(kind='product_link',url=URL),
             requirements=dict(category='audio'), fulfillment=dict(mode='delivery',destination=dict(city='Beirut')))
         return run.recommendations
@@ -102,6 +102,13 @@ class ITWorksAudio(FlowCase):
 
     def test_wired_model_preserves_the_entire_selected_finish(self):
         self.assertFalse(self.linked_wired_offer('Black and Red'))
+
+    def test_analog_selection_keeps_its_connector_and_final_delivered_total(self):
+        item = self.linked_wired_offer('Black', 'Single 3.5 mm Audio Jack Audio & Microphone Connection: Combined')[0].primary
+        self.assertEqual(item.cost.total.amount, Decimal('22.55'))
+        evidence = next(e for e in item.offer.evidence if e.field_path == 'variant.specs.connectivity')
+        self.assertIn('3.5 mm', evidence.excerpt)
+        self.assertNotIn('USB', evidence.excerpt)
 
     def test_final_stock_change_abstains(self):
         self.changed_stock = True

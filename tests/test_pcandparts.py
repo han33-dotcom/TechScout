@@ -63,6 +63,8 @@ class PcAndPartsTests(unittest.TestCase):
 
     def test_monitor_profile_and_out_of_stock(self):
         product = json.loads((ROOT / 'tests/fixtures/stores/pcandparts/monitor.json').read_text())
+        refresh = next(p for p in product['additionalProperty'] if p['name'] == 'Refresh rate')
+        refresh.update(name='Refresh Rate', value='144Hz')
         result = self.extract(self.capture(product), category='monitor')
         facts = self.fields(result)
         self.assertFalse(facts['stock'].value)

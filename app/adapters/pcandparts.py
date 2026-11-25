@@ -12,7 +12,7 @@ import re
 from app.contracts import Fact, Money
 from app.contracts_v2 import Charge, DirectRoute, Evidence
 from app.corpus_contracts import Extraction, FieldObservation, PassageDraft
-from app.extraction import PageProfile, extract_structured, _HTML, _objects, _unique_pairs, _excerpt
+from app.extraction import PageProfile, extract_structured, _HTML, _objects, _unique_pairs, _excerpt, refresh_hz
 from app.page_extraction import read_page
 
 SOURCE_ID = 'pcandparts'
@@ -125,13 +125,17 @@ def extract_listing(capture, *, sku, category, route: DirectRoute, run=None):
         if name == 'Shipping weight' and re.fullmatch(r'[0-9]+(?:\.[0-9]+)? kg', value):
             if Decimal(value.split()[0]) > 0:
                 weights.append((str(Decimal(value.split()[0])), receipt('package_weight_kg', 'value', value, pointer)))
-        field = mapping.get(name)
+        hz = refresh_hz(name, value) if category == 'monitor' else None
+        field = 'refresh_hz' if hz else mapping.get(name)
         if field is None:
             continue
         normalized = value
-        if field in {'width_px', 'height_px', 'refresh_hz'}:
-            unit = 'Hz' if field == 'refresh_hz' else 'px'
-            if not re.fullmatch(r'[1-9][0-9]{0,5} ' + unit, value):
+        if field == 'refresh_hz':
+            if hz is None:
+                continue
+            normalized = hz
+        elif field in {'width_px', 'height_px'}:
+            if not re.fullmatch(r'[1-9][0-9]{0,5} px', value):
                 continue
             normalized = int(value.split()[0])
         elif field == 'diagonal_inches':
