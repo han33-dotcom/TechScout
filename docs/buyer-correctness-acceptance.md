@@ -2,7 +2,7 @@
 
 [Buyer-flow milestone #76](https://github.com/han33-dotcom/TechScout/issues/76) tracks whether a buyer can use the normal browser to find a domestic offer and act on it. The original [held-out evaluation](evaluation-report.md) is the baseline. This protocol defines a new assessment. The case manifest, independent reference observations, and scored results are subsequent deliverables of [#178](https://github.com/han33-dotcom/TechScout/issues/178).
 
-The [25 November screening report](../acceptance/buyer-v1/README.md) records the initial reference checks and open cohort slots.
+The [25 November freeze report](../acceptance/buyer-v1/README.md) records the complete screening pool, 20 selected references and five predeclared comparisons. The [versioned manifest](../acceptance/buyer-v1/freeze-v1-2026-11-25.json) fixes the inputs and denominators for later scoring.
 
 Use [buyer product contract v1](buyer-product-contract.md) for independent reference decisions. Record each revised classification with the rule version and reason alongside its original screening label. Seller identity and service to the buyer determine domestic eligibility. Use applicable retailer fees or pre-order quotes. The [development scenarios](buyer-acceptance-matrix.md) and separate showroom and account walkthroughs are outside the scored cohort.
 
