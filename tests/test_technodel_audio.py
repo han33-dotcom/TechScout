@@ -138,6 +138,18 @@ class WiredHeadsetTests(unittest.TestCase):
         self.listing['specs'] = [dict(label='Refresh Rate', value='165 kHz')]
         self.assertEqual(self.read('monitor').variant.specs.refresh_hz.state, 'unknown')
 
+    def test_tablet_reading_purpose_does_not_change_capacity_or_connectivity_eligibility(self):
+        from app.domestic_buyer import candidate
+        from test_buyer_interpretation import form
+        self.listing.update(category={'name':'Tablets'}, title='Studio Slate',
+            specs=[dict(label='Storage', value='128 GB'), dict(label='Connectivity', value='Wi-Fi')])
+        self.product.update(category='Tablets', name='Studio Slate')
+        offer = self.read('tablet')
+        for capacity, mode, matches in ((128, 'Wi-Fi', True), (256, 'Wi-Fi', False), (128, 'cellular', False)):
+            request = form(f'I need a {mode} tablet with at least {capacity} GB for reading textbooks.', 'tablet')
+            self.assertEqual(request.unresolved_constraints, ())
+            self.assertEqual(candidate(request, offer), matches)
+
     def test_out_of_stock_or_different_actual_merchant_cannot_qualify(self):
         self.listing['inStock'] = False
         self.assertIsNone(self.read())

@@ -6,6 +6,18 @@ import type { ComparisonWorkspace } from './api';
 import fixture from './fixtures/workspace.json';
 const data=()=>structuredClone(fixture) as ComparisonWorkspace;
 describe('comparison evidence boundaries',()=>{
+ it('changes reading advice with the stated use while retaining the same listing',()=>{
+  const w=data(), item=w.current.uncertain[0];
+  w.current.recommendations=[];
+  w.current.request.intent={kind:'needs',description:'A tablet for reading textbooks',required_software:[]};
+  const unknown={state:'unknown' as const,evidence_ids:[],reason:'Unconfirmed'};
+  item.offer.variant.specs={category:'tablet',ram_gb:unknown,storage_gb:{state:'known',value:128,evidence_ids:['storage']},connectivity:unknown,stylus_support:unknown};
+  const {rerender}=render(<Comparison workspace={w}/>);
+  expect(screen.getByText(/For reading, check that the screen shows a full page/).textContent).toContain('128 GB');
+  w.current.request.intent={kind:'needs',description:'A tablet for video calls',required_software:[]};
+  rerender(<Comparison workspace={w}/>);
+  expect(screen.queryByText(/For reading, check/)).toBeNull();
+ });
  it('labels an unknown pickup time at the selected branch',()=>{
   const workspace=data(),offer=workspace.current.recommendations[0].primary.offer;
   offer.route={kind:'pickup',route_id:'pickup-east-hamra',branch_id:'hamra',destination:{country:'LB',city:'Beirut'}};
