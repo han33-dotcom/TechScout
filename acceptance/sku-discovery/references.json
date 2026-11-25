@@ -1,0 +1,315 @@
+{
+  "protocol": "All five first submissions count. References independently read before product edits. A purchasable match requires the requested variant/specifications and established new condition. A complete total also requires applicable mandatory charges. Preserve conditional totals separately. An empty independent check is inconclusive.",
+  "policies": [
+    {
+      "url": "https://shop.itworkslb.net/faq",
+      "utc": "2026-11-25 22:41:28.576520+00:00",
+      "sha256": "7b5bf097502ef0e5ff3b79b4282b8e069d289aa0069d2e526b17fca4f21a5f5b",
+      "status": 200,
+      "terms": {
+        "Do you deliver, and where?": "Yes — we deliver anywhere in Lebanon. Orders are usually with you within 1–3 business days, and we'll message you on WhatsApp to confirm the details.",
+        "How much does delivery cost?": "Delivery is a flat $5 anywhere in Lebanon — it's added as a separate line at checkout, so the price you see on the product is the price of the product.",
+        "What payment methods do you accept?": "Two: Cash on Delivery — you pay when the order reaches you — or Whish Money, sent to 03 191 730 before we ship. All prices are in USD and include tax (TTC)."
+      }
+    },
+    {
+      "url": "https://technodel.net/faq",
+      "utc": "2026-11-25 22:41:37.758298+00:00",
+      "sha256": "0fc09a08e222cdc75350c7e0ea5d8103aa82ef78bd4cd52818dbd0fd733078db",
+      "status": 200,
+      "terms": {
+        "How long does shipping take within Lebanon?": "We deliver to all Lebanese regions. Same-day delivery to Beirut, Sour, Tripoli and surroundings. Every other region: 1–2 days, never more.",
+        "What are the shipping costs?": "Delivery is a flat $4 anywhere in Lebanon — Beirut, South, North, Bekaa and Mount Lebanon alike — and free on orders of $500 or more.",
+        "What payment methods do you accept?": "We accept Cash on Delivery (COD), Wish Money transfer, and Crypto (USDT, BTC, ETH). No hidden fees — what you see is what you pay."
+      }
+    }
+  ],
+  "cases": [
+    {
+      "id": "S1",
+      "match": false,
+      "total_usd": null,
+      "page": {
+        "url": "https://shop.itworkslb.net/products/jbl-tune-510bt-wireless-on-ear-headphones-black-8842",
+        "requested_url": "https://shop.itworkslb.net/products/jbl-tune-510bt-wireless-on-ear-headphones-black-8842",
+        "utc": "2026-11-25 22:41:26.113149+00:00",
+        "sha256": "542878e68d0726709ba88918cc2c595e470dba9ca90d1743f47141a6878393a0",
+        "http": 200,
+        "merchant": {
+          "@type": "Organization",
+          "name": "ITWorks Lebanon"
+        },
+        "merchant_address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Gharios Center, Furn el Chebbek",
+          "addressLocality": "Beirut",
+          "addressCountry": "LB"
+        },
+        "title": "JBL Tune 510BT Wireless On Ear Headphones – White",
+        "sku": "gid://shopify/ProductVariant/51991159963879",
+        "selection_title": "JBL Tune 510BT Wireless On Ear Headphones – White",
+        "available": true,
+        "units": null,
+        "variants": [],
+        "listed_usd": "38.22",
+        "condition": "https://schema.org/NewCondition",
+        "shipping": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "5",
+            "currency": "USD"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "LB"
+          },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 1,
+              "maxValue": 3,
+              "unitCode": "DAY"
+            }
+          }
+        },
+        "specs": []
+      },
+      "note": "The current ITWorks purchase form selects white despite the black URL. Lebtech Store displayed black at $40 with a $4 nationwide fee in the indexed page, but a direct reread returned 429, and new condition and tax were unconfirmed.",
+      "other_url": "https://lebtech-store.com/products/jbl-tune-510bt-headphones-lebanon"
+    },
+    {
+      "id": "S2",
+      "match": false,
+      "total_usd": null,
+      "page": {
+        "url": "https://igoteck.com/product/samsung-galaxy-a16-4gb-128gb/",
+        "final_url": "https://igoteck.com/product/samsung-galaxy-a16-4gb-128gb/",
+        "status": 200,
+        "sha256": "c118249bff2a6aa51a5f37659c08bebcd1b34e3a0b9b7c9f03ef147ee871172e",
+        "utc": "2026-11-25T22:42:33.018331+00:00",
+        "merchant": "iGoteck, Dbayeh, Lebanon",
+        "sku": "8044",
+        "listed_usd": "199",
+        "storage_gb": 128,
+        "network": "4G LTE",
+        "stock": "InStock",
+        "valueAddedTaxIncluded": true,
+        "shipping": "Lebanon, free above $100"
+      },
+      "note": "Purchasable hardware match. The listed all-in amount is USD 199, conditional on new condition, which the selected product does not establish."
+    },
+    {
+      "id": "S3",
+      "match": true,
+      "total_usd": null,
+      "page": {
+        "url": "https://technodel.net/product/apple-ipad-pro-13-inch-m5-wi-fi-1tb",
+        "requested_url": "https://technodel.net/product/apple-ipad-pro-13-inch-m5-wi-fi-1tb",
+        "utc": "2026-11-25 22:41:35.374550+00:00",
+        "sha256": "13425d0152105cff2fd495d728f5970f3728148053778e5fec9ff3af5f2e4530",
+        "http": 200,
+        "merchant": {
+          "@type": "Organization",
+          "name": "Technodel",
+          "url": "https://technodel.net"
+        },
+        "merchant_address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Badaro",
+          "addressRegion": "Beirut",
+          "addressCountry": "LB"
+        },
+        "title": "Apple iPad Pro 13\" M5 Wi-Fi 1TB",
+        "sku": "AZ-58P8052E",
+        "selection_title": "Apple iPad Pro 13\" M5 Wi-Fi 1TB",
+        "available": true,
+        "units": 999,
+        "variants": [],
+        "listed_usd": "1733",
+        "condition": "https://schema.org/NewCondition",
+        "shipping": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "0",
+            "currency": "USD"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "LB"
+          },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            }
+          }
+        },
+        "specs": [
+          {
+            "label": "Brand",
+            "value": "Apple"
+          },
+          {
+            "label": "Model",
+            "value": "iPad Pro 13\" M5"
+          },
+          {
+            "label": "Storage",
+            "value": "1TB"
+          },
+          {
+            "label": "Connectivity",
+            "value": "Wi-Fi"
+          },
+          {
+            "label": "Condition",
+            "value": "New"
+          }
+        ]
+      },
+      "note": "Free shipping corroborated. Seller promises no hidden fees but the selected price has no explicit tax treatment. No checkout quote obtained."
+    },
+    {
+      "id": "S4",
+      "match": true,
+      "total_usd": "397.94",
+      "page": {
+        "url": "https://shop.itworkslb.net/products/msi-mag-274qpf-e20-27-wqhd-rapid-ips-panel-200hz-refresh-rate-05ms-2560-x-1440-pixels-824656",
+        "requested_url": "https://shop.itworkslb.net/products/msi-mag-274qpf-e20-27-wqhd-rapid-ips-panel-200hz-refresh-rate-05ms-2560-x-1440-pixels-824656",
+        "utc": "2026-11-25 22:42:07.345637+00:00",
+        "sha256": "e5994a06ce6411beabf70cdfe9f07ed03ec3eead4dc7e743a0657b4d675384ed",
+        "http": 200,
+        "merchant": {
+          "@type": "Organization",
+          "name": "ITWorks Lebanon"
+        },
+        "merchant_address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Gharios Center, Furn el Chebbek",
+          "addressLocality": "Beirut",
+          "addressCountry": "LB"
+        },
+        "title": "MSI MAG 274QPF E20 27\" WQHD Rapid IPS panel 200Hz Refresh Rate; 0.5ms 2560 x 1440 pixels",
+        "sku": "gid://shopify/ProductVariant/52715377492199",
+        "selection_title": "MSI MAG 274QPF E20 27\" WQHD Rapid IPS panel 200Hz Refresh Rate; 0.5ms 2560 x 1440 pixels",
+        "available": true,
+        "units": null,
+        "variants": [],
+        "listed_usd": "392.94",
+        "condition": "https://schema.org/NewCondition",
+        "shipping": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "5",
+            "currency": "USD"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "LB"
+          },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 1,
+              "maxValue": 3,
+              "unitCode": "DAY"
+            }
+          }
+        },
+        "specs": []
+      },
+      "note": "One new, available 200 Hz MSI, USD 392.94 including tax plus USD 5 shipping to Tripoli. Current canonical purchase selection re-read after redirect."
+    },
+    {
+      "id": "S5",
+      "match": true,
+      "total_usd": null,
+      "page": {
+        "url": "https://technodel.net/product/logitech-h110-stereo-headset-with-180-rotating-noise-reducing-microphone-dual-3-5mm-jacks-lightweigh-logitech-h",
+        "requested_url": "https://technodel.net/product/logitech-h110-stereo-headset-with-180-rotating-noise-reducing-microphone-dual-3-5mm-jacks-lightweigh-logitech-h",
+        "utc": "2026-11-25 22:42:04.740879+00:00",
+        "sha256": "58227c2874f7d9bf12b754fd141972178a45086307907cdfa1a77d8ff7b26b76",
+        "http": 200,
+        "merchant": {
+          "@type": "Organization",
+          "name": "Technodel",
+          "url": "https://technodel.net"
+        },
+        "merchant_address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Badaro",
+          "addressRegion": "Beirut",
+          "addressCountry": "LB"
+        },
+        "title": "Logitech H110 Stereo Headset With 180° Rotating Noise-Reducing Microphone, Dual 3.5mm Jacks, Lightweight Adjustable Headband, Stereo Sound | Dark Grey",
+        "sku": "AK-7RGCJT3V",
+        "selection_title": "Logitech H110 Stereo Headset With 180° Rotating Noise-Reducing Microphone, Dual 3.5mm Jacks, Lightweight Adjustable Headband, Stereo Sound | Dark Grey",
+        "available": true,
+        "units": 999,
+        "variants": [],
+        "listed_usd": "9",
+        "condition": "https://schema.org/NewCondition",
+        "shipping": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "4",
+            "currency": "USD"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "LB"
+          },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            }
+          }
+        },
+        "specs": [
+          {
+            "label": "Colour",
+            "value": "Grey"
+          }
+        ]
+      },
+      "note": "Selected new stereo H110. Shipping USD 4 to Byblos; item tax treatment unconfirmed."
+    }
+  ]
+}
