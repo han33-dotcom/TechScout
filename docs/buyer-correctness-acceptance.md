@@ -2,6 +2,8 @@
 
 [Buyer-flow milestone #76](https://github.com/han33-dotcom/TechScout/issues/76) tracks whether a buyer can use the normal browser to find a domestic offer and act on it. The original [held-out evaluation](evaluation-report.md) is the baseline. This protocol defines a new assessment. The case manifest, independent reference observations, and scored results are subsequent deliverables of [#178](https://github.com/han33-dotcom/TechScout/issues/178).
 
+The [25 November screening report](../acceptance/buyer-v1/README.md) records the initial reference checks and open cohort slots.
+
 ## Freeze the cases before debugging
 
 1. Write realistic buyer requests before looking up which retailers TechScout handles well. Use fresh requests across phones, laptops, tablets, monitors and audio. Include exact-model and needs-based entry, domestic delivery and selected-branch pickup. Keep the original study, its known outcomes, and the three development examples outside this cohort.
