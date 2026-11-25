@@ -1,0 +1,895 @@
+{
+  "version": 1,
+  "frozen_on_utc": "2026-11-25",
+  "status": "frozen",
+  "contract": "buyer-product-contract/v1",
+  "protocol_issue": 178,
+  "scored": false,
+  "evidence": "evidence-v1-2026-11-25.json",
+  "review": "review-v1-2026-11-25.json",
+  "input_sha256": {
+    "requests.json": "d0498f5cac1f1ce569cd55a7c303408dff1da82f619a62bb8597cb7fa73da2c3",
+    "requests-supplement-1.json": "0111980f7c1f72e7734908731006f9959bf113f6df689aa70511d2ebd9153165",
+    "requests-supplement-2.json": "cd040103d2ec57a73034b7b4fa27bccd8682437fcd451b2f7bf2ba7e4b783d1c",
+    "screening-2026-11-25.json": "9876988ab931182b355ca0786dcbcbe2cbea2c6ae44d007a172c750d63b2a127"
+  },
+  "cases": [
+    {
+      "id": "B07",
+      "input": {
+        "id": "B07",
+        "category": "laptop",
+        "entry": "exact",
+        "mode": "delivery",
+        "destination": "Tripoli",
+        "prompt": "Find a new 13-inch MacBook Air M2 in Midnight, 8 GB RAM and 256 GB SSD, delivered to Tripoli."
+      },
+      "expected_class": "full",
+      "comparison_flag": false,
+      "expected_buyer_outcome": "Khalife's MLY33 is the Midnight 13-inch-class M2 Air, 8 GB/256 GB. Its one-unit cash-on-delivery checkout for Tripoli shows USD 801 payable, the same as the subtotal. The scoped quote resolves the policy conflict.",
+      "observations": [
+        "E07",
+        "E28",
+        "E66",
+        "J14",
+        "K1",
+        "CK1"
+      ],
+      "variant": "Apple MacBook Air M2 Midnight MLY33, 13.6-inch, 8 GB/256 GB",
+      "fulfillment": {
+        "mode": "domestic delivery",
+        "destination": "Tripoli",
+        "quantity": 1,
+        "condition": "new",
+        "currency": "USD"
+      },
+      "offers": [
+        {
+          "seller": "Khalife Computers",
+          "listing": "J14",
+          "url": "https://khalifecomputers.com/product/apple-macbook-air-13-6-inch-mid-2022-m2-8gb-256gb-nvme-mly33/",
+          "new_condition_and_online_stock": "J14",
+          "price_usd": "801.00",
+          "delivery_usd": null,
+          "payable_usd": "801.00",
+          "total_evidence": [
+            "CK1"
+          ],
+          "seller_and_service_evidence": [
+            "N7",
+            "K1"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B11",
+      "input": {
+        "id": "B11",
+        "category": "tablet",
+        "entry": "exact",
+        "mode": "delivery",
+        "destination": "Beirut",
+        "prompt": "Find a new blue iPad with the A16 chip, Wi-Fi only and 128 GB, delivered to Beirut."
+      },
+      "expected_class": "full",
+      "comparison_flag": false,
+      "expected_buyer_outcome": "The ITWorks purchase form binds Blue, 128GB and WI-FI to an available A16 iPad at USD 609.39. Tax-inclusive price plus USD 5 Beirut delivery gives USD 614.39.",
+      "observations": [
+        "E09",
+        "E54",
+        "E10",
+        "E43",
+        "E49",
+        "I16",
+        "J7",
+        "J8",
+        "J10"
+      ],
+      "variant": "Blue Apple iPad A16 Wi-Fi only 128 GB, selected variant 52686616985831",
+      "fulfillment": {
+        "mode": "domestic delivery",
+        "destination": "Beirut",
+        "quantity": 1,
+        "condition": "new",
+        "currency": "USD"
+      },
+      "offers": [
+        {
+          "seller": "ITWorks Lebanon",
+          "listing": "I16",
+          "url": "https://shop.itworkslb.net/products/apple-ipad-wi-fi-a16-744839?Color=Blue&Storage=128GB&Network=WI-FI",
+          "new_condition_and_online_stock": "I16",
+          "price_usd": "609.39",
+          "delivery_usd": "5.00",
+          "payable_usd": "614.39",
+          "total_evidence": [
+            "J7",
+            "J8"
+          ],
+          "seller_and_service_evidence": [
+            "J10",
+            "J7",
+            "J8"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B17",
+      "input": {
+        "id": "B17",
+        "category": "monitor",
+        "entry": "exact",
+        "mode": "delivery",
+        "destination": "Tripoli",
+        "prompt": "Find me a new Samsung Odyssey G5 G55C 27-inch curved 165 Hz monitor for delivery to Tripoli."
+      },
+      "expected_class": "full",
+      "comparison_flag": false,
+      "expected_buyer_outcome": "ITWorks sells the exact LS27CG552EMXUE new and in stock, serves Tripoli and includes applicable taxes. USD 233.88 plus USD 5 gives USD 238.88. Contract v1 makes the seller and delivery route decisive. Zaytoun requires sign-in before a fee can be obtained.",
+      "observations": [
+        "E15",
+        "E33",
+        "E36",
+        "E41",
+        "E45",
+        "E13",
+        "E14",
+        "E54",
+        "R01",
+        "J7",
+        "J8",
+        "J10",
+        "Z1",
+        "Z2",
+        "CK5"
+      ],
+      "variant": "Samsung Odyssey G55C LS27CG552EMXUE, 27-inch QHD curved 165 Hz",
+      "fulfillment": {
+        "mode": "domestic delivery",
+        "destination": "Tripoli",
+        "quantity": 1,
+        "condition": "new",
+        "currency": "USD"
+      },
+      "offers": [
+        {
+          "seller": "ITWorks Lebanon",
+          "listing": "R01",
+          "url": "https://shop.itworkslb.net/products/samsung-ls27cg552emxue-791611",
+          "new_condition_and_online_stock": "R01",
+          "price_usd": "233.88",
+          "delivery_usd": "5.00",
+          "payable_usd": "238.88",
+          "total_evidence": [
+            "J7",
+            "J8"
+          ],
+          "seller_and_service_evidence": [
+            "J10",
+            "J7",
+            "J8"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B21",
+      "input": {
+        "id": "B21",
+        "category": "audio",
+        "entry": "exact",
+        "mode": "delivery",
+        "destination": "Beirut",
+        "prompt": "Compare the new black JBL Tune 520BT headphones delivered to Beirut. Which seller is cheaper overall?"
+      },
+      "expected_class": "full",
+      "comparison_flag": true,
+      "expected_buyer_outcome": "Two merchants sell the black JBL Tune 520BT. The ITWorks Black purchase option has a different variant ID from Blue. ITWorks is USD 37.34 delivered to Beirut, below CompuOne's USD 45.00 by USD 7.66.",
+      "observations": [
+        "E17",
+        "E18",
+        "E55",
+        "E39",
+        "I15",
+        "I12",
+        "C03",
+        "C04",
+        "C05",
+        "CK2",
+        "J7",
+        "J8",
+        "J10"
+      ],
+      "variant": "Black JBL Tune 520BT wireless on-ear headphones, one retail unit",
+      "fulfillment": {
+        "mode": "domestic delivery",
+        "destination": "Beirut",
+        "quantity": 1,
+        "condition": "new",
+        "currency": "USD"
+      },
+      "offers": [
+        {
+          "seller": "ITWorks Lebanon",
+          "listing": "I15",
+          "url": "https://shop.itworkslb.net/products/jbl-tune-520bt-wireless-on-ear-headphones-up-to-57h-battery-life-blue-black-white-purple-1131?Color=Black",
+          "new_condition_and_online_stock": "I15",
+          "price_usd": "32.34",
+          "delivery_usd": "5.00",
+          "payable_usd": "37.34",
+          "total_evidence": [
+            "J7",
+            "J8"
+          ],
+          "seller_and_service_evidence": [
+            "J10",
+            "J7",
+            "J8"
+          ]
+        },
+        {
+          "seller": "CompuOne",
+          "listing": "C03",
+          "url": "https://compuonelb.com/jbl-tune-520bt-black-headset/",
+          "new_condition_and_online_stock": "C03",
+          "price_usd": "38.00",
+          "delivery_usd": "7.00",
+          "payable_usd": "45.00",
+          "total_evidence": [
+            "CK2"
+          ],
+          "seller_and_service_evidence": [
+            "C03",
+            "C04",
+            "C05"
+          ]
+        }
+      ],
+      "comparison": {
+        "scope": "the two predeclared sellers in offers",
+        "cheaper_seller": "ITWorks Lebanon",
+        "difference_usd": "7.66"
+      }
+    },
+    {
+      "id": "B23",
+      "input": {
+        "id": "B23",
+        "category": "audio",
+        "entry": "needs",
+        "mode": "delivery",
+        "destination": "Saida",
+        "prompt": "I want new wired USB-C earbuds with a microphone for phone calls. What is the delivered price to Saida?"
+      },
+      "expected_class": "full",
+      "comparison_flag": true,
+      "expected_buyer_outcome": "White Apple EarPods with USB-C and microphone are USD 35 delivered to Saida at ITWorks and USD 36 at Klshi. Technodel also quotes USD 32 for Apple USB-C EarPods MYQY3. UGREEN 35754 is a different matching model at USD 22 delivered.",
+      "observations": [
+        "E27",
+        "E63",
+        "E32",
+        "E37",
+        "E21",
+        "E20",
+        "E70",
+        "E71",
+        "E72",
+        "I02",
+        "J3",
+        "KQ3",
+        "R28",
+        "T16",
+        "Q01",
+        "D05",
+        "J7",
+        "J8",
+        "J10",
+        "R20"
+      ],
+      "variant": "White Apple EarPods with USB-C connector and inline call microphone, one retail unit",
+      "fulfillment": {
+        "mode": "domestic delivery",
+        "destination": "Saida",
+        "quantity": 1,
+        "condition": "new",
+        "currency": "USD"
+      },
+      "offers": [
+        {
+          "seller": "ITWorks Lebanon",
+          "listing": "I02",
+          "url": "https://shop.itworkslb.net/products/apple-earpods-with-usb-c-connector-829157",
+          "new_condition_and_online_stock": "I02",
+          "price_usd": "30.00",
+          "delivery_usd": "5.00",
+          "payable_usd": "35.00",
+          "total_evidence": [
+            "J7",
+            "J8"
+          ],
+          "seller_and_service_evidence": [
+            "J10",
+            "J7",
+            "J8"
+          ]
+        },
+        {
+          "seller": "Klshi Shop",
+          "listing": "J3",
+          "url": "https://klshishop.com/en/p/apple-earpods-with-usb-c-connector",
+          "new_condition_and_online_stock": "J3",
+          "price_usd": "30.00",
+          "delivery_usd": "6.00",
+          "payable_usd": "36.00",
+          "total_evidence": [
+            "KQ3"
+          ],
+          "seller_and_service_evidence": [
+            "D05"
+          ]
+        }
+      ],
+      "comparison": {
+        "scope": "the two predeclared sellers in offers",
+        "cheaper_seller": "ITWorks Lebanon",
+        "difference_usd": "1.00"
+      }
+    },
+    {
+      "id": "B27",
+      "input": {
+        "id": "B27",
+        "category": "monitor",
+        "entry": "needs",
+        "mode": "delivery",
+        "destination": "Zahle",
+        "prompt": "My PC can drive 144 Hz over DisplayPort. What would I pay for a new 24-inch-class Full HD gaming monitor with DisplayPort and at least 144 Hz, delivered to Zahle?"
+      },
+      "expected_class": "full",
+      "comparison_flag": false,
+      "expected_buyer_outcome": "The new LG UltraGear 24GS50F-B has DisplayPort, Full HD and 180 Hz. ITWorks charges USD 130.54 plus USD 5 to Zahle, USD 135.54 total.",
+      "observations": [
+        "R37",
+        "T01",
+        "J7",
+        "J8",
+        "J10"
+      ],
+      "variant": "LG UltraGear 24GS50F-B, Full HD, DisplayPort, 180 Hz",
+      "fulfillment": {
+        "mode": "domestic delivery",
+        "destination": "Zahle",
+        "quantity": 1,
+        "condition": "new",
+        "currency": "USD"
+      },
+      "offers": [
+        {
+          "seller": "ITWorks Lebanon",
+          "listing": "R37",
+          "url": "https://shop.itworkslb.net/products/lg-24gs50f-b-ultragear-24-fhd-180hz-gaming-monitor-23903",
+          "new_condition_and_online_stock": "R37",
+          "price_usd": "130.54",
+          "delivery_usd": "5.00",
+          "payable_usd": "135.54",
+          "total_evidence": [
+            "J7",
+            "J8"
+          ],
+          "seller_and_service_evidence": [
+            "J10",
+            "J7",
+            "J8"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B31",
+      "input": {
+        "id": "B31",
+        "category": "laptop",
+        "entry": "needs",
+        "mode": "delivery",
+        "destination": "Saida",
+        "prompt": "I want a new notebook for running virtual machines, with at least 32 GB of RAM and a 1 TB SSD. What is the price delivered to Saida?"
+      },
+      "expected_class": "full",
+      "comparison_flag": true,
+      "expected_buyer_outcome": "Technodel quotes USD 2520 delivered to Saida for the new space-black MacBook Pro MJ3D4LL/A, M5 10-core CPU/GPU, 32 GB RAM and 1 TB SSD. ITWorks totals USD 3113. For x86 guests, Technodel also quotes USD 775 for the Ryzen 7 HP 14-EM0085CL 32 GB/1 TB. ITWorks describes its HP as open box.",
+      "observations": [
+        "A18",
+        "A19",
+        "Q14",
+        "R28",
+        "J7",
+        "J8",
+        "J10",
+        "W8",
+        "Q11",
+        "I20"
+      ],
+      "variant": "Apple MacBook Pro MJ3D4LL/A, 14.2-inch M5 10-core CPU and GPU, 32 GB/1 TB, Space Black, US English",
+      "fulfillment": {
+        "mode": "domestic delivery",
+        "destination": "Saida",
+        "quantity": 1,
+        "condition": "new",
+        "currency": "USD"
+      },
+      "offers": [
+        {
+          "seller": "Technodel",
+          "listing": "A18",
+          "url": "https://technodel.net/product/apple-macbook-pro-mj3d4lla-m5-14-10-c-cpu-10-c-gpu-32gb-ram-1tb-ssd-english-keyboard-space-black",
+          "new_condition_and_online_stock": "A18",
+          "price_usd": "2520.00",
+          "delivery_usd": "0.00",
+          "payable_usd": "2520.00",
+          "total_evidence": [
+            "Q14"
+          ],
+          "seller_and_service_evidence": [
+            "N6",
+            "R28"
+          ]
+        },
+        {
+          "seller": "ITWorks Lebanon",
+          "listing": "A19",
+          "url": "https://shop.itworkslb.net/products/apple-macbook-pro-142-inch-m5-10-core-cpu-32gb-ram-1tb-ssd-10-core-gpu-space-black-mj3d4lla-773271",
+          "new_condition_and_online_stock": "A19",
+          "price_usd": "3108.00",
+          "delivery_usd": "5.00",
+          "payable_usd": "3113.00",
+          "total_evidence": [
+            "J7",
+            "J8"
+          ],
+          "seller_and_service_evidence": [
+            "J10",
+            "J7",
+            "J8"
+          ]
+        }
+      ],
+      "comparison": {
+        "scope": "the two predeclared sellers in offers",
+        "cheaper_seller": "Technodel",
+        "difference_usd": "593.00"
+      }
+    },
+    {
+      "id": "B35",
+      "input": {
+        "id": "B35",
+        "category": "phone",
+        "entry": "needs",
+        "mode": "delivery",
+        "destination": "Beirut",
+        "prompt": "I want a new Samsung Galaxy S-series phone with 256 GB and an integrated S Pen for taking notes. What's the delivered price in Beirut?"
+      },
+      "expected_class": "full",
+      "comparison_flag": false,
+      "expected_buyer_outcome": "Technodel quotes USD 1166 delivered to Beirut for a new Galaxy S26 Ultra 12/256. Samsung confirms the built-in S Pen.",
+      "observations": [
+        "T13",
+        "Q08",
+        "R28",
+        "J15"
+      ],
+      "variant": "Samsung Galaxy S26 Ultra with built-in S Pen, 12 GB/256 GB",
+      "fulfillment": {
+        "mode": "domestic delivery",
+        "destination": "Beirut",
+        "quantity": 1,
+        "condition": "new",
+        "currency": "USD"
+      },
+      "offers": [
+        {
+          "seller": "Technodel",
+          "listing": "T13",
+          "url": "https://technodel.net/product/samsung-galaxy-s26-ultra-256gb-12gb-ram",
+          "new_condition_and_online_stock": "T13",
+          "price_usd": "1166.00",
+          "delivery_usd": "0.00",
+          "payable_usd": "1166.00",
+          "total_evidence": [
+            "Q08"
+          ],
+          "seller_and_service_evidence": [
+            "N6",
+            "R28"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "B36",
+      "input": {
+        "id": "B36",
+        "category": "audio",
+        "entry": "needs",
+        "mode": "delivery",
+        "destination": "Jounieh",
+        "prompt": "I'm buying new wireless over-ear headphones for commuting. I want active noise cancellation and USB-C charging. Can you compare the same pair delivered to Jounieh?"
+      },
+      "expected_class": "full",
+      "comparison_flag": true,
+      "expected_buyer_outcome": "The black Soundcore Q20i has ANC, wireless over-ear operation and USB-C charging. Klshi quotes USD 53 delivered to Jounieh versus USD 66.04 at ITWorks, a USD 13.04 difference.",
+      "observations": [
+        "H1",
+        "H7",
+        "H12",
+        "KQ4",
+        "D05",
+        "J7",
+        "J8",
+        "J10"
+      ],
+      "variant": "Black Soundcore Q20i, wireless over-ear, hybrid ANC, USB-C charging",
+      "fulfillment": {
+        "mode": "domestic delivery",
+        "destination": "Jounieh",
+        "quantity": 1,
+        "condition": "new",
+        "currency": "USD"
+      },
+      "offers": [
+        {
+          "seller": "Klshi Shop",
+          "listing": "H1",
+          "url": "https://klshishop.com/en/p/soundcore-q20i-anc-headphones",
+          "new_condition_and_online_stock": "H1",
+          "price_usd": "48.00",
+          "delivery_usd": "5.00",
+          "payable_usd": "53.00",
+          "total_evidence": [
+            "KQ4"
+          ],
+          "seller_and_service_evidence": [
+            "D05"
+          ]
+        },
+        {
+          "seller": "ITWorks Lebanon",
+          "listing": "H7",
+          "url": "https://shop.itworkslb.net/products/soundcore-q20i-anc-748819?Color=Black",
+          "new_condition_and_online_stock": "H7",
+          "price_usd": "61.04",
+          "delivery_usd": "5.00",
+          "payable_usd": "66.04",
+          "total_evidence": [
+            "J7",
+            "J8"
+          ],
+          "seller_and_service_evidence": [
+            "J10",
+            "J7",
+            "J8"
+          ]
+        }
+      ],
+      "comparison": {
+        "scope": "the two predeclared sellers in offers",
+        "cheaper_seller": "Klshi Shop",
+        "difference_usd": "13.04"
+      }
+    },
+    {
+      "id": "B39",
+      "input": {
+        "id": "B39",
+        "category": "audio",
+        "entry": "needs",
+        "mode": "delivery",
+        "destination": "Byblos",
+        "prompt": "Find me a new wireless gaming headset with a USB receiver and a flip-to-mute microphone for PC. What would it cost delivered to Byblos?"
+      },
+      "expected_class": "full",
+      "comparison_flag": true,
+      "expected_buyer_outcome": "The HyperX Cloud Stinger 2 Wireless PC headset includes the USB receiver and a swivel-to-mute mic. The same edition totals USD 73 to Byblos from Klshi and USD 120.43 from ITWorks, a USD 47.43 difference.",
+      "observations": [
+        "I17",
+        "D04",
+        "CK3",
+        "D05",
+        "J7",
+        "J8",
+        "J10"
+      ],
+      "variant": "HyperX Cloud Stinger 2 Wireless PC headset, 2.4 GHz USB receiver, swivel-to-mute mic, standard 50 mm/20-hour model",
+      "fulfillment": {
+        "mode": "domestic delivery",
+        "destination": "Byblos",
+        "quantity": 1,
+        "condition": "new",
+        "currency": "USD"
+      },
+      "offers": [
+        {
+          "seller": "Klshi Shop",
+          "listing": "D04",
+          "url": "https://klshishop.com/en/p/hyperx-cloud-stinger-2-wireless-gaming-headset-for-ps4-ps5-pc",
+          "new_condition_and_online_stock": "D04",
+          "price_usd": "68.00",
+          "delivery_usd": "5.00",
+          "payable_usd": "73.00",
+          "total_evidence": [
+            "CK3"
+          ],
+          "seller_and_service_evidence": [
+            "D05"
+          ]
+        },
+        {
+          "seller": "ITWorks Lebanon",
+          "listing": "I17",
+          "url": "https://shop.itworkslb.net/products/hyperx-cloud-stinger-2-wireless-gaming-headset-772703",
+          "new_condition_and_online_stock": "I17",
+          "price_usd": "115.43",
+          "delivery_usd": "5.00",
+          "payable_usd": "120.43",
+          "total_evidence": [
+            "J7",
+            "J8"
+          ],
+          "seller_and_service_evidence": [
+            "J10",
+            "J7",
+            "J8"
+          ]
+        }
+      ],
+      "comparison": {
+        "scope": "the two predeclared sellers in offers",
+        "cheaper_seller": "Klshi Shop",
+        "difference_usd": "47.43"
+      }
+    },
+    {
+      "id": "B08",
+      "input": {
+        "id": "B08",
+        "category": "laptop",
+        "entry": "needs",
+        "mode": "delivery",
+        "destination": "Byblos",
+        "prompt": "I need a new Windows laptop for spreadsheets with a built-in numeric keypad, at least 16 GB RAM and a 512 GB SSD. Deliver to Byblos."
+      },
+      "expected_class": "partial",
+      "comparison_flag": false,
+      "expected_buyer_outcome": "GCS has a new ASUS VivoBook F1504VAP-IH79T with Windows 11 Home, numeric keypad, 16 GB RAM and 1 TB SSD at USD 833 before VAT. Checkout ended at a login prompt. VAT and the payable Byblos delivery total remain unknown.",
+      "observations": [
+        "E08",
+        "E29",
+        "J13",
+        "CK4"
+      ],
+      "partial_offer": {
+        "seller": "GCS Computers Pro",
+        "listing": "J13",
+        "url": "https://gcscomputerpro.com/shop/products/asus-f1504vap-ih79t-vivobook-15-15-6-fhd-touch-core7-150u-16gb-1tb-ssd-silver",
+        "variant": "ASUS VivoBook F1504VAP-IH79T, new, Windows 11 Home, numeric keypad, 16 GB/1 TB",
+        "online_item_price_usd": "833.00",
+        "payable_usd": null,
+        "missing": "VAT and Byblos delivery total"
+      }
+    },
+    {
+      "id": "B24",
+      "input": {
+        "id": "B24",
+        "category": "audio",
+        "entry": "exact",
+        "mode": "pickup",
+        "destination": "Hamra, Beirut",
+        "prompt": "Where can I pick up new black JBL Tune 770NC headphones in Hamra, Beirut?"
+      },
+      "expected_class": "partial",
+      "comparison_flag": false,
+      "expected_buyer_outcome": "Klshi lists the new black JBL Tune 770NC at USD 70 online. The seller provides no stock observation at a Hamra branch. Pickup availability and the pickup price remain unconfirmed.",
+      "observations": [
+        "E62",
+        "E22",
+        "E23",
+        "E50",
+        "E72",
+        "D01",
+        "D05",
+        "J1"
+      ],
+      "partial_offer": {
+        "seller": "Klshi Shop",
+        "listing": "D01",
+        "url": "https://klshishop.com/en/p/jbl-tune-770nc-headphones",
+        "variant": "Black JBL Tune 770NC, new, online stock",
+        "online_item_price_usd": "70.00",
+        "payable_usd": null,
+        "missing": "Hamra branch stock and pickup price"
+      }
+    },
+    {
+      "id": "B37",
+      "input": {
+        "id": "B37",
+        "category": "monitor",
+        "entry": "needs",
+        "mode": "pickup",
+        "destination": "Beirut",
+        "prompt": "I need a new 27-inch IPS monitor with a USB-C input for my laptop. Where in Beirut can I pick one up and what will I pay?"
+      },
+      "expected_class": "partial",
+      "comparison_flag": false,
+      "expected_buyer_outcome": "ITWorks lists a new LG 27UP850K-W 27-inch IPS monitor with USB-C at USD 598.78 online. Its Furn el Chebbek store is a pickup lead. There is no item-bound pickup stock or price for a specific Beirut branch.",
+      "observations": [
+        "I14",
+        "J10"
+      ],
+      "partial_offer": {
+        "seller": "ITWorks Lebanon",
+        "listing": "I14",
+        "url": "https://shop.itworkslb.net/products/lg-27-ips-4k-uhd-vesa-hdr400-monitor-with-usb-type-c-975880",
+        "variant": "LG 27UP850K-W, new 27-inch IPS monitor with USB-C",
+        "online_item_price_usd": "598.78",
+        "payable_usd": null,
+        "missing": "Beirut branch stock and pickup price"
+      }
+    },
+    {
+      "id": "B42",
+      "input": {
+        "id": "B42",
+        "category": "tablet",
+        "entry": "needs",
+        "mode": "pickup",
+        "destination": "Tripoli",
+        "prompt": "I need a new Android tablet with at least 8 GB of RAM and a screen of 11 inches or larger. Can I collect one at a specific shop in Tripoli? What will it cost?"
+      },
+      "expected_class": "partial",
+      "comparison_flag": false,
+      "expected_buyer_outcome": "Technodel lists the new Samsung Galaxy Tab A11+ SM-X230 Android Wi-Fi 8/256, 11 inches, at USD 280 online. Centrino Cell in Tripoli lists a OnePlus Pad Go with 6/8 GB options but does not bind 8 GB to local stock or a pickup price. No specific Tripoli pickup can be confirmed.",
+      "observations": [
+        "F3",
+        "I08",
+        "N1",
+        "N2",
+        "N3"
+      ],
+      "partial_offer": {
+        "seller": "Technodel",
+        "listing": "F3",
+        "url": "https://technodel.net/product/samsung-galaxy-tab-a11-plus-sm-x230-11-inch-wi-fi-256gb-8gb-ram",
+        "variant": "Samsung Galaxy Tab A11+ SM-X230, 11-inch Android tablet, 8 GB RAM, 256 GB storage",
+        "online_item_price_usd": "280.00",
+        "payable_usd": null,
+        "missing": "Tripoli branch stock and pickup price"
+      }
+    },
+    {
+      "id": "B43",
+      "input": {
+        "id": "B43",
+        "category": "phone",
+        "entry": "exact",
+        "mode": "pickup",
+        "destination": "Beirut",
+        "prompt": "Can I pick up a new black 128 GB iPhone 15 at a specific Beirut branch? Tell me the price and whether that branch has it."
+      },
+      "expected_class": "partial",
+      "comparison_flag": false,
+      "expected_buyer_outcome": "Klshi's new black 128 GB iPhone 15 is USD 660 online. ITWorks also offers the black selection and identifies its physical store. Neither establishes that a specific Beirut branch has the unit or will honor the online price for pickup.",
+      "observations": [
+        "P43",
+        "F4",
+        "J10"
+      ],
+      "partial_offer": {
+        "seller": "Klshi Shop",
+        "listing": "P43",
+        "url": "https://klshishop.com/en/p/apple-iphone-15-new",
+        "variant": "Black iPhone 15, 128 GB, new and sealed, online stock",
+        "online_item_price_usd": "660.00",
+        "payable_usd": null,
+        "missing": "Beirut branch stock and pickup price"
+      }
+    },
+    {
+      "id": "B05",
+      "input": {
+        "id": "B05",
+        "category": "phone",
+        "entry": "exact",
+        "mode": "delivery",
+        "destination": "Beirut",
+        "prompt": "I need the iPhone 15 generation in the Mini size, new. Can you find an iPhone 15 mini for delivery to Beirut?"
+      },
+      "expected_class": "blocked",
+      "comparison_flag": false,
+      "expected_buyer_outcome": "Apple made no iPhone 15 mini. The requested generation and size cannot be combined.",
+      "observations": [
+        "E24",
+        "M05"
+      ]
+    },
+    {
+      "id": "B10",
+      "input": {
+        "id": "B10",
+        "category": "laptop",
+        "entry": "exact",
+        "mode": "delivery",
+        "destination": "Beirut",
+        "prompt": "Can you find the new 13-inch MacBook Air with the M1 chip and 32 GB of built-in memory for delivery to Beirut?"
+      },
+      "expected_class": "blocked",
+      "comparison_flag": false,
+      "expected_buyer_outcome": "Apple's 13-inch M1 MacBook Air supports at most 16 GB of unified memory. The requested 32 GB configuration is impossible.",
+      "observations": [
+        "E35",
+        "M10"
+      ]
+    },
+    {
+      "id": "B15",
+      "input": {
+        "id": "B15",
+        "category": "tablet",
+        "entry": "exact",
+        "mode": "delivery",
+        "destination": "Saida",
+        "prompt": "I want a new Wi-Fi iPad mini with the A17 Pro chip and 64 GB internal storage. Deliver to Saida."
+      },
+      "expected_class": "blocked",
+      "comparison_flag": false,
+      "expected_buyer_outcome": "Apple's iPad mini with A17 Pro starts at 128 GB. The requested 64 GB configuration does not exist.",
+      "observations": [
+        "E38",
+        "M15"
+      ]
+    },
+    {
+      "id": "B20",
+      "input": {
+        "id": "B20",
+        "category": "monitor",
+        "entry": "exact",
+        "mode": "delivery",
+        "destination": "Beirut",
+        "prompt": "I need the exact Dell P2422H, but it must display native 3840 x 2160. Can I get it new, delivered to Beirut?"
+      },
+      "expected_class": "blocked",
+      "comparison_flag": false,
+      "expected_buyer_outcome": "Dell specifies 1920 x 1080 native for the P2422H. The exact panel cannot meet the native 3840 x 2160 requirement.",
+      "observations": [
+        "E25",
+        "M20",
+        "P48",
+        "MF20"
+      ]
+    },
+    {
+      "id": "B25",
+      "input": {
+        "id": "B25",
+        "category": "audio",
+        "entry": "exact",
+        "mode": "delivery",
+        "destination": "Tripoli",
+        "prompt": "I want the Sony MDR-ZX110 in black, new, but it must connect over Bluetooth without an adapter. Can it be delivered to Tripoli?"
+      },
+      "expected_class": "blocked",
+      "comparison_flag": false,
+      "expected_buyer_outcome": "Sony specifies a wired 3.5 mm connection for the black MDR-ZX110. It cannot connect over Bluetooth without an adapter.",
+      "observations": [
+        "E26",
+        "M25",
+        "P47",
+        "MF25"
+      ]
+    }
+  ]
+}

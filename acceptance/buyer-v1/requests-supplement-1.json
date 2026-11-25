@@ -1,0 +1,133 @@
+{
+  "purpose": "Supplemental independent screening pool for #178. Locked before looking up these requests. Keep all candidates held out, including exclusions. Price in USD, quantity one, new condition.",
+  "cases": [
+    {
+      "id": "B26",
+      "category": "monitor",
+      "entry": "needs",
+      "mode": "delivery",
+      "destination": "Beirut",
+      "prompt": "I use two windows side by side for work. Find a new 27-inch QHD monitor with HDMI, delivered to Beirut. I'd like to compare the total at two shops."
+    },
+    {
+      "id": "B27",
+      "category": "monitor",
+      "entry": "needs",
+      "mode": "delivery",
+      "destination": "Zahle",
+      "prompt": "My PC can drive 144 Hz over DisplayPort. What would I pay for a new 24-inch-class Full HD gaming monitor with DisplayPort and at least 144 Hz, delivered to Zahle?"
+    },
+    {
+      "id": "B28",
+      "category": "monitor",
+      "entry": "needs",
+      "mode": "delivery",
+      "destination": "Byblos",
+      "prompt": "I need a new 32-inch-class 4K monitor for a desk in Byblos. Show me the delivered price and whether it can take an HDMI cable."
+    },
+    {
+      "id": "B29",
+      "category": "audio",
+      "entry": "exact",
+      "mode": "delivery",
+      "destination": "Tripoli",
+      "prompt": "How much would a new pair of white Apple AirPods Pro 2 with a USB-C charging case actually cost me delivered to Tripoli?"
+    },
+    {
+      "id": "B30",
+      "category": "audio",
+      "entry": "needs",
+      "mode": "delivery",
+      "destination": "Beirut",
+      "prompt": "I take calls from my desk. Can you compare a new wired USB headset with a boom mic and on-ear controls from two shops delivered to Beirut?"
+    },
+    {
+      "id": "B31",
+      "category": "laptop",
+      "entry": "needs",
+      "mode": "delivery",
+      "destination": "Saida",
+      "prompt": "I want a new notebook for running virtual machines, with at least 32 GB of RAM and a 1 TB SSD. What is the price delivered to Saida?"
+    },
+    {
+      "id": "B32",
+      "category": "laptop",
+      "entry": "needs",
+      "mode": "delivery",
+      "destination": "Beirut",
+      "prompt": "Find a new gaming laptop with a GeForce RTX 4060 or 5060 and at least 16 GB RAM. Which shops can deliver the same configuration to Beirut, and for how much?"
+    },
+    {
+      "id": "B33",
+      "category": "laptop",
+      "entry": "exact",
+      "mode": "delivery",
+      "destination": "Jounieh",
+      "prompt": "I'd like a new silver 13-inch MacBook Air M4 with 16 GB and a 512 GB SSD. How much with delivery to Jounieh?"
+    },
+    {
+      "id": "B34",
+      "category": "tablet",
+      "entry": "needs",
+      "mode": "delivery",
+      "destination": "Tripoli",
+      "prompt": "I want a new iPad with at least 256 GB and support for the Apple Pencil Pro for my illustration class. Compare prices delivered to Tripoli."
+    },
+    {
+      "id": "B35",
+      "category": "phone",
+      "entry": "needs",
+      "mode": "delivery",
+      "destination": "Beirut",
+      "prompt": "I want a new Samsung Galaxy S-series phone with 256 GB and an integrated S Pen for taking notes. What's the delivered price in Beirut?"
+    },
+    {
+      "id": "B36",
+      "category": "audio",
+      "entry": "needs",
+      "mode": "delivery",
+      "destination": "Jounieh",
+      "prompt": "I'm buying new wireless over-ear headphones for commuting. I want active noise cancellation and USB-C charging. Can you compare the same pair delivered to Jounieh?"
+    },
+    {
+      "id": "B37",
+      "category": "monitor",
+      "entry": "needs",
+      "mode": "pickup",
+      "destination": "Beirut",
+      "prompt": "I need a new 27-inch IPS monitor with a USB-C input for my laptop. Where in Beirut can I pick one up and what will I pay?"
+    },
+    {
+      "id": "B38",
+      "category": "audio",
+      "entry": "exact",
+      "mode": "delivery",
+      "destination": "Zahle",
+      "prompt": "I want a new black Logitech H390 USB-A headset delivered to Zahle. Can you compare the same part at two shops?"
+    },
+    {
+      "id": "B39",
+      "category": "audio",
+      "entry": "needs",
+      "mode": "delivery",
+      "destination": "Byblos",
+      "prompt": "Find me a new wireless gaming headset with a USB receiver and a flip-to-mute microphone for PC. What would it cost delivered to Byblos?"
+    },
+    {
+      "id": "B40",
+      "category": "monitor",
+      "entry": "needs",
+      "mode": "delivery",
+      "destination": "Tripoli",
+      "prompt": "I play racing games and want a new curved ultrawide monitor with at least 3440 x 1440 resolution and a refresh rate of 144 Hz or higher. How much delivered to Tripoli?"
+    },
+    {
+      "id": "B41",
+      "category": "audio",
+      "entry": "exact",
+      "mode": "delivery",
+      "destination": "Beirut",
+      "prompt": "What would a pair of new white Apple EarPods with the Lightning connector cost me delivered to Beirut?"
+    }
+  ]
+}
