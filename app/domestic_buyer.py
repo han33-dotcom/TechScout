@@ -82,7 +82,8 @@ def candidate(request, offer):
 
 
 def domestic_assessment(request, offer, now, *, estimates=None):
-    if isinstance(offer.route, v2.DirectRoute) and offer.route.origin_country == 'ZZ':
+    if (isinstance(offer.route, v2.DirectRoute) and offer.route.origin_country == 'ZZ'
+            and not offer.domestic_merchant_receipts()):
         # Unresolved local dispatch cannot turn a domestic search into an import quote.
         missing = ['Dispatch from Lebanon is unverified for this listing and configuration.']
         missing.extend(f'{charge.kind} is unpublished for the selected route.'
@@ -114,9 +115,11 @@ def current_problem(offer, assessment, read, run, started_at, now):
     if isinstance(offer.route, v2.DirectRoute):
         origin = dispatch_receipts(offer, run, now)
         supporting_responses = getattr(read, 'dispatch_replies', ())
-        if offer.route.origin_country != 'LB' or not origin or not all(
+        merchant = offer.domestic_merchant_receipts()
+        local_dispatch = offer.route.origin_country == 'LB' and origin and all(
                 current(e) and (e.origin_url == offer.listing_url or
-                                (e.response_sha256, e.observed_at) in supporting_responses) for e in origin):
+                                (e.response_sha256, e.observed_at) in supporting_responses) for e in origin)
+        if not (merchant and all(current(e) for e in merchant) or local_dispatch):
             return 'Dispatch from Lebanon is unverified for this listing and configuration.'
         eligibility = offer.route.item_eligible
         if eligibility.value is not True or not all(current(records[i]) and item_route(records[i])
@@ -300,6 +303,12 @@ class DomesticBuyerFlow(_Flow):
         directory = setup.workers.directory
         seen_sources = {o.source_id for o in self.catalog.values()}
         seeds = []
+        sources = self.deps.domestic_sources
+        if (self.request.intent.kind == 'exact_model' and self.request.requirements.category == 'audio'
+                and self.request.fulfillment.mode == 'delivery' and hasattr(type(sources), 'search_audio')):
+            room = lambda: self.left(self.nonfinal_by)
+            seeds.extend(Listing(url, 'itworks') for url in sources.search_audio(
+                self.request, PhaseJob(self.job, room), room=room))
         for selection in directory.select(DirectoryQuery(category=self.request.requirements.category,
                 seek_competing_offers=True, limit=10)):
             record = selection.record

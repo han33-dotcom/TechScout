@@ -1,0 +1,676 @@
+{
+  "issue": 75,
+  "scenarios": [
+    "04",
+    "17"
+  ],
+  "request": {
+    "quantity": 1,
+    "city": "Beirut",
+    "buyer": "How much for a new pair of white JBL Tune 510BT headphones delivered to Beirut?",
+    "requested_at": "2026-11-25T16:05:32.0695688Z",
+    "category": "audio",
+    "color": "white",
+    "revision": "c0d1b19f37acd0fc701a72669583a80fbcdb82f7",
+    "entry": "exact model"
+  },
+  "browser_input": {
+    "model": "JBL Tune 510BT in white",
+    "category": "audio",
+    "fulfillment": "delivery",
+    "destination": "Beirut, LB",
+    "condition": "new"
+  },
+  "independent_reference": {
+    "product": "JBL Tune 510BT Wireless On Ear Headphones – White",
+    "source_id": "itworks",
+    "selected_variant": "51991159963879",
+    "item_condition": "NewCondition",
+    "stock": "InStock",
+    "available_for_sale": true,
+    "price_usd": "38.22",
+    "tax": "included",
+    "shipping_usd": "5.00",
+    "payable_usd": "43.22",
+    "reads": {
+      "itworks-510bt": {
+        "url": "https://shop.itworkslb.net/products/jbl-tune-510bt-wireless-on-ear-headphones-black-8842",
+        "status": 200,
+        "utc": "2026-11-25T16:05:57.042015+00:00",
+        "sha256": "096ca8176638641afdb8180aa862010a889bee6413d02d631089b99ef172a1fd"
+      },
+      "itworks-faq": {
+        "url": "https://shop.itworkslb.net/faq",
+        "status": 200,
+        "utc": "2026-11-25T16:06:14.081128+00:00",
+        "sha256": "2a42e18219aaf68db651390c3ec8be319cb52fb36a249c22a14ecde40bcb20f7"
+      },
+      "itworks-terms": {
+        "url": "https://shop.itworkslb.net/policies/terms-of-service",
+        "status": 200,
+        "utc": "2026-11-25T16:06:14.650085+00:00",
+        "sha256": "5456d87a18950f974fc65c1bc9aaf36eb44eb935dc2c8f8c3274ef2df178dbee"
+      },
+      "itworks-shipping": {
+        "url": "https://shop.itworkslb.net/policies/shipping-policy",
+        "status": 200,
+        "utc": "2026-11-25T16:06:13.476492+00:00",
+        "sha256": "33b1df8372ca2a969bc88e0cabb41251f62c86e519cd40719de66caced2460b6"
+      }
+    }
+  },
+  "screening": {
+    "first_request": "I want a new pair of black JBL Tune 720BT headphones delivered to Beirut. What would I pay?",
+    "result": "Two in-stock multi-color product pages did not identify a selected black unit. Cle Market selected black and reported it out of stock. This request was not submitted to TechScout."
+  },
+  "runs": [
+    {
+      "label": "baseline",
+      "browser": {
+        "post": 202,
+        "get": 200,
+        "run": {
+          "run_id": "117b23cb-c002-4536-93f3-6ee89809356c",
+          "run_revision": 1,
+          "request_id": "141232b2-ebfd-47f4-b876-7f71cfe906f0",
+          "request_revision": 1
+        },
+        "started_at": "2026-11-25T16:08:56.877000Z",
+        "finished_at": "2026-11-25T16:09:29.534000Z",
+        "terminal_browser_ms": 33375,
+        "first_useful_browser_ms": null,
+        "status": "abstained",
+        "stop_reason": "Checked 0 independent domestic seller(s). 0 offer(s) qualified. A two-seller comparison of verified payable totals was unavailable. New retailer leads were handed to background onboarding.",
+        "coverage": {
+          "discovered": 6,
+          "attempted": 4,
+          "retrieved": 0,
+          "qualifying": 0
+        },
+        "verified": 0
+      },
+      "revision": "c0d1b19f37acd0fc701a72669583a80fbcdb82f7",
+      "worker_elapsed_ms": 32140,
+      "source": {
+        "coverage": {
+          "attempted": 4,
+          "discovered": 6,
+          "qualifying": 0,
+          "retrieved": 0
+        },
+        "outcomes": [
+          {
+            "name": "beytech",
+            "reason": "No matching SKU on the current listing",
+            "source_id": "beytech",
+            "status": "failed"
+          },
+          {
+            "name": "class_cellulars",
+            "reason": "No matching SKU on the current listing",
+            "source_id": "class_cellulars",
+            "status": "failed"
+          },
+          {
+            "name": "mojitech",
+            "reason": "The selected listing could not be checked.",
+            "source_id": "mojitech",
+            "status": "failed"
+          },
+          {
+            "name": "beirutcart.com",
+            "reason": "In background onboarding.",
+            "source_id": "lead:beirutcart.com",
+            "status": "unchecked"
+          },
+          {
+            "name": "gcscomputerpro.com",
+            "reason": "In background onboarding.",
+            "source_id": "lead:gcscomputerpro.com",
+            "status": "unchecked"
+          },
+          {
+            "name": "macrotronics",
+            "reason": "The selected listing could not be checked.",
+            "source_id": "macrotronics",
+            "status": "failed"
+          }
+        ]
+      },
+      "phases": [
+        {
+          "at_ms": 15,
+          "intent": "exact_model",
+          "market": "LB",
+          "name": "interpret"
+        },
+        {
+          "at_ms": 234,
+          "catalog_offers": 0,
+          "name": "discover"
+        },
+        {
+          "at_ms": 32000,
+          "candidates": 0,
+          "handed_off": 2,
+          "name": "research"
+        },
+        {
+          "at_ms": 32015,
+          "decision": "current payable total required",
+          "name": "evaluate"
+        },
+        {
+          "at_ms": 32125,
+          "name": "verify",
+          "rechecked": 0,
+          "recommendations": 0
+        },
+        {
+          "at_ms": 32125,
+          "name": "write",
+          "source": "fallback",
+          "status": "not_called"
+        },
+        {
+          "at_ms": 32125,
+          "name": "publish",
+          "status": "abstained"
+        }
+      ],
+      "limits": {
+        "active_seconds": 299.647,
+        "concurrent_workers": 3,
+        "final_by_s": 118,
+        "ledger_buyer_caps": {
+          "calls": 40,
+          "research_spend_usd": "0.75",
+          "seconds": 120,
+          "spend_usd": "1"
+        },
+        "nonfinal_by_s": 85,
+        "recommendation_groups": 3
+      },
+      "inference": {
+        "data_collection": "deny",
+        "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+        "fallback": "disabled",
+        "model": "openai/gpt-6.1-sol",
+        "pricing_checked_on": "2026-11-23",
+        "provider": "openrouter",
+        "purpose": "buyer",
+        "rates": {
+          "cache_write": "2.5000000",
+          "cached": "0.1000000",
+          "input": "2.000000",
+          "output": "10.00000",
+          "request": "0"
+        },
+        "roles": {
+          "max_input_tokens": 16384,
+          "max_output_tokens": 2048,
+          "prompt_version": "roles-v1",
+          "reservation_usd": "0.0614400",
+          "route_fingerprint": "5250196f5e947ff1",
+          "timeout_seconds": 30.0
+        },
+        "serving_provider": "openai",
+        "writer": {
+          "max_input_tokens": 32768,
+          "max_output_tokens": 4096,
+          "prompt_version": "writer-v1",
+          "reservation_usd": "0.1228800",
+          "route_fingerprint": "a5519600e0fd430f",
+          "timeout_seconds": 30.0
+        },
+        "zdr": false
+      },
+      "inference_config_sha256": "96906b9f6a356c6fb421a397ea1e00a8a50d54777d895963c05830a00dd65e33",
+      "source_registry_sha256": "89f682e9a6dd6c4810d24cf17418a179f102a959af4bf292b6bc33f1fb73610c",
+      "model_calls": [
+        {
+          "actual_usd": "0.000866",
+          "latency_ms": 2813,
+          "missing_metadata": [
+            "system_fingerprint"
+          ],
+          "reported_model": "openai/gpt-6.1-sol",
+          "requested_model": "openai/gpt-6.1-sol",
+          "reserved_usd": "0.0614400",
+          "role": "orchestrator",
+          "serving_provider": "OpenAI",
+          "spend": "known",
+          "status": "completed",
+          "tokens": {
+            "input_tokens": 348,
+            "output_tokens": 17,
+            "total_tokens": 365
+          },
+          "validated": true
+        }
+      ],
+      "validated_responses": 1,
+      "spend": {
+        "attempts": {
+          "model": 1,
+          "retrieval": 6,
+          "work": 2,
+          "worker": 4
+        },
+        "known_usd": "0.000866",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0"
+      },
+      "writer": {
+        "claims_filled": 0,
+        "claims_kept": 0,
+        "dropped": {},
+        "evidence_count": 0,
+        "final_deadline_left_s": 85.875,
+        "input_tokens": 0,
+        "lease_seconds": 30.0,
+        "model": null,
+        "output_tokens": 0,
+        "priced": true,
+        "prompt_version": "writer-v1",
+        "reason": "no_recommendations",
+        "source": "fallback",
+        "status": "not_called"
+      }
+    },
+    {
+      "label": "qualifying",
+      "browser": {
+        "post": 202,
+        "get": 200,
+        "run": {
+          "run_id": "5a61aa18-c3c8-414e-851a-2decf06e7ee0",
+          "run_revision": 1,
+          "request_id": "fddfb31e-5c27-4b5a-ab81-72e7795303e7",
+          "request_revision": 1
+        },
+        "started_at": "2026-11-25T16:17:41.819000Z",
+        "finished_at": "2026-11-25T16:18:22.489000Z",
+        "terminal_browser_ms": 41326,
+        "first_useful_browser_ms": 41736,
+        "status": "complete",
+        "stop_reason": "Checked 1 independent domestic seller(s). 1 offer(s) qualified. A two-seller comparison of verified payable totals was unavailable.",
+        "coverage": {
+          "discovered": 3,
+          "attempted": 3,
+          "retrieved": 1,
+          "qualifying": 1
+        },
+        "verified": 1
+      },
+      "revision": "b477fe1e7f50cc03ffd17c32a344d1049d474c54",
+      "worker_elapsed_ms": 39781,
+      "source": {
+        "coverage": {
+          "attempted": 3,
+          "discovered": 3,
+          "qualifying": 1,
+          "retrieved": 1
+        },
+        "outcomes": [
+          {
+            "name": "ITWorks Lebanon",
+            "reason": null,
+            "source_id": "itworks",
+            "status": "checked"
+          },
+          {
+            "name": "beytech",
+            "reason": "No matching SKU on the current listing",
+            "source_id": "beytech",
+            "status": "failed"
+          },
+          {
+            "name": "class_cellulars",
+            "reason": "No matching SKU on the current listing",
+            "source_id": "class_cellulars",
+            "status": "failed"
+          }
+        ]
+      },
+      "phases": [
+        {
+          "at_ms": 31,
+          "intent": "exact_model",
+          "market": "LB",
+          "name": "interpret"
+        },
+        {
+          "at_ms": 500,
+          "catalog_offers": 0,
+          "name": "discover"
+        },
+        {
+          "at_ms": 29109,
+          "candidates": 1,
+          "handed_off": 0,
+          "name": "research"
+        },
+        {
+          "at_ms": 29125,
+          "decision": "current payable total required",
+          "name": "evaluate"
+        },
+        {
+          "at_ms": 35859,
+          "name": "verify",
+          "rechecked": 1,
+          "recommendations": 1
+        },
+        {
+          "at_ms": 39781,
+          "name": "write",
+          "source": "model",
+          "status": "completed"
+        },
+        {
+          "at_ms": 39781,
+          "name": "publish",
+          "status": "complete"
+        }
+      ],
+      "limits": {
+        "active_seconds": 299.402,
+        "concurrent_workers": 3,
+        "final_by_s": 118,
+        "ledger_buyer_caps": {
+          "calls": 40,
+          "research_spend_usd": "0.75",
+          "seconds": 120,
+          "spend_usd": "1"
+        },
+        "nonfinal_by_s": 85,
+        "recommendation_groups": 3
+      },
+      "inference": {
+        "data_collection": "deny",
+        "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+        "fallback": "disabled",
+        "model": "openai/gpt-6.1-sol",
+        "pricing_checked_on": "2026-11-23",
+        "provider": "openrouter",
+        "purpose": "buyer",
+        "rates": {
+          "cache_write": "2.5000000",
+          "cached": "0.1000000",
+          "input": "2.000000",
+          "output": "10.00000",
+          "request": "0"
+        },
+        "roles": {
+          "max_input_tokens": 16384,
+          "max_output_tokens": 2048,
+          "prompt_version": "roles-v1",
+          "reservation_usd": "0.0614400",
+          "route_fingerprint": "5250196f5e947ff1",
+          "timeout_seconds": 30.0
+        },
+        "serving_provider": "openai",
+        "writer": {
+          "max_input_tokens": 32768,
+          "max_output_tokens": 4096,
+          "prompt_version": "writer-v1",
+          "reservation_usd": "0.1228800",
+          "route_fingerprint": "a5519600e0fd430f",
+          "timeout_seconds": 30.0
+        },
+        "zdr": false
+      },
+      "inference_config_sha256": "96906b9f6a356c6fb421a397ea1e00a8a50d54777d895963c05830a00dd65e33",
+      "source_registry_sha256": "5c49c65a0004d3e3b3d12120dde135cee1a049bc37ff49ed2ed933d437ae17b5",
+      "model_calls": [
+        {
+          "actual_usd": "0.00085",
+          "latency_ms": 3296,
+          "missing_metadata": [
+            "system_fingerprint"
+          ],
+          "reported_model": "openai/gpt-6.1-sol",
+          "requested_model": "openai/gpt-6.1-sol",
+          "reserved_usd": "0.0614400",
+          "role": "orchestrator",
+          "serving_provider": "OpenAI",
+          "spend": "known",
+          "status": "completed",
+          "tokens": {
+            "input_tokens": 340,
+            "output_tokens": 17,
+            "total_tokens": 357
+          },
+          "validated": true
+        },
+        {
+          "actual_usd": "0.001394",
+          "latency_ms": 2688,
+          "missing_metadata": [
+            "system_fingerprint"
+          ],
+          "reported_model": "openai/gpt-6.1-sol",
+          "requested_model": "openai/gpt-6.1-sol",
+          "reserved_usd": "0.1228800",
+          "role": "writer",
+          "serving_provider": "OpenAI",
+          "spend": "known",
+          "status": "completed",
+          "tokens": {
+            "input_tokens": 502,
+            "output_tokens": 39,
+            "total_tokens": 541
+          },
+          "validated": true
+        }
+      ],
+      "validated_responses": 2,
+      "spend": {
+        "attempts": {
+          "model": 2,
+          "retrieval": 7,
+          "work": 2,
+          "worker": 4
+        },
+        "known_usd": "0.002244",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0"
+      },
+      "writer": {
+        "claims_filled": 0,
+        "claims_kept": 5,
+        "dropped": {},
+        "evidence_count": 10,
+        "final_deadline_left_s": 78.219,
+        "input_tokens": 502,
+        "lease_seconds": 30.0,
+        "model": "openai/gpt-6.1-sol",
+        "output_tokens": 39,
+        "priced": true,
+        "prompt_version": "writer-v1",
+        "reason": null,
+        "source": "model",
+        "status": "completed"
+      }
+    }
+  ],
+  "qualifying_offer": {
+    "model": "JBL Tune 510BT",
+    "variant": "51991159963879",
+    "seller": "ITWorks Lebanon",
+    "url": "https://shop.itworkslb.net/products/jbl-tune-510bt-wireless-on-ear-headphones-black-8842",
+    "color": "White",
+    "condition": "new",
+    "price": {
+      "amount": "38.22",
+      "currency": "USD"
+    },
+    "stock": true,
+    "service": true,
+    "charges": [
+      {
+        "schema_version": 2,
+        "kind": "tax",
+        "leg": "order",
+        "state": "included",
+        "amount": null,
+        "reason": null,
+        "conditions": [],
+        "evidence_ids": [
+          "itworks:51991159963879:costs.order.tax:8"
+        ],
+        "valid_until": null
+      },
+      {
+        "schema_version": 2,
+        "kind": "shipping",
+        "leg": "order",
+        "state": "additional",
+        "amount": {
+          "amount": "5",
+          "currency": "USD"
+        },
+        "reason": null,
+        "conditions": [],
+        "evidence_ids": [
+          "itworks:51991159963879:costs.order.shipping:6",
+          "itworks:51991159963879:costs.order.shipping:7"
+        ],
+        "valid_until": null
+      }
+    ],
+    "total": {
+      "amount": "43.22",
+      "currency": "USD"
+    },
+    "receipts": [
+      {
+        "field": "variant.product.model",
+        "observed_at": "2026-11-25T16:18:16.065926Z",
+        "url": "https://shop.itworkslb.net/products/jbl-tune-510bt-wireless-on-ear-headphones-black-8842",
+        "sha256": "dcb46312403195cff208f8f88f418d68298a5873e06a476f3ba5b32763eba886",
+        "excerpt": "JBL Tune 510BT Wireless On Ear Headphones – White"
+      },
+      {
+        "field": "variant.product.manufacturer",
+        "observed_at": "2026-11-25T16:18:16.065926Z",
+        "url": "https://shop.itworkslb.net/products/jbl-tune-510bt-wireless-on-ear-headphones-black-8842",
+        "sha256": "dcb46312403195cff208f8f88f418d68298a5873e06a476f3ba5b32763eba886",
+        "excerpt": "JBL"
+      },
+      {
+        "field": "seller.name",
+        "observed_at": "2026-11-25T16:18:16.065926Z",
+        "url": "https://shop.itworkslb.net/products/jbl-tune-510bt-wireless-on-ear-headphones-black-8842",
+        "sha256": "dcb46312403195cff208f8f88f418d68298a5873e06a476f3ba5b32763eba886",
+        "excerpt": "ITWorks Lebanon"
+      },
+      {
+        "field": "seller.market",
+        "observed_at": "2026-11-25T16:18:16.065926Z",
+        "url": "https://shop.itworkslb.net/products/jbl-tune-510bt-wireless-on-ear-headphones-black-8842",
+        "sha256": "dcb46312403195cff208f8f88f418d68298a5873e06a476f3ba5b32763eba886",
+        "excerpt": "ITWorks Lebanon — Gharios Center, Furn el Chebbek, LB"
+      },
+      {
+        "field": "condition",
+        "observed_at": "2026-11-25T16:18:16.065926Z",
+        "url": "https://shop.itworkslb.net/products/jbl-tune-510bt-wireless-on-ear-headphones-black-8842",
+        "sha256": "dcb46312403195cff208f8f88f418d68298a5873e06a476f3ba5b32763eba886",
+        "excerpt": "https://schema.org/NewCondition"
+      },
+      {
+        "field": "route.item_eligible",
+        "observed_at": "2026-11-25T16:18:16.065926Z",
+        "url": "https://shop.itworkslb.net/products/jbl-tune-510bt-wireless-on-ear-headphones-black-8842",
+        "sha256": "dcb46312403195cff208f8f88f418d68298a5873e06a476f3ba5b32763eba886",
+        "excerpt": "Offer shippingDestination: LB"
+      },
+      {
+        "field": "costs.order.shipping",
+        "observed_at": "2026-11-25T16:18:16.065926Z",
+        "url": "https://shop.itworkslb.net/products/jbl-tune-510bt-wireless-on-ear-headphones-black-8842",
+        "sha256": "dcb46312403195cff208f8f88f418d68298a5873e06a476f3ba5b32763eba886",
+        "excerpt": "{\"@type\": \"MonetaryAmount\", \"value\": \"5\", \"currency\": \"USD\"}"
+      },
+      {
+        "field": "costs.order.shipping",
+        "observed_at": "2026-11-25T16:18:17.837829Z",
+        "url": "https://shop.itworkslb.net/faq",
+        "sha256": "2b6b77cb35a308adad97e121da3177f2dbb6a693dd53ebf76e3b3292f8c6766f",
+        "excerpt": "Delivery is a flat $5 anywhere in Lebanon — it's added as a separate line at checkout, so the price you see on the product is the price of the product."
+      },
+      {
+        "field": "costs.order.tax",
+        "observed_at": "2026-11-25T16:18:17.837829Z",
+        "url": "https://shop.itworkslb.net/faq",
+        "sha256": "2b6b77cb35a308adad97e121da3177f2dbb6a693dd53ebf76e3b3292f8c6766f",
+        "excerpt": "All prices are in USD and include tax (TTC)."
+      },
+      {
+        "field": "variant.color",
+        "observed_at": "2026-11-25T16:18:16.065926Z",
+        "url": "https://shop.itworkslb.net/products/jbl-tune-510bt-wireless-on-ear-headphones-black-8842",
+        "sha256": "dcb46312403195cff208f8f88f418d68298a5873e06a476f3ba5b32763eba886",
+        "excerpt": "JBL Tune 510BT Wireless On Ear Headphones – White"
+      },
+      {
+        "field": "variant.specs.form_factor",
+        "observed_at": "2026-11-25T16:18:16.065926Z",
+        "url": "https://shop.itworkslb.net/products/jbl-tune-510bt-wireless-on-ear-headphones-black-8842",
+        "sha256": "dcb46312403195cff208f8f88f418d68298a5873e06a476f3ba5b32763eba886",
+        "excerpt": "JBL Tune 510BT Wireless On Ear Headphones – White"
+      },
+      {
+        "field": "price",
+        "observed_at": "2026-11-25T16:18:16.065926Z",
+        "url": "https://shop.itworkslb.net/products/jbl-tune-510bt-wireless-on-ear-headphones-black-8842",
+        "sha256": "dcb46312403195cff208f8f88f418d68298a5873e06a476f3ba5b32763eba886",
+        "excerpt": "Selected form and Offer: USD 38.22"
+      },
+      {
+        "field": "stock",
+        "observed_at": "2026-11-25T16:18:16.065926Z",
+        "url": "https://shop.itworkslb.net/products/jbl-tune-510bt-wireless-on-ear-headphones-black-8842",
+        "sha256": "dcb46312403195cff208f8f88f418d68298a5873e06a476f3ba5b32763eba886",
+        "excerpt": "https://schema.org/InStock"
+      },
+      {
+        "field": "purchasable",
+        "observed_at": "2026-11-25T16:18:16.065926Z",
+        "url": "https://shop.itworkslb.net/products/jbl-tune-510bt-wireless-on-ear-headphones-black-8842",
+        "sha256": "dcb46312403195cff208f8f88f418d68298a5873e06a476f3ba5b32763eba886",
+        "excerpt": "Enabled purchase form: selected variant 51991159963879, availableForSale true"
+      }
+    ]
+  },
+  "adapter_version": "itworks-audio/1",
+  "handoff": {
+    "time": "2026-11-25T16:19:00.665Z",
+    "status": 200,
+    "url": "https://shop.itworkslb.net/products/jbl-tune-510bt-wireless-on-ear-headphones-black-8842",
+    "selection": {
+      "title": "JBL Tune 510BT Wireless On Ear Headphones – White",
+      "id": "gid://shopify/ProductVariant/51991159963879",
+      "quantity": 1,
+      "available": true,
+      "price": {
+        "amount": "38.22",
+        "currencyCode": "USD"
+      },
+      "enabled": true
+    }
+  },
+  "combined_known_usd": "0.003110",
+  "display_recheck": {
+    "revision": "e7ed1b14dd575b1c94830bb5aa7cb37029af5a12",
+    "heading": "JBL Tune 510BT · White",
+    "total": "USD 43.22",
+    "method": "Opened the same completed run from browser history after the heading encoding correction."
+  }
+}

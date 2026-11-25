@@ -308,10 +308,7 @@ def _aware(now: datetime | None) -> datetime:
 
 
 def supports_domestic_cost(offer) -> bool:
-    from app import contracts_v2 as v2
-
-    return (offer.seller.market == 'LB' and not isinstance(offer.route, v2.ForwardedRoute)
-            and (not isinstance(offer.route, v2.DirectRoute) or offer.route.origin_country == 'LB'))
+    return offer.locally_fulfillable()
 
 
 def calculate_domestic_cost(request, offer, *, fx: Sequence[FxRate] = (), now=None, estimates=None):

@@ -14,6 +14,11 @@ const workspace=(s:RunSnapshot):ComparisonWorkspace=>({schema_version:2,current:
 function api(s=snap()): Transport {return {start:vi.fn().mockResolvedValue(s),read:vi.fn().mockResolvedValue(workspace(s)),cancel:vi.fn().mockResolvedValue({...s,status:'cancelled'}),clarify:vi.fn().mockResolvedValue({...s,run:{...s.run,run_revision:2}}),refine:vi.fn().mockResolvedValue(workspace({...s,run:{...s.run,run_id:'run-2',request_revision:2},request:{...s.request,revision:2}}))};}
 afterEach(()=>vi.useRealTimers());
 describe('request boundaries',()=>{
+ it('keeps an explicit color separate from the exact model',()=>{
+  const r=toRequest({...initialDraft,text:'Studio 123 in white',kind:'exact_model',category:'audio'});
+  expect(r.intent).toMatchObject({kind:'exact_model',model:'Studio 123'});
+  expect(r.allowed_colors).toEqual(['white']);
+ });
  it.each(examples)('preserves approximate budget and original wording: $label',({draft})=>{
   const r=toRequest(draft); expect(r.budget?.target?.amount).toBe('1000');expect(r.budget?.maximum).toBeNull();expect(r.market_scope?.include_international).toBe(false);expect(r.allowed_conditions).toEqual(['new']);expect(r.intent.kind).toBe('needs');
  });

@@ -6,12 +6,12 @@ returned page supplies the fields and receipts of the resulting runtime offer.
 from dataclasses import dataclass, field
 from datetime import datetime
 from datetime import timezone
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from hashlib import sha256
 import json
 import time
 from typing import Literal
-from urllib.parse import urldefrag, urlsplit
+from urllib.parse import urldefrag, urlencode, urlsplit
 
 import httpx2
 from sqlalchemy import select
@@ -20,6 +20,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from app import contracts_v2 as v2
 from app.accounting import BudgetDenied, Charge
 from app.adapters.woocommerce import read_page as read_woo_page
+from app.adapters import itworks_audio
 from app.buyer_sources import DeadlineBudget
 from app.corpus_contracts import DocumentCapture, ProcessingVersion, ResourceKey
 from app.corpus import Corpus
@@ -354,6 +355,21 @@ class DomesticBuyerSources:
                   and any(origin.host == host for origin in (r.entry.origin, *r.entry.related_origins))]
         return source_id, owners[0] if len(owners) == 1 else None
 
+    def search_audio(self, request, job, *, room):
+        """One public search on a reviewed seller, with no reference URLs in the catalog."""
+        owner = self.directory.get(itworks_audio.SOURCE)
+        if not owner or owner.seller_identity != 'retailer' or owner.source_country != 'LB' or job.cancelled:
+            return ()
+        url = itworks_audio.ORIGIN + '/search?' + urlencode({'q': request.intent.model})
+        try:
+            result = retrieve_page(self.gate, _ReadJob(job, room), itworks_audio.SOURCE, url,
+                                   capability=CapabilityRef(capability_id='itworks-search', version='1'))
+            if result.status == 'ok' and result.final_url == url:
+                return itworks_audio.product_links(result.body, request.intent.model)
+        except (ValueError, TypeError, PermissionError, BudgetDenied, TimeoutError, httpx2.HTTPError):
+            pass
+        return ()
+
     def read(self, request, url, job, run, *, earlier=None, room):
         url = str(url)
         target = canonical(url)
@@ -396,6 +412,21 @@ class DomesticBuyerSources:
                               for e in outcome.errors)
                 return ReadResult(source_id, status='refused' if refused else 'failed', reason='Listing read unavailable')
             replies = frozenset({(outcome.response_sha256, outcome.observed_at)})
+            if source_id == itworks_audio.SOURCE:
+                if category != 'audio' or request.fulfillment.mode != 'delivery':
+                    return ReadResult(source_id, status='out_of_scope', reason='Reviewed only for audio delivery')
+                policy = retrieve_page(self.gate, bounded, source_id, itworks_audio.FAQ)
+                if policy.status == 'ok':
+                    replies |= {(policy.response_sha256, policy.observed_at)}
+                try:
+                    offer = itworks_audio.read_offer(outcome, policy, request, owner, run,
+                                                     _route_id(request.fulfillment.destination))
+                except (KeyError, IndexError, ValueError, TypeError, AttributeError, InvalidOperation, RecursionError):
+                    offer = None
+                if offer is None:
+                    return ReadResult(source_id, replies=replies, status='failed',
+                                      reason='The current page did not establish an unambiguous audio selection')
+                return ReadResult(source_id, (offer,), replies)
             work = bounded.reserve('work', Charge(Decimal(0)), 5)
             started = time.monotonic()
             work.dispatch()
