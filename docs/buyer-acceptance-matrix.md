@@ -52,6 +52,8 @@ Read each ID with its observable pass condition above. The first linked issue ow
 | 17 | Worker fixtures cover changed offers and stale evidence after timeout. | Exercise current-run price changes, missing stock and estimated arrival against a hard deadline. Correct any unsupported claim. | [#76](https://github.com/han33-dotcom/TechScout/issues/76), [#75](https://github.com/han33-dotcom/TechScout/issues/75) |
 | 18 | Fixtures group sellers and display a comparison. A live pair with comparable payable totals remains unproven. | Demonstrate cheaper and tied totals, and a scoped empty result. Obtain the separate live seller pair. | [#76](https://github.com/han33-dotcom/TechScout/issues/76), [#177](https://github.com/han33-dotcom/TechScout/issues/177) |
 
+On 25 November 2026 the live development check for scenario 18 showed a new black Logitech H340 delivered to Beirut. The buyer entered the model name and delivery details. Two independent retailers qualified, and both links opened the checked purchase selection. Technodel was USD 25 delivered and ITWorks Lebanon was USD 38. The separate frozen cohort belongs to #178. [Buyer card](../acceptance/development/issue-177/comparison.png) · [Reference, runs and handoffs](../acceptance/development/issue-177/evidence.json)
+
 ## How a task earns acceptance
 
 - **Repeatable scenarios.** Use offline retailer fixtures for each branch in the relevant rows. Judge what the agent asked, retained, showed, and supported with evidence. Allow different sensible wording. Assert both the resulting recommendation and any claims that would mislead the buyer.
