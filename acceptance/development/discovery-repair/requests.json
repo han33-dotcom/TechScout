@@ -70,5 +70,11 @@
     "category": "phone",
     "entry": "exact_model",
     "prompt": "Please find a new black Samsung Galaxy A56 5G with 256 GB storage for delivery to Jbeil."
+  },
+  {
+    "id": "C7",
+    "category": "phone",
+    "entry": "exact_model",
+    "prompt": "How much is a new Motorola Edge 60 Fusion with 256 GB storage delivered to Tyre?"
   }
 ]
