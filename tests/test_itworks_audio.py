@@ -6,7 +6,7 @@ import json
 import httpx2
 
 from app.adapters.itworks_audio import FAQ, ORIGIN, SELLER, SOURCE
-from app.directory import import_domestic_listings
+from app.directory import import_audit, import_domestic_listings
 from app.domestic_buyer_sources import DomesticBuyerSources
 from app.source_registry import DEFAULT_REGISTRY
 from app.sources import SourceGate, SourceLimiter
@@ -80,6 +80,7 @@ class ITWorksAudio(FlowCase):
         return run
 
     def test_payable_total_uses_final_price_and_actual_merchant(self):
+        import_audit(self.directory)
         run = self.submit()
         self.assertEqual(run.status, 'complete', (run.stop_reason, run.source_outcomes))
         verified = run.recommendations[0].primary

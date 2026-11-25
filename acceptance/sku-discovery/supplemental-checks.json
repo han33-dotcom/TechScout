@@ -1,0 +1,68 @@
+{
+  "s1_post_submission": {
+    "case": "S1",
+    "status": 200,
+    "url": "https://itpromax.store/en/p/jbl-tune-510bt-bluetooth-headphones",
+    "sha256": "e895b3f15a9dc3f79048555cbec8d5c2f4b78e85b7adc24610b07a61d4f0ca77",
+    "utc": "2026-11-26T00:52:27.590823+02:00",
+    "interpretation": "No selected black finish established.",
+    "title": "JBL Tune 510BT Bluetooth Headphones",
+    "condition": "NewCondition",
+    "availability": "InStock",
+    "finish": null,
+    "seller": "IT Promax",
+    "listed_usd": "45.00"
+  },
+  "unsuccessful_reference_reads": [
+    {
+      "case": "S1",
+      "merchant": "Lebtech Store",
+      "url": "https://lebtech-store.com/products/jbl-tune-510bt-headphones-lebanon",
+      "status": 429
+    },
+    {
+      "case": "S1",
+      "merchant": "Class Cellulars",
+      "url": "https://classcellulars.com/product/jbl-tune-510bt/",
+      "status": 404
+    },
+    {
+      "case": "S1",
+      "merchant": "961Souq",
+      "url": "https://961souq.com/products/jbl-tune-510bt-wireless-on-ear-headsets",
+      "status": 404
+    },
+    {
+      "url": "https://technodel.net/search?q=JBL+Tune+510BT",
+      "status": null,
+      "utc": "None",
+      "sha256": null,
+      "errors": [
+        "BUDGET_EXHAUSTED"
+      ],
+      "job": "sku-screen-s1"
+    },
+    {
+      "url": "https://shop.itworkslb.net/search?q=JBL+Tune+510BT",
+      "status": null,
+      "utc": "None",
+      "sha256": null,
+      "errors": [
+        "BUDGET_EXHAUSTED"
+      ],
+      "job": "sku-screen-s1"
+    },
+    {
+      "case": "S1",
+      "merchant": "iStore Plus",
+      "url": "https://istoreplus.me/collections/black-friday-sale/products/jbl-tune-510bt-black",
+      "status": 429
+    },
+    {
+      "case": "S1",
+      "merchant": "Ayoub Computers",
+      "url": "https://ayoubcomputers.com/jbl-tune-510bt-wireless-bluetooth-headphones-black/",
+      "outcome": "Independent capture exceeded 2 MB. No selected-item facts scored."
+    }
+  ]
+}

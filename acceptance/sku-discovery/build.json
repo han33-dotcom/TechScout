@@ -1,0 +1,36 @@
+{
+  "revision": "17df8cb00913d7f7fec6b30e19fa9964777e063f",
+  "base": "74daca3f7a0c8d27b83e891ca578a1dbb54e9d49",
+  "reservation": "22d8baa0ade03e2340dcf4dd751483f0082192c4",
+  "reference_freeze": "ea98c5d6131fb9bd4726425ce8bcfc17f8dde352",
+  "product_trees": {
+    "app": "30ad1b6920e1857327a2416edf5e07310297f5af",
+    "config": "b5e0b450b52431d4a8c20753d9c059aeef4ce79b",
+    "frontend/src": "b846682dd7aafe829bc6cb496d06c2b12553bfc4"
+  },
+  "development_replays": [
+    "D6",
+    "D4",
+    "D1"
+  ],
+  "first_submission_order": [
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5"
+  ],
+  "source_registry_sha256": "7e94f856d75ba14c249ee319c2e6c554a97b4dc6fffd0b5e277907fe54f9c174",
+  "inference_config_sha256": "96906b9f6a356c6fb421a397ea1e00a8a50d54777d895963c05830a00dd65e33",
+  "development_active_seconds": 300,
+  "shared_buyer_caps": {
+    "calls": 40,
+    "research_spend_usd": "0.75",
+    "seconds": 120,
+    "spend_usd": "1"
+  },
+  "frontend": {
+    "index-BBNjrH3U.js": "65f5e567954ab67b6443e65f339c57381ba043a3191535986a0610cebfb01e56",
+    "index-DeAnHqOk.css": "7f9fc0a604a94837d96049237798ee1d807a6adf5cc7a2cd86a9ec4d02dbda68"
+  }
+}
