@@ -13,6 +13,7 @@
       "outgeeked",
       "wincell",
       "asus_directory",
+      "technodel",
       "itworks"
     ]
   },
@@ -36,6 +37,27 @@
          "expect": "html", "path": ["search"], "query": [{"name": "q", "parameter": {"kind": "search_text", "max_length": 64}}]},
         {"capability_id": "itworks-product", "version": "1", "host": "shop.itworkslb.net", "operation": "product",
          "expect": "html", "path": ["products", {"kind": "token", "max_length": 128}]}
+      ]
+    },
+    {
+      "id": "technodel",
+      "name": "Technodel",
+      "origin": "https://technodel.net",
+      "status": "active",
+      "reviewed_at": "2026-11-25",
+      "admission": {
+        "basis": "Technical review of the public model search, selected headset purchase data and nationwide COD terms.",
+        "scope": "GET a bounded search, a product slug and the exact FAQ for headset delivery. Read-only HTML.",
+        "evidence": ["https://technodel.net/search?q=Logitech+H340", "https://technodel.net/faq"],
+        "reviewed_at": "2026-11-25T16:57:30Z"
+      },
+      "allowed_endpoints": ["https://technodel.net/faq"],
+      "limits": {"requests_per_minute": 6, "concurrency": 1, "max_requests_per_run": 6},
+      "endpoint_capabilities": [
+        {"capability_id": "technodel-search", "version": "1", "host": "technodel.net", "operation": "search",
+         "expect": "html", "path": ["search"], "query": [{"name": "q", "parameter": {"kind": "search_text", "max_length": 64}}]},
+        {"capability_id": "technodel-product", "version": "1", "host": "technodel.net", "operation": "product",
+         "expect": "html", "path": ["product", {"kind": "token", "max_length": 128}]}
       ]
     },
     {

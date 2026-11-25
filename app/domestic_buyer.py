@@ -307,7 +307,7 @@ class DomesticBuyerFlow(_Flow):
         if (self.request.intent.kind == 'exact_model' and self.request.requirements.category == 'audio'
                 and self.request.fulfillment.mode == 'delivery' and hasattr(type(sources), 'search_audio')):
             room = lambda: self.left(self.nonfinal_by)
-            seeds.extend(Listing(url, 'itworks') for url in sources.search_audio(
+            seeds.extend(Listing(url, source_id) for url, source_id in sources.search_audio(
                 self.request, PhaseJob(self.job, room), room=room))
         for selection in directory.select(DirectoryQuery(category=self.request.requirements.category,
                 seek_competing_offers=True, limit=10)):

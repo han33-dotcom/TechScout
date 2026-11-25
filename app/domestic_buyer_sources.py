@@ -20,7 +20,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from app import contracts_v2 as v2
 from app.accounting import BudgetDenied, Charge
 from app.adapters.woocommerce import read_page as read_woo_page
-from app.adapters import itworks_audio
+from app.adapters import itworks_audio, technodel_audio
 from app.buyer_sources import DeadlineBudget
 from app.corpus_contracts import DocumentCapture, ProcessingVersion, ResourceKey
 from app.corpus import Corpus
@@ -356,19 +356,21 @@ class DomesticBuyerSources:
         return source_id, owners[0] if len(owners) == 1 else None
 
     def search_audio(self, request, job, *, room):
-        """One public search on a reviewed seller, with no reference URLs in the catalog."""
-        owner = self.directory.get(itworks_audio.SOURCE)
-        if not owner or owner.seller_identity != 'retailer' or owner.source_country != 'LB' or job.cancelled:
-            return ()
-        url = itworks_audio.ORIGIN + '/search?' + urlencode({'q': request.intent.model})
-        try:
-            result = retrieve_page(self.gate, _ReadJob(job, room), itworks_audio.SOURCE, url,
-                                   capability=CapabilityRef(capability_id='itworks-search', version='1'))
-            if result.status == 'ok' and result.final_url == url:
-                return itworks_audio.product_links(result.body, request.intent.model)
-        except (ValueError, TypeError, PermissionError, BudgetDenied, TimeoutError, httpx2.HTTPError):
-            pass
-        return ()
+        """One bounded public search per reviewed audio retailer, with no seeded product URLs."""
+        found = []
+        for reader in (itworks_audio, technodel_audio):
+            owner = self.directory.get(reader.SOURCE)
+            if not owner or owner.seller_identity != 'retailer' or owner.source_country != 'LB' or job.cancelled:
+                continue
+            url = reader.ORIGIN + '/search?' + urlencode({'q': request.intent.model})
+            try:
+                result = retrieve_page(self.gate, _ReadJob(job, room), reader.SOURCE, url,
+                    capability=CapabilityRef(capability_id=reader.SOURCE + '-search', version='1'))
+                if result.status == 'ok' and result.final_url == url:
+                    found.extend((link, reader.SOURCE) for link in reader.product_links(result.body, request.intent.model))
+            except (ValueError, TypeError, PermissionError, BudgetDenied, TimeoutError, httpx2.HTTPError):
+                continue
+        return tuple(found)
 
     def read(self, request, url, job, run, *, earlier=None, room):
         url = str(url)
@@ -412,14 +414,15 @@ class DomesticBuyerSources:
                               for e in outcome.errors)
                 return ReadResult(source_id, status='refused' if refused else 'failed', reason='Listing read unavailable')
             replies = frozenset({(outcome.response_sha256, outcome.observed_at)})
-            if source_id == itworks_audio.SOURCE:
+            audio_reader = {itworks_audio.SOURCE: itworks_audio, technodel_audio.SOURCE: technodel_audio}.get(source_id)
+            if audio_reader:
                 if category != 'audio' or request.fulfillment.mode != 'delivery':
                     return ReadResult(source_id, status='out_of_scope', reason='Reviewed only for audio delivery')
-                policy = retrieve_page(self.gate, bounded, source_id, itworks_audio.FAQ)
+                policy = retrieve_page(self.gate, bounded, source_id, audio_reader.FAQ)
                 if policy.status == 'ok':
                     replies |= {(policy.response_sha256, policy.observed_at)}
                 try:
-                    offer = itworks_audio.read_offer(outcome, policy, request, owner, run,
+                    offer = audio_reader.read_offer(outcome, policy, request, owner, run,
                                                      _route_id(request.fulfillment.destination))
                 except (KeyError, IndexError, ValueError, TypeError, AttributeError, InvalidOperation, RecursionError):
                     offer = None
