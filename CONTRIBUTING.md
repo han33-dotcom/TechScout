@@ -46,7 +46,10 @@ GitHub requires it and rerun checks. Main is protected against force pushes and 
 [AGENTS.md](AGENTS.md) is the canonical agent policy.
 [CLAUDE.md](CLAUDE.md) imports it for Claude Code.
 [docs/team-workflow.md](docs/team-workflow.md) explains task ownership and status.
-Preserve the contracts in [docs/mvp-spec.md](docs/mvp-spec.md) and
+For buyer-facing work, follow the [buyer product contract](docs/buyer-product-contract.md).
+Link the relevant [scenario IDs](docs/buyer-acceptance-matrix.md) in the PR and attach
+buyer-visible evidence with the tested revision and source mode. Preserve the legacy
+record contracts in [docs/mvp-spec.md](docs/mvp-spec.md) and
 the existing public-source assumptions in [docs/source-admission.md](docs/source-admission.md).
 
 After policy changes merge, update your local branch deliberately and restart or

@@ -36,6 +36,10 @@ Either way, the refused request is not sent. That store's search may then return
 
 MVP 04 implements the runtime retrieval boundary. MVP 05–06 implement the actual adapters and additional coverage. This task does not implement a shopping assistant or an end-to-end scraper.
 
+## Seller quote capability to implement
+
+The [buyer contract](buyer-product-contract.md) allows a seller-specific pre-order delivery quote, including a fee exposed during checkout. [Quote task #186](https://github.com/han33-dotcom/TechScout/issues/186) owns the scoped operation, its allowed inputs and the evidence binding the fee to the item, quantity and selected destination. A buyer selects which named sellers may receive a precise address. Stop before ordering, paying or reserving. The registry and workload limits apply to every quote request. The capabilities below describe the existing reader.
+
 ## Scoped retrieval capabilities
 
 Review each operation and record it under `endpoint_capabilities` in the technical source

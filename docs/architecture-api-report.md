@@ -2,6 +2,8 @@
 
 The implementation described here is the domestic buyer application at commit `e3e6aa7`. Evidence dates refer to the individual source checks. The final release commit and its rehearsal are tracked in #85. The [November 17 checkpoint](https://github.com/han33-dotcom/TechScout/blob/733dae7e4c1317e8da0f9b916f576eb6a16ba1f4/docs/architecture-api-report.md) preserves the earlier architecture. [Report issue](https://github.com/han33-dotcom/TechScout/issues/83)
 
+The [buyer product contract](buyer-product-contract.md) supersedes the seller eligibility and pasted-deal rules described at this revision. The [matrix](buyer-acceptance-matrix.md) tracks the resulting implementation gaps.
+
 ## Product scope and implementation status
 
 TechScout supports phones, laptops, tablets, monitors and headphones or earbuds. A buyer can identify a model, paste a retailer listing or describe their needs. Purchase offers require local pickup or dispatch from inside Lebanon. New condition is the default. Other conditions require an explicit choice. Historical international comparisons remain available in private history. Purchases take place on the retailer's site. [Scope decision](https://github.com/han33-dotcom/TechScout/issues/155)

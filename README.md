@@ -1,6 +1,8 @@
 # Tech Scout
 
-TechScout compares electronics from local sellers for pickup or delivery from inside Lebanon. FastAPI serves the React comparison workspace and owned run APIs. A separate buyer worker checks offers and publishes verified or uncertain results.
+TechScout compares electronics from Lebanese sellers serving the buyer’s destination or pickup branch. FastAPI serves the React comparison workspace and owned run APIs. A separate buyer worker checks offers and publishes verified or uncertain results.
+
+The [buyer product contract](docs/buyer-product-contract.md) defines the intended conversation, seller comparison, quotes and saved locations. The [acceptance matrix](docs/buyer-acceptance-matrix.md) maps all 18 scenarios to existing behavior, open work and required evidence.
 
 ## Current implementation
 

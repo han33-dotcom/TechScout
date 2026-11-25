@@ -8,7 +8,7 @@ The [GitHub backlog](https://github.com/han33-dotcom/TechScout/issues/36) contai
 
 The application uses the merged foundation and shopping stack described in section 7. The [v1 specification](mvp-spec.md) continues to govern legacy records; the merged [v2 contracts](full-product-contracts.md) govern the full-product workspace. The two lifecycles currently coexist.
 
-**Domestic search decision, 23 November 2026.** The [approved domestic search design](domestic-search-design.md) specifies both pipelines and their operating defaults for offers from Lebanese sellers dispatched inside Lebanon. Track the five discovery channels in [#145](https://github.com/han33-dotcom/TechScout/issues/145), the OpenRouter embedding migration in [#146](https://github.com/han33-dotcom/TechScout/issues/146), and buyer research in [#147](https://github.com/han33-dotcom/TechScout/issues/147). [#155](https://github.com/han33-dotcom/TechScout/issues/155) retires international listings and forwarding across the product. [#76](https://github.com/han33-dotcom/TechScout/issues/76) owns domestic end-to-end acceptance.
+**Domestic search and the buyer contract.** The [buyer product contract v1](buyer-product-contract.md) and [acceptance matrix](buyer-acceptance-matrix.md) define the buyer-facing rules and evidence. The [approved domestic search design](domestic-search-design.md) specifies both pipelines and their operating defaults for offers from Lebanese sellers serving the buyer’s destination. Track the five discovery channels in [#145](https://github.com/han33-dotcom/TechScout/issues/145), the OpenRouter embedding migration in [#146](https://github.com/han33-dotcom/TechScout/issues/146), and buyer research in [#147](https://github.com/han33-dotcom/TechScout/issues/147). [#155](https://github.com/han33-dotcom/TechScout/issues/155) retires international listings and forwarding across the product. [#76](https://github.com/han33-dotcom/TechScout/issues/76) owns domestic end-to-end acceptance.
 
 ## 1. Product and user experience
 
@@ -23,7 +23,7 @@ Confirmed interaction: automatically investigate suitable models and return them
 
 Confirmed interface: a search-and-comparison workspace with built-in conversation. A prominent natural-language input accepts exact products or shopping needs; editable filters show the interpreted requirements. Product cards, seller offers, prices, specifications, and evidence stay visible for comparison. Short clarification questions and a follow-up input support conversational refinement, while filters offer direct control. Changes update the comparison through the run/refinement flow. Show meaningful progress and cancellation controls during searches. The main screen centers on the request and comparison rather than a scrolling message history.
 
-Compare purchase offers from sellers in Lebanon for local pickup or dispatch from inside Lebanon. Establish local dispatch separately from delivery to the buyer’s destination. Keep unknown origin or mandatory charges explicit.
+Verify that the actual merchant is based in Lebanon and serves the destination or selected branch. Use the retailer’s applicable delivery fee or obtain a pre-order quote. Keep unknown mandatory charges explicit.
 
 
 ### Confirmed buyer experience
@@ -35,7 +35,7 @@ The buyer keeps the comparison visible in the main workspace, with conversation 
 3. **Follow useful progress:** show phases such as finding suitable models, comparing sellers and verifying final prices, with cancellation and revision controls. Display available stored candidates promptly with checking labels and original observation times; they are not verified main recommendations. Do not invent progress percentages or imply every shop has been checked.
 4. **Compare recommendations:** display up to three distinct-model recommendations for needs-based requests, with exact configuration, evidence-backed suitability, main tradeoff, selected seller, verified total, route/delivery facts, check time and retailer link. Group additional qualifying sellers underneath each model. Provide side-by-side comparison and separate unresolved alternatives explaining missing facts. Show fewer than three, or no qualifying recommendation, honestly when evidence is insufficient.
 5. **Refine in place:** accept filters or conversation such as prioritizing battery life or switching from delivery to pickup. A new request revision reuses relevant evidence, recomputes affected decisions and live-checks finalists. Earlier results retain their previous requirements/version and cannot appear current while replacement results are pending.
-6. **Open the retailer:** buying happens on the selected retailer's site. No checkout, payment handling, seller messaging or retailer-account creation is added. Exact-product requests use the same workspace and focus on configuration and seller comparison without requiring the buyer to choose among alternative models first.
+6. **Open the retailer:** buying happens on the selected retailer's site. TechScout may obtain a pre-order quote. Ordering, paying and reserving stay with the buyer. Seller messaging and retailer-account creation are outside scope. Exact-product requests use the same workspace and focus on configuration and seller comparison without requiring the buyer to choose among alternative models first.
 
 Acceptance walkthroughs include an approximate-budget engineering-laptop request delivered to Beirut with a battery-life preference, an exact-phone/configuration or product-link request, a material clarification, a refinement that changes priorities or market scope, and insufficient/uncertain results. Buyers should be able to explain suitability versus seller choice, provisional versus verified results and what costs remain unknown. The experience and React + TypeScript + Vite implementation are confirmed; see section 3.
 
@@ -45,7 +45,7 @@ Acceptance walkthroughs include an approximate-budget engineering-laptop request
 |---|---|---|
 | Broad electronics | Category-aware search for phones, laptops, tablets, monitors, and headphones/earbuds | Real retrieval and identity fixtures across the category set; unsupported source/category combinations explicitly identified |
 | Exact and needs-based requests | Accept a known device or translate a use case into editable requirements and candidate models | Demonstrate both paths without silently changing hard constraints |
-| Domestic search | Compare locally stocked offers from Lebanese sellers | Show the sellers checked, evidence of local dispatch or selected-branch pickup, and coverage gaps |
+| Domestic search | Compare offers from Lebanese sellers serving this buyer | Show the actual sellers checked, evidence of destination service or selected-branch pickup, and coverage gaps |
 | Variant and condition matching | Preserve storage, memory, color, region, connectivity, and new/refurbished/used condition where relevant | Wrong variants and unverified condition do not pass required constraints |
 | Purchase feasibility | Compare pickup or delivery, cash/card, warranty, stock scope, and deadlines | Exclusions and missing evidence are visible at field level |
 | Honest cost comparison | Show device price, taxes, shipping and payment/FX fees | Included charges are not duplicated; missing charges are not zero |
@@ -55,6 +55,7 @@ Acceptance walkthroughs include an approximate-budget engineering-laptop request
 | Live verification | Recheck finalists during the current run and replace changed/unavailable offers | Price/stock drift scenario removes or reranks an affected finalist |
 | Useful results | Up to three main recommendations, uncertain alternatives in a separate section, expandable additional qualifying results, side-by-side comparison, cost breakdown, evidence, and retailer links | Buyer can explain why an offer qualifies and what remains uncertain; incomplete evidence never fills a main recommendation slot |
 | Refinement | Change a constraint, confirm alternatives, retry a failed source, or cancel | Revised constraints create a new request revision and invalidate affected decisions |
+| TechScout accounts and locations | Sign in, select or add a saved location for the named sellers, and return to the same chat | Quote requests resume automatically with the selected location, retaining prior offers and constraints. A buyer can decline and continue. |
 | Session history | Reopen recent searches in the same session and export a shareable report without private session data | Ownership checks and expiry work; an old result is visibly historical until rechecked |
 | Reliability and observability | Clear partial/failure states, source coverage, freshness, runtime, and operator traces | Interrupted, failed, and budget-limited runs preserve truthful results |
 
@@ -77,7 +78,7 @@ Research basis: [LebTech method](https://lebtechlb.com/how-we-compare-prices), [
 
 ## 2. High-level data flow
 
-At startup and then daily, one background job discovers retailers. A second scans rotating batches of known catalogs every six hours for new products. A third refreshes high-use offers every 12–24 hours and other useful offers every 3–7 days. Extra discovery can target a material gap. Give each discovery agent one objective and allow bounded catalog → query → results → catalog iteration. In the buyer flow, use the catalog first, research only decision-changing gaps, and share work across independent objectives. Check a retailer link directly, aim for two independent sellers on an exact-price comparison when feasible, and group needs-based results under up to three distinct models. The detailed [domestic design](domestic-search-design.md) covers qualification, cross-pipeline handoff and outage behavior.
+At startup and then daily, one background job discovers retailers. A second scans rotating batches of known catalogs every six hours for new products. A third refreshes high-use offers every 12–24 hours and other useful offers every 3–7 days. Extra discovery can target a material gap. Give each discovery agent one objective and allow bounded catalog → query → results → catalog iteration. In the buyer flow, use the catalog first, research only decision-changing gaps, and share work across independent objectives. For a pasted deal, verify the link and compare the same configuration across Lebanese sellers. Aim for two independent sellers on an exact-price comparison when feasible, and group needs-based results under up to three distinct models. The detailed [domestic design](domestic-search-design.md) covers qualification, cross-pipeline handoff and outage behavior.
 
 Two connected flows share the same source gate, extraction, provenance, validation, indexing and budget infrastructure. Upfront/background ingestion builds reusable public knowledge; runtime research answers a buyer's request. Background collection cannot produce buyer-specific eligibility or current-run verification.
 
@@ -108,7 +109,7 @@ flowchart TB
 ```
 
 1. **Discover and assess retailers.** Seed a broad persistent directory with canonical seller/domain, market/category/brand coverage, catalog/policy routes, evidence links and dated retrieval findings. Deep-audit roughly 10-15 priority shops without capping discovery. Automatically probe eligible leads and activate only capabilities that pass technical validation (section 5.3). Use selection priority to allocate research effort. Offers rank on buyer fit and verified purchase facts.
-2. **Collect ahead of requests and refresh between them.** Bounded jobs discover URLs and retrieve relevant retailer listings/policies, manufacturer specifications and selected review/measurement evidence across five categories. Support initial ingestion and configurable incremental refresh/discovery. Record the actual seller and evidence of dispatch origin.
+2. **Collect ahead of requests and refresh between them.** Bounded jobs discover URLs and retrieve relevant retailer listings/policies, manufacturer specifications and selected review/measurement evidence across five categories. Support initial ingestion and configurable incremental refresh/discovery. Record the actual merchant, its Lebanese base and the destinations or branches served.
 3. **Clean and normalize without losing evidence.** Preserve permitted source snapshots/excerpts and timestamps before removing boilerplate. Extract typed fields, match exact variants, deduplicate and retain conflicts/unknowns. Chunk relevant passages and embed only new/changed content. Runtime findings use this same pipeline.
 4. **Persist a corpus before the first buyer search.** Store exact attributes, monetary observations and relationships in structured PostgreSQL; use full-text/pgvector for relevant passages. Retain original source versions and observation dates. The database is not merely a cache of earlier queries; price/stock observations remain historical until current-run verification.
 5. **Interpret input.** Accept an exact model/link or needs-based request, separate hard constraints/preferences, expose editable requirements and clarify only essential gaps. Create an owned request revision/run with Lebanon and new condition as defaults.
@@ -238,7 +239,7 @@ Populate the database before the first buyer request, then combine background up
 
 The directory records canonical business/seller identity, aliases/domains, markets, category and brand coverage, catalog/product/policy routes, retrieval method, source-capability references, policy evidence links, last successful checks, missing fields and dated coverage states. Distinguish marketplace sellers and similarly named businesses. Retrieval reliability measures our access/extraction, not seller reputation. Track each lead through discovery, validation, activation, and any later suspension. Only active, validated capabilities are available for normal ingestion and buyer searches.
 
-Initial ingestion uses configured public feeds, catalog endpoints, sitemaps or bounded pagination to discover relevant product URLs. Acquire exact identities/configurations, observed price/stock, manufacturer specifications, selected useful reviews and general delivery/payment/warranty/return policies. Scope collection to five categories, deeper for phones/laptops; preserve seller and dispatch-origin evidence. Broad discovery is not a requirement to mirror every page or finish every retailer before serving a request.
+Initial ingestion uses configured public feeds, catalog endpoints, sitemaps or bounded pagination to discover relevant product URLs. Acquire exact identities/configurations, observed price/stock, manufacturer specifications, selected useful reviews and general delivery/payment/warranty/return policies. Scope collection to five categories, deeper for phones/laptops; preserve merchant identity and service-area evidence. Broad discovery is not a requirement to mirror every page or finish every retailer before serving a request.
 
 Preserve permitted source bytes/excerpts before cleaning navigation/boilerplate. Normalize units and typed fields, resolve duplicates conservatively, retain conflicts and unknowns, and persist source/observation/publication dates plus parser/schema/chunk/embedding versions. Exact facts and relationships go into SQL; relevant passages go into full-text/pgvector. Re-indexing cannot reset age or turn stored price/stock into current purchase evidence. Runtime findings use the same ingestion path; private requests and generated answers do not enter the shared evidence corpus.
 
@@ -343,7 +344,7 @@ Retain Money, Fact, Evidence, CostComponent, provenance binding, and the existin
 | Product and variant | Canonical brand/model; category; actual seller product/variant IDs; category-specific typed attributes; raw observations |
 | Category profile | Supported attributes, units, matching rules, required identity keys, and compatibility checks |
 | Offer | Seller identity and market; condition; price/payment basis; fulfillment route; warranty and arrival facts |
-| Fulfillment route | Local pickup branch or domestic dispatch origin, destination, required charges and fulfillment evidence |
+| Fulfillment route | Eligible Lebanese merchant, local pickup branch or delivery destination, required charges and fulfillment evidence |
 | Cost assessment | Verified total, estimated range, or incomplete subtotal; component evidence and uncertainty; timestamped FX; quote expiry |
 | Decision | Eligible/ineligible/unresolved; reasons by constraint; unmet evidence requirements; ranking basis |
 | Run | Session owner, request revision, current phase, cancel flag, usage/reserves, source coverage, outcome, version metadata |
@@ -388,7 +389,7 @@ Use the typed endpoint capabilities introduced in [PR #98](https://github.com/ha
 
 Prefer direct structured retrieval. Add browser rendering only for a selected source that proves necessary and has no practical structured route; browser requests need equivalent destination checks, resource bounds, and accounting. It is not an unrestricted fallback.
 
-For domestic delivery, verify dispatch from Lebanon and delivery to the requested destination. For pickup, verify stock at the selected branch. Mandatory charges must be evidenced before an offer can enter the verified price ranking.
+For domestic delivery, verify that the actual seller is based in Lebanon and serves the requested destination. For pickup, verify stock at the selected branch. Mandatory charges must be evidenced before an offer can enter the verified price ranking.
 
 
 Rank offers only after hard constraints pass. For an exact model, default to verified payable total, then deterministic tie-breakers such as verified arrival and warranty. For needs-based alternatives, first apply explicit user preferences, show the product tradeoffs, and compare seller prices within each model; do not pretend the cheapest different product is an equivalent price win. Let users sort and inspect the basis.
@@ -510,7 +511,7 @@ The [GitHub backlog](https://github.com/han33-dotcom/TechScout/issues/36) tracks
 | Evidence ingestion | Normalize documents; deduplicate observations; preserve provenance and versioned passages |
 | Persistent retrieval | SQL/full-text/vector retrieval; freshness decisions; targeted refresh and conflict handling |
 | Product matching | Category-specific identity and variant matching; supported needs-to-specification constraints |
-| Cost and eligibility | Domestic pickup and delivery totals, local dispatch evidence, and explicit missing-cost states |
+| Cost and eligibility | Domestic pickup and delivery totals, merchant and service-area evidence, and explicit missing-cost states |
 | Run execution | Session/run lifecycle; shared spending reservations; cancellation, timeout, and interruption behavior |
 | AI roles | Model-provider adapter; orchestrator; researcher; evaluator; bounded writer and output validation |
 | Final verification | Refresh decisive offer facts; rerank changed offers; separate uncertain alternatives |
@@ -574,9 +575,9 @@ Use a timeboxed, explicitly labelled relevant WebMall subset. WebShop and Shoppi
 
 Obtain several representative buyer walkthroughs, initially three to five, covering both entry paths. Observe whether users can finish a search, understand cost uncertainty, compare choices, and explain why a result fits. Record findings without unnecessary personal data and fix material confusion.
 
-Required regression families: wrong product/variant, unit/FX error, duplicated tax, missing fee, stale stock/price, deadline mismatch, unknown warranty, source failure/rate limit, malformed extraction, prompt injection, unsafe URL/redirect, output XSS, cross-session access, cancellation, exhausted budget, restart, and an offer dispatched from abroad. Each failure-matrix row links a test/scenario, expected behavior, actual result, mitigation, and remaining limitation.
+Required regression families: wrong product/variant, unit/FX error, duplicated tax, missing fee, stale stock/price, deadline mismatch, unknown warranty, source failure/rate limit, malformed extraction, prompt injection, unsafe URL/redirect, output XSS, cross-session access, cancellation, exhausted budget, restart, and an offer from a foreign merchant. Each failure-matrix row links a test/scenario, expected behavior, actual result, mitigation, and remaining limitation.
 
-Cover a seller that ships to Lebanon from abroad, an unknown dispatch origin, branch-specific stock and an unknown mandatory delivery fee in the domestic failure scenarios.
+Cover a foreign merchant serving Lebanon, an unidentified marketplace merchant, an eligible Lebanese seller with unknown warehouse location, branch-specific stock and an unknown mandatory delivery fee in the domestic failure scenarios.
 
 Multi-agent regressions also cover simultaneous resource reservations, duplicated research, conflicting worker findings, worker timeout/failure, prohibited recursive delegation, exhausted follow-up limits, unsupported writer claims/citations, and late results after cancellation or request revision. Trace role/task handoffs without exposing private user data.
 
@@ -616,7 +617,7 @@ Rehearse the complete live flow on the actual demonstration computer and network
 
 ## 12. Decisions and delivery inputs
 
-**Confirmed:** Path A; one full-product submission; phones, laptops, tablets, monitors, and headphones/earbuds, with deeper coverage for phones and laptops; domestic purchase offers with evidenced local pickup or dispatch and explicit cost uncertainty; both exact-product comparison and needs-based product selection as core features; automatic product-and-offer investigation without a mandatory model-selection pause; hybrid discovery combining core retailer integrations with web search for products, evidence, and additional offers; up to three main recommendations with uncertain alternatives separate; a search-and-comparison workspace with built-in conversation and editable filters; a bounded multi-agent architecture with one AI orchestrator, up to three research workers, an AI evaluator, and one writing step under a deterministic controller and shared budget; removal of mandatory teammate-review bottlenecks.
+**Confirmed:** Path A; one full-product submission; phones, laptops, tablets, monitors, and headphones/earbuds, with deeper coverage for phones and laptops; domestic purchase offers with evidenced branch pickup or delivery service to the destination and explicit cost uncertainty; both exact-product comparison and needs-based product selection as core features; automatic product-and-offer investigation without a mandatory model-selection pause; hybrid discovery combining core retailer integrations with web search for products, evidence, and additional offers; up to three main recommendations with uncertain alternatives separate; a search-and-comparison workspace with built-in conversation and editable filters; a bounded multi-agent architecture with one AI orchestrator, up to three research workers, an AI evaluator, and one writing step under a deterministic controller and shared budget; removal of mandatory teammate-review bottlenecks.
 
 **Confirmed buyer experience:** prominent needs/model/link input, editable interpreted requirements, material-only clarification, truthful progress and provisional candidates, up to three model recommendations with grouped sellers and side-by-side comparison, separate uncertainty, in-place revision-based refinement and retailer handoff. The exact-product path uses the same workspace. See section 1 for the accepted walkthrough.
 
