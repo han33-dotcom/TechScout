@@ -309,7 +309,8 @@ class DomesticDiscovery:
                 break
             if not rotate:
                 sent_channels += attempt.status != 'unavailable'
-                if attempt.status == 'ok' or sent_channels >= 3:
+                listing_hit = any(urlsplit(hit.url).path.strip('/') for hit in hits)
+                if (attempt.status == 'ok' and listing_hit) or sent_channels >= 3:
                     break
         identities = self._identities({urlsplit(url).hostname for url in observations})
         leads = []

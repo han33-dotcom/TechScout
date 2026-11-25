@@ -1,4 +1,4 @@
-"""Read Technodel's public headset selection, item offer and published COD charges."""
+"""Read Technodel search cards, selected single-SKU products and published delivery terms."""
 from decimal import Decimal
 from html.parser import HTMLParser
 import json
@@ -26,6 +26,7 @@ class Page(HTMLParser):
         super().__init__()
         self.links = []
         self.products = []
+        self.cards = []
         self.script = False
         self.feed(body.decode('utf-8'))
 
@@ -52,6 +53,13 @@ class Page(HTMLParser):
                 return
             for line in frame[1].splitlines():
                 _, _, payload = line.partition(':')
+                if payload.startswith('[["$"'):
+                    for node in json.loads(payload, object_pairs_hook=_unique_pairs):
+                        if isinstance(node, list) and len(node) == 4 and isinstance(node[3], dict):
+                            cards = node[3].get('products')
+                            if isinstance(cards, list) and len(cards) <= 100:
+                                self.cards.extend(c for c in cards if isinstance(c, dict))
+                    continue
                 if not payload.startswith('["$"'):
                     continue
                 component = json.loads(payload, parse_float=Decimal, object_pairs_hook=_unique_pairs)
@@ -71,6 +79,76 @@ def product_links(body, model):
     return tuple(ORIGIN + path for path in dict.fromkeys(matches))[:1]
 
 
+CATEGORIES = {'Headsets': 'audio', 'Headphones': 'audio', 'Earbuds': 'audio',
+              'Laptops': 'laptop', 'Monitors': 'monitor', 'Smartphones': 'phone', 'Tablets': 'tablet'}
+
+
+def listing_links(body, term, ranking, category):
+    """Use the search component's category and links to rank reads, never as evidence."""
+    page = Page(body)
+    def words(value):
+        return set(re.findall(r'[a-z0-9]+', value.casefold()))
+    wanted, preferred = words(term), words(ranking)
+    allowed = set(page.links)
+    scored = {}
+    for card in page.cards:
+        path = '/product/' + str(card.get('slug', ''))
+        if path not in allowed or CATEGORIES.get((card.get('category') or {}).get('name')) != category:
+            continue
+        tokens = words(str(card.get('title', '')) + ' ' + path)
+        if wanted & tokens:
+            scored[path] = len(wanted & tokens), len(preferred & tokens)
+    if not scored and category == 'audio':
+        return product_links(body, term)
+    return tuple(ORIGIN + p for p in sorted(scored, key=scored.get, reverse=True)[:1])
+
+
+def selected_specs(category, fields, title, known):
+    model = {'phone': v2.PhoneSpecs, 'laptop': v2.LaptopSpecs, 'monitor': v2.MonitorSpecs,
+             'tablet': v2.TabletSpecs, 'audio': v2.AudioSpecs}[category]
+    result = {key: dict(state='unknown', reason='The selected listing does not establish this specification')
+              for key, field in model.model_fields.items() if field.is_required() and key != 'category'}
+    result['category'] = category
+    def add(key, label, value):
+        if key in model.model_fields:
+            result[key] = known('variant.specs.' + key, value, f'{label}: {fields[label]}')
+    for label, key in (('RAM', 'ram_gb'), ('Memory', 'ram_gb'), ('Storage', 'storage_gb')):
+        if match := re.fullmatch(r'(\d+)\s*(GB|TB)', fields.get(label, ''), re.I):
+            value = int(match[1]) * (1024 if match[2].upper() == 'TB' else 1)
+            if result.get(key, {}).get('state') == 'known' and result[key]['value'] != value:
+                raise ValueError('Conflicting memory specifications')
+            add(key, label, value)
+    # A single selected laptop can spell out its installed memory and SSD in the
+    # purchase title. Never read an upgrade limit or a multi-drive capacity as installed.
+    if category == 'laptop' and not re.search(r'\b(?:up to|max(?:imum)?|supports?|expandable|optional)\b', title, re.I):
+        for label, key in (('RAM', 'ram_gb'), ('SSD', 'storage_gb')):
+            sizes = re.findall(r'(?<![\w.])(\d+)\s*(GB|TB)\s+' + label + r'\b', title, re.I)
+            if len(sizes) != 1:
+                continue
+            count, unit = sizes[0]
+            capacity = int(count) * (1024 if unit.upper() == 'TB' else 1)
+            existing = result.get(key)
+            if existing and existing['state'] == 'known' and existing['value'] != capacity:
+                raise ValueError('Title and selected specifications disagree')
+            if not existing or existing['state'] != 'known':
+                result[key] = known('variant.specs.' + key, capacity, title)
+            if label == 'SSD':
+                if fields.get('Storage type', 'SSD').upper() != 'SSD':
+                    raise ValueError('Title and storage type disagree')
+                result['storage_type'] = known('variant.specs.storage_type', 'SSD', title)
+    for label, key in (('CPU', 'cpu'), ('Graphics', 'gpu'), ('Operating System', 'operating_system'),
+                       ('Storage type', 'storage_type')):
+        if fields.get(label):
+            add(key, label, fields[label])
+    if hz := re.fullmatch(r'(\d{2,4})\s*Hz', fields.get('Refresh rate', ''), re.I):
+        add('refresh_hz', 'Refresh rate', int(hz[1]))
+    if category == 'tablet':
+        mode = {'wi-fi':'wifi', 'wifi':'wifi', 'cellular':'cellular'}.get(fields.get('Connectivity','').casefold())
+        if mode:
+            add('connectivity', 'Connectivity', mode)
+    return result
+
+
 def read_offer(page, policy, request, owner, run, route_id):
     url = page.origin_url
     if (page.final_url != url or not url.startswith(ORIGIN + '/product/')
@@ -85,9 +163,12 @@ def read_offer(page, policy, request, owner, run, route_id):
     sku = listing['sku']
     title = listing['title']
     match = WIRED_TITLE.fullmatch(title)
-    if (not match or listing['slug'] != urlsplit(url).path.removeprefix('/product/')
-            or listing['variants'] != [] or listing['category']['name'] != 'Headsets'
-            or product.get('category') != 'Headsets' or listing['isVisible'] is not True
+    category_name = listing['category']['name']
+    category = CATEGORIES.get(category_name)
+    if (not category or category != request.requirements.category
+            or listing['slug'] != urlsplit(url).path.removeprefix('/product/')
+            or listing['variants'] != []
+            or product.get('category') != category_name or listing['isVisible'] is not True
             or listing['priceDisplay'] != 'price' or listing['inStock'] is not True
             or type(listing['stock']) is not int or listing['stock'] < 1 or not sku
             or (product['sku'], product['name'], product['url'], offer['url']) != (sku, title, url, url)
@@ -97,18 +178,27 @@ def read_offer(page, policy, request, owner, run, route_id):
             or (store['name'], store['url']) != (SELLER, ORIGIN)
             or store['address']['addressCountry'] != 'LB' or not store['address'].get('addressLocality')):
         return None
-    maker, model, color, part = match.group('maker', 'model', 'color', 'part')
-    specs = _unique_pairs((s['label'], s['value']) for s in listing['specs'])
-    if (product['brand']['name'] != maker or listing['brand'] != maker or specs.get('Brand') != maker
-            or specs.get('Connectivity') != 'Wired' or specs.get('Colour') != color):
+    fields = _unique_pairs((s['label'], s['value']) for s in listing['specs'])
+    maker = listing['brand']
+    if (not maker or product['brand']['name'] != maker or fields.get('Brand', maker) != maker
+            or fields.get('Condition', 'new').casefold() != 'new'):
         return None
+    if fields.get('Colour') and fields.get('Color', fields['Colour']) != fields['Colour']:
+        return None
+    color = fields.get('Colour') or fields.get('Color')
+    model = fields.get('Model') or title
+    configuration = None
+    if match:
+        if (match['maker'] != maker or fields.get('Brand') != maker or fields.get('Connectivity') != 'Wired'
+                or color != match['color']):
+            return None
+        model = maker + ' ' + match['model']
+        configuration = identify_headset(maker, match['model'], color, part=match['part'])
     amount = Decimal(str(offer['price']))
-    # The current USD checkout renders whole dollars. Fractional listings need a distinct quote.
-    if (not amount.is_finite() or amount <= 0 or amount != amount.to_integral_value()
+    if (not amount.is_finite() or amount <= 0 or amount != amount.quantize(Decimal('0.01'))
             or amount != Decimal(str(listing['displayPrice'])) or offer['priceCurrency'] != 'USD'
             or listing['currency'] != 'USD' or 'priceSpecification' in offer):
         return None
-    configuration = identify_headset(maker, model, color, part=part)
     pid = listing['slug']
     source_key = f'{SOURCE}:{sku}'
     evidence = []
@@ -118,7 +208,7 @@ def read_offer(page, policy, request, owner, run, route_id):
         evidence.append(v2.Evidence(evidence_id=eid, field_path=path, source_id=SOURCE, product_id=pid,
             variant_id=sku, scope='route' if route else 'variant', route_id=route_id if route else None,
             origin_url=document.origin_url, final_url=document.final_url, observed_at=document.observed_at,
-            response_sha256=document.response_sha256, adapter_version='technodel-audio/1',
+            response_sha256=document.response_sha256, adapter_version='technodel-listing/2',
             origin='runtime', corpus_version='domestic-buyer-1', run=run, excerpt=excerpt))
         return [eid]
 
@@ -128,8 +218,9 @@ def read_offer(page, policy, request, owner, run, route_id):
     receipt('seller.name', SELLER)
     receipt('seller.market', f"{SELLER}: {store['address']['addressLocality']}, LB")
     receipt('variant.product.manufacturer', maker)
-    receipt('variant.product.model', title)
-    receipt('catalog.mpn', part)
+    receipt('variant.product.model', fields.get('Model') or title)
+    if match:
+        receipt('catalog.mpn', match['part'])
     if configuration:
         receipt('catalog.configuration_id', title)
     answers = policy_answers(policy, FAQ)
@@ -159,18 +250,20 @@ def read_offer(page, policy, request, owner, run, route_id):
     sale_text = ' '.join(str(listing.get(field, '')) for field in ('title','shortDescription','description','specs'))
     tax_extra = re.search(r'(?:exclud(?:es|ing)|before|additional|plus)\s+(?:VAT|tax)|'
                           r'(?:VAT|tax)(?:es)?\s+(?:excluded|extra|calculated|added)', sale_text, re.I)
-    if not tax_extra and payment == ('We accept Cash on Delivery (COD), Wish Money transfer, and Crypto (USDT, BTC, ETH). '
+    if match and amount == amount.to_integral_value() and not tax_extra and payment == ('We accept Cash on Delivery (COD), Wish Money transfer, and Crypto (USDT, BTC, ETH). '
                    'No hidden fees — what you see is what you pay.'):
         tax = dict(kind='tax', state='included', evidence_ids=receipt('costs.order.tax',
             f'Displayed COD item price: USD {amount}') + receipt('costs.order.tax', payment, document=policy))
+    specs = selected_specs(category, fields, title, known)
+    if match:
+        specs['form_factor'] = known('variant.specs.form_factor', 'headphones', title)
+        specs['connectivity'] = known('variant.specs.connectivity', 'wired', 'Connectivity: Wired')
     return v2.Offer(offer_id=source_key, retailer_id=owner.entry.retailer_id, source_id=SOURCE,
         source_product_id=pid, source_variant_id=sku, seller=dict(seller_id=owner.seller_id, name=SELLER, market='LB'),
         listing_url=url, variant=dict(variant_id=configuration.variant_id if configuration else source_key,
             product=dict(product_id=configuration.product_id if configuration else source_key,
-                         category='audio', manufacturer=maker, model=maker + ' ' + model),
-            color=known('variant.color', color, title), specs=dict(category='audio',
-                form_factor=known('variant.specs.form_factor','headphones', title),
-                connectivity=known('variant.specs.connectivity','wired','Connectivity: Wired'))),
+                         category=category, manufacturer=maker, model=model),
+            color=known('variant.color', color, 'Color: ' + color) if color else None, specs=specs),
         price=known('price',dict(amount=amount,currency='USD'),f'Offer and displayed price: USD {amount}'),
         stock=known('stock',True,offer['availability']), purchasable=known('purchasable',True,
             f'Visible priced purchase selection {sku}, inStock true, stock {listing["stock"]}'),

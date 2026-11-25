@@ -3,6 +3,7 @@ from collections import Counter, defaultdict
 from dataclasses import asdict, dataclass
 from threading import Event
 from urllib.parse import urlsplit
+import re
 
 from app import contracts_v2 as v2
 from app.accounting import BudgetDenied, SourceBudget
@@ -11,7 +12,7 @@ from app.buyer_flow import MAX_UNCERTAIN, MIN_WRITER_SECONDS, _Flow, supported
 from app.buyer_sources import FETCH_ROOM_S
 from app.directory import DirectoryQuery
 from app.domestic_discovery import CHANNELS, dispatch_receipts
-from app.domestic_search_plan import choose_search, search_options
+from app.domestic_search_plan import choose_search, retailer_query, search_options
 from app.eligibility import check_full_product
 from app.evidence_critique import CritiqueChoice, PROMPT as EVALUATE
 from app.freshness import FreshnessContext, assess_evidence
@@ -303,22 +304,36 @@ class DomesticBuyerFlow(_Flow):
         directory = setup.workers.directory
         seen_sources = {o.source_id for o in self.catalog.values()}
         seeds = []
+        term = retailer_query(self.request)
+        words = set(re.findall(r'[a-z0-9]+', (term or '').lower()))
         sources = self.deps.domestic_sources
-        if (self.request.intent.kind == 'exact_model' and self.request.requirements.category == 'audio'
-                and self.request.fulfillment.mode == 'delivery' and hasattr(type(sources), 'search_audio')):
+        if hasattr(type(sources), 'search_listings'):
             room = lambda: self.left(self.nonfinal_by)
-            seeds.extend(Listing(url, source_id) for url, source_id in sources.search_audio(
-                self.request, PhaseJob(self.job, room), room=room))
+            searches = self.trace['retailer_searches'] = []
+            for search in sources.search_listings(self.request, PhaseJob(self.job, room), room=room):
+                searches.append(search)
+                source_id = search['source_id']
+                seen_sources.add(source_id)
+                self.read_candidates([Listing(url, source_id) for url in search['links'][:2]])
+                if self.enough(self.catalog.values()):
+                    return
+                if search['reason']:
+                    self.sources.setdefault(source_id, (directory.get(source_id).entry.name,
+                                                        'failed', search['reason']))
         for selection in directory.select(DirectoryQuery(category=self.request.requirements.category,
                 seek_competing_offers=True, limit=10)):
             record = selection.record
             if not selection.configured or record.source_country != 'LB' or record.source_id in seen_sources:
                 continue
             permitted = set(selection.permitted_urls)
-            for url in record.product_urls:
-                if str(url) in permitted:
-                    seeds.append(Listing(str(url), record.source_id))
-                    break
+            urls = [str(url) for url in record.product_urls if str(url) in permitted]
+            if urls:
+                # A relevant slug can order the reads. Opaque reviewed URLs are
+                # still valid leads; only the selected product page decides identity.
+                def relevance(url):
+                    tokens = re.findall(r'[a-z0-9]+', urlsplit(url).path.lower())
+                    return len(words.intersection(tokens))
+                seeds.append(Listing(max(urls, key=relevance), record.source_id))
         self.read_candidates(seeds[:3])
         if self.enough(self.catalog.values()) or self.stopped() or self.left(self.nonfinal_by) < 2:
             return
@@ -331,7 +346,7 @@ class DomesticBuyerFlow(_Flow):
         objective, method, index = self.plan_search(options, channels)
         self.trace['search_plan'] = dict(method=method, channel=objective.channel,
             language=objective.language, objective=objective.objective,
-            query_index=index)
+            query_index=index, query=objective.query)
         self.action(objective.objective, 'Decide whether broader seller or model comparison is feasible',
                     'domestic retailer discovery channels')
         room = lambda: self.left(self.nonfinal_by)
@@ -348,12 +363,13 @@ class DomesticBuyerFlow(_Flow):
         if report.run_id != self.run_ref.run_id:
             return
         self.search_report = report
+        self.trace['discovery_leads'] = [dict(source_id=l.source_id, url=l.url) for l in report.leads]
         known_urls = {str(o.listing_url) for o in self.catalog.values()}
         fresh = []
         for lead in report.leads:
             if not lead.source_id:
                 self.handoff(lead.url)
-            elif lead.url not in known_urls:
+            elif urlsplit(lead.url).path.strip('/') and lead.url not in known_urls:
                 known_urls.add(lead.url)
                 fresh.append(Listing(lead.url, lead.source_id))
         self.read_candidates(fresh[:6])
@@ -425,7 +441,7 @@ class DomesticBuyerFlow(_Flow):
                                                            earlier=item.earlier, room=room)
                 return None
             clients.append(client)
-        timeout = min(60.0, room() - .2)
+        timeout = min(45.0, room() - 1.0)
         results = research(phase_job, clients, None, timeout=timeout)
         resolved = []
         for item, outcome in zip(listings, results):
@@ -520,7 +536,10 @@ class DomesticBuyerFlow(_Flow):
             self.assessed.pop(oid, None)
             now = self.deps.wall_clock()
             assessment = domestic_assessment(self.request, offer, now, estimates=getattr(read, 'estimates', {}).get(oid))
-            if assessment.decision == 'rejected':
+            maximum = self.request.budget.maximum if self.request.budget else None
+            if (assessment.decision == 'rejected' or
+                    (maximum and offer.price.state == 'known' and offer.price.value.currency == maximum.currency
+                     and offer.price.value.amount > maximum.amount)):
                 continue
             problem = current_problem(offer, assessment, read, self.run_ref, self.started_at, now)
             if problem is None and assessment.decision == 'recommendable':

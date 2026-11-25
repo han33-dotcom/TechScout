@@ -19,11 +19,15 @@
           "CAD"
         ]
       },
+      "unresolved_constraints": [],
       "refinement_note": null,
       "requirements": {
         "category": "laptop",
+        "ram_gb": null,
+        "storage_gb": null,
         "min_ram_gb": 16,
         "min_storage_gb": null,
+        "storage_type": null,
         "cpu": null,
         "gpu": null,
         "operating_system": null
@@ -107,6 +111,7 @@
               },
               "specs": {
                 "category": "laptop",
+                "storage_type": null,
                 "cpu": {
                   "state": "known",
                   "value": "Example U7",
@@ -565,6 +570,7 @@
             },
             "specs": {
               "category": "laptop",
+              "storage_type": null,
               "cpu": {
                 "state": "known",
                 "value": "Example U7",
@@ -1057,11 +1063,15 @@
           "CAD"
         ]
       },
+      "unresolved_constraints": [],
       "refinement_note": null,
       "requirements": {
         "category": "laptop",
+        "ram_gb": null,
+        "storage_gb": null,
         "min_ram_gb": 16,
         "min_storage_gb": null,
+        "storage_type": null,
         "cpu": null,
         "gpu": null,
         "operating_system": null
@@ -1139,6 +1149,7 @@
             },
             "specs": {
               "category": "laptop",
+              "storage_type": null,
               "cpu": {
                 "state": "known",
                 "value": "Example U7",

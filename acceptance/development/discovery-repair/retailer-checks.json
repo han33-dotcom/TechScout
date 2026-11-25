@@ -1,0 +1,817 @@
+[
+  {
+    "url": "https://technodel.net/product/hp-laptop-15-core-ultra-5-8gb-ram-256gb-ssd-15-6",
+    "attempts": [
+      "D4b",
+      "D4f"
+    ],
+    "buyer_visible": [
+      "D4b",
+      "D4f"
+    ],
+    "job_id": "194-check-31e83e82-7058-47a2-9038-e28d6a6f1b19",
+    "utc": "2026-11-25T20:52:56.644150+00:00",
+    "http": 200,
+    "request_attempts": 1,
+    "response_sha256": "23fd33c6f89321f19538c5fc6729462eeabf91055aa8c8bc6c1ada719fc49c33",
+    "final_url": "https://technodel.net/product/hp-laptop-15-core-ultra-5-8gb-ram-256gb-ssd-15-6",
+    "errors": [],
+    "page_metadata": {
+      "og:title": "HP Laptop 15, Core Ultra 5, 8GB RAM, 256GB SSD, 15.6\"",
+      "og:url": "https://technodel.net/product/hp-laptop-15-core-ultra-5-8gb-ram-256gb-ssd-15-6"
+    },
+    "products": [
+      {
+        "title": "HP Laptop 15, Core Ultra 5, 8GB RAM, 256GB SSD, 15.6\"",
+        "sku": "TD-20TD269",
+        "category": "Laptops",
+        "brand": {
+          "@type": "Brand",
+          "name": "HP"
+        },
+        "price": 555,
+        "currency": "USD",
+        "availability": "https://schema.org/InStock",
+        "condition": "https://schema.org/NewCondition",
+        "seller": {
+          "@type": "Organization",
+          "name": "Technodel",
+          "url": "https://technodel.net"
+        },
+        "shipping": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "0",
+            "currency": "USD"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "LB"
+          },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            }
+          }
+        }
+      }
+    ],
+    "outcome": "Current same-page Product offer found.",
+    "purchase_selection": {
+      "sku": "TD-20TD269",
+      "title": "HP Laptop 15, Core Ultra 5, 8GB RAM, 256GB SSD, 15.6\"",
+      "displayPrice": 555,
+      "currency": "USD",
+      "stock": 1,
+      "inStock": true,
+      "specs": [
+        {
+          "label": "Processor",
+          "value": "Intel Core Ultra 5"
+        },
+        {
+          "label": "Graphics",
+          "value": "Integrated"
+        },
+        {
+          "label": "Memory",
+          "value": "8GB"
+        },
+        {
+          "label": "Storage",
+          "value": "256GB SSD"
+        },
+        {
+          "label": "Screen size",
+          "value": "15.6\""
+        },
+        {
+          "label": "Ports",
+          "value": "1x USB-C, 2x USB-A 5Gbps, 1x HDMI 1.4b, headphone/mic combo, AC smart pin"
+        },
+        {
+          "label": "Wireless",
+          "value": "Wi-Fi 6 (2x2) + Bluetooth 5.3 / Realtek Wi-Fi 6 + BT 5.4 (HP US 15t-fd100)"
+        },
+        {
+          "label": "Weight",
+          "value": "1.59 kg"
+        },
+        {
+          "label": "Dimensions",
+          "value": "359.8 x 236 x 18.6 mm"
+        },
+        {
+          "label": "Condition",
+          "value": "New"
+        }
+      ],
+      "variant_count": 0,
+      "page_options": []
+    }
+  },
+  {
+    "url": "https://technodel.net/product/jbl-tune-720bt-available-in-multiple-colors",
+    "attempts": [
+      "C2f"
+    ],
+    "buyer_visible": [],
+    "job_id": "194-check-31e83e82-7058-47a2-9038-e28d6a6f1b19",
+    "utc": "2026-11-25T20:53:10.517175+00:00",
+    "http": 200,
+    "request_attempts": 1,
+    "response_sha256": "9766b4cf5519a093e9874fc52971bba1832f9a4636ed04a15fd5a2816dab0afc",
+    "final_url": "https://technodel.net/product/jbl-tune-720bt-available-in-multiple-colors",
+    "errors": [],
+    "page_metadata": {
+      "og:title": "JBL Tune 720BT Available in multiple colors",
+      "og:url": "https://technodel.net/product/jbl-tune-720bt-available-in-multiple-colors"
+    },
+    "products": [
+      {
+        "title": "JBL Tune 720BT Available in multiple colors",
+        "sku": "JK-M51CP9DZ",
+        "category": "Headsets",
+        "brand": {
+          "@type": "Brand",
+          "name": "JBL"
+        },
+        "price": "49.95",
+        "currency": "USD",
+        "availability": "https://schema.org/InStock",
+        "condition": "https://schema.org/NewCondition",
+        "seller": {
+          "@type": "Organization",
+          "name": "Technodel",
+          "url": "https://technodel.net"
+        },
+        "shipping": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "4",
+            "currency": "USD"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "LB"
+          },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            }
+          }
+        }
+      }
+    ],
+    "outcome": "Current same-page Product offer found.",
+    "purchase_selection": {
+      "sku": "JK-M51CP9DZ",
+      "title": "JBL Tune 720BT Available in multiple colors",
+      "displayPrice": "49.95",
+      "currency": "USD",
+      "stock": 999,
+      "inStock": true,
+      "specs": [
+        {
+          "label": "Brand",
+          "value": "JBL"
+        },
+        {
+          "label": "Model",
+          "value": "Tune 720BT"
+        },
+        {
+          "label": "Type",
+          "value": "Over-ear headphones"
+        },
+        {
+          "label": "Connectivity",
+          "value": "Bluetooth 5.3"
+        },
+        {
+          "label": "Battery Life",
+          "value": "Up to 76 hours"
+        },
+        {
+          "label": "Design",
+          "value": "Lightweight and foldable"
+        },
+        {
+          "label": "Ear Cushions",
+          "value": "Soft"
+        },
+        {
+          "label": "Headband",
+          "value": "Padded"
+        },
+        {
+          "label": "Colors",
+          "value": "Multiple colors"
+        }
+      ],
+      "variant_count": 0,
+      "page_options": []
+    }
+  },
+  {
+    "url": "https://shop.itworkslb.net/products/jbl-tune-720bt-wireless-over-ear-headphones-with-jbl-pure-bass-sound-bluetooth-53-up-to-76h-battery-life-black-43380",
+    "attempts": [
+      "C2f"
+    ],
+    "buyer_visible": [],
+    "job_id": "194-check-8cddb289-6c40-4abb-a812-9551df0f4885",
+    "utc": "2026-11-25T20:53:11.884076+00:00",
+    "http": 200,
+    "request_attempts": 1,
+    "response_sha256": "760f0d5c702557f38b67ef90cc8a6997b79062094de5314a7580edf9eeae7656",
+    "final_url": "https://shop.itworkslb.net/products/jbl-tune-720bt-wireless-over-ear-headphones-with-jbl-pure-bass-sound-bluetooth-53-up-to-76h-battery-life-black-43380",
+    "errors": [],
+    "page_metadata": {
+      "og:title": "JBL Tune 720BT Wireless Over-Ear Headphones - White",
+      "og:url": "https://shop.itworkslb.net/products/jbl-tune-720bt-wireless-over-ear-headphones-with-jbl-pure-bass-sound-bluetooth-53-up-to-76h-battery-life-black-43380",
+      "product:price:amount": "57.82",
+      "product:price:currency": "USD"
+    },
+    "products": [
+      {
+        "title": "JBL Tune 720BT Wireless Over-Ear Headphones - White",
+        "sku": null,
+        "category": null,
+        "brand": {
+          "@type": "Brand",
+          "name": "JBL"
+        },
+        "price": "57.82",
+        "currency": "USD",
+        "availability": "https://schema.org/InStock",
+        "condition": "https://schema.org/NewCondition",
+        "seller": {
+          "@type": "Organization",
+          "name": "ITWorks Lebanon"
+        },
+        "shipping": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "5",
+            "currency": "USD"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "LB"
+          },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 1,
+              "maxValue": 3,
+              "unitCode": "DAY"
+            }
+          }
+        }
+      }
+    ],
+    "outcome": "Current same-page Product offer found."
+  },
+  {
+    "url": "https://technodel.net/product/acer-aspire-14-ai-core-ultra-9-288v-32gb-ram-1tb-ssd-14-full-hd",
+    "attempts": [
+      "C3f"
+    ],
+    "buyer_visible": [],
+    "job_id": "194-check-31e83e82-7058-47a2-9038-e28d6a6f1b19",
+    "utc": "2026-11-25T20:53:24.694929+00:00",
+    "http": 200,
+    "request_attempts": 1,
+    "response_sha256": "11f40fade4182a62a353bbb8b2a24975aac35a8466692313fc92a28ce6456b1a",
+    "final_url": "https://technodel.net/product/acer-aspire-14-ai-core-ultra-9-288v-32gb-ram-1tb-ssd-14-full-hd",
+    "errors": [],
+    "page_metadata": {
+      "og:title": "Acer Aspire 14 AI, Core Ultra 9 288V, 32GB RAM, 1TB SSD, 14\" Full HD",
+      "og:url": "https://technodel.net/product/acer-aspire-14-ai-core-ultra-9-288v-32gb-ram-1tb-ssd-14-full-hd"
+    },
+    "products": [
+      {
+        "title": "Acer Aspire 14 AI, Core Ultra 9 288V, 32GB RAM, 1TB SSD, 14\" Full HD",
+        "sku": "TD-50TD283",
+        "category": "Laptops",
+        "brand": {
+          "@type": "Brand",
+          "name": "Acer"
+        },
+        "price": 1070,
+        "currency": "USD",
+        "availability": "https://schema.org/InStock",
+        "condition": "https://schema.org/NewCondition",
+        "seller": {
+          "@type": "Organization",
+          "name": "Technodel",
+          "url": "https://technodel.net"
+        },
+        "shipping": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "0",
+            "currency": "USD"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "LB"
+          },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            }
+          }
+        }
+      }
+    ],
+    "outcome": "Current same-page Product offer found.",
+    "purchase_selection": {
+      "sku": "TD-50TD283",
+      "title": "Acer Aspire 14 AI, Core Ultra 9 288V, 32GB RAM, 1TB SSD, 14\" Full HD",
+      "displayPrice": 1070,
+      "currency": "USD",
+      "stock": 1,
+      "inStock": true,
+      "specs": [
+        {
+          "label": "Processor",
+          "value": "Intel Core Ultra 9 288V"
+        },
+        {
+          "label": "Graphics",
+          "value": "Integrated"
+        },
+        {
+          "label": "Memory",
+          "value": "32GB"
+        },
+        {
+          "label": "Storage",
+          "value": "1TB SSD"
+        },
+        {
+          "label": "Screen size",
+          "value": "14\""
+        },
+        {
+          "label": "Resolution",
+          "value": "Full HD (1920 x 1080)"
+        },
+        {
+          "label": "Ports",
+          "value": "2x USB4 / Thunderbolt 4 Type-C, 2x USB-A 3.2 Gen 1, 1x HDMI, 3.5mm audio"
+        },
+        {
+          "label": "Wireless",
+          "value": "Wi-Fi 6 (802.11ax) + Bluetooth 5.3"
+        },
+        {
+          "label": "Weight",
+          "value": "1.4 kg"
+        },
+        {
+          "label": "Dimensions",
+          "value": "318.9 x 225.1 x 16.9 mm"
+        },
+        {
+          "label": "Condition",
+          "value": "New"
+        }
+      ],
+      "variant_count": 0,
+      "page_options": []
+    }
+  },
+  {
+    "url": "https://technodel.net/product/samsung-27-essential-monitor-s3-s30gd-100hz-full-hd-ls27d300gamxue",
+    "attempts": [
+      "C4f"
+    ],
+    "buyer_visible": [],
+    "job_id": "194-check-31e83e82-7058-47a2-9038-e28d6a6f1b19",
+    "utc": "2026-11-25T20:53:41.895959+00:00",
+    "http": 200,
+    "request_attempts": 1,
+    "response_sha256": "3d6fe94ef799f220eea82980544b7cf2430913c1d2fc1e95217e91f5a8e147f3",
+    "final_url": "https://technodel.net/product/samsung-27-essential-monitor-s3-s30gd-100hz-full-hd-ls27d300gamxue",
+    "errors": [],
+    "page_metadata": {
+      "og:title": "Samsung 27\" Essential Monitor S3 S30GD 100Hz Full HD | LS27D300GAMXUE",
+      "og:url": "https://technodel.net/product/samsung-27-essential-monitor-s3-s30gd-100hz-full-hd-ls27d300gamxue"
+    },
+    "products": [
+      {
+        "title": "Samsung 27\" Essential Monitor S3 S30GD 100Hz Full HD | LS27D300GAMXUE",
+        "sku": "HA-ABQ2XJG6",
+        "category": "Monitors",
+        "brand": {
+          "@type": "Brand",
+          "name": "Samsung"
+        },
+        "price": "118.8",
+        "currency": "USD",
+        "availability": "https://schema.org/InStock",
+        "condition": "https://schema.org/NewCondition",
+        "seller": {
+          "@type": "Organization",
+          "name": "Technodel",
+          "url": "https://technodel.net"
+        },
+        "shipping": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "4",
+            "currency": "USD"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "LB"
+          },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            }
+          }
+        }
+      }
+    ],
+    "outcome": "Current same-page Product offer found.",
+    "purchase_selection": {
+      "sku": "HA-ABQ2XJG6",
+      "title": "Samsung 27\" Essential Monitor S3 S30GD 100Hz Full HD | LS27D300GAMXUE",
+      "displayPrice": "118.8",
+      "currency": "USD",
+      "stock": 999,
+      "inStock": true,
+      "specs": [
+        {
+          "label": "Screen size",
+          "value": "27\""
+        },
+        {
+          "label": "Refresh rate",
+          "value": "100Hz"
+        }
+      ],
+      "variant_count": 0,
+      "page_options": []
+    }
+  },
+  {
+    "url": "https://technodel.net/product/motorola-edge",
+    "attempts": [
+      "C7f"
+    ],
+    "buyer_visible": [],
+    "job_id": "194-check-31e83e82-7058-47a2-9038-e28d6a6f1b19",
+    "utc": "2026-11-25T20:53:55.817414+00:00",
+    "http": 200,
+    "request_attempts": 1,
+    "response_sha256": "f610f1cf379f3a41047f275c804aec6422872454100eb48a4f88cfd77d1447f5",
+    "final_url": "https://technodel.net/product/motorola-edge",
+    "errors": [],
+    "page_metadata": {
+      "og:title": "Motorola Edge – 2023 – 8 – 256GB",
+      "og:url": "https://technodel.net/product/motorola-edge"
+    },
+    "products": [
+      {
+        "title": "Motorola Edge – 2023 – 8 – 256GB",
+        "sku": "DR-WPKRCW17",
+        "category": "Smartphones",
+        "brand": {
+          "@type": "Brand",
+          "name": "Motorola"
+        },
+        "price": "391.02",
+        "currency": "USD",
+        "availability": "https://schema.org/OutOfStock",
+        "condition": "https://schema.org/NewCondition",
+        "seller": {
+          "@type": "Organization",
+          "name": "Technodel",
+          "url": "https://technodel.net"
+        },
+        "shipping": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "4",
+            "currency": "USD"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "LB"
+          },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            }
+          }
+        }
+      }
+    ],
+    "outcome": "Current same-page Product offer found.",
+    "purchase_selection": {
+      "sku": "DR-WPKRCW17",
+      "title": "Motorola Edge – 2023 – 8 – 256GB",
+      "displayPrice": "391.02",
+      "currency": "USD",
+      "stock": 0,
+      "inStock": false,
+      "specs": [
+        {
+          "label": "Brand",
+          "value": "Motorola"
+        },
+        {
+          "label": "Model year",
+          "value": "2023"
+        },
+        {
+          "label": "Storage",
+          "value": "256GB"
+        },
+        {
+          "label": "Water and dust rating",
+          "value": "IP68"
+        }
+      ],
+      "variant_count": 0,
+      "page_options": []
+    }
+  },
+  {
+    "url": "https://technodel.net/product/apple-macbook-air-153-m5-24gb-ram-1tb-ssd-mvn3zujq",
+    "attempts": [
+      "D3b"
+    ],
+    "buyer_visible": [],
+    "job_id": "194-check-31e83e82-7058-47a2-9038-e28d6a6f1b19",
+    "utc": "2026-11-25T20:54:09.845872+00:00",
+    "http": 200,
+    "request_attempts": 1,
+    "response_sha256": "0e848103feea040e30225360dfa528443adad2f80fee8f861edfd937f82fd710",
+    "final_url": "https://technodel.net/product/apple-macbook-air-153-m5-24gb-ram-1tb-ssd-mvn3zujq",
+    "errors": [],
+    "page_metadata": {
+      "og:title": "Apple MacBook Air 15.3\" M5 24GB RAM 1TB SSD",
+      "og:url": "https://technodel.net/product/apple-macbook-air-153-m5-24gb-ram-1tb-ssd-mvn3zujq"
+    },
+    "products": [
+      {
+        "title": "Apple MacBook Air 15.3\" M5 24GB RAM 1TB SSD",
+        "sku": "HA-EF71VKHK",
+        "category": "Laptops",
+        "brand": {
+          "@type": "Brand",
+          "name": "APPLE"
+        },
+        "price": "2363.9",
+        "currency": "USD",
+        "availability": "https://schema.org/InStock",
+        "condition": "https://schema.org/NewCondition",
+        "seller": {
+          "@type": "Organization",
+          "name": "Technodel",
+          "url": "https://technodel.net"
+        },
+        "shipping": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "0",
+            "currency": "USD"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "LB"
+          },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            }
+          }
+        }
+      }
+    ],
+    "outcome": "Current same-page Product offer found.",
+    "purchase_selection": {
+      "sku": "HA-EF71VKHK",
+      "title": "Apple MacBook Air 15.3\" M5 24GB RAM 1TB SSD",
+      "displayPrice": "2363.9",
+      "currency": "USD",
+      "stock": 999,
+      "inStock": true,
+      "specs": [
+        {
+          "label": "Product Type",
+          "value": "Ultraportable Laptop"
+        },
+        {
+          "label": "Product Line",
+          "value": "MacBook Air"
+        },
+        {
+          "label": "Model Year",
+          "value": "2026"
+        },
+        {
+          "label": "Processor",
+          "value": "Apple M5"
+        },
+        {
+          "label": "CPU",
+          "value": "10-Core CPU"
+        },
+        {
+          "label": "CPU Configuration",
+          "value": "4 Super Cores and 6 Efficiency Cores"
+        },
+        {
+          "label": "Graphics",
+          "value": "10-Core Integrated GPU"
+        },
+        {
+          "label": "Neural Engine",
+          "value": "16-Core"
+        },
+        {
+          "label": "Memory Bandwidth",
+          "value": "153GB/s"
+        },
+        {
+          "label": "Unified Memory",
+          "value": "24GB"
+        },
+        {
+          "label": "Storage",
+          "value": "1TB SSD"
+        },
+        {
+          "label": "Display Size",
+          "value": "15.3 Inches"
+        },
+        {
+          "label": "Display Type",
+          "value": "Liquid Retina LED-Backlit IPS"
+        },
+        {
+          "label": "Native Resolution",
+          "value": "2880 × 1864 Pixels"
+        },
+        {
+          "label": "Pixel Density",
+          "value": "224ppi"
+        },
+        {
+          "label": "Display Brightness",
+          "value": "500 Nits"
+        },
+        {
+          "label": "Colour Gamut",
+          "value": "Wide Colour P3"
+        },
+        {
+          "label": "Camera",
+          "value": "12MP Center Stage Camera"
+        },
+        {
+          "label": "Wireless Connectivity",
+          "value": "Wi-Fi 7, Bluetooth 6 and Thread"
+        },
+        {
+          "label": "Battery Capacity",
+          "value": "66.5Wh Lithium-Polymer"
+        }
+      ],
+      "variant_count": 0,
+      "page_options": []
+    }
+  },
+  {
+    "url": "https://technodel.net/product/apple-iphone-16-plus-128gb-open-box",
+    "attempts": [
+      "D6f"
+    ],
+    "buyer_visible": [],
+    "job_id": "194-check-31e83e82-7058-47a2-9038-e28d6a6f1b19",
+    "utc": "2026-11-25T20:54:22.862522+00:00",
+    "http": null,
+    "request_attempts": 0,
+    "response_sha256": null,
+    "final_url": null,
+    "errors": [
+      "BUDGET_EXHAUSTED"
+    ],
+    "outcome": "No same-URL successful response."
+  },
+  {
+    "url": "https://technodel.net/product/samsung-galaxy-s24-5",
+    "attempts": [
+      "C1",
+      "C1f"
+    ],
+    "buyer_visible": [],
+    "job_id": "194-check-31e83e82-7058-47a2-9038-e28d6a6f1b19",
+    "utc": "2026-11-25T20:54:35.867492+00:00",
+    "http": null,
+    "request_attempts": 0,
+    "response_sha256": null,
+    "final_url": null,
+    "errors": [
+      "BUDGET_EXHAUSTED"
+    ],
+    "outcome": "No same-URL successful response."
+  },
+  {
+    "url": "https://technodel.net/product/samsung-galaxy-a56",
+    "attempts": [
+      "C6f"
+    ],
+    "buyer_visible": [],
+    "job_id": "194-check-31e83e82-7058-47a2-9038-e28d6a6f1b19",
+    "utc": "2026-11-25T20:54:48.876785+00:00",
+    "http": null,
+    "request_attempts": 0,
+    "response_sha256": null,
+    "final_url": null,
+    "errors": [
+      "BUDGET_EXHAUSTED"
+    ],
+    "outcome": "No same-URL successful response."
+  }
+]

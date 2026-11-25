@@ -3,7 +3,7 @@ import { BuyerApi, type RunSnapshot, type ComparisonWorkspace } from './api';
 import { categories, domesticScope, examples, initialDraft, specLabels, toRequest, fromRequest, type Draft } from './request';
 import { active, useWorkspace, type Transport } from './useWorkspace';
 import './styles.css';
-import Comparison from './Comparison';
+import Comparison, { requestDescription } from './Comparison';
 import History, { type HistoryTransport } from './History';
 const api = new BuyerApi();
 const phases = { interpret: 'Understanding your requirements', discover: 'Finding relevant retailers', research: 'Checking products and evidence', evaluate: 'Comparing eligible offers', verify: 'Rechecking price and availability', write: 'Preparing your comparison' };
@@ -32,6 +32,7 @@ export function Progress({ snapshot, busy, cancel, clarify }: { snapshot: RunSna
   const [answer, setAnswer] = useState('');
   const title = snapshot.status === 'queued' ? 'Waiting to start' : snapshot.status === 'clarification' ? 'One detail to clarify' : snapshot.status === 'running' ? phases[snapshot.phase] : endings[snapshot.status];
   return <section className="progress panel" aria-label="Search progress"><div className="section-heading"><div><span className="eyebrow">SEARCH · REVISION {snapshot.request.revision}</span><h2 role="status">{title}</h2></div>{active(snapshot) && <button type="button" disabled={busy} onClick={cancel}>Cancel search</button>}</div>
+    {snapshot.request.intent.kind !== 'product_link' && <p><strong>Searching for </strong>{requestDescription(snapshot.request)}</p>}
     {snapshot.stop_reason && <p>{snapshot.stop_reason}</p>}
     {snapshot.explanation && <div className="explanation" aria-label="Explanation of these results"><h3>About these results{snapshot.explanation.source === 'fallback' && <span className="badge">Standard summary</span>}</h3><p>{snapshot.explanation.text}</p><small className="muted">{snapshot.explanation.source === 'fallback' ? 'A standard summary of every checked fact, in a fixed order.' : 'Written only from facts checked by the rules above; the model chooses which checked facts to show, never new ones.'}</small></div>}
     {snapshot.status === 'queued' && <p className="muted">Your request is saved. Results will appear when a research worker starts.</p>}

@@ -41,13 +41,13 @@ class WiredHeadsetTests(unittest.TestCase):
         return SimpleNamespace(body=html.encode(), final_url=url, origin_url=url, status='ok',
             response_sha256=sha256(html.encode()).hexdigest(), observed_at=datetime.now(timezone.utc))
 
-    def read(self):
+    def read(self, category='audio'):
         data = '1:' + json.dumps(['$','$L1',None,dict(product=self.listing)],separators=(',',':'))
         component = '<script>self.__next_f.push('+json.dumps([1,data])+')</script>'
         policy = {'@type':'FAQPage','mainEntity':[{'name':q,'acceptedAnswer':{'text':a}} for q,a in self.terms.items()]}
         destination = v2.DeliveryDestination(country='LB',city='Beirut')
         return shop.read_offer(self.document(self.url,[self.product,self.store],component),
-            self.document(shop.FAQ,[policy]), SimpleNamespace(fulfillment=SimpleNamespace(destination=destination)),
+            self.document(shop.FAQ,[policy]), SimpleNamespace(fulfillment=SimpleNamespace(destination=destination), requirements=SimpleNamespace(category=category)),
             SimpleNamespace(entry=SimpleNamespace(name=shop.SELLER,retailer_id=shop.SOURCE),seller_id=shop.SOURCE),
             v2.RunReference(run_id='run',request_id='request',request_revision=1,run_revision=1),'route')
 
@@ -56,6 +56,34 @@ class WiredHeadsetTests(unittest.TestCase):
         self.assertEqual(shop.product_links(html.encode(),'Studio X10'), (self.url,))
         self.assertFalse(shop.product_links(html.encode(),'Studio X10 Pro'))
 
+    def test_laptop_search_chooses_a_linked_category_match_then_page_proves_specs(self):
+        cards = [
+            dict(slug='fixture-32gb-drive', title='32GB USB drive', category={'name':'Storage'}),
+            dict(slug='fixture-32gb-book', title='Fixture Book 32GB 1TB SSD', category={'name':'Laptops'}),
+            dict(slug='absent-32gb-book', title='32GB 1TB SSD', category={'name':'Laptops'}),
+        ]
+        frame = '7:' + json.dumps([['$','component',None,dict(products=cards)]], separators=(',', ':'))
+        html = ('<a href="/product/fixture-32gb-drive"></a><a href="/product/fixture-32gb-book"></a>'
+                '<script>self.__next_f.push(' + json.dumps([1, frame]) + ')</script>')
+        self.assertEqual(shop.listing_links(html.encode(), '32GB', '32GB RAM 1TB SSD', 'laptop'),
+                         (shop.ORIGIN + '/product/fixture-32gb-book',))
+        self.listing.update(title='Studio Book', category={'name':'Laptops'}, specs=[
+            dict(label='RAM',value='16GB'), dict(label='Storage',value='1TB'), dict(label='Storage type',value='SSD')])
+        self.product.update(name='Studio Book', category='Laptops')
+        offer = self.read('laptop')
+        self.assertEqual(offer.variant.specs.ram_gb.value, 16)
+        self.assertEqual(offer.variant.specs.storage_gb.value, 1024)
+        self.assertEqual(offer.variant.specs.storage_type.value, 'SSD')
+        self.assertEqual(offer.costs[0].state, 'unknown')
+        self.assertIsNone(self.read('monitor'))
+        self.listing['title'] = self.product['name'] = 'Studio Book, 8GB RAM, 512GB SSD'
+        with self.assertRaisesRegex(ValueError, 'disagree'):
+            self.read('laptop')
+        self.listing['specs'] = []
+        self.assertEqual(self.read('laptop').variant.specs.storage_gb.value, 512)
+        self.product['sku'] = 'other'
+        self.assertIsNone(self.read('laptop'))
+
     def test_priced_selection_and_two_shipping_receipts(self):
         offer = self.read()
         self.assertEqual(offer.price.value.amount, Decimal(19))
@@ -63,6 +91,17 @@ class WiredHeadsetTests(unittest.TestCase):
         self.assertEqual(len(offer.costs[1].evidence_ids), 2)
         self.assertTrue(offer.domestic_merchant_receipts())
         self.assertEqual(offer.variant.variant_id, 'technodel:TEST')
+
+    def test_fractional_listing_keeps_the_price_and_requires_checkout_evidence(self):
+        self.offer['price'] = '18.75'
+        self.listing['displayPrice'] = '18.75'
+        result = self.read()
+        self.assertEqual(result.price.value.amount, Decimal('18.75'))
+        self.assertEqual(next(cost.state for cost in result.costs if cost.kind == 'tax'), 'unknown')
+        self.listing['displayPrice'] = '19'
+        self.assertIsNone(self.read())
+        self.offer['price'] = self.listing['displayPrice'] = '18.751'
+        self.assertIsNone(self.read())
 
     def test_changed_checkout_price_and_unselected_variants_fail_closed(self):
         self.listing['displayPrice'] = 20

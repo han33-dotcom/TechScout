@@ -1,6 +1,7 @@
 """Bounded search choices for the domestic buyer's discovery phase."""
 from dataclasses import replace
 from urllib.parse import unquote
+import re
 
 from pydantic import Field
 
@@ -14,14 +15,11 @@ PUBLIC_CITIES = {city.casefold(): city for city in (
     'Byblos', 'Jbeil', 'Batroun', 'Baalbek', 'Nabatieh', 'بيروت', 'طرابلس',
     'صيدا', 'صور', 'زحلة', 'جونية', 'جبيل', 'البترون', 'بعلبك', 'النبطية')}
 
-# Suggestions for discovery only. Suitability is assessed from checked specifications.
-NEEDS_SEARCH_TERMS = {
-    'phone': ('camera', 'long battery life', 'gaming'),
-    'laptop': ('lightweight', 'workstation dedicated graphics', 'gaming high refresh'),
-    'tablet': ('active stylus note taking', 'cellular', 'keyboard'),
-    'monitor': ('color accurate', 'high refresh rate', 'office ergonomic'),
-    'audio': ('wireless earbuds', 'noise cancelling headphones', 'wired headset microphone'),
-}
+# Public product vocabulary, emitted only when it occurs in the buyer's wording.
+USE_TERMS = ('gaming', 'office', 'workstation', 'lightweight', 'portable', 'touchscreen',
+             'stylus', 'keyboard', 'camera', 'battery', 'microphone', 'Bluetooth',
+             'USB-C', 'USB-A', 'HDMI', 'DisplayPort', 'IPS', 'OLED', 'curved', 'ultrawide',
+             'Windows', 'Android', 'Linux', 'MacBook', 'iPad', 'Galaxy')
 
 
 class DomesticSearchChoice(Model):
@@ -29,12 +27,57 @@ class DomesticSearchChoice(Model):
     channel: Channel
 
 
+def product_terms(request):
+    """Use catalogue units and spelling. Each term is a lead, never proof of fit."""
+    terms = []
+    fields = request.requirements.model_dump(exclude_defaults=True, exclude={'category'})
+    for key, value in fields.items():
+        key = key.removeprefix('min_')
+        if key in ('ram_gb', 'storage_gb'):
+            capacity = f'{value // 1024}TB' if value % 1024 == 0 else f'{value}GB'
+            terms.append(capacity + (' RAM' if key == 'ram_gb' else ''))
+        elif key == 'refresh_hz':
+            terms.append(f'{value}Hz')
+        elif key == 'diagonal_inches':
+            terms.append(f'{value} inch')
+        elif isinstance(value, bool):
+            if value:
+                terms.append(key.replace('_', ' '))
+        elif isinstance(value, tuple):
+            terms.extend(str(v) for v in value)
+        else:
+            terms.append(str(value))
+    if request.intent.kind == 'needs':
+        for term in USE_TERMS:
+            if re.search(r'\b' + re.escape(term) + r'\b', request.intent.description, re.I):
+                terms.append(term)
+    return list(dict.fromkeys(terms))
+
+
+def retailer_query(request):
+    if request.intent.kind == 'exact_model':
+        model = request.intent.model
+        maker = request.intent.manufacturer
+        if maker and not model.casefold().startswith(maker.casefold() + ' '):
+            model = maker + ' ' + model
+        # Scope accepts plain catalogue terms only. Never truncate into another model.
+        if len(model) > 64 or re.search(r'[@/:?]|\b(?:address|street|deliver|please)\b', model, re.I):
+            return None
+        query = ' '.join(re.findall(r'[a-zA-Z0-9][a-zA-Z0-9._-]*', model.replace('+', ' Plus ')))
+    else:
+        category = request.requirements.category
+        terms = product_terms(request)
+        label = 'headphones' if category == 'audio' else category
+        query = ' '.join(dict.fromkeys([label, *terms]))
+    return query if 0 < len(query) <= 64 else None
+
+
 def search_options(request, offers):
     requirements = request.requirements
-    terms = [f"{key.replace('_', ' ')} {value}" for key, value in
-             requirements.model_dump(exclude_defaults=True, exclude={'category'}).items()]
+    terms = product_terms(request)
     if request.intent.kind == 'exact_model':
-        product = ' '.join(t for t in (request.intent.manufacturer, request.intent.model) if t)
+        product = retailer_query(request) or requirements.category
+        terms += list(request.allowed_colors)
         gap = 'Find an independent Lebanese seller of the requested configuration'
         for offer in offers:
             variant = offer.variant.variant_id
@@ -59,8 +102,6 @@ def search_options(request, offers):
                 candidates.append(('en', [model.manufacturer or '', model.model, product, 'Lebanon', city, *terms],
                                    'Find competing domestic sellers for a candidate model'))
                 break
-        for focus in NEEDS_SEARCH_TERMS[requirements.category]:
-            candidates.append(('en', [product, focus, 'Lebanon', *terms], f'Find models for {focus}'))
     return tuple(SearchObjective(query=' '.join(filter(None, fields))[:400], objective=objective,
                                  language=language, limit=8) for language, fields, objective in candidates)
 

@@ -1,0 +1,540 @@
+[
+  {
+    "url": "https://technodel.net/product/samsung-27-essential-monitor-s3-s30gd-100hz-full-hd-ls27d300gamxue",
+    "attempts": [
+      "C4z"
+    ],
+    "buyer_visible": [
+      "C4z"
+    ],
+    "job_id": "194-check-de74a366-72a5-4513-8ef8-18e1f90e0f2f",
+    "utc": "2026-11-25T21:09:22.734954+00:00",
+    "http": 200,
+    "request_attempts": 1,
+    "response_sha256": "04213e0cfc01eded8d1cb6c93be56880a62e9d6014326abf9cf5b6a3c613d404",
+    "final_url": "https://technodel.net/product/samsung-27-essential-monitor-s3-s30gd-100hz-full-hd-ls27d300gamxue",
+    "errors": [],
+    "page_metadata": {
+      "og:title": "Samsung 27\" Essential Monitor S3 S30GD 100Hz Full HD | LS27D300GAMXUE",
+      "og:url": "https://technodel.net/product/samsung-27-essential-monitor-s3-s30gd-100hz-full-hd-ls27d300gamxue"
+    },
+    "products": [
+      {
+        "title": "Samsung 27\" Essential Monitor S3 S30GD 100Hz Full HD | LS27D300GAMXUE",
+        "sku": "HA-ABQ2XJG6",
+        "category": "Monitors",
+        "brand": {
+          "@type": "Brand",
+          "name": "Samsung"
+        },
+        "price": "118.8",
+        "currency": "USD",
+        "availability": "https://schema.org/InStock",
+        "condition": "https://schema.org/NewCondition",
+        "seller": {
+          "@type": "Organization",
+          "name": "Technodel",
+          "url": "https://technodel.net"
+        },
+        "shipping": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "4",
+            "currency": "USD"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "LB"
+          },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            }
+          }
+        }
+      }
+    ],
+    "outcome": "Current same-page Product offer found.",
+    "purchase_selection": {
+      "sku": "HA-ABQ2XJG6",
+      "title": "Samsung 27\" Essential Monitor S3 S30GD 100Hz Full HD | LS27D300GAMXUE",
+      "displayPrice": "118.8",
+      "currency": "USD",
+      "stock": 999,
+      "inStock": true,
+      "specs": [
+        {
+          "label": "Screen size",
+          "value": "27\""
+        },
+        {
+          "label": "Refresh rate",
+          "value": "100Hz"
+        }
+      ],
+      "variant_count": 0,
+      "page_options": []
+    }
+  },
+  {
+    "url": "https://technodel.net/product/microsoft-surface-pro-12-1st-edition-copilot-pc-snapdragon-x-plus-8-core-16gb-512gb-ssd-touchscreen-win11h-violet-adapte",
+    "attempts": [
+      "N3z"
+    ],
+    "buyer_visible": [
+      "N3z"
+    ],
+    "job_id": "194-check-de74a366-72a5-4513-8ef8-18e1f90e0f2f",
+    "utc": "2026-11-25T21:09:36.988095+00:00",
+    "http": 200,
+    "request_attempts": 1,
+    "response_sha256": "08aae569b18b8cf83e86dfc58170f20a2113280f25482148be39eeac2df180f4",
+    "final_url": "https://technodel.net/product/microsoft-surface-pro-12-1st-edition-copilot-pc-snapdragon-x-plus-8-core-16gb-512gb-ssd-touchscreen-win11h-violet-adapte",
+    "errors": [],
+    "page_metadata": {
+      "og:title": "Microsoft Surface Pro 12\" 1st Edition Copilot+ PC",
+      "og:url": "https://technodel.net/product/microsoft-surface-pro-12-1st-edition-copilot-pc-snapdragon-x-plus-8-core-16gb-512gb-ssd-touchscreen-win11h-violet-adapte"
+    },
+    "products": [
+      {
+        "title": "Microsoft Surface Pro 12\" 1st Edition Copilot+ PC, Snapdragon X Plus 8-Core, 16GB, 512GB SSD, Touchscreen, Win11H, Violet, Adapter Not Included",
+        "sku": "RK-96Z24DDW",
+        "category": "Laptops",
+        "brand": {
+          "@type": "Brand",
+          "name": "Microsoft Surface"
+        },
+        "price": 1025,
+        "currency": "USD",
+        "availability": "https://schema.org/InStock",
+        "condition": "https://schema.org/NewCondition",
+        "seller": {
+          "@type": "Organization",
+          "name": "Technodel",
+          "url": "https://technodel.net"
+        },
+        "shipping": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "0",
+            "currency": "USD"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "LB"
+          },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            }
+          }
+        }
+      }
+    ],
+    "outcome": "Current same-page Product offer found.",
+    "purchase_selection": {
+      "sku": "RK-96Z24DDW",
+      "title": "Microsoft Surface Pro 12\" 1st Edition Copilot+ PC, Snapdragon X Plus 8-Core, 16GB, 512GB SSD, Touchscreen, Win11H, Violet, Adapter Not Included",
+      "displayPrice": 1025,
+      "currency": "USD",
+      "stock": 1,
+      "inStock": true,
+      "specs": [
+        {
+          "label": "Processor",
+          "value": "Snapdragon X Plus"
+        },
+        {
+          "label": "Storage",
+          "value": "512GB"
+        },
+        {
+          "label": "Storage type",
+          "value": "SSD"
+        },
+        {
+          "label": "Screen size",
+          "value": "12\""
+        },
+        {
+          "label": "Operating system",
+          "value": "Win11H"
+        },
+        {
+          "label": "Memory",
+          "value": "16GB"
+        }
+      ],
+      "variant_count": 0,
+      "page_options": []
+    }
+  },
+  {
+    "url": "https://technodel.net/product/samsung-odyssey-3d-g90xf-27-4k-165hz-gaming-monitor-mvn85fxy",
+    "attempts": [
+      "N4z"
+    ],
+    "buyer_visible": [
+      "N4z"
+    ],
+    "job_id": "194-check-de74a366-72a5-4513-8ef8-18e1f90e0f2f",
+    "utc": "2026-11-25T21:09:50.957884+00:00",
+    "http": 200,
+    "request_attempts": 1,
+    "response_sha256": "f29ffa363f0217f829c163f4c5b047d162b76db77a7d85c51f03bd4fb13d2716",
+    "final_url": "https://technodel.net/product/samsung-odyssey-3d-g90xf-27-4k-165hz-gaming-monitor-mvn85fxy",
+    "errors": [],
+    "page_metadata": {
+      "og:title": "Samsung Odyssey 3D G90XF 27\" 4K 165Hz Gaming Monitor",
+      "og:url": "https://technodel.net/product/samsung-odyssey-3d-g90xf-27-4k-165hz-gaming-monitor-mvn85fxy"
+    },
+    "products": [
+      {
+        "title": "Samsung Odyssey 3D G90XF 27\" 4K 165Hz Gaming Monitor",
+        "sku": "HA-ER2NZJBC",
+        "category": "Monitors",
+        "brand": {
+          "@type": "Brand",
+          "name": "SAMSUNG"
+        },
+        "price": "1895.3",
+        "currency": "USD",
+        "availability": "https://schema.org/InStock",
+        "condition": "https://schema.org/NewCondition",
+        "seller": {
+          "@type": "Organization",
+          "name": "Technodel",
+          "url": "https://technodel.net"
+        },
+        "shipping": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "0",
+            "currency": "USD"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "LB"
+          },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            }
+          }
+        }
+      }
+    ],
+    "outcome": "Current same-page Product offer found.",
+    "purchase_selection": {
+      "sku": "HA-ER2NZJBC",
+      "title": "Samsung Odyssey 3D G90XF 27\" 4K 165Hz Gaming Monitor",
+      "displayPrice": "1895.3",
+      "currency": "USD",
+      "stock": 999,
+      "inStock": true,
+      "specs": [
+        {
+          "label": "Screen Size",
+          "value": "27 inches"
+        },
+        {
+          "label": "Resolution",
+          "value": "3840 × 2160"
+        },
+        {
+          "label": "Refresh Rate",
+          "value": "165Hz"
+        },
+        {
+          "label": "Response Time",
+          "value": "0.03ms (GtG)"
+        },
+        {
+          "label": "Panel Type",
+          "value": "OLED with Quantum Dot"
+        },
+        {
+          "label": "3D Technology",
+          "value": "Glasses-free AI-based real-time 3D"
+        },
+        {
+          "label": "Eye Tracking",
+          "value": "Built-in smart tracking for dynamic 3D rendering"
+        },
+        {
+          "label": "Aspect Ratio",
+          "value": "16:9"
+        },
+        {
+          "label": "HDR Support",
+          "value": "HDR10+"
+        },
+        {
+          "label": "Sync",
+          "value": "AMD FreeSync Premium Pro; NVIDIA G-SYNC Compatible"
+        },
+        {
+          "label": "Ports",
+          "value": "HDMI; DisplayPort; USB-C; USB Hub"
+        },
+        {
+          "label": "Stand Adjustment",
+          "value": "Tilt; Pivot; Height Adjustable"
+        },
+        {
+          "label": "Model",
+          "value": "Odyssey G90XF"
+        },
+        {
+          "label": "Code",
+          "value": "LS27FG900XMXUE"
+        }
+      ],
+      "variant_count": 0,
+      "page_options": []
+    }
+  },
+  {
+    "url": "https://technodel.net/product/apple-ipad-air-mh304-m4-11-wi-fi-128gb-space-gray",
+    "attempts": [
+      "N5z"
+    ],
+    "buyer_visible": [
+      "N5z"
+    ],
+    "job_id": "194-check-de74a366-72a5-4513-8ef8-18e1f90e0f2f",
+    "utc": "2026-11-25T21:10:05.271202+00:00",
+    "http": 200,
+    "request_attempts": 1,
+    "response_sha256": "9554997e901346e971ae9986a7b5d5956a83b1647adbe41fc29a23dbb4f7029f",
+    "final_url": "https://technodel.net/product/apple-ipad-air-mh304-m4-11-wi-fi-128gb-space-gray",
+    "errors": [],
+    "page_metadata": {
+      "og:title": "Apple iPad Air MH304 | M4 | 11\" | Wi-Fi | 128GB | Space Gray",
+      "og:url": "https://technodel.net/product/apple-ipad-air-mh304-m4-11-wi-fi-128gb-space-gray"
+    },
+    "products": [
+      {
+        "title": "Apple iPad Air MH304 | M4 | 11\" | Wi-Fi | 128GB | Space Gray",
+        "sku": "RK-YSZMCJGW",
+        "category": "Tablets",
+        "brand": {
+          "@type": "Brand",
+          "name": "Apple"
+        },
+        "price": 750,
+        "currency": "USD",
+        "availability": "https://schema.org/InStock",
+        "condition": "https://schema.org/NewCondition",
+        "seller": {
+          "@type": "Organization",
+          "name": "Technodel",
+          "url": "https://technodel.net"
+        },
+        "shipping": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "0",
+            "currency": "USD"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "LB"
+          },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            }
+          }
+        }
+      }
+    ],
+    "outcome": "Current same-page Product offer found.",
+    "purchase_selection": {
+      "sku": "RK-YSZMCJGW",
+      "title": "Apple iPad Air MH304 | M4 | 11\" | Wi-Fi | 128GB | Space Gray",
+      "displayPrice": 750,
+      "currency": "USD",
+      "stock": 1,
+      "inStock": true,
+      "specs": [
+        {
+          "label": "Brand",
+          "value": "Apple"
+        },
+        {
+          "label": "Screen size",
+          "value": "11\""
+        },
+        {
+          "label": "Colour",
+          "value": "Gray"
+        },
+        {
+          "label": "Condition",
+          "value": "New"
+        },
+        {
+          "label": "Storage",
+          "value": "128GB"
+        },
+        {
+          "label": "Connectivity",
+          "value": "Wi-Fi"
+        }
+      ],
+      "variant_count": 0,
+      "page_options": []
+    }
+  },
+  {
+    "url": "https://technodel.net/product/jbl-live-670bt-nc-bluetooth-headset-white",
+    "attempts": [
+      "N1z"
+    ],
+    "buyer_visible": [],
+    "job_id": "194-check-de74a366-72a5-4513-8ef8-18e1f90e0f2f",
+    "utc": "2026-11-25T21:10:19.209683+00:00",
+    "http": 200,
+    "request_attempts": 1,
+    "response_sha256": "59dff7e5ede8e7311aba7185b27c365d90eb8fe8e5fce269d0bfc13f014d8b1e",
+    "final_url": "https://technodel.net/product/jbl-live-670bt-nc-bluetooth-headset-white",
+    "errors": [],
+    "page_metadata": {
+      "og:title": "JBL Live 670BT NC Bluetooth Headset, White",
+      "og:url": "https://technodel.net/product/jbl-live-670bt-nc-bluetooth-headset-white"
+    },
+    "products": [
+      {
+        "title": "JBL Live 670BT NC Bluetooth Headset, White",
+        "sku": "HA-BQWFBPW2",
+        "category": "Headsets",
+        "brand": {
+          "@type": "Brand",
+          "name": "JBL"
+        },
+        "price": "97.9",
+        "currency": "USD",
+        "availability": "https://schema.org/InStock",
+        "condition": "https://schema.org/NewCondition",
+        "seller": {
+          "@type": "Organization",
+          "name": "Technodel",
+          "url": "https://technodel.net"
+        },
+        "shipping": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "4",
+            "currency": "USD"
+          },
+          "shippingDestination": {
+            "@type": "DefinedRegion",
+            "addressCountry": "LB"
+          },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 0,
+              "maxValue": 1,
+              "unitCode": "DAY"
+            }
+          }
+        }
+      }
+    ],
+    "outcome": "Current same-page Product offer found.",
+    "purchase_selection": {
+      "sku": "HA-BQWFBPW2",
+      "title": "JBL Live 670BT NC Bluetooth Headset, White",
+      "displayPrice": "97.9",
+      "currency": "USD",
+      "stock": 999,
+      "inStock": true,
+      "specs": [
+        {
+          "label": "Type",
+          "value": "Over-Ear"
+        },
+        {
+          "label": "Series",
+          "value": "Live 670BT"
+        },
+        {
+          "label": "Connectivity",
+          "value": "Bluetooth"
+        },
+        {
+          "label": "Bluetooth version",
+          "value": "5.3"
+        },
+        {
+          "label": "Battery life",
+          "value": "65 hours"
+        },
+        {
+          "label": "Battery life with BT+ANC",
+          "value": "50 hours"
+        },
+        {
+          "label": "Colour",
+          "value": "White"
+        }
+      ],
+      "variant_count": 0,
+      "page_options": []
+    }
+  }
+]
