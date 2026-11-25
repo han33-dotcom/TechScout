@@ -19,6 +19,25 @@ by current seller evidence. [Dated traces, versions and per-call usage](https://
 
 ## What the flow does
 
+### Domestic worker and ITWorks
+
+The normal domestic worker uses `app.buyer_flow:run`. For an exact headphone delivery
+request it can search ITWorks with one public GET. The product reader accepts a single
+enabled purchase form whose variant, price and availability agree with the product's
+structured offer. A second product and FAQ read verifies the finalist. The source
+limit is six reads per run and per minute, with one concurrent read. The worker reads
+the form as HTML. The buyer opens the product page to order.
+
+The v2 wire format supports this case with two listing-bound evidence records,
+`seller.name` for the Offer's merchant and `seller.market` for the matching Store's
+Lebanese address. The domestic controller checks both receipts against its current
+responses. A direct route can retain `origin_country=ZZ` when the warehouse is
+unknown. Older records without the merchant evidence use the existing dispatch path.
+The seller's selected offer and nationwide policy must agree on the applicable shipping
+rate. The current FAQ supplies tax treatment. Pickup requires separate branch evidence.
+
+### Historical single-source checkpoint
+
 The buyer worker runs the controller `app.buyer_flow:run_checkpoint`:
 
 ```text

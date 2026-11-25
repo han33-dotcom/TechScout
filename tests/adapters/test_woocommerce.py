@@ -746,7 +746,8 @@ class ConfigurationTests(unittest.TestCase):
         settings = json.loads((ROOT / 'config/maintenance.json').read_text(encoding='utf-8'))
         directories = {page['source_id'] for page in settings['manufacturer_pages']}
         self.assertFalse(directories & (set(adapters.ADAPTERS) | set(HOSTS)))
-        self.assertEqual(set(adapters.ADAPTERS) | set(HOSTS) | directories,
+        from app.adapters.itworks_audio import SOURCE as itworks
+        self.assertEqual(set(adapters.ADAPTERS) | set(HOSTS) | directories | {itworks},
                          set(registry['live_release']['admitted_source_ids']))
         for source, adapter in adapters.ADAPTERS.items():
             with self.subTest(source=source):

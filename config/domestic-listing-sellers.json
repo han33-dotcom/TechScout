@@ -1,6 +1,25 @@
 [
   {
     "entry": {
+      "retailer_id": "itworks",
+      "name": "ITWorks Lebanon",
+      "origin": "https://shop.itworkslb.net",
+      "markets": ["LB"],
+      "categories": ["audio"],
+      "discovery_status": "audited",
+      "retrieval_method": "direct",
+      "last_checked_at": "2026-11-25T16:06:15Z"
+    },
+    "updated_at": "2026-11-25T16:06:15Z",
+    "source_id": "itworks",
+    "source_country": "LB",
+    "seller_id": "itworks",
+    "seller_identity": "retailer",
+    "policy_urls": ["https://shop.itworkslb.net/faq"],
+    "role": "domestic"
+  },
+  {
+    "entry": {
       "retailer_id": "outgeeked",
       "name": "OutGeeked",
       "origin": "https://outgeeked.net",

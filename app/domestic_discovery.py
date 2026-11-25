@@ -118,9 +118,11 @@ class SearchReport:
             verified = VerifiedOffer.model_validate(item.model_dump(mode='json'))
             offer, run = verified.offer, verified.verification.run
             if (run.run_id != self.run_id or offer.seller.market != 'LB'
-                    or not isinstance(offer.route, DirectRoute) or offer.route.origin_country != 'LB'):
+                    or not isinstance(offer.route, DirectRoute)):
                 continue
-            if dispatch_receipts(offer, run, verified.verification.checked_at):
+            merchant = offer.domestic_merchant_receipts()
+            if (merchant and all(e.run == run and e.observed_at <= verified.verification.checked_at for e in merchant)
+                    or offer.route.origin_country == 'LB' and dispatch_receipts(offer, run, verified.verification.checked_at)):
                 variant = (offer.variant.product.product_id, offer.variant.variant_id)
                 if variant in collisions:
                     variant = (*variant, offer.offer_id)

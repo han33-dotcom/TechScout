@@ -28,6 +28,11 @@ function route(offer: Offer) {
   const r = offer.route;
   if (r.kind === 'pickup') return `Pickup · ${r.destination.city ?? 'Lebanon'} · ${r.branch_id}`;
   if (r.kind === 'forwarded') return `Forwarded via ${r.forwarder_id} · ${r.retailer_leg.origin.country} → ${r.forwarding_leg.origin.country} → Lebanon`;
+  if (r.item_eligible.value === true && offer.seller.market === 'LB' &&
+      ['seller.name','seller.market'].every(path => offer.evidence.some(e => e.field_path === path &&
+        e.origin_url === offer.listing_url && e.variant_id === offer.source_variant_id && !e.conflicts?.length))) {
+    return `Lebanese seller · Delivers to ${r.destination.city ?? 'Lebanon'}`;
+  }
   if (r.origin_country === 'ZZ') return `Delivery requested to ${r.destination.city ?? 'Lebanon'} · Dispatch origin unknown`;
   return `${r.origin_country === 'LB' ? 'Domestic' : 'International'} delivery · ${r.origin_country} → ${r.destination.city ?? 'Lebanon'}`;
 }

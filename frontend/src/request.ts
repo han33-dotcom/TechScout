@@ -22,11 +22,17 @@ export function toRequest(draft: Draft, base?: EditableRequest): ShoppingRequest
   const text = draft.text.trim();
   if (!text) throw new Error('Describe what you need, enter a model, or paste a retailer link.');
   let intent: ShoppingRequest['intent'];
+  let colors = base?.allowed_colors ?? [];
   if (/^https?:\/\//i.test(text)) {
     const url = new URL(text);
     if (url.protocol !== 'https:' || url.username || url.password) throw new Error('Use a public HTTPS product link.');
     intent = { kind: 'product_link', url: url.href };
-  } else if (draft.kind === 'exact_model') intent = { kind: 'exact_model', model: text, manufacturer: base?.intent.kind === 'exact_model' && base.intent.model === text ? base.intent.manufacturer : undefined };
+  } else if (draft.kind === 'exact_model') {
+    const selection = /^(.+?)\s+in\s+(black|white|red|blue|green|yellow|purple|pink|silver|gold|gray|grey)$/i.exec(text);
+    const model = selection ? selection[1].trim() : text;
+    if (selection) colors = [selection[2].toLowerCase()];
+    intent = { kind: 'exact_model', model, manufacturer: base?.intent.kind === 'exact_model' && base.intent.model === model ? base.intent.manufacturer : undefined };
+  }
   else intent = { kind: 'needs', description: text, required_software: base?.intent.kind === 'needs' ? base.intent.required_software : [] };
   const target = draft.target ? money(draft.target,draft.currency) : null, maximum = draft.maximum ? money(draft.maximum,draft.currency) : null;
   if (target && maximum && compareDecimal(target.amount,maximum.amount) > 0) throw new Error('Your target must fit your hard maximum.');
@@ -38,7 +44,7 @@ export function toRequest(draft: Draft, base?: EditableRequest): ShoppingRequest
   }
   return { ...base, schema_version: 2, request_id: base?.request_id ?? crypto.randomUUID(), revision: base ? base.revision + 1 : 1,
     intent, requirements: requirements as ShoppingRequest['requirements'], budget: target || maximum ? { target, maximum } : null,
-    allowed_colors: base?.allowed_colors ?? [], preferences: base?.preferences ?? [], allowed_conditions: base?.allowed_conditions[0] === draft.condition ? base.allowed_conditions : [draft.condition], payment: draft.payment || null,
+    allowed_colors: colors, preferences: base?.preferences ?? [], allowed_conditions: base?.allowed_conditions[0] === draft.condition ? base.allowed_conditions : [draft.condition], payment: draft.payment || null,
     market_scope: domesticScope,
     fulfillment: { ...base?.fulfillment, mode: draft.mode, branch_id: draft.mode === 'pickup' ? draft.branch.trim() || null : null,
       destination: { ...base?.fulfillment?.destination, country: 'LB', city: draft.city.trim() || null } } };

@@ -392,13 +392,25 @@ class Offer(Contract):
     costs: tuple[Charge, ...] = ()
     evidence: tuple[Evidence, ...] = ()
 
+    def domestic_merchant_receipts(self):
+        """Item-scoped identity and domicile from the actual seller's listing."""
+        records = tuple(e for e in self.evidence if e.field_path in ('seller.market', 'seller.name')
+                        and e.scope == 'variant' and e.product_id == self.source_product_id
+                        and e.variant_id == self.source_variant_id and e.origin_url == self.listing_url
+                        and e.final_url == self.listing_url)
+        if (self.seller.market == 'LB' and not any(e.conflicts for e in records)
+                and {e.field_path for e in records} == {'seller.market', 'seller.name'}):
+            return records
+        return ()
+
     def locally_fulfillable(self, *, allow_unknown_origin=False) -> bool:
         if self.seller.market != 'LB':
             return False
         if isinstance(self.route, PickupRoute):
             return True
         return isinstance(self.route, DirectRoute) and (
-            self.route.origin_country == 'LB' or allow_unknown_origin and self.route.origin_country == 'ZZ'
+            self.route.origin_country == 'LB' or bool(self.domestic_merchant_receipts())
+            or allow_unknown_origin and self.route.origin_country == 'ZZ'
         )
 
     @model_validator(mode='after')

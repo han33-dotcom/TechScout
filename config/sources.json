@@ -12,10 +12,32 @@
       "beytech",
       "outgeeked",
       "wincell",
-      "asus_directory"
+      "asus_directory",
+      "itworks"
     ]
   },
   "sources": [
+    {
+      "id": "itworks",
+      "name": "ITWorks Lebanon",
+      "origin": "https://shop.itworkslb.net",
+      "status": "active",
+      "reviewed_at": "2026-11-25",
+      "admission": {
+        "basis": "Technical review of the public model search, product purchase-form HTML and merchant FAQ.",
+        "scope": "GET a bounded search, a single product slug and the exact FAQ. Purchase forms are read only.",
+        "evidence": ["https://shop.itworkslb.net/search?q=510BT", "https://shop.itworkslb.net/faq"],
+        "reviewed_at": "2026-11-25T16:06:15Z"
+      },
+      "allowed_endpoints": ["https://shop.itworkslb.net/faq"],
+      "limits": {"requests_per_minute": 6, "concurrency": 1, "max_requests_per_run": 6},
+      "endpoint_capabilities": [
+        {"capability_id": "itworks-search", "version": "1", "host": "shop.itworkslb.net", "operation": "search",
+         "expect": "html", "path": ["search"], "query": [{"name": "q", "parameter": {"kind": "search_text", "max_length": 64}}]},
+        {"capability_id": "itworks-product", "version": "1", "host": "shop.itworkslb.net", "operation": "product",
+         "expect": "html", "path": ["products", {"kind": "token", "max_length": 128}]}
+      ]
+    },
     {
       "id": "asus_directory",
       "name": "ASUS Middle East retailer directory",
