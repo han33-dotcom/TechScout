@@ -7,7 +7,7 @@ from urllib.parse import urlsplit
 
 from app import contracts_v2 as v2
 from app.adapters.itworks_audio import nodes, policy_answers, single
-from app.extraction import _unique_pairs
+from app.extraction import _unique_pairs, refresh_hz
 from app.headset_identity import identify_headset
 
 
@@ -19,6 +19,8 @@ PRODUCT_PATH = re.compile(r'/product/[a-z0-9][a-z0-9-]{0,127}')
 PART_SUFFIX = re.compile(r'-\d{3}-\d{6}$')
 WIRED_TITLE = re.compile(r'(?P<maker>[A-Za-z]+) Wired (?P<model>[A-Z]+[0-9]+[A-Za-z]*) Headset'
                         r'(?: with Noise-Canceling Mic)? \((?P<color>[A-Za-z]+)\) (?P<part>\d{3}-\d{6})', re.I)
+HEADSET_FIRST = re.compile(r'(?P<maker>[A-Za-z]+) Wired (?:Audio Jack )?Headset (?P<model>[A-Z]+[0-9]+[A-Za-z]*)'
+                          r'(?P<business> Stereo Business)? \((?P<color>[A-Za-z]+)\) (?P<part>\d{3}-\d{6})', re.I)
 
 
 class Page(HTMLParser):
@@ -140,8 +142,13 @@ def selected_specs(category, fields, title, known):
                        ('Storage type', 'storage_type')):
         if fields.get(label):
             add(key, label, fields[label])
-    if hz := re.fullmatch(r'(\d{2,4})\s*Hz', fields.get('Refresh rate', ''), re.I):
-        add('refresh_hz', 'Refresh rate', int(hz[1]))
+    if category == 'monitor':
+        rates = {label: refresh_hz(label, value) for label, value in fields.items()
+                 if label.strip().casefold() == 'refresh rate'}
+        if rates and len(set(rates.values())) == 1:
+            label, hz = next(iter(rates.items()))
+            if hz:
+                add('refresh_hz', label, hz)
     if category == 'tablet':
         mode = {'wi-fi':'wifi', 'wifi':'wifi', 'cellular':'cellular'}.get(fields.get('Connectivity','').casefold())
         if mode:
@@ -162,7 +169,8 @@ def read_offer(page, policy, request, owner, run, route_id):
     offer = product['offers']
     sku = listing['sku']
     title = listing['title']
-    match = WIRED_TITLE.fullmatch(title)
+    reviewed_checkout = WIRED_TITLE.fullmatch(title)
+    match = reviewed_checkout or HEADSET_FIRST.fullmatch(title)
     category_name = listing['category']['name']
     category = CATEGORIES.get(category_name)
     if (not category or category != request.requirements.category
@@ -189,10 +197,15 @@ def read_offer(page, policy, request, owner, run, route_id):
     model = fields.get('Model') or title
     configuration = None
     if match:
-        if (match['maker'] != maker or fields.get('Brand') != maker or fields.get('Connectivity') != 'Wired'
-                or color != match['color']):
+        parsed_model = maker + ' ' + match['model']
+        if (category != 'audio' or match['maker'] != maker or fields.get('Brand') != maker
+                or fields.get('Connectivity') != 'Wired' or color != match['color']
+                or fields.get('Model', match['model']) not in (match['model'], parsed_model)):
             return None
-        model = maker + ' ' + match['model']
+        if match.groupdict().get('business') and not listing.get('shortDescription', '').startswith(
+                parsed_model + ' wired stereo headset '):
+            return None
+        model = parsed_model
         configuration = identify_headset(maker, match['model'], color, part=match['part'])
     amount = Decimal(str(offer['price']))
     if (not amount.is_finite() or amount <= 0 or amount != amount.quantize(Decimal('0.01'))
@@ -250,7 +263,7 @@ def read_offer(page, policy, request, owner, run, route_id):
     sale_text = ' '.join(str(listing.get(field, '')) for field in ('title','shortDescription','description','specs'))
     tax_extra = re.search(r'(?:exclud(?:es|ing)|before|additional|plus)\s+(?:VAT|tax)|'
                           r'(?:VAT|tax)(?:es)?\s+(?:excluded|extra|calculated|added)', sale_text, re.I)
-    if match and amount == amount.to_integral_value() and not tax_extra and payment == ('We accept Cash on Delivery (COD), Wish Money transfer, and Crypto (USDT, BTC, ETH). '
+    if reviewed_checkout and amount == amount.to_integral_value() and not tax_extra and payment == ('We accept Cash on Delivery (COD), Wish Money transfer, and Crypto (USDT, BTC, ETH). '
                    'No hidden fees — what you see is what you pay.'):
         tax = dict(kind='tax', state='included', evidence_ids=receipt('costs.order.tax',
             f'Displayed COD item price: USD {amount}') + receipt('costs.order.tax', payment, document=policy))

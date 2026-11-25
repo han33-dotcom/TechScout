@@ -1,0 +1,782 @@
+{
+  "case": "F5",
+  "attempt": "F5f",
+  "series": "untouched confirmation",
+  "revision": "7670e463614755ff891f98cee409d2f451bd9e39+uncommitted",
+  "run_id": "28549402-a386-470b-8ac0-5b193d720e64",
+  "started_utc": "2026-11-25T22:11:55.961572+00:00",
+  "captured_utc": "2026-11-25T22:13:01.005Z",
+  "input": {
+    "id": "F5",
+    "entry": "needs",
+    "category": "laptop",
+    "prompt": "Find me a laptop with at least 64 GB RAM for rendering animations, delivered to Tripoli."
+  },
+  "understood": {
+    "schema_version": 2,
+    "request_id": "dbc51ea4-ea7a-4c94-be02-8b57c26a5fd4",
+    "revision": 1,
+    "intent": {
+      "kind": "needs",
+      "description": "Find me a laptop with at least 64 GB RAM for rendering animations, delivered to Tripoli.",
+      "required_software": []
+    },
+    "unresolved_constraints": [],
+    "refinement_note": null,
+    "requirements": {
+      "category": "laptop",
+      "ram_gb": null,
+      "storage_gb": null,
+      "min_ram_gb": 64,
+      "min_storage_gb": null,
+      "storage_type": null,
+      "cpu": null,
+      "gpu": null,
+      "operating_system": null
+    },
+    "budget": null,
+    "preferences": [],
+    "allowed_colors": [],
+    "payment": null,
+    "allowed_conditions": [
+      "new"
+    ],
+    "market_scope": {
+      "include_international": false,
+      "international_markets": []
+    },
+    "fulfillment": {
+      "destination": {
+        "country": "LB",
+        "city": "Tripoli",
+        "postal_code": null
+      },
+      "mode": "delivery",
+      "branch_id": null,
+      "deadline": null
+    },
+    "warranty_requirement": null
+  },
+  "accepted_submissions": 1,
+  "limits": {
+    "active_seconds": 299.994,
+    "concurrent_workers": 3,
+    "final_by_s": 118,
+    "ledger_buyer_caps": {
+      "calls": 40,
+      "research_spend_usd": "0.75",
+      "seconds": 120,
+      "spend_usd": "1"
+    },
+    "nonfinal_by_s": 77.0,
+    "recommendation_groups": 3
+  },
+  "retailer_searches": [
+    {
+      "attempts": 1,
+      "links": [
+        "https://technodel.net/product/el-ultra-9-rtx5090-laptop"
+      ],
+      "query": "64GB",
+      "reason": null,
+      "source_id": "technodel"
+    },
+    {
+      "attempts": 1,
+      "links": [],
+      "query": "laptop 64GB RAM",
+      "reason": "No matching product links in the bounded retailer search.",
+      "source_id": "beytech"
+    },
+    {
+      "attempts": 3,
+      "links": [],
+      "query": "laptop 64GB RAM",
+      "reason": "Retailer search unavailable: NETWORK_ERROR",
+      "source_id": "mojitech"
+    }
+  ],
+  "web_plan": {
+    "channel": "manufacturer",
+    "language": "en",
+    "method": "model",
+    "objective": "Find a distinct domestic model meeting the buyer requirements with local fulfillment",
+    "query": "laptop Lebanon local delivery Tripoli price 64GB RAM",
+    "query_index": 1
+  },
+  "web_attempts": [
+    {
+      "actual_usd": "0",
+      "channel": "manufacturer",
+      "latency_ms": 2594,
+      "request_id": null,
+      "reserved_usd": "0",
+      "status": "ok",
+      "usage_units": null
+    },
+    {
+      "actual_usd": null,
+      "channel": "tavily",
+      "latency_ms": 0,
+      "request_id": null,
+      "reserved_usd": "0",
+      "status": "unavailable",
+      "usage_units": null
+    },
+    {
+      "actual_usd": null,
+      "channel": "serpapi",
+      "latency_ms": 0,
+      "request_id": null,
+      "reserved_usd": "0",
+      "status": "unavailable",
+      "usage_units": null
+    },
+    {
+      "actual_usd": null,
+      "channel": "brave",
+      "latency_ms": 0,
+      "request_id": null,
+      "reserved_usd": "0",
+      "status": "unavailable",
+      "usage_units": null
+    },
+    {
+      "actual_usd": null,
+      "channel": "firecrawl",
+      "latency_ms": 0,
+      "request_id": null,
+      "reserved_usd": "0",
+      "status": "unavailable",
+      "usage_units": null
+    }
+  ],
+  "web_failure": null,
+  "web_leads": [
+    {
+      "source_id": null,
+      "url": "https://www.ayoubcomputers.com/"
+    },
+    {
+      "source_id": null,
+      "url": "https://www.beirutcart.com/"
+    },
+    {
+      "source_id": null,
+      "url": "https://gcscomputerpro.com"
+    },
+    {
+      "source_id": "macrotronics",
+      "url": "https://www.macrotronics.net"
+    },
+    {
+      "source_id": "mojitech",
+      "url": "https://mojitech.net/"
+    }
+  ],
+  "exact_phone_read": null,
+  "catalog_before": {
+    "at_ms": 250,
+    "catalog_offers": 0,
+    "name": "discover"
+  },
+  "research": {
+    "at_ms": 46219,
+    "candidates": 1,
+    "handed_off": 3,
+    "name": "research"
+  },
+  "verify": {
+    "independent_sellers_checked": 1,
+    "rechecked": 1,
+    "uncertain": [
+      "technodel:JK-MVV2HQ0V"
+    ],
+    "verified": []
+  },
+  "sources": [
+    {
+      "source_id": "technodel",
+      "name": "Technodel",
+      "status": "checked",
+      "reason": null
+    },
+    {
+      "source_id": "beytech",
+      "name": "Beytech",
+      "status": "failed",
+      "reason": "No matching product links in the bounded retailer search."
+    },
+    {
+      "source_id": "mojitech",
+      "name": "Mojitech",
+      "status": "failed",
+      "reason": "Retailer search unavailable: NETWORK_ERROR"
+    },
+    {
+      "source_id": "class_cellulars",
+      "name": "class_cellulars",
+      "status": "failed",
+      "reason": "No matching SKU on the current listing"
+    },
+    {
+      "source_id": "lead:ayoubcomputers.com",
+      "name": "ayoubcomputers.com",
+      "status": "unchecked",
+      "reason": "In background onboarding."
+    },
+    {
+      "source_id": "lead:beirutcart.com",
+      "name": "beirutcart.com",
+      "status": "unchecked",
+      "reason": "In background onboarding."
+    },
+    {
+      "source_id": "lead:gcscomputerpro.com",
+      "name": "gcscomputerpro.com",
+      "status": "unchecked",
+      "reason": "In background onboarding."
+    }
+  ],
+  "coverage": {
+    "discovered": 7,
+    "attempted": 4,
+    "retrieved": 1,
+    "qualifying": 0
+  },
+  "status": "abstained",
+  "stop_reason": "Checked 1 independent domestic seller(s). 0 offer(s) qualified. New retailer leads were handed to background onboarding.",
+  "listings": [
+    {
+      "state": "uncertain",
+      "link": "https://technodel.net/product/el-ultra-9-rtx5090-laptop",
+      "seller": "Technodel",
+      "sku": "JK-MVV2HQ0V",
+      "title": "ASUS ROG Zephyrus G16 GU605CX-QR145 - Intel Core Ultra 9 285H - Nvidia RTX 5090 24GB - 64GB RAM",
+      "specs": {
+        "category": "laptop",
+        "storage_type": null,
+        "cpu": {
+          "state": "unknown",
+          "value": null,
+          "alternatives": [],
+          "reason": "The selected listing does not establish this specification",
+          "evidence_ids": []
+        },
+        "ram_gb": {
+          "state": "known",
+          "value": 64,
+          "alternatives": [],
+          "reason": null,
+          "evidence_ids": [
+            "technodel:JK-MVV2HQ0V:variant.specs.ram_gb:4"
+          ]
+        },
+        "storage_gb": {
+          "state": "unknown",
+          "value": null,
+          "alternatives": [],
+          "reason": "The selected listing does not establish this specification",
+          "evidence_ids": []
+        },
+        "gpu": {
+          "state": "known",
+          "value": "Nvidia RTX 5090",
+          "alternatives": [],
+          "reason": null,
+          "evidence_ids": [
+            "technodel:JK-MVV2HQ0V:variant.specs.gpu:5"
+          ]
+        },
+        "operating_system": null,
+        "display_inches": null,
+        "display_width_px": null,
+        "display_height_px": null,
+        "display_refresh_hz": null,
+        "display_panel": null,
+        "display_touchscreen": null
+      },
+      "color": null,
+      "listed_price": {
+        "state": "known",
+        "value": {
+          "amount": "5438.99",
+          "currency": "USD"
+        },
+        "alternatives": [],
+        "reason": null,
+        "evidence_ids": [
+          "technodel:JK-MVV2HQ0V:price:6"
+        ]
+      },
+      "stock": {
+        "state": "known",
+        "value": true,
+        "alternatives": [],
+        "reason": null,
+        "evidence_ids": [
+          "technodel:JK-MVV2HQ0V:stock:7"
+        ]
+      },
+      "condition": {
+        "state": "known",
+        "value": "new",
+        "alternatives": [],
+        "reason": null,
+        "evidence_ids": [
+          "technodel:JK-MVV2HQ0V:condition:9"
+        ]
+      },
+      "cost": {
+        "status": "incomplete",
+        "known_subtotal": {
+          "amount": "5438.99",
+          "currency": "USD"
+        },
+        "missing": [
+          "costs.order.tax",
+          "costs.order.shipping"
+        ]
+      },
+      "charges": [
+        {
+          "schema_version": 2,
+          "kind": "tax",
+          "leg": "order",
+          "state": "unknown",
+          "amount": null,
+          "reason": "Additional charges at payment unconfirmed",
+          "conditions": [],
+          "evidence_ids": [],
+          "valid_until": null
+        },
+        {
+          "schema_version": 2,
+          "kind": "shipping",
+          "leg": "order",
+          "state": "unknown",
+          "amount": null,
+          "reason": "No matching current item and nationwide rate",
+          "conditions": [],
+          "evidence_ids": [],
+          "valid_until": null
+        }
+      ],
+      "route": {
+        "kind": "direct",
+        "route_id": "delivery:26589ea159e86a1224d09def",
+        "origin_country": "ZZ",
+        "destination": {
+          "country": "LB",
+          "city": "Tripoli",
+          "postal_code": null
+        },
+        "item_eligible": {
+          "state": "unknown",
+          "value": null,
+          "alternatives": [],
+          "reason": "Nationwide service unconfirmed",
+          "evidence_ids": []
+        }
+      },
+      "purchasable": {
+        "state": "known",
+        "value": true,
+        "alternatives": [],
+        "reason": null,
+        "evidence_ids": [
+          "technodel:JK-MVV2HQ0V:purchasable:8"
+        ]
+      },
+      "reasons": [
+        "item delivery eligibility: required evidence is missing or conflicting",
+        "costs.order.tax",
+        "costs.order.shipping",
+        "Delivery of this item to the requested destination is unverified."
+      ],
+      "receipts": [
+        {
+          "schema_version": 2,
+          "evidence_id": "technodel:JK-MVV2HQ0V:seller.name:0",
+          "source_id": "technodel",
+          "product_id": "el-ultra-9-rtx5090-laptop",
+          "variant_id": "JK-MVV2HQ0V",
+          "scope": "variant",
+          "branch_id": null,
+          "route_id": null,
+          "field_path": "seller.name",
+          "origin_url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop",
+          "final_url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop",
+          "observed_at": "2026-11-25T22:12:58.983754Z",
+          "response_sha256": "e7d8ec45dd615947ea2ff37f3a84beec69e5ec0a8d07bc68712747792b0e6abe",
+          "adapter_version": "technodel-listing/2",
+          "json_pointer": null,
+          "excerpt": "Technodel",
+          "conflicts": [],
+          "origin": "runtime",
+          "corpus_version": "domestic-buyer-1",
+          "index_version": null,
+          "run": {
+            "run_id": "28549402-a386-470b-8ac0-5b193d720e64",
+            "run_revision": 1,
+            "request_id": "dbc51ea4-ea7a-4c94-be02-8b57c26a5fd4",
+            "request_revision": 1
+          }
+        },
+        {
+          "schema_version": 2,
+          "evidence_id": "technodel:JK-MVV2HQ0V:seller.market:1",
+          "source_id": "technodel",
+          "product_id": "el-ultra-9-rtx5090-laptop",
+          "variant_id": "JK-MVV2HQ0V",
+          "scope": "variant",
+          "branch_id": null,
+          "route_id": null,
+          "field_path": "seller.market",
+          "origin_url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop",
+          "final_url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop",
+          "observed_at": "2026-11-25T22:12:58.983754Z",
+          "response_sha256": "e7d8ec45dd615947ea2ff37f3a84beec69e5ec0a8d07bc68712747792b0e6abe",
+          "adapter_version": "technodel-listing/2",
+          "json_pointer": null,
+          "excerpt": "Technodel: Badaro, LB",
+          "conflicts": [],
+          "origin": "runtime",
+          "corpus_version": "domestic-buyer-1",
+          "index_version": null,
+          "run": {
+            "run_id": "28549402-a386-470b-8ac0-5b193d720e64",
+            "run_revision": 1,
+            "request_id": "dbc51ea4-ea7a-4c94-be02-8b57c26a5fd4",
+            "request_revision": 1
+          }
+        },
+        {
+          "schema_version": 2,
+          "evidence_id": "technodel:JK-MVV2HQ0V:variant.product.manufacturer:2",
+          "source_id": "technodel",
+          "product_id": "el-ultra-9-rtx5090-laptop",
+          "variant_id": "JK-MVV2HQ0V",
+          "scope": "variant",
+          "branch_id": null,
+          "route_id": null,
+          "field_path": "variant.product.manufacturer",
+          "origin_url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop",
+          "final_url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop",
+          "observed_at": "2026-11-25T22:12:58.983754Z",
+          "response_sha256": "e7d8ec45dd615947ea2ff37f3a84beec69e5ec0a8d07bc68712747792b0e6abe",
+          "adapter_version": "technodel-listing/2",
+          "json_pointer": null,
+          "excerpt": "Asus",
+          "conflicts": [],
+          "origin": "runtime",
+          "corpus_version": "domestic-buyer-1",
+          "index_version": null,
+          "run": {
+            "run_id": "28549402-a386-470b-8ac0-5b193d720e64",
+            "run_revision": 1,
+            "request_id": "dbc51ea4-ea7a-4c94-be02-8b57c26a5fd4",
+            "request_revision": 1
+          }
+        },
+        {
+          "schema_version": 2,
+          "evidence_id": "technodel:JK-MVV2HQ0V:variant.product.model:3",
+          "source_id": "technodel",
+          "product_id": "el-ultra-9-rtx5090-laptop",
+          "variant_id": "JK-MVV2HQ0V",
+          "scope": "variant",
+          "branch_id": null,
+          "route_id": null,
+          "field_path": "variant.product.model",
+          "origin_url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop",
+          "final_url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop",
+          "observed_at": "2026-11-25T22:12:58.983754Z",
+          "response_sha256": "e7d8ec45dd615947ea2ff37f3a84beec69e5ec0a8d07bc68712747792b0e6abe",
+          "adapter_version": "technodel-listing/2",
+          "json_pointer": null,
+          "excerpt": "ASUS ROG Zephyrus G16 GU605CX-QR145 - Intel Core Ultra 9 285H - Nvidia RTX 5090 24GB - 64GB RAM",
+          "conflicts": [],
+          "origin": "runtime",
+          "corpus_version": "domestic-buyer-1",
+          "index_version": null,
+          "run": {
+            "run_id": "28549402-a386-470b-8ac0-5b193d720e64",
+            "run_revision": 1,
+            "request_id": "dbc51ea4-ea7a-4c94-be02-8b57c26a5fd4",
+            "request_revision": 1
+          }
+        },
+        {
+          "schema_version": 2,
+          "evidence_id": "technodel:JK-MVV2HQ0V:variant.specs.ram_gb:4",
+          "source_id": "technodel",
+          "product_id": "el-ultra-9-rtx5090-laptop",
+          "variant_id": "JK-MVV2HQ0V",
+          "scope": "variant",
+          "branch_id": null,
+          "route_id": null,
+          "field_path": "variant.specs.ram_gb",
+          "origin_url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop",
+          "final_url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop",
+          "observed_at": "2026-11-25T22:12:58.983754Z",
+          "response_sha256": "e7d8ec45dd615947ea2ff37f3a84beec69e5ec0a8d07bc68712747792b0e6abe",
+          "adapter_version": "technodel-listing/2",
+          "json_pointer": null,
+          "excerpt": "Memory: 64GB",
+          "conflicts": [],
+          "origin": "runtime",
+          "corpus_version": "domestic-buyer-1",
+          "index_version": null,
+          "run": {
+            "run_id": "28549402-a386-470b-8ac0-5b193d720e64",
+            "run_revision": 1,
+            "request_id": "dbc51ea4-ea7a-4c94-be02-8b57c26a5fd4",
+            "request_revision": 1
+          }
+        },
+        {
+          "schema_version": 2,
+          "evidence_id": "technodel:JK-MVV2HQ0V:variant.specs.gpu:5",
+          "source_id": "technodel",
+          "product_id": "el-ultra-9-rtx5090-laptop",
+          "variant_id": "JK-MVV2HQ0V",
+          "scope": "variant",
+          "branch_id": null,
+          "route_id": null,
+          "field_path": "variant.specs.gpu",
+          "origin_url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop",
+          "final_url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop",
+          "observed_at": "2026-11-25T22:12:58.983754Z",
+          "response_sha256": "e7d8ec45dd615947ea2ff37f3a84beec69e5ec0a8d07bc68712747792b0e6abe",
+          "adapter_version": "technodel-listing/2",
+          "json_pointer": null,
+          "excerpt": "Graphics: Nvidia RTX 5090",
+          "conflicts": [],
+          "origin": "runtime",
+          "corpus_version": "domestic-buyer-1",
+          "index_version": null,
+          "run": {
+            "run_id": "28549402-a386-470b-8ac0-5b193d720e64",
+            "run_revision": 1,
+            "request_id": "dbc51ea4-ea7a-4c94-be02-8b57c26a5fd4",
+            "request_revision": 1
+          }
+        },
+        {
+          "schema_version": 2,
+          "evidence_id": "technodel:JK-MVV2HQ0V:price:6",
+          "source_id": "technodel",
+          "product_id": "el-ultra-9-rtx5090-laptop",
+          "variant_id": "JK-MVV2HQ0V",
+          "scope": "variant",
+          "branch_id": null,
+          "route_id": null,
+          "field_path": "price",
+          "origin_url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop",
+          "final_url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop",
+          "observed_at": "2026-11-25T22:12:58.983754Z",
+          "response_sha256": "e7d8ec45dd615947ea2ff37f3a84beec69e5ec0a8d07bc68712747792b0e6abe",
+          "adapter_version": "technodel-listing/2",
+          "json_pointer": null,
+          "excerpt": "Offer and displayed price: USD 5438.99",
+          "conflicts": [],
+          "origin": "runtime",
+          "corpus_version": "domestic-buyer-1",
+          "index_version": null,
+          "run": {
+            "run_id": "28549402-a386-470b-8ac0-5b193d720e64",
+            "run_revision": 1,
+            "request_id": "dbc51ea4-ea7a-4c94-be02-8b57c26a5fd4",
+            "request_revision": 1
+          }
+        },
+        {
+          "schema_version": 2,
+          "evidence_id": "technodel:JK-MVV2HQ0V:stock:7",
+          "source_id": "technodel",
+          "product_id": "el-ultra-9-rtx5090-laptop",
+          "variant_id": "JK-MVV2HQ0V",
+          "scope": "variant",
+          "branch_id": null,
+          "route_id": null,
+          "field_path": "stock",
+          "origin_url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop",
+          "final_url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop",
+          "observed_at": "2026-11-25T22:12:58.983754Z",
+          "response_sha256": "e7d8ec45dd615947ea2ff37f3a84beec69e5ec0a8d07bc68712747792b0e6abe",
+          "adapter_version": "technodel-listing/2",
+          "json_pointer": null,
+          "excerpt": "https://schema.org/InStock",
+          "conflicts": [],
+          "origin": "runtime",
+          "corpus_version": "domestic-buyer-1",
+          "index_version": null,
+          "run": {
+            "run_id": "28549402-a386-470b-8ac0-5b193d720e64",
+            "run_revision": 1,
+            "request_id": "dbc51ea4-ea7a-4c94-be02-8b57c26a5fd4",
+            "request_revision": 1
+          }
+        },
+        {
+          "schema_version": 2,
+          "evidence_id": "technodel:JK-MVV2HQ0V:purchasable:8",
+          "source_id": "technodel",
+          "product_id": "el-ultra-9-rtx5090-laptop",
+          "variant_id": "JK-MVV2HQ0V",
+          "scope": "variant",
+          "branch_id": null,
+          "route_id": null,
+          "field_path": "purchasable",
+          "origin_url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop",
+          "final_url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop",
+          "observed_at": "2026-11-25T22:12:58.983754Z",
+          "response_sha256": "e7d8ec45dd615947ea2ff37f3a84beec69e5ec0a8d07bc68712747792b0e6abe",
+          "adapter_version": "technodel-listing/2",
+          "json_pointer": null,
+          "excerpt": "Visible priced purchase selection JK-MVV2HQ0V, inStock true, stock 999",
+          "conflicts": [],
+          "origin": "runtime",
+          "corpus_version": "domestic-buyer-1",
+          "index_version": null,
+          "run": {
+            "run_id": "28549402-a386-470b-8ac0-5b193d720e64",
+            "run_revision": 1,
+            "request_id": "dbc51ea4-ea7a-4c94-be02-8b57c26a5fd4",
+            "request_revision": 1
+          }
+        },
+        {
+          "schema_version": 2,
+          "evidence_id": "technodel:JK-MVV2HQ0V:condition:9",
+          "source_id": "technodel",
+          "product_id": "el-ultra-9-rtx5090-laptop",
+          "variant_id": "JK-MVV2HQ0V",
+          "scope": "variant",
+          "branch_id": null,
+          "route_id": null,
+          "field_path": "condition",
+          "origin_url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop",
+          "final_url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop",
+          "observed_at": "2026-11-25T22:12:58.983754Z",
+          "response_sha256": "e7d8ec45dd615947ea2ff37f3a84beec69e5ec0a8d07bc68712747792b0e6abe",
+          "adapter_version": "technodel-listing/2",
+          "json_pointer": null,
+          "excerpt": "https://schema.org/NewCondition",
+          "conflicts": [],
+          "origin": "runtime",
+          "corpus_version": "domestic-buyer-1",
+          "index_version": null,
+          "run": {
+            "run_id": "28549402-a386-470b-8ac0-5b193d720e64",
+            "run_revision": 1,
+            "request_id": "dbc51ea4-ea7a-4c94-be02-8b57c26a5fd4",
+            "request_revision": 1
+          }
+        }
+      ]
+    }
+  ],
+  "first_visible_listing_ms": 64915,
+  "final_ms": 64919,
+  "spend": {
+    "attempts": {
+      "model": 2,
+      "retrieval": 12,
+      "work": 1,
+      "worker": 5
+    },
+    "known_usd": "0.001804",
+    "ledger": "read",
+    "note": "uncertain amounts are full reservations kept because the cost was not reported",
+    "still_held_usd": "0",
+    "uncertain_usd": "0"
+  },
+  "buyer_text": "t↗\ntechscout\n.\nLB\nBuilt for buying in Lebanon\nLESS GUESSWORK. BETTER CHOICES.\nFind the right tech.\nKnow what you’re buying.\n\nTell us what matters. Compare configurations, local sellers and the full cost, with evidence you can check.\n\nYOUR SESSION\nRecent searches\nOpen history\n\nPrivate to this browser session. Saved results need a fresh check before you rely on them.\n\nPhones\nLaptops\nTablets\nMonitors\nHeadphones & earbuds\nWhat are you looking for?\nUpdate search ↗\nSearch for \nMy needs\nAn exact model\nProduct links are recognized automatically.\nYour requirements\nEditable at any time\nTarget budget · USD\nHard maximum · USD\nBudget currency\nUSD\nLBP\nEUR\nAED\nCity in Lebanon\nMinimum RAM (GB)\nCondition\nNew only\nUsed only\nRefurbished only\nFulfillment\nDelivery or pickup\nDelivery\nPickup\nPayment\nNo preference\nCash\nCard\n\nA target is a preference. Only a hard maximum is a price ceiling. Your original wording is kept for interpretation.\n\nSEARCH · REVISION 1\nNo verified recommendation yet\n\nSearching for laptop · RAM (GB) at least 64 · new · delivery to Tripoli\n\nChecked 1 independent domestic seller(s). 0 offer(s) qualified. New retailer leads were handed to background onboarding.\n\nAbout these resultsStandard summary\n\nNo offer was verified in this run.\nOpen questions:\n- Search coverage in this run: 7 retailers found, 4 attempted, 1 read successfully, 0 with a qualifying offer; retailers outside this search were not checked.\nNot verified, shown separately:\n- a product (name withheld) from Technodel (Lebanon), delivery requested to Tripoli, dispatch origin unknown: not verified (item delivery eligibility: required evidence is missing or conflicting; costs.order.tax; costs.order.shipping; Delivery of this item to the requested destination is unverified.); known subtotal USD 5438.99; missing: tax, shipping (not counted as zero).\n\nA standard summary of every checked fact, in a fixed order.\n7\nDiscovered retailers\n4\nAttempted retailers\n1\nRetrieved retailers\n0\nQualifying retailers\nYOUR COMPARISON · REVISION 1\n0 verified model options\nSort\nRecommended order\nVerified total (within currency)\n\nOnly offers verified for these requirements appear here. Fewer than three is a valid result. Costs in different currencies are not ranked as savings.\n\nNo verified options yet\n\nThe available evidence did not establish a verified option. You can adjust your requirements or inspect uncertain offers below.\n\nUncertain / non-qualifying offers (1)\nASUS ROG Zephyrus G16 GU605CX-QR145 - Intel Core Ultra 9 285H - Nvidia RTX 5090 24GB - 64GB RAM · Technodel\n\nRAM (GB): 64 · GPU: Nvidia RTX 5090\n\nUSD 5438.99 · Current listed price\n\nIn stock · Online listing\n\nView at Technodel ↗\nitem delivery eligibility: required evidence is missing or conflicting\ncosts.order.tax\ncosts.order.shipping\nDelivery of this item to the requested destination is unverified.\n\nUSD 5438.99 known subtotal · incomplete\n\nInspect configuration, costs & evidence\nWhere the evidence came from\n\nInventory and discovery counts do not mean every retailer was checked.\n\nTechnodel\nCHECKED\nBeytech\nFAILED\n\nNo matching product links in the bounded retailer search.\n\nMojitech\nFAILED\n\nRetailer search unavailable: NETWORK_ERROR\n\nclass_cellulars\nFAILED\n\nNo matching SKU on the current listing\n\nayoubcomputers.com\nUNCHECKED\n\nIn background onboarding.\n\nbeirutcart.com\nUNCHECKED\n\nIn background onboarding.\n\ngcscomputerpro.com\nUNCHECKED\n\nIn background onboarding.\n\n0 qualifying sellers across 0 displayed options. Multiple sellers are grouped under the same canonical configuration.\n\nWhat would you like to change?\nRefine comparison\n\nAdds to this request. Existing filters remain in force until you explicitly edit them above. Previous results stay labelled while new evidence is checked.\n\nTECHSCOUT / BUY WITH CONTEXT\nCompare here. Buy directly from the retailer.",
+  "capture": "F5f.png",
+  "visible_links": [
+    {
+      "text": "View at Technodel ↗",
+      "url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop"
+    },
+    {
+      "text": "",
+      "url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop"
+    },
+    {
+      "text": "",
+      "url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop"
+    },
+    {
+      "text": "",
+      "url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop"
+    },
+    {
+      "text": "",
+      "url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop"
+    },
+    {
+      "text": "",
+      "url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop"
+    },
+    {
+      "text": "",
+      "url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop"
+    },
+    {
+      "text": "",
+      "url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop"
+    },
+    {
+      "text": "",
+      "url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop"
+    },
+    {
+      "text": "",
+      "url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop"
+    },
+    {
+      "text": "",
+      "url": "https://technodel.net/product/el-ultra-9-rtx5090-laptop"
+    }
+  ],
+  "actions": [
+    {
+      "decision_effect": "Find an in-scope configuration at a known shop",
+      "missing_fact": "Selected SKU, current price, stock, local dispatch, destination and charges",
+      "source": "technodel"
+    },
+    {
+      "decision_effect": "Find an in-scope configuration at a known shop",
+      "missing_fact": "Selected SKU, current price, stock, local dispatch, destination and charges",
+      "source": "class_cellulars"
+    },
+    {
+      "decision_effect": "Decide whether broader seller or model comparison is feasible",
+      "missing_fact": "Find a distinct domestic model meeting the buyer requirements with local fulfillment",
+      "source": "domestic retailer discovery channels"
+    },
+    {
+      "decision_effect": "Decide whether to rank this offer",
+      "missing_fact": "Selected SKU, current price, stock, local dispatch, destination and charges",
+      "source": "technodel"
+    },
+    {
+      "decision_effect": "Recover a qualifying offer",
+      "missing_fact": "Which unresolved fact a second direct read could settle",
+      "source": "OpenRouter evidence evaluator"
+    },
+    {
+      "decision_effect": "Resolve the evaluator-selected evidence gap",
+      "missing_fact": "Selected SKU, current price, stock, local dispatch, destination and charges",
+      "source": "technodel"
+    },
+    {
+      "decision_effect": "Explain qualifying offers and coverage",
+      "missing_fact": "A buyer-readable comparison of checked results",
+      "source": "OpenRouter writer"
+    }
+  ],
+  "source_registry_sha256": "7e94f856d75ba14c249ee319c2e6c554a97b4dc6fffd0b5e277907fe54f9c174"
+}

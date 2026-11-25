@@ -1,0 +1,336 @@
+{
+  "itsearch": {
+    "url": "https://shop.itworkslb.net/search?q=Logitech+H151",
+    "status": 200,
+    "utc": "2026-11-25 21:47:21.542035+00:00",
+    "sha256": "52a011059e55d2cfb7015154858f41928673fe4176b19b88286f3987d3b0a53d",
+    "job": "vfollow-reference-a1",
+    "links": [
+      "/products/logitech-headset-h151-815513",
+      "/products/logitech-981-000519-791069",
+      "/products/logitech-960-001514-791292",
+      "/products/logitech-headset-h390-noise-ca-789325",
+      "/products/logitech-wireless-mouse-m170-grey-777373",
+      "/products/logitech-headset-h340-815464",
+      "/products/logitech-m171-wireless-mouse-746429",
+      "/products/logitech-m170-wireless-mouse-735272",
+      "/products/logitech-960-001428-791455",
+      "/products/logitech-bluetooth-mouse-m196-graphite-777355",
+      "/products/logitech-960-001554-791381",
+      "/products/logitech-960-000972-790951",
+      "/products/logitech-920-008962-790508",
+      "/products/logitech-910-007471-790502",
+      "/products/logitech-webcam-mx-brio-4k-ultra-hd-pale-grey-773741",
+      "/products/logitech-bluetooth-mouse-m240-silent-graphite-773707",
+      "/products/logitech-910-005471-790608",
+      "/products/logitech-m90-usb-mouse-815566",
+      "/products/logitech-webcam-brio-300-full-hd-1080p-usb-rose-773743",
+      "/products/logitech-webcam-brio-500-full-hd-1080p-usb-off-white-773745",
+      "/products/logitech-m280-comfort-plus-wireless-mouse-876779",
+      "/products/logitech-910-006181-791179",
+      "/products/logitech-g502-hero-high-performance-gaming-mouse-black-730997",
+      "/products/logitech-910-006958-791513"
+    ]
+  },
+  "tdsearch": {
+    "url": "https://technodel.net/search?q=Logitech+H151",
+    "status": 200,
+    "utc": "2026-11-25 21:47:24.403368+00:00",
+    "sha256": "0c3ff66c28ce07c1eb054238c6af9f8440a4fc5d6ea9ec0047b3d0e312ddbfa3",
+    "job": "vfollow-reference-a1",
+    "links": [
+      "/product/logitech-h151-headset-stereo-single-jack",
+      "/product/logitech-h151-wired-headset-analog-stereo-headphones-with-rotating-noise-cancell",
+      "/product/logitech-logitech-wired-audio-jack-headset-h151-black-981-000587"
+    ]
+  },
+  "itprod": {
+    "url": "https://shop.itworkslb.net/products/logitech-headset-h151-815513",
+    "status": 200,
+    "utc": "2026-11-25 21:47:37.583204+00:00",
+    "sha256": "5ed1213f0fa662f2dbd0c9d63ba268ad4f0421e0ff3af6475ccf7970f3202951",
+    "job": "vfollow-reference-a1",
+    "seller": "ITWorks Lebanon",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Gharios Center, Furn el Chebbek",
+      "addressLocality": "Beirut",
+      "addressCountry": "LB"
+    },
+    "title": "Logitech Headset H151",
+    "price": "28.0",
+    "currency": "USD",
+    "item_url": "https://shop.itworkslb.net/products/logitech-headset-h151-815513",
+    "condition": "https://schema.org/NewCondition",
+    "stock": "https://schema.org/InStock",
+    "shipping": {
+      "@type": "OfferShippingDetails",
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "5",
+        "currency": "USD"
+      },
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": "LB"
+      },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "DAY"
+        },
+        "transitTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 1,
+          "maxValue": 3,
+          "unitCode": "DAY"
+        }
+      }
+    },
+    "quantity": 1,
+    "purchase_action": "LinesAdd",
+    "merchandise_id": "gid://shopify/ProductVariant/52683501961447",
+    "selected": {
+      "id": "gid://shopify/ProductVariant/52683501961447",
+      "availableForSale": true,
+      "sku": null,
+      "price": {
+        "amount": "28.0",
+        "currencyCode": "USD"
+      },
+      "compareAtPrice": null,
+      "selectedOptions": [],
+      "title": "Logitech Headset H151",
+      "product": {
+        "handle": "logitech-headset-h151-815513",
+        "title": "Logitech Headset H151"
+      }
+    },
+    "fields": [
+      "Color: Black",
+      "Connection Type: Wired Connector: Single 3.5 mm Audio Jack"
+    ]
+  },
+  "tdprod": {
+    "url": "https://technodel.net/product/logitech-logitech-wired-audio-jack-headset-h151-black-981-000587",
+    "status": 200,
+    "utc": "2026-11-25 21:47:37.408580+00:00",
+    "sha256": "80845c45b615769c162815cf788742045aba115aed652bbd60359aabe243c9f6",
+    "job": "vfollow-reference-a1",
+    "seller": "Technodel",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Badaro",
+      "addressRegion": "Beirut",
+      "addressCountry": "LB"
+    },
+    "title": "Logitech Wired Audio Jack Headset H151 (Black) 981-000587",
+    "price": 16,
+    "currency": "USD",
+    "item_url": "https://technodel.net/product/logitech-logitech-wired-audio-jack-headset-h151-black-981-000587",
+    "condition": "https://schema.org/NewCondition",
+    "stock": "https://schema.org/InStock",
+    "shipping": {
+      "@type": "OfferShippingDetails",
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "4",
+        "currency": "USD"
+      },
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": "LB"
+      },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "DAY"
+        },
+        "transitTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "DAY"
+        }
+      }
+    },
+    "selected": {
+      "sku": "RK-M2ND1CRV",
+      "title": "Logitech Wired Audio Jack Headset H151 (Black) 981-000587",
+      "displayPrice": 16,
+      "currency": "USD",
+      "stock": 3,
+      "inStock": true,
+      "specs": [
+        {
+          "label": "Brand",
+          "value": "Logitech"
+        },
+        {
+          "label": "Colour",
+          "value": "Black"
+        },
+        {
+          "label": "Connectivity",
+          "value": "Wired"
+        },
+        {
+          "label": "Category",
+          "value": "Headsets"
+        }
+      ],
+      "variants": [],
+      "shortDescription": "Logitech wired headset in black with an audio jack connection, made for everyday listening and calls."
+    }
+  },
+  "itfaq": {
+    "url": "https://shop.itworkslb.net/faq",
+    "status": 200,
+    "utc": "2026-11-25 21:47:40.658399+00:00",
+    "sha256": "cb4e5dd45b4c241b44a441adc4e3b0ba09b458062515e93f58392c995d22695c",
+    "job": "vfollow-reference-a1",
+    "terms": {
+      "Do you deliver, and where?": "Yes — we deliver anywhere in Lebanon. Orders are usually with you within 1–3 business days, and we'll message you on WhatsApp to confirm the details.",
+      "How much does delivery cost?": "Delivery is a flat $5 anywhere in Lebanon — it's added as a separate line at checkout, so the price you see on the product is the price of the product.",
+      "What payment methods do you accept?": "Two: Cash on Delivery — you pay when the order reaches you — or Whish Money, sent to 03 191 730 before we ship. All prices are in USD and include tax (TTC)."
+    }
+  },
+  "tdfaq": {
+    "url": "https://technodel.net/faq",
+    "status": 200,
+    "utc": "2026-11-25 21:47:40.529436+00:00",
+    "sha256": "0fc09a08e222cdc75350c7e0ea5d8103aa82ef78bd4cd52818dbd0fd733078db",
+    "job": "vfollow-reference-a1",
+    "terms": {
+      "How long does shipping take within Lebanon?": "We deliver to all Lebanese regions. Same-day delivery to Beirut, Sour, Tripoli and surroundings. Every other region: 1–2 days, never more.",
+      "What are the shipping costs?": "Delivery is a flat $4 anywhere in Lebanon — Beirut, South, North, Bekaa and Mount Lebanon alike — and free on orders of $500 or more.",
+      "What payment methods do you accept?": "We accept Cash on Delivery (COD), Wish Money transfer, and Crypto (USDT, BTC, ETH). No hidden fees — what you see is what you pay."
+    }
+  },
+  "td111search": {
+    "url": "https://technodel.net/search?q=Logitech+H111",
+    "status": 200,
+    "utc": "2026-11-25 21:49:03.870782+00:00",
+    "sha256": "99856ab32c2e5b361dce28fbad97ef815e8600dfe4303222739b48c5b16d5325",
+    "job": "vfollow-reference-a3",
+    "links": [
+      "/product/logitech-h111-wired-headset-with-stereo-sound-noise-reducing-rotating-microphone-adjustable-lightwei",
+      "/product/logitech-h111-stereo-headset-microphone",
+      "/product/logitech-logitech-wired-headset-h111-stereo-business-black-981-000593"
+    ]
+  },
+  "it111search": {
+    "url": "https://shop.itworkslb.net/search?q=Logitech+H111",
+    "status": 200,
+    "utc": "2026-11-25 21:49:07.741280+00:00",
+    "sha256": "16c75be0a218750c2ac0bd9ef296932841c7e377619cc47646296d8d14c9a724",
+    "job": "vfollow-reference-a3",
+    "links": [
+      "/products/logitech-headset-h151-815513",
+      "/products/logitech-headset-h340-815464",
+      "/products/logitech-headset-h390-noise-ca-789325",
+      "/products/logitech-headset-h390-815695",
+      "/products/logitech-981-000703-790509",
+      "/products/logitech-bluetooth-mouse-m240-silent-graphite-773707",
+      "/products/logitech-981-000519-791069",
+      "/products/logitech-910-005471-790608",
+      "/products/logitech-910-007471-790502",
+      "/products/logitech-910-006181-791179",
+      "/products/logitech-headset-wired-h151-audio-jack-connection-773730",
+      "/products/logitech-920-013531-790621",
+      "/products/logitech-m280-comfort-plus-wireless-mouse-876779",
+      "/products/logitech-960-001428-791455",
+      "/products/logitech-910-005673-791302",
+      "/products/logitech-960-001514-791292",
+      "/products/logitech-wireless-mouse-mx-master-3s-business-7-buttons-logi-bolt-usb-graphite-773712",
+      "/products/logitech-910-006582-790507",
+      "/products/logitech-981-001544-791487",
+      "/products/logitech-910-006958-791513",
+      "/products/logitech-920-010072-790835",
+      "/products/logitech-920-011867-791056",
+      "/products/logitech-920-010060-791415",
+      "/products/logitech-wired-combo-mk120-en-773726"
+    ]
+  },
+  "td111prod": {
+    "url": "https://technodel.net/product/logitech-logitech-wired-headset-h111-stereo-business-black-981-000593",
+    "status": 200,
+    "utc": "2026-11-25 21:49:28.557143+00:00",
+    "sha256": "dd6d361cc0948210ec7cd14a632659baba471242768bcf42cbc59298cd12a64b",
+    "job": "vfollow-reference-a3",
+    "seller": "Technodel",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Badaro",
+      "addressRegion": "Beirut",
+      "addressCountry": "LB"
+    },
+    "title": "Logitech Wired Headset H111 Stereo Business (Black) 981-000593",
+    "price": 10,
+    "currency": "USD",
+    "item_url": "https://technodel.net/product/logitech-logitech-wired-headset-h111-stereo-business-black-981-000593",
+    "condition": "https://schema.org/NewCondition",
+    "stock": "https://schema.org/InStock",
+    "shipping": {
+      "@type": "OfferShippingDetails",
+      "shippingRate": {
+        "@type": "MonetaryAmount",
+        "value": "4",
+        "currency": "USD"
+      },
+      "shippingDestination": {
+        "@type": "DefinedRegion",
+        "addressCountry": "LB"
+      },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "DAY"
+        },
+        "transitTime": {
+          "@type": "QuantitativeValue",
+          "minValue": 0,
+          "maxValue": 1,
+          "unitCode": "DAY"
+        }
+      }
+    },
+    "selected": {
+      "sku": "RK-MVHFP2VJ",
+      "title": "Logitech Wired Headset H111 Stereo Business (Black) 981-000593",
+      "displayPrice": 10,
+      "currency": "USD",
+      "stock": 407,
+      "inStock": true,
+      "specs": [
+        {
+          "label": "Brand",
+          "value": "Logitech"
+        },
+        {
+          "label": "Colour",
+          "value": "Black"
+        },
+        {
+          "label": "Connectivity",
+          "value": "Wired"
+        },
+        {
+          "label": "Category",
+          "value": "Headsets"
+        }
+      ],
+      "variants": [],
+      "shortDescription": "Logitech H111 wired stereo headset in black, made for calls, meetings and everyday listening at a desk."
+    }
+  }
+}

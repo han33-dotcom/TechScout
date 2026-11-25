@@ -62,3 +62,13 @@ class BuyerInterpretationTests(unittest.TestCase):
             form('A monitor delivered to Byblos.', 'monitor',
                  fulfillment=dict(mode='pickup', destination=dict(city='Beirut')))
 
+    def test_reading_purpose_keeps_typed_and_unrepresented_requirements(self):
+        text = 'I need a Wi-Fi tablet with at least 128 GB of storage for reading textbooks'
+        request = form(text, 'tablet')
+        self.assertEqual(request.intent.description, text)
+        self.assertEqual(request.unresolved_constraints, ())
+        self.assertEqual(request.requirements.connectivity, 'wifi')
+        self.assertEqual(request.requirements.min_storage_gb, 128)
+        restricted = form(text + ' with a waterproof case.', 'tablet')
+        self.assertTrue(any('waterproof case' in gap for gap in restricted.unresolved_constraints))
+

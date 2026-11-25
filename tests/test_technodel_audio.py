@@ -109,6 +109,47 @@ class WiredHeadsetTests(unittest.TestCase):
         self.listing.update(displayPrice=19,variants=[{'sku':'OTHER'}])
         self.assertIsNone(self.read())
 
+    def test_headset_first_title_checks_the_finish_and_keeps_tax_unknown(self):
+        title = 'Studio Wired Audio Jack Headset X10 (Black) 123-456789'
+        self.product['name'] = self.listing['title'] = title
+        offer = self.read()
+        self.assertEqual((offer.variant.product.model, offer.variant.color.value), ('Studio X10', 'Black'))
+        self.assertEqual(offer.costs[0].state, 'unknown')
+        self.listing['specs'][-1]['value'] = 'White'
+        self.assertIsNone(self.read())
+
+    def test_monitor_label_units_receipt_and_contrasting_minima(self):
+        from app.eligibility import check_full_product
+        from test_buyer_interpretation import form
+        self.listing.update(category={'name':'Monitors'}, title='Fixture display')
+        self.product.update(category='Monitors', name='Fixture display')
+        for label in ('Refresh rate', 'Refresh Rate'):
+            self.listing['specs'] = [dict(label=label, value='165Hz')]
+            offer = self.read('monitor')
+            fact = offer.variant.specs.refresh_hz
+            self.assertEqual(fact.value, 165)
+            receipt, = [e for e in offer.evidence if e.evidence_id in fact.evidence_ids]
+            self.assertEqual((receipt.variant_id, receipt.excerpt), ('TEST', label + ': 165Hz'))
+            for minimum, expected in ((144, 'pass'), (180, 'fail')):
+                checks = check_full_product(form(f'A monitor with at least {minimum} Hz.', 'monitor'), offer).checks
+                self.assertEqual(next(c.outcome for c in checks if c.name == 'refresh_hz'), expected)
+        self.listing['specs'].append(dict(label='Refresh rate', value='240Hz'))
+        self.assertEqual(self.read('monitor').variant.specs.refresh_hz.state, 'unknown')
+        self.listing['specs'] = [dict(label='Refresh Rate', value='165 kHz')]
+        self.assertEqual(self.read('monitor').variant.specs.refresh_hz.state, 'unknown')
+
+    def test_tablet_reading_purpose_does_not_change_capacity_or_connectivity_eligibility(self):
+        from app.domestic_buyer import candidate
+        from test_buyer_interpretation import form
+        self.listing.update(category={'name':'Tablets'}, title='Studio Slate',
+            specs=[dict(label='Storage', value='128 GB'), dict(label='Connectivity', value='Wi-Fi')])
+        self.product.update(category='Tablets', name='Studio Slate')
+        offer = self.read('tablet')
+        for capacity, mode, matches in ((128, 'Wi-Fi', True), (256, 'Wi-Fi', False), (128, 'cellular', False)):
+            request = form(f'I need a {mode} tablet with at least {capacity} GB for reading textbooks.', 'tablet')
+            self.assertEqual(request.unresolved_constraints, ())
+            self.assertEqual(candidate(request, offer), matches)
+
     def test_out_of_stock_or_different_actual_merchant_cannot_qualify(self):
         self.listing['inStock'] = False
         self.assertIsNone(self.read())

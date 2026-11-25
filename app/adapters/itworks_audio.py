@@ -142,15 +142,18 @@ def read_offer(page, policy, request, owner, run, route_id):
         # These are the bounded fields of this retailer's plain-text specifications.
         # A two-tone finish or a combined connector must not collapse to its first word.
         colors = re.findall(r'\bColor: ([A-Za-z]+) Performance Audio Type:', description)
-        connectors = re.findall(r'\bConnector: (USB Type-[AC]) USB Protocol:', description)
+        connector = re.search(
+            r'\bConnection Type: Wired Connector: (USB Type-A) USB Protocol:|'
+            r'\bConnection Type: Wired Connector: (Single 3\.5 mm Audio Jack) Audio & Microphone Connection:',
+            description)
         if (wired[1] != maker or description.count('Color:') != 1 or description.count('Connector:') != 1
-                or len(colors) != 1 or connectors != ['USB Type-A']
-                or 'Connection Type: Wired Connector: USB Type-A' not in description):
+                or description.count('Connection Type:') != 1 or len(colors) != 1 or connector is None):
             return None
         color = colors[0]
         color_source = 'Color: ' + color
         model = maker + ' ' + wired[2]
-        configuration = identify_headset(maker, wired[2], color, connector='usb-a')
+        connector_text = 'Connection Type: Wired Connector: ' + (connector[1] or connector[2])
+        configuration = identify_headset(maker, wired[2], color, connector='usb-a' if connector[1] else '3.5mm')
     else:
         model, color = title_parts.group('model', 'color')
     if not model.casefold().startswith(maker.casefold() + ' '):
@@ -197,9 +200,9 @@ def read_offer(page, policy, request, owner, run, route_id):
     variant_key = configuration.variant_id if configuration else f'{SOURCE}:{vid}'
     connectivity = unknown('Connection modes were not checked')
     if wired:
-        connectivity = known('variant.specs.connectivity', 'wired', 'Connection Type: Wired Connector: USB Type-A')
+        connectivity = known('variant.specs.connectivity', 'wired', connector_text)
     if configuration:
-        receipt('catalog.configuration_id', f'{title}; {color_source}; Connector: USB Type-A')
+        receipt('catalog.configuration_id', f'{title}; {color_source}; {connector_text}')
     return v2.Offer(offer_id=f'{SOURCE}:{pid}:{vid}', retailer_id=owner.entry.retailer_id, source_id=SOURCE,
         source_product_id=pid, source_variant_id=vid, seller=dict(seller_id=owner.seller_id, name=SELLER, market='LB'),
         listing_url=url, variant=dict(variant_id=variant_key, product=dict(product_id=product_key,

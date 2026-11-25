@@ -28,6 +28,14 @@ OPENING = (r"^(?:please\s+)?(?:(?:can|could|would) you\s+)?(?:tell me\s+)?(?:"
            r"price|find(?: me)?|show me|buy)\s+")
 SOFT = re.compile(r'\b(?:prefer(?:ably)?|ideally|around|roughly|about|nice to have)\b', re.I)
 NEGATIVE = re.compile(r"\b(?:without|except|avoid|not|never|no|don't|less than|at most|up to|no more than)\b", re.I)
+# Remove only recognizable activity phrases from the residual feature check.
+# The complete wording still reaches the suitability selector. A following feature,
+# such as "with a stylus", remains in the residual even when it follows a purpose.
+PURPOSE = re.compile(
+    r'\bfor\s+(?:(?:my\s+)?(?:work|school|office|university|lecture notes)|(?:photo|video) editing|'
+    r'(?:reading|annotating|editing|streaming|compiling|coding|gaming|rendering|playing)\b'
+    r'(?:\s+(?!(?:and|or|but|with\w*|that|which|must|requir\w*|needs?|at|under|only|using|including|'
+    r'except|on|in|over|via|support\w*|not|no|without)\b)[a-z]+\b){0,4})\b', re.I)
 
 
 def interpret(request, wording):
@@ -159,7 +167,7 @@ def interpret(request, wording):
     else:
         # The selector sees the complete description. Explicit feature clauses outside
         # the typed checks must also keep an otherwise eligible offer provisional.
-        for clause in re.split(r'[.!?;]|\bfor (?:my|work|school|coding|gaming)\b', text, flags=re.I):
+        for clause in re.split(r'[.!?;]', PURPOSE.sub(' ', text)):
             match = re.search(r'\b(?:must (?:have|support|be)|with(?:out)?|requires?|at least)\s+(.+)', clause, re.I)
             if match and not SOFT.search(clause[:match.start()]):
                 residual = re.sub(r'\b(?:and|a|an|of|with|at least|minimum|refresh rate|in a laptop)\b',
