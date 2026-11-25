@@ -55,6 +55,7 @@ describe('comparison evidence boundaries',()=>{
   const w=data(),rec=w.current.recommendations[0],extra=structuredClone(rec.primary);
   extra.offer.offer_id='seller-two';extra.offer.seller={...extra.offer.seller,seller_id:'two',name:'Second seller'};
   rec.additional_sellers=[extra];const {rerender}=render(<Comparison workspace={w}/>);
+  expect(screen.getByText(/tie for the lowest verified total/)).toBeTruthy();
   const checks=screen.getAllByRole('checkbox');fireEvent.click(checks[0]);fireEvent.click(checks[1]);
   expect(screen.getByText(/Confirmed canonical configuration match/)).toBeTruthy();
   const region=screen.getByRole('region',{name:'Side-by-side comparison'});expect(within(region).getByText('Second seller')).toBeTruthy();
@@ -62,6 +63,15 @@ describe('comparison evidence boundaries',()=>{
   rerender(<Comparison workspace={structuredClone(w)}/>);
   expect((screen.getAllByRole('checkbox')[0] as HTMLInputElement).checked).toBe(true);
   expect(screen.getAllByText('Costs, terms & evidence')[0].parentElement?.hasAttribute('open')).toBe(true);
+ });
+ it('identifies the lowest comparable total even if the primary seller costs more',()=>{
+  const w=data(),rec=w.current.recommendations[0],other=structuredClone(rec.primary);
+  other.offer.offer_id='second';other.offer.seller.seller_id='second';other.offer.seller.name='Local shop';
+  other.cost.total.amount='1.02';rec.additional_sellers=[other];
+  const {rerender}=render(<Comparison workspace={w}/>);
+  expect(screen.getByText(/Local shop has the lowest verified total/)).toBeTruthy();
+  other.cost.total.currency='LBP';rerender(<Comparison workspace={structuredClone(w)}/>);
+  expect(screen.queryByText(/lowest verified total/)).toBeNull();
  });
  it('renders failed/unchecked sources without treating discovered inventory as checked',()=>{
   const w=data();w.current.source_outcomes=[{source_id:'x',name:'Failed shop',status:'failed',reason:'Rate limited'},{source_id:'y',name:'Queued shop',status:'unchecked'}];

@@ -6,6 +6,7 @@ import re
 from urllib.parse import urlsplit
 
 from app import contracts_v2 as v2
+from app.headset_identity import identify_headset
 from app.extraction import _HTML, _unique_pairs
 
 
@@ -53,9 +54,13 @@ def product_links(body, model):
     tokens = re.findall(r'[a-z0-9]+', model.lower())
     if not tokens:
         return ()
-    slug = '-'.join(tokens)
+    # Merchants can insert a product type between the manufacturer and model.
+    alternatives = {'-'.join(tokens)}
+    if len(tokens) == 2:
+        alternatives.add('-headset-'.join(tokens))
     return tuple(dict.fromkeys(ORIGIN + path for path in StorePage(body).links
-                               if ('-' + slug + '-') in ('-' + path.split('/')[-1] + '-')))[:1]
+                               if any('-' + slug + '-' in '-' + path.split('/')[-1] + '-'
+                                      for slug in alternatives)))[:1]
 
 
 def nodes(outcome):
@@ -72,8 +77,8 @@ def single(nodes, kind):
     return matches[0]
 
 
-def policy_answers(outcome):
-    if not outcome or outcome.status != 'ok' or outcome.final_url != FAQ:
+def policy_answers(outcome, expected_url=FAQ):
+    if not outcome or outcome.status != 'ok' or outcome.final_url != expected_url:
         return {}
     try:
         faq = single(nodes(outcome), 'FAQPage')
@@ -92,7 +97,8 @@ def read_offer(page, policy, request, owner, run, route_id):
     offer = product['offers']
     title = product['name']
     title_parts = HEADPHONE.fullmatch(title)
-    if (not title_parts or offer['url'] != url or offer['seller']['name'] != owner.entry.name
+    wired = re.fullmatch(r'([A-Za-z]+) Headset ([A-Za-z]+[0-9]+[A-Za-z]*)', title, re.I)
+    if ((not title_parts and not wired) or offer['url'] != url or offer['seller']['name'] != owner.entry.name
             or store['name'] != owner.entry.name or owner.entry.name != SELLER or store['url'] != ORIGIN
             or store['address']['addressCountry'] != 'LB' or not store['address'].get('streetAddress')):
         return None
@@ -128,8 +134,25 @@ def read_offer(page, policy, request, owner, run, route_id):
     def unknown(reason):
         return dict(state='unknown', reason=reason)
 
-    model, color = title_parts.group('model', 'color')
     maker = product['brand']['name']
+    configuration = None
+    color_source = title
+    if wired:
+        description = product.get('description', '')
+        # These are the bounded fields of this retailer's plain-text specifications.
+        # A two-tone finish or a combined connector must not collapse to its first word.
+        colors = re.findall(r'\bColor: ([A-Za-z]+) Performance Audio Type:', description)
+        connectors = re.findall(r'\bConnector: (USB Type-[AC]) USB Protocol:', description)
+        if (wired[1] != maker or description.count('Color:') != 1 or description.count('Connector:') != 1
+                or len(colors) != 1 or connectors != ['USB Type-A']
+                or 'Connection Type: Wired Connector: USB Type-A' not in description):
+            return None
+        color = colors[0]
+        color_source = 'Color: ' + color
+        model = maker + ' ' + wired[2]
+        configuration = identify_headset(maker, wired[2], color, connector='usb-a')
+    else:
+        model, color = title_parts.group('model', 'color')
     if not model.casefold().startswith(maker.casefold() + ' '):
         return None
     receipt('variant.product.model', title)
@@ -170,12 +193,19 @@ def read_offer(page, policy, request, owner, run, route_id):
     if (answers.get('What payment methods do you accept?', '').endswith(statement)
             and not offer.get('priceSpecification')):
         tax = dict(kind='tax', state='included', evidence_ids=receipt('costs.order.tax', statement, document=policy))
+    product_key = configuration.product_id if configuration else f'{SOURCE}:{pid}'
+    variant_key = configuration.variant_id if configuration else f'{SOURCE}:{vid}'
+    connectivity = unknown('Connection modes were not checked')
+    if wired:
+        connectivity = known('variant.specs.connectivity', 'wired', 'Connection Type: Wired Connector: USB Type-A')
+    if configuration:
+        receipt('catalog.configuration_id', f'{title}; {color_source}; Connector: USB Type-A')
     return v2.Offer(offer_id=f'{SOURCE}:{pid}:{vid}', retailer_id=owner.entry.retailer_id, source_id=SOURCE,
         source_product_id=pid, source_variant_id=vid, seller=dict(seller_id=owner.seller_id, name=SELLER, market='LB'),
-        listing_url=url, variant=dict(variant_id=f'{SOURCE}:{vid}', product=dict(product_id=f'{SOURCE}:{pid}',
-            category='audio', manufacturer=maker, model=model), color=known('variant.color', color, title),
+        listing_url=url, variant=dict(variant_id=variant_key, product=dict(product_id=product_key,
+            category='audio', manufacturer=maker, model=model), color=known('variant.color', color, color_source),
             specs=dict(category='audio', form_factor=known('variant.specs.form_factor','headphones',title),
-                       connectivity=unknown('Connection modes were not checked'))),
+                       connectivity=connectivity)),
         route=dict(kind='direct', origin_country='ZZ', route_id=route_id, destination=destination, item_eligible=service),
         price=known('price',dict(amount=amount,currency='USD'),f'Selected form and Offer: USD {amount}'),
         stock=known('stock',True,offer['availability']), purchasable=known('purchasable',True,

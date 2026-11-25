@@ -18,6 +18,26 @@ export function fact(value?: Fact | null): string {
   return String(value.value);
 }
 export const money = (value: { amount: string; currency: string }) => `${value.currency} ${value.amount}`;
+function priceComparison(sellers: Verified[]) {
+  if (sellers.length < 2) return null;
+  const {offer: first, cost} = sellers[0];
+  const route = first.route;
+  if (route.kind === 'forwarded' || first.condition.state !== 'known') return null;
+  const comparable = sellers.every(({offer, cost: other}) =>
+    other.total.currency === cost.total.currency && offer.condition.state === 'known' &&
+    offer.condition.value === first.condition.value && offer.variant.variant_id === first.variant.variant_id &&
+    offer.variant.product.product_id === first.variant.product.product_id &&
+    offer.route.kind === route.kind && offer.route.destination.country === route.destination.country &&
+    offer.route.destination.city === route.destination.city && offer.route.destination.postal_code === route.destination.postal_code &&
+    (route.kind !== 'pickup' || (offer.route.kind === 'pickup' && offer.route.branch_id === route.branch_id)));
+  if (!comparable || new Set(sellers.map(s => s.offer.seller.seller_id)).size !== sellers.length) return null;
+  const lowest = [...sellers].sort((a, b) => compareDecimal(a.cost.total.amount, b.cost.total.amount))[0];
+  const tied = sellers.filter(seller => compareDecimal(seller.cost.total.amount, lowest.cost.total.amount) === 0);
+  const names = tied.map(seller => seller.offer.seller.name).join(' and ');
+  return tied.length === 1
+    ? `${names} has the lowest verified total at ${money(lowest.cost.total)}.`
+    : `${names} tie for the lowest verified total at ${money(lowest.cost.total)}.`;
+}
 export function costText(cost?: Cost) {
   if (!cost) return 'Total unknown';
   if (cost.status === 'verified') return `${money(cost.total)} · verified total`;
@@ -121,9 +141,10 @@ export default function Comparison({ workspace, historical=false }: { workspace:
     <div className="recommendations">{recommendations.map((rec,index)=>{
       const item=rec.primary,offer=item.offer;
       const sellers=[item,...rec.additional_sellers.filter(v=>matchesRun(snapshot.run,v.verification.run))];
+      const verdict = priceComparison(sellers);
       return <article className="panel recommendation" key={offer.variant.variant_id}><div className="card-top"><span className="option-index">{String(index+1).padStart(2,'0')}</span><span className="verified-badge">{historical ? "Verified for earlier request" : "Verified in this search"}</span></div><h3>{modelName(offer)}{offer.variant.color?.state === 'known' ? ` · ${offer.variant.color.value}` : ''}</h3><p className="configuration">{specs(offer).slice(0,4).map(([key,value])=>`${labels[key]??key}: ${fact(value)}`).join(' · ')}</p><Fit offer={offer} request={snapshot.request}/><div className="price-line"><strong>{money(item.cost.total)}</strong><span>Verified payable total</span></div><p>{offer.seller.name} · {route(offer)}<br/><Arrival offer={offer}/></p><p className="muted">Price and stock verified {date(item.verification.checked_at)}</p>
         {safeLink(offer.listing_url) && <a className="retailer-link" href={safeLink(offer.listing_url)} target="_blank" rel="noopener noreferrer">View at {offer.seller.name} ↗</a>}
-        <div className="seller-list"><h4>{sellers.length} qualifying {sellers.length===1?'seller':'sellers'} for this configuration</h4>{sellers.map(seller=><div key={seller.offer.offer_id} className="seller-row"><div><strong>{seller.offer.seller.name}</strong><span>{money(seller.cost.total)} · {fact(seller.offer.condition)}</span></div><label><input type="checkbox" checked={selected.includes(seller.offer.offer_id)} disabled={!selected.includes(seller.offer.offer_id)&&comparison.length>=3} onChange={()=>toggle(seller.offer.offer_id)}/> Compare</label><details open={expanded.includes(seller.offer.offer_id)} onToggle={e=>{const open=e.currentTarget.open;setExpanded(old=>open?[...new Set([...old,seller.offer.offer_id])]:old.filter(x=>x!==seller.offer.offer_id))}}><summary>Costs, terms & evidence</summary><OfferDetails offer={seller.offer} cost={seller.cost}/>{safeLink(seller.offer.listing_url)&&<a href={safeLink(seller.offer.listing_url)} target="_blank" rel="noopener noreferrer">Open product page ↗</a>}</details></div>)}</div>
+        <div className="seller-list"><h4>{sellers.length} qualifying {sellers.length===1?'seller':'sellers'} for this configuration</h4>{verdict && <p>{verdict}</p>}{sellers.map(seller=><div key={seller.offer.offer_id} className="seller-row"><div><strong>{seller.offer.seller.name}</strong><span>{money(seller.cost.total)} · {fact(seller.offer.condition)}</span></div><label><input type="checkbox" checked={selected.includes(seller.offer.offer_id)} disabled={!selected.includes(seller.offer.offer_id)&&comparison.length>=3} onChange={()=>toggle(seller.offer.offer_id)}/> Compare</label><details open={expanded.includes(seller.offer.offer_id)} onToggle={e=>{const open=e.currentTarget.open;setExpanded(old=>open?[...new Set([...old,seller.offer.offer_id])]:old.filter(x=>x!==seller.offer.offer_id))}}><summary>Costs, terms & evidence</summary><OfferDetails offer={seller.offer} cost={seller.cost}/></details>{safeLink(seller.offer.listing_url)&&<a href={safeLink(seller.offer.listing_url)} target="_blank" rel="noopener noreferrer">Open product page ↗</a>}</div>)}</div>
       </article>;
     })}</div>
     {comparison.length>0 && <section className="panel side-by-side" aria-label="Side-by-side comparison"><h3>Side by side <span className="badge">Up to 3 offers</span></h3><Identity offers={comparison.map(v=>v.offer)}/><div className="table-scroll"><table><thead><tr><th>Attribute</th>{comparison.map(v=><th key={v.offer.offer_id}>{v.offer.variant.product.model}<small>{v.offer.seller.name}</small></th>)}</tr></thead><tbody>{comparisonRows(comparison).map(([label,values])=><tr key={label}><th>{label}</th>{values.map((value,index)=><td key={comparison[index].offer.offer_id}>{value}</td>)}</tr>)}</tbody></table></div></section>}
