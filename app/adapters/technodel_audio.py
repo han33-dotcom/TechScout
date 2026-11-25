@@ -195,8 +195,7 @@ def read_offer(page, policy, request, owner, run, route_id):
         model = maker + ' ' + match['model']
         configuration = identify_headset(maker, match['model'], color, part=match['part'])
     amount = Decimal(str(offer['price']))
-    # The current USD checkout renders whole dollars. Fractional listings need a distinct quote.
-    if (not amount.is_finite() or amount <= 0 or amount != amount.to_integral_value()
+    if (not amount.is_finite() or amount <= 0 or amount != amount.quantize(Decimal('0.01'))
             or amount != Decimal(str(listing['displayPrice'])) or offer['priceCurrency'] != 'USD'
             or listing['currency'] != 'USD' or 'priceSpecification' in offer):
         return None
@@ -251,7 +250,7 @@ def read_offer(page, policy, request, owner, run, route_id):
     sale_text = ' '.join(str(listing.get(field, '')) for field in ('title','shortDescription','description','specs'))
     tax_extra = re.search(r'(?:exclud(?:es|ing)|before|additional|plus)\s+(?:VAT|tax)|'
                           r'(?:VAT|tax)(?:es)?\s+(?:excluded|extra|calculated|added)', sale_text, re.I)
-    if match and not tax_extra and payment == ('We accept Cash on Delivery (COD), Wish Money transfer, and Crypto (USDT, BTC, ETH). '
+    if match and amount == amount.to_integral_value() and not tax_extra and payment == ('We accept Cash on Delivery (COD), Wish Money transfer, and Crypto (USDT, BTC, ETH). '
                    'No hidden fees — what you see is what you pay.'):
         tax = dict(kind='tax', state='included', evidence_ids=receipt('costs.order.tax',
             f'Displayed COD item price: USD {amount}') + receipt('costs.order.tax', payment, document=policy))

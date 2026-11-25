@@ -10,3 +10,4 @@ The existing public GET operations cover a 64-character search, a single product
 
 The expanded reader requires matching category, seller, URL, SKU, price, currency, current stock and single selection across the purchase component and Product data. It reads named specifications from the selected product. Missing fields remain unknown. The previous checkout/tax review was scoped to wired headsets. Other devices retain an unknown tax/mandatory-charge state even when the listing and current FAQ agree on shipping. The registry retains its six requests per run and minute and one concurrent read.
 
+A matching USD listing price can include cents. The selected component and Product offer must agree. The earlier whole-dollar checkout review cannot establish a payable total for a fractional listing. Those offers retain unknown mandatory charges.

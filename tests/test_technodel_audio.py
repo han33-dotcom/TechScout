@@ -92,6 +92,17 @@ class WiredHeadsetTests(unittest.TestCase):
         self.assertTrue(offer.domestic_merchant_receipts())
         self.assertEqual(offer.variant.variant_id, 'technodel:TEST')
 
+    def test_fractional_listing_keeps_the_price_and_requires_checkout_evidence(self):
+        self.offer['price'] = '18.75'
+        self.listing['displayPrice'] = '18.75'
+        result = self.read()
+        self.assertEqual(result.price.value.amount, Decimal('18.75'))
+        self.assertEqual(next(cost.state for cost in result.costs if cost.kind == 'tax'), 'unknown')
+        self.listing['displayPrice'] = '19'
+        self.assertIsNone(self.read())
+        self.offer['price'] = self.listing['displayPrice'] = '18.751'
+        self.assertIsNone(self.read())
+
     def test_changed_checkout_price_and_unselected_variants_fail_closed(self):
         self.listing['displayPrice'] = 20
         self.assertIsNone(self.read())
