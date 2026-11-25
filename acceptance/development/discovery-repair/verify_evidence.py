@@ -2,6 +2,7 @@
 
 import json
 import struct
+from decimal import Decimal
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -20,15 +21,14 @@ def load(path):
     return json.loads(path.read_bytes())
 
 
-def main():
-    requests = {case['id']: case for case in load(ROOT / 'requests.json')}
-    expected = {name for attempts in SERIES.values() for name in attempts.split()}
-    runs = ROOT / 'runs'
+def verify_cohort(root, product_pin, series, requests):
+    expected = {name for attempts in series.values() for name in attempts.split()}
+    runs = root / 'runs'
     assert {p.stem for p in runs.glob('*.json')} == expected
     assert {p.stem for p in runs.glob('*.png')} == expected
     run_ids = set()
-    visible_urls = set()
-    for group, attempts in SERIES.items():
+    visible_offers = []
+    for group, attempts in series.items():
         displayed = verified = 0
         for name in attempts.split():
             record = load(runs / f'{name}.json')
@@ -40,8 +40,8 @@ def main():
             assert record['catalog_before']['catalog_offers'] == 0
             intent = record['understood']['intent']
             assert intent.get('wording', intent.get('description')) == record['input']['prompt']
-            if name.endswith('f'):
-                assert record['revision'] == PIN
+            if name.endswith(('f', 'z')):
+                assert record['revision'] == product_pin
             assert record['capture'] == f'{name}.png'
             png = (runs / record['capture']).read_bytes()
             assert png.startswith(b'\x89PNG\r\n\x1a\n')
@@ -50,14 +50,30 @@ def main():
             for listing in record['listings']:
                 assert listing['listed_price']['state'] == 'known'
                 assert listing['receipts']
-                visible_urls.add(listing['link'])
+                visible_offers.append(listing)
             displayed += bool(record['listings'])
             verified += bool(record['verify']['verified'])
         print(f'{group} | {len(attempts.split())} runs | {displayed} displayed | {verified} verified')
-    checks = load(ROOT / 'retailer-checks.json')
-    assert visible_urls <= {check['url'] for check in checks if check['buyer_visible']}
-    print(f'{len(run_ids)} distinct browser runs, {len(requests)} distinct requests')
+    checks = load(root / 'retailer-checks.json')
+    visible_pages = {check['url']: check for check in checks if check['buyer_visible']}
+    for offer in visible_offers:
+        page = visible_pages[offer['link']]
+        assert page['http'] == 200 and page['final_url'] == offer['link'] and page['response_sha256']
+        money = offer['listed_price']['value']
+        assert any(product['sku'] == offer['sku']
+                   and product['currency'] == money['currency']
+                   and Decimal(str(product['price'])) == Decimal(money['amount'])
+                   for product in page['products'])
+    return run_ids
 
 
 if __name__ == '__main__':
-    main()
+    final = ROOT / 'final'
+    requests = {c['id']: c for folder in (ROOT, final) for c in load(folder / 'requests.json')}
+    first_ids = verify_cohort(ROOT, PIN, SERIES, requests)
+    final_ids = verify_cohort(final, 'cb2933886cf68b534dae738c8980a5853143ebe1', {
+        'final untouched confirmation': 'N1z N2z N3z N4z N5z',
+        'development replay of previous confirmation': 'C4z',
+    }, requests)
+    assert first_ids.isdisjoint(final_ids)
+    print(f'{len(first_ids | final_ids)} distinct browser runs, {len(requests)} distinct requests')

@@ -1,5 +1,11 @@
 # Buyer request and product discovery repair
 
+The [final confirmation report](final/README.md) records the five untouched requests on product commit `cb29338` after the fractional-price fix. **3/5 showed a priced listing and 0/5 showed a verified recommendation.** Direct retailer search found product links in 4/5. A separate development replay of the earlier 100 Hz monitor request showed the 100 Hz Samsung listing at USD 118.80.
+
+Across both rounds, 24 real submissions used 18 distinct buyer questions. 16 submissions found a product URL through direct retailer search. 6 showed a priced product in the UI and 0 produced a verified recommendation. The shared ledger recorded USD 0.029782 settled, USD 0.0614400 uncertain and USD 0 held across buyer submissions. Source-review reads are reported separately.
+
+## First-round results
+
 [Issue #194](https://github.com/han33-dotcom/TechScout/issues/194) follows the original [failed #178 evaluation](../../buyer-v1/results-2026-11-25/README.md). Its 20 submissions and four correctness scores remain frozen. The four fresh, pre-tuning questions and the additional post-pin phone question all returned zero priced or verified listings. Direct retailer search returned product links in four of those five runs.
 
 ## Browser protocol and independence
