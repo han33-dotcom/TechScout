@@ -11,7 +11,7 @@ from hashlib import sha256
 import json
 import time
 from typing import Literal
-from urllib.parse import urldefrag, urlencode, urlsplit
+from urllib.parse import parse_qs, urldefrag, urlencode, urlsplit
 
 import httpx2
 from sqlalchemy import select
@@ -21,7 +21,7 @@ from app import contracts_v2 as v2
 from app.accounting import BudgetDenied, Charge
 from app.adapters.woocommerce import read_page as read_woo_page
 from app.adapters import beytech, itworks_audio, mojitech, technodel_audio
-from app.domestic_search_plan import retailer_query
+from app.domestic_search_plan import product_terms, retailer_query
 from app.buyer_sources import DeadlineBudget
 from app.corpus_contracts import DocumentCapture, ProcessingVersion, ResourceKey
 from app.corpus import Corpus
@@ -369,9 +369,19 @@ class DomesticBuyerSources:
                 routes.append((reader.source_id, reader.search_url(term), 'json',
                                lambda body, r=reader: r.product_links(body, category)))
         if category == 'audio' and request.fulfillment.mode in ('any', 'delivery'):
-            for reader in (itworks_audio, technodel_audio):
+            for reader in (itworks_audio,):
                 url = reader.ORIGIN + '/search?' + urlencode({'q': term})
                 routes.append((reader.SOURCE, url, 'html', lambda body, r=reader: r.product_links(body, term)))
+        if category in technodel_audio.CATEGORIES.values() and request.fulfillment.mode != 'pickup':
+            # The store searches its titles. Use a discriminating catalogue token for needs,
+            # then rank the returned product slugs by all the original requirements.
+            terms = product_terms(request)
+            query = term if request.intent.kind == 'exact_model' else next(
+                (t.split()[0] for t in terms if any(c.isdigit() for c in t)), term)
+            rank = ' '.join([*terms, *request.allowed_colors])
+            url = technodel_audio.ORIGIN + '/search?' + urlencode({'q': query})
+            routes.insert(0, (technodel_audio.SOURCE, url, 'html',
+                              lambda body: technodel_audio.listing_links(body, query, rank, category)))
         for source_id, url, expect, extract in routes:
             owner = self.directory.get(source_id)
             if (not owner or owner.source_id != source_id or owner.seller_identity != 'retailer'
@@ -394,7 +404,9 @@ class DomesticBuyerSources:
                     reason = 'Retailer search unavailable: ' + ', '.join(e.code for e in result.errors)
             except (ValueError, TypeError, PermissionError, BudgetDenied, TimeoutError, httpx2.HTTPError):
                 reason = 'The retailer search could not be read within its approved scope.'
-            yield dict(source_id=source_id, query=term, attempts=attempts, links=links, reason=reason)
+            params = parse_qs(urlsplit(url).query)
+            yield dict(source_id=source_id, query=(params.get('q') or params['search'])[0],
+                       attempts=attempts, links=links, reason=reason)
 
     def read(self, request, url, job, run, *, earlier=None, room):
         url = str(url)
@@ -440,8 +452,8 @@ class DomesticBuyerSources:
             replies = frozenset({(outcome.response_sha256, outcome.observed_at)})
             audio_reader = {itworks_audio.SOURCE: itworks_audio, technodel_audio.SOURCE: technodel_audio}.get(source_id)
             if audio_reader:
-                if category != 'audio' or request.fulfillment.mode == 'pickup':
-                    return ReadResult(source_id, status='out_of_scope', reason='Reviewed only for audio delivery')
+                if (audio_reader is itworks_audio and category != 'audio') or request.fulfillment.mode == 'pickup':
+                    return ReadResult(source_id, status='out_of_scope', reason='No reviewed reader for the requested category or pickup route')
                 policy = retrieve_page(self.gate, bounded, source_id, audio_reader.FAQ)
                 if policy.status == 'ok':
                     replies |= {(policy.response_sha256, policy.observed_at)}
@@ -452,7 +464,7 @@ class DomesticBuyerSources:
                     offer = None
                 if offer is None:
                     return ReadResult(source_id, replies=replies, status='failed',
-                                      reason='The current page did not establish an unambiguous audio selection')
+                                      reason='The current page did not establish an unambiguous product selection')
                 return ReadResult(source_id, (offer,), replies)
             work = bounded.reserve('work', Charge(Decimal(0)), 5)
             started = time.monotonic()

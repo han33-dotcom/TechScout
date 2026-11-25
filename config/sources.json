@@ -46,8 +46,8 @@
       "status": "active",
       "reviewed_at": "2026-11-25",
       "admission": {
-        "basis": "Technical review of the public model search, selected headset purchase data and nationwide COD terms.",
-        "scope": "GET a bounded search, a product slug and the exact FAQ for headset delivery. Read-only HTML.",
+        "basis": "Public search cards and single-SKU purchase components reviewed for laptops, monitors, tablets, smartphones and audio. See docs/discovery-repair.md.",
+        "scope": "GET a bounded search, one product slug per read, and the exact FAQ for domestic electronics delivery. Single-SKU listings only.",
         "evidence": ["https://technodel.net/search?q=Logitech+H340", "https://technodel.net/faq"],
         "reviewed_at": "2026-11-25T16:57:30Z"
       },

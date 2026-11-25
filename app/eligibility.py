@@ -454,8 +454,10 @@ def check_full_product(request: v2.ShoppingRequest, offer: v2.Offer) -> Eligibil
     fact('price','price',offer.price,lambda v:v.amount > 0)
     intent = request.intent
     if intent.kind == 'exact_model':
-        add('model','variant.product.model',
-            _identity_value('model',product.model) == _identity_value('model',intent.model))
+        # Some merchants put the brand in the Model field, others publish it separately.
+        observed = {_identity_value('model', product.model),
+                    _identity_value('model', f'{product.manufacturer} {product.model}')}
+        add('model', 'variant.product.model', _identity_value('model', intent.model) in observed)
         if intent.manufacturer:
             add('manufacturer','variant.product.manufacturer',
                 _identity_value('manufacturer',product.manufacturer) == _identity_value('manufacturer',intent.manufacturer))

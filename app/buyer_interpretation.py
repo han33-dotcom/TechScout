@@ -81,6 +81,8 @@ def interpret(request, wording):
         minimum = re.search(r'(?:at least|minimum(?: of)?)\s*$', m.string[:m.start()], re.I)
         if minimum or (not exact and 'min_' + field in req):
             field = 'min_' + field
+        if unit.startswith('ssd') and category == 'laptop':
+            spec(m, 'storage_type', 'SSD')
         return spec(m, field, int(m[1]) * (1024 if m[2].lower() == 'tb' else 1))
 
     consume(CAPACITY, capacity)

@@ -40,6 +40,7 @@ class LaptopRequirements(Model):
     storage_gb: PositiveInt | None = None
     min_ram_gb: PositiveInt | None = None
     min_storage_gb: PositiveInt | None = None
+    storage_type: Text | None = None
     cpu: Text | None = None
     gpu: Text | None = None
     operating_system: Text | None = None
@@ -209,6 +210,7 @@ class PhoneSpecs(Model):
 
 class LaptopSpecs(Model):
     category: Literal['laptop']
+    storage_type: Fact[Text] | None = None
     cpu: Fact[Text]
     ram_gb: Fact[PositiveInt]
     storage_gb: Fact[PositiveInt]
