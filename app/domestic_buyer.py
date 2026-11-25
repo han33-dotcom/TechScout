@@ -304,11 +304,17 @@ class DomesticBuyerFlow(_Flow):
         seen_sources = {o.source_id for o in self.catalog.values()}
         seeds = []
         sources = self.deps.domestic_sources
-        if (self.request.intent.kind == 'exact_model' and self.request.requirements.category == 'audio'
-                and self.request.fulfillment.mode == 'delivery' and hasattr(type(sources), 'search_audio')):
+        if hasattr(type(sources), 'search_listings'):
             room = lambda: self.left(self.nonfinal_by)
-            seeds.extend(Listing(url, source_id) for url, source_id in sources.search_audio(
-                self.request, PhaseJob(self.job, room), room=room))
+            searches = self.trace['retailer_searches'] = []
+            for search in sources.search_listings(self.request, PhaseJob(self.job, room), room=room):
+                searches.append(search)
+                source_id = search['source_id']
+                seen_sources.add(source_id)
+                seeds.extend(Listing(url, source_id) for url in search['links'])
+                if search['reason']:
+                    self.sources.setdefault(source_id, (directory.get(source_id).entry.name,
+                                                        'failed', search['reason']))
         for selection in directory.select(DirectoryQuery(category=self.request.requirements.category,
                 seek_competing_offers=True, limit=10)):
             record = selection.record
@@ -331,7 +337,7 @@ class DomesticBuyerFlow(_Flow):
         objective, method, index = self.plan_search(options, channels)
         self.trace['search_plan'] = dict(method=method, channel=objective.channel,
             language=objective.language, objective=objective.objective,
-            query_index=index)
+            query_index=index, query=objective.query)
         self.action(objective.objective, 'Decide whether broader seller or model comparison is feasible',
                     'domestic retailer discovery channels')
         room = lambda: self.left(self.nonfinal_by)
@@ -348,6 +354,7 @@ class DomesticBuyerFlow(_Flow):
         if report.run_id != self.run_ref.run_id:
             return
         self.search_report = report
+        self.trace['discovery_leads'] = [dict(source_id=l.source_id, url=l.url) for l in report.leads]
         known_urls = {str(o.listing_url) for o in self.catalog.values()}
         fresh = []
         for lead in report.leads:

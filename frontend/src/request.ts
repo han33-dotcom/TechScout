@@ -31,7 +31,8 @@ export function toRequest(draft: Draft, base?: EditableRequest): ShoppingRequest
     const selection = /^(.+?)\s+in\s+(black|white|red|blue|green|yellow|purple|pink|silver|gold|gray|grey)$/i.exec(text);
     const model = selection ? selection[1].trim() : text;
     if (selection) colors = [selection[2].toLowerCase()];
-    intent = { kind: 'exact_model', model, manufacturer: base?.intent.kind === 'exact_model' && base.intent.model === model ? base.intent.manufacturer : undefined };
+    if (base?.intent.kind === 'exact_model' && base.intent.wording === text) intent = base.intent;
+    else intent = { kind: 'exact_model', model, manufacturer: base?.intent.kind === 'exact_model' && base.intent.model === model ? base.intent.manufacturer : undefined };
   }
   else intent = { kind: 'needs', description: text, required_software: base?.intent.kind === 'needs' ? base.intent.required_software : [] };
   const target = draft.target ? money(draft.target,draft.currency) : null, maximum = draft.maximum ? money(draft.maximum,draft.currency) : null;
@@ -43,6 +44,8 @@ export function toRequest(draft: Draft, base?: EditableRequest): ShoppingRequest
     Object.assign(requirements, { [key]: draft.spec ? Number(draft.spec) : null });
   }
   return { ...base, schema_version: 2, request_id: base?.request_id ?? crypto.randomUUID(), revision: base ? base.revision + 1 : 1,
+    unresolved_constraints: base?.unresolved_constraints ?? [],
+    buyer_text: intent.kind !== 'product_link' && (!base || text !== fromRequest(base).text || intent.kind !== base.intent.kind || draft.category !== base.requirements.category) ? text : undefined,
     intent, requirements: requirements as ShoppingRequest['requirements'], budget: target || maximum ? { target, maximum } : null,
     allowed_colors: colors, preferences: base?.preferences ?? [], allowed_conditions: base?.allowed_conditions[0] === draft.condition ? base.allowed_conditions : [draft.condition], payment: draft.payment || null,
     market_scope: domesticScope,
@@ -51,7 +54,7 @@ export function toRequest(draft: Draft, base?: EditableRequest): ShoppingRequest
 }
 
 export function fromRequest(r: EditableRequest): Draft {
-  return { text: r.intent.kind === 'needs' ? r.intent.description : r.intent.kind === 'product_link' ? r.intent.url : r.intent.model,
+  return { text: r.intent.kind === 'needs' ? r.intent.description : r.intent.kind === 'product_link' ? r.intent.url : r.intent.wording ?? r.intent.model,
     kind: r.intent.kind === 'exact_model' ? 'exact_model' : 'needs', category: r.requirements.category,
     target: String(r.budget?.target?.amount ?? ''), maximum: String(r.budget?.maximum?.amount ?? ''),
     currency: r.budget?.target?.currency ?? r.budget?.maximum?.currency ?? 'USD', city: r.fulfillment?.destination?.city ?? '', mode: r.fulfillment?.mode ?? 'any',

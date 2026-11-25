@@ -29,12 +29,15 @@ class Contract(Model):
 class PhoneRequirements(Model):
     category: Literal['phone']
     storage_gb: PositiveInt | None = None
+    ram_gb: PositiveInt | None = None
     sim: Sim | None = None
     regions: tuple[Text, ...] = ()
 
 
 class LaptopRequirements(Model):
     category: Literal['laptop']
+    ram_gb: PositiveInt | None = None
+    storage_gb: PositiveInt | None = None
     min_ram_gb: PositiveInt | None = None
     min_storage_gb: PositiveInt | None = None
     cpu: Text | None = None
@@ -44,6 +47,8 @@ class LaptopRequirements(Model):
 
 class TabletRequirements(Model):
     category: Literal['tablet']
+    ram_gb: PositiveInt | None = None
+    storage_gb: PositiveInt | None = None
     min_storage_gb: PositiveInt | None = None
     connectivity: Literal['wifi', 'cellular'] | None = None
     stylus_support: StrictBool | None = None
@@ -71,6 +76,7 @@ Requirements = Annotated[
 
 
 class ModelIntent(Model):
+    wording: Text | None = None
     kind: Literal['exact_model']
     manufacturer: Text | None = None
     model: Text
@@ -154,6 +160,7 @@ class ShoppingRequest(Contract):
     request_id: Text
     revision: PositiveInt = 1
     intent: Intent
+    unresolved_constraints: tuple[Text, ...] = ()
     refinement_note: Text | None = None  # Additional buyer wording; never replaces existing constraints.
     requirements: Requirements
     budget: Budget | None = None
@@ -194,6 +201,7 @@ class Product(Model):
 
 class PhoneSpecs(Model):
     category: Literal['phone']
+    ram_gb: Fact[PositiveInt] | None = None
     storage_gb: Fact[PositiveInt]
     sim: Fact[Sim]
     region: Fact[Text]
@@ -216,6 +224,7 @@ class LaptopSpecs(Model):
 
 class TabletSpecs(Model):
     category: Literal['tablet']
+    ram_gb: Fact[PositiveInt] | None = None
     storage_gb: Fact[PositiveInt]
     connectivity: Fact[Literal['wifi', 'cellular']]
     stylus_support: Fact[StrictBool] | None = None

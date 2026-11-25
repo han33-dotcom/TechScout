@@ -443,6 +443,8 @@ def check_full_product(request: v2.ShoppingRequest, offer: v2.Offer) -> Eligibil
         verdict = predicate(observed.value) if observed is not None and observed.state == 'known' else None
         add(name, path, verdict, observed.evidence_ids if observed else ())
 
+    for constraint in request.unresolved_constraints:
+        add('Requested '+constraint, 'variant.specs', None)
     req, specs, product = request.requirements, offer.variant.specs, offer.variant.product
     add('category', 'variant.product.category', req.category == product.category)
     add('market', 'seller.market', request.market_scope.allows(offer.seller.market))

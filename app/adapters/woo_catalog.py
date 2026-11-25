@@ -53,7 +53,11 @@ def _pairs(pairs):
 
 
 def _records(outcome, limit=10):
-    data = json.loads(outcome.body.decode('utf-8'), parse_float=Decimal, object_pairs_hook=_pairs,
+    return _records_body(outcome.body, limit)
+
+
+def _records_body(body, limit=10):
+    data = json.loads(body.decode('utf-8'), parse_float=Decimal, object_pairs_hook=_pairs,
                       parse_constant=lambda _: (_ for _ in ()).throw(ValueError('Nonfinite number')))
     if not isinstance(data, list) or len(data) > limit or not all(isinstance(r, dict) for r in data):
         raise ValueError('Invalid bounded product list')
@@ -123,6 +127,31 @@ class WooCatalog:
                 return kind
         return None
 
+    def search_url(self, query):
+        return f'{self.origin}/wp-json/wc/store/v1/products?search={quote(query)}&per_page=10&page=1'
+
+    def product_links(self, body, category):
+        products, _ = self._products(_records_body(body), category)
+        return tuple(p['permalink'] for p in products.values())[:self.max_products]
+
+    def _products(self, records, category):
+        invalid = False
+        products = {}
+        for record in records:
+            if record.get('type') not in {'simple','variable'} or type(record.get('parent')) is not int or record['parent'] != 0:
+                continue
+            cats = record.get('categories', [])
+            if not isinstance(cats, list) or not any(isinstance(c, dict) and c.get('slug') in self.categories[category] for c in cats):
+                continue
+            pid, slug, page = _id(record.get('id')), record.get('slug'), record.get('permalink')
+            if not pid or not isinstance(slug, str) or not re.fullmatch(r'[a-z0-9][a-z0-9-]{0,99}', slug) or not self._page_kind(page):
+                invalid = True
+                continue
+            if pid in products and products[pid] != record:
+                raise ValueError('conflicting product identity')
+            products[pid] = record
+        return products, invalid
+
     def search(self, fetch, *, category, search, run=None, only=None, corpus_version="catalog-preview-v1"):
         """Fetch at most one search page and two exact products (five calls).
 
@@ -140,25 +169,14 @@ class WooCatalog:
                 snapshots.append(Snapshot.of(outcome))
                 return outcome
             return None
-        url = f'{self.origin}/wp-json/wc/store/v1/products?search={quote(search)}&per_page=10&page=1'
+        url = self.search_url(search)
         found = get(url, 'search', 'json')
         if found:
             try:
                 records = _records(found)
-                products = {}
-                for record in records:
-                    if record.get('type') not in {'simple','variable'} or type(record.get('parent')) is not int or record['parent'] != 0:
-                        continue
-                    cats = record.get('categories', [])
-                    if not isinstance(cats, list) or not any(isinstance(c, dict) and c.get('slug') in self.categories[category] for c in cats):
-                        continue
-                    pid, slug, page = _id(record.get('id')), record.get('slug'), record.get('permalink')
-                    if not pid or not isinstance(slug, str) or not re.fullmatch(r'[a-z0-9][a-z0-9-]{0,99}', slug) or not self._page_kind(page):
-                        errors.append(self._error('invalid or unsafe catalog identity'))
-                        continue
-                    if pid in products and products[pid] != record:
-                        raise ValueError('conflicting product identity')
-                    products[pid] = record
+                products, invalid = self._products(records, category)
+                if invalid:
+                    errors.append(self._error('invalid or unsafe catalog identity'))
                 if len(records) == 10 or len(products) > self.max_products:
                     errors.append(self._error('catalog discovery truncated by configured bound'))
                 for pid, product in list(products.items())[:self.max_products]:

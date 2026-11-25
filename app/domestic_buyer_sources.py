@@ -20,7 +20,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from app import contracts_v2 as v2
 from app.accounting import BudgetDenied, Charge
 from app.adapters.woocommerce import read_page as read_woo_page
-from app.adapters import itworks_audio, technodel_audio
+from app.adapters import beytech, itworks_audio, mojitech, technodel_audio
+from app.domestic_search_plan import retailer_query
 from app.buyer_sources import DeadlineBudget
 from app.corpus_contracts import DocumentCapture, ProcessingVersion, ResourceKey
 from app.corpus import Corpus
@@ -355,22 +356,45 @@ class DomesticBuyerSources:
                   and any(origin.host == host for origin in (r.entry.origin, *r.entry.related_origins))]
         return source_id, owners[0] if len(owners) == 1 else None
 
-    def search_audio(self, request, job, *, room):
-        """One bounded public search per reviewed audio retailer, with no seeded product URLs."""
-        found = []
-        for reader in (itworks_audio, technodel_audio):
-            owner = self.directory.get(reader.SOURCE)
-            if not owner or owner.seller_identity != 'retailer' or owner.source_country != 'LB' or job.cancelled:
+    def search_listings(self, request, job, *, room):
+        """Search category-capable shops. Search results supply URLs only."""
+        category = request.requirements.category
+        term = retailer_query(request)
+        if not term:
+            return
+        bounded = _ReadJob(job, room)
+        routes = []
+        for reader in (beytech.CATALOG, mojitech.CATALOG):
+            if category in reader.categories:
+                routes.append((reader.source_id, reader.search_url(term), 'json',
+                               lambda body, r=reader: r.product_links(body, category)))
+        if category == 'audio' and request.fulfillment.mode in ('any', 'delivery'):
+            for reader in (itworks_audio, technodel_audio):
+                url = reader.ORIGIN + '/search?' + urlencode({'q': term})
+                routes.append((reader.SOURCE, url, 'html', lambda body, r=reader: r.product_links(body, term)))
+        for source_id, url, expect, extract in routes:
+            owner = self.directory.get(source_id)
+            if (not owner or owner.source_id != source_id or owner.seller_identity != 'retailer'
+                    or owner.source_country != 'LB' or owner.role != 'domestic'
+                    or category not in owner.entry.categories or owner.entry.discovery_status == 'retired'):
                 continue
-            url = reader.ORIGIN + '/search?' + urlencode({'q': request.intent.model})
+            if job.cancelled or room() < CALL_TIMEOUT_S:
+                break
+            ref = CapabilityRef(capability_id=source_id + '-search', version='1')
+            links, reason, attempts = (), None, 0
             try:
-                result = retrieve_page(self.gate, _ReadJob(job, room), reader.SOURCE, url,
-                    capability=CapabilityRef(capability_id=reader.SOURCE + '-search', version='1'))
+                result = self.gate.fetch(bounded.source_budget(self.directory.registry_path),
+                                         source_id, url, expect=expect, capability=ref)
+                attempts = result.attempts
                 if result.status == 'ok' and result.final_url == url:
-                    found.extend((link, reader.SOURCE) for link in reader.product_links(result.body, request.intent.model))
+                    links = extract(result.body)
+                    if not links:
+                        reason = 'No matching product links in the bounded retailer search.'
+                else:
+                    reason = 'Retailer search unavailable: ' + ', '.join(e.code for e in result.errors)
             except (ValueError, TypeError, PermissionError, BudgetDenied, TimeoutError, httpx2.HTTPError):
-                continue
-        return tuple(found)
+                reason = 'The retailer search could not be read within its approved scope.'
+            yield dict(source_id=source_id, query=term, attempts=attempts, links=links, reason=reason)
 
     def read(self, request, url, job, run, *, earlier=None, room):
         url = str(url)
@@ -416,7 +440,7 @@ class DomesticBuyerSources:
             replies = frozenset({(outcome.response_sha256, outcome.observed_at)})
             audio_reader = {itworks_audio.SOURCE: itworks_audio, technodel_audio.SOURCE: technodel_audio}.get(source_id)
             if audio_reader:
-                if category != 'audio' or request.fulfillment.mode != 'delivery':
+                if category != 'audio' or request.fulfillment.mode == 'pickup':
                     return ReadResult(source_id, status='out_of_scope', reason='Reviewed only for audio delivery')
                 policy = retrieve_page(self.gate, bounded, source_id, audio_reader.FAQ)
                 if policy.status == 'ok':

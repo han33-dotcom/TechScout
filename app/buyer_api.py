@@ -6,6 +6,7 @@ from fastapi import APIRouter, Request, Response, Query
 from fastapi.responses import JSONResponse
 from pydantic import Field, field_validator
 
+from app.buyer_interpretation import interpret
 from app.buyer_runs import RunError
 from app.contracts import Model, Text
 from app.contracts_v2 import Country, MarketScope, ShoppingRequest, RunSnapshot, RunReference, ComparisonWorkspace
@@ -42,6 +43,14 @@ class DomesticMarketScope(MarketScope):
 
 
 class DomesticShoppingRequest(ShoppingRequest):
+    buyer_text: str | None = Field(default=None, max_length=4000, exclude=True)
+
+    def interpreted(self):
+        try:
+            return interpret(self, self.buyer_text)
+        except ValueError as exc:
+            raise RunError(422, str(exc)) from exc
+
     market_scope: DomesticMarketScope = Field(default_factory=DomesticMarketScope)
 
 
@@ -106,7 +115,7 @@ def router(*,cookie_secure=True):
 
     @api.post('/runs',response_model=RunSnapshot,status_code=202)
     def start(body:DomesticShoppingRequest,request:Request):
-        return request.app.state.buyer_runs.start(owned(request,mutate=True),body)
+        return request.app.state.buyer_runs.start(owned(request,mutate=True),body.interpreted())
 
     @api.get('/runs/{run_id}',response_model=ComparisonWorkspace)
     def read(run_id:str,request:Request):
@@ -150,6 +159,6 @@ def router(*,cookie_secure=True):
         token=owned(request,mutate=True)
         if run_id!=body.run.run_id:
             raise RunError(409,'URL and run reference differ')
-        return request.app.state.buyer_runs.refine(token,body.run,body.request)
+        return request.app.state.buyer_runs.refine(token,body.run,body.request.interpreted())
 
     return api

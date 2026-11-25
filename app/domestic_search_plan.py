@@ -1,6 +1,7 @@
 """Bounded search choices for the domestic buyer's discovery phase."""
 from dataclasses import replace
 from urllib.parse import unquote
+import re
 
 from pydantic import Field
 
@@ -29,12 +30,50 @@ class DomesticSearchChoice(Model):
     channel: Channel
 
 
+def product_terms(request):
+    """Use catalogue units and spelling. Each term is a lead, never proof of fit."""
+    terms = []
+    fields = request.requirements.model_dump(exclude_defaults=True, exclude={'category'})
+    for key, value in fields.items():
+        key = key.removeprefix('min_')
+        if key in ('ram_gb', 'storage_gb'):
+            capacity = f'{value // 1024}TB' if value % 1024 == 0 else f'{value}GB'
+            terms.append(capacity + (' RAM' if key == 'ram_gb' else ''))
+        elif key == 'refresh_hz':
+            terms.append(f'{value}Hz')
+        elif key == 'diagonal_inches':
+            terms.append(f'{value} inch')
+        elif isinstance(value, bool):
+            if value:
+                terms.append(key.replace('_', ' '))
+        elif isinstance(value, tuple):
+            terms.extend(str(v) for v in value)
+        else:
+            terms.append(str(value))
+    return terms
+
+
+def retailer_query(request):
+    if request.intent.kind == 'exact_model':
+        model = request.intent.model
+        # Scope accepts plain catalogue terms only. Never truncate into another model.
+        if len(model) > 64 or re.search(r'[@/:?]|\b(?:address|street|deliver|please)\b', model, re.I):
+            return None
+        query = ' '.join(re.findall(r'[a-zA-Z0-9][a-zA-Z0-9._-]*', model.replace('+', ' Plus ')))
+    else:
+        category = request.requirements.category
+        terms = product_terms(request)
+        label = 'headphones' if category == 'audio' else category
+        query = ' '.join(dict.fromkeys([label, *terms]))
+    return query if 0 < len(query) <= 64 else None
+
+
 def search_options(request, offers):
     requirements = request.requirements
-    terms = [f"{key.replace('_', ' ')} {value}" for key, value in
-             requirements.model_dump(exclude_defaults=True, exclude={'category'}).items()]
+    terms = product_terms(request)
     if request.intent.kind == 'exact_model':
-        product = ' '.join(t for t in (request.intent.manufacturer, request.intent.model) if t)
+        product = retailer_query(request) or requirements.category
+        terms += list(request.allowed_colors)
         gap = 'Find an independent Lebanese seller of the requested configuration'
         for offer in offers:
             variant = offer.variant.variant_id

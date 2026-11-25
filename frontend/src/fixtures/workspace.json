@@ -19,9 +19,12 @@
           "CAD"
         ]
       },
+      "unresolved_constraints": [],
       "refinement_note": null,
       "requirements": {
         "category": "laptop",
+        "ram_gb": null,
+        "storage_gb": null,
         "min_ram_gb": 16,
         "min_storage_gb": null,
         "cpu": null,
@@ -1057,9 +1060,12 @@
           "CAD"
         ]
       },
+      "unresolved_constraints": [],
       "refinement_note": null,
       "requirements": {
         "category": "laptop",
+        "ram_gb": null,
+        "storage_gb": null,
         "min_ram_gb": 16,
         "min_storage_gb": null,
         "cpu": null,
