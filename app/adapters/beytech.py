@@ -149,5 +149,6 @@ class BeytechCatalog(WooCatalog):
 CATALOG = BeytechCatalog(SOURCE_ID, ORIGIN, {
     'phone': frozenset({'mobiles','smartphones','mobile-phones'}),
     'laptop': frozenset({'laptops'}),
+    'tablet': frozenset({'tablets', 'ipads'}),
     'monitor': frozenset({'monitors'}),
 }, (('product', ('product',), 2),))

@@ -87,6 +87,10 @@ class ITWorksAudio(FlowCase):
         self.assertEqual(verified.offer.route.origin_country, 'ZZ')
         self.assertEqual((verified.offer.source_id, str(verified.offer.listing_url)), (SOURCE, URL))
         self.assertEqual((self.reads.count(URL), self.reads.count(FAQ)), (2, 2))
+        # The first merchant returned no matching link. The worker searched the
+        # next admitted retailer and verified its selected item in the same run.
+        self.assertLess(self.reads.index('https://technodel.net/search?q=Studio+123'),
+                        self.reads.index(ORIGIN + '/search?q=Studio+123'))
 
     def linked_wired_offer(self, finish, connector='USB Type-A USB Protocol: USB'):
         self.title = 'Studio Headset X10'

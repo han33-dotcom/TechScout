@@ -99,5 +99,6 @@ from app.adapters.woo_catalog import WooCatalog
 CATALOG = WooCatalog(SOURCE_ID, ORIGIN, {
     'phone': frozenset({'smartphones', 'mobiles', 'mobile-phones', 'iphones'}),
     'laptop': frozenset({'laptops', 'gaming-laptops'}),
+    'tablet': frozenset({'tablets', 'ipads'}),
     'monitor': frozenset({'monitors', 'gaming-monitors'}),
 }, (('product', ('shop',), 4), ('deep-product', ('shop',), 5), ('short-product', ('product',), 2)))
