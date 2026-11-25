@@ -10,6 +10,7 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 
 - [Approved domestic search pipelines, model access and operating defaults](domestic-search-design.md)
 
+- [Buyer product rules audit, 25 November](buyer-product-rules-audit.md)
 - [Buyer correctness acceptance](buyer-correctness-acceptance.md)
 - [Held-out evaluation protocol](evaluation-protocol.md)
 - [Domestic held-out results, verified offers, latency and cost](evaluation-report.md)
