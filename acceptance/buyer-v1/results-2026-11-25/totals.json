@@ -1,0 +1,59 @@
+{
+  "product_revision": "1c5f80c75a6a70d9eeaf6e8db08d81dfb5097c64",
+  "originals": 20,
+  "reruns": 0,
+  "scores": {
+    "full": {
+      "passed": 0,
+      "denominator": 10,
+      "required": 8
+    },
+    "partial": {
+      "passed": 0,
+      "denominator": 5,
+      "required": 4
+    },
+    "blocked": {
+      "passed": 0,
+      "denominator": 5,
+      "required": 5
+    },
+    "two_seller": {
+      "passed": 0,
+      "denominator": 5,
+      "required": 4
+    }
+  },
+  "misleading_verified_claims": 0,
+  "overall_pass": false,
+  "terminal_outcomes": {
+    "abstained": 20
+  },
+  "timing": {
+    "final_within_120s": 20,
+    "useful_within_120s": 0,
+    "min_final_ms": 19724,
+    "median_final_ms": 32879.0,
+    "max_final_ms": 42997
+  },
+  "spend_usd": {
+    "known_usd": "0.022772",
+    "uncertain_usd": "0",
+    "still_held_usd": "0"
+  },
+  "ledger_attempts": {
+    "model": 20,
+    "retrieval": 86,
+    "work": 45,
+    "worker": 74
+  },
+  "freeze_manifest_lf_sha256": "cbdfd5af75f910ec34238c1e9e4af78767c1dda65e2eef5f0799a3afcbc5153f",
+  "research_candidates": 0,
+  "finalists_rechecked": 0,
+  "shared_ledger_reconciliation": {
+    "before_usd": "4.38128974",
+    "after_usd": "4.40406174",
+    "delta_usd": "0.02277200",
+    "checked_at_utc": "2026-11-25T17:39:45.7056368Z"
+  }
+}

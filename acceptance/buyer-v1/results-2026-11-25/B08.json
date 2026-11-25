@@ -1,0 +1,260 @@
+{
+  "case": "B08",
+  "attempt": "original",
+  "frozen_input": {
+    "id": "B08",
+    "category": "laptop",
+    "entry": "needs",
+    "mode": "delivery",
+    "destination": "Byblos",
+    "prompt": "I need a new Windows laptop for spreadsheets with a built-in numeric keypad, at least 16 GB RAM and a 512 GB SSD. Deliver to Byblos."
+  },
+  "submitted_request": {
+    "schema_version": 2,
+    "request_id": "0d21655c-9709-4503-b1c1-df4e19585042",
+    "revision": 1,
+    "intent": {
+      "kind": "needs",
+      "description": "I need a new Windows laptop for spreadsheets with a built-in numeric keypad, at least 16 GB RAM and a 512 GB SSD. Deliver to Byblos.",
+      "required_software": []
+    },
+    "requirements": {
+      "category": "laptop",
+      "min_ram_gb": null
+    },
+    "budget": null,
+    "allowed_colors": [],
+    "preferences": [],
+    "allowed_conditions": [
+      "new"
+    ],
+    "payment": null,
+    "market_scope": {
+      "include_international": false,
+      "international_markets": []
+    },
+    "fulfillment": {
+      "mode": "delivery",
+      "branch_id": null,
+      "destination": {
+        "country": "LB",
+        "city": "Byblos"
+      }
+    }
+  },
+  "submission_utc": "2026-11-25T17:32:51.153Z",
+  "http_post_status": 202,
+  "run": {
+    "run_id": "fdb515b8-fba5-4643-8a68-eeb330706356",
+    "run_revision": 1,
+    "request_id": "0d21655c-9709-4503-b1c1-df4e19585042",
+    "request_revision": 1
+  },
+  "browser_capture": "B08.png",
+  "captured_utc": "2026-11-25T17:33:29.715Z",
+  "outcome": "abstained",
+  "coverage": {
+    "discovered": 3,
+    "attempted": 3,
+    "retrieved": 0,
+    "qualifying": 0
+  },
+  "source_outcomes": [
+    {
+      "source_id": "beytech",
+      "name": "beytech",
+      "status": "failed",
+      "reason": "No matching SKU on the current listing"
+    },
+    {
+      "source_id": "class_cellulars",
+      "name": "class_cellulars",
+      "status": "failed",
+      "reason": "No matching SKU on the current listing"
+    },
+    {
+      "source_id": "mojitech",
+      "name": "mojitech",
+      "status": "failed",
+      "reason": "No matching SKU on the current listing"
+    }
+  ],
+  "visible_result": "No verified recommendation yet\n\nChecked 0 independent domestic seller(s). 0 offer(s) qualified. No in-scope listing could be verified.\n\nAbout these resultsStandard summary\n\nNo offer was verified in this run.\nOpen questions:\n- Search coverage in this run: 3 retailers found, 3 attempted, 0 read successfully, 0 with a qualifying offer; retailers outside this search were not checked.\n\nA standard summary of every checked fact, in a fixed order.\n3\nDiscovered retailers\n3\nAttempted retailers\n0\nRetrieved retailers\n0\nQualifying retailers\nYOUR COMPARISON · REVISION 1\n0 verified model options\nSort\nRecommended order\nVerified total (within currency)\n\nOnly offers verified for these requirements appear here. Fewer than three is a valid result. Costs in different currencies are not ranked as savings.\n\nNo verified options yet\n\nThe available evidence did not establish a verified option. You can adjust your requirements or inspect uncertain offers below.\n\nUncertain / non-qualifying offers (0)\nWhere the evidence came from\n\nInventory and discovery counts do not mean every retailer was checked.\n\nbeytech\nFAILED\n\nNo matching SKU on the current listing\n\nclass_cellulars\nFAILED\n\nNo matching SKU on the current listing\n\nmojitech\nFAILED\n\nNo matching SKU on the current listing\n\n0 qualifying sellers across 0 displayed options. Multiple sellers are grouped under the same canonical configuration.",
+  "visible_offer_links": [],
+  "display_timeline": [
+    {
+      "ms": 52,
+      "text": "",
+      "status": "Waiting to start"
+    },
+    {
+      "ms": 1274,
+      "text": "",
+      "status": "Checking products and evidence"
+    },
+    {
+      "ms": 38343,
+      "text": "Checked 0 independent domestic seller(s). 0 offer(s) qualified. No in-scope listing could be verified.\nNo offer was verified in this run.\nOpen questions:\n- Search coverage in this run: 3 retailers found, 3 attempted, 0 read successfully, 0 with a qualifying offer; retailers outside this search were not checked.",
+      "status": "No verified recommendation yet"
+    }
+  ],
+  "timing": {
+    "first_useful_ms": null,
+    "final_display_ms": 38343,
+    "final_within_120s": true,
+    "useful_within_120s": false,
+    "worker_ms": 37391
+  },
+  "worker": {
+    "phases": [
+      {
+        "at_ms": 16,
+        "intent": "needs",
+        "market": "LB",
+        "name": "interpret"
+      },
+      {
+        "at_ms": 391,
+        "catalog_offers": 0,
+        "name": "discover"
+      },
+      {
+        "at_ms": 37235,
+        "candidates": 0,
+        "handed_off": 0,
+        "name": "research"
+      },
+      {
+        "at_ms": 37235,
+        "decision": "current payable total required",
+        "name": "evaluate"
+      },
+      {
+        "at_ms": 37391,
+        "name": "verify",
+        "rechecked": 0,
+        "recommendations": 0
+      },
+      {
+        "at_ms": 37391,
+        "name": "write",
+        "source": "fallback",
+        "status": "not_called"
+      },
+      {
+        "at_ms": 37391,
+        "name": "publish",
+        "status": "abstained"
+      }
+    ],
+    "started_at": "2026-11-25T17:32:51.416192+00:00",
+    "finished_at": "2026-11-25T17:33:28.811748+00:00",
+    "verify": {
+      "independent_sellers_checked": 0,
+      "rechecked": 0,
+      "uncertain": [],
+      "verified": []
+    },
+    "stopped_by": [],
+    "limits": {
+      "active_seconds": 299.972,
+      "concurrent_workers": 3,
+      "final_by_s": 118,
+      "ledger_buyer_caps": {
+        "calls": 40,
+        "research_spend_usd": "0.75",
+        "seconds": 120,
+        "spend_usd": "1"
+      },
+      "nonfinal_by_s": 77.0,
+      "recommendation_groups": 3
+    },
+    "actions": [
+      {
+        "decision_effect": "Find an in-scope configuration at a known shop",
+        "missing_fact": "Selected SKU, current price, stock, local dispatch, destination and charges",
+        "source": "beytech"
+      },
+      {
+        "decision_effect": "Find an in-scope configuration at a known shop",
+        "missing_fact": "Selected SKU, current price, stock, local dispatch, destination and charges",
+        "source": "class_cellulars"
+      },
+      {
+        "decision_effect": "Find an in-scope configuration at a known shop",
+        "missing_fact": "Selected SKU, current price, stock, local dispatch, destination and charges",
+        "source": "mojitech"
+      },
+      {
+        "decision_effect": "Decide whether broader seller or model comparison is feasible",
+        "missing_fact": "Find a distinct domestic model meeting the buyer requirements with local fulfillment",
+        "source": "domestic retailer discovery channels"
+      },
+      {
+        "decision_effect": "Explain qualifying offers and coverage",
+        "missing_fact": "A buyer-readable comparison of checked results",
+        "source": "OpenRouter writer"
+      }
+    ],
+    "discovery_channels": null,
+    "search_plan": {
+      "channel": "manufacturer",
+      "language": "en",
+      "method": "model",
+      "objective": "Find a distinct domestic model meeting the buyer requirements with local fulfillment",
+      "query_index": 1
+    }
+  },
+  "versions": {
+    "code": "1c5f80c75a6a70d9eeaf6e8db08d81dfb5097c64",
+    "inference_config_sha256": "96906b9f6a356c6fb421a397ea1e00a8a50d54777d895963c05830a00dd65e33",
+    "source_registry_sha256": "a5cb2dbbcba2e78e2cb59afa539c17ce746c969f6775a0f90e6ac1a172dc02ad"
+  },
+  "provider_calls": [
+    {
+      "role": "orchestrator",
+      "status": "completed",
+      "validated": true,
+      "requested_model": "openai/gpt-6.1-sol",
+      "reported_model": "openai/gpt-6.1-sol",
+      "serving_provider": "OpenAI",
+      "tokens": {
+        "input_tokens": 472,
+        "output_tokens": 17,
+        "total_tokens": 489
+      },
+      "latency_ms": 2672,
+      "spend": "known",
+      "actual_usd": "0.001114",
+      "reserved_usd": "0.0614400",
+      "missing_metadata": [
+        "system_fingerprint"
+      ]
+    }
+  ],
+  "spend": {
+    "attempts": {
+      "model": 1,
+      "retrieval": 5,
+      "work": 3,
+      "worker": 3
+    },
+    "known_usd": "0.001114",
+    "ledger": "read",
+    "note": "uncertain amounts are full reservations kept because the cost was not reported",
+    "still_held_usd": "0",
+    "uncertain_usd": "0"
+  },
+  "ledger_retrievals_by_source": {
+    "beytech": 1,
+    "class_cellulars": 1,
+    "mojitech": 3
+  },
+  "assessment": {
+    "frozen_class": "partial",
+    "class_pass": false,
+    "comparison_pass": null,
+    "misleading_verified_claim": false,
+    "reason": "No priced numeric-keypad Windows laptop link or explanation of the missing VAT and delivery total."
+  }
+}
