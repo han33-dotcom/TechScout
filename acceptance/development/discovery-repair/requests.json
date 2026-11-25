@@ -64,5 +64,11 @@
     "category": "phone",
     "entry": "exact_model",
     "prompt": "How much for a new teal iPhone 16 Plus with 128GB storage delivered to Batroun?"
+  },
+  {
+    "id": "C6",
+    "category": "phone",
+    "entry": "exact_model",
+    "prompt": "Please find a new black Samsung Galaxy A56 5G with 256 GB storage for delivery to Jbeil."
   }
 ]
