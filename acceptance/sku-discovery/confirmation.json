@@ -1,0 +1,7 @@
+[
+  {"id":"S1","entry":"exact_model","category":"audio","prompt":"What would new black JBL Tune 510BT headphones cost delivered to Saida?"},
+  {"id":"S2","entry":"exact_model","category":"phone","prompt":"I'd like a new Samsung Galaxy A16 4G with 128 GB storage delivered to Jounieh. How much would I pay?"},
+  {"id":"S3","entry":"needs","category":"tablet","prompt":"I need a tablet with at least 1 TB of storage for my offline film library, delivered to Beirut."},
+  {"id":"S4","entry":"needs","category":"monitor","prompt":"I'm looking for a monitor with at least 200 Hz for competitive gaming. How much with delivery to Tripoli?"},
+  {"id":"S5","entry":"exact_model","category":"audio","prompt":"How much is a new Logitech H110 stereo headset delivered to Byblos?"}
+]
