@@ -1,13 +1,13 @@
 # TechScout agent instructions
 
-Policy version 3. This is the canonical policy for coding and review agents.
+Policy version 4. This is the canonical policy for coding and review agents.
 Read [CONTRIBUTING.md](CONTRIBUTING.md) and the applicable task and repository instructions.
 
 ## Project and architecture
 
 TechScout compares electronics for buyers in Lebanon. The full-product scope covers phones,
 laptops, tablets, monitors, and headphones and earbuds. Buyers can search by model or product
-link or describe their needs. Compare offers from sellers in Lebanon for local pickup or dispatch from inside Lebanon.
+link or describe their needs. Establish that the actual merchant is based in Lebanon and serves the destination or pickup branch.
 New condition is the default and other conditions require explicit opt-in. Buying takes place on the retailer's site.
 
 The [full-product backlog](https://github.com/han33-dotcom/TechScout/issues/36) defines
@@ -27,7 +27,15 @@ the existing contract. The [documentation index](docs/README.md) links source an
 ## Product and evidence rules
 
 - Preserve explicit buyer constraints. Approximate budgets are preferences. Treat an explicit
-  maximum as a hard ceiling. Exclude checkout, seller messaging and retailer-account creation.
+  maximum as a hard ceiling. Follow the [buyer product contract](docs/buyer-product-contract.md)
+  and link buyer-facing changes to the [acceptance scenarios](docs/buyer-acceptance-matrix.md).
+- Give advice across turns. Ask when the answer could change the recommendation and carry
+  feedback forward. For a pasted deal, compare the linked variant across Lebanese sellers.
+- Use applicable retailer fees or a scoped pre-order quote. Name sellers needing an address
+  and ask once. The account flow must return a buyer who adds a saved location to the
+  same chat and resume pending quotes automatically.
+  The buyer orders and pays on the retailer site. Exclude reservations, seller messaging
+  and retailer-account creation.
 - Use Decimal money and the documented serialized contracts. Unknown mandatory
   charges stay unknown, never zero; conflicts cannot masquerade as known facts.
 - Bind evidence to the actual field, product/variant and branch where required.

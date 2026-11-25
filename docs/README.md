@@ -8,6 +8,7 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 
 ## Documents
 
+- [Buyer product contract v1](buyer-product-contract.md) and [18-scenario acceptance matrix](buyer-acceptance-matrix.md)
 - [Approved domestic search pipelines, model access and operating defaults](domestic-search-design.md)
 
 - [Buyer product rules audit, 25 November](buyer-product-rules-audit.md)

@@ -1,5 +1,7 @@
 # Tech Scout MVP contract v1
 
+For the five-category buyer experience, see the [buyer product contract](buyer-product-contract.md). The account and checkout exclusions below describe the legacy MVP.
+
 Existing stores, CLI runs and stored records use this version. New consumers can use the [full-product v2 contracts](full-product-contracts.md). Both versions have explicit validation entry points.
 
 Task 2 defines the shared data format; the shopping workflow built on it is described

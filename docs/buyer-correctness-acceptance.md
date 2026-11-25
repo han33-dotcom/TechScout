@@ -4,6 +4,8 @@
 
 The [25 November screening report](../acceptance/buyer-v1/README.md) records the initial reference checks and open cohort slots.
 
+Use [buyer product contract v1](buyer-product-contract.md) for independent reference decisions. Record each revised classification with the rule version and reason alongside its original screening label. Seller identity and service to the buyer determine domestic eligibility. Use applicable retailer fees or pre-order quotes. The [development scenarios](buyer-acceptance-matrix.md) and separate showroom and account walkthroughs are outside the scored cohort.
+
 ## Freeze the cases before debugging
 
 1. Write realistic buyer requests before looking up which retailers TechScout handles well. Use fresh requests across phones, laptops, tablets, monitors and audio. Include exact-model and needs-based entry, domestic delivery and selected-branch pickup. Keep the original study, its known outcomes, and the three development examples outside this cohort.

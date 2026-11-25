@@ -74,6 +74,8 @@ volume, inference configuration and ledger used by the API.
 python -m app.run_worker --controller app.buyer_flow:run
 ```
 
+The following describes the implemented worker at `698d9b4`. The [buyer contract](buyer-product-contract.md) changes how pasted deals and actual-seller eligibility must work. The [matrix](buyer-acceptance-matrix.md) identifies the corresponding implementation tasks.
+
 The controller uses the domestic catalog for all five categories. A retailer link checks only
 the linked seller and selected configuration. An exact-model request seeks two independent
 sellers with the same configuration. A needs request can return three distinct models with
