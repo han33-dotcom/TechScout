@@ -1,12 +1,8 @@
-# Working on TechScout
+# Contributing to TechScout
 
-Use [docs/collaborator-setup.md](docs/collaborator-setup.md) for Windows/macOS setup,
-assistant instruction-loading checks and individual onboarding evidence.
+Claim a ready issue on the [project board](https://github.com/users/han33-dotcom/projects/2). Preserve existing work and branch from current main or the issue’s declared base. Read the [project rules](AGENTS.md).
 
-The [full-product backlog](https://github.com/han33-dotcom/TechScout/issues/36)
-lists ready work and prerequisites. See the [team workflow](docs/team-workflow.md).
-
-## Setup
+## Setup and tests
 
 Use Python 3.11 for the shared baseline. Create a virtual environment at the repository
 root and install the current pinned backend requirements.
@@ -25,43 +21,10 @@ python3.11 -m venv .venv
 .venv/bin/python -m unittest discover -s tests -v
 ```
 
-Keep local environments, credentials and operational configuration out of commits.
-Use the README for Postgres, migrations and fixture-loading checks.
+Ordinary tests use offline fixtures. Use the [local development guide](docs/local-development.md) for PostgreSQL, frontend setup and recovery. Keep credentials and local configuration private.
 
-## Branch and PR flow
+## Submit a change
 
-1. Assign yourself a ready, unassigned issue and read its acceptance criteria.
-2. Fetch origin, preserve local edits and create a focused branch from current main
-   or the declared stacked base.
-3. Read [AGENTS.md](AGENTS.md). Implement and run the relevant offline checks.
-4. Open a PR, link the issue, inspect the diff and record acceptance evidence and limits.
-5. The author merges through GitHub after the required checks pass on a current branch
-   and the acceptance criteria are demonstrated. Feedback from teammates is optional.
+Open a focused PR and link the issue. Record checks, limitations and observed results. For buyer-facing changes, identify the [acceptance scenarios](docs/buyer-acceptance-matrix.md) and show what the buyer saw, on which revision, using live or fixture evidence. Inspect the diff and fix material findings. The author can merge once the required checks pass on the current branch, then verify the result and close the issue. [Team workflow](docs/team-workflow.md)
 
-Main requires a PR and the GitHub Actions test and build checks. Update the branch when
-GitHub requires it and rerun checks. Main is protected against force pushes and deletion.
-
-## Shared instructions and handoff
-
-[AGENTS.md](AGENTS.md) is the canonical agent policy.
-[CLAUDE.md](CLAUDE.md) imports it for Claude Code.
-[docs/team-workflow.md](docs/team-workflow.md) explains task ownership and status.
-For buyer-facing work, follow the [buyer product contract](docs/buyer-product-contract.md).
-Link the relevant [scenario IDs](docs/buyer-acceptance-matrix.md) in the PR and attach
-buyer-visible evidence with the tested revision and source mode. Preserve the legacy
-record contracts in [docs/mvp-spec.md](docs/mvp-spec.md) and
-the existing public-source assumptions in [docs/source-admission.md](docs/source-admission.md).
-
-After policy changes merge, update your local branch deliberately and restart or
-refresh the assistant. Confirm it can identify loaded instructions, branch target
-and test commands. In an ordinary web chat, supply the current instruction contents
-and repository context explicitly.
-
-Review findings belong on the PR. The author and their assistant read them there;
-there is no requirement to copy private chat histories between teammates.
-Record durable design decisions in project documents or the linked GitHub issue.
-
-## Completion
-
-The author records the merged PR and actual acceptance evidence on the issue,
-then closes it. Use issue state, assignee and a brief blocker note to track progress.
+Coding assistants follow [AGENTS.md](AGENTS.md). [CLAUDE.md](CLAUDE.md) imports those same rules for Claude Code. [Collaborator setup](docs/collaborator-setup.md) explains how to verify a checkout.
