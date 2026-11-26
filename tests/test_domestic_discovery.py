@@ -186,6 +186,12 @@ class DomesticDiscoveryTests(unittest.TestCase):
         service = DomesticDiscovery.from_env(self.gate, self.directory, environ=env)
         self.assertIn('firecrawl', service.connectors)
         self.assertIsNone(service.fallback)
+        for rate in ('included', '0', 'NaN', 'invalid'):
+            with self.subTest(rate=rate):
+                env['FIRECRAWL_SCRAPE_USD_PER_CREDIT'] = rate
+                service = DomesticDiscovery.from_env(self.gate, self.directory, environ=env)
+                self.assertEqual(service.fallback is not None, rate == 'included')
+                self.assertIn('firecrawl', service.connectors)
 
     def test_included_quota_requires_an_explicit_setting_and_uses_a_call_slot(self):
         env = dict(SERPAPI_API_KEY='fixture-only', SERPAPI_USD_PER_SEARCH='included',

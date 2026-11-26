@@ -33,6 +33,8 @@ Each submission gets a new product database, evidence directory, browser context
 
 The setup UI request is an Honor X9d for delivery to Tripoli. Galaxy A17 requests to Jounieh exercised the adapter while it was being developed. Fresh verification uses a Galaxy A07s exact-model request and a separate Class Cellulars product link for delivery to Batroun. The link lets the control exercise its normal retailer-read path even when general discovery is offline. A directory lookup, onsite search or pasted URL cannot satisfy the general-search demonstration. Output labels must be new.
 
+Fresh preparations include the backend managed-scrape client in the hashed adapter snapshot. Both frozen products, the independent collector and their provider probes use that copy. Set `FIRECRAWL_SCRAPE_USD_PER_CREDIT=included` for verified, hard-capped free quota. Keep the search rate separately configured. Historical run receipts describe the profile in effect at their timestamps.
+
 ## What the shared browser observes
 
 The adapter accepts reviewed product URLs for the selected category and retailer. SourceGate fetches the actual document under the job budget. Playwright renders those bytes at the exact URL. An isolated Chromium context blocks subresources, scripts, sockets and form submissions. The browser uses the retailer's native WooCommerce controls and reads back their selected values. A complete attribute tuple must identify one row in the retailer's embedded variation data. The receipt records the previous and selected values, product and variation IDs, document hash, source time and action time.

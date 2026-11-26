@@ -48,6 +48,10 @@ def product(work, arm):
     target = work / arm
     target.mkdir()
     files = ['app', 'config', 'frontend', 'migrations', 'alembic.ini', 'docs/retailer-audit-2026-11-16.json']
+    # The account UI imports its shared contract fixture during TypeScript compilation.
+    fixture = 'tests/fixtures/accounts.json'
+    if subprocess.check_output(['git', 'ls-tree', '--name-only', PINS[arm], fixture], cwd=ROOT).strip():
+        files.append(fixture)
     archive = subprocess.check_output(['git', 'archive', '--format=zip', PINS[arm], *files], cwd=ROOT)
     with zipfile.ZipFile(io.BytesIO(archive)) as package:
         package.extractall(target)
@@ -57,12 +61,18 @@ def product(work, arm):
     return target
 
 
+def adapter_sources():
+    sources = {p.name: p for p in HERE.glob('*.py')}
+    sources['managed_scrape.py'] = ROOT / 'app/firecrawl.py'
+    return sources
+
+
 def prepare(work, env_file):
     work.mkdir(parents=True)
     adapter = work / 'adapter'
     adapter.mkdir()
-    for script in HERE.glob('*.py'):
-        shutil.copyfile(script, adapter / script.name)
+    for name, script in adapter_sources().items():
+        shutil.copyfile(script, adapter / name)
     roots = {arm: product(work, arm) for arm in PINS}
     seed = work / 'seed.sqlite'
     env = dict(os.environ, DATABASE_URL='sqlite:///' + str(seed), PYTHONPATH=str(roots['control']),

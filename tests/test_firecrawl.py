@@ -100,6 +100,25 @@ class FirecrawlTests(unittest.TestCase):
         self.assertTrue(self.ledger.snapshot()['blocked'])
         self.assertEqual(self.ledger.snapshot()['scopes']['project'][3],'0.05')
 
+    def test_included_scrape_uses_a_call_and_preserves_missing_or_invalid_usage(self):
+        env = {'FIRECRAWL_API_KEY': 'synthetic', 'FIRECRAWL_SCRAPE_USD_PER_CREDIT': 'included'}
+        provider = Firecrawl.from_env(self.gate, env)
+        for usage in (1, None, 2):
+            raw = self.response()
+            raw['data']['metadata']['provider']['creditsCost'] = usage
+            provider.transport = self.provider(raw).transport
+            if usage == 2:
+                with self.assertRaisesRegex(ValueError, 'provider usage'):
+                    provider.scrape(self.job, SOURCE, URL)
+            else:
+                self.assertEqual(provider.scrape(self.job, SOURCE, URL).outcome.status, 'ok')
+        snapshot = self.ledger.snapshot()
+        self.assertEqual(len(self.calls), 3)
+        self.assertEqual(snapshot['scopes']['project'][4], 3)
+        self.assertEqual(Decimal(snapshot['scopes']['project'][3]), Decimal(0))
+        self.assertCountEqual([a['status'] for a in snapshot['attempts'].values()],
+                              ['completed', 'uncertain', 'uncertain'])
+
     def test_missing_large_or_warning_content_refused(self):
         for change in ({'rawHtml':None},{'rawHtml':'x'*2_097_153},{'warning':'partial output'}):
             raw = self.response()

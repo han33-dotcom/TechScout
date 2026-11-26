@@ -1,0 +1,128 @@
+{
+  "revision": "d6a61efe48702aa9b2d1454c661fba81ff862dba",
+  "directory": "b3674edecb1446ce57e5fa582126633793874e21217c8540afd5de3c602c4573",
+  "original_seed": "f79d4c087febd35bc63a37cd3ee7f8e4d43eb3c77869c6deee6edad33372cd8b",
+  "seed": "9fd4abd1b8a00c8b1a377dbe8ba8c4d16d56461787bf07f508b3d1735507d25f",
+  "budgets": {
+    "browser_cap_s": 300,
+    "active_lease_s": 300,
+    "shared_job_deadline_s": 120,
+    "external_calls": 40,
+    "spend_usd": "1.00",
+    "research_spend_usd": "0.75",
+    "final_reserve": {
+      "seconds": 30,
+      "calls": 10,
+      "usd": "0.25"
+    },
+    "per_source_limits": "config/sources.json",
+    "min_seconds_between_live_submissions": 60,
+    "project": "techscout-december-2026",
+    "campaign_cap_usd": "500"
+  },
+  "profile": "38cc28ed48412a5f853f8ea0a9f69177da20444a1dceff0dedcbf54e347b6b2a",
+  "adapter": {
+    "bank.py": "863085b49fbc001f55f93b707409df0cdedc2babaef9cd5eea94e79e176fc153",
+    "browser.py": "767a37d1e78c84a3a7db1efd7e81b26fd430ce2ca44ca2761537ca0d6cdf2ee4",
+    "managed_scrape.py": "e010378fb94de1d3b3de58aeb498cebbee7aa46c254d3236ca6ad8482f365b14",
+    "pair.py": "95be2cda8484d9c081ba5b00e5c93873853d6dea8946fb78b3d15d6feb2cbc98",
+    "profile.py": "0f4e38d61b70fdf8d254d23386708c2cb71d5cf099dc0b688898d9568844e480",
+    "selected_phone.py": "2773982d95299723a54fd4c592fd6812bc47b3b1a219c25bfd4ec0ccc0ebf65b",
+    "serve.py": "2e148abbd5ec00763bd7fd95ec0f07b91882fefde380b7ebaa50543191ecae44"
+  },
+  "driver": "f8dd92cf60f9ac0467d40fb66182faf0d637bbbcf9ce86a7e6978637f98a27f5",
+  "assets": {
+    "frontend/dist/index.html": "ae06d7d24c534cc6546b3bbeab2fcc4b9f9362652d270f1808094d8d7ea1c28b",
+    "frontend/dist/assets/index-C0eJDJfj.css": "700d39afc39517ac3f0490d8a708555874ecb368e81d3c9b63b5a7341a3dc600",
+    "frontend/dist/assets/index-DFcEeEtt.js": "549937cb7598ce72485f9c45a63b71abc75c2c2acea6c9ff67c505921731bc49"
+  },
+  "configs": {
+    "config/evaluation.json": "8dfe1227b7bf3b4cb25e9b719cb217a0ed373a1f60446e57a50448cab1c72685",
+    "config/sources.json": "7e94f856d75ba14c249ee319c2e6c554a97b4dc6fffd0b5e277907fe54f9c174",
+    "config/maintenance.json": "6869fefa7aae52ddd9d05a099fd6c311bf113e7eeb8d7967167e9dc2677e435c",
+    "config/retailer-directory-seed.json": "7fb99f02ee743d88b0177ad8a6e215ce00b34bf5f5b067f8550830cae5161e2f"
+  },
+  "preflight": {
+    "channels": [
+      "serpapi",
+      "brave",
+      "firecrawl",
+      "manufacturer",
+      "tavily"
+    ],
+    "managed_scrape": true,
+    "query": "ASUS Zenbook S 13 OLED Lebanon",
+    "attempts": {
+      "serpapi": {
+        "channel": "serpapi",
+        "status": "ok",
+        "latency_ms": 3203,
+        "reserved_usd": "0",
+        "actual_usd": null,
+        "usage_units": null,
+        "request_id": "6b0856ee2cd7a18288fe59e7"
+      },
+      "brave": {
+        "channel": "brave",
+        "status": "ok",
+        "latency_ms": 3734,
+        "reserved_usd": "0.005",
+        "actual_usd": null,
+        "usage_units": null,
+        "request_id": null
+      },
+      "firecrawl": {
+        "channel": "firecrawl",
+        "status": "ok",
+        "latency_ms": 4172,
+        "reserved_usd": "0",
+        "actual_usd": "0",
+        "usage_units": 2,
+        "request_id": "01a218b1-31ae-72a9-bd8e-9ec1fbbfb8c5"
+      },
+      "manufacturer": {
+        "channel": "manufacturer",
+        "status": "ok",
+        "latency_ms": 1734,
+        "reserved_usd": "0",
+        "actual_usd": "0",
+        "usage_units": null,
+        "request_id": null
+      },
+      "tavily": {
+        "channel": "tavily",
+        "status": "ok",
+        "latency_ms": 5485,
+        "reserved_usd": "0",
+        "actual_usd": "0",
+        "usage_units": 1,
+        "request_id": "5fa88cc5-7e0c-42c6-8816-3467cd1ad67f"
+      }
+    },
+    "rates": {
+      "tavily": "0",
+      "serpapi": "0",
+      "brave": "0.005",
+      "firecrawl": "0",
+      "managed_scrape": "0"
+    },
+    "scrape": {
+      "configured": true,
+      "status": "ok",
+      "url": "https://technodel.net/faq",
+      "sha256": "140e77863b1baeeb517b983cba9186210c21f2bd4a9f1205ae5f4a11d3edb4bd"
+    },
+    "spend": {
+      "ledger": "read",
+      "known_usd": "0",
+      "uncertain_usd": "0.005",
+      "still_held_usd": "0",
+      "attempts": {
+        "search": 4,
+        "retrieval": 2
+      },
+      "note": "uncertain amounts are full reservations kept because the cost was not reported"
+    },
+    "provider_preflight_passed": true
+  }
+}

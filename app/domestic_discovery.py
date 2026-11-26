@@ -181,13 +181,7 @@ class DomesticDiscovery:
                     gate, directory, [DirectoryPage(**p) for p in json.loads(pages)])
             except (ValueError, TypeError, AttributeError):
                 pass
-        fallback = None
-        if env.get('FIRECRAWL_API_KEY') and env.get('FIRECRAWL_SCRAPE_USD_PER_CREDIT'):
-            try:
-                fallback = Firecrawl(env['FIRECRAWL_API_KEY'], gate,
-                                     usd_per_credit=Decimal(env['FIRECRAWL_SCRAPE_USD_PER_CREDIT']))
-            except (ValueError, InvalidOperation):
-                pass
+        fallback = Firecrawl.from_env(gate, env)
         return cls(gate, directory, connectors, fallback=fallback)
 
     def read(self, job, key, profile, processing, **kwargs):
