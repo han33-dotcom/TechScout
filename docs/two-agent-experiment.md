@@ -42,3 +42,11 @@ For a failed request, record the first step that lost the answer: discovery, pag
 ## Starting evidence
 
 The prior experiment began each buyer run with 23 directory entries and an empty offer catalog. It earned 0/10 complete answers, 0/5 useful partials, 4/5 explained blockers and 0/5 seller pairs. Its [scorecard](../acceptance/architecture-v2/agent-primary-2026-11-26/README.md) is the baseline. Increment 1 exercises the page transport with an offline provider. The first browser comparison and live agent results belong to later increments.
+
+## Checkpoint 2 evidence
+
+On November 27 in Beirut the normal buyer form submitted a pasted product link for delivery to Batroun. The worker opened IT Promax on its first action. The browser showed the black Soundcore Q20i, USD 48.00, online stock and the exact retailer link. The agent finished with the delivery total open. The run took 44.5 seconds of worker time and the ledger recorded USD 0.0128175. A separate first-visit attempt at Corex failed page validation. The catalog job was idle. [Browser result](../acceptance/development/two-agent/selected-listing/buyer-partial.png) · [Public receipts and actions](../acceptance/development/two-agent/selected-listing/live.json)
+
+The offline API and worker exercise starts with an empty offer catalog and one web result from a new shop. Its white Q20i costs USD 39. Selecting black sends a Firecrawl color-radio action and yields USD 49. The tests cover both retailer product metadata and a listing that publishes the offer as text. A failed reread keeps the original price receipt. A successful change to USD 52 replaces it. A return to white or a contradictory displayed price withdraws the black offer. Run `python -m unittest discover -s tests -p test_public_listing_buyer.py -v`. These exercises use simulated search, model and Firecrawl replies. The live browser run read the default black selection.
+
+This increment supports observed color radio controls. Other selection widgets and competing price displays can still leave an item unresolved. Storefront fees and the two-seller comparison are later checkpoints. No frozen acceptance request was used for development.

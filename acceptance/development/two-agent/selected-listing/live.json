@@ -1,0 +1,100 @@
+{
+  "revision": "5102419d76ea80d9a39700c4d058564cc52d72aa",
+  "catalog_job_triggered": false,
+  "standalone_reads": [
+    {
+      "url": "https://corexlb.net/products/anker-soundcore-anc-headphones",
+      "job": "checkpoint-220-b271bdfe1c314a26b60ed5adf1fa07f9",
+      "status": "provenance, freshness or status validation failed"
+    },
+    {
+      "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+      "source": "auto-itpromax-store-fe112386",
+      "sha256": "a1aed3cfe53e2b7af2ab61ac169200822c6741b861e684b63f14ee850ff0e94e",
+      "observed_at": "2026-11-26T22:40:20.545282+00:00",
+      "job": "checkpoint-220-2b52a5f75b41488fa4b4a86037c4df4f",
+      "provider": "firecrawl-v2",
+      "request_id": "01a21a04-4842-716f-b6f1-09a385be2d77",
+      "bytes": 234597,
+      "status": 200
+    }
+  ],
+  "live_browser": {
+    "run": "694ebdc2-c0c5-4fb1-bb35-1f5fd0652a6b",
+    "input": {
+      "product_link": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+      "category": "audio",
+      "city": "Batroun",
+      "condition": "new",
+      "fulfillment": "delivery"
+    },
+    "actions": [
+      {
+        "lead": 0,
+        "receipts": [
+          "2b21fce86711d41f4183a7417c886df10f86c61ef0989797dacea4d53f49e0c0"
+        ],
+        "status": "priced_partial",
+        "tool": "inspect",
+        "turn": 1
+      },
+      {
+        "count": 2,
+        "status": "leads",
+        "tool": "retailer_search",
+        "turn": 2
+      },
+      {
+        "tool": "present",
+        "turn": 3
+      }
+    ],
+    "result": "partial",
+    "worker_elapsed_ms": 44531,
+    "spend": {
+      "attempts": {
+        "model": 4,
+        "retrieval": 3
+      },
+      "known_usd": "0.0128175",
+      "ledger": "read",
+      "note": "uncertain amounts are full reservations kept because the cost was not reported",
+      "still_held_usd": "0",
+      "uncertain_usd": "0"
+    },
+    "merchant": "IT Promax",
+    "variant": "Q20i-ANC-black",
+    "price": {
+      "amount": "48.00",
+      "currency": "USD"
+    },
+    "online_stock": true,
+    "payable_total": {
+      "status": "incomplete",
+      "known_subtotal": null,
+      "missing": [
+        "Delivery to the requested destination and mandatory charges still need checking."
+      ]
+    },
+    "listing_url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+    "observed_at": "2026-11-26T22:53:24.175610Z",
+    "excerpts": {
+      "price": [
+        "\"price\":\"48.00\"",
+        "\"priceCurrency\":\"USD\""
+      ],
+      "variant.color": [
+        "Black"
+      ],
+      "seller.market": [
+        "Mar Elias, Beirut, Lebanon"
+      ],
+      "condition": [
+        "https://schema.org/NewCondition"
+      ],
+      "stock": [
+        "https://schema.org/InStock"
+      ]
+    }
+  }
+}
