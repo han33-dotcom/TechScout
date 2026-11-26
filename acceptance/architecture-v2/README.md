@@ -8,6 +8,8 @@ For a known listing, either arm can use direct reads, Firecrawl Scrape or the sa
 
 [#201](https://github.com/han33-dotcom/TechScout/issues/201) owns shared integration and the development smoke test. Demonstrate a web search and an interactive selection or quote through each implementation. Pin both runnable revisions, the common adapter, effective providers and browser build before scoring. Capture browser state transitions for replay. The offline verifier checks the protocol and case integrity; runtime access needs separate receipts.
 
+The [paired development runner and receipts](../development/paired-shopping/README.md) record effective provider access, retailer selections and the buyer-visible outcomes for both pinned revisions.
+
 ## Keep the evaluation independent
 
 During #200 and the #201 smoke test, use separate development requests. Keep both scored cohorts, reference URLs, grader files and captured answers out of prompts, tools, fixtures, indexes and debugging. The two `*-inputs.json` files contain the only buyer fields the evaluation driver may submit. Use the normal UI and default new condition. Leave an unspecified branch blank. Supply no invented address or clarification.

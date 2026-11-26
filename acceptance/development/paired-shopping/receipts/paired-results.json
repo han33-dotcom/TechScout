@@ -1,0 +1,2550 @@
+{
+  "adapter_revision": "625afd2e18144416a93fb0442f1cb6c3366948cb",
+  "pins": {
+    "control": "34918b296c1615cba2741eb6962d5b8ba185ddad",
+    "agent": "c9c71033d7daf5508683e216f165d77c3eaab026"
+  },
+  "runtime": {
+    "python": "3.11.5",
+    "node": "v24.14.1",
+    "playwright_python": "1.64.1",
+    "chromium": {
+      "name": "chromium-headless-shell",
+      "revision": "1248",
+      "installByDefault": true,
+      "browserVersion": "156.0.8078.4",
+      "title": "Chrome Headless Shell"
+    },
+    "headless_binary_sha256": "f77d8e27c8db1e4ac0399459a00e0c97bb9417adc393474cabaffebe2314ecb0",
+    "backend": {
+      "pydantic": "2.13.5",
+      "fastapi": "0.143.0",
+      "uvicorn": "0.54.0",
+      "SQLAlchemy": "2.1.4",
+      "alembic": "1.20.0",
+      "psycopg[binary]": "3.3.6",
+      "pgvector": "0.5.1",
+      "httpx2": "2.13.1",
+      "httpcore2": "2.13.1",
+      "truststore": "0.10.5",
+      "anthropic": "2.8.0"
+    }
+  },
+  "directory_sha256": "b3674edecb1446ce57e5fa582126633793874e21217c8540afd5de3c602c4573",
+  "seed_sha256": "e09f2664589a663e6bf5009c5e2c0065d14a35720c85cdb1c7783bc2e5d43971",
+  "budgets": {
+    "browser_cap_s": 300,
+    "active_lease_s": 300,
+    "shared_job_deadline_s": 120,
+    "external_calls": 40,
+    "spend_usd": "1.00",
+    "research_spend_usd": "0.75",
+    "final_reserve": {
+      "seconds": 30,
+      "calls": 10,
+      "usd": "0.25"
+    },
+    "per_source_limits": "config/sources.json",
+    "min_seconds_between_live_submissions": 60,
+    "project": "techscout-december-2026",
+    "campaign_cap_usd": "500"
+  },
+  "adapter_files": {
+    "bank.py": "863085b49fbc001f55f93b707409df0cdedc2babaef9cd5eea94e79e176fc153",
+    "browser.py": "767a37d1e78c84a3a7db1efd7e81b26fd430ce2ca44ca2761537ca0d6cdf2ee4",
+    "pair.py": "e88c8f824cc888e0ed2536257e6ecd8886aa07175266c596dde116a36702be74",
+    "profile.py": "840820c3f44d6678a1edf4764903f3dadcd3afc011024a96bcfe2d5db4dbaf27",
+    "selected_phone.py": "2773982d95299723a54fd4c592fd6812bc47b3b1a219c25bfd4ec0ccc0ebf65b",
+    "serve.py": "b99a57f8f13c435bf4c78f6f806fc939bae9547fe6a72e5f2d35a8c988f43f2c"
+  },
+  "profile_sha256": "c620b5e5d23595c7e44baec569eaf0f26f82e59cc562f21d70f62f188a62735e",
+  "profile": {
+    "channels": [
+      "manufacturer"
+    ],
+    "rates": {},
+    "managed_scrape": false,
+    "probes": {
+      "control": {
+        "channels": [
+          "manufacturer"
+        ],
+        "managed_scrape": false,
+        "query": "ASUS Zenbook S 13 OLED Lebanon",
+        "attempts": {
+          "serpapi": {
+            "channel": "serpapi",
+            "status": "unavailable",
+            "latency_ms": 0,
+            "reserved_usd": "0",
+            "actual_usd": null,
+            "usage_units": null,
+            "request_id": null
+          },
+          "brave": {
+            "channel": "brave",
+            "status": "unavailable",
+            "latency_ms": 0,
+            "reserved_usd": "0",
+            "actual_usd": null,
+            "usage_units": null,
+            "request_id": null
+          },
+          "firecrawl": {
+            "channel": "firecrawl",
+            "status": "unavailable",
+            "latency_ms": 0,
+            "reserved_usd": "0",
+            "actual_usd": null,
+            "usage_units": null,
+            "request_id": null
+          },
+          "manufacturer": {
+            "channel": "manufacturer",
+            "status": "ok",
+            "latency_ms": 1797,
+            "reserved_usd": "0",
+            "actual_usd": "0",
+            "usage_units": null,
+            "request_id": null
+          },
+          "tavily": {
+            "channel": "tavily",
+            "status": "unavailable",
+            "latency_ms": 0,
+            "reserved_usd": "0",
+            "actual_usd": null,
+            "usage_units": null,
+            "request_id": null
+          }
+        },
+        "rates": {},
+        "scrape": {
+          "configured": false,
+          "status": "unavailable"
+        },
+        "spend": {
+          "ledger": "read",
+          "known_usd": "0",
+          "uncertain_usd": "0",
+          "still_held_usd": "0",
+          "attempts": {
+            "retrieval": 1
+          },
+          "note": "uncertain amounts are full reservations kept because the cost was not reported"
+        },
+        "provider_preflight_passed": false
+      },
+      "agent": {
+        "channels": [
+          "manufacturer"
+        ],
+        "managed_scrape": false,
+        "query": "ASUS Zenbook S 13 OLED Lebanon",
+        "attempts": {
+          "serpapi": {
+            "channel": "serpapi",
+            "status": "unavailable",
+            "latency_ms": 0,
+            "reserved_usd": "0",
+            "actual_usd": null,
+            "usage_units": null,
+            "request_id": null
+          },
+          "brave": {
+            "channel": "brave",
+            "status": "unavailable",
+            "latency_ms": 0,
+            "reserved_usd": "0",
+            "actual_usd": null,
+            "usage_units": null,
+            "request_id": null
+          },
+          "firecrawl": {
+            "channel": "firecrawl",
+            "status": "unavailable",
+            "latency_ms": 0,
+            "reserved_usd": "0",
+            "actual_usd": null,
+            "usage_units": null,
+            "request_id": null
+          },
+          "manufacturer": {
+            "channel": "manufacturer",
+            "status": "ok",
+            "latency_ms": 1766,
+            "reserved_usd": "0",
+            "actual_usd": "0",
+            "usage_units": null,
+            "request_id": null
+          },
+          "tavily": {
+            "channel": "tavily",
+            "status": "unavailable",
+            "latency_ms": 0,
+            "reserved_usd": "0",
+            "actual_usd": null,
+            "usage_units": null,
+            "request_id": null
+          }
+        },
+        "rates": {},
+        "scrape": {
+          "configured": false,
+          "status": "unavailable"
+        },
+        "spend": {
+          "ledger": "read",
+          "known_usd": "0",
+          "uncertain_usd": "0",
+          "still_held_usd": "0",
+          "attempts": {
+            "retrieval": 1
+          },
+          "note": "uncertain amounts are full reservations kept because the cost was not reported"
+        },
+        "provider_preflight_passed": false
+      }
+    },
+    "provider_preflight_passed": false
+  },
+  "runs": [
+    {
+      "phase": "discovery",
+      "arm": "control",
+      "product": "34918b296c1615cba2741eb6962d5b8ba185ddad",
+      "mode": "live",
+      "input": "Samsung Galaxy A07s",
+      "city": "Batroun",
+      "submitted": "2026-11-26T14:55:37.283996+00:00",
+      "elapsed_s": 47.547,
+      "first_offer_display_s": null,
+      "first_provisional_s": null,
+      "terminal": "No verified recommendation yet",
+      "worker_status": "abstained",
+      "worker_ms": 46719,
+      "stop_reason": "Checked 1 independent domestic seller(s). 0 offer(s) qualified. A two-seller comparison of verified payable totals was unavailable. No in-scope listing could be verified.",
+      "ledger": {
+        "settled_usd": "0.000912",
+        "uncertain_usd": "0",
+        "held_usd": "0",
+        "external_calls": 8,
+        "metered_call_slots": 8,
+        "attempts": {
+          "model": 1,
+          "retrieval": 7,
+          "work": 4,
+          "worker": 2
+        }
+      },
+      "browser": "156.0.8078.4",
+      "served_assets": {
+        "frontend/dist/index.html": "7f16701d705356f895575d546ef244548675cf50f70b114f23981c574e0a45ca",
+        "frontend/dist/assets/index-BBNjrH3U.js": "65f5e567954ab67b6443e65f339c57381ba043a3191535986a0610cebfb01e56",
+        "frontend/dist/assets/index-DeAnHqOk.css": "7f9fc0a604a94837d96049237798ee1d807a6adf5cc7a2cd86a9ec4d02dbda68"
+      },
+      "model_config": "8dfe1227b7bf3b4cb25e9b719cb217a0ed373a1f60446e57a50448cab1c72685",
+      "source_policy": "7e94f856d75ba14c249ee319c2e6c554a97b4dc6fffd0b5e277907fe54f9c174",
+      "bank_sha256": "a8e09b405676d2a3de97fbc58b73fd083ba71e550141c1e2ffc07d35f78befa8",
+      "run_digest": "79c572eddde463b983a9e8a602b5ce77ec964ede9cc6a046cade9fd6b5bab051",
+      "search_and_browser_events": [
+        {
+          "at": "2026-11-26T14:55:52.719728+00:00",
+          "kind": "browser",
+          "mode": "live",
+          "source": "technodel",
+          "url": "https://technodel.net/product/samsung-galaxy-a27-128gb-6gb-ram-open-box",
+          "prior": null,
+          "action": "open",
+          "arguments": {},
+          "quantity": 1,
+          "destination": "search-city",
+          "branch": null,
+          "status": "failed",
+          "reason": "Could not establish a unique retailer selection"
+        },
+        {
+          "at": "2026-11-26T14:56:11.125397+00:00",
+          "kind": "browser",
+          "mode": "live",
+          "source": "class_cellulars",
+          "url": "https://classcellulars.com/product/iphone-17-pro/",
+          "prior": null,
+          "action": "open",
+          "arguments": {},
+          "quantity": 1,
+          "destination": "search-city",
+          "branch": null,
+          "status": "ok",
+          "before": null,
+          "selected": {
+            "attribute_pa_storage-capacity": "",
+            "attribute_pa_color": "",
+            "attribute_pa_sim-type": ""
+          },
+          "selected_row": null,
+          "title": "iPhone 17 Pro – Class Cellulars",
+          "product": "18418",
+          "source_sha256": "e403de08938638d43923620736f8465de5cf3c329b650cc01b11311889fa23c9",
+          "observed_at": "2026-11-26T14:56:05.223453+00:00"
+        },
+        {
+          "at": "2026-11-26T14:56:13.605338+00:00",
+          "kind": "browser",
+          "mode": "live",
+          "source": "class_cellulars",
+          "url": "https://classcellulars.com/product/iphone-17-pro/",
+          "prior": "f65cba02fd1c15a80f7df2b2e663f230d1273c500fba4de58a7882a5f846032e",
+          "action": "select_variant",
+          "arguments": {
+            "attribute_pa_storage-capacity": "256gb",
+            "attribute_pa_color": "silver",
+            "attribute_pa_sim-type": "nano-sim-esim"
+          },
+          "quantity": 1,
+          "destination": "search-city",
+          "branch": null,
+          "status": "ok",
+          "before": {
+            "attribute_pa_storage-capacity": "",
+            "attribute_pa_color": "",
+            "attribute_pa_sim-type": ""
+          },
+          "selected": {
+            "attribute_pa_storage-capacity": "256gb",
+            "attribute_pa_color": "silver",
+            "attribute_pa_sim-type": "nano-sim-esim"
+          },
+          "selected_row": {
+            "attributes": {
+              "attribute_pa_storage-capacity": "256gb",
+              "attribute_pa_color": "silver",
+              "attribute_pa_sim-type": "nano-sim-esim"
+            },
+            "labels": [
+              "256GB",
+              "Silver",
+              "Nano SIM / eSIM"
+            ],
+            "variant": "18420",
+            "price": "1475",
+            "stock": false
+          },
+          "title": "iPhone 17 Pro – Class Cellulars",
+          "product": "18418",
+          "source_sha256": "e403de08938638d43923620736f8465de5cf3c329b650cc01b11311889fa23c9",
+          "observed_at": "2026-11-26T14:56:05.223453+00:00"
+        }
+      ],
+      "buyer_result": "SEARCH · REVISION 1\nNo verified recommendation yet\n\nSearching for Samsung Galaxy A07s · new · delivery to Batroun\n\nChecked 1 independent domestic seller(s). 0 offer(s) qualified. A two-seller comparison of verified payable totals was unavailable. No in-scope listing could be verified.\n\nAbout these resultsStandard summary\n\nNo offer was verified in this run.\nOpen questions:\n- Search coverage in this run: 4 retailers found, 4 attempted, 1 read successfully, 0 with a qualifying offer; retailers outside this search were not checked.\n\nA standard summary of every checked fact, in a fixed order.\n4\nDiscovered retailers\n4\nAttempted retailers\n1\nRetrieved retailers\n0\nQualifying retailers\nYOUR COMPARISON · REVISION 1\n0 verified matching options\nSort\nRecommended order\nVerified total (within currency)\n\nOnly offers verified for these requirements appear here. Fewer than three is a valid result. Costs in different currencies are not ranked as savings.\n\nNo verified options yet\n\nThe available evidence did not establish a verified option. You can adjust your requirements or inspect uncertain offers below.\n\nUncertain / non-qualifying offers (0)\nWhere the evidence came from\n\nInventory and discovery counts do not mean every retailer was checked.\n\ntechnodel\nFAILED\n\nThe current page did not establish an unambiguous product selection\n\nBeytech\nFAILED\n\nNo matching product links in the bounded retailer search.\n\nMojitech\nFAILED\n\nRetailer search unavailable: INVALID_SCHEMA\n\nClass Cellulars\nCHECKED\n\n0 qualifying sellers across 0 displayed options. Multiple sellers are grouped under the same canonical configuration.",
+      "model_calls": [
+        {
+          "sequence": 1,
+          "status": "completed",
+          "wall_ms": 6406,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.000912",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        }
+      ],
+      "discovery_plan": {
+        "channel": "manufacturer",
+        "language": "en",
+        "method": "model",
+        "objective": "Find an independent Lebanese seller of the requested configuration with local fulfillment",
+        "query": "Samsung Galaxy A07s Lebanon local delivery Batroun price",
+        "query_index": 1
+      },
+      "discovery_failure": "failed",
+      "screenshot": "discovery-control.png",
+      "agent_actions": [
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "phase": "discovery",
+      "arm": "agent",
+      "product": "c9c71033d7daf5508683e216f165d77c3eaab026",
+      "mode": "live",
+      "input": "Samsung Galaxy A07s",
+      "city": "Batroun",
+      "submitted": "2026-11-26T14:56:38.339865+00:00",
+      "elapsed_s": 65.031,
+      "first_offer_display_s": null,
+      "first_provisional_s": null,
+      "terminal": "One detail to clarify",
+      "worker_status": "clarification",
+      "worker_ms": 64485,
+      "stop_reason": "One detail could change your comparison.",
+      "ledger": {
+        "settled_usd": "0.0225645",
+        "uncertain_usd": "0",
+        "held_usd": "0",
+        "external_calls": 12,
+        "metered_call_slots": 12,
+        "attempts": {
+          "model": 8,
+          "retrieval": 4
+        }
+      },
+      "browser": "156.0.8078.4",
+      "served_assets": {
+        "frontend/dist/index.html": "e7755229187f52297be742c9a8285b395e24ad72bce13a0131fc097fa38cc117",
+        "frontend/dist/assets/index-DeAnHqOk.css": "7f9fc0a604a94837d96049237798ee1d807a6adf5cc7a2cd86a9ec4d02dbda68",
+        "frontend/dist/assets/index-PhU3W4TW.js": "874b0e3ac855f6e8354ffa25c16444395afbeeb6c28948ca947107a273e11510"
+      },
+      "model_config": "8dfe1227b7bf3b4cb25e9b719cb217a0ed373a1f60446e57a50448cab1c72685",
+      "source_policy": "7e94f856d75ba14c249ee319c2e6c554a97b4dc6fffd0b5e277907fe54f9c174",
+      "bank_sha256": "00c52d490e96a35b3b21ed1a501dff670bbc7748ed7521724221d6f00e7774e8",
+      "run_digest": "ae62f9fdf47c0e9cb7a3f7bc9823579e613ed6f7a710b27bf75bafda8a1cd740",
+      "search_and_browser_events": [
+        {
+          "at": "2026-11-26T14:56:45.222825+00:00",
+          "kind": "search",
+          "mode": "live",
+          "provider": "manufacturer",
+          "query": "Samsung Galaxy A07s Lebanon retailer",
+          "country": "LB",
+          "language": "en",
+          "limit": 8,
+          "cursor": 0,
+          "status": "ok",
+          "count": 5,
+          "urls": [
+            "https://www.ayoubcomputers.com/",
+            "https://www.beirutcart.com/",
+            "https://gcscomputerpro.com",
+            "https://www.macrotronics.net",
+            "https://mojitech.net/"
+          ],
+          "response": "5b8833cfc8d3cb1f15fa909e10787ab8926ce36b116fa252da3e52ae83f75cef"
+        },
+        {
+          "at": "2026-11-26T14:56:51.299172+00:00",
+          "kind": "search",
+          "mode": "live",
+          "provider": "manufacturer",
+          "query": "Samsung Galaxy A07s Lebanon local delivery Batroun price",
+          "country": "LB",
+          "language": "en",
+          "limit": 8,
+          "cursor": 0,
+          "status": "budget_denied",
+          "count": 0,
+          "urls": [],
+          "response": "7ff325d13b7ffb7b3af43b56587a7ae57bb106c0c7110ae1c55c53d5efd11ef8"
+        },
+        {
+          "at": "2026-11-26T14:57:05.829391+00:00",
+          "kind": "search",
+          "mode": "live",
+          "provider": "manufacturer",
+          "query": "Samsung Galaxy A07s لبنان توصيل محلي Batroun",
+          "country": "LB",
+          "language": "ar",
+          "limit": 8,
+          "cursor": 0,
+          "status": "budget_denied",
+          "count": 0,
+          "urls": [],
+          "response": "7ff325d13b7ffb7b3af43b56587a7ae57bb106c0c7110ae1c55c53d5efd11ef8"
+        }
+      ],
+      "buyer_result": "SEARCH · REVISION 1\nOne detail to clarify\nCancel search\n\nSearching for Samsung Galaxy A07s · new · delivery to Batroun\n\nOne detail could change your comparison.\n\nDo you mean the Samsung Galaxy A07, or specifically a model labeled Galaxy A07s?\n\nThe searches have not verified a Galaxy A07s listing; confirming the model will help avoid recommending the wrong phone.\n\nContinue search\n0\nDiscovered retailers\n0\nAttempted retailers\n0\nRetrieved retailers\n0\nQualifying retailers\nYOUR COMPARISON · REVISION 1\n0 verified matching options\nSort\nRecommended order\nVerified total (within currency)\n\nOnly offers verified for these requirements appear here. Fewer than three is a valid result. Costs in different currencies are not ranked as savings.\n\nNo verified options yet\n\nResearch is still underway. Early candidates remain in the checking section.\n\nUncertain / non-qualifying offers (0)\nWhere the evidence came from\n\nInventory and discovery counts do not mean every retailer was checked.\n\nPer-retailer check details are not available yet. The progress counts above show reported coverage; no missing source is assumed checked.\n\n0 qualifying sellers across 0 displayed options. Multiple sellers are grouped under the same canonical configuration.",
+      "model_calls": [
+        {
+          "sequence": 1,
+          "status": "completed",
+          "wall_ms": 4516,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.001848",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 2,
+          "status": "completed",
+          "wall_ms": 5875,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.002062",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 3,
+          "status": "completed",
+          "wall_ms": 8828,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.002216",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 4,
+          "status": "completed",
+          "wall_ms": 5469,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.002232",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 5,
+          "status": "completed",
+          "wall_ms": 5891,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.002916",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 6,
+          "status": "completed",
+          "wall_ms": 8000,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.0031685",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 7,
+          "status": "completed",
+          "wall_ms": 7594,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.0035785",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 8,
+          "status": "completed",
+          "wall_ms": 7953,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.0045435",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        }
+      ],
+      "discovery_plan": null,
+      "discovery_failure": null,
+      "screenshot": "discovery-agent.png",
+      "agent_actions": [
+        {
+          "channel": "manufacturer",
+          "count": 5,
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 1
+        },
+        {
+          "channel": "manufacturer",
+          "count": 0,
+          "status": "budget_denied",
+          "tool": "web_search",
+          "turn": 2
+        },
+        {
+          "count": 0,
+          "status": "leads",
+          "tool": "catalog",
+          "turn": 3
+        },
+        {
+          "channel": "manufacturer",
+          "count": 0,
+          "status": "budget_denied",
+          "tool": "web_search",
+          "turn": 4
+        },
+        {
+          "count": 0,
+          "receipts": [],
+          "status": "unconfigured",
+          "tool": "inspect",
+          "turn": 5
+        },
+        {
+          "count": 1,
+          "status": "leads",
+          "tool": "retailer_search",
+          "turn": 6
+        },
+        {
+          "count": 3,
+          "status": "reviewed_retailers",
+          "tool": "directory",
+          "turn": 7
+        },
+        {
+          "tool": "ask",
+          "turn": 8
+        }
+      ]
+    },
+    {
+      "phase": "selection",
+      "arm": "control",
+      "product": "34918b296c1615cba2741eb6962d5b8ba185ddad",
+      "mode": "live",
+      "input": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+      "city": "Batroun",
+      "submitted": "2026-11-26T14:57:47.761896+00:00",
+      "elapsed_s": 45.391,
+      "first_offer_display_s": 45.391,
+      "first_provisional_s": null,
+      "terminal": "No verified recommendation yet",
+      "worker_status": "abstained",
+      "worker_ms": 44812,
+      "stop_reason": "Checked 1 independent domestic seller(s). 0 offer(s) qualified.",
+      "ledger": {
+        "settled_usd": "0.000786",
+        "uncertain_usd": "0",
+        "held_usd": "0",
+        "external_calls": 5,
+        "metered_call_slots": 5,
+        "attempts": {
+          "model": 1,
+          "retrieval": 4,
+          "work": 6,
+          "worker": 2
+        }
+      },
+      "browser": "156.0.8078.4",
+      "served_assets": {
+        "frontend/dist/index.html": "7f16701d705356f895575d546ef244548675cf50f70b114f23981c574e0a45ca",
+        "frontend/dist/assets/index-BBNjrH3U.js": "65f5e567954ab67b6443e65f339c57381ba043a3191535986a0610cebfb01e56",
+        "frontend/dist/assets/index-DeAnHqOk.css": "7f9fc0a604a94837d96049237798ee1d807a6adf5cc7a2cd86a9ec4d02dbda68"
+      },
+      "model_config": "8dfe1227b7bf3b4cb25e9b719cb217a0ed373a1f60446e57a50448cab1c72685",
+      "source_policy": "7e94f856d75ba14c249ee319c2e6c554a97b4dc6fffd0b5e277907fe54f9c174",
+      "bank_sha256": "1b6461210aa7ef24eda01d99ffa8d07b98f488e9c2e0b7550e7b5da82992a836",
+      "run_digest": "a56e6267c2516ac649288c90666f72f143868ebbf4e8fc2b64b21879564ad458",
+      "search_and_browser_events": [
+        {
+          "at": "2026-11-26T14:58:00.822725+00:00",
+          "kind": "browser",
+          "mode": "live",
+          "source": "class_cellulars",
+          "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+          "prior": null,
+          "action": "open",
+          "arguments": {},
+          "quantity": 1,
+          "destination": "selection-city",
+          "branch": null,
+          "status": "ok",
+          "before": null,
+          "selected": {
+            "attribute_pa_color": ""
+          },
+          "selected_row": null,
+          "title": "Samsung Galaxy A07s – Class Cellulars",
+          "product": "26090",
+          "source_sha256": "dd1ea901483d57b901ca10c3596e5774575b41e64cd631d1a1adb440d6c94a6c",
+          "observed_at": "2026-11-26T14:57:54.372204+00:00"
+        },
+        {
+          "at": "2026-11-26T14:58:03.675963+00:00",
+          "kind": "browser",
+          "mode": "live",
+          "source": "class_cellulars",
+          "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+          "prior": "3941e0130b981bdfd6d3b94367bde5d93daf28cb979a89bea96dd788c29c9b9d",
+          "action": "select_variant",
+          "arguments": {
+            "attribute_pa_color": "light-violet"
+          },
+          "quantity": 1,
+          "destination": "selection-city",
+          "branch": null,
+          "status": "ok",
+          "before": {
+            "attribute_pa_color": ""
+          },
+          "selected": {
+            "attribute_pa_color": "light-violet"
+          },
+          "selected_row": {
+            "attributes": {
+              "attribute_pa_color": "light-violet"
+            },
+            "labels": [
+              "Light Violet"
+            ],
+            "variant": "26096",
+            "price": "165",
+            "stock": true
+          },
+          "title": "Samsung Galaxy A07s – Class Cellulars",
+          "product": "26090",
+          "source_sha256": "dd1ea901483d57b901ca10c3596e5774575b41e64cd631d1a1adb440d6c94a6c",
+          "observed_at": "2026-11-26T14:57:54.372204+00:00"
+        },
+        {
+          "at": "2026-11-26T14:58:25.871952+00:00",
+          "kind": "browser",
+          "mode": "live",
+          "source": "class_cellulars",
+          "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+          "prior": "1743088a67b75b7cc3373791f4a901285f36ccdf0396dc8dfbd9c3ebba841f63",
+          "action": "refresh",
+          "arguments": {},
+          "quantity": 1,
+          "destination": "selection-city",
+          "branch": null,
+          "status": "ok",
+          "before": {
+            "attribute_pa_color": "light-violet"
+          },
+          "selected": {
+            "attribute_pa_color": ""
+          },
+          "selected_row": null,
+          "title": "Samsung Galaxy A07s – Class Cellulars",
+          "product": "26090",
+          "source_sha256": "368e214d0473557393a30bb2ac2114059ac3b7689c88aca33cf172da513b9fe2",
+          "observed_at": "2026-11-26T14:58:19.904399+00:00"
+        },
+        {
+          "at": "2026-11-26T14:58:28.535518+00:00",
+          "kind": "browser",
+          "mode": "live",
+          "source": "class_cellulars",
+          "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+          "prior": "7a8439e028d0a28366a72f2b37d0269c1ab52e4ce7899fbafe445ad2be94d99c",
+          "action": "select_variant",
+          "arguments": {
+            "attribute_pa_color": "light-violet"
+          },
+          "quantity": 1,
+          "destination": "selection-city",
+          "branch": null,
+          "status": "ok",
+          "before": {
+            "attribute_pa_color": ""
+          },
+          "selected": {
+            "attribute_pa_color": "light-violet"
+          },
+          "selected_row": {
+            "attributes": {
+              "attribute_pa_color": "light-violet"
+            },
+            "labels": [
+              "Light Violet"
+            ],
+            "variant": "26096",
+            "price": "165",
+            "stock": true
+          },
+          "title": "Samsung Galaxy A07s – Class Cellulars",
+          "product": "26090",
+          "source_sha256": "368e214d0473557393a30bb2ac2114059ac3b7689c88aca33cf172da513b9fe2",
+          "observed_at": "2026-11-26T14:58:19.904399+00:00"
+        }
+      ],
+      "buyer_result": "SEARCH · REVISION 1\nNo verified recommendation yet\n\nChecked 1 independent domestic seller(s). 0 offer(s) qualified.\n\nAbout these resultsStandard summary\n\nNo offer was verified in this run.\nOpen questions:\n- Search coverage in this run: 1 retailers found, 1 attempted, 1 read successfully, 0 with a qualifying offer; retailers outside this search were not checked.\nNot verified, shown separately:\n- Samsung Samsung Galaxy A07s from Class Cellulars (Lebanon), delivery requested to Batroun, dispatch origin unknown: not verified (condition: required evidence is missing or conflicting; item delivery eligibility: required evidence is missing or conflicting; Dispatch from Lebanon is unverified for this listing and configuration.; shipping is unpublished for the selected route.; Price lacks a current response for this exact configuration.); missing: a cost component (details withheld), shipping is unpublished for the selected route. (not counted as zero).\n\nA standard summary of every checked fact, in a fixed order.\n1\nDiscovered retailers\n1\nAttempted retailers\n1\nRetrieved retailers\n0\nQualifying retailers\nYOUR COMPARISON · REVISION 1\n0 verified matching options\nSort\nRecommended order\nVerified total (within currency)\n\nOnly offers verified for these requirements appear here. Fewer than three is a valid result. Costs in different currencies are not ranked as savings.\n\nNo verified options yet\n\nThe available evidence did not establish a verified option. You can adjust your requirements or inspect uncertain offers below.\n\nUncertain / non-qualifying offers (1)\nSamsung Galaxy A07s · Class Cellulars\n\nLight Violet\n\nUSD 165.00 · Current listed price\n\nIn stock · Online listing\n\nView at Class Cellulars ↗\ncondition: required evidence is missing or conflicting\nitem delivery eligibility: required evidence is missing or conflicting\nDispatch from Lebanon is unverified for this listing and configuration.\nshipping is unpublished for the selected route.\nPrice lacks a current response for this exact configuration.\n\nPayable total incomplete\n\nInspect configuration, costs & evidence\nWhere the evidence came from\n\nInventory and discovery counts do not mean every retailer was checked.\n\nClass Cellulars\nCHECKED\n\n0 qualifying sellers across 0 displayed options. Multiple sellers are grouped under the same canonical configuration.",
+      "model_calls": [
+        {
+          "sequence": 1,
+          "status": "completed",
+          "wall_ms": 5578,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.000786",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        }
+      ],
+      "discovery_plan": null,
+      "discovery_failure": null,
+      "screenshot": "selection-control.png",
+      "agent_actions": [
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "phase": "selection",
+      "arm": "agent",
+      "product": "c9c71033d7daf5508683e216f165d77c3eaab026",
+      "mode": "live",
+      "input": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+      "city": "Batroun",
+      "submitted": "2026-11-26T14:58:48.798517+00:00",
+      "elapsed_s": 77.719,
+      "first_offer_display_s": 77.703,
+      "first_provisional_s": null,
+      "terminal": "Some checks could not finish",
+      "worker_status": "partial",
+      "worker_ms": 76906,
+      "stop_reason": "These listings still have unresolved checks.",
+      "ledger": {
+        "settled_usd": "0.0241710",
+        "uncertain_usd": "0",
+        "held_usd": "0",
+        "external_calls": 14,
+        "metered_call_slots": 14,
+        "attempts": {
+          "model": 7,
+          "retrieval": 7,
+          "work": 5
+        }
+      },
+      "browser": "156.0.8078.4",
+      "served_assets": {
+        "frontend/dist/index.html": "e7755229187f52297be742c9a8285b395e24ad72bce13a0131fc097fa38cc117",
+        "frontend/dist/assets/index-DeAnHqOk.css": "7f9fc0a604a94837d96049237798ee1d807a6adf5cc7a2cd86a9ec4d02dbda68",
+        "frontend/dist/assets/index-PhU3W4TW.js": "874b0e3ac855f6e8354ffa25c16444395afbeeb6c28948ca947107a273e11510"
+      },
+      "model_config": "8dfe1227b7bf3b4cb25e9b719cb217a0ed373a1f60446e57a50448cab1c72685",
+      "source_policy": "7e94f856d75ba14c249ee319c2e6c554a97b4dc6fffd0b5e277907fe54f9c174",
+      "bank_sha256": "6b99b17fe4031019cac1e94121a10a1a616ff20928dc31dde9b80d640ea65127",
+      "run_digest": "6c69fcc6eefb51bbde3c2fa3d616fabdaf03382411bfed16107d2739447eb71e",
+      "search_and_browser_events": [
+        {
+          "at": "2026-11-26T14:59:09.641114+00:00",
+          "kind": "browser",
+          "mode": "live",
+          "source": "class_cellulars",
+          "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+          "prior": null,
+          "action": "open",
+          "arguments": {},
+          "quantity": 1,
+          "destination": "selection-city",
+          "branch": null,
+          "status": "ok",
+          "before": null,
+          "selected": {
+            "attribute_pa_color": ""
+          },
+          "selected_row": null,
+          "title": "Samsung Galaxy A07s – Class Cellulars",
+          "product": "26090",
+          "source_sha256": "cc4954c81bc588e31883dd1fea064b626c31631768800196790d0be487cd078f",
+          "observed_at": "2026-11-26T14:58:58.056819+00:00"
+        },
+        {
+          "at": "2026-11-26T14:59:19.545756+00:00",
+          "kind": "browser",
+          "mode": "live",
+          "source": "class_cellulars",
+          "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+          "prior": "afb1bd74c96cbf133fecc8efb7b1daca407ce8a8a962431696e407d762b71b20",
+          "action": "select_variant",
+          "arguments": {
+            "attribute_pa_color": "black"
+          },
+          "quantity": 1,
+          "destination": "selection-city",
+          "branch": null,
+          "status": "ok",
+          "before": {
+            "attribute_pa_color": ""
+          },
+          "selected": {
+            "attribute_pa_color": "black"
+          },
+          "selected_row": {
+            "attributes": {
+              "attribute_pa_color": "black"
+            },
+            "labels": [
+              "Black"
+            ],
+            "variant": "26092",
+            "price": "165",
+            "stock": true
+          },
+          "title": "Samsung Galaxy A07s – Class Cellulars",
+          "product": "26090",
+          "source_sha256": "cc4954c81bc588e31883dd1fea064b626c31631768800196790d0be487cd078f",
+          "observed_at": "2026-11-26T14:58:58.056819+00:00"
+        },
+        {
+          "at": "2026-11-26T14:59:28.534347+00:00",
+          "kind": "browser",
+          "mode": "live",
+          "source": "class_cellulars",
+          "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+          "prior": "7ad4d4b8f8392dc7beb4a22d4372345385f9440e739a42fd3dc5bf7c79918bbe",
+          "action": "select_variant",
+          "arguments": {
+            "attribute_pa_color": "light-violet"
+          },
+          "quantity": 1,
+          "destination": "selection-city",
+          "branch": null,
+          "status": "ok",
+          "before": {
+            "attribute_pa_color": "black"
+          },
+          "selected": {
+            "attribute_pa_color": "light-violet"
+          },
+          "selected_row": {
+            "attributes": {
+              "attribute_pa_color": "light-violet"
+            },
+            "labels": [
+              "Light Violet"
+            ],
+            "variant": "26096",
+            "price": "165",
+            "stock": true
+          },
+          "title": "Samsung Galaxy A07s – Class Cellulars",
+          "product": "26090",
+          "source_sha256": "cc4954c81bc588e31883dd1fea064b626c31631768800196790d0be487cd078f",
+          "observed_at": "2026-11-26T14:58:58.056819+00:00"
+        },
+        {
+          "at": "2026-11-26T14:59:38.212037+00:00",
+          "kind": "browser",
+          "mode": "live",
+          "source": "class_cellulars",
+          "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+          "prior": "f1b8b8350ff544f2a1e9b505e6613c63c2938cd4c0caa12b71a0bf04620c05ed",
+          "action": "select_variant",
+          "arguments": {
+            "attribute_pa_color": "black"
+          },
+          "quantity": 1,
+          "destination": "selection-city",
+          "branch": null,
+          "status": "ok",
+          "before": {
+            "attribute_pa_color": "light-violet"
+          },
+          "selected": {
+            "attribute_pa_color": "black"
+          },
+          "selected_row": {
+            "attributes": {
+              "attribute_pa_color": "black"
+            },
+            "labels": [
+              "Black"
+            ],
+            "variant": "26092",
+            "price": "165",
+            "stock": true
+          },
+          "title": "Samsung Galaxy A07s – Class Cellulars",
+          "product": "26090",
+          "source_sha256": "cc4954c81bc588e31883dd1fea064b626c31631768800196790d0be487cd078f",
+          "observed_at": "2026-11-26T14:58:58.056819+00:00"
+        }
+      ],
+      "buyer_result": "SEARCH · REVISION 1\nSome checks could not finish\n\nThese listings still have unresolved checks.\n\nAbout these resultsStandard summary\n\nNo offer was verified in this run.\nOpen questions:\n- Search coverage in this run: 1 retailers found, 1 attempted, 1 read successfully, 0 with a qualifying offer; retailers outside this search were not checked.\nNot verified, shown separately:\n- Samsung Samsung Galaxy A07s from Class Cellulars (Lebanon), delivery requested to Batroun, dispatch origin unknown: not verified (condition: required evidence is missing or conflicting; item delivery eligibility: required evidence is missing or conflicting; Dispatch from Lebanon is unverified for this listing and configuration.; shipping is unpublished for the selected route.; Price lacks a current response for this exact configuration.); missing: a cost component (details withheld), shipping is unpublished for the selected route. (not counted as zero).\n\nA standard summary of every checked fact, in a fixed order.\n1\nDiscovered retailers\n1\nAttempted retailers\n1\nRetrieved retailers\n0\nQualifying retailers\nYOUR COMPARISON · REVISION 1\n0 verified matching options\nSort\nRecommended order\nVerified total (within currency)\n\nOnly offers verified for these requirements appear here. Fewer than three is a valid result. Costs in different currencies are not ranked as savings.\n\nNo verified options yet\n\nThe available evidence did not establish a verified option. You can adjust your requirements or inspect uncertain offers below.\n\nUncertain / non-qualifying offers (1)\nSamsung Galaxy A07s · Class Cellulars\n\nBlack\n\nUSD 165.00 · Current listed price\n\nIn stock · Online listing\n\nView at Class Cellulars ↗\ncondition: required evidence is missing or conflicting\nitem delivery eligibility: required evidence is missing or conflicting\nDispatch from Lebanon is unverified for this listing and configuration.\nshipping is unpublished for the selected route.\nPrice lacks a current response for this exact configuration.\n\nPayable total incomplete\n\nInspect configuration, costs & evidence\nWhere the evidence came from\n\nInventory and discovery counts do not mean every retailer was checked.\n\nclass_cellulars\nCHECKED\n\n0 qualifying sellers across 0 displayed options. Multiple sellers are grouped under the same canonical configuration.",
+      "model_calls": [
+        {
+          "sequence": 1,
+          "status": "completed",
+          "wall_ms": 6047,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.00189",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 2,
+          "status": "completed",
+          "wall_ms": 7406,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.002214",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 3,
+          "status": "completed",
+          "wall_ms": 8343,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.002478",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 4,
+          "status": "completed",
+          "wall_ms": 4593,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.0032635",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 5,
+          "status": "completed",
+          "wall_ms": 6422,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.0041935",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 6,
+          "status": "completed",
+          "wall_ms": 9375,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.0052185",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 7,
+          "status": "completed",
+          "wall_ms": 5297,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.0049135",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        }
+      ],
+      "discovery_plan": null,
+      "discovery_failure": null,
+      "screenshot": "selection-agent.png",
+      "agent_actions": [
+        {
+          "count": 0,
+          "receipts": [
+            "cc4954c81bc588e31883dd1fea064b626c31631768800196790d0be487cd078f"
+          ],
+          "status": "failed",
+          "tool": "inspect",
+          "turn": 1
+        },
+        {
+          "count": 0,
+          "receipts": [],
+          "status": "failed",
+          "tool": "browser",
+          "turn": 2
+        },
+        {
+          "count": 1,
+          "receipts": [
+            "c48e7425ab7659ba56dca947018282b3c7ee8d02d5f399bd9de48585c5d780f6",
+            "cc4954c81bc588e31883dd1fea064b626c31631768800196790d0be487cd078f"
+          ],
+          "status": "ok",
+          "tool": "browser",
+          "turn": 3
+        },
+        {
+          "count": 1,
+          "receipts": [
+            "c48e7425ab7659ba56dca947018282b3c7ee8d02d5f399bd9de48585c5d780f6",
+            "cc4954c81bc588e31883dd1fea064b626c31631768800196790d0be487cd078f"
+          ],
+          "status": "ok",
+          "tool": "browser",
+          "turn": 4
+        },
+        {
+          "count": 1,
+          "receipts": [
+            "c48e7425ab7659ba56dca947018282b3c7ee8d02d5f399bd9de48585c5d780f6",
+            "cc4954c81bc588e31883dd1fea064b626c31631768800196790d0be487cd078f"
+          ],
+          "status": "ok",
+          "tool": "browser",
+          "turn": 5
+        },
+        {
+          "count": 0,
+          "status": "leads",
+          "tool": "retailer_search",
+          "turn": 6
+        },
+        {
+          "tool": "present",
+          "turn": 7
+        }
+      ]
+    },
+    {
+      "phase": "replay-selection",
+      "arm": "control",
+      "product": "34918b296c1615cba2741eb6962d5b8ba185ddad",
+      "mode": "replay",
+      "input": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+      "city": "Batroun",
+      "submitted": "2026-11-26T15:01:33.355234+00:00",
+      "elapsed_s": 26.297,
+      "first_offer_display_s": 26.297,
+      "first_provisional_s": null,
+      "terminal": "No verified recommendation yet",
+      "worker_status": "abstained",
+      "worker_ms": 24890,
+      "stop_reason": "Checked 1 independent domestic seller(s). 0 offer(s) qualified.",
+      "ledger": {
+        "settled_usd": "0.000826",
+        "uncertain_usd": "0",
+        "held_usd": "0",
+        "external_calls": 1,
+        "metered_call_slots": 3,
+        "attempts": {
+          "model": 1,
+          "retrieval": 2,
+          "work": 1,
+          "worker": 2
+        }
+      },
+      "browser": "156.0.8078.4",
+      "served_assets": {
+        "frontend/dist/index.html": "7f16701d705356f895575d546ef244548675cf50f70b114f23981c574e0a45ca",
+        "frontend/dist/assets/index-BBNjrH3U.js": "65f5e567954ab67b6443e65f339c57381ba043a3191535986a0610cebfb01e56",
+        "frontend/dist/assets/index-DeAnHqOk.css": "7f9fc0a604a94837d96049237798ee1d807a6adf5cc7a2cd86a9ec4d02dbda68"
+      },
+      "model_config": "8dfe1227b7bf3b4cb25e9b719cb217a0ed373a1f60446e57a50448cab1c72685",
+      "source_policy": "7e94f856d75ba14c249ee319c2e6c554a97b4dc6fffd0b5e277907fe54f9c174",
+      "bank_sha256": "226a9352c608e35e910c2c80585e0054cac23abd3cba06c8cae5e97d8974023d",
+      "run_digest": "90c715938a81e05b37b11bf74227cb16ec039dbfd7a0fd0a30bdcf668900ade6",
+      "search_and_browser_events": [
+        {
+          "at": "2026-11-26T15:01:41.292461+00:00",
+          "kind": "browser",
+          "mode": "replay",
+          "source": "class_cellulars",
+          "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+          "prior": null,
+          "action": "open",
+          "arguments": {},
+          "quantity": 1,
+          "destination": "selection-city",
+          "branch": null,
+          "status": "ok",
+          "before": null,
+          "selected": {
+            "attribute_pa_color": ""
+          },
+          "selected_row": null,
+          "title": "Samsung Galaxy A07s – Class Cellulars",
+          "product": "26090",
+          "source_sha256": "73fc06ef04b861805706db2b01dcc228330e201964addd4425cd56f94b9d7a30",
+          "observed_at": "2026-11-26T15:01:13.861787+00:00"
+        },
+        {
+          "at": "2026-11-26T15:01:41.682888+00:00",
+          "kind": "browser",
+          "mode": "replay",
+          "source": "class_cellulars",
+          "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+          "prior": "aa2d7633738823e19602cee6aa2de98e853770ebd00f0022b0d4e0501b01b31d",
+          "action": "select_variant",
+          "arguments": {
+            "attribute_pa_color": "light-violet"
+          },
+          "quantity": 1,
+          "destination": "selection-city",
+          "branch": null,
+          "status": "ok",
+          "before": {
+            "attribute_pa_color": ""
+          },
+          "selected": {
+            "attribute_pa_color": "light-violet"
+          },
+          "selected_row": {
+            "attributes": {
+              "attribute_pa_color": "light-violet"
+            },
+            "labels": [
+              "Light Violet"
+            ],
+            "variant": "26096",
+            "price": "165",
+            "stock": true
+          },
+          "title": "Samsung Galaxy A07s – Class Cellulars",
+          "product": "26090",
+          "source_sha256": "73fc06ef04b861805706db2b01dcc228330e201964addd4425cd56f94b9d7a30",
+          "observed_at": "2026-11-26T15:01:13.861787+00:00"
+        }
+      ],
+      "buyer_result": "SEARCH · REVISION 1\nNo verified recommendation yet\n\nChecked 1 independent domestic seller(s). 0 offer(s) qualified.\n\nAbout these resultsStandard summary\n\nNo offer was verified in this run.\nOpen questions:\n- Search coverage in this run: 1 retailers found, 1 attempted, 1 read successfully, 0 with a qualifying offer; retailers outside this search were not checked.\nNot verified, shown separately:\n- Samsung Samsung Galaxy A07s from Class Cellulars (Lebanon), delivery requested to Batroun, dispatch origin unknown: not verified (The selected listing and configuration could not be rechecked.); cost not established.\n\nA standard summary of every checked fact, in a fixed order.\n1\nDiscovered retailers\n1\nAttempted retailers\n1\nRetrieved retailers\n0\nQualifying retailers\nYOUR COMPARISON · REVISION 1\n0 verified matching options\nSort\nRecommended order\nVerified total (within currency)\n\nOnly offers verified for these requirements appear here. Fewer than three is a valid result. Costs in different currencies are not ranked as savings.\n\nNo verified options yet\n\nThe available evidence did not establish a verified option. You can adjust your requirements or inspect uncertain offers below.\n\nUncertain / non-qualifying offers (1)\nSamsung Galaxy A07s · Class Cellulars\n\nLight Violet\n\nUSD 165.00 · Current listed price\n\nIn stock · Online listing\n\nView at Class Cellulars ↗\nThe selected listing and configuration could not be rechecked.\n\nTotal unknown\n\nInspect configuration, costs & evidence\nWhere the evidence came from\n\nInventory and discovery counts do not mean every retailer was checked.\n\nClass Cellulars\nCHECKED\n\n0 qualifying sellers across 0 displayed options. Multiple sellers are grouped under the same canonical configuration.",
+      "model_calls": [
+        {
+          "sequence": 1,
+          "status": "completed",
+          "wall_ms": 8766,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.000826",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        }
+      ],
+      "discovery_plan": null,
+      "discovery_failure": null,
+      "agent_actions": [
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "phase": "replay-selection",
+      "arm": "agent",
+      "product": "c9c71033d7daf5508683e216f165d77c3eaab026",
+      "mode": "replay",
+      "input": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+      "city": "Batroun",
+      "submitted": "2026-11-26T15:02:34.408551+00:00",
+      "elapsed_s": 20.016,
+      "first_offer_display_s": null,
+      "first_provisional_s": null,
+      "terminal": "Some checks could not finish",
+      "worker_status": "partial",
+      "worker_ms": 18641,
+      "stop_reason": "The shopping agent could not complete its decision.",
+      "ledger": {
+        "settled_usd": "0.001894",
+        "uncertain_usd": "0.0614400",
+        "held_usd": "0",
+        "external_calls": 2,
+        "metered_call_slots": 3,
+        "attempts": {
+          "model": 2,
+          "retrieval": 1,
+          "work": 1
+        }
+      },
+      "browser": "156.0.8078.4",
+      "served_assets": {
+        "frontend/dist/index.html": "e7755229187f52297be742c9a8285b395e24ad72bce13a0131fc097fa38cc117",
+        "frontend/dist/assets/index-DeAnHqOk.css": "7f9fc0a604a94837d96049237798ee1d807a6adf5cc7a2cd86a9ec4d02dbda68",
+        "frontend/dist/assets/index-PhU3W4TW.js": "874b0e3ac855f6e8354ffa25c16444395afbeeb6c28948ca947107a273e11510"
+      },
+      "model_config": "8dfe1227b7bf3b4cb25e9b719cb217a0ed373a1f60446e57a50448cab1c72685",
+      "source_policy": "7e94f856d75ba14c249ee319c2e6c554a97b4dc6fffd0b5e277907fe54f9c174",
+      "bank_sha256": "226a9352c608e35e910c2c80585e0054cac23abd3cba06c8cae5e97d8974023d",
+      "run_digest": "757c6bb2bbba9f6356281ce54742b2fc82d937aec314e6c3edd3bc0f06dde64d",
+      "search_and_browser_events": [],
+      "buyer_result": "SEARCH · REVISION 1\nSome checks could not finish\n\nThe shopping agent could not complete its decision.\n\nAbout these resultsStandard summary\n\nNo offer was verified in this run.\nOpen questions:\n- Search coverage in this run: 1 retailers found, 1 attempted, 0 read successfully, 0 with a qualifying offer; retailers outside this search were not checked.\n\nA standard summary of every checked fact, in a fixed order.\n1\nDiscovered retailers\n1\nAttempted retailers\n0\nRetrieved retailers\n0\nQualifying retailers\nYOUR COMPARISON · REVISION 1\n0 verified matching options\nSort\nRecommended order\nVerified total (within currency)\n\nOnly offers verified for these requirements appear here. Fewer than three is a valid result. Costs in different currencies are not ranked as savings.\n\nNo verified options yet\n\nThe available evidence did not establish a verified option. You can adjust your requirements or inspect uncertain offers below.\n\nUncertain / non-qualifying offers (0)\nWhere the evidence came from\n\nInventory and discovery counts do not mean every retailer was checked.\n\nclass_cellulars\nFAILED\n\nNo matching SKU on the current listing\n\n0 qualifying sellers across 0 displayed options. Multiple sellers are grouped under the same canonical configuration.",
+      "model_calls": [
+        {
+          "sequence": 1,
+          "status": "completed",
+          "wall_ms": 8219,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.001894",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 2,
+          "status": "timeout",
+          "wall_ms": 7562,
+          "usage": {
+            "actual_model": null,
+            "actual_usd": null,
+            "reserved_usd": "0.0614400",
+            "serving_provider": null,
+            "spend": "uncertain"
+          }
+        }
+      ],
+      "discovery_plan": null,
+      "discovery_failure": null,
+      "agent_actions": [
+        {
+          "count": 0,
+          "receipts": [
+            "73fc06ef04b861805706db2b01dcc228330e201964addd4425cd56f94b9d7a30"
+          ],
+          "status": "failed",
+          "tool": "inspect",
+          "turn": 1
+        }
+      ]
+    },
+    {
+      "phase": "replay-search",
+      "arm": "control",
+      "product": "34918b296c1615cba2741eb6962d5b8ba185ddad",
+      "mode": "replay",
+      "input": "Samsung Galaxy A07s",
+      "city": "Batroun",
+      "submitted": "2026-11-26T15:03:35.442141+00:00",
+      "elapsed_s": 12.641,
+      "first_offer_display_s": null,
+      "first_provisional_s": null,
+      "terminal": "No verified recommendation yet",
+      "worker_status": "abstained",
+      "worker_ms": 11172,
+      "stop_reason": "Checked 0 independent domestic seller(s). 0 offer(s) qualified. A two-seller comparison of verified payable totals was unavailable. No in-scope listing could be verified.",
+      "ledger": {
+        "settled_usd": "0.000912",
+        "uncertain_usd": "0",
+        "held_usd": "0",
+        "external_calls": 1,
+        "metered_call_slots": 1,
+        "attempts": {
+          "model": 1,
+          "worker": 2
+        }
+      },
+      "browser": "156.0.8078.4",
+      "served_assets": {
+        "frontend/dist/index.html": "7f16701d705356f895575d546ef244548675cf50f70b114f23981c574e0a45ca",
+        "frontend/dist/assets/index-BBNjrH3U.js": "65f5e567954ab67b6443e65f339c57381ba043a3191535986a0610cebfb01e56",
+        "frontend/dist/assets/index-DeAnHqOk.css": "7f9fc0a604a94837d96049237798ee1d807a6adf5cc7a2cd86a9ec4d02dbda68"
+      },
+      "model_config": "8dfe1227b7bf3b4cb25e9b719cb217a0ed373a1f60446e57a50448cab1c72685",
+      "source_policy": "7e94f856d75ba14c249ee319c2e6c554a97b4dc6fffd0b5e277907fe54f9c174",
+      "bank_sha256": "226a9352c608e35e910c2c80585e0054cac23abd3cba06c8cae5e97d8974023d",
+      "run_digest": "a423e60520b72c0090f1c4eda1dfeeb663e49e1244b073cc96719974e63ee6d2",
+      "search_and_browser_events": [
+        {
+          "at": "2026-11-26T15:03:36.349485+00:00",
+          "kind": "replay_miss",
+          "mode": "replay",
+          "operation": "get",
+          "key": {
+            "source": "technodel",
+            "url": "https://technodel.net/search?q=Samsung+Galaxy+A07s",
+            "expect": "html",
+            "capability": {
+              "capability_id": "technodel-search",
+              "version": "1"
+            }
+          }
+        },
+        {
+          "at": "2026-11-26T15:03:36.506324+00:00",
+          "kind": "replay_miss",
+          "mode": "replay",
+          "operation": "get",
+          "key": {
+            "source": "beytech",
+            "url": "https://beytech.com.lb/wp-json/wc/store/v1/products?search=Samsung%20Galaxy%20A07s&per_page=10&page=1",
+            "expect": "json",
+            "capability": {
+              "capability_id": "beytech-search",
+              "version": "1"
+            }
+          }
+        },
+        {
+          "at": "2026-11-26T15:03:36.669986+00:00",
+          "kind": "replay_miss",
+          "mode": "replay",
+          "operation": "get",
+          "key": {
+            "source": "mojitech",
+            "url": "https://mojitech.net/wp-json/wc/store/v1/products?search=Samsung%20Galaxy%20A07s&per_page=10&page=1",
+            "expect": "json",
+            "capability": {
+              "capability_id": "mojitech-search",
+              "version": "1"
+            }
+          }
+        },
+        {
+          "at": "2026-11-26T15:03:38.471751+00:00",
+          "kind": "replay_miss",
+          "mode": "replay",
+          "operation": "get",
+          "key": {
+            "source": "class_cellulars",
+            "url": "https://classcellulars.com/product/iphone-17-pro/",
+            "expect": "html",
+            "capability": {
+              "capability_id": "class-product",
+              "version": "1"
+            }
+          }
+        },
+        {
+          "at": "2026-11-26T15:03:45.717042+00:00",
+          "kind": "search",
+          "mode": "replay",
+          "provider": "manufacturer",
+          "query": "Samsung Galaxy A07s Lebanon local delivery Batroun price",
+          "country": "LB",
+          "language": "en",
+          "limit": 8,
+          "cursor": 0,
+          "status": "budget_denied",
+          "count": 0,
+          "urls": [],
+          "response": "c6597d531298d1bd1c2f44ad0a1badf12435ff18431a49e6ef1eb38d249bab46"
+        }
+      ],
+      "buyer_result": "SEARCH · REVISION 1\nNo verified recommendation yet\n\nSearching for Samsung Galaxy A07s · new · delivery to Batroun\n\nChecked 0 independent domestic seller(s). 0 offer(s) qualified. A two-seller comparison of verified payable totals was unavailable. No in-scope listing could be verified.\n\nAbout these resultsStandard summary\n\nNo offer was verified in this run.\nOpen questions:\n- Search coverage in this run: 4 retailers found, 4 attempted, 0 read successfully, 0 with a qualifying offer; retailers outside this search were not checked.\n\nA standard summary of every checked fact, in a fixed order.\n4\nDiscovered retailers\n4\nAttempted retailers\n0\nRetrieved retailers\n0\nQualifying retailers\nYOUR COMPARISON · REVISION 1\n0 verified matching options\nSort\nRecommended order\nVerified total (within currency)\n\nOnly offers verified for these requirements appear here. Fewer than three is a valid result. Costs in different currencies are not ranked as savings.\n\nNo verified options yet\n\nThe available evidence did not establish a verified option. You can adjust your requirements or inspect uncertain offers below.\n\nUncertain / non-qualifying offers (0)\nWhere the evidence came from\n\nInventory and discovery counts do not mean every retailer was checked.\n\nTechnodel\nFAILED\n\nThe retailer search could not be read within its approved scope.\n\nBeytech\nFAILED\n\nThe retailer search could not be read within its approved scope.\n\nMojitech\nFAILED\n\nThe retailer search could not be read within its approved scope.\n\nclass_cellulars\nFAILED\n\nThe listing could not be read for the selected product\n\n0 qualifying sellers across 0 displayed options. Multiple sellers are grouped under the same canonical configuration.",
+      "model_calls": [
+        {
+          "sequence": 1,
+          "status": "completed",
+          "wall_ms": 5172,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.000912",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        }
+      ],
+      "discovery_plan": {
+        "channel": "manufacturer",
+        "language": "en",
+        "method": "model",
+        "objective": "Find an independent Lebanese seller of the requested configuration with local fulfillment",
+        "query": "Samsung Galaxy A07s Lebanon local delivery Batroun price",
+        "query_index": 1
+      },
+      "discovery_failure": null,
+      "agent_actions": [
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "phase": "replay-search",
+      "arm": "agent",
+      "product": "c9c71033d7daf5508683e216f165d77c3eaab026",
+      "mode": "replay",
+      "input": "Samsung Galaxy A07s",
+      "city": "Batroun",
+      "submitted": "2026-11-26T15:04:36.470990+00:00",
+      "elapsed_s": 49.093,
+      "first_offer_display_s": null,
+      "first_provisional_s": null,
+      "terminal": "One detail to clarify",
+      "worker_status": "clarification",
+      "worker_ms": 48328,
+      "stop_reason": "One detail could change your comparison.",
+      "ledger": {
+        "settled_usd": "0.0186365",
+        "uncertain_usd": "0",
+        "held_usd": "0",
+        "external_calls": 7,
+        "metered_call_slots": 8,
+        "attempts": {
+          "model": 7,
+          "retrieval": 1
+        }
+      },
+      "browser": "156.0.8078.4",
+      "served_assets": {
+        "frontend/dist/index.html": "e7755229187f52297be742c9a8285b395e24ad72bce13a0131fc097fa38cc117",
+        "frontend/dist/assets/index-DeAnHqOk.css": "7f9fc0a604a94837d96049237798ee1d807a6adf5cc7a2cd86a9ec4d02dbda68",
+        "frontend/dist/assets/index-PhU3W4TW.js": "874b0e3ac855f6e8354ffa25c16444395afbeeb6c28948ca947107a273e11510"
+      },
+      "model_config": "8dfe1227b7bf3b4cb25e9b719cb217a0ed373a1f60446e57a50448cab1c72685",
+      "source_policy": "7e94f856d75ba14c249ee319c2e6c554a97b4dc6fffd0b5e277907fe54f9c174",
+      "bank_sha256": "226a9352c608e35e910c2c80585e0054cac23abd3cba06c8cae5e97d8974023d",
+      "run_digest": "a2a77f96cbbd40137e6f3ebcb40c927dd3cb1f6e421d941db959f2896b56b3f0",
+      "search_and_browser_events": [
+        {
+          "at": "2026-11-26T15:04:44.383124+00:00",
+          "kind": "search",
+          "mode": "replay",
+          "provider": "manufacturer",
+          "query": "Samsung Galaxy A07s Lebanon retailer",
+          "country": "LB",
+          "language": "en",
+          "limit": 8,
+          "cursor": 0,
+          "status": "ok",
+          "count": 5,
+          "urls": [
+            "https://www.ayoubcomputers.com/",
+            "https://www.beirutcart.com/",
+            "https://gcscomputerpro.com",
+            "https://www.macrotronics.net",
+            "https://mojitech.net/"
+          ],
+          "response": "1181bb8fea0db66dd25554de521f21edc735f414c470908bd732f332a4575214"
+        },
+        {
+          "at": "2026-11-26T15:04:50.252096+00:00",
+          "kind": "search",
+          "mode": "replay",
+          "provider": "manufacturer",
+          "query": "Samsung Galaxy A07s Lebanon local delivery Batroun price",
+          "country": "LB",
+          "language": "en",
+          "limit": 8,
+          "cursor": 0,
+          "status": "budget_denied",
+          "count": 0,
+          "urls": [],
+          "response": "c6597d531298d1bd1c2f44ad0a1badf12435ff18431a49e6ef1eb38d249bab46"
+        },
+        {
+          "at": "2026-11-26T15:05:03.001702+00:00",
+          "kind": "search",
+          "mode": "replay",
+          "provider": "manufacturer",
+          "query": "Samsung Galaxy A07s لبنان توصيل محلي Batroun",
+          "country": "LB",
+          "language": "ar",
+          "limit": 8,
+          "cursor": 0,
+          "status": "budget_denied",
+          "count": 0,
+          "urls": [],
+          "response": "7ff325d13b7ffb7b3af43b56587a7ae57bb106c0c7110ae1c55c53d5efd11ef8"
+        },
+        {
+          "at": "2026-11-26T15:05:15.995672+00:00",
+          "kind": "replay_miss",
+          "mode": "replay",
+          "operation": "get",
+          "key": {
+            "source": "technodel",
+            "url": "https://technodel.net/search?q=Samsung+Galaxy+A07s",
+            "expect": "html",
+            "capability": {
+              "capability_id": "technodel-search",
+              "version": "1"
+            }
+          }
+        },
+        {
+          "at": "2026-11-26T15:05:16.187182+00:00",
+          "kind": "replay_miss",
+          "mode": "replay",
+          "operation": "get",
+          "key": {
+            "source": "beytech",
+            "url": "https://beytech.com.lb/wp-json/wc/store/v1/products?search=Samsung%20Galaxy%20A07s&per_page=10&page=1",
+            "expect": "json",
+            "capability": {
+              "capability_id": "beytech-search",
+              "version": "1"
+            }
+          }
+        },
+        {
+          "at": "2026-11-26T15:05:16.445376+00:00",
+          "kind": "replay_miss",
+          "mode": "replay",
+          "operation": "get",
+          "key": {
+            "source": "mojitech",
+            "url": "https://mojitech.net/wp-json/wc/store/v1/products?search=Samsung%20Galaxy%20A07s&per_page=10&page=1",
+            "expect": "json",
+            "capability": {
+              "capability_id": "mojitech-search",
+              "version": "1"
+            }
+          }
+        }
+      ],
+      "buyer_result": "SEARCH · REVISION 1\nOne detail to clarify\nCancel search\n\nSearching for Samsung Galaxy A07s · new · delivery to Batroun\n\nOne detail could change your comparison.\n\nDo you need the exact Galaxy A07s, or would you consider the Galaxy A07?\n\nNo exact Galaxy A07s listing has been verified from the Lebanese sources checked; accepting the A07 would change which listings can be considered.\n\nContinue search\n0\nDiscovered retailers\n0\nAttempted retailers\n0\nRetrieved retailers\n0\nQualifying retailers\nYOUR COMPARISON · REVISION 1\n0 verified matching options\nSort\nRecommended order\nVerified total (within currency)\n\nOnly offers verified for these requirements appear here. Fewer than three is a valid result. Costs in different currencies are not ranked as savings.\n\nNo verified options yet\n\nResearch is still underway. Early candidates remain in the checking section.\n\nUncertain / non-qualifying offers (0)\nWhere the evidence came from\n\nInventory and discovery counts do not mean every retailer was checked.\n\nPer-retailer check details are not available yet. The progress counts above show reported coverage; no missing source is assumed checked.\n\n0 qualifying sellers across 0 displayed options. Multiple sellers are grouped under the same canonical configuration.",
+      "model_calls": [
+        {
+          "sequence": 1,
+          "status": "completed",
+          "wall_ms": 6406,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.00185",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 2,
+          "status": "completed",
+          "wall_ms": 5843,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.002064",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 3,
+          "status": "completed",
+          "wall_ms": 4844,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.002218",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 4,
+          "status": "completed",
+          "wall_ms": 7875,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.002234",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 5,
+          "status": "completed",
+          "wall_ms": 5203,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.0029185",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 6,
+          "status": "completed",
+          "wall_ms": 7563,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.003311",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 7,
+          "status": "completed",
+          "wall_ms": 8407,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.004041",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        }
+      ],
+      "discovery_plan": null,
+      "discovery_failure": null,
+      "agent_actions": [
+        {
+          "channel": "manufacturer",
+          "count": 5,
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 1
+        },
+        {
+          "channel": "manufacturer",
+          "count": 0,
+          "status": "budget_denied",
+          "tool": "web_search",
+          "turn": 2
+        },
+        {
+          "count": 0,
+          "status": "leads",
+          "tool": "catalog",
+          "turn": 3
+        },
+        {
+          "channel": "manufacturer",
+          "count": 0,
+          "status": "budget_denied",
+          "tool": "web_search",
+          "turn": 4
+        },
+        {
+          "count": 0,
+          "receipts": [],
+          "status": "unconfigured",
+          "tool": "inspect",
+          "turn": 5
+        },
+        {
+          "count": 0,
+          "status": "leads",
+          "tool": "retailer_search",
+          "turn": 6
+        },
+        {
+          "tool": "ask",
+          "turn": 7
+        }
+      ]
+    },
+    {
+      "phase": "replay-retry",
+      "arm": "control",
+      "product": "34918b296c1615cba2741eb6962d5b8ba185ddad",
+      "mode": "replay",
+      "input": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+      "city": "Batroun",
+      "submitted": "2026-11-26T15:05:57.152517+00:00",
+      "elapsed_s": 29.093,
+      "first_offer_display_s": 29.078,
+      "first_provisional_s": null,
+      "terminal": "No verified recommendation yet",
+      "worker_status": "abstained",
+      "worker_ms": 27703,
+      "stop_reason": "Checked 1 independent domestic seller(s). 0 offer(s) qualified.",
+      "ledger": {
+        "settled_usd": "0.000786",
+        "uncertain_usd": "0",
+        "held_usd": "0",
+        "external_calls": 1,
+        "metered_call_slots": 4,
+        "attempts": {
+          "model": 1,
+          "retrieval": 3,
+          "work": 2,
+          "worker": 2
+        }
+      },
+      "browser": "156.0.8078.4",
+      "served_assets": {
+        "frontend/dist/index.html": "7f16701d705356f895575d546ef244548675cf50f70b114f23981c574e0a45ca",
+        "frontend/dist/assets/index-BBNjrH3U.js": "65f5e567954ab67b6443e65f339c57381ba043a3191535986a0610cebfb01e56",
+        "frontend/dist/assets/index-DeAnHqOk.css": "7f9fc0a604a94837d96049237798ee1d807a6adf5cc7a2cd86a9ec4d02dbda68"
+      },
+      "model_config": "8dfe1227b7bf3b4cb25e9b719cb217a0ed373a1f60446e57a50448cab1c72685",
+      "source_policy": "7e94f856d75ba14c249ee319c2e6c554a97b4dc6fffd0b5e277907fe54f9c174",
+      "bank_sha256": "226a9352c608e35e910c2c80585e0054cac23abd3cba06c8cae5e97d8974023d",
+      "run_digest": "983f45615535a0ba6d071b7bd113af66ee21f75b3f0c8eabc6d91cb48cbff835",
+      "search_and_browser_events": [
+        {
+          "at": "2026-11-26T15:06:05.807169+00:00",
+          "kind": "browser",
+          "mode": "replay",
+          "source": "class_cellulars",
+          "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+          "prior": null,
+          "action": "open",
+          "arguments": {},
+          "quantity": 1,
+          "destination": "selection-city",
+          "branch": null,
+          "status": "ok",
+          "before": null,
+          "selected": {
+            "attribute_pa_color": ""
+          },
+          "selected_row": null,
+          "title": "Samsung Galaxy A07s – Class Cellulars",
+          "product": "26090",
+          "source_sha256": "73fc06ef04b861805706db2b01dcc228330e201964addd4425cd56f94b9d7a30",
+          "observed_at": "2026-11-26T15:01:13.861787+00:00"
+        },
+        {
+          "at": "2026-11-26T15:06:06.259430+00:00",
+          "kind": "browser",
+          "mode": "replay",
+          "source": "class_cellulars",
+          "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+          "prior": "aa2d7633738823e19602cee6aa2de98e853770ebd00f0022b0d4e0501b01b31d",
+          "action": "select_variant",
+          "arguments": {
+            "attribute_pa_color": "light-violet"
+          },
+          "quantity": 1,
+          "destination": "selection-city",
+          "branch": null,
+          "status": "ok",
+          "before": {
+            "attribute_pa_color": ""
+          },
+          "selected": {
+            "attribute_pa_color": "light-violet"
+          },
+          "selected_row": {
+            "attributes": {
+              "attribute_pa_color": "light-violet"
+            },
+            "labels": [
+              "Light Violet"
+            ],
+            "variant": "26096",
+            "price": "165",
+            "stock": true
+          },
+          "title": "Samsung Galaxy A07s – Class Cellulars",
+          "product": "26090",
+          "source_sha256": "73fc06ef04b861805706db2b01dcc228330e201964addd4425cd56f94b9d7a30",
+          "observed_at": "2026-11-26T15:01:13.861787+00:00"
+        },
+        {
+          "at": "2026-11-26T15:06:24.332280+00:00",
+          "kind": "replay_miss",
+          "mode": "replay",
+          "operation": "browser",
+          "key": {
+            "source": "class_cellulars",
+            "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+            "prior": "44631cb18624856b79106a78865ada698f16d73a6d67e2fb0c63e3729bcae832",
+            "action": "refresh",
+            "arguments": {},
+            "quantity": 1,
+            "destination": "selection-city",
+            "branch": null
+          }
+        },
+        {
+          "at": "2026-11-26T15:06:24.332280+00:00",
+          "kind": "browser",
+          "mode": "replay",
+          "source": "class_cellulars",
+          "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+          "prior": "44631cb18624856b79106a78865ada698f16d73a6d67e2fb0c63e3729bcae832",
+          "action": "refresh",
+          "arguments": {},
+          "quantity": 1,
+          "destination": "selection-city",
+          "branch": null,
+          "status": "failed",
+          "reason": "Uncaptured browser state transition"
+        }
+      ],
+      "buyer_result": "SEARCH · REVISION 1\nNo verified recommendation yet\n\nChecked 1 independent domestic seller(s). 0 offer(s) qualified.\n\nAbout these resultsStandard summary\n\nNo offer was verified in this run.\nOpen questions:\n- Search coverage in this run: 1 retailers found, 1 attempted, 1 read successfully, 0 with a qualifying offer; retailers outside this search were not checked.\nNot verified, shown separately:\n- Samsung Samsung Galaxy A07s from Class Cellulars (Lebanon), delivery requested to Batroun, dispatch origin unknown: not verified (The selected listing and configuration could not be rechecked.); cost not established.\n\nA standard summary of every checked fact, in a fixed order.\n1\nDiscovered retailers\n1\nAttempted retailers\n1\nRetrieved retailers\n0\nQualifying retailers\nYOUR COMPARISON · REVISION 1\n0 verified matching options\nSort\nRecommended order\nVerified total (within currency)\n\nOnly offers verified for these requirements appear here. Fewer than three is a valid result. Costs in different currencies are not ranked as savings.\n\nNo verified options yet\n\nThe available evidence did not establish a verified option. You can adjust your requirements or inspect uncertain offers below.\n\nUncertain / non-qualifying offers (1)\nSamsung Galaxy A07s · Class Cellulars\n\nLight Violet\n\nUSD 165.00 · Current listed price\n\nIn stock · Online listing\n\nView at Class Cellulars ↗\nThe selected listing and configuration could not be rechecked.\n\nTotal unknown\n\nInspect configuration, costs & evidence\nWhere the evidence came from\n\nInventory and discovery counts do not mean every retailer was checked.\n\nClass Cellulars\nCHECKED\n\n0 qualifying sellers across 0 displayed options. Multiple sellers are grouped under the same canonical configuration.",
+      "model_calls": [
+        {
+          "sequence": 1,
+          "status": "completed",
+          "wall_ms": 7797,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.000786",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        }
+      ],
+      "discovery_plan": null,
+      "discovery_failure": null,
+      "agent_actions": [
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "phase": "replay-retry",
+      "arm": "agent",
+      "product": "c9c71033d7daf5508683e216f165d77c3eaab026",
+      "mode": "replay",
+      "input": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+      "city": "Batroun",
+      "submitted": "2026-11-26T15:06:58.196802+00:00",
+      "elapsed_s": 67.0,
+      "first_offer_display_s": null,
+      "first_provisional_s": null,
+      "terminal": "No verified recommendation yet",
+      "worker_status": "abstained",
+      "worker_ms": 65781,
+      "stop_reason": "No qualifying offer was confirmed in the listings checked.",
+      "ledger": {
+        "settled_usd": "0.0255290",
+        "uncertain_usd": "0",
+        "held_usd": "0",
+        "external_calls": 8,
+        "metered_call_slots": 10,
+        "attempts": {
+          "model": 8,
+          "retrieval": 2,
+          "work": 1
+        }
+      },
+      "browser": "156.0.8078.4",
+      "served_assets": {
+        "frontend/dist/index.html": "e7755229187f52297be742c9a8285b395e24ad72bce13a0131fc097fa38cc117",
+        "frontend/dist/assets/index-DeAnHqOk.css": "7f9fc0a604a94837d96049237798ee1d807a6adf5cc7a2cd86a9ec4d02dbda68",
+        "frontend/dist/assets/index-PhU3W4TW.js": "874b0e3ac855f6e8354ffa25c16444395afbeeb6c28948ca947107a273e11510"
+      },
+      "model_config": "8dfe1227b7bf3b4cb25e9b719cb217a0ed373a1f60446e57a50448cab1c72685",
+      "source_policy": "7e94f856d75ba14c249ee319c2e6c554a97b4dc6fffd0b5e277907fe54f9c174",
+      "bank_sha256": "226a9352c608e35e910c2c80585e0054cac23abd3cba06c8cae5e97d8974023d",
+      "run_digest": "989919d2a9b87ddfb59eb660ae4a8c1e50134a37a487148767ef93cf2fc42ab4",
+      "search_and_browser_events": [
+        {
+          "at": "2026-11-26T15:07:12.982507+00:00",
+          "kind": "browser",
+          "mode": "replay",
+          "source": "class_cellulars",
+          "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+          "prior": null,
+          "action": "open",
+          "arguments": {},
+          "quantity": 1,
+          "destination": "selection-city",
+          "branch": null,
+          "status": "ok",
+          "before": null,
+          "selected": {
+            "attribute_pa_color": ""
+          },
+          "selected_row": null,
+          "title": "Samsung Galaxy A07s – Class Cellulars",
+          "product": "26090",
+          "source_sha256": "73fc06ef04b861805706db2b01dcc228330e201964addd4425cd56f94b9d7a30",
+          "observed_at": "2026-11-26T15:01:13.861787+00:00"
+        },
+        {
+          "at": "2026-11-26T15:07:21.806064+00:00",
+          "kind": "browser",
+          "mode": "replay",
+          "source": "class_cellulars",
+          "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+          "prior": "aa2d7633738823e19602cee6aa2de98e853770ebd00f0022b0d4e0501b01b31d",
+          "action": "select_variant",
+          "arguments": {
+            "attribute_pa_color": "black"
+          },
+          "quantity": 1,
+          "destination": "selection-city",
+          "branch": null,
+          "status": "ok",
+          "before": {
+            "attribute_pa_color": ""
+          },
+          "selected": {
+            "attribute_pa_color": "black"
+          },
+          "selected_row": {
+            "attributes": {
+              "attribute_pa_color": "black"
+            },
+            "labels": [
+              "Black"
+            ],
+            "variant": "26092",
+            "price": "165",
+            "stock": true
+          },
+          "title": "Samsung Galaxy A07s – Class Cellulars",
+          "product": "26090",
+          "source_sha256": "73fc06ef04b861805706db2b01dcc228330e201964addd4425cd56f94b9d7a30",
+          "observed_at": "2026-11-26T15:01:13.861787+00:00"
+        },
+        {
+          "at": "2026-11-26T15:07:29.592564+00:00",
+          "kind": "replay_miss",
+          "mode": "replay",
+          "operation": "browser",
+          "key": {
+            "source": "class_cellulars",
+            "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+            "prior": "d97f666af1c862967bc7bcdadf3b423152af185c0a68b33c318268be942a2add",
+            "action": "select_variant",
+            "arguments": {
+              "attribute_pa_color": "light-violet"
+            },
+            "quantity": 1,
+            "destination": "selection-city",
+            "branch": null
+          }
+        },
+        {
+          "at": "2026-11-26T15:07:29.592564+00:00",
+          "kind": "browser",
+          "mode": "replay",
+          "source": "class_cellulars",
+          "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+          "prior": "d97f666af1c862967bc7bcdadf3b423152af185c0a68b33c318268be942a2add",
+          "action": "select_variant",
+          "arguments": {
+            "attribute_pa_color": "light-violet"
+          },
+          "quantity": 1,
+          "destination": "selection-city",
+          "branch": null,
+          "status": "failed",
+          "reason": "Uncaptured browser state transition"
+        },
+        {
+          "at": "2026-11-26T15:07:58.521620+00:00",
+          "kind": "replay_miss",
+          "mode": "replay",
+          "operation": "search",
+          "key": {
+            "provider": "manufacturer",
+            "query": "phone Lebanon retailer",
+            "country": "LB",
+            "language": "en",
+            "limit": 8,
+            "cursor": 0
+          }
+        }
+      ],
+      "buyer_result": "SEARCH · REVISION 1\nNo verified recommendation yet\n\nNo qualifying offer was confirmed in the listings checked.\n\nAbout these resultsStandard summary\n\nNo offer was verified in this run.\nOpen questions:\n- Search coverage in this run: 1 retailers found, 1 attempted, 0 read successfully, 0 with a qualifying offer; retailers outside this search were not checked.\n\nA standard summary of every checked fact, in a fixed order.\n1\nDiscovered retailers\n1\nAttempted retailers\n0\nRetrieved retailers\n0\nQualifying retailers\nYOUR COMPARISON · REVISION 1\n0 verified matching options\nSort\nRecommended order\nVerified total (within currency)\n\nOnly offers verified for these requirements appear here. Fewer than three is a valid result. Costs in different currencies are not ranked as savings.\n\nNo verified options yet\n\nThe available evidence did not establish a verified option. You can adjust your requirements or inspect uncertain offers below.\n\nUncertain / non-qualifying offers (0)\nWhere the evidence came from\n\nInventory and discovery counts do not mean every retailer was checked.\n\nclass_cellulars\nFAILED\n\nUncaptured browser state transition\n\n0 qualifying sellers across 0 displayed options. Multiple sellers are grouped under the same canonical configuration.",
+      "model_calls": [
+        {
+          "sequence": 1,
+          "status": "completed",
+          "wall_ms": 5672,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.00189",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 2,
+          "status": "completed",
+          "wall_ms": 6188,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.00199",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 3,
+          "status": "completed",
+          "wall_ms": 8610,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.002354",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 4,
+          "status": "completed",
+          "wall_ms": 6453,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.003276",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 5,
+          "status": "completed",
+          "wall_ms": 9343,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.0035835",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 6,
+          "status": "completed",
+          "wall_ms": 9250,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.003826",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 7,
+          "status": "completed",
+          "wall_ms": 10266,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.0043035",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        },
+        {
+          "sequence": 8,
+          "status": "completed",
+          "wall_ms": 5485,
+          "usage": {
+            "actual_model": "openai/gpt-6.1-sol",
+            "actual_usd": "0.004306",
+            "reserved_usd": "0.0614400",
+            "serving_provider": "OpenAI",
+            "spend": "known"
+          }
+        }
+      ],
+      "discovery_plan": null,
+      "discovery_failure": null,
+      "agent_actions": [
+        {
+          "count": 0,
+          "receipts": [
+            "73fc06ef04b861805706db2b01dcc228330e201964addd4425cd56f94b9d7a30"
+          ],
+          "status": "failed",
+          "tool": "inspect",
+          "turn": 1
+        },
+        {
+          "count": 0,
+          "receipts": [],
+          "status": "failed",
+          "tool": "browser",
+          "turn": 2
+        },
+        {
+          "count": 1,
+          "receipts": [
+            "73fc06ef04b861805706db2b01dcc228330e201964addd4425cd56f94b9d7a30",
+            "c48e7425ab7659ba56dca947018282b3c7ee8d02d5f399bd9de48585c5d780f6"
+          ],
+          "status": "ok",
+          "tool": "browser",
+          "turn": 3
+        },
+        {
+          "count": 0,
+          "receipts": [],
+          "status": "failed",
+          "tool": "browser",
+          "turn": 4
+        },
+        {
+          "count": 0,
+          "status": "leads",
+          "tool": "catalog",
+          "turn": 5
+        },
+        {
+          "count": 3,
+          "status": "reviewed_retailers",
+          "tool": "directory",
+          "turn": 6
+        },
+        {
+          "channel": "manufacturer",
+          "count": 0,
+          "status": "unavailable",
+          "tool": "web_search",
+          "turn": 7
+        },
+        {
+          "tool": "present",
+          "turn": 8
+        }
+      ]
+    }
+  ],
+  "independent_capture": {
+    "bank": "226a9352c608e35e910c2c80585e0054cac23abd3cba06c8cae5e97d8974023d",
+    "seed": "e09f2664589a663e6bf5009c5e2c0065d14a35720c85cdb1c7783bc2e5d43971",
+    "spend": {
+      "search": {
+        "ledger": "read",
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "retrieval": 1
+        },
+        "note": "uncertain amounts are full reservations kept because the cost was not reported"
+      },
+      "selection": {
+        "ledger": "read",
+        "known_usd": "0",
+        "uncertain_usd": "0",
+        "still_held_usd": "0",
+        "attempts": {
+          "retrieval": 4,
+          "work": 5
+        },
+        "note": "uncertain amounts are full reservations kept because the cost was not reported"
+      }
+    },
+    "events": [
+      {
+        "at": "2026-11-26T15:01:10.111253+00:00",
+        "kind": "search",
+        "mode": "live",
+        "provider": "manufacturer",
+        "query": "Samsung Galaxy A07s Lebanon retailer",
+        "country": "LB",
+        "language": "en",
+        "limit": 8,
+        "cursor": 0,
+        "status": "ok",
+        "count": 5,
+        "urls": [
+          "https://www.ayoubcomputers.com/",
+          "https://www.beirutcart.com/",
+          "https://gcscomputerpro.com",
+          "https://www.macrotronics.net",
+          "https://mojitech.net/"
+        ],
+        "response": "1181bb8fea0db66dd25554de521f21edc735f414c470908bd732f332a4575214"
+      },
+      {
+        "at": "2026-11-26T15:01:10.256430+00:00",
+        "kind": "search",
+        "mode": "live",
+        "provider": "manufacturer",
+        "query": "Samsung Galaxy A07s Lebanon local delivery Batroun price",
+        "country": "LB",
+        "language": "en",
+        "limit": 8,
+        "cursor": 0,
+        "status": "budget_denied",
+        "count": 0,
+        "urls": [],
+        "response": "c6597d531298d1bd1c2f44ad0a1badf12435ff18431a49e6ef1eb38d249bab46"
+      },
+      {
+        "at": "2026-11-26T15:01:10.400547+00:00",
+        "kind": "search",
+        "mode": "live",
+        "provider": "manufacturer",
+        "query": "Samsung Galaxy A07s لبنان توصيل محلي Batroun",
+        "country": "LB",
+        "language": "ar",
+        "limit": 8,
+        "cursor": 0,
+        "status": "budget_denied",
+        "count": 0,
+        "urls": [],
+        "response": "7ff325d13b7ffb7b3af43b56587a7ae57bb106c0c7110ae1c55c53d5efd11ef8"
+      },
+      {
+        "at": "2026-11-26T15:01:16.786601+00:00",
+        "kind": "browser",
+        "mode": "live",
+        "source": "class_cellulars",
+        "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+        "prior": null,
+        "action": "open",
+        "arguments": {},
+        "quantity": 1,
+        "destination": "selection-city",
+        "branch": null,
+        "status": "ok",
+        "before": null,
+        "selected": {
+          "attribute_pa_color": ""
+        },
+        "selected_row": null,
+        "title": "Samsung Galaxy A07s – Class Cellulars",
+        "product": "26090",
+        "source_sha256": "73fc06ef04b861805706db2b01dcc228330e201964addd4425cd56f94b9d7a30",
+        "observed_at": "2026-11-26T15:01:13.861787+00:00"
+      },
+      {
+        "at": "2026-11-26T15:01:18.103734+00:00",
+        "kind": "browser",
+        "mode": "live",
+        "source": "class_cellulars",
+        "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+        "prior": "aa2d7633738823e19602cee6aa2de98e853770ebd00f0022b0d4e0501b01b31d",
+        "action": "select_variant",
+        "arguments": {
+          "attribute_pa_color": "light-violet"
+        },
+        "quantity": 1,
+        "destination": "selection-city",
+        "branch": null,
+        "status": "ok",
+        "before": {
+          "attribute_pa_color": ""
+        },
+        "selected": {
+          "attribute_pa_color": "light-violet"
+        },
+        "selected_row": {
+          "attributes": {
+            "attribute_pa_color": "light-violet"
+          },
+          "labels": [
+            "Light Violet"
+          ],
+          "variant": "26096",
+          "price": "165",
+          "stock": true
+        },
+        "title": "Samsung Galaxy A07s – Class Cellulars",
+        "product": "26090",
+        "source_sha256": "73fc06ef04b861805706db2b01dcc228330e201964addd4425cd56f94b9d7a30",
+        "observed_at": "2026-11-26T15:01:13.861787+00:00"
+      },
+      {
+        "at": "2026-11-26T15:01:22.634694+00:00",
+        "kind": "browser",
+        "mode": "live",
+        "source": "class_cellulars",
+        "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+        "prior": "44631cb18624856b79106a78865ada698f16d73a6d67e2fb0c63e3729bcae832",
+        "action": "select_variant",
+        "arguments": {
+          "attribute_pa_color": "black"
+        },
+        "quantity": 1,
+        "destination": "selection-city",
+        "branch": null,
+        "status": "ok",
+        "before": {
+          "attribute_pa_color": "light-violet"
+        },
+        "selected": {
+          "attribute_pa_color": "black"
+        },
+        "selected_row": {
+          "attributes": {
+            "attribute_pa_color": "black"
+          },
+          "labels": [
+            "Black"
+          ],
+          "variant": "26092",
+          "price": "165",
+          "stock": true
+        },
+        "title": "Samsung Galaxy A07s – Class Cellulars",
+        "product": "26090",
+        "source_sha256": "73fc06ef04b861805706db2b01dcc228330e201964addd4425cd56f94b9d7a30",
+        "observed_at": "2026-11-26T15:01:13.861787+00:00"
+      },
+      {
+        "at": "2026-11-26T15:01:25.876483+00:00",
+        "kind": "browser",
+        "mode": "live",
+        "source": "class_cellulars",
+        "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+        "prior": "d97f666af1c862967bc7bcdadf3b423152af185c0a68b33c318268be942a2add",
+        "action": "refresh",
+        "arguments": {},
+        "quantity": 1,
+        "destination": "selection-city",
+        "branch": null,
+        "status": "ok",
+        "before": {
+          "attribute_pa_color": "black"
+        },
+        "selected": {
+          "attribute_pa_color": ""
+        },
+        "selected_row": null,
+        "title": "Samsung Galaxy A07s – Class Cellulars",
+        "product": "26090",
+        "source_sha256": "73fc06ef04b861805706db2b01dcc228330e201964addd4425cd56f94b9d7a30",
+        "observed_at": "2026-11-26T15:01:13.861787+00:00"
+      },
+      {
+        "at": "2026-11-26T15:01:27.068954+00:00",
+        "kind": "browser",
+        "mode": "live",
+        "source": "class_cellulars",
+        "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+        "prior": "aa2d7633738823e19602cee6aa2de98e853770ebd00f0022b0d4e0501b01b31d",
+        "action": "select_variant",
+        "arguments": {
+          "attribute_pa_color": "black"
+        },
+        "quantity": 1,
+        "destination": "selection-city",
+        "branch": null,
+        "status": "ok",
+        "before": {
+          "attribute_pa_color": ""
+        },
+        "selected": {
+          "attribute_pa_color": "black"
+        },
+        "selected_row": {
+          "attributes": {
+            "attribute_pa_color": "black"
+          },
+          "labels": [
+            "Black"
+          ],
+          "variant": "26092",
+          "price": "165",
+          "stock": true
+        },
+        "title": "Samsung Galaxy A07s – Class Cellulars",
+        "product": "26090",
+        "source_sha256": "73fc06ef04b861805706db2b01dcc228330e201964addd4425cd56f94b9d7a30",
+        "observed_at": "2026-11-26T15:01:13.861787+00:00"
+      }
+    ],
+    "search_responses": [
+      {
+        "operation": "search",
+        "key": {
+          "provider": "manufacturer",
+          "query": "Samsung Galaxy A07s Lebanon local delivery Batroun price",
+          "country": "LB",
+          "language": "en",
+          "limit": 8,
+          "cursor": 0
+        },
+        "response": {
+          "attempt": {
+            "channel": "manufacturer",
+            "status": "budget_denied",
+            "latency_ms": 16,
+            "reserved_usd": "0",
+            "actual_usd": null,
+            "usage_units": null,
+            "request_id": null
+          },
+          "hits": []
+        }
+      },
+      {
+        "operation": "search",
+        "key": {
+          "provider": "manufacturer",
+          "query": "Samsung Galaxy A07s لبنان توصيل محلي Batroun",
+          "country": "LB",
+          "language": "ar",
+          "limit": 8,
+          "cursor": 0
+        },
+        "response": {
+          "attempt": {
+            "channel": "manufacturer",
+            "status": "budget_denied",
+            "latency_ms": 0,
+            "reserved_usd": "0",
+            "actual_usd": null,
+            "usage_units": null,
+            "request_id": null
+          },
+          "hits": []
+        }
+      },
+      {
+        "operation": "search",
+        "key": {
+          "provider": "manufacturer",
+          "query": "Samsung Galaxy A07s Lebanon retailer",
+          "country": "LB",
+          "language": "en",
+          "limit": 8,
+          "cursor": 0
+        },
+        "response": {
+          "attempt": {
+            "channel": "manufacturer",
+            "status": "ok",
+            "latency_ms": 1391,
+            "reserved_usd": "0",
+            "actual_usd": "0",
+            "usage_units": null,
+            "request_id": null
+          },
+          "hits": [
+            {
+              "url": "https://www.ayoubcomputers.com/",
+              "title": "ayoubcomputers.com",
+              "snippet": "",
+              "score": null,
+              "source_url": "https://www.asus.com/me-en/content/where-to-buy/"
+            },
+            {
+              "url": "https://www.beirutcart.com/",
+              "title": "beirutcart.com",
+              "snippet": "",
+              "score": null,
+              "source_url": "https://www.asus.com/me-en/content/where-to-buy/"
+            },
+            {
+              "url": "https://gcscomputerpro.com",
+              "title": "gcscomputerpro.com",
+              "snippet": "",
+              "score": null,
+              "source_url": "https://www.asus.com/me-en/content/where-to-buy/"
+            },
+            {
+              "url": "https://www.macrotronics.net",
+              "title": "macrotronics.net",
+              "snippet": "",
+              "score": null,
+              "source_url": "https://www.asus.com/me-en/content/where-to-buy/"
+            },
+            {
+              "url": "https://mojitech.net/",
+              "title": "mojitech.net",
+              "snippet": "",
+              "score": null,
+              "source_url": "https://www.asus.com/me-en/content/where-to-buy/"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
