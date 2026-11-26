@@ -23,6 +23,7 @@ def main():
     root = args.work / 'control'
     lock = json.loads((args.work / 'lock.json').read_bytes())
     if (hash_file(args.work / 'seed.sqlite') != lock['seed'] or hash_file(args.work / 'profile.json') != lock['profile']
+            or lock['adapter'] != {p.name: hash_file(p) for p in HERE.glob('*.py')}
             or any(hash_file(root / p) != h for p, h in lock['files']['control'].items())):
         raise ValueError('Prepared control or seed differs from its lock')
     args.output.mkdir(parents=True)

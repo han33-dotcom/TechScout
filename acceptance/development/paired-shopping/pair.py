@@ -25,8 +25,8 @@ FREEZE = ROOT / 'acceptance/architecture-v2'
 PINS = {'control': '34918b296c1615cba2741eb6962d5b8ba185ddad',
         'agent': 'c9c71033d7daf5508683e216f165d77c3eaab026'}
 INPUTS = {'setup': ('Honor X9d', 'Tripoli'),
-          'search': ('Samsung Galaxy A17', 'Jounieh'),
-          'selection': ('https://classcellulars.com/product/samsung-galaxy-a17/', 'Jounieh')}
+          'search': ('Samsung Galaxy A07s', 'Batroun'),
+          'selection': ('https://classcellulars.com/product/samsung-galaxy-a07s/', 'Batroun')}
 ENDINGS = re.compile('^(Your search is complete|Some checks could not finish|No verified recommendation yet'
                      '|Search cancelled|Search could not finish|One detail to clarify)$')
 
