@@ -63,6 +63,9 @@ and held catalog entries are leads only. Preserve explicit model identifiers inc
 If search returned nearby models, try the exact designation at a reviewed shop and inspect a
 plausible exact page and its selectable variants. Unreviewed titles can guide another search
 but cannot verify a product. Missing search coverage does not make the buyer's wording ambiguous.
+Once a selected variant fits and has a current price, keep that selection. Change it only to
+resolve a buyer constraint. Other colors do not resolve shipping, condition or seller eligibility.
+Look for a different seller or applicable terms, or present the checked partial promptly.
 If exact stock or a requested variant cannot be verified, present the evidence and its limits.
 Ask about genuinely unspecified or conflicting requirements when the answer can
 change the recommendation. Never ask for a precise address in free text. Use question and
@@ -85,7 +88,7 @@ class ShoppingAgent(DomesticBuyerFlow):
 
     def __init__(self, context, deps):
         super().__init__(context, deps)
-        self.trace.update(controller='single_agent', actions=[], prompt_version='shopping-agent-2')
+        self.trace.update(controller='single_agent', actions=[], prompt_version='shopping-agent-3')
         self.trace['request'].pop('model', None)
         self.leads = []
         self.used = set()
@@ -275,6 +278,7 @@ class ShoppingAgent(DomesticBuyerFlow):
 
     def observe(self, index, listing, read):
         # A later selection, failed re-read or changed price supersedes the previous result.
+        previous_partials = tuple(self.uncertain.values())[:MAX_UNCERTAIN]
         urls = {listing.url, self.leads[index].url}
         for url in urls:
             self.blockers.pop(url, None)
@@ -285,6 +289,7 @@ class ShoppingAgent(DomesticBuyerFlow):
             if str(item.offer.listing_url) in urls:
                 del self.uncertain[key]
         if any(o.source_id != read.source_id for o in read.offers):
+            self.publish_partials(previous_partials)
             return dict(status='mismatched_source', lead=index, count=0)
         checks = []
         now = self.deps.wall_clock()
@@ -313,6 +318,7 @@ class ShoppingAgent(DomesticBuyerFlow):
                 self.blockers.setdefault(listing.url, []).append(reason)
         # Old catalog rows are leads, never publish them as evidence after an unsuccessful read.
         self.record_verification(listing, read, preserve_earlier=False)
+        self.publish_partials(previous_partials)
         if read.source_id:
             checked = read.status == 'ok' and bool(read.replies)
             self.sources[read.source_id] = (read.source_id, 'checked' if checked else 'failed',
@@ -324,6 +330,11 @@ class ShoppingAgent(DomesticBuyerFlow):
                     receipts=sorted({digest for digest, _ in read.replies}),
                     partials=[dict(model=u.offer.variant.product.model, price=u.offer.price.model_dump(mode='json'),
                                    reasons=u.reasons) for u in self.uncertain.values()][:4])
+
+    def publish_partials(self, previous):
+        current = tuple(self.uncertain.values())[:MAX_UNCERTAIN]
+        if current != previous:
+            self.publish(status='running', phase='research', uncertain=current)
 
     def verified_choices(self):
         choices = []
