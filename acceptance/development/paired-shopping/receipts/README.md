@@ -1,5 +1,9 @@
 # Development evidence, 26 November 2026
 
+This page records the initial paired run. After provider restoration the agent dispatched two SerpApi searches. The control planned a Tavily search and its worker failed before dispatch. Both arms later passed the managed-scrape preflight. The owner archived #201 with the control defect unresolved and selected the agent for the primary score. [Restored search receipts](https://github.com/han33-dotcom/TechScout/issues/201#issuecomment-7197052070) · [Managed-scrape receipts](https://github.com/han33-dotcom/TechScout/pull/216) · [Scope amendment](../../agent-first/README.md)
+
+## Initial paired run
+
 Both pinned buyer UIs selected real Galaxy A07s variants at Class Cellulars. Each buyer saw a USD 165 online listing with an incomplete payable total for delivery to Batroun. General web search and Firecrawl Scrape remain unverified. Neither buyer dispatched a successful general-search call. Issue #201 remains open and scoring has not started. [Issue #201](https://github.com/han33-dotcom/TechScout/issues/201)
 
 ## What each buyer saw live

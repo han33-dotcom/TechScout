@@ -1,0 +1,413 @@
+{
+  "run": {
+    "request_id": "62b27827-8029-4a3f-8689-19584c43279e",
+    "request_revision": 1,
+    "run_id": "e3ac1961-01cd-4888-99a1-1da0caf86d2f",
+    "run_revision": 1
+  },
+  "product_revision": "40320a1519ee7972d92ee74cc10afeef1078dcee",
+  "buyer": {
+    "input": {
+      "id": "B35",
+      "category": "phone",
+      "entry": "needs",
+      "mode": "delivery",
+      "destination": "Beirut",
+      "prompt": "I want a new Samsung Galaxy S-series phone with 256 GB and an integrated S Pen for taking notes. What's the delivered price in Beirut?"
+    },
+    "submitted": "2026-11-26T16:51:58.052598+00:00",
+    "elapsed_s": 76.922,
+    "terminal": "No verified recommendation yet",
+    "browser": "156.0.8078.4",
+    "links": [],
+    "timeline": [
+      {
+        "ms": 4,
+        "text": "",
+        "status": null
+      },
+      {
+        "ms": 54,
+        "text": "Searching for phone · Storage (GB) at least 256 · new · delivery to Beirut\nYour request is saved. Results will appear when a research worker starts.",
+        "status": "Waiting to start"
+      },
+      {
+        "ms": 1274,
+        "text": "Searching for phone · Storage (GB) at least 256 · new · delivery to Beirut",
+        "status": "Checking products and evidence"
+      },
+      {
+        "ms": 76874,
+        "text": "Searching for phone · Storage (GB) at least 256 · new · delivery to Beirut\nNo qualifying offer was confirmed in the listings checked.\nNo offer was verified in this run.\nOpen questions:\n- Search coverage in this run: 1 retailers found, 1 attempted, 0 read successfully, 0 with a qualifying offer; retailers outside this search were not checked.",
+        "status": "No verified recommendation yet"
+      }
+    ],
+    "buyer": "t↗\ntechscout\n.\nSign in or create account\nLB\nBuilt for buying in Lebanon\nLESS GUESSWORK. BETTER CHOICES.\nFind the right tech.\nKnow what you’re buying.\n\nTell us what matters. Compare configurations, local sellers and the full cost, with evidence you can check.\n\nYOUR SESSION\nRecent searches\nOpen history\n\nPrivate to this browser session. Saved results need a fresh check before you rely on them.\n\nPhones\nLaptops\nTablets\nMonitors\nHeadphones & earbuds\nWhat are you looking for?\nUpdate search ↗\nShopping assistant \nStandard comparison\nSingle shopping agent (experimental)\nSearch for \nMy needs\nAn exact model\nProduct links are recognized automatically.\nYour requirements\nEditable at any time\nTarget budget · USD\nHard maximum · USD\nBudget currency\nUSD\nLBP\nEUR\nAED\nCity in Lebanon\nStorage (GB)\nCondition\nNew only\nUsed only\nRefurbished only\nFulfillment\nDelivery or pickup\nDelivery\nPickup\nPayment\nNo preference\nCash\nCard\n\nA target is a preference. Only a hard maximum is a price ceiling. Your original wording is kept for interpretation.\n\nSEARCH · REVISION 1\nNo verified recommendation yet\n\nSearching for phone · Storage (GB) at least 256 · new · delivery to Beirut\n\nNo qualifying offer was confirmed in the listings checked.\n\nAbout these resultsStandard summary\n\nNo offer was verified in this run.\nOpen questions:\n- Search coverage in this run: 1 retailers found, 1 attempted, 0 read successfully, 0 with a qualifying offer; retailers outside this search were not checked.\n\nA standard summary of every checked fact, in a fixed order.\n1\nDiscovered retailers\n1\nAttempted retailers\n0\nRetrieved retailers\n0\nQualifying retailers\nYOUR COMPARISON · REVISION 1\n0 verified model options\nSort\nRecommended order\nVerified total (within currency)\n\nOnly offers verified for these requirements appear here. Fewer than three is a valid result. Costs in different currencies are not ranked as savings.\n\nNo verified options yet\n\nThe available evidence did not establish a verified option. You can adjust your requirements or inspect uncertain offers below.\n\nUncertain / non-qualifying offers (0)\nWhere the evidence came from\n\nInventory and discovery counts do not mean every retailer was checked.\n\noutgeeked\nFAILED\n\nNo applicable domestic retailer identity\n\n0 qualifying sellers across 0 displayed options. Multiple sellers are grouped under the same canonical configuration.\n\nWhat would you like to change?\nRefine comparison\n\nAdds to this request. Existing filters remain in force until you explicitly edit them above. Previous results stay labelled while new evidence is checked.\n\nTECHSCOUT / BUY WITH CONTEXT\nCompare here. Buy directly from the retailer."
+  },
+  "actions": [
+    {
+      "count": 0,
+      "status": "leads",
+      "tool": "catalog",
+      "turn": 1
+    },
+    {
+      "count": 1,
+      "status": "leads",
+      "tool": "retailer_search",
+      "turn": 2
+    },
+    {
+      "channel": "serpapi",
+      "count": 7,
+      "query_index": 1,
+      "query_sha256": "fb8fff2fd0f44977fe131f1b68d79d9c0bf05fef3213eb5100a3d0b9ec7c5aa2",
+      "status": "ok",
+      "tool": "web_search",
+      "turn": 3
+    },
+    {
+      "checks": [],
+      "count": 0,
+      "lead": 1,
+      "receipts": [],
+      "status": "out_of_scope",
+      "tool": "inspect",
+      "turn": 4
+    },
+    {
+      "channel": "serpapi",
+      "count": 0,
+      "query_index": 0,
+      "query_sha256": "223210933efd74a200f5421ecb0b56445f87157ab746e81f27d56214362abdef",
+      "status": "budget_denied",
+      "tool": "web_search",
+      "turn": 5
+    },
+    {
+      "tool": "present",
+      "turn": 6
+    }
+  ],
+  "stop_reason": "No qualifying offer was confirmed in the listings checked.",
+  "presentation": {
+    "uncertain": [],
+    "verified": []
+  },
+  "spend": {
+    "attempts": {
+      "model": 6,
+      "retrieval": 3,
+      "search": 1
+    },
+    "known_usd": "0.0222585",
+    "ledger": "read",
+    "note": "uncertain amounts are full reservations kept because the cost was not reported",
+    "still_held_usd": "0",
+    "uncertain_usd": "0"
+  },
+  "limits": {
+    "active_seconds": 299.986,
+    "concurrent_workers": 3,
+    "final_by_s": 118,
+    "ledger_buyer_caps": {
+      "calls": 40,
+      "research_spend_usd": "0.75",
+      "seconds": 120,
+      "spend_usd": "1"
+    },
+    "nonfinal_by_s": 77.0,
+    "recommendation_groups": 3
+  },
+  "completion": {
+    "lock": "6739df002bf01266dbd568582f0a3721f9330d7e6afc42786a06c6e7740b92a4",
+    "bank": "8874b54944fc8554dce03dc77b0a76215b18523833a6d70f436629de6cd94fa4",
+    "finished": "2026-11-26T16:53:15.201271+00:00"
+  },
+  "retrieval": [
+    {
+      "operation": "get",
+      "source": "mojitech",
+      "url": "https://mojitech.net/wp-json/wc/store/v1/products?search=phone+256GB+Galaxy&per_page=10&page=1",
+      "final_url": null,
+      "sha256": null,
+      "http_status": null,
+      "observed": null,
+      "errors": [
+        "INVALID_SCHEMA"
+      ],
+      "attempts": 3
+    },
+    {
+      "operation": "get",
+      "source": "technodel",
+      "url": "https://technodel.net/search?q=phone+256GB+Galaxy",
+      "final_url": "https://technodel.net/search?q=phone+256GB+Galaxy",
+      "sha256": "5bbe2417aea404a723d53900648bf60e8903edd4388793bb6436c0d5315b2755",
+      "http_status": 200,
+      "observed": "2026-11-26 16:52:09.668648+00:00",
+      "errors": [],
+      "attempts": 1
+    },
+    {
+      "operation": "get",
+      "source": "beytech",
+      "url": "https://beytech.com.lb/wp-json/wc/store/v1/products?search=phone+256GB+Galaxy&per_page=10&page=1",
+      "final_url": "https://beytech.com.lb/wp-json/wc/store/v1/products?search=phone+256GB+Galaxy&per_page=10&page=1",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "http_status": 200,
+      "observed": "2026-11-26 16:52:12.519307+00:00",
+      "errors": [],
+      "attempts": 1
+    }
+  ],
+  "events": [
+    {
+      "at": "2026-11-26T16:52:54.854956+00:00",
+      "kind": "search",
+      "mode": "live",
+      "provider": "serpapi",
+      "query": "phone Lebanon local delivery Beirut price 256GB Galaxy",
+      "country": "LB",
+      "language": "en",
+      "limit": 8,
+      "cursor": 0,
+      "status": "ok",
+      "count": 7,
+      "urls": [
+        "https://mobileleb.com/collections/samsung-mobile-phones",
+        "https://www.facebook.com/100063640328897/videos/samsung-models-are-available-in-the-best-price-in-lebanon-make-sure-to-visit-our/724385729599326/",
+        "https://outgeeked.net/collections/samsung-galaxy-smartphones",
+        "https://www.facebook.com/thecellbar/videos/the-cellbar/1146830275735972/",
+        "https://lb.bmsmena.com/collections/smartphones",
+        "https://www.instagram.com/p/C6JoTgWshpW/",
+        "https://najemstarcall.com/product-category/mobile-phones/samsung/"
+      ],
+      "response": "b800eafeeb794e02d0c640f384fc90cb59c16dca540457eb78900894195af190"
+    },
+    {
+      "at": "2026-11-26T16:53:05.937208+00:00",
+      "kind": "search",
+      "mode": "live",
+      "provider": "serpapi",
+      "query": "phone Lebanon retailer 256GB Galaxy",
+      "country": "LB",
+      "language": "en",
+      "limit": 8,
+      "cursor": 0,
+      "status": "budget_denied",
+      "count": 0,
+      "urls": [],
+      "response": "11b2468a78c543791047072dc477b35b0e77bf91042641e7301b0abcc567a774"
+    }
+  ],
+  "source_outcomes": [
+    {
+      "source_id": "outgeeked",
+      "name": "outgeeked",
+      "status": "failed",
+      "reason": "No applicable domestic retailer identity"
+    }
+  ],
+  "clarification": null,
+  "offer_evidence": [],
+  "assessment": {
+    "frozen_class": "full",
+    "pair_flag": false,
+    "reason": "Native retailer search yielded a Galaxy A27. General search returned category or social pages. No S-series listing with an integrated S Pen, price, link or Beirut total reached the buyer.",
+    "correct_listing_evidence": null,
+    "exact_or_suitable_visible": false,
+    "current_price_link": false,
+    "full_or_partial_or_blocked_credit": false,
+    "pair_credit": false,
+    "misleading_verified_claims": [],
+    "first_useful_ms": null,
+    "observations": []
+  },
+  "final_display_ms": 76874,
+  "submitted_request": {
+    "schema_version": 2,
+    "request_id": "62b27827-8029-4a3f-8689-19584c43279e",
+    "implementation": "single_agent",
+    "revision": 1,
+    "intent": {
+      "kind": "needs",
+      "description": "I want a new Samsung Galaxy S-series phone with 256 GB and an integrated S Pen for taking notes. What's the delivered price in Beirut?",
+      "required_software": []
+    },
+    "unresolved_constraints": [
+      "integrated S Pen for taking notes"
+    ],
+    "refinement_note": null,
+    "requirements": {
+      "category": "phone",
+      "min_ram_gb": null,
+      "min_storage_gb": 256,
+      "storage_gb": null,
+      "ram_gb": null,
+      "sim": null,
+      "regions": []
+    },
+    "budget": null,
+    "preferences": [],
+    "allowed_colors": [],
+    "payment": null,
+    "allowed_conditions": [
+      "new"
+    ],
+    "market_scope": {
+      "include_international": false,
+      "international_markets": []
+    },
+    "fulfillment": {
+      "destination": {
+        "country": "LB",
+        "city": "Beirut",
+        "postal_code": null
+      },
+      "mode": "delivery",
+      "branch_id": null,
+      "deadline": null
+    },
+    "warranty_requirement": null
+  },
+  "coverage": {
+    "discovered": 1,
+    "attempted": 1,
+    "retrieved": 0,
+    "qualifying": 0
+  },
+  "reported_model_calls": [
+    {
+      "role": "model",
+      "status": "completed",
+      "validated": true,
+      "requested_model": "openai/gpt-6.1-sol",
+      "reported_model": "openai/gpt-6.1-sol",
+      "serving_provider": "OpenAI",
+      "tokens": {
+        "input_tokens": 1133,
+        "output_tokens": 30,
+        "total_tokens": 1163
+      },
+      "latency_ms": 2891,
+      "spend": "known",
+      "actual_usd": "0.003131",
+      "reserved_usd": "0.0614400",
+      "missing_metadata": [
+        "system_fingerprint"
+      ]
+    },
+    {
+      "role": "model",
+      "status": "completed",
+      "validated": true,
+      "requested_model": "openai/gpt-6.1-sol",
+      "reported_model": "openai/gpt-6.1-sol",
+      "serving_provider": "OpenAI",
+      "tokens": {
+        "input_tokens": 1141,
+        "output_tokens": 30,
+        "total_tokens": 1171
+      },
+      "latency_ms": 2657,
+      "spend": "known",
+      "actual_usd": "0.003151",
+      "reserved_usd": "0.0614400",
+      "missing_metadata": [
+        "system_fingerprint"
+      ]
+    },
+    {
+      "role": "model",
+      "status": "completed",
+      "validated": true,
+      "requested_model": "openai/gpt-6.1-sol",
+      "reported_model": "openai/gpt-6.1-sol",
+      "serving_provider": "OpenAI",
+      "tokens": {
+        "input_tokens": 1248,
+        "output_tokens": 30,
+        "total_tokens": 1278
+      },
+      "latency_ms": 2781,
+      "spend": "known",
+      "actual_usd": "0.0034185",
+      "reserved_usd": "0.0614400",
+      "missing_metadata": [
+        "system_fingerprint"
+      ]
+    },
+    {
+      "role": "model",
+      "status": "completed",
+      "validated": true,
+      "requested_model": "openai/gpt-6.1-sol",
+      "reported_model": "openai/gpt-6.1-sol",
+      "serving_provider": "OpenAI",
+      "tokens": {
+        "input_tokens": 1547,
+        "output_tokens": 45,
+        "total_tokens": 1592
+      },
+      "latency_ms": 3688,
+      "spend": "known",
+      "actual_usd": "0.004316",
+      "reserved_usd": "0.0614400",
+      "missing_metadata": [
+        "system_fingerprint"
+      ]
+    },
+    {
+      "role": "model",
+      "status": "completed",
+      "validated": true,
+      "requested_model": "openai/gpt-6.1-sol",
+      "reported_model": "openai/gpt-6.1-sol",
+      "serving_provider": "OpenAI",
+      "tokens": {
+        "input_tokens": 1515,
+        "output_tokens": 30,
+        "total_tokens": 1545
+      },
+      "latency_ms": 2828,
+      "spend": "known",
+      "actual_usd": "0.004086",
+      "reserved_usd": "0.0614400",
+      "missing_metadata": [
+        "system_fingerprint"
+      ]
+    },
+    {
+      "role": "model",
+      "status": "completed",
+      "validated": true,
+      "requested_model": "openai/gpt-6.1-sol",
+      "reported_model": "openai/gpt-6.1-sol",
+      "serving_provider": "OpenAI",
+      "tokens": {
+        "input_tokens": 1383,
+        "output_tokens": 70,
+        "total_tokens": 1453
+      },
+      "latency_ms": 5703,
+      "spend": "known",
+      "actual_usd": "0.004156",
+      "reserved_usd": "0.0614400",
+      "missing_metadata": [
+        "system_fingerprint"
+      ]
+    }
+  ],
+  "ledger_reconciliation": {
+    "known_usd": "0.0222585",
+    "uncertain_usd": "0",
+    "still_held_usd": "0",
+    "attempts": {
+      "model": 6,
+      "retrieval": 3,
+      "search": 1
+    },
+    "external": 10
+  }
+}

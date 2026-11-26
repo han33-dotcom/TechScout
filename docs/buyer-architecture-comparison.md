@@ -24,6 +24,6 @@ The normal UI can select a single shopping agent. Both historical implementation
 | 3 | [Archive the shared integration evidence and defer the control dispatch repair](https://github.com/han33-dotcom/TechScout/issues/201) |
 | 4 | [Verify the agent on independent development requests, then score its frozen 20](https://github.com/han33-dotcom/TechScout/issues/202) |
 
-The agent runs live in listed primary order under the frozen scoring and budget rules. Report buyer-visible outcomes, misleading claims, cost per useful answer, latency and reference drift. Preserve the six reserved requests for a separate confirmation. [Scope and development cases](../acceptance/development/agent-first/README.md) · [Scoring protocol](buyer-correctness-acceptance.md)
+The agent ran live in listed primary order under the frozen scoring and budget rules. The scorecard records buyer-visible outcomes, misleading claims, cost per useful answer, latency and reference drift. The six reserved requests remain available for a separate confirmation. [Frozen 20 scorecard](../acceptance/architecture-v2/agent-primary-2026-11-26/README.md) · [Scope and development cases](../acceptance/development/agent-first/README.md) · [Scoring protocol](buyer-correctness-acceptance.md)
 
 **Later experiments:** compare parallel seller workers with the single agent, then vary model or reasoning effort on a fixed architecture. Record the measured tradeoff before adopting a change.

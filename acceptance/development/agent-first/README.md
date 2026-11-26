@@ -29,6 +29,17 @@ The pinned code offered inspection actions only for leads with a reviewed source
 
 Each attempt directory contains all four buyer submissions and a runtime lock. Titles from unreviewed sellers cannot create inspection permissions or verified offers. The separate audio reference found 961Souq's black JBLT720BTBLK-SD23-JAA listed in stock at USD 46. Its online availability does not establish a delivered total to Sidon. [Independent audio check](audio-reference.json)
 
+### Final buyer-form verification
+
+| Development request | What the buyer saw on 40320a1 | Final (s) | Settled USD |
+| --- | --- | ---: | ---: |
+| [A07s to Batroun](verification/D-phone.json) | Black, online stock, USD 165 and a working Class Cellulars link. The shipping charge, condition and payable total remained unresolved. | 74.953 | 0.0257685 |
+| [Black Tune 720BT to Sidon](verification/D-audio.json) | No priced link. The agent reported a color mismatch at ITWorks. Its separate read of the black product URL hit a budget limit. A matching black pair was independently available. | 102.344 | 0.0688645 |
+| [Keyboard-compatible iPad Air](verification/D-tablet.json) | Asked for the keyboard's brand and model number or compatibility text before recommending a tablet. The question addressed the missing fact. | 7.891 | 0.0037185 |
+| [32-inch Dell P2425H](verification/D-monitor.json) | No offer. The UI gave a generic explanation and omitted the 23.8-inch panel conflict. | 79.406 | 0.0436240 |
+
+All four settled with zero held or uncertain spend. The final development run demonstrated the phone partial and a justified question across buyer scenarios for exact models, incomplete charges and clarification. The available audio model and evidenced monitor blocker remain buyer-visible failures. [Buyer acceptance matrix](../../../docs/buyer-acceptance-matrix.md) · [Runtime settings](verification/runtime.json)
+
 ## Reproduction
 
 With the repository's Python 3.11 environment, Chromium and Node installed, run the commands below from the repository root. Supply a new work directory and the control seed prepared by the paired runner. Preparation verifies the original logical catalog at migration 0009, builds the specified candidate from its Git archive, then applies the candidate's account schema migration. The 23 directory entries carry forward with empty offer, evidence, buyer, account and saved-location tables. Each submission copies the closed seed. The backend receives one exact buyer request and never receives the grader references.

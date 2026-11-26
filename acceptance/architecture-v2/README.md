@@ -1,6 +1,6 @@
 # Iteration 2 comparison freeze
 
-On 26 November 2026 the owner authorized an agent-only live primary run for #202. The historical paired design below records the original experiment. The scope amendment preserves the frozen inputs, graded denominators, six reserved cases and resource limits. [Scope amendment and development checks](../development/agent-first/README.md)
+On 26 November 2026 the owner authorized an agent-only live primary run for #202. The historical paired design below records the original experiment. The scope amendment preserves the frozen inputs, graded denominators, six reserved cases and resource limits. [Frozen 20 scorecard and buyer receipts](agent-primary-2026-11-26/README.md) · [Scope amendment and development checks](../development/agent-first/README.md)
 
 [Manifest v2](manifest-v2.json) pairs the #197 decision baseline with the single-agent finalist that #200 will build. Both use the same search and browser tools. The original 20 cases decide product acceptance. Six reserved requests check generalization across the five categories. [Original freeze](manifest-v1.json)
 
