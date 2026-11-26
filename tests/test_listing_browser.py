@@ -23,9 +23,9 @@ from test_shopping_agent import development_tools
 
 
 def storefront(url, dropdown):
-    default = listing('White', '39.00').replace(URL, url)
+    default = listing('White', '39.00').replace(URL, url).replace('schema.org/InStock', 'schema.org/OutOfStock')
     variants = json.dumps([
-        dict(id=3034, options={'Color': 'White'}, raw=39, price='$39.00', stock=True),
+        dict(id=3034, options={'Color': 'White'}, raw=39, price='$39.00', stock=False),
         dict(id=3035, options={'Color': 'Black'}, raw=49, price='$49.00', stock=True)])
     controls = ('<select name="options[Color]"><option value="White" selected>White</option>'
                 '<option value="Black">Black</option></select>' if dropdown else
@@ -38,7 +38,7 @@ def storefront(url, dropdown):
             controls +
             '<input type="hidden" name="variant_id" value="3034">'
             '<span data-variant-price>$39.00</span>'
-            '<span data-variant-stock data-in="In stock" data-out="Out of stock">In stock</span>'
+            '<span data-variant-stock data-in="In stock" data-out="Out of stock">Out of stock</span>'
             '</div><script src="/static/colors.js"></script>')
 
 
@@ -47,6 +47,7 @@ CHANGE = """document.addEventListener('change', e => {
   if (e.target.value === 'Black') {
     document.querySelector('[name="variant_id"]').value = '3035';
     document.querySelector('[data-variant-price]').textContent = '$49.00';
+    document.querySelector('[data-variant-stock]').textContent = 'In stock';
   }
 });"""
 

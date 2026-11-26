@@ -11,6 +11,8 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: /opt/techscout-browsers
     services:
       postgres:
         image: pgvector/pgvector:0.8.2-pg17-bookworm@sha256:feb68f4f15446397d8cac7f4fe48fe4586de83160d1fc48b46283312d1a33966
@@ -29,7 +31,19 @@ jobs:
           python-version: "3.11"
           cache: pip
       - run: python -m pip install -r requirements.txt
-      - run: python -m playwright install --with-deps --only-shell chromium
+      - name: Install sandboxed Chromium for the offline retailer tests
+        run: |
+          sudo install -d -o "$USER" "$PLAYWRIGHT_BROWSERS_PATH"
+          python -m playwright install --with-deps --only-shell chromium
+          sudo chown -R root:root "$PLAYWRIGHT_BROWSERS_PATH"
+          browser=$(find "$PLAYWRIGHT_BROWSERS_PATH" -type f -name chrome-headless-shell -print -quit)
+          test -x "$browser"
+          if [[ $(cat /proc/sys/kernel/apparmor_restrict_unprivileged_userns 2>/dev/null) == 1 ]]; then
+            echo "abi <abi/4.0>,
+            profile techscout-ci-chromium $browser flags=(unconfined) {
+              userns,
+            }" | sudo apparmor_parser -r
+          fi
       - uses: actions/setup-node@v4
         with:
           node-version: "22"

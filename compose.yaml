@@ -67,6 +67,8 @@ services:
 
   worker:
     <<: *backend
+    security_opt:
+      - seccomp=./config/playwright/seccomp.json
     depends_on:
       migrate:
         condition: service_completed_successfully
