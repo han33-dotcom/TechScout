@@ -1,0 +1,162 @@
+[
+  {
+    "id": "B07",
+    "category": "laptop",
+    "entry": "exact",
+    "mode": "delivery",
+    "destination": "Tripoli",
+    "prompt": "Find a new 13-inch MacBook Air M2 in Midnight, 8 GB RAM and 256 GB SSD, delivered to Tripoli."
+  },
+  {
+    "id": "B11",
+    "category": "tablet",
+    "entry": "exact",
+    "mode": "delivery",
+    "destination": "Beirut",
+    "prompt": "Find a new blue iPad with the A16 chip, Wi-Fi only and 128 GB, delivered to Beirut."
+  },
+  {
+    "id": "B17",
+    "category": "monitor",
+    "entry": "exact",
+    "mode": "delivery",
+    "destination": "Tripoli",
+    "prompt": "Find me a new Samsung Odyssey G5 G55C 27-inch curved 165 Hz monitor for delivery to Tripoli."
+  },
+  {
+    "id": "B21",
+    "category": "audio",
+    "entry": "exact",
+    "mode": "delivery",
+    "destination": "Beirut",
+    "prompt": "Compare the new black JBL Tune 520BT headphones delivered to Beirut. Which seller is cheaper overall?"
+  },
+  {
+    "id": "B23",
+    "category": "audio",
+    "entry": "needs",
+    "mode": "delivery",
+    "destination": "Saida",
+    "prompt": "I want new wired USB-C earbuds with a microphone for phone calls. What is the delivered price to Saida?"
+  },
+  {
+    "id": "B27",
+    "category": "monitor",
+    "entry": "needs",
+    "mode": "delivery",
+    "destination": "Zahle",
+    "prompt": "My PC can drive 144 Hz over DisplayPort. What would I pay for a new 24-inch-class Full HD gaming monitor with DisplayPort and at least 144 Hz, delivered to Zahle?"
+  },
+  {
+    "id": "B31",
+    "category": "laptop",
+    "entry": "needs",
+    "mode": "delivery",
+    "destination": "Saida",
+    "prompt": "I want a new notebook for running virtual machines, with at least 32 GB of RAM and a 1 TB SSD. What is the price delivered to Saida?"
+  },
+  {
+    "id": "B35",
+    "category": "phone",
+    "entry": "needs",
+    "mode": "delivery",
+    "destination": "Beirut",
+    "prompt": "I want a new Samsung Galaxy S-series phone with 256 GB and an integrated S Pen for taking notes. What's the delivered price in Beirut?"
+  },
+  {
+    "id": "B36",
+    "category": "audio",
+    "entry": "needs",
+    "mode": "delivery",
+    "destination": "Jounieh",
+    "prompt": "I'm buying new wireless over-ear headphones for commuting. I want active noise cancellation and USB-C charging. Can you compare the same pair delivered to Jounieh?"
+  },
+  {
+    "id": "B39",
+    "category": "audio",
+    "entry": "needs",
+    "mode": "delivery",
+    "destination": "Byblos",
+    "prompt": "Find me a new wireless gaming headset with a USB receiver and a flip-to-mute microphone for PC. What would it cost delivered to Byblos?"
+  },
+  {
+    "id": "B08",
+    "category": "laptop",
+    "entry": "needs",
+    "mode": "delivery",
+    "destination": "Byblos",
+    "prompt": "I need a new Windows laptop for spreadsheets with a built-in numeric keypad, at least 16 GB RAM and a 512 GB SSD. Deliver to Byblos."
+  },
+  {
+    "id": "B24",
+    "category": "audio",
+    "entry": "exact",
+    "mode": "pickup",
+    "destination": "Hamra, Beirut",
+    "prompt": "Where can I pick up new black JBL Tune 770NC headphones in Hamra, Beirut?"
+  },
+  {
+    "id": "B37",
+    "category": "monitor",
+    "entry": "needs",
+    "mode": "pickup",
+    "destination": "Beirut",
+    "prompt": "I need a new 27-inch IPS monitor with a USB-C input for my laptop. Where in Beirut can I pick one up and what will I pay?"
+  },
+  {
+    "id": "B42",
+    "category": "tablet",
+    "entry": "needs",
+    "mode": "pickup",
+    "destination": "Tripoli",
+    "prompt": "I need a new Android tablet with at least 8 GB of RAM and a screen of 11 inches or larger. Can I collect one at a specific shop in Tripoli? What will it cost?"
+  },
+  {
+    "id": "B43",
+    "category": "phone",
+    "entry": "exact",
+    "mode": "pickup",
+    "destination": "Beirut",
+    "prompt": "Can I pick up a new black 128 GB iPhone 15 at a specific Beirut branch? Tell me the price and whether that branch has it."
+  },
+  {
+    "id": "B05",
+    "category": "phone",
+    "entry": "exact",
+    "mode": "delivery",
+    "destination": "Beirut",
+    "prompt": "I need the iPhone 15 generation in the Mini size, new. Can you find an iPhone 15 mini for delivery to Beirut?"
+  },
+  {
+    "id": "B10",
+    "category": "laptop",
+    "entry": "exact",
+    "mode": "delivery",
+    "destination": "Beirut",
+    "prompt": "Can you find the new 13-inch MacBook Air with the M1 chip and 32 GB of built-in memory for delivery to Beirut?"
+  },
+  {
+    "id": "B15",
+    "category": "tablet",
+    "entry": "exact",
+    "mode": "delivery",
+    "destination": "Saida",
+    "prompt": "I want a new Wi-Fi iPad mini with the A17 Pro chip and 64 GB internal storage. Deliver to Saida."
+  },
+  {
+    "id": "B20",
+    "category": "monitor",
+    "entry": "exact",
+    "mode": "delivery",
+    "destination": "Beirut",
+    "prompt": "I need the exact Dell P2422H, but it must display native 3840 x 2160. Can I get it new, delivered to Beirut?"
+  },
+  {
+    "id": "B25",
+    "category": "audio",
+    "entry": "exact",
+    "mode": "delivery",
+    "destination": "Tripoli",
+    "prompt": "I want the Sony MDR-ZX110 in black, new, but it must connect over Bluetooth without an adapter. Can it be delivered to Tripoli?"
+  }
+]
