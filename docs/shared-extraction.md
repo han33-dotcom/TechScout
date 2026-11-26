@@ -48,7 +48,8 @@ provider trust boundary; no claim of a locally observed redirect chain is made.
 Every fallback reserves one paid retrieval and the shared source slot before
 dispatch. Direct retries and fallback are separate ledger attempts. Unknown usage
 retains the entire configured quote; reported overcharges block the campaign.
-The fixed Decimal USD/credit rate is deployment configuration, not a guessed price.
+Configure a positive Decimal USD/credit rate, or `included` for verified free quota
+with enough credits and a hard stop before paid overages. Both use the same call and source limits.
 An admission/budget refusal, unsafe target, rate limit, authentication requirement
 or explicit 404/410 cannot be bypassed with fallback. A registered public target
 returning a generic 403 can use the explicitly enabled managed path. No credentials,

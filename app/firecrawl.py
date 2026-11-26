@@ -1,7 +1,7 @@
 """Explicit, metered single-page fallback; no crawl, actions or LLM tools."""
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 from hashlib import sha256
 import time
 
@@ -19,10 +19,23 @@ class ManagedPage:
 
 
 class Firecrawl:
-    def __init__(self, api_key, gate, *, usd_per_credit: Decimal, transport=None):
-        if not api_key.strip() or money(usd_per_credit) == 0:
-            raise ValueError('Explicit key and positive configured credit rate are required')
-        self.api_key, self.gate, self.rate, self.transport = api_key, gate, usd_per_credit, transport
+    def __init__(self, api_key, gate, *, usd_per_credit, transport=None):
+        included = usd_per_credit == 'included'
+        rate = Decimal(0) if included else money(usd_per_credit)
+        if not api_key.strip() or (not included and not rate):
+            raise ValueError('Explicit key and positive rate or confirmed included quota required')
+        self.api_key, self.gate, self.rate, self.transport = api_key, gate, rate, transport
+
+    @classmethod
+    def from_env(cls, gate, env):
+        key = env.get('FIRECRAWL_API_KEY')
+        rate = env.get('FIRECRAWL_SCRAPE_USD_PER_CREDIT')
+        if not key or not rate:
+            return None
+        try:
+            return cls(key, gate, usd_per_credit=rate if rate == 'included' else Decimal(rate))
+        except (ValueError, InvalidOperation):
+            return None
 
     def scrape(self, job, source_id, url, *, capability=None, international=False):
         limits = self.gate.check_provider_target(source_id,url,expect='html',capability=capability)
@@ -52,7 +65,7 @@ class Firecrawl:
             if not isinstance(html,str) or not html.strip() or len(html.encode('utf-8')) > MAX_RESPONSE_BYTES:
                 raise ValueError('Managed HTML is absent or exceeds the source body bound')
             credits = metadata.get('provider',{}).get('creditsCost')
-            if type(credits) is int and credits > 1:
+            if type(credits) is int and credits > 1 and self.rate:
                 attempt.complete(self.rate*credits,time.monotonic()-started)
             if credits is not None and (type(credits) is not int or credits != 1):
                 raise ValueError('Invalid provider usage')

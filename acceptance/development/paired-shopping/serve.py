@@ -2,6 +2,7 @@
 import argparse
 from contextlib import nullcontext
 import json
+import os
 from pathlib import Path
 import threading
 
@@ -20,6 +21,7 @@ from app.source_registry import DEFAULT_REGISTRY
 from app.storage import Storage
 from bank import Bank, SharedGate, SharedScrape, SharedSearch, digest
 from browser import Session
+from managed_scrape import Firecrawl
 
 
 class PairedSources(DomesticBuyerSources):
@@ -77,6 +79,7 @@ def main():
         raise ValueError('Incorrect live ledger project')
     bank = Bank(args.bank, args.mode, args.work / 'events.jsonl')
     original = deps.research.workers.domestic_tools
+    original.fallback = Firecrawl.from_env(original.gate, os.environ)
     profile = json.loads(args.profile.read_bytes())
     channels = profile['channels']
     if args.mode == 'live' and not set(channels).issubset(original.connectors):
