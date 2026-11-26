@@ -48,6 +48,10 @@ def product(work, arm):
     target = work / arm
     target.mkdir()
     files = ['app', 'config', 'frontend', 'migrations', 'alembic.ini', 'docs/retailer-audit-2026-11-16.json']
+    # The account UI imports its shared contract fixture during TypeScript compilation.
+    fixture = 'tests/fixtures/accounts.json'
+    if subprocess.check_output(['git', 'ls-tree', '--name-only', PINS[arm], fixture], cwd=ROOT).strip():
+        files.append(fixture)
     archive = subprocess.check_output(['git', 'archive', '--format=zip', PINS[arm], *files], cwd=ROOT)
     with zipfile.ZipFile(io.BytesIO(archive)) as package:
         package.extractall(target)
