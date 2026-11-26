@@ -44,6 +44,18 @@ python -m app.contract_schema > techscout-v2.schema.json
   and fall inside that run's timestamps. Pickup binds stock to the actual branch and variant.
   Shipping and import charges bind to the selected route. Foreign currency and promotion terms
   are resolved by the deterministic cost engine. Money is serialized as decimal strings.
+- **Seller rule (since #185).** Direct delivery counts as domestic when the actual merchant is
+  established as a Lebanese seller for the item (`Offer.domestic_seller`). Either the listing
+  names its merchant with listing-bound `seller.name` and `seller.market` receipts, or a reviewed
+  retailer sells the listing on its own storefront and the reader sets `seller.first_party`.
+  Service to the destination is the route's separate `item_eligible` fact. Dispatch origin and
+  warehouse location are informational and never qualify or exclude an offer. A foreign
+  merchant, a forwarded route, conflicting seller evidence, or a marketplace listing that names
+  no Lebanese merchant leaves the seller unverified. A Lebanese seller's own published terms
+  price the order through the domestic cost engine. `seller.first_party` is additive and
+  defaults to false, so older records still read but no longer qualify through dispatch
+  origin alone. Results recorded before #185 used the earlier dispatch-origin rule and keep
+  their original labels.
 - Historical import records can represent direct delivery or two legs joined at a forwarding hub. Route eligibility,
   package assumptions, quote expiry and charge evidence are recorded separately. Estimated
   ranges and incomplete subtotals have their own discriminators.

@@ -25,13 +25,68 @@ describe('comparison evidence boundaries',()=>{
   render(<Comparison workspace={workspace}/>);
   expect(screen.getAllByText('Pickup timing: Unknown').length).toBeGreaterThan(0);
  });
- it('shows an unconfirmed dispatch origin without classifying it as international',()=>{
+ it('names an unverified seller rather than an unknown warehouse (#185)',()=>{
   const workspace=data(),offer=workspace.current.uncertain[0].offer;
+  offer.seller={...offer.seller,market:'LB',first_party:false};
   offer.route={kind:'direct',route_id:'unknown-origin',origin_country:'ZZ',destination:{country:'LB',city:'Beirut'},
                item_eligible:{state:'unknown',reason:'Destination unconfirmed',evidence_ids:[]}};
   render(<Comparison workspace={workspace}/>);
-  expect(screen.getByText(/Delivery requested to Beirut · Dispatch origin unknown/)).toBeTruthy();
-  expect(screen.queryByText(/International delivery · ZZ/)).toBeNull();
+  expect(screen.getByText(/Seller unverified · Delivery to Beirut unconfirmed/)).toBeTruthy();
+  expect(screen.queryByText(/Dispatch origin unknown|International delivery/)).toBeNull();
+ });
+ it('scenario 10: a Lebanese seller serving Tripoli qualifies whatever its warehouse; each gap stays visible (#185)',()=>{
+  const w=data(), rec=w.current.recommendations[0], own=rec.primary;
+  w.current.request.fulfillment={...w.current.request.fulfillment,mode:'delivery',destination:{country:'LB',city:'Tripoli',postal_code:null}};
+  own.offer.route={...own.offer.route,kind:'direct',origin_country:'ZZ',destination:{country:'LB',city:'Tripoli',postal_code:null}} as typeof own.offer.route;
+  for (const receipt of own.offer.evidence) receipt.run=w.current.run;
+  // A second merchant named on its listing: seller.name and seller.market receipts bound to the item.
+  const named=structuredClone(own), price=named.offer.evidence.find(e=>e.field_path==='price')!;
+  named.offer.offer_id='named-merchant';named.offer.seller={seller_id:'named',name:'Named merchant',market:'LB',first_party:false};
+  named.offer.evidence.push({...price,evidence_id:'named:seller.name',field_path:'seller.name',excerpt:'Sold by Named merchant'},
+                            {...price,evidence_id:'named:seller.market',field_path:'seller.market',excerpt:'Named merchant — Tripoli, LB'});
+  rec.additional_sellers=[named];
+  const gap=(id:string,name:string,reason:string,subtotal:string,change:(o:typeof own.offer)=>void)=>{
+    const offer=structuredClone(own.offer);offer.offer_id=id;offer.seller={...offer.seller,seller_id:id,name};
+    offer.listing_url=`https://${id}.example/scout-book`;change(offer);
+    for (const e of offer.evidence) {e.origin_url=offer.listing_url;e.final_url=offer.listing_url;}
+    return {status:'uncertain' as const,offer,reasons:[reason],
+            cost:{status:'incomplete' as const,known_subtotal:{amount:subtotal,currency:'USD'},missing:[reason]}};
+  };
+  w.current.uncertain=[
+    gap('market-a','Marketplace listing','The actual Lebanese seller is unverified for this listing.','930',o=>{o.seller.first_party=false;}),
+    gap('shop-b','Unconfirmed service','Delivery of this item to the requested destination is unverified.','930',o=>{
+      if (o.route.kind==='direct') o.route.item_eligible={state:'unknown',reason:'Delivery to Tripoli unpublished',evidence_ids:[]};}),
+    gap('shop-c','Unpublished fee','costs.order.shipping','920',o=>{
+      o.costs=o.costs.map(c=>c.kind==='shipping'?{...c,state:'unknown',amount:null,evidence_ids:[],reason:'No Tripoli rate'}:c);}),
+  ];
+  const {container}=render(<Comparison workspace={w}/>);
+  expect(container.textContent).not.toMatch(/Dispatch origin|International|duty/);
+  const card=within(screen.getByText('Verified payable total').closest('article')!);
+  expect(card.getByText('USD 930')).toBeTruthy();
+  expect(card.getByText(/Book-Local · Lebanese seller · Delivers to Tripoli/)).toBeTruthy();
+  expect(card.getByText(/Book-Local and Named merchant tie for the lowest verified total at USD 930/)).toBeTruthy();
+  for (const name of ['Book-Local','Named merchant']) {
+    const row=within(card.getAllByText(name,{selector:'strong'})[0].closest('.seller-row') as HTMLElement);
+    expect(row.getByText('USD 930 · new')).toBeTruthy();
+    expect(row.getByText(/USD 930 · verified total/)).toBeTruthy();
+    expect(row.getByText(/Lebanese seller · Delivers to Tripoli/)).toBeTruthy();
+    expect(row.getByText('USD 920')).toBeTruthy();                        // listed price
+    expect(row.getAllByText(/order \/ shipping/)).toHaveLength(1);         // the fee, once
+    expect(row.getByText('USD 10')).toBeTruthy();
+  }
+  const uncertain=(name:string)=>within(screen.getByRole('heading',{name:new RegExp(`· ${name}$`)}).closest('article')!);
+  for (const [name,route,reason,subtotal] of [
+    ['Marketplace listing','Seller unverified · Delivers to Tripoli','The actual Lebanese seller is unverified for this listing.','USD 930'],
+    ['Unconfirmed service','Lebanese seller · Delivery to Tripoli unconfirmed','Delivery of this item to the requested destination is unverified.','USD 930'],
+    ['Unpublished fee','Lebanese seller · Delivers to Tripoli','costs.order.shipping','USD 920'],
+  ]) {
+    const item=uncertain(name);
+    expect(item.getByText(new RegExp(route))).toBeTruthy();
+    expect(item.getAllByText(reason).length).toBeGreaterThan(0);
+    expect(item.getAllByText(`${subtotal} known subtotal · incomplete`).length).toBeGreaterThan(0);
+    expect(item.getByText(/Current listed price/).querySelector('strong')?.textContent).toBe('USD 920');
+    expect(item.getByRole('link',{name:new RegExp(`View at ${name}`)}).getAttribute('href')).toMatch(/^https:\/\/[a-z-]+\.example\/scout-book$/);
+  }
  });
  it('sorts exact decimals including exponent notation without rounding',()=>{expect(compareDecimal('1E+3','1000.00')).toBe(0);expect(compareDecimal('1000.00000000000001','1000')).toBe(1);expect(compareDecimal('0.01','0.1')).toBe(-1)});
  it('keeps one verified result, uncertainty and previous provisional separate',()=>{
