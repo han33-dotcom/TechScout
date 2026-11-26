@@ -41,7 +41,8 @@ class BuyerDecisions(Decisions):
         if 'selected' in data:
             assert data['request']['intent']['wording'] == WORDING
             fits = data['selected']['color'] == 'Black'
-            return dict(selected_item_fits=fits, merchant_address_line=0,
+            return dict(selected_item_fits=fits,
+                        merchant_address_line=None if data['selected']['sku'].startswith('Q20i-') else 0,
                         reason='The requested black Q20i is selected.' if fits else 'The selected color is white.')
         return super().answer(role, data)
 

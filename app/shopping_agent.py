@@ -221,7 +221,7 @@ class ShoppingAgent(DomesticBuyerFlow):
                 observation = dict(status=type(exc).__name__)
             self.observations.append(dict(tool=action.kind, **observation))
             self.trace['actions'][-1].update({k: v for k, v in observation.items()
-                if k in ('status', 'count', 'channel', 'query_index', 'query_sha256', 'checks', 'lead', 'receipts', 'error')})
+                if k in ('status', 'count', 'channel', 'query_index', 'query_sha256', 'checks', 'lead', 'receipts', 'error', 'item_fits', 'merchant_located')})
         return self.present([], 'The agent reached its search limit.')
 
     def perform(self, action, job, room, query):
@@ -364,6 +364,9 @@ class ShoppingAgent(DomesticBuyerFlow):
         if match is None:
             self.blockers[url] = ['The selected item could not be assessed against the request.']
             return dict(status='match_unavailable', **result)
+        result['item_fits'] = match.selected_item_fits
+        result['merchant_located'] = selected.structured_address or (
+            match.merchant_address_line is not None and match.merchant_address_line < len(selected.address_lines))
         try:
             item = selected.partial(page, self.run_ref, self.request, match, control)
         except ValueError as exc:
