@@ -1,0 +1,449 @@
+{
+  "browser_cap_seconds": 300,
+  "built_assets_sha256": {
+    "index-DeAnHqOk.css": "7f9fc0a604a94837d96049237798ee1d807a6adf5cc7a2cd86a9ec4d02dbda68",
+    "index-PhU3W4TW.js": "874b0e3ac855f6e8354ffa25c16444395afbeeb6c28948ca947107a273e11510"
+  },
+  "candidate_base": "85f88f48f473f49e2e3b982dab681312484efd03",
+  "candidate_revision": "c9c71033d7daf5508683e216f165d77c3eaab026",
+  "control_revision": "34918b296c1615cba2741eb6962d5b8ba185ddad",
+  "evaluation_inference_config_sha256_lf": "339047b96e225abfe502f03571416b3c9ce9fbbe0500b11b524cf5383e799031",
+  "runs": {
+    "recovery": {
+      "actions": [
+        {
+          "channel": "serpapi",
+          "count": 0,
+          "query_index": 0,
+          "query_sha256": "34b7b97baefc4eb6fa75b9c2f51b4274da4a61d93864e8eac3f2fda86349274d",
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 1
+        },
+        {
+          "channel": "serpapi",
+          "count": 0,
+          "query_index": 1,
+          "query_sha256": "952bb9339495c33ebef769b42c32edb28782f42366deaf904a3eb05f2bd7ff8b",
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 2
+        },
+        {
+          "count": 0,
+          "status": "leads",
+          "tool": "catalog",
+          "turn": 3
+        },
+        {
+          "channel": "brave",
+          "count": 1,
+          "query_index": 0,
+          "query_sha256": "952bb9339495c33ebef769b42c32edb28782f42366deaf904a3eb05f2bd7ff8b",
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 4
+        },
+        {
+          "checks": [
+            {
+              "failed": [],
+              "model": "Aster Finch Q14",
+              "variant": "sku-workbench"
+            }
+          ],
+          "count": 1,
+          "lead": 0,
+          "receipts": [
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ],
+          "status": "ok",
+          "tool": "inspect",
+          "turn": 5
+        },
+        {
+          "tool": "present",
+          "turn": 6
+        }
+      ],
+      "active_seconds": 299.99,
+      "capabilities": {
+        "retailer_browser": false,
+        "search_channels": [
+          "serpapi",
+          "brave"
+        ]
+      },
+      "controller": "single_agent",
+      "finished_at": "2026-11-26T11:52:00.748293+00:00",
+      "ledger_caps": {
+        "calls": 40,
+        "research_spend_usd": "0.75",
+        "seconds": 120,
+        "spend_usd": "1"
+      },
+      "model_calls": [
+        {
+          "actual_model": "openai/gpt-6.1-sol",
+          "provider_verified": true,
+          "serving_provider": "OpenAI",
+          "settled_usd": "0.002",
+          "status": "completed",
+          "tokens": {
+            "input_tokens": 850,
+            "output_tokens": 30,
+            "total_tokens": 880
+          },
+          "turn": 1,
+          "wall_ms": 5688
+        },
+        {
+          "actual_model": "openai/gpt-6.1-sol",
+          "provider_verified": true,
+          "serving_provider": "OpenAI",
+          "settled_usd": "0.002254",
+          "status": "completed",
+          "tokens": {
+            "input_tokens": 932,
+            "output_tokens": 39,
+            "total_tokens": 971
+          },
+          "turn": 2,
+          "wall_ms": 5453
+        },
+        {
+          "actual_model": "openai/gpt-6.1-sol",
+          "provider_verified": true,
+          "serving_provider": "OpenAI",
+          "settled_usd": "0.002296",
+          "status": "completed",
+          "tokens": {
+            "input_tokens": 998,
+            "output_tokens": 30,
+            "total_tokens": 1028
+          },
+          "turn": 3,
+          "wall_ms": 3828
+        },
+        {
+          "actual_model": "openai/gpt-6.1-sol",
+          "provider_verified": true,
+          "serving_provider": "OpenAI",
+          "settled_usd": "0.002752",
+          "status": "completed",
+          "tokens": {
+            "input_tokens": 1006,
+            "output_tokens": 74,
+            "total_tokens": 1080
+          },
+          "turn": 4,
+          "wall_ms": 6437
+        },
+        {
+          "actual_model": "openai/gpt-6.1-sol",
+          "provider_verified": true,
+          "serving_provider": "OpenAI",
+          "settled_usd": "0.0030185",
+          "status": "completed",
+          "tokens": {
+            "input_tokens": 1088,
+            "output_tokens": 30,
+            "total_tokens": 1118
+          },
+          "turn": 5,
+          "wall_ms": 4953
+        },
+        {
+          "actual_model": "openai/gpt-6.1-sol",
+          "provider_verified": true,
+          "serving_provider": "OpenAI",
+          "settled_usd": "0.003376",
+          "status": "completed",
+          "tokens": {
+            "input_tokens": 1219,
+            "output_tokens": 33,
+            "total_tokens": 1252
+          },
+          "turn": 6,
+          "wall_ms": 4250
+        }
+      ],
+      "presentation": {
+        "uncertain": [],
+        "verified": [
+          "workbench"
+        ]
+      },
+      "prompt_version": "shopping-agent-1",
+      "reasoning_effort": "low",
+      "run_id": "be0acbc6-0a8e-42d8-bef5-0971dcdaabbc",
+      "spend": {
+        "attempts": {
+          "model": 6
+        },
+        "known_usd": "0.0156965",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0"
+      },
+      "started_at": "2026-11-26T11:51:29.842437+00:00",
+      "status": "complete",
+      "stop_reason": "The selected offers passed the current listing, eligibility and payable-total checks.",
+      "worker_latency_ms": 30906
+    },
+    "wrong-variant": {
+      "actions": [
+        {
+          "channel": "serpapi",
+          "count": 1,
+          "query_index": 0,
+          "query_sha256": "3c02bbd869b18602b1914899c0488701f640facd14bbe5631e1472a6604d1daa",
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 1
+        },
+        {
+          "checks": [
+            {
+              "failed": [
+                "RAM requirement (listing has 16 GB)"
+              ],
+              "model": "Rowan Slate W8",
+              "variant": "sku-workbench"
+            }
+          ],
+          "count": 1,
+          "lead": 0,
+          "receipts": [
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ],
+          "status": "ok",
+          "tool": "inspect",
+          "turn": 2
+        },
+        {
+          "channel": "serpapi",
+          "count": 1,
+          "query_index": 1,
+          "query_sha256": "a8ae9eb26722d8f9f025b343e72e9dff6b48b8114a5a0d83e3d0ca0bcab07429",
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 3
+        },
+        {
+          "channel": "serpapi",
+          "count": 1,
+          "query_index": 2,
+          "query_sha256": "0043c9210dda003b9b9641b8eb9e980a07ff2e11a5499ca991a5df0dcb330217",
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 4
+        },
+        {
+          "count": 0,
+          "status": "leads",
+          "tool": "catalog",
+          "turn": 5
+        },
+        {
+          "channel": "brave",
+          "count": 1,
+          "query_index": 0,
+          "query_sha256": "3c02bbd869b18602b1914899c0488701f640facd14bbe5631e1472a6604d1daa",
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 6
+        },
+        {
+          "channel": "brave",
+          "count": 1,
+          "query_index": 1,
+          "query_sha256": "a8ae9eb26722d8f9f025b343e72e9dff6b48b8114a5a0d83e3d0ca0bcab07429",
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 7
+        },
+        {
+          "channel": "brave",
+          "count": 1,
+          "query_index": 2,
+          "query_sha256": "0043c9210dda003b9b9641b8eb9e980a07ff2e11a5499ca991a5df0dcb330217",
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 8
+        },
+        {
+          "tool": "present",
+          "turn": 9
+        }
+      ],
+      "active_seconds": 300.0,
+      "capabilities": {
+        "retailer_browser": false,
+        "search_channels": [
+          "serpapi",
+          "brave"
+        ]
+      },
+      "controller": "single_agent",
+      "finished_at": "2026-11-26T11:53:28.179462+00:00",
+      "ledger_caps": {
+        "calls": 40,
+        "research_spend_usd": "0.75",
+        "seconds": 120,
+        "spend_usd": "1"
+      },
+      "model_calls": [
+        {
+          "actual_model": "openai/gpt-6.1-sol",
+          "provider_verified": true,
+          "serving_provider": "OpenAI",
+          "settled_usd": "0.00198",
+          "status": "completed",
+          "tokens": {
+            "input_tokens": 840,
+            "output_tokens": 30,
+            "total_tokens": 870
+          },
+          "turn": 1,
+          "wall_ms": 4594
+        },
+        {
+          "actual_model": "openai/gpt-6.1-sol",
+          "provider_verified": true,
+          "serving_provider": "OpenAI",
+          "settled_usd": "0.002154",
+          "status": "completed",
+          "tokens": {
+            "input_tokens": 927,
+            "output_tokens": 30,
+            "total_tokens": 957
+          },
+          "turn": 2,
+          "wall_ms": 4796
+        },
+        {
+          "actual_model": "openai/gpt-6.1-sol",
+          "provider_verified": true,
+          "serving_provider": "OpenAI",
+          "settled_usd": "0.002286",
+          "status": "completed",
+          "tokens": {
+            "input_tokens": 993,
+            "output_tokens": 30,
+            "total_tokens": 1023
+          },
+          "turn": 3,
+          "wall_ms": 3969
+        },
+        {
+          "actual_model": "openai/gpt-6.1-sol",
+          "provider_verified": true,
+          "serving_provider": "OpenAI",
+          "settled_usd": "0.0029935",
+          "status": "completed",
+          "tokens": {
+            "input_tokens": 1078,
+            "output_tokens": 30,
+            "total_tokens": 1108
+          },
+          "turn": 4,
+          "wall_ms": 4438
+        },
+        {
+          "actual_model": "openai/gpt-6.1-sol",
+          "provider_verified": true,
+          "serving_provider": "OpenAI",
+          "settled_usd": "0.0033685",
+          "status": "completed",
+          "tokens": {
+            "input_tokens": 1156,
+            "output_tokens": 48,
+            "total_tokens": 1204
+          },
+          "turn": 5,
+          "wall_ms": 6031
+        },
+        {
+          "actual_model": "openai/gpt-6.1-sol",
+          "provider_verified": true,
+          "serving_provider": "OpenAI",
+          "settled_usd": "0.0033985",
+          "status": "completed",
+          "tokens": {
+            "input_tokens": 1164,
+            "output_tokens": 49,
+            "total_tokens": 1213
+          },
+          "turn": 6,
+          "wall_ms": 4875
+        },
+        {
+          "actual_model": "openai/gpt-6.1-sol",
+          "provider_verified": true,
+          "serving_provider": "OpenAI",
+          "settled_usd": "0.0033985",
+          "status": "completed",
+          "tokens": {
+            "input_tokens": 1240,
+            "output_tokens": 30,
+            "total_tokens": 1270
+          },
+          "turn": 7,
+          "wall_ms": 4594
+        },
+        {
+          "actual_model": "openai/gpt-6.1-sol",
+          "provider_verified": true,
+          "serving_provider": "OpenAI",
+          "settled_usd": "0.0036085",
+          "status": "completed",
+          "tokens": {
+            "input_tokens": 1324,
+            "output_tokens": 30,
+            "total_tokens": 1354
+          },
+          "turn": 8,
+          "wall_ms": 4843
+        },
+        {
+          "actual_model": "openai/gpt-6.1-sol",
+          "provider_verified": true,
+          "serving_provider": "OpenAI",
+          "settled_usd": "0.0038035",
+          "status": "completed",
+          "tokens": {
+            "input_tokens": 1402,
+            "output_tokens": 30,
+            "total_tokens": 1432
+          },
+          "turn": 9,
+          "wall_ms": 4344
+        }
+      ],
+      "presentation": {
+        "uncertain": [],
+        "verified": []
+      },
+      "prompt_version": "shopping-agent-1",
+      "reasoning_effort": "low",
+      "run_id": "d6050638-e360-45bd-a52a-a22997402d6b",
+      "spend": {
+        "attempts": {
+          "model": 9
+        },
+        "known_usd": "0.0269910",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0"
+      },
+      "started_at": "2026-11-26T11:52:45.535376+00:00",
+      "status": "abstained",
+      "stop_reason": "No qualifying offer was confirmed in the listings checked. workbench's selected Rowan Slate W8 did not meet the RAM requirement (listing has 16 GB).",
+      "worker_latency_ms": 42641
+    }
+  },
+  "source_mode": "Synthetic local search and selected-item reads. Live OpenRouter model and shared campaign ledger."
+}

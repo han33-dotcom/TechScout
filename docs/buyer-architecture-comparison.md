@@ -15,7 +15,7 @@ The earlier [23-request study](evaluation-report.md) compared fixed rules, a seq
 
 ## Experiment 2 · Single shopping agent
 
-One agent will interpret the request, choose tools, revise its search and advise the buyer. Both implementations will have general web search, direct retailer reads, and browser interaction for variant selection, branch checks and delivery quotes. The control keeps its existing decision logic and gains the same tools through a shared adapter. The [amended freeze](../acceptance/architecture-v2/README.md) keeps the original 20 primary cases, six fresh requests, budgets and run order. Runtime integration and paired results are pending.
+The normal UI can select a single shopping agent. The [development receipts](../acceptance/development/shopping-agent/README.md) show a search recovery and a wrong-variant rejection with the live model and synthetic retailer evidence. Both implementations will have general web search, direct retailer reads, and browser interaction for variant selection, branch checks and delivery quotes. The control keeps its existing decision logic and gains the same tools through a shared adapter. The [amended freeze](../acceptance/architecture-v2/README.md) keeps the original 20 primary cases, six fresh requests, budgets and run order. Runtime integration and paired results are pending.
 
 | Order | Deliverable |
 | --- | --- |
