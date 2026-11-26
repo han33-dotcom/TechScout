@@ -59,6 +59,10 @@ def product(work, arm):
 
 def prepare(work, env_file):
     work.mkdir(parents=True)
+    adapter = work / 'adapter'
+    adapter.mkdir()
+    for script in HERE.glob('*.py'):
+        shutil.copyfile(script, adapter / script.name)
     roots = {arm: product(work, arm) for arm in PINS}
     seed = work / 'seed.sqlite'
     env = dict(os.environ, DATABASE_URL='sqlite:///' + str(seed), PYTHONPATH=str(roots['control']),
@@ -74,7 +78,7 @@ def prepare(work, env_file):
         output = work / (arm + '-preflight.json')
         probe_env = dict(env, DATABASE_URL='sqlite:///' + str(database), PYTHONPATH=str(root),
                          EVIDENCE_DIR=str(work / (arm + '-preflight-evidence')))
-        subprocess.run([sys.executable, str(HERE / 'profile.py'), str(env_file), str(output)],
+        subprocess.run([sys.executable, str(adapter / 'profile.py'), str(env_file), str(output)],
                        cwd=root, env=probe_env, check=True)
         probes[arm] = json.loads(output.read_bytes())
     a, b = probes.values()
@@ -90,7 +94,7 @@ def prepare(work, env_file):
                       and f.suffix != '.pyc'}
     lock = dict(pins=PINS, files=files, seed=hash_file(seed), profile=hash_file(work / 'profile.json'),
                 directory=manifest['catalog']['directory_sha256'], budgets=manifest['budget'],
-                adapter={p.name: hash_file(p) for p in HERE.glob('*.py')})
+                adapter={p.name: hash_file(p) for p in adapter.glob('*.py')})
     save(work / 'lock.json', lock)
 
 
@@ -162,9 +166,11 @@ def submit(engine, url, arm, case, out):
 def run(args):
     work = args.work
     lock = json.loads((work / 'lock.json').read_bytes())
+    adapter = work / 'adapter'
     if (lock['pins'] != PINS or hash_file(work / 'seed.sqlite') != lock['seed']
             or hash_file(work / 'profile.json') != lock['profile']
-            or lock['adapter'] != {p.name: hash_file(p) for p in HERE.glob('*.py')}):
+            or hash_file(Path(__file__)) != lock['adapter']['pair.py']
+            or lock['adapter'] != {p.name: hash_file(p) for p in adapter.glob('*.py')}):
         raise ValueError('Seed, profile or adapter changed since preparation')
     output = work / args.label
     output.mkdir()
@@ -186,7 +192,7 @@ def run(args):
                 sock.bind(('127.0.0.1', 0))
                 port = sock.getsockname()[1]
             bank = args.bank if args.mode == 'replay' else out / 'bank'
-            cmd = [sys.executable, str(HERE / 'serve.py'), '--arm', arm, '--mode', args.mode,
+            cmd = [sys.executable, str(adapter / 'serve.py'), '--arm', arm, '--mode', args.mode,
                    '--work', str(out), '--bank', str(bank), '--port', str(port), '--env-file', str(args.env_file),
                    '--destination-ref', args.case + '-city', '--profile', str(work / 'profile.json'),
                    '--input', INPUTS[args.case][0], '--city', INPUTS[args.case][1]]
