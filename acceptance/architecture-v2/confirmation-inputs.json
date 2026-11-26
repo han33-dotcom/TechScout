@@ -24,12 +24,12 @@
     "prompt": "I want the new Wi-Fi version of the Xiaomi Redmi Pad 2, 8 GB RAM and 256 GB storage. What would one cost delivered to Tripoli?"
   },
   {
-    "id": "C04",
+    "id": "C07",
     "category": "monitor",
     "entry": "exact",
     "mode": "pickup",
     "destination": "Beirut",
-    "prompt": "Can I pick up a new ASUS ProArt PA278QV monitor at a shop in Beirut? Tell me the price and which branch has one."
+    "prompt": "Can I pick up a new BenQ PD2705Q monitor at a shop in Beirut? Tell me the price and which branch has one."
   },
   {
     "id": "C05",
