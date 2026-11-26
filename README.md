@@ -4,6 +4,8 @@ TechScout compares electronics from Lebanese sellers serving the buyer’s desti
 
 The [buyer product contract](docs/buyer-product-contract.md) defines the intended conversation, seller comparison, quotes and saved locations. The [acceptance matrix](docs/buyer-acceptance-matrix.md) maps all 18 scenarios to existing behavior, open work and required evidence.
 
+**Current experiment:** [Single-agent comparison and results](docs/buyer-architecture-comparison.md) · [Task board](https://github.com/users/han33-dotcom/projects/2)
+
 ## Current implementation
 
 The [architecture, API and reproducibility report](docs/architecture-api-report.md)
