@@ -1,6 +1,6 @@
 # TechScout agent instructions
 
-Policy version 4. This is the canonical policy for coding and review agents.
+This file is the single source of project policy for coding and review agents.
 Read [CONTRIBUTING.md](CONTRIBUTING.md) and the applicable task and repository instructions.
 
 ## Project and architecture
