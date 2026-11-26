@@ -12,7 +12,7 @@
 
 | Area | Guides |
 | --- | --- |
-| Buyer application | [Browser API and worker](buyer-api.md) · [Comparison UI](buyer-ui.md) · [History and export](buyer-history.md) · [Live run procedure](live-flow.md) |
+| Buyer application | [Browser API and worker](buyer-api.md) · [Comparison UI](buyer-ui.md) · [History and export](buyer-history.md) · [Accounts and saved locations](buyer-accounts.md) · [Live run procedure](live-flow.md) |
 | Data and decisions | [v2 contracts](full-product-contracts.md) · [Eligibility and totals](full-product-assessment.md) · [Tablet identity](tablet-identity.md) · [Monitor and audio identity](monitor-audio-identity.md) · [Grounded writer](writer.md) |
 | Search and inference | [Domestic search design](domestic-search-design.md) · [Discovery channels](discovery.md) · [Research workers](research-workers.md) · [Freshness and retrieval](evidence-services.md) · [Page extraction](shared-extraction.md) · [OpenRouter](openrouter.md) |
 | Retailer operations | [Admission rules](source-admission.md) · [Directory](retailer-directory.md) · [Onboarding](retailer-onboarding.md) · [Catalog bootstrap](catalog-bootstrap.md) · [Refresh jobs](catalog-refresh.md) |

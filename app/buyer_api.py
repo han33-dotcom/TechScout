@@ -11,6 +11,7 @@ from app.buyer_runs import RunError
 from app.contracts import Model, Text
 from app.contracts_v2 import Country, MarketScope, ShoppingRequest, RunSnapshot, RunReference, ComparisonWorkspace
 from app.buyer_history import HistoryList, HistoricalWorkspace, DeletionResult, export_comparison
+from app.buyer_accounts import AccountSummary, DestinationState, LocationList, SavedLocation
 
 COOKIE = 'techscout_session'
 
@@ -18,6 +19,27 @@ COOKIE = 'techscout_session'
 class SessionInfo(Model):
     csrf_token: Text
     expires_at: datetime
+    # Additive since #187: the signed-in TechScout account, if any.
+    account: AccountSummary | None = None
+
+
+# Account and location bodies use plain strings: the service validates them and its
+# errors never echo a submitted password or address back to the browser.
+class Credentials(Model):
+    username: str
+    password: str
+
+
+class LocationDraft(Model):
+    label: str
+    city: str
+    street: str
+    details: str | None = None
+
+
+class DestinationChoice(Model):
+    location_id: str
+    recipients: list[str]
 
 
 class RunCommand(Model):
@@ -103,15 +125,57 @@ def router(*,cookie_secure=True):
             request.app.state.buyer_runs.authorize(token,request.headers.get('x-csrf-token'))
         return token
 
+    def issued(response,token,csrf,expires,account=None):
+        response.set_cookie(COOKIE,token,httponly=True,secure=cookie_secure,samesite='strict',
+                            path='/',expires=expires)
+        response.headers['Cache-Control']='no-store'
+        return SessionInfo(csrf_token=csrf,expires_at=expires,account=account)
+
     @api.get('/session',response_model=SessionInfo)
     def session(request:Request,response:Response):
         if request.headers.get('sec-fetch-site')=='cross-site':
             raise RunError(403,'Session creation requires the same origin')
-        token,csrf,expires=request.app.state.buyer_runs.session(request.cookies.get(COOKIE))
-        response.set_cookie(COOKIE,token,httponly=True,secure=cookie_secure,samesite='strict',
-                            path='/',expires=expires)
-        response.headers['Cache-Control']='no-store'
-        return SessionInfo(csrf_token=csrf,expires_at=expires)
+        return issued(response,*request.app.state.buyer_accounts.session(request.cookies.get(COOKIE)))
+
+    @api.post('/account/register',response_model=SessionInfo,status_code=201)
+    def register(body:Credentials,request:Request,response:Response):
+        token=owned(request,mutate=True)
+        return issued(response,*request.app.state.buyer_accounts.register(token,body.username,body.password))
+
+    @api.post('/account/sign-in',response_model=SessionInfo)
+    def sign_in(body:Credentials,request:Request,response:Response):
+        token=owned(request,mutate=True)
+        return issued(response,*request.app.state.buyer_accounts.sign_in(token,body.username,body.password))
+
+    @api.post('/account/sign-out',response_model=SessionInfo)
+    def sign_out(request:Request,response:Response):
+        return issued(response,*request.app.state.buyer_accounts.sign_out(owned(request,mutate=True)))
+
+    @api.get('/account/locations',response_model=LocationList)
+    def locations(request:Request):
+        return request.app.state.buyer_accounts.locations(owned(request))
+
+    @api.post('/account/locations',response_model=SavedLocation,status_code=201)
+    def add_location(body:LocationDraft,request:Request):
+        return request.app.state.buyer_accounts.add_location(owned(request,mutate=True),**body.model_dump())
+
+    @api.post('/account/locations/{location_id}/delete',response_model=DeletionResult)
+    def delete_location(location_id:str,request:Request):
+        request.app.state.buyer_accounts.delete_location(owned(request,mutate=True),location_id)
+        return DeletionResult()
+
+    @api.get('/runs/{run_id}/destination',response_model=DestinationState)
+    def destination(run_id:str,request:Request):
+        return request.app.state.buyer_accounts.destination(owned(request),run_id)
+
+    @api.post('/runs/{run_id}/destination',response_model=DestinationState)
+    def select_destination(run_id:str,body:DestinationChoice,request:Request):
+        return request.app.state.buyer_accounts.select_destination(owned(request,mutate=True),run_id,
+                                                                    body.location_id,body.recipients)
+
+    @api.post('/runs/{run_id}/destination/decline',response_model=DestinationState)
+    def decline_destination(run_id:str,request:Request):
+        return request.app.state.buyer_accounts.decline_destination(owned(request,mutate=True),run_id)
 
     @api.post('/runs',response_model=RunSnapshot,status_code=202)
     def start(body:DomesticShoppingRequest,request:Request):

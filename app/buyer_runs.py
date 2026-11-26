@@ -15,7 +15,7 @@ from sqlalchemy import select, insert, update, delete, func
 
 from app import contracts_v2 as v
 from app.costs import FxRate, calculate_domestic_cost, supports_domestic_cost
-from app.storage import buyer_guard, buyer_sessions, buyer_runs
+from app.storage import buyer_destinations, buyer_guard, buyer_sessions, buyer_runs
 from app.buyer_history import HistoryEntry, HistoryList, HistoricalWorkspace, DeletionResult
 
 ACTIVE = {'queued','running','clarification'}
@@ -75,15 +75,31 @@ class BuyerRunService:
             row = self._session(db,now,token,required=False)
             if row:
                 return token,row['csrf'],row['expires_at']
-            # Expired private sessions cascade to their runs; they are never
-            # copied into the public evidence corpus.
-            db.execute(delete(buyer_sessions).where(buyer_sessions.c.expires_at<=now))
-            if db.execute(select(func.count()).select_from(buyer_sessions)).scalar_one() >= 10000:
-                raise RunError(429,'Session capacity is busy')
-            token, csrf = secrets.token_urlsafe(32), secrets.token_urlsafe(32)
-            expires = now+timedelta(hours=24)
-            db.execute(insert(buyer_sessions).values(session_hash=session_hash(token),csrf=csrf,expires_at=expires))
-            return token,csrf,expires
+            return self.issue(db,now)
+
+    def guarded(self):
+        """The serialized buyer transaction, shared with account, location and destination changes."""
+        return self._transaction()
+
+    def owner(self, db, now, token, *, required=True):
+        """The unexpired session row for a cookie token inside a guarded transaction."""
+        return self._session(db, now, token, required=required)
+
+    def owned_run(self, db, run_id, owner):
+        """The run row when that session owns it; 404 for anything else."""
+        return self._row(db, run_id, owner)
+
+    def issue(self, db, now):
+        """Create a new random session inside a guarded transaction; return token, CSRF and expiry."""
+        # Expired private sessions cascade to their runs; they are never
+        # copied into the public evidence corpus.
+        db.execute(delete(buyer_sessions).where(buyer_sessions.c.expires_at<=now))
+        if db.execute(select(func.count()).select_from(buyer_sessions)).scalar_one() >= 10000:
+            raise RunError(429,'Session capacity is busy')
+        token, csrf = secrets.token_urlsafe(32), secrets.token_urlsafe(32)
+        expires = now+timedelta(hours=24)
+        db.execute(insert(buyer_sessions).values(session_hash=session_hash(token),csrf=csrf,expires_at=expires))
+        return token,csrf,expires
 
     def _session(self,db,now,token,*,required=True,csrf=None):
         row = None
@@ -219,6 +235,8 @@ class BuyerRunService:
             if db.execute(select(buyer_runs.c.run_id).where(*chain,buyer_runs.c.status.in_(ACTIVE))).first():
                 raise RunError(409,'Cancel the active search before deleting its history')
             db.execute(delete(buyer_runs).where(*chain))
+            db.execute(delete(buyer_destinations).where(buyer_destinations.c.session_hash==owner,
+                buyer_destinations.c.request_id==row['request_id']))
             return DeletionResult()
 
     @staticmethod
