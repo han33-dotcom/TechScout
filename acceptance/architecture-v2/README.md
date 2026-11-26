@@ -18,4 +18,4 @@ Measure both timers from submission. Report an unreached first useful display ex
 
 ## Verify offline
 
-From the freeze checkout, run `python acceptance/buyer-v1/verify_freeze.py` and `python acceptance/architecture-v2/verify.py`. To recreate the starting catalog, run the manifest’s two build commands on a new SQLite database and pass its path to the second verifier with `--catalog PATH`. This checks the logical directory digest and empty offer, evidence and session state. No model or retailer call is needed.
+From the freeze checkout, run `python acceptance/buyer-v1/verify_freeze.py` and `python acceptance/architecture-v2/verify.py`. To recreate the starting catalog, run the manifest’s two build commands **at the pinned control revision**, with `DATABASE_URL` pointing to a new SQLite file. Pass its path to the freeze checkout’s verifier with `--catalog PATH`. This checks the logical directory digest and empty offer, evidence and session state. No model or retailer call is needed.
