@@ -3,6 +3,7 @@ import argparse
 from collections import Counter
 from datetime import datetime, timezone
 from decimal import Decimal
+from functools import partial
 from hashlib import sha256
 import json
 import os
@@ -13,6 +14,7 @@ from uuid import uuid4
 from pydantic import Field
 
 from app.accounting import BudgetDenied, Ledger
+from app.agent_inspection import inspect_public_listing
 from app.bootstrap import Manifest, Seed
 from app.contracts import Model
 from app.corpus import Corpus
@@ -95,11 +97,13 @@ def status(ledger):
 
 
 class Maintenance:
-    def __init__(self, ledger, corpus, gate, manifest, settings, *, discovery, queue, roles=None, embedding=None):
+    def __init__(self, ledger, corpus, gate, manifest, settings, *, discovery, queue, roles=None, embedding=None,
+                 inspect_listing=None):
         self.ledger, self.corpus, self.gate = ledger, corpus, gate
         self.manifest, self.settings = manifest, settings
         self.discovery, self.queue, self.roles, self.embedding = discovery, queue, roles, embedding
         self.catalog = DomesticCatalog(corpus.storage, registry_path=gate._registry_path)
+        self.inspect_listing = inspect_listing
 
     def claim(self, kind, force):
         limits = getattr(self.settings, kind)
@@ -155,12 +159,12 @@ class Maintenance:
                                                      before[c]['domestic_variants_with_two_sellers']))
                 report = discover(job, category=category, cursor=active['cursor'] * limits.pages, coverage=before[category],
                                   discovery=self.discovery, queue=self.queue, roles=self.roles,
-                                  steps=min(5, limits.pages))
+                                  steps=min(5, limits.pages), inspect_listing=self.inspect_listing)
             elif active['seeds']:
                 manifest = self.manifest.model_copy(update={'seeds': tuple(Seed.model_validate(s) for s in active['seeds'])})
                 result = refresh(manifest, ledger=self.ledger, corpus=self.corpus, gate=self.gate, batch_id=active['batch'],
                                  limit=limits.pages, high_use=active['high'], embedding=self.embedding,
-                                 envelope=limits.envelope(), rotation=active['cursor'])
+                                 envelope=limits.envelope(), rotation=active['cursor'], inspect_listing=self.inspect_listing)
                 counts = Counter(result['counts'])
                 pages = result['pages']
                 for page in pages.values():
@@ -243,6 +247,7 @@ def main(argv=None):
             except InferenceUnavailable:
                 roles = None
             runner = Maintenance(ledger, Corpus(storage), gate, manifest, settings, roles=roles,
+                    inspect_listing=partial(inspect_public_listing, registry=registry),
                     discovery=DomesticDiscovery.from_env(gate,directory,environ=env), embedding=EmbeddingRoute.configured(),
                     queue=OnboardingQueue(storage,registry,directory=directory))
             if args.command == 'trigger':

@@ -9,3 +9,4 @@ httpx2==2.13.1
 httpcore2==2.13.1
 truststore==0.10.5
 anthropic==2.8.0
+playwright==1.65.2

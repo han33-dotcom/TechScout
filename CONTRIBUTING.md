@@ -11,6 +11,7 @@ Windows PowerShell:
 ```powershell
 py -3.11 -m venv .venv
 .venv/Scripts/python.exe -m pip install -r requirements.txt
+.venv/Scripts/python.exe -m playwright install --only-shell chromium
 .venv/Scripts/python.exe -m unittest discover -s tests -v
 ```
 
@@ -18,6 +19,7 @@ macOS/Linux:
 ```bash
 python3.11 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m playwright install --with-deps --only-shell chromium
 .venv/bin/python -m unittest discover -s tests -v
 ```
 

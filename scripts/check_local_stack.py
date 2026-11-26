@@ -51,6 +51,8 @@ def verify_vector(project):
 def smoke(source, target, archive):
     print('Start the API, ingestion worker and PostgreSQL from clean volumes.', flush=True)
     compose(source, 'up', '--build', '--wait', '--wait-timeout', '120')
+    compose(source, 'exec', '-T', 'worker', 'python', '-m', 'unittest', 'discover', '-s', 'tests',
+            '-p', 'test_listing_browser.py', '-v')
     compose(source, 'exec', '-T', 'app', 'python', '-m', 'app.storage', 'load-fixtures')
     verify_vector(source)
     verify_http(source)

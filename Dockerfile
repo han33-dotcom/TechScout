@@ -14,7 +14,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 WORKDIR /srv/techscout
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+ENV PLAYWRIGHT_BROWSERS_PATH=/opt/playwright
+RUN apt-get update && apt-get install -y --no-install-recommends libatomic1 \
+    && pip install --no-cache-dir -r requirements.txt \
+    && python -m playwright install --with-deps --only-shell chromium
 
 COPY alembic.ini ./
 COPY app ./app

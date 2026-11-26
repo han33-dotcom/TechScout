@@ -50,6 +50,7 @@ class Seed(Model):
     policy_field: Literal['policy.shipping','policy.warranty','policy.returns','policy.payment'] = 'policy.shipping'
     # Preserve serialized digests of legacy manifests/checkpoints without a listing.
     listing: ListingSeed | None = Field(default=None, exclude_if=lambda value: value is None)
+    selection_color: Text | None = Field(default=None, max_length=60, exclude_if=lambda value: value is None)
     dispatch_for: DispatchSeed | None = Field(default=None, exclude_if=lambda value: value is None)
     # Category slugs reviewed for this source. Search text alone is insufficient.
     category_slugs: tuple[Text, ...] = ()
@@ -67,6 +68,9 @@ class Manifest(Model):
     def check_targets(self):
         seen = set()
         for seed in self.seeds:
+            if seed.selection_color and (seed.format != 'html' or seed.content != 'listing' or not seed.sku
+                                        or not seed.product_id or seed.dispatch_for):
+                raise ValueError('A color selection requires an HTML product and variant seed')
             if (seed.source_id, str(seed.url)) in seen:
                 raise ValueError('Duplicate seed URL')
             seen.add((seed.source_id, str(seed.url)))
@@ -99,6 +103,11 @@ class SeedBudget:
 
     def reserve(self, kind, charge, seconds, **kwargs):
         is_fetch = kind == 'retrieval'
+        if is_fetch and kwargs.get('limits'):
+            limits = kwargs['limits']
+            kwargs['limits'] = limits.model_copy(update={
+                'concurrency': min(limits.concurrency, self.manifest.limits.max_concurrent_per_source),
+                'requests_per_minute': min(limits.requests_per_minute, self.manifest.limits.max_requests_per_source_minute)})
         with self.job.ledger._transaction() as (state, now):
             record = state[self.checkpoints][self.run_id]
             if record.get('owner') != self.token or now >= record['lease_until']:
@@ -116,7 +125,7 @@ class SeedBudget:
             used['usd'] = str(Decimal(used['usd']) + charge.total)
             used['ms'] += int(seconds * 1000)
             if is_fetch:
-                key = str(self.seed.url)
+                key = kwargs.get('resource') or str(self.seed.url)
                 tries = record['tries'].get(key,0)
                 if tries >= 1 + limits.max_retries_per_resource:
                     raise BudgetDenied('Resource attempt ceiling reached')
