@@ -53,8 +53,10 @@ is required.
 
 Default admission allows one active/queued/waiting run per session, 20 globally,
 and two running controllers across processes. A worker lease lasts 15 seconds and
-is renewed while executing. Active work has 120 seconds total across clarification
-resumes; queued and human-wait time do not count. Poll/start/claim/startup recover
+is renewed while executing. The standard controller has 120 active seconds across clarification
+resumes. The iteration 2 agent has a 300-second active allowance and the shared ledger enforces
+its 120-second external-work deadline. Queue and human-wait time do not consume active time.
+Poll/start/claim/startup recover
 expired leases as partial, without automatic external-call retries. A local
 monotonic deadline also stops publication if the database clock has not ticked.
 Late callbacks after cancellation, refinement, expiry or clarification lose their
@@ -73,6 +75,26 @@ volume, inference configuration and ledger used by the API.
 ```text
 python -m app.run_worker --controller app.buyer_flow:run
 ```
+
+The v2 request accepts an optional `implementation` field. The UI's **Shopping assistant**
+selector sends `control` (default for existing callers and saved requests) or `single_agent`.
+The latter uses the original intent wording, structured requirements, refinement note and
+recorded question/answer pairs on every decision. It uses the OpenRouter route and low effort
+in `config/evaluation.json#/evaluation_inference`. A decision can select only server-offered
+actions and verified offer IDs. The same domestic verifier calculates eligibility and costs.
+The local catalog, reviewed retailer search, scoped reads and configured discovery channels
+are available separately. Web queries can use the offered public product and locality terms.
+
+For #201, inject the shared search implementation at `research.workers.domestic_tools`
+(`connectors` and `search(SearchObjective, job, alternatives=()) -> SearchReport`).
+Set `FlowDependencies.tavily_preflight_ok` after the common successful preflight.
+`FlowDependencies.retailer_browser(request, run)` opens an isolated context manager yielding
+the `BrowserSession` interface in `app.shopping_agent`. It exposes state-bound action IDs
+and safe labels. Dispatch receives the selected listing, action ID, phase-limited ledger job
+and remaining time. The adapter owns source scope, consent and traffic accounting and returns
+the selected listing plus `ReadResult` receipts. The agent offers browser actions only while
+the adapter is present. A scoped pre-order quote may supply delivery evidence. Payment
+and ordering are outside this interface.
 
 The worker can use stored listings, reviewed retailer reads and discovery to find candidates. The [experiment record](buyer-architecture-comparison.md) reports demonstrated results. The [buyer contract](buyer-product-contract.md) defines the intended comparison. The historical single-source phone controller is available as `app.buyer_flow:run_checkpoint`. [Checkpoint runbook](live-flow.md)
 

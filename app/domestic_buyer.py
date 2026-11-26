@@ -526,7 +526,7 @@ class DomesticBuyerFlow(_Flow):
         elif self.sources.get(source.source_id, ('', '', None))[1] != 'checked':
             self.sources[source.source_id] = (record.entry.name, 'failed', 'No current priced variant from the retailer search.')
 
-    def record_verification(self, listing, read):
+    def record_verification(self, listing, read, *, preserve_earlier=True):
         earlier = listing.earlier
         key = earlier.offer_id if earlier else listing.url
         self.reread.add(key)
@@ -535,7 +535,7 @@ class DomesticBuyerFlow(_Flow):
             and (earlier is None or ((o.source_id, o.source_product_id, o.source_variant_id) ==
                  (earlier.source_id, earlier.source_product_id, earlier.source_variant_id)
                  and not changed_listing_configuration(earlier, o)))]
-        if not returned and earlier:
+        if not returned and earlier and preserve_earlier:
             self.uncertain[earlier.offer_id] = v2.UncertainAlternative(offer=earlier,
                 reasons=('The selected listing and configuration could not be rechecked.',))
             if read is None or read.status == 'failed':

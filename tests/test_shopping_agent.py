@@ -1,4 +1,7 @@
 """Separate development inputs. No scored requests or evaluation evidence are loaded."""
+from contextlib import contextmanager
+import json
+
 from app.domestic_buyer_sources import ReadResult
 from app.domestic_discovery import ChannelAttempt, SearchReport
 from test_buyer_flow import FakeOpenRouter, FlowCase
@@ -21,8 +24,7 @@ class DevelopmentSearch:
     def search(self, query, job, *, alternatives):
         url = str(self.offer.listing_url)
         if self.offer.variant.product.model == 'Aster Finch Q14' and 'price' not in query.query:
-            return SearchReport(job.run_id, (ChannelAttempt('serpapi', 'ok'),),
-                                (lead('https://old-shop.example/discontinued', self.offer),))
+            return SearchReport(job.run_id, (ChannelAttempt('serpapi', 'ok'),), ())
         return SearchReport(job.run_id, (ChannelAttempt('serpapi', 'ok'),), (lead(url, self.offer),))
 
 
@@ -58,13 +60,12 @@ class ShoppingAgentTests(FlowCase):
             intent=dict(kind='exact_model', model=model, wording=f'Find {model} for delivery'),
             refinement_note='Compare all mandatory fees.')[1]
 
-    def test_recover_after_removed_listing(self):
-        run = self.agent('Aster Finch Q14', 16, ['Search serpapi', 'Inspect', 'Search serpapi',
-                                                 'Inspect', 'Present'])
+    def test_reformulate_after_search_misses_listing(self):
+        run = self.agent('Aster Finch Q14', 16, ['Search serpapi', 'Search serpapi', 'Inspect', 'Present'])
         self.assertEqual(run.status, 'complete', self.trace(run))
         self.assertEqual(str(run.recommendations[0].primary.cost.total.amount), '722.35')
         trace = self.trace(run)['actions']
-        self.assertEqual([a.get('status') for a in trace], ['ok', 'failed', 'ok', 'ok', None])
+        self.assertEqual([a.get('count') for a in trace], [0, 1, 1, None])
 
     def test_wrong_selected_memory_is_rejected(self):
         run = self.agent('Rowan Slate W8', 32, ['Search serpapi', 'Inspect', 'Present'])
@@ -82,9 +83,49 @@ class ShoppingAgentTests(FlowCase):
         self.assertEqual(response.status_code, 202)
         self.openrouter = Decisions(['Present'])
         self.work(development_tools(self.deps(), 'Rowan Slate W8'))
-        import json
         data = json.loads(self.openrouter.requests[-1]['body']['messages'][1]['content'])
         self.assertEqual(data['request']['intent']['wording'], 'Find Rowan Slate W8 for delivery')
         self.assertEqual(data['request']['refinement_note'], 'Compare all mandatory fees.')
         self.assertEqual(data['feedback'][0]['question'], run.clarification.question)
         self.assertIn('32 GB', data['feedback'][0]['answer'])
+
+    def test_stateful_adapter_observation_supersedes_previous_verification(self):
+        events = []
+        self.openrouter = Decisions(['Search serpapi', 'Inspect', 'Select variant', 'Present'])
+        deps = development_tools(self.deps(), 'Rowan Slate W8')
+
+        @contextmanager
+        def session(request, run):
+            class Browser:
+                def actions(self, listing):
+                    return {'change-selection': 'Select variant at the reviewed shop'}
+
+                def perform(self, listing, action_id, job, *, room):
+                    events.append((action_id, job.run_id == run.run_id, room() > 0))
+                    return listing, ReadResult(listing.source_id, status='failed',
+                                               reason='Changed selection could not be confirmed.')
+            try:
+                yield Browser()
+            finally:
+                events.append('closed')
+
+        deps.retailer_browser = session
+        _, run = self.browse(deps, implementation='single_agent', requirements=dict(category='laptop'),
+                             intent=dict(kind='exact_model', model='Rowan Slate W8'))
+        self.assertEqual(run.status, 'abstained', self.trace(run))
+        self.assertEqual(events, [('change-selection', True, True), 'closed'])
+        self.assertFalse(run.recommendations or run.uncertain)
+        prior, after = [json.loads(r['body']['messages'][1]['content']) for r in self.openrouter.requests[-2:]]
+        self.assertEqual(len(prior['verified']), 1)
+        self.assertFalse(after['verified'])
+
+    def test_unpublished_charge_stays_partial(self):
+        self.openrouter = Decisions(['Search serpapi', 'Inspect', 'Present'])
+        offer = laptop('workbench', model='Rowan Slate W8', unknown_fee=True)
+        deps = development_tools(self.deps(), 'Rowan Slate W8')
+        deps.domestic_sources = Sources([], [offer])
+        _, run = self.browse(deps, implementation='single_agent', requirements=dict(category='laptop'),
+                             intent=dict(kind='exact_model', model='Rowan Slate W8'))
+        self.assertEqual(run.status, 'partial', self.trace(run))
+        self.assertFalse(run.recommendations)
+        self.assertEqual(run.uncertain[0].cost.status, 'incomplete')
