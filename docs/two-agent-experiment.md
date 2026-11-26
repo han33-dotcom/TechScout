@@ -1,0 +1,44 @@
+# Two-agent shopping experiment
+
+The buyer agent owns the conversation and shopping decisions. A second agent builds the catalog once a day. Both inspect public retailer pages directly through Firecrawl, including pages on a shop's first appearance. The [buyer contract](buyer-product-contract.md), [18 acceptance scenarios](buyer-acceptance-matrix.md) and [frozen scoring protocol](buyer-correctness-acceptance.md) define success.
+
+## Delivery
+
+Use `test/two-agent` as the integration branch, starting at main commit `cb26d14`. Branch each increment from the current experiment head, open its PR against `test/two-agent`, inspect the diff, run CI and record the observed result. Keep the previous working checkpoint available in Git. Promotion to main requires a separate owner decision. [First increment #218](https://github.com/han33-dotcom/TechScout/issues/218)
+
+## Responsibilities
+
+| Component | Decisions and outputs |
+| --- | --- |
+| Buyer agent | Start from the buyer's own wording, selected controls, destination and chat history. Interpret constraints and preferences, ask material questions, choose catalog and web searches, inspect competing listings, match the selected variant, assess tradeoffs and explain the answer. For a pasted deal, start with the exact URL. Preserve established constraints across revisions. |
+| Catalog agent | On a daily trigger at a configurable local time in Asia/Beirut, find sellers and products and refresh due observations. Prioritize stale listings, gaps in category coverage and configurations with only one known seller. Reuse existing storage, checkpoints and leases for retries. First exercise the daily job on demand. Choose the operating hour when scheduling it. |
+| Shared page inspection | Give Firecrawl the exact public URL first. A missing shop or path pattern never disqualifies a public listing. Inspect what came back, including actual merchant, selected options, currency, price and stock. Where needed, select a variant or branch and capture the resulting state. The registry supplies useful shop knowledge. Workload limits, public destination checks and shared accounting apply to both jobs. |
+| Application and storage | Keep the original request, agent decisions and page evidence. Calculate comparable amounts with Decimal. Enforce evidence provenance, privacy and the existing time and spend budgets. Render and save useful partials while research continues. Preserve authoritative identifiers when supplied; a product family plus requested attributes can match a more detailed retailer title. |
+
+A page read produces an observation with URL, UTC time, source response hash and the selected item or option evidence available on that page. A priced buyer claim points back to the evidence for that item. Public observations may enrich the shared catalog. Private addresses, chat content and buyer-specific quotes stay in the buyer's scoped records. Establish that the actual merchant is based in Lebanon and serves the requested destination. Recheck finalist price and stock during the buyer run. A delivery total also needs evidence for applicable mandatory charges. Integrate pending seller quotes through [#186](https://github.com/han33-dotcom/TechScout/issues/186) and the same-chat account flow through [#187](https://github.com/han33-dotcom/TechScout/issues/187).
+
+If one inspection fails, keep previously supported same-run facts visible with their timestamps and explain the outstanding question. A contradictory observation, changed selection or changed price triggers reassessment. Online stock can support an explicitly labeled partial for pickup; branch stock needs branch evidence. Label incomplete totals and present evidenced alternatives when they help the buyer.
+
+## First development journey
+
+> I'm looking for new black Soundcore Q20i headphones. Which Lebanese shop has the lower total for one pair delivered to Batroun?
+
+Use this fresh request for development. For the controlled rehearsal, give the catalog agent public sample evidence from synthetic shop A. Start a fresh buyer session after catalog ingestion. Its web search can discover synthetic shop B for the first time. Shop B is absent from the catalog and retailer registry. Only the independent evaluator knows the expected URLs, selected variant, prices and totals. Supply the buyer with the request and destination only.
+
+Use a cheaper sibling color or nearby model on one storefront. Give one seller the lower listed price and the other the lower delivered total. The buyer must see the black Q20i at both sellers, the two exact links, selected-variant price and stock, applicable charges, comparable totals and the correct cheaper seller. Then withhold a mandatory fee and check that the priced offer survives with the fee labeled unknown. Include a later failed re-read and a separate contradictory successful read. The fixture is a controlled exercise; current commercial availability and a real seller pair remain to be established independently. Keep an unsuccessful live attempt in the results.
+
+## Increments and evidence
+
+| Order | Deliverable | Check before advancing |
+| --- | --- | --- |
+| 1. First-visit inspection | Shared direct Firecrawl call for a public listing. | Offline test invokes the tool with buyer and maintenance jobs, an unfamiliar shop and a mock provider. Verify the target, returned HTML, timestamp, hash, ledger and absence of a preliminary retailer GET. Verify a refused destination. Run this checkpoint with `python -m unittest discover -s tests -p test_agent_inspection.py -v`. |
+| 2. Select a listing and retain evidence | Give the experimental buyer agent the public-page tool through the normal request API and worker. Read the original request and evaluate requirements against the selected item. Add Firecrawl interaction when selection is needed. | Show one exact, priced link in the browser. Capture a selection that changes the price. Reject a wrong-color sibling. A failed further read preserves the supported partial. Record a bounded live first-visit receipt separately from fixture evidence. |
+| 3. Populate and retrieve the catalog | Give the catalog agent the same tool. Trigger one daily job manually, ingest shop A and persist dated variant observations. | A fresh buyer process finds A in storage. Rerunning the same job produces no duplicate observation for the same capture. Check handling of changed prices, interrupted work and the configured daily trigger. |
+| 4. Complete the two-seller journey | Through the buyer UI, search the populated catalog and the web, inspect newly discovered B, recheck A and B, resolve costs and present a comparison. | Demonstrate the development journey above with offline fixtures, then on independently checked real listings. Save the starting catalog snapshot, initial registry, revision, links, actions, visible answer, time and spend. Distinguish an incomplete reference from a demonstrated pass. |
+| 5. Evaluate buyer acceptance | Freeze a catalog snapshot populated independently of grading references. Run the candidate on the original class denominators under the documented budget. | At least 8/10 complete, 4/5 useful partials, 5/5 explained blockers and 4/5 seller pairs, with zero misleading verified claims. Report attainment within 120 seconds, failed attempts and cost per useful answer. Keep the six reserved requests separate for confirmation. |
+
+For a failed request, record the first step that lost the answer: discovery, page read, item selection, match judgment, fulfillment, or presentation. Use independent development requests for repairs. Keep frozen reference URLs, expected answers and private quotes out of the agent inputs and catalog seed.
+
+## Starting evidence
+
+The prior experiment began each buyer run with 23 directory entries and an empty offer catalog. It earned 0/10 complete answers, 0/5 useful partials, 4/5 explained blockers and 0/5 seller pairs. Its [scorecard](../acceptance/architecture-v2/agent-primary-2026-11-26/README.md) is the baseline. Increment 1 exercises the page transport with an offline provider. The first browser comparison and live agent results belong to later increments.
