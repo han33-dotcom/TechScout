@@ -162,6 +162,7 @@ class FulfillmentRequest(Model):
 
 class ShoppingRequest(Contract):
     request_id: Text
+    implementation: Literal['control', 'single_agent'] = 'control'
     revision: PositiveInt = 1
     intent: Intent
     unresolved_constraints: tuple[Text, ...] = ()

@@ -42,13 +42,19 @@ def session_hash(token):
 
 
 class BuyerRunService:
-    def __init__(self, storage, *, clock=None, max_running=2, max_pending=20, active_seconds=120):
+    def __init__(self, storage, *, clock=None, max_running=2, max_pending=20, active_seconds=None):
         if (type(max_running) is not int or type(max_pending) is not int
-                or not 1 <= max_running <= max_pending <= 100 or not 0 < active_seconds <= 120):
+                or not 1 <= max_running <= max_pending <= 100 or (active_seconds is not None and not 0 < active_seconds <= 300)):
             raise ValueError('Positive bounded run limits are required')
         self.storage, self.clock = storage, clock
         self.max_running, self.max_pending = max_running, max_pending
-        self.limit_ms = math.ceil(active_seconds*1000)
+        self.limit_ms = math.ceil(active_seconds*1000) if active_seconds is not None else 120_000
+        self.agent_limit_ms = self.limit_ms if active_seconds is not None else 300_000
+
+    def _limit(self, row):
+        if row['snapshot']['request'].get('implementation') == 'single_agent':
+            return self.agent_limit_ms
+        return self.limit_ms
 
     @contextmanager
     def _transaction(self):
@@ -128,7 +134,7 @@ class BuyerRunService:
         db.execute(delete(buyer_sessions).where(buyer_sessions.c.expires_at<=now))
         rows=db.execute(select(buyer_runs).where(buyer_runs.c.status=='running')).mappings().all()
         for row in rows:
-            if row['lease_until'] is None or row['lease_until']<=now or self._used(row,now)>=self.limit_ms:
+            if row['lease_until'] is None or row['lease_until']<=now or self._used(row,now)>=self._limit(row):
                 self._finish(db,row,now,'partial','Execution limit reached or worker interrupted; no automatic retry')
 
     def recover(self):
@@ -242,6 +248,9 @@ class BuyerRunService:
             if row['status'] in ACTIVE:
                 self._finish(db,row,now,'cancelled','Superseded by buyer refinement')
             current=self._new(db,now,owner,request,previous=run.run_id)
+            if request.implementation == 'single_agent' and row['answers']:
+                db.execute(update(buyer_runs).where(buyer_runs.c.run_id == current.run.run_id)
+                           .values(answers=row['answers']))
             return self._workspace(db,owner,self._row(db,current.run.run_id,owner))
 
     def clarify(self,token,run,clarification_id,answer):
@@ -260,7 +269,10 @@ class BuyerRunService:
             data['run']['run_revision']+=1
             data.update(status='queued',clarification=None,updated_at=now)
             snap=v.RunSnapshot.model_validate(data)
-            answers=[*row['answers'],dict(clarification_id=clarification_id,answer=answer)]
+            reply = dict(clarification_id=clarification_id, answer=answer)
+            if snap.request.implementation == 'single_agent':
+                reply['question'] = row['snapshot']['clarification']['question']
+            answers=[*row['answers'], reply]
             self._write(db,row,snap,answers=answers)
             return snap
 
@@ -277,7 +289,7 @@ class BuyerRunService:
             if row['snapshot']['request'].get('market_scope', {}).get('include_international'):
                 self._finish(db,row,now,'cancelled','International search retired; refine for domestic offers')
                 return None
-            if row['active_ms']>=self.limit_ms:
+            if row['active_ms']>=self._limit(row):
                 self._finish(db,row,now,'partial','Active execution allowance exhausted')
                 return None
             data=dict(row['snapshot'])
@@ -285,7 +297,7 @@ class BuyerRunService:
             snap=v.RunSnapshot.model_validate(data)
             token=uuid.uuid4().hex
             self._write(db,row,snap,lease_token=token,lease_until=now+timedelta(seconds=15),active_since=now)
-            return Claim(snap.run,token,snap,tuple(row['answers']),self.limit_ms-row['active_ms'])
+            return Claim(snap.run,token,snap,tuple(row['answers']),self._limit(row)-row['active_ms'])
 
     def _owned_claim(self,db,now,claim):
         row=self._row(db,claim.run.run_id)
@@ -293,7 +305,7 @@ class BuyerRunService:
             buyer_sessions.c.expires_at>now)).first()
         self._reference(row,claim.run)
         if (session is None or row['status']!='running' or row['lease_token']!=claim.token
-                or row['lease_until']<=now or self._used(row,now)>=self.limit_ms):
+                or row['lease_until']<=now or self._used(row,now)>=self._limit(row)):
             raise RunError(409,'Worker ownership expired or run stopped')
         return row
 
@@ -301,7 +313,7 @@ class BuyerRunService:
         with self._transaction() as (db,now):
             row=self._owned_claim(db,now,claim)
             db.execute(update(buyer_runs).where(buyer_runs.c.run_id==row['run_id']).values(lease_until=now+timedelta(seconds=15)))
-            return self.limit_ms-self._used(row,now)
+            return self._limit(row)-self._used(row,now)
 
     def abandon(self,claim):
         """Close a stopped local controller even between database clock ticks."""
