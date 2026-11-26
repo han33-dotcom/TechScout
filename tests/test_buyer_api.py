@@ -147,14 +147,21 @@ class BuyerApiTests(unittest.TestCase):
                     'verification':{'checked_at':self.now,'run':claim.run}}}])
         self.assertEqual(self.read(snapshot).current.status,'running')
 
-    def test_local_seller_shipping_from_abroad_cannot_publish_a_candidate(self):
+    def test_a_warehouse_abroad_is_no_bar_but_a_foreign_merchant_is(self):
+        """Seller rule (#185). The earlier dispatch rule refused the Lebanese seller's AE warehouse."""
         self.start()
         claim = self.service.claim()
         offer = deepcopy(fixture('offers')['phone_different'])
         offer['route']['origin_country'] = 'AE'
+        foreign = deepcopy(offer)
+        foreign['seller']['market'] = 'AE'
+        for merchant in (foreign, dict(foreign, route=dict(foreign['route'], origin_country='LB'))):
+            with self.assertRaises(ValueError):
+                self.service.publish(claim, provisional=[v.ProvisionalCandidate(
+                    offer=merchant, observed_at=merchant['evidence'][0]['observed_at'])])
         candidate = v.ProvisionalCandidate(offer=offer, observed_at=offer['evidence'][0]['observed_at'])
-        with self.assertRaisesRegex(ValueError, 'local fulfillment'):
-            self.service.publish(claim, provisional=[candidate])
+        published = self.service.publish(claim, provisional=[candidate])
+        self.assertEqual(published.provisional[0].offer.route.origin_country, 'AE')
 
     def test_current_run_verification_can_publish_checked_result(self):
         snapshot=self.start()

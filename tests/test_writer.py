@@ -561,13 +561,18 @@ class TermsTests(WriterCase):
         self.assertNotIn('Book-Local (Lebanon): direct delivery from Lebanon to Beirut; condition new; price and stock '
                          'checked in this run at 16 Nov 2026 12:00 UTC, reported in stock at that branch', text)
 
-    def test_unknown_dispatch_origin_is_identified_for_an_uncertain_offer(self):
+    def test_an_unverified_seller_is_named_and_an_unknown_warehouse_is_not(self):
+        """Seller rule (#185). The earlier wording reported 'dispatch origin unknown' instead."""
         data = snapshot()
         offer = clone(primary(data), 'unconfirmed', name='Other shop')['offer']
         offer['route']['origin_country'] = 'ZZ'
-        data['uncertain'] = [dict(offer=offer, reasons=['Dispatch origin was not published'])]
+        offer['seller']['first_party'] = False
+        data['uncertain'] = [dict(offer=offer, reasons=['The actual Lebanese seller is unverified for this listing.'])]
+        primary(data)['offer']['route']['origin_country'] = 'ZZ'
         text = deterministic_explanation(context(data)).text
-        self.assertIn('delivery requested to Beirut, dispatch origin unknown', text)
+        self.assertIn('Option 1 from Book-Local (Lebanon): delivery by the Lebanese seller to Beirut;', text)
+        self.assertIn('Other shop (Lebanon), delivery requested to Beirut, actual Lebanese seller unverified', text)
+        self.assertNotIn('dispatch origin', text)
         self.assertNotIn('from ZZ', text)
 
     def test_sellers_in_different_currencies_are_not_ranked(self):

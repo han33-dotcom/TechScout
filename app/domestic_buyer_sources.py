@@ -161,13 +161,15 @@ def _offer(listing, fields, destination, *, current=False):
                   else f'{listing.source_id}:{listing.product_id}')
     variant_id = exact_key or source_key
     # The direct-route contract requires a country. ZZ is the ISO user-assigned
-    # unknown territory. A positive domestic dispatch still needs its own receipt.
+    # unknown territory. Origin is informational: the seller rule (#185) ignores it.
     country = known('route.origin_country') or 'ZZ'
     bound('costs.order.shipping_range')
     return v2.Offer(
         offer_id=source_key, retailer_id=listing.retailer_id, source_id=listing.source_id,
         source_product_id=listing.product_id, source_variant_id=listing.sku,
-        seller=dict(seller_id=listing.seller_id, name=listing.seller_name, market='LB'),
+        # Listings come only from a reviewed Lebanese retailer's own storefront (the catalog and
+        # read() admit seller_identity='retailer' owners), so that retailer is the merchant.
+        seller=dict(seller_id=listing.seller_id, name=listing.seller_name, market='LB', first_party=True),
         listing_url=listing.listing_url,
         variant=dict(variant_id=variant_id, product=dict(product_id=product_id, category=category,
             manufacturer=manufacturer, model=model), specs=specs, color=fact('variant.color')),

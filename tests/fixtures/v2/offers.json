@@ -152,7 +152,8 @@
     "seller": {
       "seller_id": "phone-two",
       "name": "Phone-Two",
-      "market": "LB"
+      "market": "LB",
+      "first_party": true
     },
     "listing_url": "https://phone-two.example/phone-two",
     "variant": {
@@ -317,7 +318,8 @@
     "seller": {
       "seller_id": "phone-three",
       "name": "Phone-Three",
-      "market": "LB"
+      "market": "LB",
+      "first_party": true
     },
     "listing_url": "https://phone-three.example/phone-three",
     "variant": {
@@ -448,7 +450,8 @@
     "seller": {
       "seller_id": "phone-four",
       "name": "Phone-Four",
-      "market": "LB"
+      "market": "LB",
+      "first_party": true
     },
     "listing_url": "https://phone-four.example/phone-four",
     "variant": {
@@ -575,7 +578,8 @@
     "seller": {
       "seller_id": "book-other",
       "name": "Book-Other",
-      "market": "LB"
+      "market": "LB",
+      "first_party": true
     },
     "listing_url": "https://book-other.example/book-other",
     "variant": {
@@ -706,7 +710,8 @@
     "seller": {
       "seller_id": "book-local",
       "name": "Book-Local",
-      "market": "LB"
+      "market": "LB",
+      "first_party": true
     },
     "listing_url": "https://book-local.example/book-local",
     "variant": {
@@ -1166,7 +1171,8 @@
     "seller": {
       "seller_id": "tablet",
       "name": "Tablet",
-      "market": "LB"
+      "market": "LB",
+      "first_party": true
     },
     "listing_url": "https://tablet.example/tablet",
     "variant": {
@@ -1297,7 +1303,8 @@
     "seller": {
       "seller_id": "monitor",
       "name": "Monitor",
-      "market": "LB"
+      "market": "LB",
+      "first_party": true
     },
     "listing_url": "https://monitor.example/monitor",
     "variant": {
@@ -1436,7 +1443,8 @@
     "seller": {
       "seller_id": "audio",
       "name": "Audio",
-      "market": "LB"
+      "market": "LB",
+      "first_party": true
     },
     "listing_url": "https://audio.example/audio",
     "variant": {

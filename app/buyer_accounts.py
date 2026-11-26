@@ -170,12 +170,14 @@ class PreciseAddress(Model):
 
 
 def chat_sellers(snapshot: v.RunSnapshot) -> tuple[DestinationSeller, ...]:
-    """Distinct Lebanese sellers visible in a chat snapshot, in display order."""
+    """Distinct Lebanese-market sellers with pickup or direct delivery in a chat, in display order.
+
+    Import and forwarding routes are never offered as recipients (Offer.domestic_route, #185)."""
     offers = [checked.offer for group in snapshot.recommendations for checked in group.offers()]
     offers += [item.offer for item in (*snapshot.provisional, *snapshot.uncertain)]
     sellers = {}
     for offer in offers:
-        if offer.seller.market == 'LB':
+        if offer.domestic_route():
             sellers.setdefault(offer.retailer_id, DestinationSeller(retailer_id=offer.retailer_id,
                                                                     name=offer.seller.name))
     return tuple(sellers.values())

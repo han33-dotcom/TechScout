@@ -44,17 +44,30 @@ export function costText(cost?: Cost) {
   if (cost.status === 'estimated') return `${money(cost.lower)}–${money(cost.upper)} · estimated`;
   return `${cost.known_subtotal ? money(cost.known_subtotal) + ' known subtotal' : 'Subtotal unknown'} · incomplete`;
 }
+// Seller rule (#185), mirroring Offer.domestic_seller in app/contracts_v2.py: the listing names a
+// Lebanese merchant with bound receipts, or a reviewed retailer sells on its own storefront.
+// A warehouse or dispatch origin never decides whether the seller is domestic.
+export function lebaneseSeller(offer: Offer): boolean {
+  if (offer.seller.market !== 'LB' || offer.route.kind === 'forwarded') return false;
+  const records = offer.evidence.filter(e => e.field_path === 'seller.name' || e.field_path === 'seller.market');
+  if (records.some(e => e.conflicts?.length)) return false;
+  if (offer.seller.first_party) return true;
+  const bound = records.filter(e => e.scope === 'variant' && e.product_id === offer.source_product_id &&
+    e.variant_id === offer.source_variant_id && e.origin_url === offer.listing_url && e.final_url === offer.listing_url);
+  return ['seller.name','seller.market'].every(path => bound.some(e => e.field_path === path));
+}
 function route(offer: Offer) {
   const r = offer.route;
   if (r.kind === 'pickup') return `Pickup · ${r.destination.city ?? 'Lebanon'} · ${r.branch_id}`;
   if (r.kind === 'forwarded') return `Forwarded via ${r.forwarder_id} · ${r.retailer_leg.origin.country} → ${r.forwarding_leg.origin.country} → Lebanon`;
-  if (r.item_eligible.value === true && offer.seller.market === 'LB' &&
-      ['seller.name','seller.market'].every(path => offer.evidence.some(e => e.field_path === path &&
-        e.origin_url === offer.listing_url && e.variant_id === offer.source_variant_id && !e.conflicts?.length))) {
-    return `Lebanese seller · Delivers to ${r.destination.city ?? 'Lebanon'}`;
+  const city = r.destination.city ?? 'Lebanon';
+  if (offer.seller.market === 'LB') {
+    const service = r.item_eligible.state === 'known' && r.item_eligible.value === true
+      ? `Delivers to ${city}` : `Delivery to ${city} unconfirmed`;
+    return `${lebaneseSeller(offer) ? 'Lebanese seller' : 'Seller unverified'} · ${service}`;
   }
-  if (r.origin_country === 'ZZ') return `Delivery requested to ${r.destination.city ?? 'Lebanon'} · Dispatch origin unknown`;
-  return `${r.origin_country === 'LB' ? 'Domestic' : 'International'} delivery · ${r.origin_country} → ${r.destination.city ?? 'Lebanon'}`;
+  if (r.origin_country === 'ZZ') return `Delivery requested to ${city} · Dispatch origin unknown`;
+  return `International delivery · ${r.origin_country} → ${city}`;
 }
 function modelName(offer: Offer) {
   const { manufacturer, model } = offer.variant.product;
