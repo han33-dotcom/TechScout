@@ -1,0 +1,342 @@
+{
+  "input": "I'm looking for new black Soundcore Q20i headphones delivered to Batroun.",
+  "model": "Configured live OpenRouter shopping agent",
+  "provider_transport": "Local Chromium storefront and simulated Firecrawl transport",
+  "initial_offers": 0,
+  "first_seen_shop": true,
+  "runs": [
+    {
+      "stage": "initial",
+      "run": "ce0a8828-ed6a-4d60-9699-405d3628c400",
+      "status": "abstained",
+      "actions": [
+        {
+          "count": 0,
+          "status": "leads",
+          "tool": "catalog",
+          "turn": 1
+        },
+        {
+          "channel": "serpapi",
+          "count": 1,
+          "query_index": 0,
+          "query_sha256": "7116e98bdf4354dd186525020d7ba1b259ac6ace6064b283445fd7132f0de126",
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 2
+        },
+        {
+          "lead": 0,
+          "receipts": [
+            "07c4f6a122ab2a997f3f34fe13d4559a0b9050930f51ab0d11fe355f8d8ae47e"
+          ],
+          "status": "no_match",
+          "tool": "inspect",
+          "turn": 3
+        },
+        {
+          "lead": 0,
+          "receipts": [
+            "683528c82ed2f4fbb8cd4fbed91831269a3052d7a8f4960c63902458988001fd"
+          ],
+          "status": "priced_partial",
+          "tool": "select_color",
+          "turn": 4
+        },
+        {
+          "lead": 0,
+          "receipts": [
+            "683528c82ed2f4fbb8cd4fbed91831269a3052d7a8f4960c63902458988001fd"
+          ],
+          "status": "no_match",
+          "tool": "recheck",
+          "turn": 5
+        },
+        {
+          "count": 0,
+          "status": "reviewed_retailers",
+          "tool": "directory",
+          "turn": 6
+        },
+        {
+          "channel": "serpapi",
+          "count": 1,
+          "query_index": 1,
+          "query_sha256": "942ca33c47d29b00799eb37afdbca23ca73db961b31726590e8baabb620506dc",
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 7
+        },
+        {
+          "tool": "present",
+          "turn": 8
+        }
+      ],
+      "captures": [
+        {
+          "selected": "White",
+          "price": "USD 39.00",
+          "actions": []
+        },
+        {
+          "selected": "Black",
+          "price": "USD 49.00",
+          "actions": [
+            {
+              "type": "click",
+              "selector": "input[type=\"radio\"][name=\"color\"][value=\"Black\"]"
+            },
+            {
+              "type": "wait",
+              "milliseconds": 500
+            }
+          ]
+        },
+        {
+          "selected": "Black",
+          "price": "USD 49.00",
+          "actions": [
+            {
+              "type": "click",
+              "selector": "input[type=\"radio\"][name=\"color\"][value=\"Black\"]"
+            },
+            {
+              "type": "wait",
+              "milliseconds": 500
+            }
+          ]
+        }
+      ],
+      "offers": [],
+      "judgments": null,
+      "elapsed_ms": 81000,
+      "known_usd": "0.0316495"
+    },
+    {
+      "stage": "after retaining unchanged judgments",
+      "run": "0807480e-cbdc-4d8e-9552-536dcd8b3af7",
+      "status": "abstained",
+      "actions": [
+        {
+          "count": 0,
+          "status": "leads",
+          "tool": "catalog",
+          "turn": 1
+        },
+        {
+          "channel": "serpapi",
+          "count": 1,
+          "query_index": 0,
+          "query_sha256": "7116e98bdf4354dd186525020d7ba1b259ac6ace6064b283445fd7132f0de126",
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 2
+        },
+        {
+          "lead": 0,
+          "receipts": [
+            "07c4f6a122ab2a997f3f34fe13d4559a0b9050930f51ab0d11fe355f8d8ae47e"
+          ],
+          "status": "no_match",
+          "tool": "inspect",
+          "turn": 3
+        },
+        {
+          "lead": 0,
+          "receipts": [
+            "683528c82ed2f4fbb8cd4fbed91831269a3052d7a8f4960c63902458988001fd"
+          ],
+          "status": "no_match",
+          "tool": "select_color",
+          "turn": 4
+        },
+        {
+          "channel": "serpapi",
+          "count": 1,
+          "query_index": 1,
+          "query_sha256": "942ca33c47d29b00799eb37afdbca23ca73db961b31726590e8baabb620506dc",
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 5
+        },
+        {
+          "count": 0,
+          "status": "reviewed_retailers",
+          "tool": "directory",
+          "turn": 6
+        },
+        {
+          "channel": "serpapi",
+          "count": 1,
+          "query_index": 2,
+          "query_sha256": "e825b33a8a53d88a752bae1cd88b288e7287b1f7128eb7340e3cb754fcf3ae75",
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 7
+        },
+        {
+          "tool": "present",
+          "turn": 8
+        }
+      ],
+      "captures": [
+        {
+          "selected": "White",
+          "price": "USD 39.00",
+          "actions": []
+        },
+        {
+          "selected": "Black",
+          "price": "USD 49.00",
+          "actions": [
+            {
+              "type": "click",
+              "selector": "input[type=\"radio\"][name=\"color\"][value=\"Black\"]"
+            },
+            {
+              "type": "wait",
+              "milliseconds": 500
+            }
+          ]
+        }
+      ],
+      "offers": [],
+      "judgments": null,
+      "elapsed_ms": 83828,
+      "known_usd": "0.0292345"
+    },
+    {
+      "stage": "after binding the explicit merchant address",
+      "run": "4a172f18-35be-4fb3-b72c-88c8c7d653e3",
+      "status": "partial",
+      "actions": [
+        {
+          "count": 0,
+          "status": "leads",
+          "tool": "catalog",
+          "turn": 1
+        },
+        {
+          "channel": "serpapi",
+          "count": 1,
+          "query_index": 0,
+          "query_sha256": "7116e98bdf4354dd186525020d7ba1b259ac6ace6064b283445fd7132f0de126",
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 2
+        },
+        {
+          "item_fits": false,
+          "lead": 0,
+          "merchant_located": true,
+          "receipts": [
+            "07c4f6a122ab2a997f3f34fe13d4559a0b9050930f51ab0d11fe355f8d8ae47e"
+          ],
+          "status": "no_match",
+          "tool": "inspect",
+          "turn": 3
+        },
+        {
+          "item_fits": true,
+          "lead": 0,
+          "merchant_located": true,
+          "receipts": [
+            "683528c82ed2f4fbb8cd4fbed91831269a3052d7a8f4960c63902458988001fd"
+          ],
+          "status": "priced_partial",
+          "tool": "select_color",
+          "turn": 4
+        },
+        {
+          "item_fits": true,
+          "lead": 0,
+          "merchant_located": true,
+          "receipts": [
+            "683528c82ed2f4fbb8cd4fbed91831269a3052d7a8f4960c63902458988001fd"
+          ],
+          "status": "priced_partial",
+          "tool": "recheck",
+          "turn": 5
+        },
+        {
+          "channel": "serpapi",
+          "count": 1,
+          "query_index": 1,
+          "query_sha256": "942ca33c47d29b00799eb37afdbca23ca73db961b31726590e8baabb620506dc",
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 6
+        },
+        {
+          "tool": "present",
+          "turn": 7
+        }
+      ],
+      "captures": [
+        {
+          "selected": "White",
+          "price": "USD 39.00",
+          "actions": []
+        },
+        {
+          "selected": "Black",
+          "price": "USD 49.00",
+          "actions": [
+            {
+              "type": "click",
+              "selector": "input[type=\"radio\"][name=\"color\"][value=\"Black\"]"
+            },
+            {
+              "type": "wait",
+              "milliseconds": 500
+            }
+          ]
+        },
+        {
+          "selected": "Black",
+          "price": "USD 49.00",
+          "actions": [
+            {
+              "type": "click",
+              "selector": "input[type=\"radio\"][name=\"color\"][value=\"Black\"]"
+            },
+            {
+              "type": "wait",
+              "milliseconds": 500
+            }
+          ]
+        }
+      ],
+      "offers": [
+        {
+          "url": "https://new-shop.example/products/soundcore-q20i",
+          "color": "Black",
+          "price": {
+            "amount": "49.00",
+            "currency": "USD"
+          }
+        }
+      ],
+      "judgments": [
+        {
+          "status": "no_match",
+          "reason": "The selected Soundcore Q20i is new, but its White color and Q20i-White SKU do not match the buyer\u2019s request for black headphones.",
+          "item_fits": false,
+          "merchant_located": true
+        },
+        {
+          "status": "priced_partial",
+          "item_fits": true,
+          "merchant_located": true
+        },
+        {
+          "status": "priced_partial",
+          "item_fits": true,
+          "merchant_located": true
+        }
+      ],
+      "elapsed_ms": 82531,
+      "known_usd": "0.0264210"
+    }
+  ]
+}
