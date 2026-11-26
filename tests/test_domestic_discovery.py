@@ -203,34 +203,37 @@ class DomesticDiscoveryTests(unittest.TestCase):
         usage = self.ledger.snapshot()['scopes']['project']
         self.assertEqual((usage[0], Decimal(usage[3]), usage[4]), (1, Decimal(0), 1))
 
-    def test_incremental_coverage_requires_current_item_dispatch_and_same_variant(self):
+    def test_incremental_coverage_requires_an_established_seller_and_same_variant(self):
+        """Coverage credit uses the worker's seller rule (#185), not dispatch origin."""
         first, second = self.seller(), self.seller(1)
         self.responses = {'api.tavily.com': dict(results=[dict(url=first)], usage=dict(credits=1)),
                           'serpapi.com': dict(search_metadata=dict(status='Success'),
                                              organic_results=[dict(link=first),dict(link=second)])}
-        def verified(index):
+        def verified(index, *, seller='first_party', receipts_run=None):
             raw = deepcopy(writer.primary(writer.snapshot()))
             offer = raw['offer']
             url = (first, second)[index]
             sid = 'store-' + str(index)
             offer.update(source_id=sid, retailer_id=sid, listing_url=url)
-            offer['seller']['seller_id'] = sid
+            offer['seller'].update(seller_id=sid, first_party=seller == 'first_party')
+            offer['route']['origin_country'] = 'ZZ'  # an unknown warehouse never withholds credit
             raw['verification']['run']['run_id'] = self.job.run_id
             for e in offer['evidence']:
                 e.update(source_id=sid, origin_url=url, final_url=url)
                 if e.get('run'):
                     e['run']['run_id'] = self.job.run_id
-            dispatch = dict(offer['evidence'][0], evidence_id='domestic-dispatch', field_path='route.origin_country',
-                            route_id=offer['route']['route_id'], scope='route', product_id=offer['source_product_id'],
-                            variant_id=offer['source_variant_id'], excerpt='Dispatched from Beirut', run=raw['verification']['run'])
-            offer['evidence'].append(dispatch)
+            if seller == 'listing':
+                price = next(e for e in offer['evidence'] if e['field_path'] == 'price')
+                run = dict(price['run'], run_id=receipts_run or self.job.run_id)
+                offer['evidence'] += [dict(price, evidence_id=f'{sid}:{path}', field_path=path, excerpt=path, run=run)
+                                      for path in ('seller.name', 'seller.market')]
             return VerifiedOffer.model_validate(raw)
         report = self.service().rotate(self.objective, self.job, count=2)
         a, b = verified(0), verified(1)
-        data = b.model_dump(mode='json')
-        data['offer']['evidence'].pop()
-        unbound = VerifiedOffer.model_validate(data)
-        self.assertEqual(report.coverage((a,unbound))['serpapi']['additional_usable_sellers'], 0)
+        for unestablished in (verified(1, seller=None), verified(1, seller='listing', receipts_run='earlier-run')):
+            self.assertEqual(report.coverage((a, unestablished))['serpapi']['additional_usable_sellers'], 0)
+        named = report.coverage((a, verified(1, seller='listing')))
+        self.assertEqual(named['serpapi'], dict(additional_usable_sellers=1, new_same_variant_comparisons=1))
         counts = report.coverage((a,b))
         self.assertEqual(counts['tavily'], dict(additional_usable_sellers=1,new_same_variant_comparisons=0))
         self.assertEqual(counts['serpapi'], dict(additional_usable_sellers=1,new_same_variant_comparisons=1))

@@ -63,7 +63,8 @@
           "seller": {
             "seller_id": "book-other",
             "name": "Book-Other",
-            "market": "LB"
+            "market": "LB",
+            "first_party": true
           },
           "listing_url": "https://book-other.example/book-other",
           "variant": {
@@ -437,7 +438,8 @@
             "seller": {
               "seller_id": "book-local",
               "name": "Book-Local",
-              "market": "LB"
+              "market": "LB",
+              "first_party": true
             },
             "listing_url": "https://book-local.example/book-local",
             "variant": {

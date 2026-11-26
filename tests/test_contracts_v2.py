@@ -113,6 +113,52 @@ class ContractsV2Tests(unittest.TestCase):
         self.assertNotEqual(left.condition.value, right.condition.value)
         self.assertNotEqual(left.warranty.months.value, right.warranty.months.value)
 
+    def test_seller_rule_ignores_the_warehouse_and_requires_the_actual_lebanese_merchant(self):
+        """#185: a Lebanese merchant identified for this item qualifies the route; origin plays no part."""
+        from app.costs import supports_domestic_cost
+
+        def offer(*, warehouse='ZZ', first_party=True, receipts=(), market='LB', conflict=False):
+            data = deepcopy(self.offers['laptop_verified'])
+            data['route']['origin_country'] = warehouse
+            data['seller'].update(first_party=first_party, market=market)
+            price = next(e for e in data['evidence'] if e['field_path'] == 'price')
+            for path, url in receipts:
+                data['evidence'].append(dict(price, evidence_id='seller-' + path, field_path=path,
+                                             origin_url=url, final_url=url, excerpt=path,
+                                             conflicts=['Sold by another merchant'] if conflict else []))
+            return v2.Offer.model_validate(data)
+
+        listing = self.offers['laptop_verified']['listing_url']
+        named = (('seller.name', listing), ('seller.market', listing))
+        for warehouse in ('ZZ', 'US', 'LB'):
+            own_store = offer(warehouse=warehouse)
+            self.assertEqual(own_store.domestic_seller(), 'first_party')
+            self.assertTrue(own_store.locally_fulfillable())
+            self.assertTrue(supports_domestic_cost(own_store))  # the seller's own terms, not an import
+        self.assertEqual(offer(first_party=False, receipts=named).domestic_seller(), 'listing')
+        legacy = deepcopy(self.offers['laptop_verified'])
+        del legacy['seller']['first_party']  # an older record still reads, and dispatch alone proves nothing
+        legacy = v2.Offer.model_validate(legacy)
+        self.assertEqual((legacy.route.origin_country, legacy.seller.first_party), ('LB', False))
+        unestablished = (
+            legacy,
+            offer(first_party=False),                                         # unidentified merchant
+            offer(first_party=False, receipts=named[:1]),                     # marketplace names no address
+            offer(first_party=False, receipts=(('seller.name', listing),
+                                               ('seller.market', 'https://market.example/about'))),
+            offer(receipts=named, conflict=True),                             # conflicting merchant evidence
+        )
+        for item in unestablished:
+            self.assertIsNone(item.domestic_seller())
+            self.assertFalse(item.locally_fulfillable())
+            self.assertTrue(item.locally_fulfillable(allow_unverified_seller=True))
+        foreign = offer(market='AE', receipts=named)
+        self.assertIsNone(foreign.domestic_seller())
+        self.assertFalse(foreign.locally_fulfillable(allow_unverified_seller=True))
+        self.assertFalse(supports_domestic_cost(foreign))
+        forwarded = v2.Offer.model_validate(self.offers['laptop_forwarded'])
+        self.assertIsNone(forwarded.domestic_seller())
+
     def test_scope_errors_for_branch_variant_and_forwarding_hub(self):
         pickup = self.offers['phone_pickup']
         wrong_branch = deepcopy(pickup)

@@ -297,7 +297,8 @@ class _Item:
 
 
 def requires_landed_cost(offer: v2.Offer) -> bool:
-    """True for an overseas seller or origin: the exact complement of the domestic cost engine."""
+    """True for an overseas seller or a forwarded route: the exact complement of the domestic
+    cost engine. A Lebanese seller's warehouse location does not make its order an import."""
     return not supports_domestic_cost(offer)
 
 

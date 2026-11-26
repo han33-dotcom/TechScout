@@ -272,6 +272,11 @@ class Seller(Model):
     seller_id: Text
     name: Text
     market: Country
+    # Additive since #185; older records without it read as False. True only when a reviewed
+    # retailer sells this listing on its own storefront, so the storefront operator is the actual
+    # merchant. A marketplace or unreviewed listing leaves it False and must name its merchant
+    # with listing-bound seller.name and seller.market receipts (Offer.domestic_seller).
+    first_party: StrictBool = False
 
 
 class PickupRoute(Model):
@@ -417,15 +422,34 @@ class Offer(Contract):
             return records
         return ()
 
-    def locally_fulfillable(self, *, allow_unknown_origin=False) -> bool:
-        if self.seller.market != 'LB':
+    def domestic_seller(self) -> Literal['listing', 'first_party'] | None:
+        """The seller rule (#185): what establishes this item's actual merchant as Lebanese.
+
+        'listing': the listing names its merchant and that merchant's Lebanese address
+        (domestic_merchant_receipts), which also covers a marketplace. 'first_party': a
+        reviewed retailer sells the listing on its own storefront. Dispatch origin and
+        warehouse location play no part. Service to the destination is the route's
+        separate item_eligible fact."""
+        if self.seller.market != 'LB' or isinstance(self.route, ForwardedRoute) or any(
+                e.conflicts for e in self.evidence if e.field_path in ('seller.market', 'seller.name')):
+            return None
+        if self.domestic_merchant_receipts():
+            return 'listing'
+        return 'first_party' if self.seller.first_party else None
+
+    def domestic_route(self) -> bool:
+        """A Lebanese-market seller's pickup or direct delivery, whatever its warehouse."""
+        return self.seller.market == 'LB' and isinstance(self.route, (PickupRoute, DirectRoute))
+
+    def locally_fulfillable(self, *, allow_unverified_seller=False) -> bool:
+        """Pickup, or direct delivery whose actual Lebanese merchant is established.
+
+        allow_unverified_seller admits a candidate or uncertain result whose seller is still
+        a visible gap. It never admits a foreign merchant or an import route."""
+        if not self.domestic_route():
             return False
-        if isinstance(self.route, PickupRoute):
-            return True
-        return isinstance(self.route, DirectRoute) and (
-            self.route.origin_country == 'LB' or bool(self.domestic_merchant_receipts())
-            or allow_unknown_origin and self.route.origin_country == 'ZZ'
-        )
+        return (isinstance(self.route, PickupRoute) or allow_unverified_seller
+                or self.domestic_seller() is not None)
 
     @model_validator(mode='after')
     def bind_offer_evidence(self):

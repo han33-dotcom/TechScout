@@ -86,27 +86,6 @@ class ChannelAttempt:
     request_id: str | None = None
 
 
-def dispatch_receipts(offer, run, now):
-    """Listing dispatch or a reviewed collection's exact listing, product and variant membership."""
-    receipts = [e for e in offer.evidence if e.field_path == 'route.origin_country' and e.scope == 'route'
-                and e.source_id == offer.source_id and e.route_id == offer.route.route_id
-                and e.product_id == offer.source_product_id and e.variant_id == offer.source_variant_id
-                and e.run == run and e.observed_at <= now]
-    if any(e.conflicts for e in receipts):
-        return ()
-    listing = tuple(e for e in receipts if e.origin_url == offer.listing_url)
-    if listing:
-        return listing
-    pages = defaultdict(list)
-    listing_origin = urlsplit(str(offer.listing_url)).netloc
-    for receipt in receipts:
-        origin = urlsplit(str(receipt.origin_url))
-        if origin.scheme == 'https' and origin.netloc == listing_origin:
-            pages[(str(receipt.origin_url), receipt.response_sha256, receipt.observed_at)].append(receipt)
-    required = {f'/collection/dispatch/{part}' for part in ('statement', 'listing', 'variant', 'product')}
-    return next((group for group in pages.values() if required <= {e.json_pointer for e in group}), ())
-
-
 @dataclass(frozen=True)
 class SearchReport:
     run_id: str
@@ -120,9 +99,12 @@ class SearchReport:
             if (run.run_id != self.run_id or offer.seller.market != 'LB'
                     or not isinstance(offer.route, DirectRoute)):
                 continue
-            merchant = offer.domestic_merchant_receipts()
-            if (merchant and all(e.run == run and e.observed_at <= verified.verification.checked_at for e in merchant)
-                    or offer.route.origin_country == 'LB' and dispatch_receipts(offer, run, verified.verification.checked_at)):
+            # The worker's seller rule (#185): an established Lebanese merchant, whatever the
+            # warehouse. A named merchant's listing receipts must belong to this verification.
+            seller = offer.domestic_seller()
+            if seller == 'first_party' or seller == 'listing' and all(
+                    e.run == run and e.observed_at <= verified.verification.checked_at
+                    for e in offer.domestic_merchant_receipts()):
                 variant = (offer.variant.product.product_id, offer.variant.variant_id)
                 if variant in collisions:
                     variant = (*variant, offer.offer_id)

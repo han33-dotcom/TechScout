@@ -273,6 +273,11 @@ def _route(offer: v2.Offer) -> str:
         return f'pickup at branch {branch}'
     if isinstance(route, v2.DirectRoute):
         city = safe_text(route.destination.city, 40) if route.destination.city else None
+        if offer.domestic_route():
+            # Seller rule (#185): name the seller gap. A warehouse is never a domestic fact.
+            if offer.domestic_seller() is None:
+                return f'delivery requested to {city or "Lebanon"}, actual Lebanese seller unverified'
+            return f'delivery by the Lebanese seller to {city or "Lebanon"}'
         if route.origin_country == 'ZZ':
             return f'delivery requested to {city or "Lebanon"}, dispatch origin unknown'
         return f'direct delivery from {country(route.origin_country)} to {city or "Lebanon"}'
@@ -285,7 +290,8 @@ def _route(offer: v2.Offer) -> str:
 def _route_evidence(offer: v2.Offer) -> list[str]:
     route = offer.route
     if isinstance(route, v2.DirectRoute):
-        return list(route.item_eligible.evidence_ids)
+        seller = [e.evidence_id for e in offer.domestic_merchant_receipts()] if offer.domestic_route() else []
+        return [*route.item_eligible.evidence_ids, *seller]
     if isinstance(route, v2.ForwardedRoute):
         return [*route.retailer_leg.item_eligible.evidence_ids, *route.forwarding_leg.item_eligible.evidence_ids]
     return []
