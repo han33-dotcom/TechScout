@@ -1,14 +1,13 @@
 """Serve one archived product revision with the comparison adapter on loopback."""
 import argparse
 from contextlib import nullcontext
-from dataclasses import replace
 import json
 from pathlib import Path
 import threading
 
 import uvicorn
 
-from app.buyer_flow import execute, production_dependencies
+from app import buyer_flow
 from app.buyer_runs import BuyerRunService
 from app.buyer_sources import gate_fetcher
 from app.domestic_buyer import Listing
@@ -72,8 +71,8 @@ def main():
     args = parser.parse_args()
     load_env_file(args.env_file, names=('OPENROUTER_API_KEY', *DISCOVERY_ENV))
     config = json.loads((Path.cwd() / 'config/evaluation.json').read_bytes())['evaluation_inference']
-    deps = production_dependencies(fixed_registry_path=DEFAULT_REGISTRY,
-                                   inference=build_inference(InferenceConfig.model_validate(config)))
+    deps = buyer_flow.production_dependencies(fixed_registry_path=DEFAULT_REGISTRY,
+                                              inference=build_inference(InferenceConfig.model_validate(config)))
     if deps.ledger.project != 'techscout-december-2026':
         raise ValueError('Incorrect live ledger project')
     bank = Bank(args.bank, args.mode, args.work / 'events.jsonl')
@@ -100,6 +99,9 @@ def main():
     sources.control = args.arm == 'control'
     deps.domestic_sources = sources
     deps.traces = args.work / 'traces'
+    # This process serves one arm and one request. Fill its ordinary worker
+    # dependency cache, so dispatch goes through the freeze's named entry point.
+    buyer_flow._PRODUCTION = deps
     service = BuyerRunService(storage)
     # #197 only accepts <=120 in its constructor. The same lease envelope
     # is injected at the adapter boundary; the ledger still enforces 120 s.
@@ -124,7 +126,7 @@ def main():
             if not sources.control:
                 deps.retailer_browser = lambda request, run: nullcontext(session)
                 deps.tavily_preflight_ok = 'tavily' in channels
-            execute(context, deps)
+            buyer_flow.run(context)
 
     stop = threading.Event()
     def work():
