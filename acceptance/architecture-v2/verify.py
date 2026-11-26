@@ -22,6 +22,25 @@ def check(ok, message):
         raise ValueError(message)
 
 
+def load_freeze():
+    manifest = read(HERE / "manifest-v2.json")
+    original = HERE / "manifest-v1.json"
+    digest = hashlib.sha256(original.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+    check(manifest["replaces"]["sha256_lf"] == digest, "Original freeze digest differs")
+    amended = {"version", "issue", "tools", "replaces"}
+    previous = read(original)
+    check({k: v for k, v in manifest.items() if k not in amended} ==
+          {k: v for k, v in previous.items() if k not in amended},
+          "Tool amendment changed another experiment condition")
+    tools = manifest["tools"]
+    check(tools["applies_to"] == ["control", "agent"], "Tool access must be shared")
+    check(set(tools["web_discovery_enabled"]) == {"serpapi", "brave", "firecrawl", "manufacturer"}
+          and set(tools["web_discovery_conditional"]) == {"tavily"}, "Discovery profile differs")
+    check(tools["browser"]["enabled"] is True and tools["managed_scrape"] is True,
+          "Browser interaction and managed reads must be enabled in the protocol")
+    return manifest
+
+
 def verify_catalog(path, catalog):
     with closing(sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)) as db:
         head, = db.execute("SELECT version_num FROM alembic_version").fetchone()
@@ -43,7 +62,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--catalog", type=Path, help="Read-only check of a freshly seeded SQLite database")
     args = parser.parse_args()
-    manifest = read(HERE / "manifest-v1.json")
+    manifest = load_freeze()
     for name, expected in manifest["sha256_lf"].items():
         data = (ROOT / name).read_bytes().replace(b"\r\n", b"\n")
         check(hashlib.sha256(data).hexdigest() == expected, f"Hash differs for {name}")
