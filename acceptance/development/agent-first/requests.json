@@ -1,0 +1,6 @@
+[
+  {"id":"D-phone","category":"phone","entry":"exact","prompt":"Samsung Galaxy A07s","mode":"delivery","destination":"Batroun"},
+  {"id":"D-audio","category":"audio","entry":"exact","prompt":"JBL Tune 720BT Black","mode":"delivery","destination":"Sidon"},
+  {"id":"D-tablet","category":"tablet","entry":"needs","prompt":"I need an iPad Air that fits my existing iPad Air keyboard case. I do not know which size or generation my case fits.","mode":"delivery","destination":"Jounieh"},
+  {"id":"D-monitor","category":"monitor","entry":"exact","prompt":"Dell P2425H, 32 inches only. Both the model and the size are required.","mode":"delivery","destination":"Zahle"}
+]
