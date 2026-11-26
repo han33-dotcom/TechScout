@@ -1,0 +1,426 @@
+[
+  {
+    "phase": "setup",
+    "label": "dev2/discovery/agent",
+    "input": "Samsung Galaxy A17",
+    "city": "Jounieh",
+    "submitted": "2026-11-26T14:32:08.018921+00:00",
+    "elapsed_s": 74.656,
+    "terminal": "No verified recommendation yet",
+    "ledger": {
+      "settled_usd": "0.0273260",
+      "uncertain_usd": "0",
+      "held_usd": "0",
+      "external_calls": 13,
+      "metered_call_slots": 13,
+      "attempts": {
+        "model": 9,
+        "retrieval": 4
+      }
+    }
+  },
+  {
+    "phase": "setup",
+    "label": "dev2/discovery/control",
+    "input": "Samsung Galaxy A17",
+    "city": "Jounieh",
+    "submitted": "2026-11-26T14:31:07.016924+00:00",
+    "elapsed_s": 51.203,
+    "terminal": "No verified recommendation yet",
+    "ledger": {
+      "settled_usd": "0.000902",
+      "uncertain_usd": "0",
+      "held_usd": "0",
+      "external_calls": 8,
+      "metered_call_slots": 8,
+      "attempts": {
+        "model": 1,
+        "retrieval": 7,
+        "work": 4,
+        "worker": 3
+      }
+    }
+  },
+  {
+    "phase": "setup",
+    "label": "dev2/setup/agent",
+    "input": "Honor X9d",
+    "city": "Tripoli",
+    "submitted": "2026-11-26T14:27:47.080888+00:00",
+    "elapsed_s": 72.453,
+    "terminal": "No verified recommendation yet",
+    "ledger": {
+      "settled_usd": "0.0261510",
+      "uncertain_usd": "0",
+      "held_usd": "0",
+      "external_calls": 13,
+      "metered_call_slots": 13,
+      "attempts": {
+        "model": 9,
+        "retrieval": 4
+      }
+    }
+  },
+  {
+    "phase": "setup",
+    "label": "dev2/setup/control",
+    "input": "Honor X9d",
+    "city": "Tripoli",
+    "submitted": "2026-11-26T14:26:46.079400+00:00",
+    "elapsed_s": 37.86,
+    "terminal": "No verified recommendation yet",
+    "ledger": {
+      "settled_usd": "0.000898",
+      "uncertain_usd": "0",
+      "held_usd": "0",
+      "external_calls": 6,
+      "metered_call_slots": 6,
+      "attempts": {
+        "model": 1,
+        "retrieval": 5,
+        "work": 2,
+        "worker": 2
+      }
+    }
+  },
+  {
+    "phase": "setup",
+    "label": "dev2/variants/agent",
+    "input": "https://classcellulars.com/product/samsung-galaxy-a17/",
+    "city": "Jounieh",
+    "submitted": "2026-11-26T14:30:06.015715+00:00",
+    "elapsed_s": 54.891,
+    "terminal": "One detail to clarify",
+    "ledger": {
+      "settled_usd": "0.0167580",
+      "uncertain_usd": "0",
+      "held_usd": "0",
+      "external_calls": 8,
+      "metered_call_slots": 8,
+      "attempts": {
+        "model": 6,
+        "retrieval": 2,
+        "work": 2
+      }
+    }
+  },
+  {
+    "phase": "setup",
+    "label": "dev2/variants/control",
+    "input": "https://classcellulars.com/product/samsung-galaxy-a17/",
+    "city": "Jounieh",
+    "submitted": "2026-11-26T14:29:05.014014+00:00",
+    "elapsed_s": 14.187,
+    "terminal": "No verified recommendation yet",
+    "ledger": {
+      "settled_usd": "0",
+      "uncertain_usd": "0",
+      "held_usd": "0",
+      "external_calls": 1,
+      "metered_call_slots": 1,
+      "attempts": {
+        "retrieval": 1,
+        "work": 2,
+        "worker": 1
+      }
+    }
+  },
+  {
+    "phase": "setup",
+    "label": "final/discovery/agent",
+    "input": "Samsung Galaxy A17",
+    "city": "Jounieh",
+    "submitted": "2026-11-26T14:47:29.695813+00:00",
+    "elapsed_s": 63.719,
+    "terminal": "No verified recommendation yet",
+    "ledger": {
+      "settled_usd": "0.0209210",
+      "uncertain_usd": "0",
+      "held_usd": "0",
+      "external_calls": 12,
+      "metered_call_slots": 12,
+      "attempts": {
+        "model": 8,
+        "retrieval": 4
+      }
+    }
+  },
+  {
+    "phase": "setup",
+    "label": "final/discovery/control",
+    "input": "Samsung Galaxy A17",
+    "city": "Jounieh",
+    "submitted": "2026-11-26T14:46:28.643740+00:00",
+    "elapsed_s": 52.781,
+    "terminal": "No verified recommendation yet",
+    "ledger": {
+      "settled_usd": "0.001072",
+      "uncertain_usd": "0",
+      "held_usd": "0",
+      "external_calls": 9,
+      "metered_call_slots": 9,
+      "attempts": {
+        "model": 1,
+        "retrieval": 8,
+        "work": 4,
+        "worker": 3
+      }
+    }
+  },
+  {
+    "phase": "setup",
+    "label": "final/selection/agent",
+    "input": "https://classcellulars.com/product/samsung-galaxy-a17/",
+    "city": "Jounieh",
+    "submitted": "2026-11-26T14:49:39.066842+00:00",
+    "elapsed_s": 118.844,
+    "terminal": "Some checks could not finish",
+    "ledger": {
+      "settled_usd": "0.0301840",
+      "uncertain_usd": "0.0614400",
+      "held_usd": "0",
+      "external_calls": 13,
+      "metered_call_slots": 13,
+      "attempts": {
+        "model": 9,
+        "retrieval": 4,
+        "work": 6
+      }
+    }
+  },
+  {
+    "phase": "setup",
+    "label": "final/selection/control",
+    "input": "https://classcellulars.com/product/samsung-galaxy-a17/",
+    "city": "Jounieh",
+    "submitted": "2026-11-26T14:48:38.007969+00:00",
+    "elapsed_s": 42.5,
+    "terminal": "No verified recommendation yet",
+    "ledger": {
+      "settled_usd": "0.000796",
+      "uncertain_usd": "0",
+      "held_usd": "0",
+      "external_calls": 5,
+      "metered_call_slots": 5,
+      "attempts": {
+        "model": 1,
+        "retrieval": 4,
+        "work": 6,
+        "worker": 2
+      }
+    }
+  },
+  {
+    "phase": "setup",
+    "label": "release/live-discovery/agent",
+    "input": "Samsung Galaxy A17",
+    "city": "Jounieh",
+    "submitted": "2026-11-26T14:44:34.411550+00:00",
+    "elapsed_s": 62.719,
+    "terminal": "No verified recommendation yet",
+    "ledger": {
+      "settled_usd": "0.0254610",
+      "uncertain_usd": "0",
+      "held_usd": "0",
+      "external_calls": 13,
+      "metered_call_slots": 13,
+      "attempts": {
+        "model": 9,
+        "retrieval": 4
+      }
+    }
+  },
+  {
+    "phase": "setup",
+    "label": "release/live-discovery/control",
+    "input": "Samsung Galaxy A17",
+    "city": "Jounieh",
+    "submitted": "2026-11-26T14:43:33.347734+00:00",
+    "elapsed_s": 49.75,
+    "terminal": "No verified recommendation yet",
+    "ledger": {
+      "settled_usd": "0.001172",
+      "uncertain_usd": "0",
+      "held_usd": "0",
+      "external_calls": 8,
+      "metered_call_slots": 8,
+      "attempts": {
+        "model": 1,
+        "retrieval": 7,
+        "work": 4,
+        "worker": 2
+      }
+    }
+  },
+  {
+    "phase": "setup",
+    "label": "release/live-selection/agent",
+    "input": "https://classcellulars.com/product/samsung-galaxy-a17/",
+    "city": "Jounieh",
+    "submitted": "2026-11-26T14:41:47.216823+00:00",
+    "elapsed_s": 102.609,
+    "terminal": "Some checks could not finish",
+    "ledger": {
+      "settled_usd": "0.0519510",
+      "uncertain_usd": "0",
+      "held_usd": "0",
+      "external_calls": 20,
+      "metered_call_slots": 20,
+      "attempts": {
+        "model": 11,
+        "retrieval": 9,
+        "work": 6
+      }
+    }
+  },
+  {
+    "phase": "setup",
+    "label": "release/live-selection/control",
+    "input": "https://classcellulars.com/product/samsung-galaxy-a17/",
+    "city": "Jounieh",
+    "submitted": "2026-11-26T14:40:46.159431+00:00",
+    "elapsed_s": 46.797,
+    "terminal": "No verified recommendation yet",
+    "ledger": {
+      "settled_usd": "0.000876",
+      "uncertain_usd": "0",
+      "held_usd": "0",
+      "external_calls": 5,
+      "metered_call_slots": 5,
+      "attempts": {
+        "model": 1,
+        "retrieval": 4,
+        "work": 6,
+        "worker": 2
+      }
+    }
+  },
+  {
+    "phase": "earlier verification",
+    "label": "smoke/discovery/agent",
+    "input": "Samsung Galaxy A07s",
+    "city": "Batroun",
+    "submitted": "2026-11-26T14:52:13.444997+00:00",
+    "elapsed_s": 42.954,
+    "terminal": "One detail to clarify",
+    "ledger": {
+      "settled_usd": "0.0134690",
+      "uncertain_usd": "0",
+      "held_usd": "0",
+      "external_calls": 9,
+      "metered_call_slots": 9,
+      "attempts": {
+        "model": 5,
+        "retrieval": 4
+      }
+    }
+  },
+  {
+    "phase": "earlier verification",
+    "label": "smoke/discovery/control",
+    "input": "Samsung Galaxy A07s",
+    "city": "Batroun",
+    "submitted": "2026-11-26T14:51:05.074140+00:00",
+    "elapsed_s": 66.157,
+    "terminal": "No verified recommendation yet",
+    "ledger": {
+      "settled_usd": "0.000912",
+      "uncertain_usd": "0",
+      "held_usd": "0",
+      "external_calls": 9,
+      "metered_call_slots": 9,
+      "attempts": {
+        "model": 1,
+        "retrieval": 8,
+        "work": 4,
+        "worker": 3
+      }
+    }
+  },
+  {
+    "phase": "earlier verification",
+    "label": "smoke/selection/agent",
+    "input": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+    "city": "Batroun",
+    "submitted": "2026-11-26T14:54:15.527521+00:00",
+    "elapsed_s": 76.312,
+    "terminal": "Some checks could not finish",
+    "ledger": {
+      "settled_usd": "0.0299945",
+      "uncertain_usd": "0",
+      "held_usd": "0",
+      "external_calls": 12,
+      "metered_call_slots": 12,
+      "attempts": {
+        "model": 8,
+        "retrieval": 4,
+        "work": 5
+      }
+    }
+  },
+  {
+    "phase": "earlier verification",
+    "label": "smoke/selection/control",
+    "input": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+    "city": "Batroun",
+    "submitted": "2026-11-26T14:53:14.495044+00:00",
+    "elapsed_s": 43.938,
+    "terminal": "No verified recommendation yet",
+    "ledger": {
+      "settled_usd": "0.000756",
+      "uncertain_usd": "0",
+      "held_usd": "0",
+      "external_calls": 5,
+      "metered_call_slots": 5,
+      "attempts": {
+        "model": 1,
+        "retrieval": 4,
+        "work": 6,
+        "worker": 2
+      }
+    }
+  },
+  {
+    "phase": "setup",
+    "label": "verified/selection/agent",
+    "input": "https://classcellulars.com/product/samsung-galaxy-a17/",
+    "city": "Jounieh",
+    "submitted": "2026-11-26T14:36:00.684054+00:00",
+    "elapsed_s": 117.984,
+    "terminal": "Some checks could not finish",
+    "ledger": {
+      "settled_usd": "0.0412295",
+      "uncertain_usd": "0.0614400",
+      "held_usd": "0",
+      "external_calls": 19,
+      "metered_call_slots": 19,
+      "attempts": {
+        "model": 11,
+        "retrieval": 8,
+        "work": 8
+      }
+    }
+  },
+  {
+    "phase": "setup",
+    "label": "verified/selection/control",
+    "input": "https://classcellulars.com/product/samsung-galaxy-a17/",
+    "city": "Jounieh",
+    "submitted": "2026-11-26T14:34:59.615047+00:00",
+    "elapsed_s": 38.969,
+    "terminal": "No verified recommendation yet",
+    "ledger": {
+      "settled_usd": "0.000886",
+      "uncertain_usd": "0",
+      "held_usd": "0",
+      "external_calls": 4,
+      "metered_call_slots": 4,
+      "attempts": {
+        "model": 1,
+        "retrieval": 3,
+        "work": 4,
+        "worker": 2
+      }
+    }
+  }
+]

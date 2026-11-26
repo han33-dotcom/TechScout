@@ -1,0 +1,58 @@
+{
+  "control": {
+    "bank": "226a9352c608e35e910c2c80585e0054cac23abd3cba06c8cae5e97d8974023d",
+    "query": "Samsung Galaxy A07s Lebanon retailer",
+    "channel": "manufacturer",
+    "search_response": "1f920229e10440381f1d44a6353af6fe1fcd58f7e138424960c73cf36903c7c6",
+    "leads": 5,
+    "source": "class_cellulars",
+    "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+    "product": "26090",
+    "before": {
+      "attribute_pa_color": ""
+    },
+    "after": {
+      "attribute_pa_color": "light-violet"
+    },
+    "selected": {
+      "attributes": {
+        "attribute_pa_color": "light-violet"
+      },
+      "labels": [
+        "Light Violet"
+      ],
+      "variant": "26096",
+      "price": "165",
+      "stock": true
+    },
+    "document": "73fc06ef04b861805706db2b01dcc228330e201964addd4425cd56f94b9d7a30"
+  },
+  "agent": {
+    "bank": "226a9352c608e35e910c2c80585e0054cac23abd3cba06c8cae5e97d8974023d",
+    "query": "Samsung Galaxy A07s Lebanon retailer",
+    "channel": "manufacturer",
+    "search_response": "1f920229e10440381f1d44a6353af6fe1fcd58f7e138424960c73cf36903c7c6",
+    "leads": 5,
+    "source": "class_cellulars",
+    "url": "https://classcellulars.com/product/samsung-galaxy-a07s/",
+    "product": "26090",
+    "before": {
+      "attribute_pa_color": ""
+    },
+    "after": {
+      "attribute_pa_color": "light-violet"
+    },
+    "selected": {
+      "attributes": {
+        "attribute_pa_color": "light-violet"
+      },
+      "labels": [
+        "Light Violet"
+      ],
+      "variant": "26096",
+      "price": "165",
+      "stock": true
+    },
+    "document": "73fc06ef04b861805706db2b01dcc228330e201964addd4425cd56f94b9d7a30"
+  }
+}
