@@ -39,14 +39,4 @@ This module evaluates evidence already held. `recommendable` is an eligibility/c
 decision, **not a live verification receipt**. Publication still requires
 `VerifiedOffer` and `RunSnapshot` with current-run price/stock evidence.
 
-Integration boundaries: all five categories are exercised with shared synthetic
-fixtures. Concrete normalization profiles (#43/#44) connect in full-flow work.
-Software suitability remains unresolved until an evidence-backed capability
-profile exists. A product-link request needs its resolved product identity before
-offers at other URLs can pass. Overseas seller/route costs belong to the
-[international landed-cost engine](landed-costs.md), which `assess_full_product`
-calls with its `route=RouteInputs(...)`; an LB seller does not make an overseas
-origin domestic. Such assessments also carry `route_support`, and an unsupported
-route rejects the offer. `shortlist` ranks only recommendable offers and keeps
-estimated or incomplete totals among the uncertain alternatives. No retailer or
-paid provider calls are made by these functions.
+For product links, resolve the selected variant before comparing another seller. Suitability claims require evidence. The domestic worker checks the actual merchant and service to the destination under the [buyer contract](buyer-product-contract.md). The older [international cost engine](landed-costs.md) remains available for legacy routes. `shortlist` ranks recommendable offers and keeps incomplete or estimated totals among the uncertain alternatives.
