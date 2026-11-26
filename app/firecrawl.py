@@ -1,8 +1,9 @@
-"""Explicit, metered single-page fallback; no crawl, actions or LLM tools."""
+"""Explicit, metered single-page capture with optional observed color selection."""
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 from hashlib import sha256
+import re
 import time
 
 from app.accounting import Charge, BudgetDenied, money
@@ -16,6 +17,19 @@ class ManagedPage:
     provider: str
     request_id: str | None
     max_age_ms: int = 0
+
+
+@dataclass(frozen=True)
+class ColorOption:
+    """A single product color radio observed on the listing. No free-form selector."""
+    name: str
+    value: str
+
+    def selector(self):
+        if (not re.fullmatch(r'(?:opt\[colou?r\]|colou?r)', self.name, re.I)
+                or not re.fullmatch(r'[\w -]{1,60}', self.value)):
+            raise ValueError('Unsupported product color control')
+        return f'input[type="radio"][name="{self.name}"][value="{self.value}"]'
 
 
 class Firecrawl:
@@ -37,12 +51,15 @@ class Firecrawl:
         except (ValueError, InvalidOperation):
             return None
 
-    def scrape(self, job, source_id, url, *, capability=None, international=False):
+    def scrape(self, job, source_id, url, *, capability=None, international=False, color: ColorOption | None = None):
+        selector = color.selector() if color else None
         limits = self.gate.check_provider_target(source_id,url,expect='html',capability=capability)
         attempt = job.reserve('retrieval',Charge(self.rate),20,source=source_id,limits=limits,
                               international=international)
         payload = dict(url=url,formats=['rawHtml'],onlyMainContent=False,maxAge=0,storeInCache=False,
             timeout=10000,proxy='basic',skipTlsVerification=False,parsers=[],blockAds=True)
+        if selector:
+            payload['actions'] = [dict(type='click', selector=selector), dict(type='wait', milliseconds=500)]
         started = time.monotonic()
         attempt.dispatch()
         try:
