@@ -11,6 +11,7 @@
     "request": {
       "schema_version": 2,
       "request_id": "needs-1",
+      "implementation": "control",
       "revision": 2,
       "intent": {
         "kind": "needs",
@@ -1057,6 +1058,7 @@
     "request": {
       "schema_version": 2,
       "request_id": "needs-1",
+      "implementation": "control",
       "revision": 1,
       "intent": {
         "kind": "needs",
