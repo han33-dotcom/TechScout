@@ -8,6 +8,12 @@ from app.onboarding import ActivationRegistry, PROBE_TTL, ProbeRegistry, canonic
 from app.sources import SourceGate
 
 
+class FrozenInspectionRegistry(ActivationRegistry):
+    """Use the evaluation's pinned directory without overlaying activated database rows."""
+    def read_registry(self):
+        return self._base()
+
+
 class _ListingScope(ProbeRegistry):
     """One public document. Carry existing shop limits and stops into each gate check."""
 
@@ -43,7 +49,7 @@ class _ListingScope(ProbeRegistry):
         return document
 
 
-def inspect_public_listing(job, url: str, registry: ActivationRegistry, *, environ=None) -> ManagedPage:
+def inspect_public_listing(job, url: str, registry: ActivationRegistry, *, environ=None, color=None) -> ManagedPage:
     """Capture one exact public URL for a buyer or catalog job. Seller identity is assessed later."""
     target = canonical(url)
     if target is None:
@@ -54,6 +60,6 @@ def inspect_public_listing(job, url: str, registry: ActivationRegistry, *, envir
         provider = Firecrawl.from_env(SourceGate(scope), os.environ if environ is None else environ)
         if provider is None:
             raise ValueError('Configure Firecrawl and its credit allowance for listing inspection')
-        return provider.scrape(job, scope.source_id, url)
+        return provider.scrape(job, scope.source_id, url, color=color)
     finally:
         scope.close()

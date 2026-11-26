@@ -125,6 +125,7 @@ class FlowDependencies:
     research_parallelism: int = 3
     retailer_browser: object | None = None  # Per-run session factory supplied by the shared adapter.
     tavily_preflight_ok: bool = False
+    inspect_listing: Callable | None = None
 
 
 def supported(request: v2.ShoppingRequest) -> str | None:
@@ -196,6 +197,8 @@ def production_dependencies(*, require_inference=True, fixed_registry_path=None,
                             load_worker_inference=True) -> FlowDependencies:
     """Wire the backend. The single-source checkpoint explicitly requires its inference route."""
     from app.accounting import Ledger
+    from functools import partial
+    from app.agent_inspection import FrozenInspectionRegistry, inspect_public_listing
     from app.corpus import Corpus
     from app.corpus_contracts import ProcessingVersion
     from app.directory import Directory
@@ -213,6 +216,7 @@ def production_dependencies(*, require_inference=True, fixed_registry_path=None,
     ledger = Ledger.configured()
     storage = Storage()
     registry = fixed_registry_path or ActivationRegistry(storage)
+    inspection_registry = FrozenInspectionRegistry(storage, base=fixed_registry_path) if fixed_registry_path else registry
     directory = Directory(storage, registry_path=registry)
     gate = SourceGate(registry)
     source = ClassCellularsSource(gate_fetcher(gate, registry), storage=storage)
@@ -233,6 +237,7 @@ def production_dependencies(*, require_inference=True, fixed_registry_path=None,
                             traces=ROOT / 'var' / 'traces', versions=versions,
                             domestic_sources=DomesticBuyerSources(storage, gate, directory,
                                                                   fallback=workers.domestic_tools.fallback, embedding=workers.embeddings),
+                            inspect_listing=partial(inspect_public_listing, registry=inspection_registry),
                             onboarding=None if fixed_registry_path else OnboardingQueue(storage, registry, directory=directory))
 
 
