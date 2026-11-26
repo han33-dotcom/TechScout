@@ -9,11 +9,12 @@ from unittest.mock import Mock
 HERE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(HERE.parents[2]))
-from bank import Bank, SharedSearch, digest
+from bank import Bank, SharedGate, SharedScrape, SharedSearch, digest
 from browser import Session
 from app.domestic_buyer import Listing
 from app.domestic_discovery import SearchObjective
 from app.source_capabilities import CapabilityRef
+from app.sources import FetchOutcome
 
 
 class ReplayTests(unittest.TestCase):
@@ -74,6 +75,22 @@ class ReplayTests(unittest.TestCase):
             self.assertFalse(session.states)
         events = [json.loads(line) for line in self.replay.events.read_text().splitlines()]
         self.assertEqual(sum(e['kind'] == 'replay_miss' for e in events), 1)
+
+    def test_managed_document_available_to_browser_and_replay(self):
+        url = 'https://shop.example/dev'
+        original = Mock()
+        reply = FetchOutcome('shop', url, (url,), 1, 10, final_url=url,
+                             body=b'<html>development</html>', status_code=200)
+        fallback = Mock()
+        fallback.scrape.return_value.outcome = reply
+        for mode in (self.live, self.replay):
+            gate = SharedGate(original, mode)
+            scrape = SharedScrape(fallback, mode, gate)
+            result = scrape.scrape(Mock(), 'shop', url)
+            self.assertEqual(result.outcome.body, reply.body)
+            self.assertIs(gate.documents[url], result.outcome)
+        self.assertEqual(original.check_scope.call_count, 2)
+        fallback.scrape.assert_called_once()
 
 
 if __name__ == '__main__':

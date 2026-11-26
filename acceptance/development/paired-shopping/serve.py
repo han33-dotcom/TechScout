@@ -90,11 +90,11 @@ def main():
             raise ValueError('Provider rates or scrape access changed since preflight')
     search = SharedSearch(original, bank)
     search.connectors = {name: original.connectors.get(name) for name in channels}
-    fallback = SharedScrape(original.fallback, bank, DEFAULT_REGISTRY) if profile['managed_scrape'] else None
+    gate = SharedGate(original.gate, bank)
+    fallback = SharedScrape(original.fallback, bank, gate) if profile['managed_scrape'] else None
     search.fallback = fallback
     deps.research.workers.domestic_tools = search
     storage = Storage()
-    gate = SharedGate(original.gate, bank)
     deps.source.fetcher = gate_fetcher(gate, DEFAULT_REGISTRY)
     sources = PairedSources(storage, gate, original.directory, fallback=fallback)
     sources.control = args.arm == 'control'

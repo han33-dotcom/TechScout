@@ -7,6 +7,7 @@ from hashlib import sha256
 import json
 from pathlib import Path
 from threading import Lock
+from urllib.parse import urlsplit, urlunsplit
 
 from app.accounting import BudgetDenied, Charge
 from app.contracts import ToolError
@@ -90,7 +91,8 @@ class SharedSearch(DomesticDiscovery):
             if data[field] is not None:
                 data[field] = Decimal(data[field])
         self.bank.event('search', **key, status=data['status'], count=len(result['hits']),
-                        urls=[h['url'] for h in result['hits']], response=digest(result))
+                        urls=[urlunsplit((*urlsplit(h['url'])[:3], '', '')) for h in result['hits']],
+                        response=digest(result))
         return ChannelAttempt(**data), tuple(Hit(**h) for h in result['hits'])
 
 
@@ -121,12 +123,15 @@ class SharedGate:
                 account_read(budget, source_id, url)
         outcome = unpack(result, source_id, url, self.bank.mode)
         if expect == 'html':
-            with self.lock:
-                if outcome.status == 'ok' and outcome.final_url == url:
-                    self.documents[url] = outcome
-                else:
-                    self.documents.pop(url, None)
+            self.remember(url, outcome)
         return outcome
+
+    def remember(self, url, outcome):
+        with self.lock:
+            if outcome.status == 'ok' and outcome.final_url == url:
+                self.documents[url] = outcome
+            else:
+                self.documents.pop(url, None)
 
 
 def account_read(budget, source, url):
@@ -161,8 +166,8 @@ def unpack(data, source, url, mode):
 
 
 class SharedScrape:
-    def __init__(self, fallback, bank, registry_path):
-        self.fallback, self.bank, self.registry_path = fallback, bank, registry_path
+    def __init__(self, fallback, bank, gate):
+        self.fallback, self.bank, self.gate = fallback, bank, gate
 
     def scrape(self, job, source_id, url, *, capability=None, international=False):
         from app.firecrawl import ManagedPage
@@ -173,9 +178,11 @@ class SharedScrape:
             reply = self.fallback.scrape(job, source_id, url, capability=capability, international=international)
             return pack(reply.outcome)
 
+        self.gate.check_scope(source_id, url, expect='html', capability=capability)
         result = self.bank.exchange('scrape', key, capture)
         if self.bank.mode == 'replay' and result:
-            account_read(job.source_budget(self.registry_path, international=international), source_id, url)
+            account_read(job.source_budget(self.gate._registry_path, international=international), source_id, url)
         outcome = unpack(result, source_id, url, self.bank.mode)
+        self.gate.remember(url, outcome)
         self.bank.event('scrape', source=source_id, url=url, status=outcome.status)
         return ManagedPage(outcome, 'firecrawl-v2', None)
