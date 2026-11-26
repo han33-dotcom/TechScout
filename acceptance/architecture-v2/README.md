@@ -1,8 +1,12 @@
 # Iteration 2 comparison freeze
 
-[Manifest v1](manifest-v1.json) pairs the merged #197 control with the single-agent finalist that #200 will build. The existing 20 cases decide product acceptance. Six requests committed before retailer lookup provide a separate generalization check across the five categories. The independent checks establish at least one complete delivered offer. Other checks include an unavailable finish, uncertain prices or charges, and a pickup request without verified branch stock.
+[Manifest v2](manifest-v2.json) pairs the #197 decision baseline with the single-agent finalist that #200 will build. Both use the same search and browser tools. The original 20 cases decide product acceptance. Six reserved requests check generalization across the five categories. [Original freeze](manifest-v1.json)
 
-Both arms start each case with 23 retailer directory records and an empty offer catalog. Both can search reviewed retailer catalogs, read listing and policy pages, and use the configured manufacturer directory. The freeze host had no configured general web-search connector. This comparison measures architecture with that tool set. A broader search configuration would be a separate experiment.
+Both arms start each case with 23 retailer records and an empty offer catalog. They can use SerpApi, Brave, Firecrawl Search and the manufacturer directory. Enable Tavily for both if its access check passes. Web search can find new sellers. The shared source review determines which retailer operations can run.
+
+For a known listing, either arm can use direct reads, Firecrawl Scrape or the same interactive Chromium browser. The browser can search a shop, select a variant or pickup branch, and request a delivery quote up to the point of purchase. If the seller needs an address the case does not supply, preserve the missing fee.
+
+[#201](https://github.com/han33-dotcom/TechScout/issues/201) owns shared integration and the development smoke test. Demonstrate a web search and an interactive selection or quote through each implementation. Pin both runnable revisions, the common adapter, effective providers and browser build before scoring. Capture browser state transitions for replay. The offline verifier checks the protocol and case integrity; runtime access needs separate receipts.
 
 ## Keep the evaluation independent
 

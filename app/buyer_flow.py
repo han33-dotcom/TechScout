@@ -123,6 +123,8 @@ class FlowDependencies:
     domestic_sources: object | None = None
     onboarding: object | None = None
     research_parallelism: int = 3
+    retailer_browser: object | None = None  # Per-run session factory supplied by the shared adapter.
+    tavily_preflight_ok: bool = False
 
 
 def supported(request: v2.ShoppingRequest) -> str | None:
@@ -273,6 +275,11 @@ def run_checkpoint(context) -> None:
 def _start(context, *, checkpoint):
     try:
         deps = worker_dependencies(checkpoint=checkpoint)
+        if not checkpoint and context.request.implementation == 'single_agent':
+            from app.shopping_agent import pinned_inference
+            deps = replace(deps, inference=pinned_inference(), versions=dict(deps.versions,
+                inference_config_sha256=_sha256(ROOT / 'config/evaluation.json'),
+                inference_config_section='evaluation_inference', reasoning_effort='low'))
     except (InferenceUnavailable, BudgetDenied) as exc:
         # The operator reads the detail in the worker log; the buyer sees a fixed message.
         log.warning('Buyer worker is not configured: %s', exc)
@@ -285,7 +292,10 @@ def _start(context, *, checkpoint):
 
 
 def execute(context, deps: FlowDependencies, *, checkpoint=False) -> None:
-    if deps.domestic_sources is not None and not checkpoint:
+    if context.request.implementation == 'single_agent' and not checkpoint:
+        from app.shopping_agent import ShoppingAgent
+        ShoppingAgent(context, deps).run()
+    elif deps.domestic_sources is not None and not checkpoint:
         from app.domestic_buyer import DomesticBuyerFlow
         DomesticBuyerFlow(context, deps).run()
     else:
