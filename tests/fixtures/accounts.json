@@ -1,0 +1,13 @@
+{
+  "note": "Synthetic test data for issue #187. These accounts and addresses are invented, belong to nobody and are used only by offline tests and local walkthroughs.",
+  "accounts": [
+    {"username": "test-buyer-a", "password": "synthetic-pass-A-7419"},
+    {"username": "test-buyer-b", "password": "synthetic-pass-B-2856"},
+    {"username": "test-buyer-new", "password": "synthetic-pass-N-6031"}
+  ],
+  "locations": [
+    {"label": "Test home", "city": "Beirut", "street": "1 Synthetic Test Street", "details": "Test building, floor 0"},
+    {"label": "Test office", "city": "Beirut", "street": "2 Example Placeholder Road", "details": null},
+    {"label": "Test family", "city": "Jounieh", "street": "3 Fictional Fixture Lane", "details": "Not a real address"}
+  ]
+}

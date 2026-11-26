@@ -30,6 +30,7 @@ Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues
 - [Ayoub marketplace catalog, sellers and live-access gap](ayoub-catalog.md)
 
 - [Private session history and exports](buyer-history.md)
+- [TechScout accounts, saved locations and chat destinations](buyer-accounts.md)
 - [Monitor and audio identity](monitor-audio-identity.md)
 - [Tablet identity](tablet-identity.md)
 - [Bounded research workers](research-workers.md)

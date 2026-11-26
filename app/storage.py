@@ -335,6 +335,59 @@ buyer_runs = Table(
     UniqueConstraint('session_hash','request_id','request_revision',name='uq_buyer_request_revision'),
 )
 
+# TechScout buyer accounts (issue #187, migration 0010). Passwords are stored only as
+# salted scrypt hashes. A signed-in browser session has one buyer_signins row; chats stay
+# owned by the session. Saved locations belong to the account and outlive sessions, but
+# their street details never enter request snapshots, history, exports or logs.
+buyer_accounts = Table(
+    'buyer_accounts', metadata,
+    Column('account_id', String(36), primary_key=True),
+    Column('username', String(32), nullable=False, unique=True),
+    Column('password_hash', String(255), nullable=False),
+    Column('created_at', UtcDateTime, nullable=False),
+)
+
+buyer_signins = Table(
+    'buyer_signins', metadata,
+    Column('session_hash', ForeignKey('buyer_sessions.session_hash', ondelete='CASCADE'), primary_key=True),
+    Column('account_id', ForeignKey('buyer_accounts.account_id', ondelete='CASCADE'), nullable=False, index=True),
+    Column('signed_in_at', UtcDateTime, nullable=False),
+)
+
+buyer_locations = Table(
+    'buyer_locations', metadata,
+    Column('location_id', String(36), primary_key=True),
+    Column('account_id', ForeignKey('buyer_accounts.account_id', ondelete='CASCADE'), nullable=False, index=True),
+    Column('label', String(40), nullable=False),
+    Column('city', String(80), nullable=False),
+    Column('street', String(200), nullable=False),
+    Column('details', String(200)),
+    Column('created_at', UtcDateTime, nullable=False),
+)
+
+# One destination decision per chat (session + request ID), shared by every revision of
+# that request. recipients lists the retailers allowed to receive the selected address for
+# this chat only; quote_state is the hand-off to the pre-order quote operation (#186).
+buyer_destinations = Table(
+    'buyer_destinations', metadata,
+    Column('session_hash', ForeignKey('buyer_sessions.session_hash', ondelete='CASCADE'), primary_key=True),
+    Column('request_id', Text, primary_key=True),
+    Column('status', String(10), nullable=False),
+    Column('location_id', ForeignKey('buyer_locations.location_id', ondelete='CASCADE'), index=True),
+    Column('recipients', JSON, nullable=False),
+    Column('quote_state', String(12), nullable=False),
+    Column('decided_at', UtcDateTime, nullable=False),
+)
+
+# Fixed-window counters for sign-in and registration throttling. Keys hold SHA-256
+# digests rather than attempted usernames, and rows are removed within an hour.
+buyer_attempts = Table(
+    'buyer_attempts', metadata,
+    Column('key', String(80), primary_key=True),
+    Column('attempts', Integer, nullable=False),
+    Column('window_start', UtcDateTime, nullable=False),
+)
+
 accounting_state = Table(
     'accounting_state', metadata,
     Column('id', Integer, primary_key=True),

@@ -14,6 +14,10 @@ after 24 hours; recovery removes their private run rows. All run reads and write
 require the owner session. A different session sees 404, not another buyer's data.
 Responses under `/api/` use `Cache-Control: no-store`.
 
+The session response also names the signed-in TechScout account, or `null`.
+Registration, sign-in, sign-out, private saved locations and a chat's destination
+choice are described in [buyer-accounts.md](buyer-accounts.md).
+
 Mutations require both the exact browser `Origin` and `X-CSRF-Token` from the
 session response. Secure cookies are the standalone backend default. For local
 HTTP development export `TECHSCOUT_COOKIE_SECURE=0`; the localhost-only Compose

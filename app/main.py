@@ -5,10 +5,13 @@ import os
 from pathlib import Path
 
 from fastapi import FastAPI, Request, HTTPException
+from fastapi.exceptions import RequestValidationError
+from fastapi.exception_handlers import request_validation_exception_handler
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.storage import RUN_LEASE, Storage
+from app.buyer_accounts import BuyerAccounts
 from app.buyer_api import BodyLimit, router
 from app.buyer_runs import BuyerRunService, RunError
 
@@ -16,11 +19,13 @@ log = logging.getLogger('techscout')
 FRONTEND_DIST = Path(__file__).resolve().parent.parent / 'frontend' / 'dist'
 
 
-def create_app(storage: Storage | None = None, *, buyer_service=None, cookie_secure=None) -> FastAPI:
+def create_app(storage: Storage | None = None, *, buyer_service=None, account_service=None,
+               cookie_secure=None) -> FastAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         app.state.storage = storage or Storage()
         app.state.buyer_runs = buyer_service or BuyerRunService(app.state.storage)
+        app.state.buyer_accounts = account_service or BuyerAccounts(app.state.buyer_runs)
         app.state.buyer_runs.recover()
         # Only runs older than the lease: a command-line search may be running on the same database.
         recovered = app.state.storage.recover_interrupted_runs(live_for=RUN_LEASE)
@@ -37,6 +42,14 @@ def create_app(storage: Storage | None = None, *, buyer_service=None, cookie_sec
     @app.exception_handler(RunError)
     async def run_error(request,exc):
         return JSONResponse({'detail':exc.detail},status_code=exc.status,headers={'Cache-Control':'no-store'})
+
+    @app.exception_handler(RequestValidationError)
+    async def invalid_request(request,exc):
+        # Passwords and addresses are never echoed back in validation errors.
+        if request.url.path.startswith('/api/account'):
+            return JSONResponse({'detail':'The account request is not valid'},status_code=422,
+                                headers={'Cache-Control':'no-store'})
+        return await request_validation_exception_handler(request,exc)
 
     @app.middleware('http')
     async def private_responses(request,call_next):
