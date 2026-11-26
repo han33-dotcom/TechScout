@@ -3,7 +3,7 @@ from contextlib import contextmanager
 import json
 
 from app.domestic_buyer_sources import ReadResult
-from app.domestic_discovery import ChannelAttempt, SearchReport
+from app.domestic_discovery import Attribution, ChannelAttempt, SearchLead, SearchReport
 from test_buyer_flow import FakeOpenRouter, FlowCase
 from test_domestic_buyer import Sources, laptop, lead
 
@@ -67,6 +67,29 @@ class ShoppingAgentTests(FlowCase):
         self.assertFalse(run.recommendations or run.uncertain)
         self.assertIn('RAM requirement (listing has 16 GB)', run.stop_reason)
         self.assertIn('Rowan Slate W8', run.stop_reason)
+
+    def test_unreviewed_title_informs_scoped_search_without_becoming_an_inspection(self):
+        model = 'Rowan Slate W8 Plus'
+        self.openrouter = Decisions(['Search serpapi', 'Search workbench.example for exact', 'Present'])
+        deps = development_tools(self.deps(), model)
+        search = deps.research.workers.domestic_tools
+        queries = []
+        reviewed = lead(str(search.offer.listing_url), search.offer)
+        unknown = SearchLead('https://other.example/product/w8-plus', 'host:other.example', None,
+                             (Attribution('serpapi', None, 'W8 Plus listed', '', None, None),))
+
+        def results(query, job, *, alternatives):
+            queries.append(query.query)
+            return SearchReport(job.run_id, (ChannelAttempt(query.channel, 'ok'),), (reviewed, unknown))
+
+        search.search = results
+        self.browse(deps, implementation='single_agent', requirements=dict(category='laptop'),
+                    intent=dict(kind='exact_model', model=model))
+        self.assertEqual(queries[1], 'site:workbench.example "Rowan Slate W8 Plus"')
+        decision = json.loads(self.openrouter.requests[1]['body']['messages'][1]['content'])
+        self.assertEqual(decision['observations'][0]['unreviewed_search_titles'],
+                         [dict(host='other.example', title='W8 Plus listed')])
+        self.assertFalse(any('other.example' in action for action in decision['available']))
 
     def test_question_and_feedback_reach_resumed_agent(self):
         run = self.agent('Rowan Slate W8', 32, ['Ask'])

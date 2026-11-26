@@ -12,6 +12,7 @@ from types import MappingProxyType
 from urllib.parse import quote
 
 from app.adapters.base import Snapshot, parse_offer_id
+from app.adapters.woo_catalog import WooCatalog
 from app.adapters.woocommerce import strict_json, _Read
 from app.devices import match_model
 from app.source_capabilities import CapabilityRef, safe_endpoint
@@ -28,6 +29,15 @@ SOURCE_ID = 'class_cellulars'
 ORIGIN = 'https://classcellulars.com'
 MOBILE_CATEGORY_ID = 132
 MAX_VAT_CLAIMS = 50
+
+
+def phone_search_url(term):
+    return (f'{ORIGIN}/wp-json/wc/store/v1/products?search={quote(term)}'
+            f'&category={MOBILE_CATEGORY_ID}&per_page=10&page=1')
+
+
+PHONE_LINKS = WooCatalog(SOURCE_ID, ORIGIN, {'phone': ('mobiles', 'smartphones', 'mobile-phones')},
+                        [('product', ('product',), 2)])
 
 # Prices read '1,030.00 $ (Inc. VAT)'; the left boundary stops a match inside a longer number.
 _PRICE_VAT = re.compile(r'(?<![0-9.,])([0-9]{1,3}(?:,[0-9]{3})+|[0-9]+)(\.[0-9]{1,6})?\s*\$\s*'
@@ -155,8 +165,7 @@ class ClassCatalogAdapter(WooCommerceAdapter):
             read.errors.append(self._error('unsupported phone model'))
             return (), read
         # An unfiltered first page can be entirely accessories, even for an exact model on the site.
-        url = (f'{ORIGIN}/wp-json/wc/store/v1/products?search={quote(model)}'
-               f'&category={MOBILE_CATEGORY_ID}&per_page=10&page=1')
+        url = phone_search_url(model)
         outcome = fetch(self.source_id, url, expect='json',
                         capability=CapabilityRef(capability_id='class-search', version='2'))
         read.outcomes.append(outcome)

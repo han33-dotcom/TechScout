@@ -1,0 +1,451 @@
+{
+  "run": {
+    "request_id": "c25106a7-686c-4b65-a078-6c262176310d",
+    "request_revision": 1,
+    "run_id": "315aad2b-e86f-423e-9b9c-2b446633eed7",
+    "run_revision": 1
+  },
+  "product_revision": "40320a1519ee7972d92ee74cc10afeef1078dcee",
+  "buyer": {
+    "input": {
+      "id": "B23",
+      "category": "audio",
+      "entry": "needs",
+      "mode": "delivery",
+      "destination": "Saida",
+      "prompt": "I want new wired USB-C earbuds with a microphone for phone calls. What is the delivered price to Saida?"
+    },
+    "submitted": "2026-11-26T16:48:03.775611+00:00",
+    "elapsed_s": 50.734,
+    "terminal": "No verified recommendation yet",
+    "browser": "156.0.8078.4",
+    "links": [],
+    "timeline": [
+      {
+        "ms": 2,
+        "text": "",
+        "status": null
+      },
+      {
+        "ms": 37,
+        "text": "Searching for audio · Form factor earbuds · Connectivity wired · new · delivery to Saida\nYour request is saved. Results will appear when a research worker starts.",
+        "status": "Waiting to start"
+      },
+      {
+        "ms": 1268,
+        "text": "Searching for audio · Form factor earbuds · Connectivity wired · new · delivery to Saida",
+        "status": "Checking products and evidence"
+      },
+      {
+        "ms": 50617,
+        "text": "Searching for audio · Form factor earbuds · Connectivity wired · new · delivery to Saida\nNo qualifying offer was confirmed in the listings checked.\nNo offer was verified in this run.\nOpen questions:\n- Search coverage in this run: 4 retailers found, 1 attempted, 0 read successfully, 0 with a qualifying offer; retailers outside this search were not checked.",
+        "status": "No verified recommendation yet"
+      }
+    ],
+    "buyer": "t↗\ntechscout\n.\nSign in or create account\nLB\nBuilt for buying in Lebanon\nLESS GUESSWORK. BETTER CHOICES.\nFind the right tech.\nKnow what you’re buying.\n\nTell us what matters. Compare configurations, local sellers and the full cost, with evidence you can check.\n\nYOUR SESSION\nRecent searches\nOpen history\n\nPrivate to this browser session. Saved results need a fresh check before you rely on them.\n\nPhones\nLaptops\nTablets\nMonitors\nHeadphones & earbuds\nWhat are you looking for?\nUpdate search ↗\nShopping assistant \nStandard comparison\nSingle shopping agent (experimental)\nSearch for \nMy needs\nAn exact model\nProduct links are recognized automatically.\nYour requirements\nEditable at any time\nTarget budget · USD\nHard maximum · USD\nBudget currency\nUSD\nLBP\nEUR\nAED\nCity in Lebanon\nCondition\nNew only\nUsed only\nRefurbished only\nFulfillment\nDelivery or pickup\nDelivery\nPickup\nPayment\nNo preference\nCash\nCard\n\nA target is a preference. Only a hard maximum is a price ceiling. Your original wording is kept for interpretation.\n\nSEARCH · REVISION 1\nNo verified recommendation yet\n\nSearching for audio · Form factor earbuds · Connectivity wired · new · delivery to Saida\n\nNo qualifying offer was confirmed in the listings checked.\n\nAbout these resultsStandard summary\n\nNo offer was verified in this run.\nOpen questions:\n- Search coverage in this run: 4 retailers found, 1 attempted, 0 read successfully, 0 with a qualifying offer; retailers outside this search were not checked.\n\nA standard summary of every checked fact, in a fixed order.\n4\nDiscovered retailers\n1\nAttempted retailers\n0\nRetrieved retailers\n0\nQualifying retailers\nYOUR COMPARISON · REVISION 1\n0 verified model options\nSort\nRecommended order\nVerified total (within currency)\n\nOnly offers verified for these requirements appear here. Fewer than three is a valid result. Costs in different currencies are not ranked as savings.\n\nNo verified options yet\n\nThe available evidence did not establish a verified option. You can adjust your requirements or inspect uncertain offers below.\n\nUncertain / non-qualifying offers (0)\nWhere the evidence came from\n\nInventory and discovery counts do not mean every retailer was checked.\n\nabed_tahan\nUNCHECKED\nsouq_961\nUNCHECKED\noutgeeked\nFAILED\n\nListing URL is outside the active source scope\n\nistyle_lebanon\nUNCHECKED\n\n0 qualifying sellers across 0 displayed options. Multiple sellers are grouped under the same canonical configuration.\n\nWhat would you like to change?\nRefine comparison\n\nAdds to this request. Existing filters remain in force until you explicitly edit them above. Previous results stay labelled while new evidence is checked.\n\nTECHSCOUT / BUY WITH CONTEXT\nCompare here. Buy directly from the retailer."
+  },
+  "actions": [
+    {
+      "count": 0,
+      "status": "leads",
+      "tool": "catalog",
+      "turn": 1
+    },
+    {
+      "channel": "serpapi",
+      "count": 8,
+      "query_index": 0,
+      "query_sha256": "4b10ed2d12888b58676ee565f422444020d8346a7180de548b2bf455ee0f1891",
+      "status": "ok",
+      "tool": "web_search",
+      "turn": 2
+    },
+    {
+      "count": 0,
+      "status": "leads",
+      "tool": "retailer_search",
+      "turn": 3
+    },
+    {
+      "count": 6,
+      "status": "reviewed_retailers",
+      "tool": "directory",
+      "turn": 4
+    },
+    {
+      "checks": [],
+      "count": 0,
+      "lead": 2,
+      "receipts": [],
+      "status": "out_of_scope",
+      "tool": "inspect",
+      "turn": 5
+    },
+    {
+      "channel": "serpapi",
+      "count": 8,
+      "query_index": 1,
+      "query_sha256": "c23b23b8cf0b8dc7ada91702235eadc7b77f91c8e2c49e0a5932fd2bfc877261",
+      "status": "ok",
+      "tool": "web_search",
+      "turn": 6
+    },
+    {
+      "tool": "present",
+      "turn": 7
+    }
+  ],
+  "stop_reason": "No qualifying offer was confirmed in the listings checked.",
+  "presentation": {
+    "uncertain": [],
+    "verified": []
+  },
+  "spend": {
+    "attempts": {
+      "model": 7,
+      "retrieval": 2,
+      "search": 2
+    },
+    "known_usd": "0.0311820",
+    "ledger": "read",
+    "note": "uncertain amounts are full reservations kept because the cost was not reported",
+    "still_held_usd": "0",
+    "uncertain_usd": "0"
+  },
+  "limits": {
+    "active_seconds": 299.99,
+    "concurrent_workers": 3,
+    "final_by_s": 118,
+    "ledger_buyer_caps": {
+      "calls": 40,
+      "research_spend_usd": "0.75",
+      "seconds": 120,
+      "spend_usd": "1"
+    },
+    "nonfinal_by_s": 77.0,
+    "recommendation_groups": 3
+  },
+  "completion": {
+    "lock": "6739df002bf01266dbd568582f0a3721f9330d7e6afc42786a06c6e7740b92a4",
+    "bank": "985777962e8e686b90b46a363cba3ca2cba14102e76e05b89cc06624f823967b",
+    "finished": "2026-11-26T16:48:54.722064+00:00"
+  },
+  "retrieval": [
+    {
+      "operation": "get",
+      "source": "technodel",
+      "url": "https://technodel.net/search?q=headphones+earbuds+wired+microphone+USB-C",
+      "final_url": "https://technodel.net/search?q=headphones+earbuds+wired+microphone+USB-C",
+      "sha256": "d51180d75eb554246eaf78029be4a5a61a1ff2f2fdccb220af2daa71ed07e140",
+      "http_status": 200,
+      "observed": "2026-11-26 16:48:23.984548+00:00",
+      "errors": [],
+      "attempts": 1
+    },
+    {
+      "operation": "get",
+      "source": "itworks",
+      "url": "https://shop.itworkslb.net/search?q=headphones+earbuds+wired+microphone+USB-C",
+      "final_url": "https://shop.itworkslb.net/search?q=headphones+earbuds+wired+microphone+USB-C",
+      "sha256": "bd2fa017bde8ee7c7410cfce8b0c9c1dc020e9404d57f1df47af9af59bdd3b1d",
+      "http_status": 200,
+      "observed": "2026-11-26 16:48:26.440970+00:00",
+      "errors": [],
+      "attempts": 1
+    }
+  ],
+  "events": [
+    {
+      "at": "2026-11-26T16:48:17.691402+00:00",
+      "kind": "search",
+      "mode": "live",
+      "provider": "serpapi",
+      "query": "audio Lebanon retailer earbuds wired microphone USB-C",
+      "country": "LB",
+      "language": "en",
+      "limit": 8,
+      "cursor": 0,
+      "status": "ok",
+      "count": 8,
+      "urls": [
+        "https://abedtahan.com/collections/wired-earphones-headphones",
+        "https://phonefinity.net/products/ugreen-type-c-wired-earphones-with-microphone/",
+        "https://distiplus.net/71-wired-earphones",
+        "https://961souq.com/collections/wired",
+        "https://www.mobicarelb.com/shop/category/earphones-71",
+        "https://outgeeked.net/collections/earphones",
+        "https://www.dslr-zone.com/product/apple-earpods/",
+        "https://www.ubuy.com.lb/en/product/53M5OBZ52-usb-c-headphone-usb-type-c-earphone-stereo-in-ear-earbuds-digital-dac-bass-noise-cancelling-headset-w-h-mic-remote-control-nylon-braided-for"
+      ],
+      "response": "bd348ccb9fb8a5c0b51fb71435017ad01f0e4a2cdc953874459584c643a337ab"
+    },
+    {
+      "at": "2026-11-26T16:48:49.358367+00:00",
+      "kind": "search",
+      "mode": "live",
+      "provider": "serpapi",
+      "query": "audio Lebanon local delivery Saida price earbuds wired microphone USB-C",
+      "country": "LB",
+      "language": "en",
+      "limit": 8,
+      "cursor": 0,
+      "status": "ok",
+      "count": 8,
+      "urls": [
+        "https://phonefinity.net/products/ugreen-type-c-wired-earphones-with-microphone/",
+        "https://outgeeked.net/collections/earphones",
+        "https://abedtahan.com/collections/wired-earphones-headphones",
+        "https://distiplus.net/71-wired-earphones",
+        "https://ayoubcomputers.com/wired-earphones/",
+        "https://www.dslr-zone.com/product/apple-earpods/",
+        "https://961souq.com/collections/wired",
+        "https://istyle.com.lb/products/earpods-usb-c-myqy3zm-a"
+      ],
+      "response": "34ddde52d734afda218e766f27c2732494ae120f26c0dbfcf63619a5cee874b4"
+    }
+  ],
+  "source_outcomes": [
+    {
+      "source_id": "abed_tahan",
+      "name": "abed_tahan",
+      "status": "unchecked",
+      "reason": null
+    },
+    {
+      "source_id": "souq_961",
+      "name": "souq_961",
+      "status": "unchecked",
+      "reason": null
+    },
+    {
+      "source_id": "outgeeked",
+      "name": "outgeeked",
+      "status": "failed",
+      "reason": "Listing URL is outside the active source scope"
+    },
+    {
+      "source_id": "istyle_lebanon",
+      "name": "istyle_lebanon",
+      "status": "unchecked",
+      "reason": null
+    }
+  ],
+  "clarification": null,
+  "offer_evidence": [],
+  "assessment": {
+    "frozen_class": "full",
+    "pair_flag": true,
+    "reason": "Search returned wired USB-C earbuds with a microphone, including a matching Phonefinity listing. The UI showed no price, seller link, Saida total or comparison.",
+    "correct_listing_evidence": "UGREEN USB-C wired earphones with microphone, SKU 30638. A separate public read confirmed the search result.",
+    "exact_or_suitable_visible": false,
+    "current_price_link": false,
+    "full_or_partial_or_blocked_credit": false,
+    "pair_credit": false,
+    "misleading_verified_claims": [],
+    "first_useful_ms": null,
+    "observations": []
+  },
+  "final_display_ms": 50617,
+  "submitted_request": {
+    "schema_version": 2,
+    "request_id": "c25106a7-686c-4b65-a078-6c262176310d",
+    "implementation": "single_agent",
+    "revision": 1,
+    "intent": {
+      "kind": "needs",
+      "description": "I want new wired USB-C earbuds with a microphone for phone calls. What is the delivered price to Saida?",
+      "required_software": []
+    },
+    "unresolved_constraints": [
+      "microphone for phone calls"
+    ],
+    "refinement_note": null,
+    "requirements": {
+      "category": "audio",
+      "form_factor": "earbuds",
+      "connectivity": "wired",
+      "active_noise_cancellation": null
+    },
+    "budget": null,
+    "preferences": [],
+    "allowed_colors": [],
+    "payment": null,
+    "allowed_conditions": [
+      "new"
+    ],
+    "market_scope": {
+      "include_international": false,
+      "international_markets": []
+    },
+    "fulfillment": {
+      "destination": {
+        "country": "LB",
+        "city": "Saida",
+        "postal_code": null
+      },
+      "mode": "delivery",
+      "branch_id": null,
+      "deadline": null
+    },
+    "warranty_requirement": null
+  },
+  "coverage": {
+    "discovered": 4,
+    "attempted": 1,
+    "retrieved": 0,
+    "qualifying": 0
+  },
+  "reported_model_calls": [
+    {
+      "role": "model",
+      "status": "completed",
+      "validated": true,
+      "requested_model": "openai/gpt-6.1-sol",
+      "reported_model": "openai/gpt-6.1-sol",
+      "serving_provider": "OpenAI",
+      "tokens": {
+        "input_tokens": 1139,
+        "output_tokens": 30,
+        "total_tokens": 1169
+      },
+      "latency_ms": 2672,
+      "spend": "known",
+      "actual_usd": "0.003146",
+      "reserved_usd": "0.0614400",
+      "missing_metadata": [
+        "system_fingerprint"
+      ]
+    },
+    {
+      "role": "model",
+      "status": "completed",
+      "validated": true,
+      "requested_model": "openai/gpt-6.1-sol",
+      "reported_model": "openai/gpt-6.1-sol",
+      "serving_provider": "OpenAI",
+      "tokens": {
+        "input_tokens": 1147,
+        "output_tokens": 30,
+        "total_tokens": 1177
+      },
+      "latency_ms": 3266,
+      "spend": "known",
+      "actual_usd": "0.003166",
+      "reserved_usd": "0.0614400",
+      "missing_metadata": [
+        "system_fingerprint"
+      ]
+    },
+    {
+      "role": "model",
+      "status": "completed",
+      "validated": true,
+      "requested_model": "openai/gpt-6.1-sol",
+      "reported_model": "openai/gpt-6.1-sol",
+      "serving_provider": "OpenAI",
+      "tokens": {
+        "input_tokens": 1557,
+        "output_tokens": 30,
+        "total_tokens": 1587
+      },
+      "latency_ms": 2500,
+      "spend": "known",
+      "actual_usd": "0.004191",
+      "reserved_usd": "0.0614400",
+      "missing_metadata": [
+        "system_fingerprint"
+      ]
+    },
+    {
+      "role": "model",
+      "status": "completed",
+      "validated": true,
+      "requested_model": "openai/gpt-6.1-sol",
+      "reported_model": "openai/gpt-6.1-sol",
+      "serving_provider": "OpenAI",
+      "tokens": {
+        "input_tokens": 1603,
+        "output_tokens": 30,
+        "total_tokens": 1633
+      },
+      "latency_ms": 2735,
+      "spend": "known",
+      "actual_usd": "0.004306",
+      "reserved_usd": "0.0614400",
+      "missing_metadata": [
+        "system_fingerprint"
+      ]
+    },
+    {
+      "role": "model",
+      "status": "completed",
+      "validated": true,
+      "requested_model": "openai/gpt-6.1-sol",
+      "reported_model": "openai/gpt-6.1-sol",
+      "serving_provider": "OpenAI",
+      "tokens": {
+        "input_tokens": 1892,
+        "output_tokens": 58,
+        "total_tokens": 1950
+      },
+      "latency_ms": 4031,
+      "spend": "known",
+      "actual_usd": "0.0053085",
+      "reserved_usd": "0.0614400",
+      "missing_metadata": [
+        "system_fingerprint"
+      ]
+    },
+    {
+      "role": "model",
+      "status": "completed",
+      "validated": true,
+      "requested_model": "openai/gpt-6.1-sol",
+      "reported_model": "openai/gpt-6.1-sol",
+      "serving_provider": "OpenAI",
+      "tokens": {
+        "input_tokens": 1862,
+        "output_tokens": 30,
+        "total_tokens": 1892
+      },
+      "latency_ms": 2735,
+      "spend": "known",
+      "actual_usd": "0.0049535",
+      "reserved_usd": "0.0614400",
+      "missing_metadata": [
+        "system_fingerprint"
+      ]
+    },
+    {
+      "role": "model",
+      "status": "completed",
+      "validated": true,
+      "requested_model": "openai/gpt-6.1-sol",
+      "reported_model": "openai/gpt-6.1-sol",
+      "serving_provider": "OpenAI",
+      "tokens": {
+        "input_tokens": 2325,
+        "output_tokens": 30,
+        "total_tokens": 2355
+      },
+      "latency_ms": 2860,
+      "spend": "known",
+      "actual_usd": "0.006111",
+      "reserved_usd": "0.0614400",
+      "missing_metadata": [
+        "system_fingerprint"
+      ]
+    }
+  ],
+  "ledger_reconciliation": {
+    "known_usd": "0.0311820",
+    "uncertain_usd": "0",
+    "still_held_usd": "0",
+    "attempts": {
+      "model": 7,
+      "search": 2,
+      "retrieval": 2
+    },
+    "external": 11
+  }
+}

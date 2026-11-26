@@ -20,7 +20,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from app import contracts_v2 as v2
 from app.accounting import BudgetDenied, Charge
 from app.adapters.woocommerce import read_page as read_woo_page
-from app.adapters import beytech, itworks_audio, mojitech, technodel_audio
+from app.adapters import beytech, class_cellulars, itworks_audio, mojitech, technodel_audio
 from app.domestic_search_plan import product_terms, retailer_query
 from app.buyer_sources import DeadlineBudget
 from app.corpus_contracts import DocumentCapture, ProcessingVersion, ResourceKey
@@ -366,6 +366,9 @@ class DomesticBuyerSources:
             return
         bounded = _ReadJob(job, room)
         routes = []
+        if category == 'phone' and request.intent.kind == 'exact_model':
+            routes.append((class_cellulars.SOURCE_ID, class_cellulars.phone_search_url(term), 'json',
+                           lambda body: class_cellulars.PHONE_LINKS.product_links(body, category)))
         for reader in (beytech.CATALOG, mojitech.CATALOG):
             if category in reader.categories:
                 routes.append((reader.source_id, reader.search_url(term), 'json',
@@ -387,7 +390,8 @@ class DomesticBuyerSources:
                 continue
             if job.cancelled or room() < CALL_TIMEOUT_S:
                 break
-            ref = CapabilityRef(capability_id=source_id + '-search', version='1')
+            ref = (CapabilityRef(capability_id='class-search', version='2') if source_id == class_cellulars.SOURCE_ID
+                   else CapabilityRef(capability_id=source_id + '-search', version='1'))
             links, reason, attempts = (), None, 0
             try:
                 result = self.gate.fetch(bounded.source_budget(self.directory.registry_path),

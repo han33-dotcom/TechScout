@@ -69,6 +69,8 @@ def main():
     parser.add_argument('--destination-ref', required=True)
     parser.add_argument('--input', required=True)
     parser.add_argument('--city', required=True)
+    parser.add_argument('--category', default='phone')
+    parser.add_argument('--fulfillment', default='delivery')
     parser.add_argument('--profile', type=Path, required=True)
     args = parser.parse_args()
     load_env_file(args.env_file, names=('OPENROUTER_API_KEY', *DISCOVERY_ENV))
@@ -117,9 +119,10 @@ def main():
         nonlocal submitted
         request = context.request
         intent = request.intent
-        text = str(intent.url) if intent.kind == 'product_link' else getattr(intent, 'model', None)
+        text = (str(intent.url) if intent.kind == 'product_link' else intent.description
+                if intent.kind == 'needs' else getattr(intent, 'wording', None) or intent.model)
         if (submitted or text != args.input or request.fulfillment.destination.city != args.city
-                or request.requirements.category != 'phone' or request.fulfillment.mode != 'delivery'
+                or request.requirements.category != args.category or request.fulfillment.mode != args.fulfillment
                 or (getattr(request, 'implementation', 'control') == 'single_agent') != (args.arm == 'agent')):
             return context.publish(status='error', stop_reason='Unexpected development submission')
         submitted = True
