@@ -1,61 +1,27 @@
-# TechScout technical documentation
+# TechScout documentation
 
-The [full-product delivery plan](full-product-plan.md) defines the approved scope, architecture, and evaluation. The [GitHub backlog](https://github.com/han33-dotcom/TechScout/issues/36) tracks tasks and dependencies.
+| To find | Start here |
+| --- | --- |
+| What buyers should experience | [Buyer contract](buyer-product-contract.md) · [Acceptance scenarios](buyer-acceptance-matrix.md) |
+| What worked and what comes next | [Experiment comparison](buyer-architecture-comparison.md) · [Project board](https://github.com/users/han33-dotcom/projects/2) |
+| How both implementations are scored | [Buyer scoring rules](buyer-correctness-acceptance.md) · [Frozen 20 cases](../acceptance/buyer-v1/README.md) · [Baseline results](../acceptance/buyer-v1/results-2026-11-25/README.md) |
+| How to run or contribute | [Quick start](../README.md) · [Local development and recovery](local-development.md) · [Contributing](../CONTRIBUTING.md) |
+| What the course submission needs | [Delivery plan](full-product-plan.md) · [Architecture and API report](architecture-api-report.md) · [Failure matrix](full-product-failure-matrix.md) |
 
-Start with [Team workflow](team-workflow.md), [Collaborator setup](collaborator-setup.md) and [Workspace activation](github-workspace-activation.md).
+## Engineering reference
 
-Tasks belong in [GitHub Issues](https://github.com/han33-dotcom/TechScout/issues); general reference and meeting notes belong in the [Wiki](https://github.com/han33-dotcom/TechScout/wiki) after publication.
+| Area | Guides |
+| --- | --- |
+| Buyer application | [Browser API and worker](buyer-api.md) · [Comparison UI](buyer-ui.md) · [History and export](buyer-history.md) · [Live run procedure](live-flow.md) |
+| Data and decisions | [v2 contracts](full-product-contracts.md) · [Eligibility and totals](full-product-assessment.md) · [Tablet identity](tablet-identity.md) · [Monitor and audio identity](monitor-audio-identity.md) · [Grounded writer](writer.md) |
+| Search and inference | [Domestic search design](domestic-search-design.md) · [Discovery channels](discovery.md) · [Research workers](research-workers.md) · [Freshness and retrieval](evidence-services.md) · [Page extraction](shared-extraction.md) · [OpenRouter](openrouter.md) |
+| Retailer operations | [Admission rules](source-admission.md) · [Directory](retailer-directory.md) · [Onboarding](retailer-onboarding.md) · [Catalog bootstrap](catalog-bootstrap.md) · [Refresh jobs](catalog-refresh.md) |
+| Source coverage | [Coverage by source](source-coverage.md) · [Class](class-catalog.md) · [Mojitech](mojitech-catalog.md) · [Beytech](beytech-catalog.md) · [Ayoub](ayoub-catalog.md) · [PC and Parts](pcandparts.md) |
+| Operations and team | [Shared ledger](shared-accounting.md) · [Local accounting](local-accounting.md) · [Team workflow](team-workflow.md) · [Collaborator setup](collaborator-setup.md) |
 
-## Documents
+## Studies and earlier designs
 
-- [Buyer product contract v1](buyer-product-contract.md) and [18-scenario acceptance matrix](buyer-acceptance-matrix.md)
-- [Approved domestic search pipelines, model access and operating defaults](domestic-search-design.md)
-
-- [Buyer product rules audit, 25 November](buyer-product-rules-audit.md)
-- [Buyer correctness acceptance](buyer-correctness-acceptance.md)
-- [Held-out evaluation protocol](evaluation-protocol.md)
-- [Domestic held-out results, verified offers, latency and cost](evaluation-report.md)
-- [Full-product failure matrix and threat model](full-product-failure-matrix.md)
-
-- [Architecture, API and reproducibility report: implemented checkpoint and remaining work](architecture-api-report.md)
-
-- [PC and Parts exact-listing retrieval and live-access limitations](pcandparts.md)
-- [Local accounting setup and later hosted migration](local-accounting.md)
-
-- [Historical international source audit and retired ingestion manifest](international-source-audit.md)
-
-- [Beytech catalog and policy evidence](beytech-catalog.md)
-
-- [Mojitech catalog and live-access evidence](mojitech-catalog.md)
-- [Ayoub marketplace catalog, sellers and live-access gap](ayoub-catalog.md)
-
-- [Private session history and exports](buyer-history.md)
-- [Monitor and audio identity](monitor-audio-identity.md)
-- [Tablet identity](tablet-identity.md)
-- [Bounded research workers](research-workers.md)
-- [collaborator setup](collaborator-setup.md)
-- [Full-product contracts v2](full-product-contracts.md) and [MVP contract v1](mvp-spec.md)
-- [Evidence freshness and retrieval services](evidence-services.md)
-- [Persistent retailer directory](retailer-directory.md)
-- [Automatic retailer onboarding](retailer-onboarding.md)
-- [Shared accounting and bounded research](shared-accounting.md)
-- [OpenRouter inference adapter](openrouter.md) and [historical direct-provider implementation](model-provider.md)
-- [First browser-to-result flow and live-run runbook](live-flow.md)
-- [Grounded writer and deterministic fallback](writer.md)
-- [Full-product eligibility and domestic costs](full-product-assessment.md)
-- [Domestic buyer demo and five-category coverage](domestic-buyer-demo.md)
-- [Buyer walkthrough prompts and observation sheet](buyer-walkthroughs.md)
-- [Domestic development calibration and per-request measurements](development-calibration.md)
-- [Why every recorded run abstained: blocking facts, root causes and a bounded live-run plan](abstention-diagnosis-2026-11-24.md)
-- [Historical international landed-cost contracts](landed-costs.md)
-- [Owned buyer API and worker lifecycle](buyer-api.md)
-- [Buyer request, comparison and refinement UI](buyer-ui.md)
-- [Bounded Class Cellulars discovery and live-access limits](class-catalog.md)
-- [Domestic discovery channels, source selection and accounting](discovery.md)
-- [Shared page extraction and Firecrawl fallback](shared-extraction.md)
-- [pr policy activation](pr-policy-activation.md)
-- [retailer access requests](retailer-access-requests.md)
-- [source coverage](source-coverage.md) and [Lebanese retailer audit / seeds](retailer-audit-2026-11-16.md)
-- [Amhaz: blocked until the intended business is identified](source-coverage.md#amhaz-56-blocked-until-the-intended-business-is-identified)
-- [source admission](source-admission.md)
-- [team workflow](team-workflow.md)
+- **Buyer studies.** [Walkthrough script](buyer-walkthroughs.md) · [Domestic demo](domestic-buyer-demo.md) · [Product rules audit](buyer-product-rules-audit.md) · [Fresh discovery results](../acceptance/sku-discovery/README.md) · [Technodel review](discovery-repair.md)
+- **Earlier held-out study.** [Protocol](evaluation-protocol.md) · [Results](evaluation-report.md) · [Development calibration](development-calibration.md) · [Abstention diagnosis](abstention-diagnosis-2026-11-24.md) · [Runner guide](../eval/runner-guide.md)
+- **Earlier implementation.** [v1 contracts and CLI](mvp-spec.md) · [Direct model provider](model-provider.md) · [International costs](landed-costs.md) · [International source audit](international-source-audit.md)
+- **Historical decisions.** [Retailer audit](retailer-audit-2026-11-16.md) · [Superseded outreach](retailer-access-requests.md) · [Workspace activation](github-workspace-activation.md) · [PR policy activation](pr-policy-activation.md)

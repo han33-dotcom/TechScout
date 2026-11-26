@@ -1,19 +1,10 @@
 # OpenRouter adapter
 
-`app.openrouter.OpenRouterProvider` is a gateway behind the same
-`ModelProvider.generate(instructions, data, OutputModel, budget=..., cancelled=...)`
-boundary as the [direct OpenAI adapter](model-provider.md). Since #142 it is the
-planned inference provider. The buyer worker builds it for every model-driven role
-from one pinned runtime route (`purpose: "buyer"`, see the
-[first live flow](live-flow.md), #75). The frozen main evaluation keeps its direct
-OpenAI route until [#80](https://github.com/han33-dotcom/TechScout/issues/80) versions
-the protocol. Nothing selects the adapter automatically. Building it did not create
-an account, buy credits or make a paid call; all tests use offline fake clients.
+The baseline buyer worker builds its model roles from the pinned runtime route in [app/inference.py](../app/inference.py). The [experiment record](buyer-architecture-comparison.md) names the model and reasoning effort used for comparison. The legacy direct provider is documented [separately](model-provider.md).
 
 ## Off by default
 
-`load_openrouter_config()` with no path returns a disabled configuration, and
-`config/evaluation.json` has no OpenRouter route. Constructing the provider raises
+`load_openrouter_config()` without a path returns a disabled standalone configuration. The [evaluation configuration](../config/evaluation.json) records the study route. Constructing the provider raises
 `ProviderUnavailable` (no request, no reservation) when:
 
 - the configuration does not set `"enabled": true`; or
@@ -179,53 +170,6 @@ FAQ on 2026-11-17) counts as spend at purchase. Each call's consumption is then
 counted through its reservation and reported cost, so the credit principal is not
 counted twice. Recheck fees before buying; no code here buys credits.
 
-## Main evaluation and experiments
+## Evaluation and experiments
 
-The main evaluation stays on direct OpenAI. If a later decision runs part of it
-through OpenRouter, use `purpose: "evaluation"`: one pinned model and provider, no
-fallback, and the `route_fingerprint` recorded on every attempt. Optional route or
-model comparisons use `purpose: "experiment"` with their own `exp-` label and are
-reported apart from the main results.
-
-The frozen [evaluation protocol](evaluation-protocol.md) (version 1.0.0) plans no
-OpenRouter experiment. Before one runs, it must be declared in `eval/models.json`
-with a protocol version bump. A declared experiment keeps a fixed provider order
-with fallbacks off, so use one route and leave `allow_fallback` false. Its
-records write each field listed in `metadata_unavailable` as `not_reported`.
-Fallback experiments outside that protocol stay exploratory and are never
-reported as evaluation results.
-
-Pinning removes deliberate substitution,
-but OpenRouter and its providers can still change model weights, serving stacks or
-metadata, so results are not claimed to be fully reproducible: deviations and
-missing metadata are reported instead.
-
-## Account-specific behaviour and limits
-
-- Model and provider availability, regional hosts, privacy settings, guardrails
-  and key spending limits are account settings. They can make a route
-  `unavailable`, `provider_unavailable` or `access_denied`; the adapter does not
-  work around them.
-- `data_collection: "deny"` and `zdr: true` exclude providers that do not meet the
-  policy. If none remain, OpenRouter refuses the request.
-- A dispatched request that times out or is cancelled may still finish and be
-  billed. The adapter stops waiting and keeps the reservation.
-- Not verified live: account access, the exact `openrouter_metadata` shape, the
-  serving-provider name forms, the `max_tokens` capability name and whether every
-  reply carries `usage.is_byok` (if not, every call stays `unknown_usage` and keeps
-  its full reservation). Before any paid comparison, run one bounded,
-  ledger-recorded call per route and check these.
-- Not implemented: streaming, tool calling, a CLI switch, BYOK accounting and the
-  generation-stats lookup (`GET /api/v1/generation`) for later reconciliation.
-
-Sources, checked 2026-11-17:
-[chat completions](https://openrouter.ai/docs/api-reference/chat-completion),
-[provider routing](https://openrouter.ai/docs/features/provider-routing),
-[model fallbacks](https://openrouter.ai/docs/guides/routing/model-fallbacks),
-[structured outputs](https://openrouter.ai/docs/features/structured-outputs),
-[usage accounting](https://openrouter.ai/docs/use-cases/usage-accounting),
-[errors](https://openrouter.ai/docs/api-reference/errors),
-[generation stats](https://openrouter.ai/docs/api-reference/get-a-generation),
-[privacy](https://openrouter.ai/docs/features/privacy-and-logging),
-[BYOK](https://openrouter.ai/docs/use-cases/byok) and
-[FAQ](https://openrouter.ai/docs/faq).
+Record the model, serving provider, reasoning effort, prompt versions, token usage, settled spend and uncertain reservations for each run. Pin the route used by both architectures and label any model or fallback experiment separately. Use the [applicable study protocol](buyer-correctness-acceptance.md) and the [comparison record](buyer-architecture-comparison.md) for current work. The [older adapter report](https://github.com/han33-dotcom/TechScout/blob/9006e2ac8557003c958c31f729371ccb8e160b9a/docs/openrouter.md) records account-specific limits and the original provider plan.
