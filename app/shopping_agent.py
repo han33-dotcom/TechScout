@@ -3,7 +3,9 @@ from contextlib import ExitStack
 from dataclasses import dataclass, replace
 from hashlib import sha256
 import json
+import re
 from typing import Protocol
+from urllib.parse import urlsplit
 
 from pydantic import Field
 
@@ -18,6 +20,7 @@ from app.domestic_search_plan import search_options
 from app.directory import DirectoryQuery
 from app.eligibility import check_full_product
 from app.inference import ROOT, InferenceConfig, build_inference, load_env_file
+from app.onboarding import canonical
 
 
 def pinned_inference():
@@ -82,6 +85,7 @@ class ShoppingAgent(DomesticBuyerFlow):
         self.observations = []
         self.blockers = {}
         self.titles = {}
+        self.buyer_links = set()
         self.discovery = deps.research.workers.domestic_tools if deps.research else None
         self.directory = getattr(deps.research.workers, 'directory', None) if deps.research else None
         self.browser: BrowserSession | None = None
@@ -94,6 +98,13 @@ class ShoppingAgent(DomesticBuyerFlow):
         self.job = self.deps.ledger.open_job(self.run_ref.run_id)
         if self.request.intent.kind == 'product_link':
             self.add_lead(Listing(str(self.request.intent.url)))
+        notes = [self.request.refinement_note or '', *(entry['answer'] for entry in self.context.answers)]
+        for note in notes:
+            for link in re.findall(r'https://[^\s<>"\x27]+', note):
+                url = link.rstrip('.,!?)')
+                if canonical(url):
+                    self.buyer_links.add(url)
+                    self.add_lead(Listing(url))
         with ExitStack() as stack:
             if self.deps.retailer_browser:
                 self.browser = stack.enter_context(self.deps.retailer_browser(self.request, self.run_ref))
@@ -283,7 +294,8 @@ class ShoppingAgent(DomesticBuyerFlow):
             self.sources[read.source_id] = (read.source_id, 'checked' if checked else 'failed',
                                              None if checked else getattr(read, 'reason', None) or 'No current listing response.')
         if read.status == 'unconfigured':
-            self.handoff(listing.url)
+            self.handoff('https://' + urlsplit(listing.url).netloc + '/'
+                         if listing.url in self.buyer_links else listing.url)
         return dict(status=read.status, lead=index, count=len(read.offers), checks=checks,
                     receipts=sorted({digest for digest, _ in read.replies}),
                     partials=[dict(model=u.offer.variant.product.model, price=u.offer.price.model_dump(mode='json'),

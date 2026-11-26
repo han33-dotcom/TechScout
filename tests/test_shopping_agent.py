@@ -8,29 +8,23 @@ from test_buyer_flow import FakeOpenRouter, FlowCase
 from test_domestic_buyer import Sources, laptop, lead
 
 
-class DevelopmentListings(Sources):
-    def read(self, request, url, job, run, *, earlier, room):
-        if url not in self.current:
-            return ReadResult('old-shop', status='failed', reason='The listing has been removed.')
-        return super().read(request, url, job, run, earlier=earlier, room=room)
-
-
 class DevelopmentSearch:
-    connectors = {'serpapi': object()}
+    connectors = {'serpapi': object(), 'brave': object()}
 
     def __init__(self, offer):
         self.offer = offer
 
     def search(self, query, job, *, alternatives):
         url = str(self.offer.listing_url)
-        if self.offer.variant.product.model == 'Aster Finch Q14' and 'price' not in query.query:
-            return SearchReport(job.run_id, (ChannelAttempt('serpapi', 'ok'),), ())
-        return SearchReport(job.run_id, (ChannelAttempt('serpapi', 'ok'),), (lead(url, self.offer),))
+        attempts = (ChannelAttempt(query.channel, 'ok'),)
+        if self.offer.variant.product.model == 'Aster Finch Q14' and query.channel == 'serpapi':
+            return SearchReport(job.run_id, attempts, ())
+        return SearchReport(job.run_id, attempts, (lead(url, self.offer),))
 
 
 def development_tools(deps, model):
     offer = laptop('workbench', model=model, price='712.35')
-    deps.domestic_sources = DevelopmentListings([], [offer])
+    deps.domestic_sources = Sources([], [offer])
     deps.research.workers.domestic_tools = DevelopmentSearch(offer)
     return deps
 
@@ -60,8 +54,8 @@ class ShoppingAgentTests(FlowCase):
             intent=dict(kind='exact_model', model=model, wording=f'Find {model} for delivery'),
             refinement_note='Compare all mandatory fees.')[1]
 
-    def test_reformulate_after_search_misses_listing(self):
-        run = self.agent('Aster Finch Q14', 16, ['Search serpapi', 'Search serpapi', 'Inspect', 'Present'])
+    def test_switch_channel_after_search_misses_listing(self):
+        run = self.agent('Aster Finch Q14', 16, ['Search serpapi', 'Search brave', 'Inspect', 'Present'])
         self.assertEqual(run.status, 'complete', self.trace(run))
         self.assertEqual(str(run.recommendations[0].primary.cost.total.amount), '722.35')
         trace = self.trace(run)['actions']
@@ -79,9 +73,9 @@ class ShoppingAgentTests(FlowCase):
         self.assertEqual(run.status, 'clarification', self.trace(run))
         response = self.client.post(f'/api/runs/{run.run.run_id}/clarify', headers=self.headers,
             json=dict(run=run.run.model_dump(), clarification_id=run.clarification.clarification_id,
-                      answer='I can only use the 32 GB configuration.'))
+                      answer='I need 32 GB. Check https://workbench.example/workbench'))
         self.assertEqual(response.status_code, 202)
-        self.openrouter = Decisions(['Present'])
+        self.openrouter = Decisions(['Inspect', 'Present'])
         self.work(development_tools(self.deps(), 'Rowan Slate W8'))
         data = json.loads(self.openrouter.requests[-1]['body']['messages'][1]['content'])
         self.assertEqual(data['request']['intent']['wording'], 'Find Rowan Slate W8 for delivery')
