@@ -15,13 +15,13 @@ The earlier [23-request study](evaluation-report.md) compared fixed rules, a seq
 
 ## Experiment 2 · Single shopping agent
 
-One agent will interpret the request, choose tools, inspect selected-item evidence, revise its search and advise the buyer. Shared tools enforce retailer scope, verify evidence and calculate payable totals. The [comparison freeze](../acceptance/architecture-v2/README.md) pins the control, 20 primary cases, six fresh requests, tools, budgets and run order. Agent implementation and paired results are pending.
+One agent will interpret the request, choose tools, revise its search and advise the buyer. Both implementations will have general web search, direct retailer reads, and browser interaction for variant selection, branch checks and delivery quotes. The control keeps its existing decision logic and gains the same tools through a shared adapter. The [amended freeze](../acceptance/architecture-v2/README.md) keeps the original 20 primary cases, six fresh requests, budgets and run order. Runtime integration and paired results are pending.
 
 | Order | Deliverable |
 | --- | --- |
 | 1 | [Pin the control and reserve fresh confirmation cases](https://github.com/han33-dotcom/TechScout/issues/199) |
 | 2 | [Build the agent behind the buyer UI](https://github.com/han33-dotcom/TechScout/issues/200) |
-| 3 | [Replay identical evidence and run both implementations](https://github.com/han33-dotcom/TechScout/issues/201) |
+| 3 | [Verify shared search and browser access, then replay identical evidence](https://github.com/han33-dotcom/TechScout/issues/201) |
 | 4 | [Score both and record the design decision](https://github.com/han33-dotcom/TechScout/issues/202) |
 
 Use the same [20 frozen requests](../acceptance/buyer-v1/freeze-v1-2026-11-25.json), model, effort, tools, catalog and budgets. Run the finalists on the same fresh confirmation set. Score browser-visible correctness first, including misleading claims. Compare cost per useful answer, first useful display and final latency. Publish paired outcomes and dated reference changes. [Scoring protocol](buyer-correctness-acceptance.md)
