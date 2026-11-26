@@ -72,16 +72,20 @@ def registry_entry(name, detail):
                                          destination_detail=detail, max_quantity=1)]}
 
 
-def clone_offer(base, name, price, variant, arrival=None):
-    """A Lebanese seller of Book-Local's exact configuration whose delivery fee is unpublished."""
+def clone_offer(base, name, price, variant, arrival=None, shipping=None):
+    """A Lebanese seller of Book-Local's exact configuration whose delivery fee is unpublished, or
+    published only under the given shipping charge's terms."""
     text = json.dumps(base).replace('book-local', slug(name)).replace('Book-Local', name)
     text = text.replace(f'"sku-{slug(name)}"', f'"{variant}"')
     data = json.loads(text)
     data['price']['value']['amount'] = price
     data['costs'] = [charge for charge in data['costs'] if charge['kind'] != 'shipping'] + [
         {'schema_version': 2, 'leg': 'order', 'kind': 'shipping', 'state': 'unknown',
-         'reason': 'Delivery depends on the destination'}]
-    data['evidence'] = [e for e in data['evidence'] if e['field_path'] != 'costs.order.shipping']
+         'reason': 'Delivery depends on the destination'} if shipping is None else
+        {'schema_version': 2, 'leg': 'order', 'kind': 'shipping', 'state': 'additional',
+         'evidence_ids': [f'{slug(name)}:costs.order.shipping'], **shipping}]
+    if shipping is None:
+        data['evidence'] = [e for e in data['evidence'] if e['field_path'] != 'costs.order.shipping']
     if arrival is not None:
         record = dict(data['evidence'][0], evidence_id=f'{slug(name)}:arrival', field_path='arrival',
                       scope='variant', route_id=None)
@@ -90,12 +94,15 @@ def clone_offer(base, name, price, variant, arrival=None):
     return data
 
 
-def chat_snapshot(suffix, *, deadline=None, arrival=None, mode='delivery'):
+def chat_snapshot(suffix, *, deadline=None, arrival=None, mode='delivery', street_a=None):
+    """street_a: optional 'reasons' and 'shipping' for Street-A's uncertain result."""
     raw = fixture('workspace')['current']
     base = raw['recommendations'][0]['primary']['offer']
     for name, (price, variant, _) in SELLERS.items():
-        raw['uncertain'].append({'status': 'uncertain', 'offer': clone_offer(base, name, price, variant, arrival),
-                                 'reasons': ['payable total is incomplete'],
+        special = (street_a or {}) if name == 'Street-A' else {}
+        raw['uncertain'].append({'status': 'uncertain', 'offer': clone_offer(
+                                     base, name, price, variant, arrival, special.get('shipping')),
+                                 'reasons': special.get('reasons', ['payable total is incomplete']),
                                  'cost': {'status': 'incomplete', 'known_subtotal': {'amount': price, 'currency': 'USD'},
                                           'missing': ['costs.order.shipping']}})
     # The fixture's CAD suitability need has no evidence on any synthetic offer; drop it so the
@@ -504,6 +511,32 @@ class DeliveryQuoteTests(unittest.TestCase):
         state = self.destination(moved)
         self.assertEqual((self.by_seller(state)['Street-A']['status'], state['selection']['quote_state']),
                          ('quoted', 'quoted'))
+        # Its price and stock evidence comes from the earlier search, so the quote cannot rank it.
+        revised = self.revised(state)['Street-A']
+        self.assertEqual((revised['rank'], revised['doubts'][0]), (None, dq.NOT_CURRENT))
+
+    def test_a_quote_settles_the_fee_but_keeps_the_searchs_other_doubts(self):
+        [home] = self.signed_in(HOME)
+        doubt = 'The selected listing and configuration could not be rechecked.'
+        snapshot = self.chat(street_a={'reasons': ['payable total is incomplete', doubt]})
+        self.select(snapshot, home, 'Street-A')
+        self.settle()
+        revised = self.revised(self.destination(snapshot))['Street-A']
+        self.assertEqual(revised['after']['total'], {'amount': '910.00', 'currency': 'USD'})
+        self.assertEqual((revised['rank'], revised['doubts']), (None, [doubt]))
+
+    def test_a_published_fee_that_does_not_apply_never_conflicts_with_a_quote(self):
+        [home] = self.signed_in(HOME)
+        for suffix, terms in (('t', {'conditions': ['city:Tripoli']}),
+                              ('x', {'valid_until': '2026-11-16T12:00:40Z'})):
+            with self.subTest(suffix):
+                snapshot = self.chat(suffix, street_a={'shipping': {'amount': {'amount': '10', 'currency': 'USD'},
+                                                                    **terms}})
+                self.select(snapshot, home, 'Street-A')
+                self.settle()
+                state = self.destination(snapshot)
+                self.assertEqual((self.by_seller(state)['Street-A']['status'], self.revised(state)['Street-A']['rank']),
+                                 ('quoted', 1))
 
     def test_a_pending_quote_that_no_longer_applies_is_not_sent(self):
         snapshot = self.chat()

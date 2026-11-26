@@ -91,7 +91,7 @@ Each quote (`DeliveryQuote`) has one of these states:
 | `requested` | Sent, waiting for the reply. A lease of 60 seconds guards it. If the lease expires, the quote becomes `unavailable` and is not resent. |
 | `quoted` | Usable. Records the source route, endpoint, observation time, response hash, item price, the included charges from the seller's terms (for example tax), the added fee once, and `quoted_total` (the item price plus that fee). `quoted_total` is not a payable total while another mandatory charge is unknown; the revised comparison decides that. |
 | `unavailable` | No usable quote. Possible causes: no route, another city, the allowance, a busy workload limit, a refused, failed or malformed reply, no delivery option, an item not for sale, or a withdrawn address. The total stays unknown. |
-| `conflicting` | The pre-order price disagrees with the listing, or the quoted fee disagrees with a published one. The total stays unknown. |
+| `conflicting` | The pre-order price disagrees with the listing, or the quoted fee disagrees with a published fee that applies to this order: no conditions, still current and in the same currency. A rate for another city, or one that has expired, is why the fee was open and is not a conflict. The total stays unknown. |
 
 Only options that deliver (Shopify's `SHIPPING` or `LOCAL` method) can be the fee. The cheapest of them is used, and a free in-store pickup is never a delivery fee. A reply of any unexpected shape settles that one quote as `unavailable` and never stops the others.
 
@@ -129,6 +129,7 @@ The revised comparison works like this:
 
 - **The quote becomes evidence.** It turns into a route-scoped delivery charge on its offer. The existing eligibility and cost rules then recompute that offer.
 - **Ranking uses verified totals only.** Verified, eligible totals are ranked in one currency, and equal totals share a rank.
+- **A quote settles the fee and nothing else.** An uncertain offer joins the ranking only if two things hold. First, its delivery total was its only open fact. Second, its price and stock were checked during this search. Otherwise it keeps every other doubt from the search, for example a listing that could not be rechecked. It is not ranked, even when the quoted fee completes its total.
 - **Unknown stays unknown.** No usable quote, a conflicting quote, a declined address or a price that changed after the quote all keep the total unknown. They add a fixed reason, and the product link stays.
 - **The advice is fixed text.** It names the cheapest verified total and the seller it replaced. It says which sellers gave no usable quote, and that prices and stock come from the search.
 - **No arrival date.** A quote never sets one. The retailer's option name, for example "Guaranteed next-day", cannot satisfy a guaranteed deadline.

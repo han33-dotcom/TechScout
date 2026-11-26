@@ -86,6 +86,9 @@ ROUTE_OFF = 'The quote route for this seller is not active, so nothing was sent.
 WORKLOAD = 'TechScout\'s request allowance for this seller stayed busy, so the quote was not sent.'
 FAILED = 'The seller gave no usable quote. TechScout does not repeat a quote automatically.'
 REPRICED = 'The listing price changed after the delivery quote, so its total stays unknown.'
+NOT_CURRENT = 'Its price and stock were not checked in this search, so the quote cannot rank it.'
+# Doubts that only say the total is open; a delivery quote can settle these and nothing else.
+COST_DOUBTS = frozenset({'payable total is incomplete', 'payable total is only estimated'})
 # A failure after the request was sent; it is never repeated.
 _SENT = {
     'RATE_LIMIT': 'The seller asked TechScout to slow down. The quote is not repeated automatically.',
@@ -376,8 +379,13 @@ def _read_cart(outcome, quote, offer, rule, answered) -> DeliveryQuote:
             Money(amount=expected or listed.amount, currency=listed.currency))
         return _settle(quote, 'conflicting', f'The pre-order step charged {money_text(item)} for the item, '
                                              f'but the listing shows {shown}. Its total stays unknown.', **found)
+    # Only a published fee that applies to this order when quoted can contradict the quote: one
+    # without conditions, still current and in the same currency. A rate for another city or an
+    # expired one is why the fee was open, not a conflict.
     published = [charge for charge in offer.costs if charge.leg == 'order' and charge.kind == 'shipping'
-                 and charge.state == 'additional']
+                 and charge.state == 'additional' and not charge.conditions
+                 and (charge.valid_until is None or charge.valid_until > outcome.observed_at)
+                 and charge.amount.currency == cost.currency]
     if any(charge.amount != cost for charge in published):
         return _settle(quote, 'conflicting', f'The quoted delivery fee {money_text(cost)} differs from the '
                                              'seller\'s published fee. Its total stays unknown.', **found)
@@ -423,6 +431,24 @@ def _comparable(cost):
     return cost.budget_conversion.quote if cost.budget_conversion is not None else cost.total
 
 
+def _open_facts(assessment) -> tuple[str, ...]:
+    """Why an assessed offer cannot rank: its failed checks if rejected, else its open doubts."""
+    if assessment.decision == 'rejected':
+        failed = tuple(check.reason for check in assessment.eligibility.checks if check.outcome == 'fail')
+        if failed:
+            return failed
+    return _doubts(assessment)
+
+
+def _checked_in_search(snapshot: v.RunSnapshot, offer: v.Offer) -> bool:
+    """Price and stock evidence observed during this search, as a verified finalist requires."""
+    records = {record.evidence_id: record for record in offer.evidence}
+    decisive = [records.get(evidence_id) for evidence_id in (*offer.price.evidence_ids, *offer.stock.evidence_ids)]
+    return bool(decisive) and offer.stock.value is True and all(
+        record is not None and record.run is not None and record.run.run_id == snapshot.run.run_id
+        and snapshot.started_at <= record.observed_at for record in decisive)
+
+
 def revise(snapshot: v.RunSnapshot, quotes: dict[str, DeliveryQuote], destination: str) -> RevisedComparison | None:
     """Recompute totals and ranking for the latest search with its settled quotes (by offer ID)."""
     settled = {offer_id: quote for offer_id, quote in quotes.items() if quote.status in SETTLED}
@@ -441,8 +467,21 @@ def revise(snapshot: v.RunSnapshot, quotes: dict[str, DeliveryQuote], destinatio
         elif quote is not None and quote.status == 'quoted' and not verified:
             when = max(quote.observed_at, _finished(snapshot))
             assessment = assess_full_product(request, with_quote(offer, quote), now=when)
-            after, rankable = assessment.cost, assessment.decision == 'recommendable'
-            doubts = () if rankable else _doubts(assessment)
+            after = assessment.cost
+            cost_only = set(getattr(before, 'missing', ()) or ()) | COST_DOUBTS
+            current = _checked_in_search(snapshot, offer)
+            if current and all(reason in cost_only for reason in reasons):
+                # The delivery fee was the offer's only open fact, so the quote can settle it.
+                rankable = assessment.decision == 'recommendable'
+                doubts = () if rankable else _open_facts(assessment)
+            else:
+                # The quote settles the fee only. Every other doubt from the search remains, and
+                # an offer whose price and stock were not checked in this search is never ranked.
+                kept = [reason for reason in reasons if after.status != 'verified' or reason not in cost_only]
+                extra = [] if current else [NOT_CURRENT]
+                if assessment.decision != 'recommendable':
+                    extra += list(_open_facts(assessment))
+                doubts = tuple(dict.fromkeys((*kept, *extra)))
         elif quote is not None and quote.status != 'quoted':
             doubts = tuple(dict.fromkeys((*doubts, quote.reason)))
         entries.append(dict(offer_id=offer.offer_id, retailer_id=offer.retailer_id, seller=offer.seller.name,
