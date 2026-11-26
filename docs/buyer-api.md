@@ -77,8 +77,10 @@ Start the domestic buyer worker in the backend environment with the shared datab
 volume, inference configuration and ledger used by the API.
 
 ```text
-python -m app.run_worker --controller app.buyer_flow:run
+python -m app.run_worker --controller app.buyer_flow:run --quotes
 ```
+
+`--quotes` also runs the delivery quote loop in that process. It plans finished chats and sends their pending pre-order quotes, then the chat's destination state shows the quotes and revised totals without a new search ([delivery quotes](delivery-quotes.md)). Without it, quotes stay pending.
 
 The v2 request accepts an optional `implementation` field. The UI's **Shopping assistant**
 selector sends `control` (default for existing callers and saved requests) or `single_agent`.

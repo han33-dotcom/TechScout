@@ -51,4 +51,6 @@ Enforce the limits for each source and each run. A local limiter may wait briefl
 
 The buyer contract allows a scoped pre-order delivery quote for the chosen item, quantity and destination. A checkout-only fee stays unknown until the seller supplies it. Follow the contract for naming sellers and requesting an address. Stop before order, reservation or payment. [Buyer contract](buyer-product-contract.md) · [Quote implementation task](https://github.com/han33-dotcom/TechScout/issues/186)
 
+A source may declare `quote_capabilities`. Each one names a protocol defined in `app/quote_capabilities.py` and supplies only typed settings, never a URL template, body or header. `SourceGate.quote` is the gate's only POST. It sends only the reviewed request for a route whose `status` is `active`, under the source's limits and the shared ledger. It follows no redirect, sends no cookie and never retries. A route ships as `pending_live_check` until a teammate checks it against the live store. Reads still exclude cart, checkout and account paths. [Delivery quotes](delivery-quotes.md)
+
 The [original source review](https://github.com/han33-dotcom/TechScout/blob/9006e2ac8557003c958c31f729371ccb8e160b9a/docs/source-admission.md) records the October MVP shortlist and dated prices. [Response hashes](source-evidence.json)

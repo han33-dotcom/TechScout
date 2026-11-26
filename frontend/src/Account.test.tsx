@@ -17,7 +17,7 @@ const session = (account: SessionInfo['account'] = null): SessionInfo => ({ csrf
 
 function accounts(signedIn = false, saved: SavedLocation[] = []) {
   const items = [...saved];
-  let state: DestinationState = { request_id: 'needs-1', signed_in: signedIn, sellers, selection: null };
+  let state: DestinationState = { request_id: 'needs-1', signed_in: signedIn, sellers, selection: null, waiting: [], quotes: [] };
   const mock = {
     session: vi.fn(async () => session(signedIn ? { username: buyer.username } : null)),
     register: vi.fn(async (username: string) => { state = { ...state, signed_in: true }; return session({ username }); }),
@@ -135,7 +135,7 @@ describe('address prompt in the chat', () => {
   });
   it('stays out of the way when the chat has no sellers or choice yet', async () => {
     const api = accounts();
-    vi.mocked(api.destination).mockResolvedValue({ request_id: 'r', signed_in: false, sellers: [], selection: null });
+    vi.mocked(api.destination).mockResolvedValue({ request_id: 'r', signed_in: false, sellers: [], selection: null, waiting: [], quotes: [] });
     const { container } = render(<Destination api={api} runId="run-1" status="queued" refresh={0} onChoose={vi.fn()} />);
     await waitFor(() => expect(api.destination).toHaveBeenCalled());
     expect(container.textContent).toBe('');

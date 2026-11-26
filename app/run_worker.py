@@ -2,6 +2,10 @@
 
 No in-process API task owns run state. Controllers publish through the lease and
 must pass context.cancelled/remaining_seconds to their tool/provider boundaries.
+
+With --quotes the same process also runs the delivery quote loop (#186) in a daemon thread:
+it plans finished chats and sends their pending pre-order quotes through the source gate and
+the shared ledger, so a buyer's chosen address resumes them without a new search.
 """
 import argparse
 import importlib
@@ -93,9 +97,22 @@ def execute_one(service,controller):
     return True
 
 
+def quote_service(storage,service):
+    """The production quote loop's dependencies: shared ledger, live registry and gate."""
+    from app.accounting import Ledger
+    from app.buyer_accounts import BuyerAccounts
+    from app.delivery_quotes import QuoteService
+    from app.onboarding import ActivationRegistry
+    from app.sources import SourceGate
+    registry=ActivationRegistry(storage)
+    accounts=BuyerAccounts(service,quote_registry=registry)
+    return QuoteService(accounts,gate=SourceGate(registry),ledger=Ledger.configured(),registry=registry)
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--controller',required=True,help='Trusted backend module:function; never supplied by a buyer')
+    parser.add_argument('--quotes',action='store_true',help='Also run the delivery quote loop (#186)')
     args=parser.parse_args()
     module,sep,name=args.controller.partition(':')
     if not sep:
@@ -103,11 +120,17 @@ def main():
     controller=getattr(importlib.import_module(module),name)
     storage=Storage()
     service=BuyerRunService(storage)
+    stop=threading.Event()
+    if args.quotes:
+        from app.delivery_quotes import run_forever
+        threading.Thread(target=run_forever,args=(quote_service(storage,service),stop),
+                         name='delivery-quotes',daemon=True).start()
     try:
         while True:
             if not execute_one(service,controller):
                 time.sleep(.5)
     finally:
+        stop.set()
         storage.engine.dispose()
 
 

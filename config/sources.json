@@ -37,6 +37,16 @@
          "expect": "html", "path": ["search"], "query": [{"name": "q", "parameter": {"kind": "search_text", "max_length": 64}}]},
         {"capability_id": "itworks-product", "version": "1", "host": "shop.itworkslb.net", "operation": "product",
          "expect": "html", "path": ["products", {"kind": "token", "max_length": 128}]}
+      ],
+      "quote_capabilities": [
+        {"capability_id": "itworks-delivery-quote", "version": "1", "host": "shop.itworkslb.net",
+         "protocol": "shopify_storefront_cart", "api_version": "2025-01", "status": "pending_live_check",
+         "destination_detail": "city", "currency": "USD", "max_quantity": 1,
+         "review": {
+           "basis": "Offline review for #186. The ITWorks purchase form is a Shopify storefront LinesAdd cart form (#191). The route follows Shopify's public Storefront API cartCreate documentation and offline fixtures. It has not been checked against the live store, so it stays off until that check.",
+           "evidence": ["https://shopify.dev/docs/api/storefront/2025-01/mutations/cartCreate",
+                        "https://shop.itworkslb.net/products/jbl-tune-510bt-wireless-on-ear-headphones-black-8842"],
+           "reviewed_at": "2026-11-26"}}
       ]
     },
     {

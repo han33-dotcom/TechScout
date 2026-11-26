@@ -276,8 +276,9 @@ again within the run; only the source gate (Task 4) retries, and callers must no
 | `NO_PRICE` | No usable price was published | No |
 
 `BLOCKED` messages start with a fixed reason: `blocked:url` (not an allow-listed endpoint),
-`blocked:method` (reserved: the gate only sends GET, and a registry entry allowing another
-method disables the source), `blocked:dns` (a resolved address is not public),
+`blocked:method` (reserved: reads only send GET, and a registry entry allowing another
+method disables the source; the one reviewed POST is the delivery quote in
+[delivery-quotes.md](delivery-quotes.md), refused as `blocked:url`), `blocked:dns` (a resolved address is not public),
 `blocked:redirect` (unsafe or too many redirects), `blocked:size` (reply over the size cap)
 or `blocked:encoding` (unsupported content encoding). `HTTP_ERROR` messages start with
 `http:<status>`, the three-digit status code. Each prefix is followed by a space or ends the

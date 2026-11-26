@@ -3,6 +3,10 @@
 Every attempt re-reads the registry, sends only an allow-listed GET to a checked public
 address over a fresh, pinned and verified TLS connection, and ends in a typed outcome.
 Per-source limits live here; run totals and cancellation belong to the run budget (MVP 11).
+
+The single exception is SourceGate.quote (#186): one POST of the reviewed pre-order delivery
+quote document in app.quote_capabilities, for a route a teammate marked 'active'. It shares
+every other control here, follows no redirect, is never retried and sends no cookie.
 """
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
@@ -26,6 +30,9 @@ import httpx2
 from app.contracts import SourceLimits, SourcePolicy, ToolError, ToolResult
 from app.source_capabilities import ACTION_PATH_DENYLIST as ACTION_PATH_DENYLIST
 from app.source_capabilities import CapabilityRef, Expect, safe_endpoint
+from app.quote_capabilities import (
+    MAX_QUOTE_RESPONSE_BYTES, QuoteCapability, quote_url, storefront_request_allowed, storefront_token,
+)
 from app.source_registry import DEFAULT_REGISTRY, get_active_source, load_registry
 
 MAX_RESPONSE_BYTES = 2 * 1024 * 1024
@@ -487,9 +494,90 @@ class SourceGate:
                 observed_at=reply.observed_at, validators=reply.validators)
         return FetchOutcome(source_id, url, tuple(chain), attempts, self._duration_ms(started), tuple(errors))
 
+    def quote(self, budget: RunBudget, source_id: str, capability: CapabilityRef, body: bytes) -> FetchOutcome:
+        """POST one reviewed pre-order delivery quote (#186). Nothing else ever leaves as a POST.
+
+        The route must be the source's current 'active' quote capability, and the body must be
+        exactly the reviewed document for one variant, quantity and destination. No redirect is
+        followed, no cookie is sent or kept and nothing is retried: a quote that fails stays failed."""
+        if not isinstance(budget, RunBudget):
+            raise TypeError('quote needs the run budget handle')
+        if type(source_id) is not str or type(body) is not bytes:
+            raise TypeError('source_id must be a plain string and body bytes')
+        if type(capability) is not CapabilityRef:
+            raise TypeError('capability must be a CapabilityRef')
+        started, url, attempts = self._clock(), '', 0
+        try:
+            rule, _, _ = self._quote_allowed(source_id, capability, body)
+            url = quote_url(rule)
+
+            def check():
+                _, token, limits = self._quote_allowed(source_id, capability, body)
+                return token, limits
+
+            def send(address, guard, token):
+                nonlocal attempts
+                attempts = 1
+                return self._quote_exchange(source_id, url, address, body, token, guard)
+
+            reply = self._dispatch(budget, source_id, url, 0.0, check, send)
+        except _Stop as stop:
+            return FetchOutcome(source_id, url, (url,) if url else (), attempts, self._duration_ms(started),
+                                (stop.error,))
+        return FetchOutcome(source_id, url, (url,), attempts, self._duration_ms(started), final_url=url,
+                            status_code=200, content_type=reply.content_type,
+                            content_encoding=reply.content_encoding, body=reply.body,
+                            response_sha256=hashlib.sha256(reply.body).hexdigest(), observed_at=reply.observed_at)
+
+    def _quote_allowed(self, source_id: str, capability: CapabilityRef,
+                       body: bytes) -> tuple[QuoteCapability, str | None, SourceLimits]:
+        _, policy = self._admitted(source_id)
+        rule = next((rule for rule in policy.quote_capabilities
+                     if rule.capability_id == capability.capability_id and rule.version == capability.version), None)
+        if rule is None or rule.status != 'active':
+            raise _Refusal('BLOCKED', source_id, 'quote route is not active', token='blocked:url')
+        if not storefront_request_allowed(rule, quote_url(rule), body):
+            raise _Refusal('BLOCKED', source_id, 'quote request is outside the reviewed route', token='blocked:url')
+        token = storefront_token(rule)
+        if token == '':
+            raise _Refusal('SOURCE_DISABLED', source_id, 'quote route is not configured')
+        return rule, token, policy.limits
+
+    def _quote_exchange(self, source_id: str, url: str, address: str, body: bytes, token: str | None,
+                        guard: '_AttemptGuard') -> '_Reply':
+        headers = {**HEADERS, 'Accept': 'application/json', 'Content-Type': 'application/json'}
+        if token:
+            headers['X-Shopify-Storefront-Access-Token'] = token
+        request = httpx2.Request('POST', url, headers=headers, content=body,
+                                 extensions={'timeout': httpx2.Timeout(PHASE_TIMEOUT_S).as_dict()})
+        with self._build_transport(address, guard) as transport:
+            try:
+                response = transport.handle_request(request)
+                try:
+                    # No target is allowed, so any redirect is refused rather than followed.
+                    reply = self._reply(source_id, url, response, 'json', lambda target: False, guard, {})
+                finally:
+                    response.close()
+            except httpx2.HTTPError as exc:
+                raise _transport_failure(source_id, exc) from exc
+        if len(reply.body) > MAX_QUOTE_RESPONSE_BYTES:
+            raise _Failure('BLOCKED', source_id, f'quote reply is over {MAX_QUOTE_RESPONSE_BYTES} bytes',
+                           token='blocked:size')
+        return reply
+
     def _attempt(self, budget: RunBudget, source_id: str, url: str, expect: Expect,
                  wait: float, capability: CapabilityRef | None, conditional: dict[str, str]) -> str | _Reply:
-        allowed, limits = self._allowed(source_id, url, expect, capability)
+        return self._dispatch(
+            budget, source_id, url, wait, lambda: self._allowed(source_id, url, expect, capability),
+            lambda address, guard, allowed: self._exchange(source_id, url, address, expect, allowed, guard,
+                                                           conditional))
+
+    def _dispatch(self, budget: RunBudget, source_id: str, url: str, wait: float,
+                  check: Callable[[], tuple[object, SourceLimits]],
+                  send: Callable[[str, '_AttemptGuard', object], 'str | _Reply']) -> 'str | _Reply':
+        """One attempt under every shared control. check() re-reads the registry and returns the
+        current scope and limits; send(address, guard, scope) makes the single exchange."""
+        allowed, limits = check()
         slot = self._limiter.acquire(budget.run_id, source_id, limits, self._clock(), wait)
         reservation, start = None, None
         try:
@@ -502,7 +590,7 @@ class SourceGate:
             if slot.wait:
                 self._sleep(slot.wait)
             if slot.wait or slot.queued:  # the store may have been switched off, paused or limited meanwhile
-                allowed, limits = self._allowed(source_id, url, expect, capability)
+                allowed, limits = check()
             self._limiter.recheck(slot, limits, self._clock())  # a stall without a wait counts too
             start = self._clock()
             guard = _AttemptGuard(source_id, self._clock, start)
@@ -512,7 +600,7 @@ class SourceGate:
             if still_wanted is not None and not still_wanted():  # cancelled during the wait or lookup
                 raise _Refusal('BUDGET_EXHAUSTED', source_id, 'the run budget refused the call')
             self._limiter.mark_sent(slot, self._clock())
-            return self._exchange(source_id, url, address, expect, allowed, guard, conditional)
+            return send(address, guard, allowed)
         except _Failure as stop:
             if (stop.retry_after or 0.0) > self._limiter.max_wait_s:  # before a queued request wakes
                 self._limiter.cool_down(source_id, self._clock(), stop.retry_after)

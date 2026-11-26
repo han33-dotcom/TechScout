@@ -10,6 +10,7 @@ from pydantic import (
 )
 
 from app.source_capabilities import EndpointCapability, validate_capability_scope
+from app.quote_capabilities import QuoteCapability, validate_quote_scope
 
 
 Text = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, strict=True)]
@@ -166,6 +167,9 @@ class SourcePolicy(Contract):
     admission: SourceReview | None
     allowed_endpoints: list[HttpsUrl] = Field(default_factory=list)
     endpoint_capabilities: tuple[EndpointCapability, ...] = ()
+    # Additive since #186: reviewed pre-order delivery quote routes (app.quote_capabilities).
+    # They never widen reads; only SourceGate.quote sends them, and only while 'active'.
+    quote_capabilities: tuple[QuoteCapability, ...] = ()
     limits: SourceLimits
     allowed_methods: tuple[Literal['GET'], ...] = ('GET',)
     adapter_version: Text | None = None
@@ -180,7 +184,8 @@ class SourcePolicy(Contract):
                     or endpoint.fragment):
                 raise ValueError('Endpoint must belong to the configured origin')
         validate_capability_scope(self.endpoint_capabilities, self.origin.host)
-        if self.endpoint_capabilities and self.origin.port != 443:
+        validate_quote_scope(self.quote_capabilities, self.origin.host)
+        if (self.endpoint_capabilities or self.quote_capabilities) and self.origin.port != 443:
             raise ValueError('Capabilities require the default HTTPS port')
         if self.status == 'active' and (
             self.admission is None or not (self.allowed_endpoints or self.endpoint_capabilities)
