@@ -27,3 +27,21 @@ Per-source check details display checked/failed/unchecked states only when suppl
 Run `python -m app.api_types` to regenerate both OpenAPI TypeScript types and the normalized browser fixture from the canonical `tests/fixtures/v2/workspace.json`. The fixture is synthetic; it is imported only by tests and never bundled into production. A Python regression compares the generated fixture with the current contract defaults.
 
 Validation covers stale receipts, no padded slots, grouped sellers, side-by-side selection, retained expansion, failed/unchecked source labels, unknown/estimated costs, safe outbound URLs, and conversational refinement without weakening the original maximum. Browser QA uses intercepted synthetic API fixtures; it does not fetch retailers or establish real purchase results.
+
+## Accounts, saved locations and the same-chat return (#187)
+
+The header shows the signed-in username or a **Sign in or create account** button. The account page registers or signs in with a username and password. Passwords stay only in the form and are cleared after a successful request. Errors show the server's fixed explanation, never the submitted values. Sign-out asks first, because it deletes this browser's searches; saved locations stay with the account. **Saved locations** lists each location's label and city only. The street address is entered once and never displayed again. Deleting a location asks for confirmation.
+
+A chat shows one address prompt when its latest results include Lebanese sellers. It names those sellers together and asks which of them may receive an address. No seller is ticked by default. **Choose a saved address** opens Locations; a signed-out buyer goes to sign-in first. The Locations page states which sellers will receive the address. The buyer can add one or more locations there and pick one with **Use this address**. TechScout then saves the choice for this chat and returns to the same chat with the same run, earlier revision, offers and links. No search is resubmitted. **Continue without an address** records a decline and leaves every offer, link and unknown fee as it was. The buyer can change either choice later.
+
+The open chat and page are kept in the address bar (`?chat=<run id>&view=locations`). A reload or the browser's back button therefore returns to the same chat. A chat that this session no longer owns is dropped from the address bar.
+
+The prompt says plainly that seller quotes for the chosen address have not been requested. Totals and advice stay unchanged until the quote operation in #186 exists. Component tests in `Account.test.tsx` use mocked API responses and the synthetic accounts in `tests/fixtures/accounts.json`. They cover:
+
+- registration, sign-in and sign-out;
+- location masking, adding and deleting;
+- the explicit recipient choice;
+- the sign-in-to-Locations-to-chat round trip;
+- decline with working links;
+- reuse in a later signed-in search;
+- recovery after sign-out.

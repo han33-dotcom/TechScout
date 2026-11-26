@@ -44,5 +44,19 @@ export function useWorkspace(api: Transport) {
     cancel: () => mutate(async () => envelope(await api.cancel(current.current!.current.run), current.current?.previous)),
     clarify: (answer: string) => mutate(async () => envelope(await api.clarify(current.current!.current.run, current.current!.current.clarification!.clarification_id, answer), current.current?.previous)),
     recover: () => mutate(async () => api.read(current.current!.current.run.run_id)),
+    /** Reopen a chat this session owns, e.g. after a reload or returning from Locations. */
+    resume: async (runId: string): Promise<boolean> => {
+      if (lock.current) return false;
+      lock.current = true; setBusy(true); setError(''); poll.current?.abort();
+      const epoch = ++generation.current;
+      try { const next = await api.read(runId); if (generation.current === epoch) commit(next); return true; }
+      catch { return false; }
+      finally { if (generation.current === epoch) { lock.current = false; setBusy(false); } }
+    },
+    /** Drop the visible chat after sign-out deleted this session's searches. */
+    reset: () => {
+      generation.current++; poll.current?.abort(); lock.current = false;
+      current.current = undefined; setWorkspace(undefined); setBusy(false); setError('');
+    },
   };
 }
