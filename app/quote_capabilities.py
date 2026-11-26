@@ -42,7 +42,7 @@ STOREFRONT_DOCUMENT = (
     'mutation TechScoutDeliveryQuote($input: CartInput!) { cartCreate(input: $input) { cart { '
     'lines(first: 2) { nodes { quantity merchandise { ... on ProductVariant { id availableForSale } } '
     'cost { totalAmount { amount currencyCode } } } } '
-    'deliveryGroups(first: 2) { nodes { deliveryOptions { handle title '
+    'deliveryGroups(first: 2) { nodes { deliveryOptions { handle title deliveryMethodType '
     'estimatedCost { amount currencyCode } } } } } '
     'userErrors { code field } warnings { code } } }'
 )
@@ -159,7 +159,8 @@ def storefront_request_allowed(rule: QuoteCapability, url: str, body: bytes) -> 
             and set(identity) == {'countryCode', 'deliveryAddressPreferences'}
             and identity['countryCode'] == COUNTRY_CODE and set(preference) == {'deliveryAddress'}
             and fields <= set(address) <= fields | optional and address['country'] == COUNTRY_NAME
-            and all(_plain(address[key], _ADDRESS_LIMITS[key]) == address[key] for key in address if key != 'country'))
+            and all(isinstance(address[key], str) and _plain(address[key], _ADDRESS_LIMITS[key]) == address[key]
+                    for key in address if key != 'country'))
 
 
 def _no_duplicates(pairs):

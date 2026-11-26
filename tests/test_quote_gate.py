@@ -151,6 +151,8 @@ class QuoteGateTests(GateCase):
                 'deliveryAddressPreferences'][0]['deliveryAddress'].update(phone='+961000000')),
             'no city': variant(lambda d: d['variables']['input']['buyerIdentity'][
                 'deliveryAddressPreferences'][0]['deliveryAddress'].pop('city')),
+            'null city': variant(lambda d: d['variables']['input']['buyerIdentity'][
+                'deliveryAddressPreferences'][0]['deliveryAddress'].update(city=None)),
             'markup in the city': variant(lambda d: d['variables']['input']['buyerIdentity'][
                 'deliveryAddressPreferences'][0]['deliveryAddress'].update(city='<b>Beirut</b>')),
             'another country': variant(lambda d: d['variables']['input']['buyerIdentity'].update(countryCode='US')),

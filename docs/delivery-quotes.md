@@ -20,7 +20,7 @@ Every retailer read is a GET. The gate refuses cart, checkout and account paths 
   - review evidence.
 
   The entry cannot supply a URL template, a request body or a header.
-- **There is one protocol: Shopify's Storefront API `cartCreate`.** It builds a new anonymous cart holding exactly one variant and quantity for one Lebanese destination. The reply contains the line's price and the cart's delivery options. The fixed request asks for no checkout URL and echoes no address. Shopify carts hold no stock, so nothing is reserved.
+- **There is one protocol: Shopify's Storefront API `cartCreate`.** It builds a new anonymous cart holding exactly one variant and quantity for one Lebanese destination. The reply contains the line's price and the cart's delivery options, with each option's method. The fixed request asks for no checkout URL and echoes no address. Shopify carts hold no stock, so nothing is reserved.
 - **The gate checks every request before sending it.** It refuses anything other than the reviewed document, including:
   - another mutation or a checkout field;
   - a second line or a quantity above the route's cap;
@@ -77,8 +77,9 @@ Pickup requests, unfinished searches and sellers with a published or verified fe
 Further limits on each quote:
 
 - **Same city only.** An address in a different city from the search is not sent.
-- **At most six requests per search.** The rest are recorded as over the allowance.
+- **At most six requests per search, across all destination choices.** Choosing another address does not renew the allowance; the rest are recorded as over the allowance.
 - **One unit only.** Every quote is for a quantity of one, because the request has no quantity field.
+- **Still current when sent.** Before each send, the worker checks that the quote still applies to the chat's latest search and destination. One that no longer applies is not sent.
 
 ## Quote states
 
@@ -88,9 +89,11 @@ Each quote (`DeliveryQuote`) has one of these states:
 | --- | --- |
 | `pending` | Planned, not yet sent. |
 | `requested` | Sent, waiting for the reply. A lease of 60 seconds guards it. If the lease expires, the quote becomes `unavailable` and is not resent. |
-| `quoted` | Usable. Records the source route, endpoint, observation time, response hash, item price, the included charges from the seller's terms (for example tax), the added fee once, and the total. |
-| `unavailable` | No usable quote. Possible causes: no route, workload refusal, a refused or failed reply, no delivery option, an item not for sale, or a withdrawn address. The total stays unknown. |
+| `quoted` | Usable. Records the source route, endpoint, observation time, response hash, item price, the included charges from the seller's terms (for example tax), the added fee once, and `quoted_total` (the item price plus that fee). `quoted_total` is not a payable total while another mandatory charge is unknown; the revised comparison decides that. |
+| `unavailable` | No usable quote. Possible causes: no route, another city, the allowance, a busy workload limit, a refused, failed or malformed reply, no delivery option, an item not for sale, or a withdrawn address. The total stays unknown. |
 | `conflicting` | The pre-order price disagrees with the listing, or the quoted fee disagrees with a published one. The total stays unknown. |
+
+Only options that deliver (Shopify's `SHIPPING` or `LOCAL` method) can be the fee. The cheapest of them is used, and a free in-store pickup is never a delivery fee. A reply of any unexpected shape settles that one quote as `unavailable` and never stops the others.
 
 `selection.quote_state` on the chat's destination summarizes its street-level quotes:
 
@@ -104,7 +107,11 @@ Each quote (`DeliveryQuote`) has one of these states:
 | `not_needed` | No named seller's total depends on the address. |
 | `none` | The buyer declined. |
 
-Settled requests are never repeated in a chat. A request is identified by its seller, variant, quantity and destination.
+A request is identified by its seller, variant, quantity and destination.
+
+- **Sent once.** A request that reached the seller, or might have, is never sent again in that chat. That includes a reply that failed and a quote interrupted mid-request.
+- **Unsent requests are reconsidered.** One that was never sent stays visible as `unavailable` with its reason. The causes are no route, another city, the allowance, a withdrawn address or an inactive route. The next new search or destination choice reconsiders it, so a fixed cause does not block the quote for good.
+- **Busy limits are paced.** TechScout's own rate limit or the shared ledger can refuse a request before sending. That request waits 30 seconds and is tried again, up to four times, before it is recorded as unsent. A search that just used the seller's per-minute allowance therefore does not lose its quote.
 
 **A destination change invalidates earlier quotes.** Every new choice, a deleted location or a new search re-plans the chat. Quotes for other destinations stop applying and drop out of the chat's quotes and revision. If the buyer switches back, the earlier quote for that same destination is reused rather than requested again.
 
@@ -163,7 +170,11 @@ The API reads quote routes from the reviewed `config/sources.json`. Onboarding n
   - A seller without a route never receives the address.
   - An address in another city is not sent.
   - An estimate against a guaranteed deadline.
-  - An interrupted quote, the chat moving at sign-in, the ledger and its refusal, the per-search allowance.
+  - An interrupted quote, and the chat moving at sign-in.
+  - The shared ledger: a busy refusal paced and then sent, or given up unsent and asked again later.
+  - The per-search allowance across destination choices.
+  - An unsent quote reconsidered after the search changes, and a pending quote that no longer applies left unsent.
+  - Malformed replies settling only their own quote, and a free pickup option never used as the fee.
   - No street address in storage, logs, responses or exports.
 
 No quote has been made against a live retailer.

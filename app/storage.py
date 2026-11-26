@@ -380,8 +380,10 @@ buyer_destinations = Table(
 )
 
 # Pre-order delivery quotes (#186). One row is one request for one item, variant, quantity and
-# destination in one chat. request_key keeps the same request from being sent twice in that chat.
-# record holds the DeliveryQuote (app.delivery_quotes); it never contains a street address.
+# destination in one chat. request_key keeps a sent request from being sent twice in that chat;
+# sent says whether it ever left (an unsent one is reconsidered). not_before and deferrals pace a
+# request that TechScout's own workload limits refused. record holds the DeliveryQuote
+# (app.delivery_quotes); it never contains a street address.
 buyer_quotes = Table(
     'buyer_quotes', metadata,
     Column('quote_id', String(36), primary_key=True),
@@ -391,6 +393,9 @@ buyer_quotes = Table(
     Column('request_key', String(64), nullable=False),
     Column('status', String(12), nullable=False, index=True),
     Column('record', JSON, nullable=False),
+    Column('sent', Boolean, nullable=False),
+    Column('not_before', UtcDateTime),
+    Column('deferrals', Integer, nullable=False),
     Column('lease_token', String(32)),
     Column('lease_until', UtcDateTime),
     Column('created_at', UtcDateTime, nullable=False),

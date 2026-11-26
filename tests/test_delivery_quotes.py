@@ -17,6 +17,7 @@ import json
 import logging
 from pathlib import Path
 import tempfile
+from types import SimpleNamespace
 import unittest
 from unittest import mock
 
@@ -112,10 +113,21 @@ def chat_snapshot(suffix, *, deadline=None, arrival=None, mode='delivery'):
     return snapshot
 
 
+def refined(snapshot, city):
+    """The chat's next search revision, for another city, with the same unpriced offers."""
+    data = snapshot.model_dump(mode='json')
+    data['run'] = dict(data['run'], run_id=data['run']['run_id'] + '-r', request_revision=3)
+    data['request'] = dict(data['request'], revision=3)
+    data['request']['fulfillment']['destination']['city'] = city
+    data.update(recommendations=[], status='partial')
+    return v.RunSnapshot.model_validate(data)
+
+
 def storefront(amount, options=(('Standard', '5.00'),), *, variant, available=True, errors=(), groups=1):
-    nodes = [{'deliveryOptions': [{'handle': title.lower(), 'title': title,
-                                   'estimatedCost': {'amount': fee, 'currencyCode': 'USD'}}
-                                  for title, fee in options]}] * groups
+    nodes = [{'deliveryOptions': [{'handle': option[0].lower(), 'title': option[0],
+                                   'deliveryMethodType': option[2] if len(option) > 2 else 'SHIPPING',
+                                   'estimatedCost': {'amount': option[1], 'currencyCode': 'USD'}}
+                                  for option in options]}] * groups
     return json.dumps({'data': {'cartCreate': {'cart': {
         'lines': {'nodes': [{'quantity': 1, 'merchandise': {'id': f'gid://shopify/ProductVariant/{variant}',
                                                             'availableForSale': available},
@@ -159,12 +171,15 @@ class DeliveryQuoteTests(unittest.TestCase):
         return [address for host, _, address in self.sent if host == host_of(name)]
 
     def chat(self, suffix='1', token=None, **options):
-        snapshot = chat_snapshot(suffix, **options)
+        return self.store(chat_snapshot(suffix, **options), token=token)
+
+    def store(self, snapshot, previous=None, token=None):
         with self.storage.transaction() as db:
             db.execute(buyer_runs.insert().values(
                 run_id=snapshot.run.run_id, session_hash=session_hash(token or self.browser.token),
                 request_id=snapshot.request.request_id, request_revision=snapshot.request.revision,
-                status=snapshot.status, snapshot=snapshot.model_dump(mode='json'), answers=[], active_ms=0))
+                status=snapshot.status, snapshot=snapshot.model_dump(mode='json'), answers=[], active_ms=0,
+                previous_id=previous.run.run_id if previous else None))
         return snapshot
 
     def destination(self, snapshot):
@@ -257,12 +272,12 @@ class DeliveryQuoteTests(unittest.TestCase):
         self.settle()
         quote = self.by_seller(self.destination(snapshot))['Street-A']
         self.assertEqual({key: quote[key] for key in ('status', 'capability', 'endpoint', 'quantity', 'included',
-                                                      'item_price', 'fee', 'total', 'reason')},
+                                                      'item_price', 'fee', 'quoted_total', 'reason')},
                          {'status': 'quoted', 'capability': 'source-street-a-quote@1',
                           'endpoint': 'https://street-a.example/api/2025-01/graphql.json', 'quantity': 1,
                           'included': ['tax'], 'item_price': {'amount': '905.00', 'currency': 'USD'},
                           'fee': {'label': 'Standard', 'amount': {'amount': '5.0', 'currency': 'USD'}},
-                          'total': {'amount': '910.00', 'currency': 'USD'}, 'reason': None})
+                          'quoted_total': {'amount': '910.00', 'currency': 'USD'}, 'reason': None})
         self.assertEqual(len(quote['response_sha256']), 64)
         self.assertEqual((quote['source_variant_id'], quote['destination']['location_id']), ('4101', home['location_id']))
         self.assertTrue(datetime.fromisoformat(quote['observed_at'].replace('Z', '+00:00')) >= datetime.fromisoformat(
@@ -302,7 +317,7 @@ class DeliveryQuoteTests(unittest.TestCase):
         self.settle()
         state = self.destination(snapshot)
         quote = self.by_seller(state)['Street-B']
-        self.assertEqual((quote['status'], quote['total'], quote['reason']),
+        self.assertEqual((quote['status'], quote['quoted_total'], quote['reason']),
                          ('unavailable', None, 'The seller could not deliver to this destination.'))
         self.assertEqual(state['selection']['quote_state'], 'partial')
         revised = self.revised(state)
@@ -334,7 +349,8 @@ class DeliveryQuoteTests(unittest.TestCase):
         self.settle()
         state = self.destination(snapshot)
         quote = self.by_seller(state)['Street-B']
-        self.assertEqual((quote['status'], quote['total'], quote['item_price']['amount']), ('conflicting', None, '950'))
+        self.assertEqual((quote['status'], quote['quoted_total'], quote['item_price']['amount']),
+                         ('conflicting', None, '950'))
         self.assertEqual(quote['reason'], 'The pre-order step charged USD 950 for the item, but the listing shows '
                                           'USD 900. Its total stays unknown.')
         self.assertEqual(state['selection']['quote_state'], 'unavailable')
@@ -407,7 +423,7 @@ class DeliveryQuoteTests(unittest.TestCase):
     def test_an_interrupted_quote_is_settled_unusable_and_not_retried(self):
         snapshot = self.chat()
         self.quotes.plan()
-        [claimed] = self.quotes._claim(4)
+        claimed = self.quotes._claim()
         self.assertEqual(claimed[4].status, 'requested')
         self.now += timedelta(seconds=61)
         self.settle()
@@ -421,7 +437,7 @@ class DeliveryQuoteTests(unittest.TestCase):
         self.browser.register(A)
         self.assertEqual([q['seller'] for q in self.destination(snapshot)['quotes']], ['City-Shop'])
 
-    def test_quotes_use_the_shared_ledger_and_its_refusal_sends_nothing(self):
+    def test_quotes_use_the_shared_ledger_and_a_refusal_is_paced_then_given_up_unsent(self):
         [home] = self.signed_in(HOME)
         snapshot = self.chat()
         self.settle()
@@ -430,19 +446,130 @@ class DeliveryQuoteTests(unittest.TestCase):
                          [('source-city-shop', True)])
         self.select(snapshot, home, 'Street-A')
         with mock.patch.object(Ledger, 'reserve', side_effect=BudgetDenied('Shared source workload limit')):
+            for _ in range(dq.MAX_DEFERRALS):
+                self.settle()
+                self.assertEqual(self.destination(snapshot)['selection']['quote_state'], 'pending')
+                self.now += dq.DEFER + timedelta(seconds=1)
             self.settle()
         self.assertEqual(self.to('Street-A'), [])
-        self.assertEqual(self.by_seller(self.destination(snapshot))['Street-A']['reason'], dq._GATE['BUDGET_EXHAUSTED'])
+        state = self.destination(snapshot)
+        self.assertEqual((self.by_seller(state)['Street-A']['reason'], state['selection']['quote_state']),
+                         (dq.WORKLOAD, 'unavailable'))
+        # Never sent, so a later choice may ask again.
+        self.select(snapshot, home, 'Street-A')
+        self.settle()
+        self.assertEqual(len(self.to('Street-A')), 1)
 
-    def test_each_search_has_a_bounded_quote_allowance(self):
+    def test_a_busy_workload_limit_defers_the_quote_and_then_sends_it(self):
+        snapshot = self.chat()
+        real, calls = Ledger.reserve, []
+
+        def busy_once(ledger, *args, **kwargs):
+            calls.append(1)
+            if len(calls) == 1:
+                raise BudgetDenied('Shared source workload limit')
+            return real(ledger, *args, **kwargs)
+        with mock.patch.object(Ledger, 'reserve', autospec=True, side_effect=busy_once):
+            self.settle()
+            self.assertEqual((self.sent, self.destination(snapshot)['quotes'][0]['status']), ([], 'pending'))
+            self.now += dq.DEFER + timedelta(seconds=1)
+            self.settle()
+        [quote] = self.destination(snapshot)['quotes']
+        self.assertEqual((quote['status'], len(self.to('City-Shop'))), ('quoted', 1))
+
+    def test_each_search_has_a_bounded_quote_allowance_across_destination_choices(self):
+        home, office = self.signed_in(HOME, OFFICE)
+        snapshot = self.chat()
+        with mock.patch.object(dq, 'MAX_QUOTES_PER_SEARCH', 2):
+            self.select(snapshot, home, 'Street-A', 'Street-B')
+            self.settle()
+            self.assertEqual(self.by_seller(self.destination(snapshot))['Street-B']['reason'], dq.OVER_LIMIT)
+            # Choosing other addresses does not renew the allowance for the same search.
+            self.select(snapshot, office, 'Street-A')
+            self.settle()
+            self.assertEqual(self.by_seller(self.destination(snapshot))['Street-A']['reason'], dq.OVER_LIMIT)
+        self.assertEqual([host for host, _, _ in self.sent], ['city-shop.example', 'street-a.example'])
+
+    def test_an_unsent_quote_is_reconsidered_when_the_search_changes(self):
+        [family] = self.signed_in(FAMILY)
+        snapshot = self.chat()
+        self.select(snapshot, family, 'Street-A')
+        self.settle()
+        self.assertEqual(self.by_seller(self.destination(snapshot))['Street-A']['reason'], dq.OTHER_CITY)
+        moved = self.store(refined(snapshot, 'Jounieh'), previous=snapshot)
+        self.settle()
+        self.assertEqual(self.to('Street-A'), [{'country': 'Lebanon', 'city': 'Jounieh', 'address1': FAMILY['street'],
+                                                'address2': FAMILY['details']}])
+        self.assertEqual([address['city'] for address in self.to('City-Shop')], ['Beirut', 'Jounieh'])
+        state = self.destination(moved)
+        self.assertEqual((self.by_seller(state)['Street-A']['status'], state['selection']['quote_state']),
+                         ('quoted', 'quoted'))
+
+    def test_a_pending_quote_that_no_longer_applies_is_not_sent(self):
+        snapshot = self.chat()
+        self.quotes.plan()
+        self.store(refined(snapshot, 'Jounieh'), previous=snapshot)
+        self.quotes.execute()
+        self.assertEqual(self.sent, [])
+        self.settle()
+        self.assertEqual([address['city'] for address in self.to('City-Shop')], ['Jounieh'])
+
+    def test_a_malformed_reply_settles_only_that_quote(self):
         [home] = self.signed_in(HOME)
         snapshot = self.chat()
+        bad = json.loads(storefront('905', variant='4101'))
+        bad['data']['cartCreate']['cart']['lines']['nodes'][0]['merchandise'] = 'not an object'
+        self.script['Street-A'] = respond(200, json.dumps(bad).encode(), 'application/json')
         self.select(snapshot, home, 'Street-A', 'Street-B')
-        with mock.patch.object(dq, 'MAX_QUOTES_PER_PLAN', 2):
-            self.settle()
-            state = self.destination(snapshot)
-        self.assertEqual(len(self.sent), 2)
-        self.assertEqual(self.by_seller(state)['Street-B']['reason'], dq.OVER_LIMIT)
+        self.settle()
+        quotes = self.by_seller(self.destination(snapshot))
+        self.assertEqual({seller: (quote['status'], quote['reason']) for seller, quote in quotes.items()},
+                         {'City-Shop': ('quoted', None), 'Street-A': ('unavailable', dq.FAILED),
+                          'Street-B': ('quoted', None)})
+
+    def test_any_reply_shape_settles_the_quote_without_raising(self):
+        offer = next(item.offer for item in chat_snapshot('u').uncertain if item.offer.seller.name == 'Street-A')
+        rule = active_quote_routes(self.registry)['source-street-a']
+        quote = dq.new_quote(dq.Wanted(offer, dq.QuoteDestination(detail='city', city='Beirut'), rule),
+                             chat_snapshot('u').run, self.now)
+        good = json.loads(storefront('905', variant='4101'))
+        cart = ['data', 'cartCreate', 'cart']
+
+        def reply(path, value):
+            data = json.loads(json.dumps(good))
+            node = data
+            for key in path[:-1]:
+                node = node[key]
+            node[path[-1]] = value
+            return json.dumps(data).encode()
+        bodies = [b'null', b'[]', b'"text"', b'{"data": null}', reply(['data', 'cartCreate'], 'x'),
+                  reply([*cart, 'lines'], []), reply([*cart, 'lines', 'nodes'], ['x']),
+                  reply([*cart, 'lines', 'nodes', 0, 'cost'], 'x'),
+                  reply([*cart, 'deliveryGroups', 'nodes'], ['x']),
+                  reply([*cart, 'deliveryGroups', 'nodes', 0, 'deliveryOptions'], ['x']),
+                  reply([*cart, 'deliveryGroups', 'nodes', 0, 'deliveryOptions', 0, 'estimatedCost'], 'x'),
+                  reply(['data', 'cartCreate', 'userErrors'], ['x']),
+                  reply([*cart, 'lines', 'nodes', 0, 'cost', 'totalAmount', 'amount'], 'NaN')]
+        for body in bodies:
+            with self.subTest(body=body[:60]):
+                outcome = SimpleNamespace(errors=(), body=body, observed_at=self.now, response_sha256='a' * 64)
+                result = dq.read_storefront_reply(outcome, quote, offer, rule)
+                self.assertEqual((result.status, result.quoted_total), ('unavailable', None))
+
+    def test_a_free_pickup_option_is_never_the_delivery_fee(self):
+        snapshot = self.chat()
+        self.script['City-Shop'] = respond(200, storefront('915', (
+            ('Pickup in store', '0.00', 'PICK_UP'), ('Standard', '5.00', 'SHIPPING')), variant='4103'),
+            'application/json')
+        self.settle()
+        [quote] = self.destination(snapshot)['quotes']
+        self.assertEqual((quote['fee']['label'], quote['fee']['amount']['amount']), ('Standard', '5.00'))
+        only = self.chat('2')
+        self.script['City-Shop'] = respond(200, storefront('915', (('Pickup in store', '0.00', 'PICK_UP'),),
+                                                           variant='4103'), 'application/json')
+        self.settle()
+        [quote] = self.destination(only)['quotes']
+        self.assertEqual((quote['status'], quote['fee']), ('unavailable', None))
 
     def test_street_addresses_stay_out_of_storage_logs_and_responses(self):
         [home] = self.signed_in(HOME)

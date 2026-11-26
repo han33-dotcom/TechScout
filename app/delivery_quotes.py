@@ -26,13 +26,15 @@ Rules kept throughout:
 
 - Unknown stays unknown: no usable quote, a conflicting quote and a declined address all leave
   the affected total unknown, and every other offer and product link stays.
-- A request (seller, variant, quantity, destination) is sent at most once per chat. Failures
-  are not retried.
+- A request (seller, variant, quantity, destination) reaches a seller at most once per chat, and
+  a failure after sending is never retried. A request that was never sent (no route, another city,
+  the allowance, a busy workload limit) is reconsidered when the chat changes, and a busy limit
+  is tried again a few times before it is given up.
 - A destination change makes earlier quotes stop applying.
 - A quote never sets an arrival time, so it can never satisfy a guaranteed deadline.
 """
 from collections import Counter
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from datetime import datetime, timedelta
 from decimal import Decimal
 import hashlib
@@ -49,6 +51,7 @@ from sqlalchemy import and_, delete, insert, or_, select, update
 from app import contracts_v2 as v
 from app.assessment import _doubts, assess_full_product
 from app.contracts import HttpsUrl, Model, Money, PositiveInt, Text, UtcTime
+from app.accounting import BudgetDenied
 from app.costs import _sum, calculate_domestic_cost
 from app.quote_capabilities import QuoteCapability, active_quote_routes, quote_url, storefront_body
 from app.source_capabilities import CapabilityRef
@@ -61,8 +64,11 @@ SETTLED = ('quoted', 'unavailable', 'conflicting')
 # A chat's destination summary (buyer_destinations.quote_state); see docs/delivery-quotes.md.
 QuoteState = Literal['pending', 'requested', 'quoted', 'partial', 'unavailable', 'not_needed', 'none']
 QUANTITY = 1  # ShoppingRequest has no quantity; every comparison is for one unit.
-MAX_QUOTES_PER_PLAN = 6  # retailer quote requests one finished search may start
-LEASE = timedelta(seconds=60)
+MAX_QUOTES_PER_SEARCH = 6  # retailer quote requests one finished search may start, in all
+LEASE = timedelta(seconds=60)  # one claimed quote: far above one gated call and its waits
+DEFER = timedelta(seconds=30)  # a workload refusal before sending waits this long, then retries
+MAX_DEFERRALS = 4
+DELIVERY_METHODS = ('SHIPPING', 'LOCAL')  # delivered options; pickup options are never a delivery fee
 ADAPTER_VERSION = 'delivery-quote/1'
 CORPUS_VERSION = 'delivery-quote-1'
 Sha256 = Annotated[str, StringConstraints(strict=True, pattern=r'^[0-9a-f]{64}$')]
@@ -73,16 +79,20 @@ OTHER_CITY = 'The selected address is in a different city from this search, so i
 OVER_LIMIT = 'This search already used its delivery quote allowance, so this seller was not asked.'
 WITHDRAWN = 'The address is no longer selected for this seller, so it was not sent.'
 GONE = 'The listing is no longer in this comparison, so it was not quoted.'
+STALE = 'This quote no longer applies to the chat\'s latest search or destination, so it was not sent.'
 INTERRUPTED = 'The quote was interrupted. TechScout does not repeat a quote automatically.'
 NOT_SENT = 'TechScout could not prepare this quote within the reviewed route, so nothing was sent.'
+ROUTE_OFF = 'The quote route for this seller is not active, so nothing was sent.'
+WORKLOAD = 'TechScout\'s request allowance for this seller stayed busy, so the quote was not sent.'
 FAILED = 'The seller gave no usable quote. TechScout does not repeat a quote automatically.'
 REPRICED = 'The listing price changed after the delivery quote, so its total stays unknown.'
-_GATE = {
-    'BUDGET_EXHAUSTED': 'The quote did not fit the workload limits for this seller, so it was not sent.',
+# A failure after the request was sent; it is never repeated.
+_SENT = {
     'RATE_LIMIT': 'The seller asked TechScout to slow down. The quote is not repeated automatically.',
-    'SOURCE_DISABLED': 'The quote route for this seller is not active, so nothing was sent.',
-    'BLOCKED': 'The quote route for this seller is not active, so nothing was sent.',
+    'BLOCKED': 'The seller\'s reply was outside the reviewed quote route. The quote is not repeated automatically.',
 }
+# Refused by TechScout's own workload limits before sending: deferred, then given up.
+_BUSY = ('RATE_LIMIT', 'BUDGET_EXHAUSTED')
 _USER_ERRORS = {
     'MERCHANDISE_NOT_ENOUGH_STOCK': 'The seller reports this item is not available in that quantity.',
     'MERCHANDISE_OUT_OF_STOCK': 'The seller reports this item is out of stock.',
@@ -136,22 +146,25 @@ class DeliveryQuote(Model):
     item_price: Money | None = None  # what the pre-order step charged for the item(s)
     included: tuple[Text, ...] = ()  # charges the seller's terms put inside that price, e.g. tax
     fee: QuotedFee | None = None  # the added delivery fee, counted once
-    total: Money | None = None
+    # The item price plus the quoted fee, as the pre-order step showed them. It is not a payable
+    # total when another mandatory charge is unknown; RevisedComparison decides that.
+    quoted_total: Money | None = None
     reason: Text | None = None
 
     @model_validator(mode='after')
     def coherent_outcome(self):
         answered = (self.observed_at, self.capability, self.endpoint, self.response_sha256)
         if self.status == 'quoted':
-            if None in answered or None in (self.item_price, self.fee, self.total) or self.reason is not None:
+            if None in answered or None in (self.item_price, self.fee, self.quoted_total) or self.reason is not None:
                 raise ValueError('A quote records its source, time, price, fee and total')
-            currencies = {self.item_price.currency, self.fee.amount.currency, self.total.currency}
-            if len(currencies) != 1 or _sum([self.item_price.amount, self.fee.amount.amount]) != self.total.amount:
+            currencies = {self.item_price.currency, self.fee.amount.currency, self.quoted_total.currency}
+            if (len(currencies) != 1
+                    or _sum([self.item_price.amount, self.fee.amount.amount]) != self.quoted_total.amount):
                 raise ValueError('A quoted total is the item price plus the fee, once, in one currency')
         elif self.status in ('unavailable', 'conflicting'):
-            if self.reason is None or self.total is not None:
+            if self.reason is None or self.quoted_total is not None:
                 raise ValueError('An unusable quote keeps its reason and no total')
-        elif any(item is not None for item in (*answered, self.item_price, self.fee, self.total, self.reason)):
+        elif any(item is not None for item in (*answered, self.item_price, self.fee, self.quoted_total, self.reason)):
             raise ValueError('A quote that has not been answered has no result')
         return self
 
@@ -255,9 +268,7 @@ def wanted_quotes(snapshot: v.RunSnapshot, decision: ChatDecision | None,
         if wanted.key not in seen:
             seen.add(wanted.key)
             out.append(wanted)
-    sendable = [item for item in out if item.route is not None]
-    over = {item.key for item in sendable[MAX_QUOTES_PER_PLAN:]}
-    return [replace(item, route=None, reason=OVER_LIMIT) if item.key in over else item for item in out]
+    return out
 
 
 def waiting_sellers(snapshot: v.RunSnapshot, routes: dict[str, QuoteCapability]) -> list[tuple[str, str]]:
@@ -273,18 +284,18 @@ def waiting_sellers(snapshot: v.RunSnapshot, routes: dict[str, QuoteCapability])
     return list(sellers.items())
 
 
-def new_quote(wanted: Wanted, run: v.RunReference, now: datetime) -> DeliveryQuote:
+def new_quote(wanted: Wanted, run: v.RunReference, now: datetime, reason: str | None = None) -> DeliveryQuote:
+    """A pending request, or with a reason one that is recorded unsent."""
     offer = wanted.offer
-    status = 'pending' if wanted.route is not None else 'unavailable'
     return DeliveryQuote(quote_id=str(uuid.uuid4()), run=run, offer_id=offer.offer_id, retailer_id=offer.retailer_id,
                          seller=offer.seller.name, source_id=offer.source_id,
                          source_variant_id=offer.source_variant_id, listing_url=offer.listing_url,
-                         quantity=QUANTITY, destination=wanted.destination, status=status, requested_at=now,
-                         reason=None if wanted.route is not None else wanted.reason)
+                         quantity=QUANTITY, destination=wanted.destination,
+                         status='pending' if reason is None else 'unavailable', requested_at=now, reason=reason)
 
 
 def _settle(quote: DeliveryQuote, status: str, reason: str, **fields) -> DeliveryQuote:
-    data = quote.model_dump(mode='python') | fields | dict(status=status, reason=reason, total=None)
+    data = quote.model_dump(mode='python') | fields | dict(status=status, reason=reason, quoted_total=None)
     return DeliveryQuote.model_validate(data)
 
 
@@ -305,10 +316,18 @@ def _label(value) -> str:
 
 
 def read_storefront_reply(outcome, quote: DeliveryQuote, offer: v.Offer, rule: QuoteCapability) -> DeliveryQuote:
-    """Turn the gate's outcome into a settled quote. Retailer text never becomes a reason."""
+    """Turn the gate's outcome for a sent request into a settled quote. Retailer text never becomes a
+    reason, and a reply of any shape settles the quote rather than raising."""
     if outcome.errors:
-        return _settle(quote, 'unavailable', _GATE.get(outcome.errors[0].code, FAILED))
+        return _settle(quote, 'unavailable', _SENT.get(outcome.errors[0].code, FAILED))
     answered = dict(observed_at=outcome.observed_at, response_sha256=outcome.response_sha256)
+    try:
+        return _read_cart(outcome, quote, offer, rule, answered)
+    except (ValueError, KeyError, TypeError, AttributeError, IndexError):
+        return _settle(quote, 'unavailable', FAILED, **answered)
+
+
+def _read_cart(outcome, quote, offer, rule, answered) -> DeliveryQuote:
     try:
         data = json.loads(outcome.body)
         if data.get('errors'):
@@ -334,13 +353,18 @@ def read_storefront_reply(outcome, quote: DeliveryQuote, offer: v.Offer, rule: Q
     if merchandise.get('availableForSale') is not True:
         return _settle(quote, 'unavailable', _USER_ERRORS['MERCHANDISE_OUT_OF_STOCK'], **answered)
     item = _money((line.get('cost') or {}).get('totalAmount'), rule.currency)
-    options = groups[0].get('deliveryOptions') if isinstance(groups, list) and len(groups) == 1 and isinstance(
-        groups[0], dict) else None
-    if not isinstance(options, list) or not options:
+    if not isinstance(groups, list) or len(groups) > 1 or not all(isinstance(group, dict) for group in groups):
+        return _settle(quote, 'unavailable', FAILED, **answered)
+    options = groups[0].get('deliveryOptions') if groups else []  # no group: nothing delivers there
+    if not isinstance(options, list) or not all(isinstance(option, dict) for option in options):
+        return _settle(quote, 'unavailable', FAILED, **answered)
+    # Only options that deliver: a free in-store pickup is never this order's delivery fee.
+    delivered = [option for option in options if option.get('deliveryMethodType') in DELIVERY_METHODS]
+    if not delivered:
         return _settle(quote, 'unavailable', _USER_ERRORS['INVALID_DELIVERY_ADDRESS'], **answered)
     priced = [(_money(option.get('estimatedCost'), rule.currency), _label(option.get('title')))
-              for option in options if isinstance(option, dict)]
-    if item is None or len(priced) != len(options) or any(money is None for money, _ in priced):
+              for option in delivered]
+    if item is None or any(money is None for money, _ in priced):
         return _settle(quote, 'unavailable', FAILED, **answered)
     cost, label = min(priced, key=lambda pair: (pair[0].amount, pair[1]))
     fee = QuotedFee(label=label, amount=cost)
@@ -363,7 +387,7 @@ def read_storefront_reply(outcome, quote: DeliveryQuote, offer: v.Offer, rule: Q
     included = tuple(dict.fromkeys(charge.kind for charge in offer.costs
                                    if charge.leg == 'order' and charge.state == 'included'))
     data = quote.model_dump(mode='python') | found | dict(
-        status='quoted', reason=None, included=included, total=Money(amount=total, currency=item.currency))
+        status='quoted', reason=None, included=included, quoted_total=Money(amount=total, currency=item.currency))
     return DeliveryQuote.model_validate(data)
 
 
@@ -548,23 +572,40 @@ def refresh_state(db, session_hash, request_id, routes) -> None:
 
 
 def plan_chat(db, now, session_hash, request_id, routes) -> int:
-    """Record every quote the chat's latest finished search implies, once. Returns new requests."""
+    """Record the quotes the chat's latest finished search implies. Returns new requests.
+
+    A request that was sent, or is waiting to be, is never planned again. One recorded unsent
+    (no route, another city, the allowance, a refusal before sending) is reconsidered here. A
+    search may start at most MAX_QUOTES_PER_SEARCH requests across all its destination choices."""
     snapshot = latest_snapshot(db, session_hash, request_id)
     if snapshot is None:
         return 0
     decision, decided_at = read_decision(db, session_hash, request_id)
     wanted = wanted_quotes(snapshot, decision, routes)
-    existing = _rows(db, session_hash, request_id, wanted)
+    chat = (buyer_quotes.c.session_hash == session_hash, buyer_quotes.c.request_id == request_id)
+    keys = [item.key for item in wanted]
+    existing = {row.request_key: row for row in db.execute(select(
+        buyer_quotes.c.request_key, buyer_quotes.c.quote_id, buyer_quotes.c.status, buyer_quotes.c.sent).where(
+        *chat, buyer_quotes.c.request_key.in_(keys))).all()} if keys else {}
+    used = len(db.execute(select(buyer_quotes.c.quote_id).where(
+        *chat, buyer_quotes.c.run_id == snapshot.run.run_id,
+        or_(buyer_quotes.c.sent.is_(True), buyer_quotes.c.status.in_(('pending', 'requested'))))).all())
     created = 0
     for item in wanted:
-        if item.key in existing:
+        row = existing.get(item.key)
+        if row is not None and (row.sent or row.status in ('pending', 'requested')):
             continue
-        quote = new_quote(item, snapshot.run, now)
+        if row is not None:
+            db.execute(delete(buyer_quotes).where(buyer_quotes.c.quote_id == row.quote_id))
+        reason = item.reason or (OVER_LIMIT if used >= MAX_QUOTES_PER_SEARCH else None)
+        quote = new_quote(item, snapshot.run, now, reason)
         db.execute(insert(buyer_quotes).values(
             quote_id=quote.quote_id, session_hash=session_hash, request_id=request_id, run_id=snapshot.run.run_id,
-            request_key=item.key, status=quote.status, record=quote.model_dump(mode='json'),
-            created_at=now, updated_at=now))
-        created += quote.status == 'pending'
+            request_key=item.key, status=quote.status, record=quote.model_dump(mode='json'), sent=False,
+            deferrals=0, created_at=now, updated_at=now))
+        if reason is None:
+            used += 1
+            created += 1
     db.execute(delete(buyer_quote_plans).where(buyer_quote_plans.c.run_id == snapshot.run.run_id))
     db.execute(insert(buyer_quote_plans).values(run_id=snapshot.run.run_id, decided_at=decided_at, planned_at=now))
     refresh_state(db, session_hash, request_id, routes)
@@ -604,87 +645,125 @@ class QuoteService:
                 plan_chat(db, now, chat.session_hash, chat.request_id, routes)
         return len(chats)
 
-    def _claim(self, limit):
+    @staticmethod
+    def _settle_row(db, now, row, quote, *, sent):
+        db.execute(update(buyer_quotes).where(buyer_quotes.c.quote_id == row['quote_id']).values(
+            status=quote.status, record=quote.model_dump(mode='json'), sent=sent, lease_token=None,
+            lease_until=None, not_before=None, updated_at=now))
+
+    def _claim(self):
+        """Claim the next pending quote that still applies, or None. One at a time, so a lease
+        covers a single gated call."""
         routes = self.routes()
         with self.runs.guarded() as (db, now):
             stale = db.execute(select(buyer_quotes).where(buyer_quotes.c.status == 'requested',
                                                           buyer_quotes.c.lease_until <= now)).mappings().all()
-            for row in stale:
+            for row in stale:  # it may have been sent, so it is never sent again
                 quote = _settle(DeliveryQuote.model_validate(row['record']), 'unavailable', INTERRUPTED)
-                db.execute(update(buyer_quotes).where(buyer_quotes.c.quote_id == row['quote_id']).values(
-                    status='unavailable', record=quote.model_dump(mode='json'), lease_token=None,
-                    lease_until=None, updated_at=now))
+                self._settle_row(db, now, row, quote, sent=True)
                 refresh_state(db, row['session_hash'], row['request_id'], routes)
-            rows = db.execute(select(buyer_quotes).join(
-                buyer_sessions, buyer_sessions.c.session_hash == buyer_quotes.c.session_hash).where(
-                buyer_quotes.c.status == 'pending', buyer_sessions.c.expires_at > now)
-                .order_by(buyer_quotes.c.created_at, buyer_quotes.c.quote_id).limit(limit)).mappings().all()
-            claimed = []
-            for row in rows:
+            for _ in range(20):
+                row = db.execute(select(buyer_quotes).join(
+                    buyer_sessions, buyer_sessions.c.session_hash == buyer_quotes.c.session_hash).where(
+                    buyer_quotes.c.status == 'pending', buyer_sessions.c.expires_at > now,
+                    or_(buyer_quotes.c.not_before.is_(None), buyer_quotes.c.not_before <= now))
+                    .order_by(buyer_quotes.c.created_at, buyer_quotes.c.quote_id).limit(1)).mappings().first()
+                if row is None:
+                    return None
+                quote = DeliveryQuote.model_validate(row['record'])
+                snapshot = latest_snapshot(db, row['session_hash'], row['request_id'])
+                decision, _ = read_decision(db, row['session_hash'], row['request_id'])
+                current = {item.key: item for item in wanted_quotes(snapshot, decision, routes)}
+                item = current.get(row['request_key'])
+                if item is None or item.route is None:
+                    reason = STALE if item is None else item.reason or NO_ROUTE
+                    self._settle_row(db, now, row, _settle(quote, 'unavailable', reason), sent=False)
+                    refresh_state(db, row['session_hash'], row['request_id'], routes)
+                    continue
                 token = uuid.uuid4().hex
-                quote = DeliveryQuote.model_validate(row['record']).model_copy(update=dict(status='requested'))
+                quote = quote.model_copy(update=dict(status='requested'))
                 db.execute(update(buyer_quotes).where(buyer_quotes.c.quote_id == row['quote_id']).values(
                     status='requested', record=quote.model_dump(mode='json'), lease_token=token,
                     lease_until=now + self.lease, updated_at=now))
                 refresh_state(db, row['session_hash'], row['request_id'], routes)
-                snapshot = db.execute(select(buyer_runs.c.snapshot).where(
-                    buyer_runs.c.run_id == row['run_id'])).scalar_one()
-                claimed.append((row['quote_id'], token, row['session_hash'], row['request_id'], quote,
-                                v.RunSnapshot.model_validate(snapshot)))
-            return claimed
+                return (row['quote_id'], token, row['session_hash'], row['request_id'], quote, item.offer)
+            return None
 
-    def _request(self, quote: DeliveryQuote, snapshot: v.RunSnapshot) -> DeliveryQuote:
-        """Send one claimed quote. The released address lives only inside this call."""
-        offer = next((item for item, _, _, _ in priced_offers(snapshot) if item.offer_id == quote.offer_id), None)
+    def _request(self, quote: DeliveryQuote, offer: v.Offer) -> tuple[DeliveryQuote, bool, bool]:
+        """Send one claimed quote: (result, whether it was sent, whether to defer it). The released
+        address lives only inside this call."""
         route = self.routes().get(quote.source_id)
-        if offer is None:
-            return _settle(quote, 'unavailable', GONE)
         if route is None or route.destination_detail != quote.destination.detail:
-            return _settle(quote, 'unavailable', NO_ROUTE)
+            return _settle(quote, 'unavailable', NO_ROUTE), False, False
         place = dict(city=quote.destination.city)
         if quote.destination.detail == 'street':
             released = self.accounts.release_address(quote.run, quote.retailer_id,
                                                      location_id=quote.destination.location_id)
             if released is None:
-                return _settle(quote, 'unavailable', WITHDRAWN)
+                return _settle(quote, 'unavailable', WITHDRAWN), False, False
             place = dict(city=released.city, street=released.street, details=released.details)
             del released
         try:
             body = storefront_body(route, offer.source_variant_id, quote.quantity, **place)
         except ValueError:
-            return _settle(quote, 'unavailable', NOT_SENT)
+            return _settle(quote, 'unavailable', NOT_SENT), False, False
         finally:
             place.clear()
-        sent = quote.model_copy(update=dict(capability=f'{route.capability_id}@{route.version}',
-                                            endpoint=quote_url(route)))
+        prepared = quote.model_copy(update=dict(capability=f'{route.capability_id}@{route.version}',
+                                                endpoint=quote_url(route)))
         try:
-            job = self.ledger.open_job('quote:' + quote.quote_id)
-            outcome = self.gate.quote(job.source_budget(self.registry), quote.source_id,
+            budget = self.ledger.open_job('quote:' + quote.quote_id).source_budget(self.registry)
+        except BudgetDenied:
+            return quote, False, True
+        try:
+            outcome = self.gate.quote(budget, quote.source_id,
                                       CapabilityRef(capability_id=route.capability_id, version=route.version), body)
-        except Exception as exc:  # the address is never logged; only the failure's type
-            log.warning('Delivery quote %s failed before a reply: %s', quote.quote_id, type(exc).__name__)
-            return _settle(sent, 'unavailable', FAILED)
+        except Exception as exc:  # it may have been sent; the address is never logged, only the type
+            log.warning('Delivery quote %s failed: %s', quote.quote_id, type(exc).__name__)
+            return _settle(prepared, 'unavailable', FAILED), True, False
         finally:
             del body
-        return read_storefront_reply(outcome, sent, offer, route)
+        if outcome.errors and not outcome.attempts:  # refused before anything was sent
+            if outcome.errors[0].code in _BUSY:
+                return quote, False, True
+            return _settle(prepared, 'unavailable', ROUTE_OFF), False, False
+        return read_storefront_reply(outcome, prepared, offer, route), True, False
 
-    def _record(self, quote_id, token, session_hash, request_id, result: DeliveryQuote) -> None:
+    def _record(self, claim, result: DeliveryQuote, sent: bool, defer: bool) -> None:
+        quote_id, token, session_hash, request_id = claim[:4]
         routes = self.routes()
         with self.runs.guarded() as (db, now):
-            changed = db.execute(update(buyer_quotes).where(
+            row = db.execute(select(buyer_quotes).where(
                 buyer_quotes.c.quote_id == quote_id, buyer_quotes.c.lease_token == token,
-                buyer_quotes.c.status == 'requested').values(
-                status=result.status, record=result.model_dump(mode='json'), lease_token=None, lease_until=None,
-                updated_at=now)).rowcount
-            if changed:
-                refresh_state(db, session_hash, request_id, routes)
+                buyer_quotes.c.status == 'requested')).mappings().first()
+            if row is None:  # the lease expired and the quote was settled meanwhile
+                return
+            if defer and row['deferrals'] < MAX_DEFERRALS:
+                waiting = result.model_copy(update=dict(status='pending'))
+                db.execute(update(buyer_quotes).where(buyer_quotes.c.quote_id == quote_id).values(
+                    status='pending', record=waiting.model_dump(mode='json'), lease_token=None,
+                    lease_until=None, not_before=now + DEFER, deferrals=row['deferrals'] + 1, updated_at=now))
+            else:
+                final = _settle(result, 'unavailable', WORKLOAD) if defer else result
+                self._settle_row(db, now, row, final, sent=sent)
+            refresh_state(db, session_hash, request_id, routes)
 
     def execute(self, limit=4) -> int:
-        """Send up to limit pending quotes, one at a time, and record each outcome."""
-        claimed = self._claim(limit)
-        for quote_id, token, session_hash, request_id, quote, snapshot in claimed:
-            self._record(quote_id, token, session_hash, request_id, self._request(quote, snapshot))
-        return len(claimed)
+        """Send up to limit pending quotes, one at a time, and record each outcome. A failure in one
+        quote settles that quote only."""
+        done = 0
+        while done < limit:
+            claim = self._claim()
+            if claim is None:
+                break
+            try:
+                result, sent, defer = self._request(claim[4], claim[5])
+            except Exception as exc:
+                log.warning('Delivery quote %s failed: %s', claim[0], type(exc).__name__)
+                result, sent, defer = _settle(claim[4], 'unavailable', FAILED), True, False
+            self._record(claim, result, sent, defer)
+            done += 1
+        return done
 
     def step(self) -> bool:
         """One pass: plan finished chats, then send pending quotes. True when work was done."""
