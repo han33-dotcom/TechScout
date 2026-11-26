@@ -78,36 +78,7 @@ volume, inference configuration and ledger used by the API.
 python -m app.run_worker --controller app.buyer_flow:run
 ```
 
-The following describes the implemented worker at `698d9b4`. The [buyer contract](buyer-product-contract.md) changes how pasted deals and actual-seller eligibility must work. The [matrix](buyer-acceptance-matrix.md) identifies the corresponding implementation tasks.
-
-The controller uses the domestic catalog for all five categories. A retailer link checks only
-the linked seller and selected configuration. An exact-model request seeks two independent
-sellers with the same configuration. A needs request can return three distinct models with
-seller offers grouped below each. OpenRouter selects suitable models from cited, current
-specifications. A requirement without supporting evidence stays unresolved. With no usable
-OpenRouter configuration or key, the worker can still verify domestic offers and report
-coverage. The writer uses its deterministic explanation and model suitability stays unresolved.
-
-Catalog prices retain their original observation dates. A historical price above the buyer's
-maximum can still trigger a recheck. The controller starts with known listings and reviewed
-directory product URLs. For a gap in comparative coverage it can issue one targeted
-multi-channel search, immediately read a new in-scope listing, and queue a new shop for
-background onboarding. An unknown shop from a buyer-supplied link contributes its public
-origin and category only. New searches and refinements accept only domestic offers. Omit `market_scope` or send `include_international: false` and an empty market list. An international opt-in or overseas market returns HTTP 422. Saved v2 snapshots retain their original scope.
-
-Up to three workers can read independent sources concurrently. They share the run ledger
-and return their findings to one controller. Every external action records the missing fact,
-its effect on the decision and the likely source. Research ends before the final 30 seconds.
-Verification and the writer share the remaining active time within the 120-second limit.
-Rechecks require actual response receipts for the selected SKU, local dispatch, delivery to
-the requested destination and mandatory charges. Alternatives can replace unavailable or
-over-budget offers. An evaluator can request one targeted reread. The final snapshot
-reports checked sellers and the qualifying coverage even when discovery is unavailable.
-
-The original one-source phone checkpoint is available as `app.buyer_flow:run_checkpoint`.
-Its independent runbook covers the inference configuration, ledger and bounded live check.
-Without a configured buyer worker, API runs remain queued. The Compose ingestion worker
-continues to serve its own queue. [Single-source live runbook](live-flow.md)
+The worker can use stored listings, reviewed retailer reads and discovery to find candidates. The [experiment record](buyer-architecture-comparison.md) reports demonstrated results. The [buyer contract](buyer-product-contract.md) defines the intended comparison. The historical single-source phone controller is available as `app.buyer_flow:run_checkpoint`. [Checkpoint runbook](live-flow.md)
 
 ## React and validation
 

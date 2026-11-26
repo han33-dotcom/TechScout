@@ -1,47 +1,31 @@
 # Buyer workspace
 
-The React/TypeScript/Vite buyer interface uses the generated v2 API types and same-origin BuyerApi. Start with `cd frontend`, `npm ci`, and `npm run dev`. Vite proxies `/api` to `http://127.0.0.1:8000` (override with TECHSCOUT_API_ORIGIN). Use the backend setup in buyer-api.md. A worker/controller is required for real shopping progress; a missing worker leaves a request honestly queued.
+The React workspace uses the owned [buyer API](buyer-api.md) to submit, poll, clarify, cancel and refine a shopping request. An edit creates a new revision while preserving untouched constraints. Previous results remain available as history.
 
-`npm run typecheck`, `npm test`, and `npm run build` run strict TypeScript checks, offline component/race tests, and the production build. CI runs these alongside the existing Python/PostgreSQL/Docker checks. FastAPI serves frontend/dist in the production stack. No provider keys, browser provider calls, external fonts or tracking scripts are used.
+## What the buyer sees
 
-## Request and progress (#72)
+- Progress and source status for the current revision. A source check records coverage. Each verified offer also needs its own current-run receipts.
+- Up to three model groups with sellers under each configuration. Cards show the variant, seller, terms, cost breakdown, evidence dates and listing link. Comparisons order exact decimal totals within a currency.
+- A separate view for incomplete or uncertain offers, including missing charges. Historical results retain their original timestamps.
+- A plain-text explanation when the worker supplies one. The backend owns verification, ranking and currency conversion. [Writer](writer.md)
 
-Needs, exact-model and HTTPS product-link entry share editable five-category requirements. All searches compare local sellers in Lebanon. New condition is the default. Target budgets remain preferences and a separate field sets an explicit maximum. Original text is retained; the frontend does not claim to understand arbitrary natural language. English, Arabic and Arabizi example buttons have declared preset requirements, covered by tests. The controller is responsible for general interpretation and material ambiguity; clarification appears only when the API requests it. Returned interpreted requirements update the editor unless the buyer has unsaved edits.
+## Accounts and saved locations
 
-Status/phase, original provisional observation times, retailer counts and partial/error/abstention states come from the API. There are no fabricated percentages or verified labels on provisional data. API text renders as text. Polls are bounded to one at a time and stop for terminal states. Abort plus generation/run/request-revision checks discard late reads after mutations. Mutations are never automatically retried after ambiguous failures; Check latest status reconciles an existing run. A new request with an unknown start outcome may be rejected by backend admission until its existing run finishes.
+The [account backend](buyer-accounts.md) supports these pages.
 
-Refinements retain unedited backend requirements, increment the request revision and retain previous results separately. Price, eligibility, model interpretation and verification remain backend responsibilities. Full browser-to-live-result integration remains #75, and general multilingual measurement remains later evaluation work.
+- **Header.** It shows the signed-in username, or a button to sign in or create an account.
+- **Account page.** The buyer registers, signs in and signs out. Passwords are cleared from the form after a successful request. Errors show the server's fixed message, never the submitted values. Sign-out warns first that it deletes this browser's searches.
+- **Saved locations.** The page shows each location's label and city only. The street is never displayed after saving.
+- **Address prompt in a chat.** The prompt names the chat's Lebanese sellers together, once. The buyer ticks which sellers may receive an address; none is ticked by default.
+  - **Choose a saved address** opens Locations, through sign-in when needed. **Use this address** saves the choice and returns to the same chat with its earlier revision, offers and links. No search is resubmitted.
+  - **Continue without an address** records a decline. Every offer, link and unknown fee stays as it was.
+  - Until the quote operation in #186 exists, the prompt says that seller quotes have not been requested and totals are unchanged.
+- **Address bar.** It holds the open chat and page (`?chat=<run id>&view=locations`), so a reload or Back returns to the same chat.
 
-## Comparison and refinement (#73)
+`Account.test.tsx` covers these flows with synthetic API responses. The scripted browser walkthrough and its screenshots are in [issue-187 evidence](../acceptance/development/issue-187/evidence.json).
 
-The comparison renders up to three backend-selected model/configuration groups. A receipt from another run or revision cannot create a verified card. Additional sellers share the canonical configuration and retain their own price, condition, activation, warranty, route, timing and evidence. Selection/expanded details persist by offer ID across same-run refreshes; unavailable old selections cannot block new selections. Previous-revision cards are separately expandable and labelled historical.
+## Developer reference
 
-Cards show configuration facts against requested requirements and factual missing terms. This is not a generated claim that one model is subjectively best: the writer's narrative integration remains separate. Evidence drawers expose per-field observation time, scope and safe source links. Cost components preserve included/additional/unknown states; estimated/incomplete totals remain separate from verified totals. Side-by-side comparison exposes canonical configuration differences and unresolved facts. Decimal-string ordering is exact, including exponent notation, and is only within the same currency; there is no browser FX conversion or eligibility recalculation.
+`ShoppingRequest.refinement_note` carries extra buyer text. `RunSnapshot.source_outcomes` records checked, failed or unchecked sources. Optional `RunSnapshot.explanation` holds the text, evidence IDs and source. Older snapshots remain readable with their defaults.
 
-Per-source check details display checked/failed/unchecked states only when supplied. Missing detail is explicitly unknown, not inferred from discovered inventory. Uncertain/non-qualifying offers remain outside verified slots with their reasons and missing costs. Retailer handoff uses HTTPS product links in a separate tab, with no checkout or messaging.
-
-### Additive v2 contract fields
-
-`ShoppingRequest.refinement_note` is optional additional buyer text. It preserves exact-model/link intent, filters, budget and original needs; recording it does not claim the controller has interpreted or applied it. `RunSnapshot.source_outcomes` defaults to empty and holds unique source IDs, display names, checked/failed/unchecked status and optional reason (required for failure). Checked means the research process checked that source; it is not a final-offer verification receipt. These optional additions keep stored v2 fixtures readable; no schema version is removed. Existing consumers may omit them. `RunSnapshot.explanation` (#75) is a later additive field. It is optional and holds the writer's plain-text explanation, its evidence IDs and its source (`model`, `mixed` or `fallback`). It is allowed only on complete, partial or abstained runs, and the progress panel renders it as text, never HTML. General controller population beyond the [first live flow](live-flow.md) remains full-flow work.
-
-Run `python -m app.api_types` to regenerate both OpenAPI TypeScript types and the normalized browser fixture from the canonical `tests/fixtures/v2/workspace.json`. The fixture is synthetic; it is imported only by tests and never bundled into production. A Python regression compares the generated fixture with the current contract defaults.
-
-Validation covers stale receipts, no padded slots, grouped sellers, side-by-side selection, retained expansion, failed/unchecked source labels, unknown/estimated costs, safe outbound URLs, and conversational refinement without weakening the original maximum. Browser QA uses intercepted synthetic API fixtures; it does not fetch retailers or establish real purchase results.
-
-## Accounts, saved locations and the same-chat return (#187)
-
-The header shows the signed-in username or a **Sign in or create account** button. The account page registers or signs in with a username and password. Passwords stay only in the form and are cleared after a successful request. Errors show the server's fixed explanation, never the submitted values. Sign-out asks first, because it deletes this browser's searches; saved locations stay with the account. **Saved locations** lists each location's label and city only. The street address is entered once and never displayed again. Deleting a location asks for confirmation.
-
-A chat shows one address prompt when its latest results include Lebanese sellers. It names those sellers together and asks which of them may receive an address. No seller is ticked by default. **Choose a saved address** opens Locations; a signed-out buyer goes to sign-in first. The Locations page states which sellers will receive the address. The buyer can add one or more locations there and pick one with **Use this address**. TechScout then saves the choice for this chat and returns to the same chat with the same run, earlier revision, offers and links. No search is resubmitted. **Continue without an address** records a decline and leaves every offer, link and unknown fee as it was. The buyer can change either choice later.
-
-The open chat and page are kept in the address bar (`?chat=<run id>&view=locations`). A reload or the browser's back button therefore returns to the same chat. A chat that this session no longer owns is dropped from the address bar.
-
-The prompt says plainly that seller quotes for the chosen address have not been requested. Totals and advice stay unchanged until the quote operation in #186 exists. Component tests in `Account.test.tsx` use mocked API responses and the synthetic accounts in `tests/fixtures/accounts.json`. They cover:
-
-- registration, sign-in and sign-out;
-- location masking, adding and deleting;
-- the explicit recipient choice;
-- the sign-in-to-Locations-to-chat round trip;
-- decline with working links;
-- reuse in a later signed-in search;
-- recovery after sign-out.
+Run `python -m app.api_types` to regenerate the browser types and normalized test fixture. Browser interaction tests use synthetic API responses. The [acceptance matrix](buyer-acceptance-matrix.md) specifies where a buyer-visible walkthrough or live result is required. [Session history and export](buyer-history.md)
