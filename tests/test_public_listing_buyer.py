@@ -1,6 +1,7 @@
 """Checkpoint 2: buyer API and worker, with offline model and Firecrawl transports."""
 from functools import partial
 import json
+import httpx2
 from unittest.mock import patch
 
 from app.agent_inspection import inspect_public_listing
@@ -116,6 +117,44 @@ class PublicListingBuyerTests(FlowCase):
         run = self.journey(listing('Black', '49.00') + '<span data-variant-price>USD 72.00</span>')
         self.assertFalse(run.uncertain or run.recommendations)
         self.assertIn('could not confirm', run.stop_reason)
+
+    def test_after_a_click_is_denied_agent_follows_the_published_option_url(self):
+        black_url = URL + '?variant=black'
+        self.openrouter = BuyerDecisions(['Inspect', 'Select Black', f'Inspect selected listing {black_url}', 'Present'])
+        deps = development_tools(self.deps(), 'Q20i')
+        deps.inspect_listing = partial(inspect_public_listing, registry=ActivationRegistry(self.storage),
+            environ=dict(FIRECRAWL_API_KEY='fixture', FIRECRAWL_SCRAPE_USD_PER_CREDIT='.001'))
+
+        def provider(endpoint, key, payload, **_):
+            url = payload['url']
+            if 'actions' in payload:
+                httpx2.Response(403, request=httpx2.Request('POST', endpoint)).raise_for_status()
+            html = (listing('Black', '49.00') if url == black_url else listing('White', '39.00')
+                    + '<a class="swatch" href="?variant=black">Black</a>')
+            return dict(success=True, data=dict(rawHtml=html, metadata=dict(url=url, sourceURL=url,
+                        contentType='text/html', statusCode=200, provider=dict(creditsCost=1))))
+
+        with (patch('app.agent_inspection.SourceGate', side_effect=lambda scope:
+                    SourceGate._for_tests(scope, resolver=lambda *_: ['8.8.8.8'])),
+              patch('app.firecrawl.post_json', side_effect=provider) as calls):
+            _, run = self.browse(deps, implementation='single_agent', requirements=dict(category='audio'),
+                intent=dict(kind='exact_model', model='Soundcore Q20i', wording=WORDING),
+                refinement_note='Check ' + URL, allowed_colors=['black'])
+        self.assertEqual([c.args[2]['url'] for c in calls.call_args_list], [URL, URL, black_url])
+        self.assertNotIn('actions', calls.call_args_list[-1].args[2])
+        self.assertEqual(run.status, 'partial', self.trace(run))
+        item, = run.uncertain
+        self.assertEqual(str(item.offer.listing_url), black_url)
+        self.assertEqual(item.offer.variant.color.value, 'Black')
+        self.assertEqual(str(item.offer.price.value.amount), '49.00')
+
+    def test_identical_recheck_renews_the_receipt_without_redeciding_fit(self):
+        run = self.journey(listing('Black', '49.00'))
+        self.assertEqual(run.status, 'partial', self.trace(run))
+        matches = [json.loads(r['body']['messages'][1]['content']) for r in self.openrouter.requests]
+        self.assertEqual([m['selected']['color'] for m in matches if 'selected' in m], ['White', 'Black'])
+        first = next(s.uncertain[0].offer for s in self.published if s.uncertain)
+        self.assertGreater(run.uncertain[0].offer.evidence[0].observed_at, first.evidence[0].observed_at)
 
     def test_changed_price_replaces_prior_price_and_receipt(self):
         run = self.journey(listing('Black', '52.00'))

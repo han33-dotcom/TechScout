@@ -5,6 +5,7 @@ from hashlib import sha256
 from html import unescape
 import json
 import re
+from urllib.parse import parse_qsl, urljoin, urlsplit
 
 from pydantic import Field
 
@@ -13,6 +14,7 @@ from app.catalog_extraction import current_unrestricted_offer
 from app.contracts import Model, Money
 from app.extraction import _HTML, _excerpt, _objects, _unique_pairs
 from app.firecrawl import ColorOption
+from app.onboarding import canonical
 
 
 class ReadPageText(ValueError):
@@ -62,6 +64,8 @@ class ListingDocument(_HTML):
     def __init__(self, html):
         super().__init__(None)
         self.options = []
+        self.links = []
+        self.anchor = None
         self.checked = []
         self.address_lines = []
         self.lines = []
@@ -86,6 +90,9 @@ class ListingDocument(_HTML):
             return
         if self.hidden:
             return
+        if tag == 'a' and a.get('href'):
+            self.anchor = [a['href'], a.get('aria-label') or a.get('title') or '',
+                           ' '.join((a.get('class') or '', ' '.join(a)))]
         if 'data-variant-price' in a:
             self.price_tag = tag
         if tag == 'input' and a.get('type') == 'radio':
@@ -99,8 +106,15 @@ class ListingDocument(_HTML):
             if 'checked' in a:
                 self.checked.append(option)
 
+    def handle_startendtag(self, tag, attrs):
+        self.handle_starttag(tag, attrs)
+        self.handle_endtag(tag)
+
     def handle_endtag(self, tag):
         super().handle_endtag(tag)
+        if tag == 'a' and self.anchor:
+            self.links.append(tuple(self.anchor))
+            self.anchor = None
         if self.price_tag == tag:
             self.price_tag = None
         if self.hidden and self.hidden[-1] == tag:
@@ -109,6 +123,8 @@ class ListingDocument(_HTML):
     def handle_data(self, data):
         super().handle_data(data)
         line = ' '.join(unescape(data).split())
+        if self.anchor and line and not self.hidden and len(self.anchor[1]) < 90:
+            self.anchor[1] = (self.anchor[1] + ' ' + line).strip()[:90]
         if (not self.hidden and line and len(line) <= 400 and len(self.lines) < 350 and self.text_length + len(line) <= 12000
                 and (not self.lines or self.lines[-1] != line)):
             self.lines.append(line)
@@ -119,6 +135,24 @@ class ListingDocument(_HTML):
                 re.search(r'\b(lebanon|liban|beirut|tripoli|lb)\b|لبنان|بيروت', line, re.I)
                 and line not in self.address_lines and len(self.address_lines) < 100):
             self.address_lines.append(line)
+
+    def variant_links(self, url, colors):
+        """Return retailer-published alternatives, including ordinary links labeled with a requested color."""
+        origin = urlsplit(url)
+        color_labels = {color.casefold() for color in colors}
+        for href, label, attributes in self.links:
+            try:
+                link = urljoin(url, href)
+                target = urlsplit(link)
+                if link == url or target.netloc != origin.netloc or not canonical(link):
+                    continue
+            except ValueError:
+                continue
+            variant_query = target.path == origin.path and any(
+                k.casefold() in ('variant', 'color', 'colour', 'sku') for k, _ in parse_qsl(target.query))
+            if variant_query or any(word in attributes.lower() for word in ('swatch', 'variant', 'colour', 'color')) or (
+                    label and label.casefold() in color_labels):
+                yield link, label or 'Retailer variant link'
 
     def selected_text(self, reading):
         """A first-visit page may publish the whole offer as text, without JSON-LD or a SKU."""
@@ -180,7 +214,7 @@ class ListingDocument(_HTML):
         if isinstance(offer, list) and len(offer) == 1:
             offer = offer[0]
         if (not isinstance(offer, dict) or offer.get('@type') != 'Offer'
-                or any(u != url for u in (product.get('url', url), offer.get('url', url)))):
+                or any(u not in listing_identities(url) for u in (product.get('url', url), offer.get('url', url)))):
             raise ValueError('The offer and selected listing could not be bound to the same page.')
         sku = literal(product.get('sku'))
         if offer.get('sku', sku) != sku or not current_unrestricted_offer(offer, observed_at):
@@ -219,6 +253,16 @@ class ListingDocument(_HTML):
         return Selection(title, sku, brand, color, name, money, availability, condition, tuple(lines),
                          _excerpt(script, 'price', offer['price']), _excerpt(script, 'priceCurrency', money.currency),
                          literal(offer.get('availability')), literal(offer.get('itemCondition', product.get('itemCondition'))))
+
+
+def listing_identities(url):
+    parsed = urlsplit(url)
+    # A shop may publish its base product as the canonical URL on a variant deep link.
+    # An explicitly different option URL still conflicts.
+    keys = {k.casefold() for k, _ in parse_qsl(parsed.query)}
+    if keys and keys <= {'variant', 'color', 'colour', 'sku'}:
+        return (url, parsed._replace(query='').geturl())
+    return (url,)
 
 
 def literal(value):
