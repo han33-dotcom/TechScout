@@ -379,6 +379,39 @@ buyer_destinations = Table(
     Column('decided_at', UtcDateTime, nullable=False),
 )
 
+# Pre-order delivery quotes (#186). One row is one request for one item, variant, quantity and
+# destination in one chat. request_key keeps a sent request from being sent twice in that chat;
+# sent says whether it ever left (an unsent one is reconsidered). not_before and deferrals pace a
+# request that TechScout's own workload limits refused. record holds the DeliveryQuote
+# (app.delivery_quotes); it never contains a street address.
+buyer_quotes = Table(
+    'buyer_quotes', metadata,
+    Column('quote_id', String(36), primary_key=True),
+    Column('session_hash', ForeignKey('buyer_sessions.session_hash', ondelete='CASCADE'), nullable=False),
+    Column('request_id', Text, nullable=False),
+    Column('run_id', ForeignKey('buyer_runs.run_id', ondelete='CASCADE'), nullable=False, index=True),
+    Column('request_key', String(64), nullable=False),
+    Column('status', String(12), nullable=False, index=True),
+    Column('record', JSON, nullable=False),
+    Column('sent', Boolean, nullable=False),
+    Column('not_before', UtcDateTime),
+    Column('deferrals', Integer, nullable=False),
+    Column('lease_token', String(32)),
+    Column('lease_until', UtcDateTime),
+    Column('created_at', UtcDateTime, nullable=False),
+    Column('updated_at', UtcDateTime, nullable=False),
+    UniqueConstraint('session_hash', 'request_id', 'request_key', name='uq_buyer_quote_request'),
+)
+
+# Which finished run the quote worker has planned, and for which destination decision
+# (buyer_destinations.decided_at, or null without one). A new run or a new decision re-plans.
+buyer_quote_plans = Table(
+    'buyer_quote_plans', metadata,
+    Column('run_id', ForeignKey('buyer_runs.run_id', ondelete='CASCADE'), primary_key=True),
+    Column('decided_at', UtcDateTime),
+    Column('planned_at', UtcDateTime, nullable=False),
+)
+
 # Fixed-window counters for sign-in and registration throttling. Keys hold SHA-256
 # digests rather than attempted usernames, and rows are removed within an hour.
 buyer_attempts = Table(

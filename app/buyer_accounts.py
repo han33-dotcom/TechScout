@@ -10,7 +10,9 @@ exactly as expiry does.
 A saved location belongs to one account. Its street details never enter shopping requests,
 run snapshots, history, exports, API listings or logs. Selecting a location for a chat names
 the retailers allowed to receive it for that chat only; release_address is the single
-internal path by which the pre-order quote operation (#186) may obtain it.
+internal path by which the pre-order quote operation (#186, app.delivery_quotes) may obtain it.
+The chat's destination state also carries the sellers waiting for an address, the delivery
+quotes that apply and the revised comparison.
 """
 import base64
 import binascii
@@ -30,9 +32,13 @@ from sqlalchemy.exc import IntegrityError
 from app import contracts_v2 as v
 from app.buyer_runs import BuyerRunService, RunError, session_hash
 from app.contracts import Model, Text, UtcTime
+from app.delivery_quotes import (
+    DeliveryQuote, QuoteState, RevisedComparison, chat_quotes, read_decision, waiting_sellers,
+)
+from app.quote_capabilities import active_quote_routes
 from app.storage import (
-    buyer_accounts, buyer_attempts, buyer_destinations, buyer_locations, buyer_runs, buyer_sessions,
-    buyer_signins,
+    buyer_accounts, buyer_attempts, buyer_destinations, buyer_locations, buyer_quote_plans, buyer_quotes,
+    buyer_runs, buyer_sessions, buyer_signins,
 )
 
 # About 16 MiB and tens of milliseconds per hash. Parameters are stored with each hash so
@@ -142,9 +148,9 @@ class DestinationSelection(Model):
     status: Literal['selected', 'declined']
     location: SavedLocation | None = None
     recipients: tuple[DestinationSeller, ...] = ()
-    # pending: the buyer selected an address; no retailer quote has been requested yet.
-    # none: the buyer declined, so no retailer receives an address in this chat.
-    quote_state: Literal['pending', 'none']
+    # What happened to the street-level quotes for this choice (docs/delivery-quotes.md):
+    # pending, requested, quoted, partial, unavailable, not_needed; none after a decline.
+    quote_state: QuoteState
     decided_at: UtcTime
 
 
@@ -154,6 +160,12 @@ class DestinationState(Model):
     signed_in: bool
     sellers: tuple[DestinationSeller, ...]
     selection: DestinationSelection | None = None
+    # Additive since #186. waiting: sellers whose open delivery total a street address could
+    # settle, to name once in the prompt. quotes: the delivery quotes that apply to the latest
+    # search and destination. revised: totals, ranking and advice after those quotes.
+    waiting: tuple[DestinationSeller, ...] = ()
+    quotes: tuple[DeliveryQuote, ...] = ()
+    revised: RevisedComparison | None = None
 
 
 class PendingQuote(Model):
@@ -185,11 +197,15 @@ def chat_sellers(snapshot: v.RunSnapshot) -> tuple[DestinationSeller, ...]:
 
 class BuyerAccounts:
     def __init__(self, runs: BuyerRunService, *, name_attempts=5, session_attempts=10,
-                 registrations_per_session=5, registrations_per_hour=60, window_seconds=900):
+                 registrations_per_session=5, registrations_per_hour=60, window_seconds=900,
+                 quote_registry=None):
         if min(name_attempts, session_attempts, registrations_per_session, registrations_per_hour,
                window_seconds) <= 0:
             raise ValueError('Positive throttling limits are required')
         self.runs = runs
+        # The source registry whose active quote routes decide which sellers wait for an
+        # address (#186). None: no route is active, so no seller waits.
+        self.quote_registry = quote_registry
         self.name_attempts, self.session_attempts = name_attempts, session_attempts
         self.registrations_per_session = registrations_per_session
         self.registrations_per_hour = registrations_per_hour
@@ -249,6 +265,8 @@ class BuyerAccounts:
         if owner in (None, account_id):
             db.execute(update(buyer_runs).where(buyer_runs.c.session_hash == previous).values(session_hash=current))
             db.execute(update(buyer_destinations).where(buyer_destinations.c.session_hash == previous)
+                       .values(session_hash=current))
+            db.execute(update(buyer_quotes).where(buyer_quotes.c.session_hash == previous)
                        .values(session_hash=current))
         db.execute(delete(buyer_sessions).where(buyer_sessions.c.session_hash == previous))
         return token, csrf, expires
@@ -362,6 +380,10 @@ class BuyerAccounts:
 
     # Destination for one chat
 
+    def _routes(self):
+        """Active quote routes, read before (never inside) a guarded transaction."""
+        return {} if self.quote_registry is None else active_quote_routes(self.quote_registry)
+
     def _chat(self, db, now, token, run_id):
         session = self.runs.owner(db, now, token)
         owner = session['session_hash']
@@ -369,9 +391,10 @@ class BuyerAccounts:
         latest = db.execute(select(buyer_runs.c.snapshot).where(buyer_runs.c.session_hash == owner,
             buyer_runs.c.request_id == row['request_id']).order_by(buyer_runs.c.request_revision.desc())
             .limit(1)).scalar_one()
-        return session, row['request_id'], chat_sellers(v.RunSnapshot.model_validate(latest))
+        snapshot = v.RunSnapshot.model_validate(latest)
+        return session, row['request_id'], chat_sellers(snapshot), snapshot
 
-    def _state(self, db, session, request_id, sellers):
+    def _state(self, db, session, request_id, sellers, snapshot, routes):
         decision = db.execute(select(buyer_destinations).where(
             buyer_destinations.c.session_hash == session['session_hash'],
             buyer_destinations.c.request_id == request_id)).mappings().first()
@@ -384,8 +407,13 @@ class BuyerAccounts:
             selection = DestinationSelection(status=decision['status'], location=location,
                                              recipients=decision['recipients'], quote_state=decision['quote_state'],
                                              decided_at=decision['decided_at'])
+        decision, _ = read_decision(db, session['session_hash'], request_id)
+        quotes, revised = chat_quotes(db, session['session_hash'], request_id, snapshot, decision, routes)
+        waiting = tuple(DestinationSeller(retailer_id=retailer, name=name)
+                        for retailer, name in waiting_sellers(snapshot, routes))
         return DestinationState(request_id=request_id, signed_in=self._signed_in(db, session) is not None,
-                                sellers=sellers, selection=selection)
+                                sellers=sellers, selection=selection, waiting=waiting, quotes=quotes,
+                                revised=revised)
 
     def _decide(self, db, now, session, request_id, **values):
         key = (buyer_destinations.c.session_hash == session['session_hash'],
@@ -393,18 +421,24 @@ class BuyerAccounts:
         db.execute(delete(buyer_destinations).where(*key))
         db.execute(insert(buyer_destinations).values(session_hash=session['session_hash'], request_id=request_id,
                                                      decided_at=now, **values))
+        # Every new choice re-plans the chat's quotes (#186), even within one clock tick.
+        db.execute(delete(buyer_quote_plans).where(buyer_quote_plans.c.run_id.in_(
+            select(buyer_runs.c.run_id).where(buyer_runs.c.session_hash == session['session_hash'],
+                                              buyer_runs.c.request_id == request_id))))
 
     def destination(self, token, run_id):
+        routes = self._routes()
         with self.runs.guarded() as (db, now):
-            return self._state(db, *self._chat(db, now, token, run_id))
+            return self._state(db, *self._chat(db, now, token, run_id), routes)
 
     def select_destination(self, token, run_id, location_id, recipients):
         """Use an owned location for this chat and only the named sellers in it."""
         if (not isinstance(recipients, (list, tuple)) or not 1 <= len(recipients) <= 20
                 or len(set(recipients)) != len(recipients)):
             raise RunError(422, 'Choose one or more distinct sellers to receive this address')
+        routes = self._routes()
         with self.runs.guarded() as (db, now):
-            session, request_id, sellers = self._chat(db, now, token, run_id)
+            session, request_id, sellers, snapshot = self._chat(db, now, token, run_id)
             _, account_id = self._account_id(db, now, token)
             if db.execute(select(buyer_locations.c.location_id).where(
                     buyer_locations.c.location_id == str(location_id),
@@ -416,20 +450,24 @@ class BuyerAccounts:
             self._decide(db, now, session, request_id, status='selected', location_id=str(location_id),
                          quote_state='pending',
                          recipients=[named[retailer].model_dump() for retailer in recipients])
-            return self._state(db, session, request_id, sellers)
+            return self._state(db, session, request_id, sellers, snapshot, routes)
 
     def decline_destination(self, token, run_id):
         """Keep shopping without a precise address; no seller receives one in this chat."""
+        routes = self._routes()
         with self.runs.guarded() as (db, now):
-            session, request_id, sellers = self._chat(db, now, token, run_id)
+            session, request_id, sellers, snapshot = self._chat(db, now, token, run_id)
             self._decide(db, now, session, request_id, status='declined', location_id=None,
                          quote_state='none', recipients=[])
-            return self._state(db, session, request_id, sellers)
+            return self._state(db, session, request_id, sellers, snapshot, routes)
 
     # Internal hand-off to the pre-order quote operation (#186). Never exposed over HTTP.
 
     def pending_quotes(self, limit=20) -> tuple[PendingQuote, ...]:
-        """Selected destinations still waiting for retailer quotes, with each chat's latest run."""
+        """Selected destinations still waiting for retailer quotes, with each chat's latest run.
+
+        Kept from the #187 hand-off. The quote worker (app.delivery_quotes.QuoteService) plans
+        from buyer_quote_plans instead, which also covers a new search and a changed choice."""
         with self.runs.guarded() as (db, now):
             rows = db.execute(select(buyer_destinations).join(buyer_sessions).where(
                 buyer_destinations.c.status == 'selected', buyer_destinations.c.quote_state == 'pending',
@@ -445,8 +483,12 @@ class BuyerAccounts:
                         item['retailer_id'] for item in row['recipients'])))
             return tuple(pending)
 
-    def release_address(self, run: v.RunReference, retailer_id: str) -> PreciseAddress | None:
-        """The selected address of that run's chat, only for a retailer the buyer named."""
+    def release_address(self, run: v.RunReference, retailer_id: str, *,
+                        location_id: str | None = None) -> PreciseAddress | None:
+        """The selected address of that run's chat, only for a retailer the buyer named.
+
+        With location_id, only while that location is still the chat's selection, so a quote
+        planned for one address can never carry another (#186)."""
         with self.runs.guarded() as (db, now):
             row = db.execute(select(buyer_runs.c.session_hash, buyer_runs.c.request_id).join(buyer_sessions).where(
                 buyer_runs.c.run_id == run.run_id, buyer_sessions.c.expires_at > now)).first()
@@ -457,6 +499,8 @@ class BuyerAccounts:
                 buyer_destinations.c.request_id == row.request_id,
                 buyer_destinations.c.status == 'selected')).mappings().first()
             if decision is None or retailer_id not in {item['retailer_id'] for item in decision['recipients']}:
+                return None
+            if location_id is not None and decision['location_id'] != location_id:
                 return None
             location = db.execute(select(buyer_locations).where(
                 buyer_locations.c.location_id == decision['location_id'])).mappings().one()

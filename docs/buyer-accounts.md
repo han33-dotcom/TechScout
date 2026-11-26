@@ -1,6 +1,6 @@
 # TechScout accounts, saved locations and chat destinations
 
-Issue [#187](https://github.com/han33-dotcom/TechScout/issues/187) adds buyer accounts to the cookie-owned chats in [buyer-api.md](buyer-api.md). It covers scenarios 12–14 of the [acceptance matrix](buyer-acceptance-matrix.md). A buyer can create a TechScout account, sign in and keep private saved locations. In a chat, the buyer can choose one location and the sellers that may receive it, or decline to give an address. Retailer pre-order quotes belong to [#186](https://github.com/han33-dotcom/TechScout/issues/186). This page ends at the hand-off to that work.
+Issue [#187](https://github.com/han33-dotcom/TechScout/issues/187) adds buyer accounts to the cookie-owned chats in [buyer-api.md](buyer-api.md). It covers scenarios 12–14 of the [acceptance matrix](buyer-acceptance-matrix.md). A buyer can create a TechScout account, sign in and keep private saved locations. In a chat, the buyer can choose one location and the sellers that may receive it, or decline to give an address. Retailer pre-order quotes for that choice are described in [delivery-quotes.md](delivery-quotes.md) (#186).
 
 `app/buyer_accounts.py` holds the service. Migration `0010` adds five private tables: `buyer_accounts`, `buyer_signins`, `buyer_locations`, `buyer_destinations` and `buyer_attempts`. All account changes share the buyer guard transaction with runs, so a sign-in cannot race a worker write.
 
@@ -51,28 +51,22 @@ A buyer who is not signed in gets 401 "Sign in to use saved locations". Each acc
 | `POST /api/runs/{id}/destination` | `location_id`, `recipients` (1–20 retailer IDs) | Selection replaces any earlier choice |
 | `POST /api/runs/{id}/destination/decline` | `{}` | Buyer keeps shopping without an address |
 
-A chat is one request ID in one session, across all its revisions. `DestinationState` lists the Lebanese sellers in the chat's latest revision (`sellers`), whether the buyer is signed in, and the current `selection`.
+A chat is one request ID in one session, across all its revisions. `DestinationState` lists the Lebanese sellers in the chat's latest revision (`sellers`), whether the buyer is signed in, and the current `selection`. Since #186 it also carries `waiting` (the sellers whose delivery total a street address could settle, to name once), `quotes` and `revised`; see [delivery-quotes.md](delivery-quotes.md).
 
 - **Selecting** needs a signed-in session that owns both the chat and the location. Recipients must be sellers shown in that chat. Overseas sellers are never offered. The choice is saved for this chat only. A later chat, or a seller that appears later, needs a new choice. Saving a location and choosing its recipients stay separate actions.
 - **Declining** works with or without an account. No seller receives an address. The comparison, exact product links and unknown fees stay as they were. The buyer can still select a location later.
 - **Ownership:** another session or account gets 404 for the chat. It also gets 404 for another account's location, even when using its own chat.
 
-`selection.quote_state` is `pending` after a selection and `none` after a decline. Until #186 lands, `pending` means only that the buyer has chosen. No retailer has been asked, and totals are unchanged.
+`selection.quote_state` is `pending` after a selection and `none` after a decline. The quote worker then moves it to `requested`, `quoted`, `partial`, `unavailable` or `not_needed` ([states](delivery-quotes.md#quote-states)).
 
 ## Hand-off to the pre-order quote operation (#186)
 
 These two methods are internal Python only, never HTTP:
 
-- `BuyerAccounts.pending_quotes(limit)` returns each chat that is waiting for quotes: its latest `RunReference` and the named retailer IDs. It returns no address.
-- `BuyerAccounts.release_address(run, retailer_id)` returns the `PreciseAddress` only when that retailer is a named recipient of that run's chat and the session is alive. Otherwise it returns `None`. Its `repr()` hides the street and building details.
+- `BuyerAccounts.pending_quotes(limit)` returns each chat that is waiting for quotes: its latest `RunReference` and the named retailer IDs. It returns no address. The quote worker now plans from `buyer_quote_plans` instead, which also covers a new search and a changed choice; this method stays for compatibility.
+- `BuyerAccounts.release_address(run, retailer_id, location_id=None)` returns the `PreciseAddress` only when that retailer is a named recipient of that run's chat and the session is alive. With `location_id`, it also requires that location to still be the chat's choice. Otherwise it returns `None`. Its `repr()` hides the street and building details.
 
-The following remains for #186:
-
-- request the quote from each named retailer only;
-- move `quote_state` through its later states (for example requested, quoted or unavailable);
-- publish revised totals and advice in the same chat without a new search.
-
-The selection, the recipients and this hand-off are ready for it.
+[delivery-quotes.md](delivery-quotes.md) describes how #186 uses them: quotes go only to the named sellers, `quote_state` moves through its later states, and revised totals and advice appear in the same chat without a new search. Signing in moves a chat's quotes with its runs.
 
 ## Validation
 
@@ -94,4 +88,4 @@ The selection, the recipients and this hand-off are ready for it.
 - reuse in a later session;
 - the absence of the street from logs, snapshots, history, exports and API responses.
 
-The existing migration test compares migration `0010` with the models on SQLite and PostgreSQL.
+The existing migration test compares migrations `0010` and `0011` with the models on SQLite and PostgreSQL.

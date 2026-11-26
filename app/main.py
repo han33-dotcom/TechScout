@@ -14,6 +14,7 @@ from app.storage import RUN_LEASE, Storage
 from app.buyer_accounts import BuyerAccounts
 from app.buyer_api import BodyLimit, router
 from app.buyer_runs import BuyerRunService, RunError
+from app.source_registry import DEFAULT_REGISTRY
 
 log = logging.getLogger('techscout')
 FRONTEND_DIST = Path(__file__).resolve().parent.parent / 'frontend' / 'dist'
@@ -25,7 +26,9 @@ def create_app(storage: Storage | None = None, *, buyer_service=None, account_se
     async def lifespan(app: FastAPI):
         app.state.storage = storage or Storage()
         app.state.buyer_runs = buyer_service or BuyerRunService(app.state.storage)
-        app.state.buyer_accounts = account_service or BuyerAccounts(app.state.buyer_runs)
+        # Quote routes come only from the reviewed registry file; onboarding never adds one (#186).
+        app.state.buyer_accounts = account_service or BuyerAccounts(app.state.buyer_runs,
+                                                                    quote_registry=DEFAULT_REGISTRY)
         app.state.buyer_runs.recover()
         # Only runs older than the lease: a command-line search may be running on the same database.
         recovered = app.state.storage.recover_interrupted_runs(live_for=RUN_LEASE)
