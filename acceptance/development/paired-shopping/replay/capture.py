@@ -11,7 +11,7 @@ from uuid import uuid4
 
 HERE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(HERE))
-from pair import INPUTS, bank_hash, hash_file, save
+from pair import INPUTS, adapter_sources, bank_hash, hash_file, save
 
 
 def main():
@@ -23,11 +23,12 @@ def main():
     root = args.work / 'control'
     lock = json.loads((args.work / 'lock.json').read_bytes())
     if (hash_file(args.work / 'seed.sqlite') != lock['seed'] or hash_file(args.work / 'profile.json') != lock['profile']
-            or lock['adapter'] != {p.name: hash_file(p) for p in HERE.glob('*.py')}
+            or lock['adapter'] != {name: hash_file(p) for name, p in adapter_sources().items()}
+            or lock['adapter'] != {p.name: hash_file(p) for p in (args.work / 'adapter').glob('*.py')}
             or any(hash_file(root / p) != h for p, h in lock['files']['control'].items())):
         raise ValueError('Prepared control or seed differs from its lock')
     args.output.mkdir(parents=True)
-    sys.path.insert(0, str(root))
+    sys.path[:0] = [str(root), str(args.work / 'adapter')]
     os.chdir(root)
     database = args.output / 'catalog.sqlite'
     shutil.copyfile(args.work / 'seed.sqlite', database)
@@ -39,8 +40,9 @@ def main():
     from app.domestic_search_plan import search_options
     from app.inference import load_env_file
     from app.source_registry import DEFAULT_REGISTRY
-    from bank import Bank, SharedGate, SharedSearch
+    from bank import Bank, SharedGate, SharedScrape, SharedSearch
     from browser import Session
+    from managed_scrape import Firecrawl
 
     load_env_file(args.env_file, names=DISCOVERY_ENV)
     deps = production_dependencies(fixed_registry_path=DEFAULT_REGISTRY, load_worker_inference=False)
@@ -49,9 +51,15 @@ def main():
     profile = json.loads((args.work / 'profile.json').read_bytes())
     bank = Bank(args.output / 'bank', 'live', args.output / 'events.jsonl')
     tools = deps.research.workers.domestic_tools
+    fallback = Firecrawl.from_env(tools.gate, os.environ)
+    if (bool(fallback) != profile['managed_scrape']
+            or (fallback and str(fallback.rate) != profile['rates']['managed_scrape'])):
+        raise ValueError('Managed scrape configuration differs from the preflight')
     search = SharedSearch(tools, bank)
     tools = deps.domestic_sources
     tools.gate = SharedGate(tools.gate, bank)
+    tools.fallback = SharedScrape(fallback, bank, tools.gate) if fallback else None
+    search.fallback = tools.fallback
     spend = {}
     for case in ('search', 'selection'):
         value, city = INPUTS[case]

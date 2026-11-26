@@ -57,12 +57,18 @@ def product(work, arm):
     return target
 
 
+def adapter_sources():
+    sources = {p.name: p for p in HERE.glob('*.py')}
+    sources['managed_scrape.py'] = ROOT / 'app/firecrawl.py'
+    return sources
+
+
 def prepare(work, env_file):
     work.mkdir(parents=True)
     adapter = work / 'adapter'
     adapter.mkdir()
-    for script in HERE.glob('*.py'):
-        shutil.copyfile(script, adapter / script.name)
+    for name, script in adapter_sources().items():
+        shutil.copyfile(script, adapter / name)
     roots = {arm: product(work, arm) for arm in PINS}
     seed = work / 'seed.sqlite'
     env = dict(os.environ, DATABASE_URL='sqlite:///' + str(seed), PYTHONPATH=str(roots['control']),

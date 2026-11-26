@@ -2,6 +2,7 @@
 import argparse
 from dataclasses import asdict
 import json
+import os
 from pathlib import Path
 from uuid import uuid4
 
@@ -9,6 +10,7 @@ from app.buyer_flow import production_dependencies
 from app.domestic_discovery import DISCOVERY_ENV, SearchObjective
 from app.inference import load_env_file
 from app.source_registry import DEFAULT_REGISTRY
+from managed_scrape import Firecrawl
 
 
 def main():
@@ -21,6 +23,7 @@ def main():
     if deps.ledger.project != 'techscout-december-2026':
         raise ValueError('Expected frozen campaign')
     tools = deps.research.workers.domestic_tools
+    tools.fallback = Firecrawl.from_env(tools.gate, os.environ)
     job = deps.ledger.open_job('dev201-profile-' + str(uuid4()))
     channels = ('serpapi', 'brave', 'firecrawl', 'manufacturer', 'tavily')
     objective = SearchObjective('ASUS Zenbook S 13 OLED Lebanon', 'Independent tool setup', limit=4)
