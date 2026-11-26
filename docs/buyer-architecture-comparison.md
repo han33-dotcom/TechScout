@@ -1,6 +1,6 @@
 # Buyer search experiments
 
-**Current milestone:** compare one end-to-end shopping agent with the rule-based buyer. [Board](https://github.com/users/han33-dotcom/projects/2) · [Experiment 2 tasks](https://github.com/han33-dotcom/TechScout/milestone/2)
+The current milestone measures the single shopping agent on the original 20 buyer requests. The owner retired the paired control requirement on 26 November 2026. [Board](https://github.com/users/han33-dotcom/projects/2) · [Experiment 2 tasks](https://github.com/han33-dotcom/TechScout/milestone/2)
 
 ## Experiment 1 · Baseline established
 
@@ -15,15 +15,15 @@ The earlier [23-request study](evaluation-report.md) compared fixed rules, a seq
 
 ## Experiment 2 · Single shopping agent
 
-The normal UI can select a single shopping agent. The [development receipts](../acceptance/development/shopping-agent/README.md) show a search recovery and a wrong-variant rejection with the live model and synthetic retailer evidence. Both implementations will have general web search, direct retailer reads, and browser interaction for variant selection, branch checks and delivery quotes. The control keeps its existing decision logic and gains the same tools through a shared adapter. The [amended freeze](../acceptance/architecture-v2/README.md) keeps the original 20 primary cases, six fresh requests, budgets and run order. Runtime integration and paired results are pending.
+The normal UI can select a single shopping agent. Both historical implementations selected real product variants and displayed a USD 165 uncertain offer. After provider restoration, the agent dispatched general web searches. The control planned a search and its worker failed before dispatch. Both preflights subsequently demonstrated managed scraping. Branch-stock checks and pre-order quote submission lack a paired demonstration. The control stays available as historical evidence. [Paired receipts](../acceptance/development/paired-shopping/receipts/README.md) · [Final capability record](https://github.com/han33-dotcom/TechScout/issues/201)
 
 | Order | Deliverable |
 | --- | --- |
 | 1 | [Pin the control and reserve fresh confirmation cases](https://github.com/han33-dotcom/TechScout/issues/199) |
 | 2 | [Build the agent behind the buyer UI](https://github.com/han33-dotcom/TechScout/issues/200) |
-| 3 | [Verify shared search and browser access, then replay identical evidence](https://github.com/han33-dotcom/TechScout/issues/201) |
-| 4 | [Score both and record the design decision](https://github.com/han33-dotcom/TechScout/issues/202) |
+| 3 | [Archive the shared integration evidence and defer the control dispatch repair](https://github.com/han33-dotcom/TechScout/issues/201) |
+| 4 | [Verify the agent on independent development requests, then score its frozen 20](https://github.com/han33-dotcom/TechScout/issues/202) |
 
-Use the same [20 frozen requests](../acceptance/buyer-v1/freeze-v1-2026-11-25.json), model, effort, tools, catalog and budgets. Run the finalists on the same fresh confirmation set. Score browser-visible correctness first, including misleading claims. Compare cost per useful answer, first useful display and final latency. Publish paired outcomes and dated reference changes. [Scoring protocol](buyer-correctness-acceptance.md)
+The agent runs live in listed primary order under the frozen scoring and budget rules. Report buyer-visible outcomes, misleading claims, cost per useful answer, latency and reference drift. Preserve the six reserved requests for a separate confirmation. [Scope and development cases](../acceptance/development/agent-first/README.md) · [Scoring protocol](buyer-correctness-acceptance.md)
 
 **Later experiments:** compare parallel seller workers with the single agent, then vary model or reasoning effort on a fixed architecture. Record the measured tradeoff before adopting a change.
