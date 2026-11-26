@@ -1,0 +1,172 @@
+{
+  "version": 1,
+  "observed_on": "2026-11-26",
+  "method": "Independent read-only public retailer page checks after the buyer inputs were committed. HTTP hashes cover decoded response bytes. Findings apply to the observed sellers and variants. Recheck offers near the paired runs and retain both observations.",
+  "cases": [
+    {
+      "id": "C01",
+      "status": "seller_stock_block",
+      "evidence": [
+        "pixel"
+      ],
+      "expected": "Disclose that the checked Obsidian offer is out of stock. Other finishes need a near-match label. Another independently evidenced in-stock Obsidian offer can qualify.",
+      "verified_payable_usd": null
+    },
+    {
+      "id": "C02",
+      "status": "priced_partial",
+      "evidence": [
+        "lenovo",
+        "kingpolicy"
+      ],
+      "expected": "Show a 14-inch laptop with at least 16 GB RAM and 1 TB SSD. The reference Lenovo is USD 925 with free domestic delivery. Final tax treatment is unresolved. Around USD 1,000 is a preference. Other evidenced models can qualify.",
+      "verified_payable_usd": null
+    },
+    {
+      "id": "C03",
+      "status": "priced_partial",
+      "evidence": [
+        "redmiblack",
+        "redmi2"
+      ],
+      "expected": "Use the selected Wi-Fi 8/256 GB variation. Explain availability, condition or applicable charges wherever unconfirmed. The USD 225 default and the cellular variation fail the variant check.",
+      "verified_payable_usd": null
+    },
+    {
+      "id": "C07",
+      "status": "no_exact_branch_reference",
+      "evidence": [
+        "benq",
+        "souqmonitor"
+      ],
+      "expected": "An exact pickup answer requires PD2705Q with price and stock at a named Beirut branch. The domestic PD2706U listing is a different model. Explain what was checked. Lack of a confirmed branch is not proof the requested product is unavailable everywhere.",
+      "verified_payable_usd": null
+    },
+    {
+      "id": "C05",
+      "status": "no_comparable_pair_established",
+      "evidence": [
+        "head2",
+        "head3",
+        "sony"
+      ],
+      "expected": "Keep color, exact model, actual seller and availability separate. Neither the out-of-stock black unit nor the call-for-availability listing proves a comparable purchase. Accept a better evidenced pair on recheck.",
+      "verified_payable_usd": null
+    },
+    {
+      "id": "C06",
+      "status": "verified_total",
+      "evidence": [
+        "itheadset",
+        "faq",
+        "usb",
+        "usbpolicy"
+      ],
+      "expected": "The new ITWorks Logitech H390 meets the USB-A, microphone and physical mute requirements at USD 40 delivered to Byblos, within the hard ceiling. Other evidenced qualifying models can count.",
+      "price_usd": "35.00",
+      "shipping_usd": "5.00",
+      "tax": "included",
+      "verified_payable_usd": "40.00"
+    }
+  ],
+  "observations": {
+    "pixel": {
+      "url": "https://outgeeked.net/products/google-pixel-9a",
+      "status": 200,
+      "read_at": "2026-11-26T10:17:22+00:00",
+      "sha256": "8b834f15e8453562c903263f2880b8540bc44e64f78446b640ce636ffe321cc5",
+      "finding": "OutGeeked’s structured offer for the Obsidian 8/128 GB variant (47452763455746, SKU OG-STK-5187) listed USD 549 and OutOfStock. Prices for Iris and Porcelain belong to other finishes."
+    },
+    "lenovo": {
+      "url": "https://laptopsking.com/products/lenovo-v14-g5-irl-83hda06jus-core-7-240h-16gb-ram-1tb-ssd-fhd-business-laptop-14",
+      "status": 200,
+      "read_at": "2026-11-26T10:19:39+00:00",
+      "sha256": "f37ae227e764fdf1b1404d848307123a6ded4f52b561f75513b80e9e112e15be",
+      "finding": "The Lenovo V14 G5 IRL, MU-83HDA06JUS, was listed new with a 14-inch screen, 16 GB RAM and 1 TB SSD at USD 925. Variant 48900454842551 was marked InStock in the offer. The page advertises free nationwide delivery and directs the buyer to checkout for taxes."
+    },
+    "kingpolicy": {
+      "url": "https://laptopsking.com/policies/shipping-policy",
+      "status": 200,
+      "read_at": "2026-11-26T10:22:22+00:00",
+      "sha256": "f443905b3ca9a80a25f6bd11b67b25841eb9f32ca9b2400ae125fa689da86890",
+      "finding": "Laptops King describes its own domestic delivery service as free of charge."
+    },
+    "redmiblack": {
+      "url": "https://961souq.com/products/xiaomi-redmi-pad-2?Storage=8GB%2F256GB&Connectivity=Wifi&Color=Black",
+      "status": 200,
+      "read_at": "2026-11-26T10:19:39+00:00",
+      "sha256": "11cdf1384eaf28eb5b398acbad6d902202726802e9bb568a6ad902cf7deb2e67",
+      "finding": "With 8GB/256GB, Wifi and Black selected, SKU 2505DRP06G-8/256-BK-SD26-M showed USD 275 excluding VAT and asked buyers to check availability. Generic structured data on the same page described the 4/128 GB SKU at USD 225."
+    },
+    "redmi2": {
+      "url": "https://phonefinity.net/products/xiaomi-redmi-pad-2/",
+      "status": 200,
+      "read_at": "2026-11-26T10:21:10+00:00",
+      "sha256": "d603e340c420060e059fe419005e9551e72d8f0a2f6af8e5753131c1fe73fae1",
+      "finding": "Phonefinity variation 70202 (grey, Wi-Fi only, 8/256 GB) was purchasable and in stock at USD 290. The seller states final prices without VAT and USD 5 delivery outside Beirut for parcels under 15 kg. New condition and packed weight were unconfirmed."
+    },
+    "sony": {
+      "url": "https://ayoubcomputers.com/sony-ult-wear-wireless-noise-canceling-headphones-black-wh-ult900/",
+      "status": 200,
+      "read_at": "2026-11-26T10:17:32+00:00",
+      "sha256": "72f61a91db5860159409d40353e73a335e8102f559ed1032f791c2c663536cfa",
+      "finding": "Ayoub listed a black ULT Wear under abbreviated code WH-ULT900, SKU 1122321, at USD 143, new and in stock. The marketplace notice allows third-party sellers. The exact suffix, actual listing seller and delivered total were unconfirmed."
+    },
+    "head2": {
+      "url": "https://shop.itworkslb.net/products/sony-ult-wear-wireless-noise-canceling-headphones-718809",
+      "status": 200,
+      "read_at": "2026-11-26T10:18:02+00:00",
+      "sha256": "317fd7806802d90c33443703f79e2fe7e71ec4aca4db11a1cdbc1ab6a19ebf24",
+      "finding": "ITWorks names WH-ULT900N in its specifications. The buyer-facing listing says to call for stock and price. No selected black offer with a current price was established."
+    },
+    "head3": {
+      "url": "https://phonefinity.net/products/sony-ult-wear-noise-canceling-wireless-headphones/",
+      "status": 200,
+      "read_at": "2026-11-26T10:18:01+00:00",
+      "sha256": "1c0cb9d56b25c69c9cf90c96ad482a37dc805c5e3499d7840966e258574b85a2",
+      "finding": "Phonefinity lists variation 64034 for the black WH-ULT900N at USD 145. The selected variation was out of stock."
+    },
+    "itheadset": {
+      "url": "https://shop.itworkslb.net/products/logitech-headset-h390-noise-ca-789325",
+      "status": 200,
+      "read_at": "2026-11-26T10:22:32+00:00",
+      "sha256": "185faa98b0248519d9e8c46fcf44551b5640b0bac750f50aff1aaa275133c22a",
+      "finding": "The selected ITWorks H390 variant 52777442672871 was available to buy at USD 35. The seller describes it as new and sealed with a wired USB Type-A connector, microphone and inline mute. The structured offer identifies ITWorks Lebanon and USD 5 delivery to Lebanon."
+    },
+    "faq": {
+      "url": "https://shop.itworkslb.net/faq",
+      "status": 200,
+      "read_at": "2026-11-26T10:19:07+00:00",
+      "sha256": "c62b981d4bb7985ecaa12524b028cef61f7cb7922b6c1afe530ff47f8753562d",
+      "finding": "ITWorks identifies its Beirut location, says its USD prices include tax and quotes flat USD 5 delivery anywhere in Lebanon, added at checkout."
+    },
+    "usb": {
+      "url": "https://gadgetlb.com/products/logitech-h390-usb-a-wired-headset-noise-canceling-mic-black",
+      "status": 200,
+      "read_at": "2026-11-26T10:17:29+00:00",
+      "sha256": "d0589f071e648cad4286e5123d09d6c687fdb48362e76050d521c900c1ee3ec2",
+      "finding": "Gadget LB’s black H390, SKU 981-000406, had an in-stock USD 45 offer with USB-A, a microphone and inline mute. The listing delegates shipping to checkout."
+    },
+    "usbpolicy": {
+      "url": "https://gadgetlb.com/policies/shipping-policy",
+      "status": 200,
+      "read_at": "2026-11-26T10:19:07+00:00",
+      "sha256": "0e58195f391704e0bcaa2ca368b016b67bd3f358631d2f91d4cc59a2eef7759b",
+      "finding": "Gadget LB gives a Jounieh address and quotes USD 5 nationwide delivery for an order below USD 100. New condition and tax treatment for the H390 were unconfirmed."
+    },
+    "benq": {
+      "url": "https://www.benq.com/en-me/monitor/creative-pro/pd2705q/spec.html",
+      "status": 200,
+      "read_at": "2026-11-26T10:27:51+00:00",
+      "sha256": "73e884931e3359d733e07cc06712f5174493492b68dae02bc6d469bf49c3521e",
+      "finding": "The manufacturer identifies PD2705Q as a 27-inch QHD model. Its specification page supplies no Beirut branch quote or stock."
+    },
+    "souqmonitor": {
+      "url": "https://961souq.com/products/benq-pd2706u-27-4k-uhd-usb-c-monitor",
+      "status": 200,
+      "read_at": "2026-11-26T10:27:50+00:00",
+      "sha256": "059162c015c0ffce0433f3105f113f63f0aaa4846ee9f2cbb38a5ad2a0d3faae",
+      "finding": "The Lebanese listing is for PD2706U, a different 4K model. It supplies no selected-branch stock or price for PD2705Q."
+    }
+  }
+}

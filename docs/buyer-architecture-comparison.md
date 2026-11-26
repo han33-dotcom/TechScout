@@ -15,7 +15,7 @@ The earlier [23-request study](evaluation-report.md) compared fixed rules, a seq
 
 ## Experiment 2 · Single shopping agent
 
-One agent interprets the request, chooses tools, inspects selected-item evidence, revises its search and advises the buyer. Shared tools enforce retailer scope, verify evidence and calculate payable totals. The experiment starts in planning. Paired results are pending.
+One agent will interpret the request, choose tools, inspect selected-item evidence, revise its search and advise the buyer. Shared tools enforce retailer scope, verify evidence and calculate payable totals. The [comparison freeze](../acceptance/architecture-v2/README.md) pins the control, 20 primary cases, six fresh requests, tools, budgets and run order. Agent implementation and paired results are pending.
 
 | Order | Deliverable |
 | --- | --- |

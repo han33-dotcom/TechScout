@@ -1,0 +1,50 @@
+[
+  {
+    "id": "C01",
+    "category": "phone",
+    "entry": "exact",
+    "mode": "delivery",
+    "destination": "Saida",
+    "prompt": "How much is a new Google Pixel 9a in Obsidian with 128 GB, delivered to Saida?"
+  },
+  {
+    "id": "C02",
+    "category": "laptop",
+    "entry": "needs",
+    "mode": "delivery",
+    "destination": "Beirut",
+    "prompt": "I carry my laptop to class. Can you find me a new 14-inch laptop with at least 16 GB RAM and a 1 TB SSD, around $1,000 delivered to Beirut?"
+  },
+  {
+    "id": "C03",
+    "category": "tablet",
+    "entry": "exact",
+    "mode": "delivery",
+    "destination": "Tripoli",
+    "prompt": "I want the new Wi-Fi version of the Xiaomi Redmi Pad 2, 8 GB RAM and 256 GB storage. What would one cost delivered to Tripoli?"
+  },
+  {
+    "id": "C07",
+    "category": "monitor",
+    "entry": "exact",
+    "mode": "pickup",
+    "destination": "Beirut",
+    "prompt": "Can I pick up a new BenQ PD2705Q monitor at a shop in Beirut? Tell me the price and which branch has one."
+  },
+  {
+    "id": "C05",
+    "category": "audio",
+    "entry": "exact",
+    "mode": "delivery",
+    "destination": "Jounieh",
+    "prompt": "Compare Lebanese sellers for new black Sony ULT Wear WH-ULT900N headphones. What would I pay for delivery to Jounieh?"
+  },
+  {
+    "id": "C06",
+    "category": "audio",
+    "entry": "needs",
+    "mode": "delivery",
+    "destination": "Byblos",
+    "prompt": "For calls at my desk I need a new wired USB-A headset with a microphone and a physical mute control. Can you find one for at most $60 including delivery to Byblos?"
+  }
+]
