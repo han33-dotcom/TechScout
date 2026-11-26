@@ -11,7 +11,7 @@ from app.assessment import FullProductAssessment, assess_full_product, shortlist
 from app.buyer_flow import MAX_UNCERTAIN, MIN_WRITER_SECONDS, _Flow, supported
 from app.buyer_sources import FETCH_ROOM_S
 from app.directory import DirectoryQuery
-from app.domestic_discovery import CHANNELS, dispatch_receipts
+from app.domestic_discovery import CHANNELS
 from app.domestic_search_plan import choose_search, retailer_query, search_options
 from app.eligibility import check_full_product
 from app.evidence_critique import CritiqueChoice, PROMPT as EVALUATE
@@ -71,9 +71,13 @@ def configuration(offer):
     return offer.variant.product.product_id, offer.variant.variant_id
 
 
+SELLER_GAP = 'The actual Lebanese seller is unverified for this listing.'
+SERVICE_GAP = 'Delivery of this item to the requested destination is unverified.'
+
+
 def candidate(request, offer):
     """A past price, availability or surcharge is never a permanent exclusion."""
-    if not offer.locally_fulfillable(allow_unknown_origin=True):
+    if not offer.locally_fulfillable(allow_unverified_seller=True):
         return False
     if request.intent.kind == 'product_link' and offer.listing_url != request.intent.url:
         return False
@@ -83,15 +87,23 @@ def candidate(request, offer):
 
 
 def domestic_assessment(request, offer, now, *, estimates=None):
-    if (isinstance(offer.route, v2.DirectRoute) and offer.route.origin_country == 'ZZ'
-            and not offer.domestic_merchant_receipts()):
-        # Unresolved local dispatch cannot turn a domestic search into an import quote.
-        missing = ['Dispatch from Lebanon is unverified for this listing and configuration.']
-        missing.extend(f'{charge.kind} is unpublished for the selected route.'
-                       for charge in offer.costs if charge.state == 'unknown')
-        return FullProductAssessment(offer_id=offer.offer_id, eligibility=check_full_product(request, offer),
-                                     cost=v2.IncompleteCost(status='incomplete', missing=tuple(missing)), within_maximum=None)
-    return assess_full_product(request, offer, now=now, estimates=estimates)
+    """The seller rule (#185): warehouse location is irrelevant, the actual merchant is not."""
+    assessment = assess_full_product(request, offer, now=now, estimates=estimates)
+    if not isinstance(offer.route, v2.DirectRoute) or offer.domestic_seller() is not None:
+        return assessment
+    # Keep the listed price and published charges as a partial. An unidentified merchant
+    # never yields a verified or estimated payable total.
+    cost = assessment.cost
+    if cost.status == 'verified':
+        subtotal, missing = cost.total, ()
+    elif cost.status == 'incomplete':
+        subtotal, missing = cost.known_subtotal, cost.missing
+    else:
+        subtotal, missing = None, ('payable total is only estimated',)
+    return FullProductAssessment(offer_id=offer.offer_id, eligibility=assessment.eligibility,
+        cost=v2.IncompleteCost(status='incomplete', known_subtotal=subtotal,
+                               missing=tuple(dict.fromkeys((SELLER_GAP, *missing)))),
+        within_maximum=None, route_support=assessment.route_support)
 
 
 def current_problem(offer, assessment, read, run, started_at, now):
@@ -114,18 +126,17 @@ def current_problem(offer, assessment, read, run, started_at, now):
                 current(records[e]) and selected(records[e]) for e in fact.evidence_ids):
             return f'{label} lacks a current response for this exact configuration.'
     if isinstance(offer.route, v2.DirectRoute):
-        origin = dispatch_receipts(offer, run, now)
-        supporting_responses = getattr(read, 'dispatch_replies', ())
-        merchant = offer.domestic_merchant_receipts()
-        local_dispatch = offer.route.origin_country == 'LB' and origin and all(
-                current(e) and (e.origin_url == offer.listing_url or
-                                (e.response_sha256, e.observed_at) in supporting_responses) for e in origin)
-        if not (merchant and all(current(e) for e in merchant) or local_dispatch):
-            return 'Dispatch from Lebanon is unverified for this listing and configuration.'
+        # Seller rule (#185). A named merchant needs its listing receipts in this run. A
+        # first-party storefront is bound to the item by the current selected-listing
+        # receipts checked above. Dispatch origin and warehouse are not consulted.
+        seller = offer.domestic_seller()
+        if seller is None or seller == 'listing' and not all(
+                current(e) for e in offer.domestic_merchant_receipts()):
+            return SELLER_GAP
         eligibility = offer.route.item_eligible
         if eligibility.value is not True or not all(current(records[i]) and item_route(records[i])
                                                     for i in eligibility.evidence_ids):
-            return 'Delivery of this item to the requested destination is unverified.'
+            return SERVICE_GAP
     if not isinstance(offer.route, (v2.DirectRoute, v2.PickupRoute)):
         return 'A domestic purchase route is unverified.'
     if any(records[i].conflicts for check in assessment.eligibility.checks for i in check.evidence_ids):
@@ -433,7 +444,7 @@ class DomesticBuyerFlow(_Flow):
         phase_job = PhaseJob(self.job, room)
         clients = []
         for item in listings:
-            self.action('Selected SKU, current price, stock, local dispatch, destination and charges',
+            self.action('Selected SKU, current price, stock, actual seller, destination service and charges',
                         effect, item.source_id or 'linked retailer')
             def client(_, job, stop, item=item):
                 if not stop.is_set() and not job.cancelled:
@@ -556,7 +567,10 @@ class DomesticBuyerFlow(_Flow):
                 reasons.extend(getattr(assessment.cost, 'missing', ()) or ('The payable total is unverified.',))
             cost = assessment.cost
             if problem and cost.status == 'verified':
-                cost = v2.IncompleteCost(status='incomplete', missing=(problem,))
+                # A seller or service gap leaves the current price and published fees as a
+                # useful partial. Other problems (stale or conflicting receipts) show no subtotal.
+                partial = cost.total if problem in (SELLER_GAP, SERVICE_GAP) else None
+                cost = v2.IncompleteCost(status='incomplete', known_subtotal=partial, missing=(problem,))
             self.uncertain[oid] = v2.UncertainAlternative(offer=offer, cost=cost,
                 reasons=tuple(dict.fromkeys([*reasons, *([problem] if problem else [])])))
             self.retries.append(Listing(listing.url, offer.source_id, offer))

@@ -326,15 +326,15 @@ class BuyerRunService:
                 if value is not None:
                     data[key]=value
             snapshot=v.RunSnapshot.model_validate(data)
-            if any(not item.offer.locally_fulfillable(allow_unknown_origin=True)
+            if any(not item.offer.locally_fulfillable(allow_unverified_seller=True)
                    for item in (*snapshot.provisional, *snapshot.uncertain)):
-                raise ValueError('Buyer results require a domestic seller and local fulfillment')
+                raise ValueError('Buyer results require a Lebanese-market seller and local fulfillment')
             if snapshot.recommendations:
                 from app.eligibility import check_full_product
                 for group in snapshot.recommendations:
                     for checked in group.offers():
                         if not checked.offer.locally_fulfillable():
-                            raise ValueError('Recommendations require local pickup or dispatch from Lebanon')
+                            raise ValueError('Recommendations require local pickup or an established Lebanese seller')
                         if check_full_product(snapshot.request,checked.offer).outcome!='pass':
                             raise ValueError('Recommendation does not meet the buyer hard requirements')
                         if any(charge.valid_until is not None and charge.valid_until <= now

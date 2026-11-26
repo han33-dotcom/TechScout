@@ -97,7 +97,8 @@
             "seller": {
               "seller_id": "book-local",
               "name": "Book-Local",
-              "market": "LB"
+              "market": "LB",
+              "first_party": true
             },
             "fulfiller_id": null,
             "variant": {
@@ -556,7 +557,8 @@
           "seller": {
             "seller_id": "book-forward",
             "name": "Book-Forward",
-            "market": "US"
+            "market": "US",
+            "first_party": false
           },
           "fulfiller_id": null,
           "variant": {
@@ -1135,7 +1137,8 @@
           "seller": {
             "seller_id": "book-other",
             "name": "Book-Other",
-            "market": "LB"
+            "market": "LB",
+            "first_party": true
           },
           "fulfiller_id": null,
           "variant": {
