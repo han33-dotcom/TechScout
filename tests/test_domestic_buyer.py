@@ -38,8 +38,26 @@ class Router(FakeOpenRouter):
         return super().answer(role, data)
 
 
-def laptop(shop, *, price='920', model=None, variant=None, origin=True, unknown_fee=False, in_stock=True):
+def laptop(shop, *, price='920', model=None, variant=None, origin=True, seller='first_party', unknown_fee=False,
+           in_stock=True, warehouse=None, city=None, service=True):
+    """A synthetic laptop offer. seller: 'first_party' (a reviewed shop's own storefront), 'listing'
+    (the listing names its Lebanese merchant) or None (merchant unidentified). origin adds a
+    dispatch-from-Lebanon receipt and warehouse sets the route origin; the seller rule (#185)
+    ignores both. service=False leaves delivery to the destination unpublished."""
     offer = clone(primary(snapshot()), shop, name=shop, price=price, product=model)['offer']
+    offer['seller']['first_party'] = seller == 'first_party'
+    if warehouse:
+        offer['route']['origin_country'] = warehouse
+    if city:
+        offer['route']['destination']['city'] = city
+    if not service:
+        offer['route']['item_eligible'] = dict(state='unknown', reason='Delivery to this city is unpublished')
+        offer['evidence'] = [e for e in offer['evidence'] if e['field_path'] != 'route.item_eligible']
+    if seller == 'listing':
+        price_receipt = next(e for e in offer['evidence'] if e['field_path'] == 'price')
+        for path, excerpt in (('seller.name', 'Sold by ' + shop), ('seller.market', shop + ' — Tripoli, LB')):
+            offer['evidence'].append(dict(price_receipt, evidence_id=f'{shop}:{path}', field_path=path,
+                                          excerpt=excerpt))
     if model:
         offer['variant']['product']['model'] = model
     if variant:
@@ -186,7 +204,10 @@ class DomesticBuyerTests(FlowCase):
             self.assertTrue(offer.stock.value)
             self.assertTrue(str(offer.listing_url).startswith(PAGE + '?attribute_pa_'))
             self.assertTrue(all(e.run == run.run for e in offer.evidence if e.field_path in ('price', 'stock')))
-            self.assertIn('shipping is unpublished for the selected route.', item.reasons)
+            # The reviewed retailer is the merchant (#185); service and the fee remain the gaps.
+            self.assertEqual(offer.domestic_seller(), 'first_party')
+            self.assertIn('costs.order.shipping', item.reasons)
+            self.assertNotIn(domestic_buyer.SELLER_GAP, item.reasons)
             self.assertEqual(item.cost.status, 'incomplete')
 
     def test_sufficient_catalog_avoids_web_and_rechecks_above_old_maximum(self):
@@ -311,14 +332,47 @@ class DomesticBuyerTests(FlowCase):
         self.assertIn('two-seller', run.stop_reason)
         self.assertEqual(len(self.sources.calls), 1)
 
-    def test_unknown_dispatch_and_unknown_shipping_cannot_qualify(self):
-        first, second = laptop('shop-a', origin=False), laptop('shop-b', unknown_fee=True)
-        run = self.run_buyer([first, second], [first, second])
-        self.assertEqual(run.status, 'abstained')
-        reasons = [reason for item in run.uncertain for reason in item.reasons]
-        self.assertTrue(any('Dispatch from Lebanon' in reason for reason in reasons), reasons)
-        self.assertTrue(any('charge' in reason or 'shipping' in reason for reason in reasons), reasons)
+    def test_seller_service_and_fee_gaps_stay_separate_without_a_warehouse(self):
+        """Scenario 10 (#185): with the warehouse requirement removed, an unidentified merchant,
+        unconfirmed service to Tripoli, an unpublished fee or a conflicting fee each stays its own
+        gap. A foreign merchant is never a domestic candidate."""
+        tripoli = dict(origin=False, warehouse='ZZ', city='Tripoli')
+        unnamed = laptop('market-a', seller=None, **tripoli)  # marketplace listing, merchant unnamed
+        unserved = laptop('shop-b', service=False, **tripoli)
+        unpriced = laptop('shop-c', unknown_fee=True, **tripoli)
+        conflicting = laptop('shop-d', **tripoli).model_dump(mode='json')
+        fee = next(e for e in conflicting['evidence'] if e['field_path'] == 'costs.order.shipping')
+        fee['conflicts'] = ['Shipping: USD 15 on the delivery page']
+        conflicting = v2.Offer.model_validate(conflicting)
+        foreign = laptop('abroad-e', seller='listing', **tripoli).model_dump(mode='json')
+        foreign['seller']['market'] = 'AE'
+        foreign = v2.Offer.model_validate(foreign)
+        offers = [unnamed, unserved, unpriced, conflicting, foreign]
+        run = self.run_buyer(offers, offers, fulfillment=dict(mode='delivery',
+                                                             destination=dict(country='LB', city='Tripoli')))
+        self.assertEqual(run.status, 'abstained', run.stop_reason)
         self.assertFalse(run.recommendations)
+        shown = {item.offer.seller.seller_id: item for item in run.uncertain}
+        self.assertNotIn('abroad-e', shown)
+        self.assertNotIn(str(foreign.listing_url), [url for url, _, _ in self.sources.calls])
+        reasons = {seller: ' '.join(item.reasons) for seller, item in shown.items()}
+        self.assertIn(domestic_buyer.SELLER_GAP, reasons['market-a'])
+        self.assertIn('Delivery of this item to the requested destination is unverified', reasons['shop-b'])
+        self.assertIn('costs.order.shipping', reasons['shop-c'])
+        self.assertIn('mandatory charge lacks current evidence', reasons['shop-d'])
+        for seller in ('shop-b', 'shop-c', 'shop-d'):
+            self.assertNotIn('seller', reasons[seller])
+        for text in reasons.values():
+            self.assertNotIn('Dispatch', text)
+            self.assertNotIn('duty', text)
+        # Useful partials: the listed price plus a published fee, never past an unknown or conflicting fee.
+        self.assertEqual({seller: item.cost.status for seller, item in shown.items()},
+                         dict.fromkeys(('market-a', 'shop-b', 'shop-c', 'shop-d'), 'incomplete'))
+        subtotal = {seller: item.cost.known_subtotal for seller, item in shown.items()}
+        self.assertEqual(subtotal['market-a'].amount, Decimal('930'))
+        self.assertEqual(subtotal['shop-b'].amount, Decimal('930'))
+        self.assertEqual(subtotal['shop-c'].amount, Decimal('920'))
+        self.assertIsNone(subtotal['shop-d'])
 
     def test_link_reads_only_the_linked_seller_and_fails_closed_without_gate_response(self):
         left, right = laptop('shop-a'), laptop('shop-b')
@@ -366,14 +420,27 @@ class DomesticBuyerTests(FlowCase):
         self.assertEqual(self.openrouter.roles().count('critique'), 1)
         self.assertIn('evaluator_follow_up', self.trace(run))
 
-    def test_unknown_dispatch_uses_actual_projection_sentinel(self):
-        offer = laptop('shop-a', origin=False)
-        offer = offer.model_copy(update={'route': offer.route.model_copy(update={'origin_country': 'ZZ'})})
-        run = self.run_buyer([offer], [offer])
-        self.assertFalse(run.recommendations)
-        self.assertIn('Dispatch from Lebanon is unverified', ' '.join(run.uncertain[0].reasons))
-        self.assertEqual(run.uncertain[0].cost.status, 'incomplete')
-        self.assertFalse(any('duty' in r or 'customs' in r for r in run.uncertain[0].reasons))
+    def test_known_lebanese_seller_qualifies_in_tripoli_with_an_unknown_warehouse(self):
+        """Scenario 10 (#185). The earlier dispatch rule kept this unknown-origin offer uncertain."""
+        tripoli = dict(origin=False, warehouse='ZZ', city='Tripoli')
+        own_store, named = laptop('shop-a', **tripoli), laptop('shop-b', seller='listing', **tripoli)
+        run = self.run_buyer([own_store, named], [own_store, named],
+                             fulfillment=dict(mode='delivery', destination=dict(country='LB', city='Tripoli')))
+        self.assertEqual(run.status, 'complete', run.stop_reason)
+        group, = run.recommendations
+        offers = {item.offer.seller.seller_id: item for item in group.offers()}
+        self.assertEqual(set(offers), {'shop-a', 'shop-b'})
+        self.assertEqual({item.offer.domestic_seller() for item in offers.values()}, {'first_party', 'listing'})
+        for item in offers.values():
+            offer = item.offer
+            self.assertEqual((offer.route.origin_country, offer.route.destination.city), ('ZZ', 'Tripoli'))
+            shipping, = [c for c in offer.costs if c.kind == 'shipping']
+            self.assertEqual((offer.price.value.amount, shipping.amount.amount), (Decimal('920'), Decimal('10')))
+            self.assertEqual(item.cost.total.amount, Decimal('930'))  # the fee is counted once
+        self.assertEqual(run.coverage.qualifying, 2)
+        self.assertIn('delivery by the Lebanese seller to Tripoli', run.explanation.text)
+        self.assertNotIn('dispatch origin', run.explanation.text)
+        self.assertNotIn('duty', run.explanation.text)
 
     def test_same_identifier_with_conflicting_ram_does_not_make_a_seller_comparison(self):
         left, right = laptop('shop-a'), laptop('shop-b')

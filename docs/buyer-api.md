@@ -95,8 +95,9 @@ Up to three workers can read independent sources concurrently. They share the ru
 and return their findings to one controller. Every external action records the missing fact,
 its effect on the decision and the likely source. Research ends before the final 30 seconds.
 Verification and the writer share the remaining active time within the 120-second limit.
-Rechecks require actual response receipts for the selected SKU, local dispatch, delivery to
-the requested destination and mandatory charges. Alternatives can replace unavailable or
+Rechecks require actual response receipts for the selected SKU, the actual Lebanese seller,
+delivery to the requested destination and mandatory charges. Since #185 the seller rule replaces
+the earlier local-dispatch receipt; warehouse location is not checked. Alternatives can replace unavailable or
 over-budget offers. An evaluator can request one targeted reread. The final snapshot
 reports checked sellers and the qualifying coverage even when discovery is unavailable.
 

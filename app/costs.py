@@ -308,7 +308,9 @@ def _aware(now: datetime | None) -> datetime:
 
 
 def supports_domestic_cost(offer) -> bool:
-    return offer.locally_fulfillable()
+    """A Lebanese-market seller's own terms price the order, wherever its warehouse is (#185).
+    Whether that seller is verified is an eligibility question, not a cost-engine choice."""
+    return offer.domestic_route()
 
 
 def calculate_domestic_cost(request, offer, *, fx: Sequence[FxRate] = (), now=None, estimates=None):

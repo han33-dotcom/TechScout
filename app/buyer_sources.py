@@ -267,7 +267,8 @@ def convert_offer(offer: v1.Offer, *, run: v2.RunReference, current: set, route:
     data = dict(
         offer_id=offer.offer_id, retailer_id=retailer_id, source_id=offer.source_id,
         source_product_id=variant.product_id, source_variant_id=variant.variant_id,
-        seller=dict(seller_id=offer.source_id, name=seller_name, market='LB'),
+        # This flow reads one reviewed retailer's own storefront, so it is the merchant (#185).
+        seller=dict(seller_id=offer.source_id, name=seller_name, market='LB', first_party=True),
         variant=dict(variant_id=variant.variant_id,
                      product=dict(product_id=f'{offer.source_id}:{variant.product_id}', category='phone',
                                   manufacturer=variant.manufacturer.value, model=variant.model.value),

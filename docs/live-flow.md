@@ -32,7 +32,9 @@ The v2 wire format supports this case with two listing-bound evidence records,
 `seller.name` for the Offer's merchant and `seller.market` for the matching Store's
 Lebanese address. The domestic controller checks both receipts against its current
 responses. A direct route can retain `origin_country=ZZ` when the warehouse is
-unknown. Older records without the merchant evidence use the existing dispatch path.
+unknown. Since #185 the warehouse never decides eligibility. A reviewed retailer's own
+storefront sets `seller.first_party`, and other merchants need the two listing receipts. Runs
+before #185 used the earlier dispatch-origin rule.
 The seller's selected offer and nationwide policy must agree on the applicable shipping
 rate. The current FAQ supplies tax treatment. Pickup requires separate branch evidence.
 

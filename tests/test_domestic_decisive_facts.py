@@ -6,7 +6,8 @@ source gate and the owned API/worker, and verifies a payable total. Removing one
 the same run into an honest abstention that names it. Changing the delivery city also loses the
 fee, because a shipping rate is read only for a matching destination. The same facts stated as
 store-wide prose and a plain add-to-cart button are not item evidence under the current rules.
-See docs/abstention-diagnosis-2026-11-24.md.
+See docs/abstention-diagnosis-2026-11-24.md. Since #185 the seller rule replaces dispatch origin:
+the reviewed first-party seller qualifies whatever its warehouse, so origin is not an ablation.
 """
 from copy import deepcopy
 from datetime import datetime, timedelta, timezone
@@ -88,8 +89,6 @@ ABLATIONS = {
     'condition': (without('offers', 'itemCondition'), 'condition'),
     'purchasable': (drop_purchasable, 'Purchase availability'),
     'stock': (without('offers', 'availability'), 'Stock lacks a current response'),
-    'dispatch from Lebanon': (without('offers', 'shippingDetails', 'shippingOrigin'),
-                              'Dispatch from Lebanon is unverified'),
     # A rate is read only for a matching destination, so this also loses the fee.
     'delivery to the buyer city': (other_city, 'item delivery eligibility'),
     'delivery fee': (without('offers', 'shippingDetails', 'shippingRate'), 'costs.order.shipping'),
@@ -133,14 +132,39 @@ class DecisiveFacts(FlowCase):
         # No second seller exists, and public search is down: one seller must stand on its own facts.
         self.buyer.research.workers.domestic_tools = Search(outage=True)
 
-    def submit(self, request_id):
+    def submit(self, request_id, fulfillment=FULFILLMENT):
         # Each submission is an independent buyer session against a cold corpus.
         self.client.cookies.clear()
         session = self.client.get('/api/session').json()
         self.headers['X-CSRF-Token'] = session['csrf_token']
         _, run = self.browse(self.buyer, request_id=request_id, intent=INTENT,
-                             requirements=REQUIREMENTS, fulfillment=FULFILLMENT)
+                             requirements=REQUIREMENTS, fulfillment=fulfillment)
         return run
+
+    def test_reviewed_seller_serving_tripoli_qualifies_whatever_its_warehouse(self):
+        """Scenario 10 (#185) through the real page reader. The earlier rule needed shippingOrigin LB."""
+        for warehouse in (None, 'US'):
+            with self.subTest(warehouse=warehouse):
+                self.page = deepcopy(PAGE)
+                other_city(self.page)
+                details = self.page['offers']['shippingDetails']
+                if warehouse:
+                    details['shippingOrigin']['addressCountry'] = warehouse
+                else:
+                    details.pop('shippingOrigin')
+                run = self.submit(f'tripoli-{warehouse}', dict(mode='delivery', destination=dict(city='Tripoli')))
+                self.assertEqual(run.status, 'complete', run.stop_reason)
+                verified = run.recommendations[0].primary
+                offer = verified.offer
+                self.assertEqual((offer.seller.name, offer.seller.first_party, offer.domestic_seller()),
+                                 ('Cedar', True, 'first_party'))
+                self.assertEqual((offer.route.origin_country, offer.route.destination.city,
+                                  offer.route.item_eligible.value), (warehouse or 'ZZ', 'Tripoli', True))
+                # USD 899 listed (VAT included) plus the USD 3 published Tripoli fee, counted once.
+                shipping, = [c for c in offer.costs if c.kind == 'shipping']
+                self.assertEqual((offer.price.value.amount, shipping.amount.amount), (Decimal('899.00'), Decimal('3.00')))
+                self.assertEqual(verified.cost.total.amount, Decimal('902.00'))
+                self.assertFalse(any(c.kind in ('duty', 'customs_handling') for c in offer.costs))
 
     def test_published_decisive_facts_verify_a_payable_total(self):
         run = self.submit('all-facts')
