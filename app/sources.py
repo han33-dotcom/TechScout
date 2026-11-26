@@ -46,6 +46,7 @@ HEADERS = {'Accept-Encoding': ACCEPT_ENCODING, 'User-Agent': USER_AGENT}
 ACCEPT: dict[Expect, tuple[str, ...]] = {
     'json': ('application/json',),
     'html': ('text/html',),
+    'script': ('text/javascript', 'application/javascript', 'application/x-javascript'),
     'xml': ('application/xml', 'text/xml', 'application/rss+xml', 'application/atom+xml'),
 }
 CONTENT_ENCODINGS = frozenset({'identity', 'gzip'})

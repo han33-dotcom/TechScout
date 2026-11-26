@@ -103,7 +103,8 @@ class ShoppingAgent(DomesticBuyerFlow):
         self.selected_controls = {}
         self.current_selections = {}
         self.accepted_matches = {}
-        self.color_click_denials = set()
+        self.option_links = {}
+        self.attempted_pages = set()
         self.discovery = deps.research.workers.domestic_tools if deps.research else None
         self.directory = getattr(deps.research.workers, 'directory', None) if deps.research else None
         self.browser: BrowserSession | None = None
@@ -157,8 +158,10 @@ class ShoppingAgent(DomesticBuyerFlow):
             title = self.titles.get(listing.url, '')
             actions.append(Action('inspect', f'Inspect selected listing {listing.url[:200]} {title}'.rstrip(), (i,)))
             if self.deps.inspect_listing:
-                options = () if listing.url in self.color_click_denials else self.color_options.get(listing.url, ())
-                for option in options:
+                for option in self.color_options.get(listing.url, ()):
+                    preferred = self.option_links.get((listing.url, option))
+                    if preferred and preferred not in self.attempted_pages:
+                        continue
                     actions.append(Action('select_color', f'Select {option.value} on {listing.url[:200]}', (i, option)))
                 if listing.url in self.current_selections:
                     actions.append(Action('recheck', f'Recheck the current selection at {listing.url[:200]}', (i,)))
@@ -221,7 +224,7 @@ class ShoppingAgent(DomesticBuyerFlow):
                 observation = dict(status=type(exc).__name__)
             self.observations.append(dict(tool=action.kind, **observation))
             self.trace['actions'][-1].update({k: v for k, v in observation.items()
-                if k in ('status', 'count', 'channel', 'query_index', 'query_sha256', 'checks', 'lead', 'receipts', 'error', 'item_fits', 'merchant_located')})
+                if k in ('status', 'count', 'channel', 'query_index', 'query_sha256', 'checks', 'lead', 'receipts', 'reader', 'error', 'item_fits', 'merchant_located')})
         return self.present([], 'The agent reached its search limit.')
 
     def perform(self, action, job, room, query):
@@ -300,14 +303,12 @@ class ShoppingAgent(DomesticBuyerFlow):
 
     def inspect_public(self, index, url, control, job, room):
         prior = tuple(self.uncertain.values())[:MAX_UNCERTAIN]
+        self.attempted_pages.add(url)
         try:
             page = self.deps.inspect_listing(job, url, color=control)
         except (BudgetDenied, OSError, ValueError, KeyError, httpx2.HTTPError) as exc:
             # A provider error contains no observation about the product. Keep its last receipt.
             reason = 'A further listing read failed.' if url in self.current_selections else 'The listing could not be read.'
-            if control and isinstance(exc, httpx2.HTTPStatusError) and exc.response.status_code == 403:
-                self.color_click_denials.add(url)
-                reason = 'The page reader declined the color change. A separate link for that option may be available.'
             self.blockers[url] = [reason]
             if target := canonical(url):
                 source = self.leads[index].source_id or source_id_for(target[0])
@@ -319,7 +320,7 @@ class ShoppingAgent(DomesticBuyerFlow):
                 or not self.started_at <= obs.observed_at <= self.deps.wall_clock()
                 or sha256(obs.body).hexdigest() != obs.response_sha256):
             return dict(status='invalid_capture', lead=index)
-        result = dict(lead=index, receipts=[obs.response_sha256])
+        result = dict(lead=index, reader=page.provider, receipts=[obs.response_sha256])
         self.sources[obs.source_id] = (urlsplit(url).hostname, 'checked', None)
         document = ListingDocument(obs.body.decode('utf-8', errors='replace'))
         self.color_options[url] = tuple(option for option in dict.fromkeys(document.options)
@@ -330,9 +331,16 @@ class ShoppingAgent(DomesticBuyerFlow):
                 break
             self.add_lead(Listing(link))
             self.titles[link] = label
+        available_urls = {lead.url for lead in self.leads}
+        for option in self.color_options[url]:
+            link = document.color_link(url, option.value)
+            if link in available_urls:
+                self.option_links[url, option] = link
+            else:
+                self.option_links.pop((url, option), None)
         try:
             try:
-                selected = document.selected(url, obs.observed_at)
+                selected = document.selected(url, obs.observed_at, rendered=page.provider == 'playwright')
             except ReadPageText:
                 reading = self.generate(READ_TEXT, dict(lines=document.lines,
                     checked_colors=[c.value for c in document.checked]), PageReading, self.elapsed() + room())

@@ -1,13 +1,16 @@
 """Checkpoint 2: buyer API and worker, with offline model and Firecrawl transports."""
 from functools import partial
+from datetime import datetime, timezone
+from hashlib import sha256
 import json
-import httpx2
 from unittest.mock import patch
 
 from app.agent_inspection import inspect_public_listing
 from app.domestic_discovery import ChannelAttempt, SearchReport
 from app.onboarding import ActivationRegistry
-from app.sources import SourceGate
+from app.firecrawl import ManagedPage
+from app.sources import FetchOutcome, SourceGate
+from app.onboarding import source_id_for
 from test_buyer_flow import FlowCase
 from test_domestic_buyer import lead
 from test_shopping_agent import Decisions, development_tools
@@ -60,23 +63,29 @@ class PublicListingBuyerTests(FlowCase):
 
         def provider(endpoint, key, payload, **_):
             html = next(replies)
-            if html is None:
-                raise TimeoutError('fixture failure')
             return dict(success=True, data=dict(rawHtml=html, metadata=dict(url=URL, sourceURL=URL,
                         statusCode=200, contentType='text/html', provider=dict(creditsCost=1))))
+
+        def browser(job, url, control, read):
+            html = next(replies)
+            if html is None:
+                raise TimeoutError('fixture failure')
+            body = html.encode()
+            return ManagedPage(FetchOutcome(source_id_for('new-shop.example'), url, (url,), 1, 1,
+                status_code=200, content_type='text/html', final_url=url, body=body,
+                observed_at=datetime.now(timezone.utc), response_sha256=sha256(body).hexdigest()), 'playwright', None)
         with (patch('app.agent_inspection.SourceGate', side_effect=lambda scope:
                     SourceGate._for_tests(scope, resolver=lambda *_: ['8.8.8.8'])),
+              patch('app.agent_inspection.select_listing', side_effect=browser) as clicks,
               patch('app.firecrawl.post_json', side_effect=provider) as calls):
             _, run = self.browse(deps, implementation='single_agent', requirements=dict(category='audio'),
                 intent=dict(kind='exact_model', model='Soundcore Q20i', wording=WORDING),
                 allowed_colors=['black'], fulfillment=dict(destination=dict(city='Batroun')))
-        self.assertEqual(calls.call_count, 3, self.trace(run))
+        self.assertEqual(calls.call_count, 1, self.trace(run))
         payloads = [call.args[2] for call in calls.call_args_list]
         self.assertNotIn('actions', payloads[0])
-        for payload in payloads[1:]:
-            self.assertEqual(payload['url'], URL)
-            self.assertEqual(payload['actions'][0], dict(type='click',
-                             selector='input[type="radio"][name="color"][value="Black"]'))
+        self.assertEqual([(call.args[1], call.args[2].value) for call in clicks.call_args_list],
+                         [(URL, 'Black'), (URL, 'Black')])
         self.assertEqual(self.trace(run)['actions'][1]['status'], 'no_match')
         self.assertFalse(any(u.offer.variant.color.value == 'White' for snap in self.published for u in snap.uncertain))
         return run
@@ -119,17 +128,16 @@ class PublicListingBuyerTests(FlowCase):
         self.assertFalse(run.uncertain or run.recommendations)
         self.assertIn('could not confirm', run.stop_reason)
 
-    def test_after_a_click_is_denied_agent_follows_the_published_option_url(self):
+    def test_agent_follows_the_published_option_url_before_offering_a_click(self):
         black_url = URL + '?variant=black'
-        self.openrouter = BuyerDecisions(['Inspect', 'Select Black', f'Inspect selected listing {black_url}', 'Present'])
+        self.openrouter = BuyerDecisions(['Inspect', f'Inspect selected listing {black_url}', 'Present'])
         deps = development_tools(self.deps(), 'Q20i')
         deps.inspect_listing = partial(inspect_public_listing, registry=ActivationRegistry(self.storage),
             environ=dict(FIRECRAWL_API_KEY='fixture', FIRECRAWL_SCRAPE_USD_PER_CREDIT='.001'))
 
         def provider(endpoint, key, payload, **_):
             url = payload['url']
-            if 'actions' in payload:
-                httpx2.Response(403, request=httpx2.Request('POST', endpoint)).raise_for_status()
+            self.assertNotIn('actions', payload)
             html = (listing('Black', '49.00') if url == black_url else listing('White', '39.00')
                     + '<a class="swatch" href="?variant=black">Black</a>')
             return dict(success=True, data=dict(rawHtml=html, metadata=dict(url=url, sourceURL=url,
@@ -141,7 +149,11 @@ class PublicListingBuyerTests(FlowCase):
             _, run = self.browse(deps, implementation='single_agent', requirements=dict(category='audio'),
                 intent=dict(kind='exact_model', model='Soundcore Q20i', wording=WORDING),
                 refinement_note='Check ' + URL, allowed_colors=['black'])
-        self.assertEqual([c.args[2]['url'] for c in calls.call_args_list], [URL, URL, black_url])
+        self.assertEqual([c.args[2]['url'] for c in calls.call_args_list], [URL, black_url])
+        choices = [json.loads(r['body']['messages'][1]['content']).get('available', [])
+                   for r in self.openrouter.requests]
+        menu = next(m for m in choices if any(black_url in action for action in m))
+        self.assertFalse(any(action.startswith('Select Black') for action in menu))
         self.assertNotIn('actions', calls.call_args_list[-1].args[2])
         self.assertEqual(run.status, 'partial', self.trace(run))
         item, = run.uncertain

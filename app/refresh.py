@@ -9,13 +9,17 @@ import json
 from pathlib import Path
 from uuid import uuid4
 
+import httpx2
 from app.accounting import BudgetDenied, Ledger
+from app.agent_inspection import read_catalog_listing
 from app.adapters.woo_catalog import _records
 from app.bootstrap import (RETIRED_IMPORT_SOURCES, ListingSeed, Manifest, Seed, SeedBudget,
                            extract_seed, index_pending, seed_processing, seed_target)
 from app.embeddings import EmbeddingAllowanceExceeded, EmbeddingUnavailable
 from app.corpus import Corpus
-from app.corpus_contracts import DocumentCapture
+from app.corpus_contracts import DocumentCapture, Extraction, FieldObservation
+from app.contracts_v2 import Evidence
+from app.selected_listing import ListingDocument
 from app.directory import Directory
 from app.onboarding import ActivationRegistry
 from app.source_registry import get_active_source
@@ -121,7 +125,39 @@ def catalog_links(outcome, seed, corpus, gate, limit):
     return links
 
 
-def check_page(seed, manifest, corpus, gate, budget, rows_left, embedding=None):
+def selected_fields(capture, selected):
+    """Persist only facts bound to the requested variant in the post-click capture."""
+    key = capture.key
+    if selected.sku != key.variant_id:
+        raise ValueError('The catalog SKU differs from the selected retailer variant.')
+    fields = [('price', selected.money.model_dump(mode='json'), selected.price_excerpt),
+              ('variant.color', selected.color, selected.color),
+              ('variant.product.model', selected.title, selected.title),
+              ('variant.product.manufacturer', selected.brand, selected.brand)]
+    if selected.availability in ('InStock', 'OutOfStock', 'SoldOut'):
+        fields.append(('stock', selected.availability == 'InStock', selected.stock_excerpt))
+    digest = sha256(capture.body).hexdigest()
+    observations = []
+    for path, value, excerpt in fields:
+        if not excerpt:
+            continue
+        excerpts = (excerpt, selected.currency_excerpt) if path == 'price' else (excerpt,)
+        receipts = []
+        for quote in dict.fromkeys(excerpts):
+            eid = sha256(json.dumps([key.model_dump(mode='json'), digest, path, quote,
+                                     capture.observed_at.isoformat(), capture.processing.model_dump()]).encode()).hexdigest()
+            receipts.append(Evidence(evidence_id=eid, source_id=key.source_id, product_id=key.product_id,
+                variant_id=key.variant_id, field_path=path, scope='variant', origin_url=key.url,
+                final_url=capture.final_url, observed_at=capture.observed_at, response_sha256=digest,
+                adapter_version=capture.processing.extraction_version, origin='maintenance',
+                corpus_version=capture.processing.corpus_version, index_version=capture.processing.index_version,
+                excerpt=quote))
+        observations.append(FieldObservation(fact=dict(state='known', value=value,
+            evidence_ids=[r.evidence_id for r in receipts]), evidence=tuple(receipts)))
+    return Extraction(observations=tuple(observations))
+
+
+def check_page(seed, manifest, corpus, gate, budget, rows_left, embedding=None, inspect_listing=None):
     key, profile, options = target(seed, corpus, gate)
     policy = get_active_source(seed.source_id, gate._registry_path)
     previous = corpus.state(key)
@@ -136,13 +172,35 @@ def check_page(seed, manifest, corpus, gate, budget, rows_left, embedding=None):
             pass  # A full response can restore a missing or damaged local snapshot.
         else:
             validators = CacheValidators(previous.conditional_url, previous.etag, previous.last_modified)
-    outcome = gate.fetch(budget, seed.source_id, str(seed.url), validators=validators, **options)
+    selected = None
+    reader = None
+    if inspect_listing and seed.format == 'html' and seed.content == 'listing' and not seed.dispatch_for:
+        try:
+            page = read_catalog_listing(inspect_listing, budget, str(seed.url), seed.selection_color)
+            outcome, reader = page.outcome, page.provider
+            if outcome.source_id != seed.source_id:
+                raise ValueError('The listing source changed during catalog inspection.')
+            if reader == 'playwright' or seed.selection_color:
+                selected = ListingDocument(outcome.body.decode('utf-8')).selected(
+                    outcome.final_url, outcome.observed_at, rendered=reader == 'playwright')
+                if selected.sku != seed.sku or selected.color.casefold() != seed.selection_color.casefold():
+                    raise ValueError('The observed variant differs from the catalog seed.')
+        except (ValueError, OSError, BudgetDenied, httpx2.HTTPError) as exc:
+            with budget.ledger._transaction() as (_, now):
+                checked = datetime.fromtimestamp(now, timezone.utc)
+            corpus.record_failed_check(key, checked)
+            return dict(status='failed', checked_at=checked.isoformat(), reason=type(exc).__name__,
+                        rows=0, extractions=0)
+    else:
+        outcome = gate.fetch(budget, seed.source_id, str(seed.url), validators=validators, **options)
     checked = outcome.observed_at
     if checked is None:
         with budget.ledger._transaction() as (_, now):
             checked = datetime.fromtimestamp(now, timezone.utc)
     result = dict(status='failed', checked_at=checked.isoformat(), attempts=outcome.attempts,
                   http_status=outcome.status_code, bytes=len(outcome.body or b''), rows=0, extractions=0)
+    if reader:
+        result['reader'] = reader
     if outcome.errors:
         result['errors'] = [error.code for error in outcome.errors]
         if outcome.attempts:
@@ -169,6 +227,8 @@ def check_page(seed, manifest, corpus, gate, budget, rows_left, embedding=None):
 
         def extract(page):
             result['extractions'] += 1
+            if selected:
+                return selected_fields(page, selected)
             return extract_seed(page, outcome, seed, profile, policy, rows_left)
 
         receipt = corpus.ingest(capture, extract, compare_extracted=True)
@@ -201,7 +261,7 @@ def check_page(seed, manifest, corpus, gate, budget, rows_left, embedding=None):
 
 
 def refresh(manifest, *, ledger, corpus, gate, batch_id, limit, high_use=(), embedding=None, envelope=None,
-            rotation=0):
+            rotation=0, inspect_listing=None):
     """Freeze the first selection. A recovered lease never repeats an unacknowledged read."""
     if not batch_id.strip() or len(batch_id) > 100:
         raise ValueError('Provide a stable batch ID of 1–100 characters')
@@ -257,7 +317,7 @@ def refresh(manifest, *, ledger, corpus, gate, batch_id, limit, high_use=(), emb
                 record['pages'][url] = dict(status='in_flight')
             budget = SeedBudget(job, manifest, seed, token, gate._registry_path, checkpoints='refresh_batches')
             try:
-                page = check_page(seed, manifest, corpus, gate, budget, remaining, embedding)
+                page = check_page(seed, manifest, corpus, gate, budget, remaining, embedding, inspect_listing)
             except (ValueError, PermissionError, BudgetDenied) as exc:
                 page = dict(status='skipped', reason=str(exc)[:200])
             with ledger._transaction() as (state, now):
