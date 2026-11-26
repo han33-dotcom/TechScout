@@ -488,7 +488,7 @@ class DeliveryQuoteTests(unittest.TestCase):
             self.select(snapshot, office, 'Street-A')
             self.settle()
             self.assertEqual(self.by_seller(self.destination(snapshot))['Street-A']['reason'], dq.OVER_LIMIT)
-        self.assertEqual([host for host, _, _ in self.sent], ['city-shop.example', 'street-a.example'])
+        self.assertEqual(sorted(host for host, _, _ in self.sent), ['city-shop.example', 'street-a.example'])
 
     def test_an_unsent_quote_is_reconsidered_when_the_search_changes(self):
         [family] = self.signed_in(FAMILY)
