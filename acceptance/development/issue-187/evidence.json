@@ -1,0 +1,222 @@
+{
+  "issue": 187,
+  "scenarios": [
+    12,
+    13,
+    14
+  ],
+  "revision": "a4979a48ae332e8cb45f85686def7463adc7d106",
+  "recorded_at": "2026-11-26T09:56:34.914Z",
+  "source_mode": "Synthetic v2 workspace fixture stored as each session's chat (seed_chat.py). No worker, retailer, model, ledger or provider key. Retailer quotes are #186, so totals are expected to stay unchanged.",
+  "runtime": {
+    "api": "uvicorn app.main:app on 127.0.0.1 with a fresh SQLite database, TECHSCOUT_COOKIE_SECURE=0, built frontend served by FastAPI",
+    "browser": "Chrome/158.0.8127.37"
+  },
+  "test_data": "Synthetic accounts and invented addresses from tests/fixtures/accounts.json. Passwords are not recorded here.",
+  "steps": [
+    {
+      "step": "registration",
+      "url": "/",
+      "account": "test-buyer-new",
+      "screenshot": "01-registered.png"
+    },
+    {
+      "step": "chat with address prompt",
+      "url": "/?chat=run-new-first",
+      "account": "test-buyer-a",
+      "run_id": "run-new-first",
+      "request_revision": 2,
+      "previous_revision": 1,
+      "prompt": [
+        "Exact delivery totals may need your address",
+        "A street address can change what these sellers charge for delivery: Book-Local and Book-Other. Choose which of them may receive a saved address for this search. Nothing is sent to a seller you leave unticked."
+      ],
+      "screenshot": "02-chat-address-prompt.png"
+    },
+    {
+      "step": "Locations opened from the chat",
+      "url": "/?chat=run-new-first&view=locations",
+      "banner": [
+        "Choose the address for your comparison. Only Book-Local and Book-Other will be allowed to receive it, for this search only."
+      ],
+      "screenshot": "03-locations-from-chat.png"
+    },
+    {
+      "step": "two locations added",
+      "url": "/?chat=run-new-first&view=locations",
+      "listed": [
+        "Test home",
+        "Beirut · street address hidden",
+        "Test office",
+        "Beirut · street address hidden"
+      ],
+      "screenshot": "04-locations-added.png"
+    },
+    {
+      "step": "returned to the same chat",
+      "url": "/?chat=run-new-first",
+      "run_id": "run-new-first",
+      "selection": {
+        "status": "selected",
+        "location": {
+          "location_id": "ee954e25-d169-4b75-b7ea-f1cdd7a2186b",
+          "label": "Test home",
+          "city": "Beirut",
+          "created_at": "2026-11-26T09:56:19.479000Z"
+        },
+        "recipients": [
+          {
+            "retailer_id": "retailer-book-local",
+            "name": "Book-Local"
+          },
+          {
+            "retailer_id": "retailer-book-other",
+            "name": "Book-Other"
+          }
+        ],
+        "quote_state": "pending",
+        "decided_at": "2026-11-26T09:56:20.233000Z"
+      },
+      "summary": [
+        "Using Test home · Beirut",
+        "Allowed to receive this address for this search: Book-Local and Book-Other. No other seller receives it.",
+        "Seller delivery quotes for this address have not been requested yet, so the totals and advice above are unchanged. Unknown fees stay unknown."
+      ],
+      "screenshot": "05-same-chat-after-selection.png"
+    },
+    {
+      "step": "later search lists saved locations",
+      "url": "/?chat=run-new-later&view=locations",
+      "listed": [
+        "Test home",
+        "Beirut · street address hidden",
+        "Test office",
+        "Beirut · street address hidden"
+      ],
+      "screenshot": "06-later-search-saved-locations.png"
+    },
+    {
+      "step": "later search reused a saved location",
+      "url": "/?chat=run-new-later",
+      "run_id": "run-new-later",
+      "selection": {
+        "status": "selected",
+        "location": {
+          "location_id": "a9580a33-99f0-4c50-b056-a2b2ce431839",
+          "label": "Test office",
+          "city": "Beirut",
+          "created_at": "2026-11-26T09:56:19.680000Z"
+        },
+        "recipients": [
+          {
+            "retailer_id": "retailer-book-other",
+            "name": "Book-Other"
+          }
+        ],
+        "quote_state": "pending",
+        "decided_at": "2026-11-26T09:56:28.347000Z"
+      },
+      "screenshot": "07-later-search-selected.png"
+    },
+    {
+      "step": "declined and kept shopping",
+      "url": "/?chat=run-new-decline",
+      "run_id": "run-new-decline",
+      "summary": [
+        "Continuing without a precise address",
+        "No seller receives an address in this search. Delivery totals that depend on one remain unknown; every product link still opens the retailer's page."
+      ],
+      "product_links": [
+        {
+          "text": "View at Book-Local ↗",
+          "https": true
+        },
+        {
+          "text": "Open product page ↗",
+          "https": true
+        },
+        {
+          "text": "View at Book-Forward ↗",
+          "https": true
+        }
+      ],
+      "screenshot": "08-declined-keeps-offers.png"
+    }
+  ],
+  "checks": {
+    "registration_session": {
+      "username": "test-buyer-new"
+    },
+    "saved_before_chat": 0,
+    "same_chat_url": true,
+    "same_run_and_previous_revision": true,
+    "request_constraints_retained": true,
+    "request_summary": {
+      "category": "laptop",
+      "budget": {
+        "target": {
+          "amount": "900",
+          "currency": "USD"
+        },
+        "maximum": {
+          "amount": "950",
+          "currency": "USD"
+        }
+      },
+      "destination_city": "Beirut",
+      "conditions": [
+        "new"
+      ]
+    },
+    "totals_before": [
+      {
+        "seller": "Book-Local",
+        "total": {
+          "amount": "930",
+          "currency": "USD"
+        }
+      },
+      {
+        "seller": "Book-Forward",
+        "total": "unknown"
+      }
+    ],
+    "totals_after": [
+      {
+        "seller": "Book-Local",
+        "total": {
+          "amount": "930",
+          "currency": "USD"
+        }
+      },
+      {
+        "seller": "Book-Forward",
+        "total": "unknown"
+      }
+    ],
+    "totals_unchanged_until_186": true,
+    "no_new_search_submitted": true,
+    "recipients_named_by_buyer": [
+      "Book-Local",
+      "Book-Other"
+    ],
+    "quote_state": "pending",
+    "later_reuse": {
+      "location": "Test office",
+      "recipients": [
+        "Book-Other"
+      ]
+    },
+    "decline": {
+      "selection": "declined",
+      "product_links": 3,
+      "uncertain_total": {
+        "seller": "Book-Forward",
+        "total": "unknown"
+      }
+    },
+    "anonymous_locations_status": 401,
+    "street_absent_from_page_steps_and_export": true,
+    "password_absent_from_evidence": true
+  }
+}

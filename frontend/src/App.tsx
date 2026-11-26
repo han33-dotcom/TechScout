@@ -1,11 +1,30 @@
-import { useState, useEffect, type FormEvent, type ReactNode } from 'react';
-import { BuyerApi, type RunSnapshot, type ComparisonWorkspace } from './api';
+import { useState, useEffect, useRef, type FormEvent, type ReactNode } from 'react';
+import { BuyerApi, type RunSnapshot, type ComparisonWorkspace, type AccountSummary, type DestinationSeller, type SavedLocation } from './api';
 import { categories, domesticScope, examples, initialDraft, specLabels, toRequest, fromRequest, type Draft } from './request';
 import { active, useWorkspace, type Transport } from './useWorkspace';
 import './styles.css';
 import Comparison, { requestDescription } from './Comparison';
 import History, { type HistoryTransport } from './History';
+import Account, { type AccountTransport } from './Account';
+import Locations, { type LocationTransport } from './Locations';
+import Destination, { type DestinationTransport } from './Destination';
 const api = new BuyerApi();
+export type AccountApi = AccountTransport & LocationTransport & DestinationTransport & Pick<BuyerApi, 'session' | 'selectDestination'>;
+type View = 'search' | 'account' | 'locations';
+type Choice = { runId: string; sellers: DestinationSeller[]; recipients: string[] };
+/** The chat and the open page live in the URL, so a reload or the back button returns to the same chat. */
+function readLocation(): { chat?: string; view: View } {
+  const params = new URLSearchParams(window.location.search), view = params.get('view');
+  return { chat: params.get('chat') || undefined, view: view === 'account' || view === 'locations' ? view : 'search' };
+}
+function writeLocation(chat: string | undefined, view: View, push = false) {
+  const params = new URLSearchParams();
+  if (chat) params.set('chat', chat);
+  if (view !== 'search') params.set('view', view);
+  const query = params.toString(), url = query ? `?${query}` : window.location.pathname;
+  if (`?${query}` === window.location.search || (!query && !window.location.search)) return;
+  if (push) window.history.pushState(null, '', url); else window.history.replaceState(null, '', url);
+}
 const phases = { interpret: 'Understanding your requirements', discover: 'Finding relevant retailers', research: 'Checking products and evidence', evaluate: 'Comparing eligible offers', verify: 'Rechecking price and availability', write: 'Preparing your comparison' };
 const endings = { complete: 'Your search is complete', partial: 'Some checks could not finish', abstained: 'No verified recommendation yet', cancelled: 'Search cancelled', error: 'Search could not finish' };
 export function RequestForm({ draft, setDraft, onSubmit, busy, refining }: { draft: Draft; setDraft: (d: Draft) => void; onSubmit: (e: FormEvent) => void; busy: boolean; refining: boolean }) {
@@ -41,21 +60,71 @@ export function Progress({ snapshot, busy, cancel, clarify }: { snapshot: RunSna
     {snapshot.provisional.length > 0 && <div className="provisional"><h3>Early candidates <span className="badge">Checking · not verified</span></h3>{snapshot.provisional.map(candidate => <article key={candidate.offer.offer_id}><strong>{candidate.offer.variant.product.manufacturer} {candidate.offer.variant.product.model}</strong><p>{candidate.offer.seller.name} · Originally observed {new Date(candidate.observed_at).toLocaleString()}</p><small>Price, stock and eligibility still need checks for this search.</small></article>)}</div>}
   </section>;
 }
-export default function App({ transport = api, historyTransport = api, renderResults }: { transport?: Transport; historyTransport?: HistoryTransport; renderResults?: (workspace: ComparisonWorkspace) => ReactNode }) {
+export default function App({ transport = api, historyTransport = api, accountTransport = api, renderResults }: { transport?: Transport; historyTransport?: HistoryTransport; accountTransport?: AccountApi; renderResults?: (workspace: ComparisonWorkspace) => ReactNode }) {
   const [draft, setDraft] = useState<Draft>(initialDraft), [validation, setValidation] = useState('');
   const state = useWorkspace(transport);
+  const [account, setAccount] = useState<AccountSummary | null>(), [view, setView] = useState<View>(() => readLocation().view);
+  const [choice, setChoice] = useState<Choice>(), [destinationRefresh, setDestinationRefresh] = useState(0);
+  const resumed = useRef(false);
+  const chatId = state.workspace?.current.run.run_id;
+  useEffect(() => {
+    let live = true;
+    accountTransport.session().then(info => { if (live) setAccount(info.account ?? null); }).catch(() => { if (live) setAccount(null); });
+    return () => { live = false; };
+  }, [accountTransport]);
+  useEffect(() => {
+    // Once: reopen the chat named in the address bar, or forget a chat this session no longer owns.
+    if (resumed.current) return;
+    resumed.current = true;
+    const { chat } = readLocation();
+    if (chat) void state.resume(chat).then(found => { if (!found) writeLocation(undefined, readLocation().view); });
+  });
+  useEffect(() => { if (chatId) writeLocation(chatId, readLocation().view); }, [chatId]);
+  useEffect(() => {
+    const back = () => { const next = readLocation(); setView(next.view); if (next.view === 'search') setChoice(undefined); };
+    window.addEventListener('popstate', back);
+    return () => window.removeEventListener('popstate', back);
+  }, []);
+  const go = (next: View) => { setView(next); writeLocation(chatId, next, true); };
+  const backToChat = () => { setChoice(undefined); go('search'); };
+  const chooseAddress = (sellers: DestinationSeller[], recipients: string[]) => {
+    if (!chatId) return;
+    setChoice({ runId: chatId, sellers, recipients });
+    go(account ? 'locations' : 'account');
+  };
+  const selectLocation = async (location: SavedLocation) => {
+    if (!choice) return;
+    await accountTransport.selectDestination(choice.runId, location.location_id, choice.recipients);
+    setDestinationRefresh(value => value + 1);
+    backToChat();
+  };
   const [followup,setFollowup] = useState('');
   const [dirty, setDirty] = useState(false);
   const edit = (next: Draft) => { setDirty(true); setDraft(next); };
   useEffect(() => { if (state.workspace && !dirty && !state.busy && !state.error) setDraft(fromRequest(state.workspace.current.request)); }, [state.workspace, dirty, state.busy, state.error]);
   const submit = (e: FormEvent) => { e.preventDefault(); setValidation(''); try { const request = toRequest(draft, state.workspace?.current.request); setDirty(false); void state.submit(request); } catch (error) { setValidation(error instanceof Error ? error.message : 'Check your requirements.'); } };
-  return <><header className="topbar"><a className="brand" href="/" aria-label="TechScout home"><span className="brand-mark">t↗</span>techscout<span className="brand-dot">.</span></a><span className="location">LB <span>Built for buying in Lebanon</span></span></header>
+  const header = <header className="topbar"><a className="brand" href="/" aria-label="TechScout home"><span className="brand-mark">t↗</span>techscout<span className="brand-dot">.</span></a>
+    <nav className="account-nav" aria-label="Account">{account ? <><span className="muted">Signed in as <strong>{account.username}</strong></span><button type="button" onClick={() => go('locations')}>Saved locations</button><button type="button" onClick={() => go('account')}>Account</button></>
+      : <button type="button" disabled={account === undefined} onClick={() => go('account')}>Sign in or create account</button>}
+      <span className="location">LB <span>Built for buying in Lebanon</span></span></nav></header>;
+  if (view === 'account') return <>{header}<main>
+    <Account api={accountTransport} account={account} onBack={backToChat}
+      purpose={choice ? 'Sign in or create an account to choose a saved address. You will come back to this same comparison.' : undefined}
+      onSignedIn={signedIn => { setAccount(signedIn); if (choice) go('locations'); else backToChat(); }}
+      onSignedOut={() => { setAccount(null); setChoice(undefined); state.reset(); setView('search'); writeLocation(undefined, 'search'); }} />
+  </main></>;
+  if (view === 'locations') return <>{header}<main>
+    {account ? <Locations api={accountTransport} onBack={backToChat} choosing={choice?.sellers.filter(seller => choice.recipients.includes(seller.retailer_id))} onChoose={choice ? selectLocation : undefined} />
+      : <section className="panel"><h2>Saved locations</h2><p>{account === undefined ? 'Checking your account…' : 'Sign in to manage saved locations.'}</p>{account === null && <button className="primary" onClick={() => go('account')}>Sign in or create account</button>}</section>}
+  </main></>;
+  return <>{header}
     <main><section className="hero"><span className="eyebrow">LESS GUESSWORK. BETTER CHOICES.</span><h1>Find the right tech.<br/><span>Know what you’re buying.</span></h1><p>Tell us what matters. Compare configurations, local sellers and the full cost, with evidence you can check.</p></section>
       <History api={historyTransport} onDeleted={state.forget} onRecheck={request=>{setDirty(false);setValidation('');void state.startFresh({...request,market_scope:domesticScope,request_id:crypto.randomUUID(),revision:1});}}/>
       <section className="panel request-panel" aria-label="Your search"><RequestForm draft={draft} setDraft={edit} onSubmit={submit} busy={state.busy} refining={!!state.workspace} />{validation && <p role="alert" className="error">{validation}</p>}</section>
       {!state.workspace && <div className="examples"><span>Try an example</span>{examples.map(example => <button key={example.label} onClick={() => edit({ ...example.draft, implementation: draft.implementation })}>{example.label} ↗</button>)}<small>These examples have preset requirements. General language interpretation happens during research.</small></div>}
       {state.error && <div role="alert" className="error panel"><p>{state.error}</p>{state.workspace && <button disabled={state.busy} onClick={() => void state.recover()}>Check latest status</button>}</div>}
       {state.workspace && <><Progress snapshot={state.workspace.current} busy={state.busy} cancel={() => void state.cancel()} clarify={answer => void state.clarify(answer)} />{renderResults ? renderResults(state.workspace) : <Comparison workspace={state.workspace}/>}
+        <Destination api={accountTransport} runId={state.workspace.current.run.run_id} status={state.workspace.current.status} refresh={destinationRefresh} onChoose={chooseAddress} />
         <form className="panel refinement" onSubmit={e=>{e.preventDefault();setValidation('');try {const request=toRequest(draft,state.workspace!.current.request);request.refinement_note=[request.refinement_note,followup.trim()].filter(Boolean).join('\n');if(!followup.trim())return;void state.submit(request);}catch(error){setValidation(error instanceof Error?error.message:'Check your refinement.')}}}>
           <label htmlFor="followup">What would you like to change?</label><div className="search-box"><input id="followup" value={followup} maxLength={4000} required onChange={e=>setFollowup(e.target.value)} placeholder="Tell us what matters more, or clarify a requirement..."/><button className="primary" disabled={state.busy}>Refine comparison</button></div><p className="muted">Adds to this request. Existing filters remain in force until you explicitly edit them above. Previous results stay labelled while new evidence is checked.</p>{state.workspace.current.request.refinement_note && <p>Refinement sent: {state.workspace.current.request.refinement_note}</p>}
         </form>{state.workspace.previous && <details className="panel previous"><summary>Previous search · revision {state.workspace.previous.request.revision}</summary><p>These results belong to earlier requirements and are not verified for your current search.</p><Comparison workspace={{schema_version:2,current:state.workspace.previous}} historical/></details>}</>}
