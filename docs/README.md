@@ -3,7 +3,7 @@
 | To find | Start here |
 | --- | --- |
 | What buyers should experience | [Buyer contract](buyer-product-contract.md) · [Acceptance scenarios](buyer-acceptance-matrix.md) |
-| What worked and what comes next | [Experiment comparison](buyer-architecture-comparison.md) · [Project board](https://github.com/users/han33-dotcom/projects/2) |
+| What worked and what comes next | [Two-agent experiment and checkpoints](two-agent-experiment.md) · [Earlier experiments](buyer-architecture-comparison.md) · [Project board](https://github.com/users/han33-dotcom/projects/2) |
 | How both implementations are scored | [Buyer scoring rules](buyer-correctness-acceptance.md) · [Frozen 20 cases](../acceptance/buyer-v1/README.md) · [Baseline results](../acceptance/buyer-v1/results-2026-11-25/README.md) |
 | How to run or contribute | [Quick start](../README.md) · [Local development and recovery](local-development.md) · [Contributing](../CONTRIBUTING.md) |
 | What the course submission needs | [Delivery plan](full-product-plan.md) · [Architecture and API report](architecture-api-report.md) · [Failure matrix](full-product-failure-matrix.md) |

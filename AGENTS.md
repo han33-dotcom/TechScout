@@ -46,6 +46,11 @@ the existing contract. The [documentation index](docs/README.md) links source an
 - Preserve source registry technical review, endpoint scope and positive workload
   limits. The existing project assumption permits public-data retrieval without
   retailer permission emails; do not introduce a permission-first gate.
+- On the `test/two-agent` experiment and its topic branches, both agents may inspect
+  a first-seen public retailer page directly through Firecrawl. Use a per-URL scope,
+  honor explicit shop stops and workload limits, and assess the seller and item
+  after inspection. Target experiment PRs at `test/two-agent`. Follow the
+  [design and checkpoint plan](docs/two-agent-experiment.md).
 - The archived outreach drafts are superseded and must not be sent.
 - Tests use synthetic offers and offline fixtures. Do not invoke retailer endpoints,
   paid models or an operational service just to run the ordinary test suite.
