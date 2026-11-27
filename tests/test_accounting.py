@@ -61,6 +61,23 @@ class AccountingTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 Ledger(self.storage, 'test-campaign')
 
+    def test_other_clients_landing_shop_counts_as_a_visit(self):
+        job = self.ledger.open_job('experiment', 'bootstrap')
+        attempt = job.reserve('retrieval', Charge(D(0)), 110, source='origin', limits=LIMIT)
+        attempt.dispatch()
+        with self.ledger._transaction() as (state, _):
+            state['attempts'][attempt.token]['landing_source'] = 'destination'
+        ahmad = self.ledger.open_job('other-client', 'bootstrap')
+        tight = SourceLimits(requests_per_minute=1, concurrency=1, max_requests_per_run=1)
+        for delay in (0, 61):
+            self.now = START + timedelta(seconds=delay)
+            with self.assertRaisesRegex(BudgetDenied, 'Shared source workload'):
+                ahmad.reserve('retrieval', Charge(D(0)), 1, source='destination', limits=tight)
+        attempt.complete(D(0), 65)
+        with self.assertRaisesRegex(BudgetDenied, 'Shared source workload'):
+            job.reserve('retrieval', Charge(D(0)), 1, source='destination', limits=tight)
+        ahmad.reserve('retrieval', Charge(D(0)), 1, source='destination', limits=tight)
+
     def test_live_search_never_loads_retired_history(self):
         old = self.ledger.open_job('old')
         spent = old.reserve('retrieval', Charge(D(0)), 5, source='store', limits=LIMIT)

@@ -48,12 +48,13 @@ class Records(MutableMapping):
         condition = entries.c.job_id.startswith(job_id, autoescape=True) if prefix else entries.c.job_id == job_id
         return self.matching(condition)
 
-    def source_counts(self, source, job_id, since):
-        recent = entries.c.created > since
+    def source_counts(self, source, job_id, now):
+        active = entries.c.status.in_(('held', 'sent')) & (entries.c.expires > now)
+        recent = entries.c.created > now - 60
         in_job = entries.c.job_id == job_id
-        query = select(func.count().filter(recent), func.count().filter(in_job)).where(
-            entries.c.section == self.section, entries.c.source == source,
-            entries.c.status != 'released', or_(recent, in_job))
+        shop = or_(entries.c.source == source, entries.c.payload['landing_source'].as_string() == source)
+        query = select(func.count().filter(active), func.count().filter(recent), func.count().filter(in_job)).where(
+            entries.c.section == self.section, shop, entries.c.status != 'released', or_(active, recent, in_job))
         return self.db.execute(query).one()
 
     def boolean_field(self, key, name):

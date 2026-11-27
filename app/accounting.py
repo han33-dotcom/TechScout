@@ -53,6 +53,15 @@ LIMITS = {
 KINDS = {'model', 'search', 'retrieval', 'embedding', 'work', 'worker'}
 
 
+def check_source_workload(attempts, source, limits, job_id, now):
+    positive = (limits.requests_per_minute, limits.concurrency, limits.max_requests_per_run)
+    if any(type(v) is not int or v <= 0 for v in positive):
+        raise ValueError('Source workload bounds must be positive integers')
+    live, recent, in_job = attempts.source_counts(source, job_id, now)
+    if live >= limits.concurrency or recent >= limits.requests_per_minute or in_job >= limits.max_requests_per_run:
+        raise BudgetDenied('Shared source workload limit')
+
+
 class Ledger:
     def __init__(self, storage: Storage, project: str, *, fixture=False, clock=None):
         if not project or not project.strip():
@@ -192,14 +201,7 @@ class Ledger:
             if job['kind'] != 'buyer' and sum(a['background'] for a in live) >= 2:
                 raise BudgetDenied('Background capacity is busy')
             if source is not None:
-                positive = (limits.requests_per_minute, limits.concurrency, limits.max_requests_per_run)
-                if any(type(v) is not int or v <= 0 for v in positive):
-                    raise ValueError('Source workload bounds must be positive integers')
-                recent_count, job_count = attempts.source_counts(source, job_id, now - 60)
-                if (sum(a['source'] == source for a in live) >= limits.concurrency
-                    or recent_count >= limits.requests_per_minute
-                    or job_count >= limits.max_requests_per_run):
-                    raise BudgetDenied('Shared source workload limit')
+                check_source_workload(attempts, source, limits, job_id, now)
             keys = self._scope_keys(job_id, job, international)
             for key, profile in keys:
                 used = state['scopes'].setdefault(key, [0, 0, 0, '0', 0])
