@@ -223,7 +223,7 @@ class PublicListingBuyerTests(FlowCase):
                 intent=dict(kind='exact_model', model='Soundcore Q20i', wording=WORDING),
                 refinement_note='Check ' + URL, allowed_colors=['black'])
         self.assertEqual([c.args[2]['url'] for c in calls.call_args_list], [URL, black_url])
-        choices = [json.loads(r['body']['messages'][1]['content']).get('available', [])
+        choices = [json.loads(r['body']['messages'][1]['content']).get('available', {}).values()
                    for r in self.openrouter.requests]
         menu = next(m for m in choices if any(black_url in action for action in m))
         self.assertTrue(any(action.startswith('Select Black') for action in menu))

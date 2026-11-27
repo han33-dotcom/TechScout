@@ -1,0 +1,579 @@
+{
+  "issue": 253,
+  "base": "370b549",
+  "scope": "Ordinary buyer worker, original buyer wording, fixed opening pages from the audit, no live shop or search calls in the buyer jobs. The monitor replay starts at the checked Samsung and Syscom category. Headphone replays start at the Carrefour product. The positive replay also supplies the evaluator-found CompuOne product. All subsequent choices and answers use the real Sol low model. Each recorded response is presented at replay time; these are archived offer terms.",
+  "runs": [
+    {
+      "case": "monitor-01",
+      "starting_pages": [
+        "https://pcandparts.com/product/samsung-24d300-24-100hz/",
+        "https://syscom.com.lb/71-monitor"
+      ],
+      "worker_revision": "fb76284",
+      "run_id": "c9044e9c-cfe9-466e-aeb4-a2ea5ee54428",
+      "limits": {
+        "active_seconds": 299.837,
+        "concurrent_workers": 3,
+        "final_by_s": 297.835,
+        "ledger_buyer_caps": {
+          "calls": 40,
+          "research_spend_usd": "20",
+          "seconds": 300,
+          "spend_usd": "25"
+        },
+        "nonfinal_by_s": 265,
+        "recommendation_groups": 3
+      },
+      "elapsed_ms": 87844,
+      "spend": {
+        "attempts": {
+          "model": 10
+        },
+        "known_usd": "0.1928944",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0"
+      },
+      "archived_reads": [
+        {
+          "archive": "https://pcandparts.com/product/samsung-24d300-24-100hz/",
+          "digest": "0be8bf567a6bf96bf706349f4cbe680144dc7a8b3b6fbc8cb2b91f0635e5ee32"
+        },
+        {
+          "archive": "https://syscom.com.lb/71-monitor",
+          "digest": "d03386525b72df0ebe34de350c23d61946aed3bef986e89fb0b3cf8de424c1e4"
+        },
+        {
+          "archive": "https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html",
+          "digest": "cd38fceea58dad7874bda33c38002878000292cd3510831721b30216c54b43e9"
+        },
+        {
+          "archive": "https://pcandparts.com/product-category/monitor/",
+          "digest": "3fd9168fdff28edd700f7419107592f9d25e594c61eb3e426733f25c31c7fa18"
+        }
+      ],
+      "status": "partial",
+      "answer": "I’d buy the AOC 24B15H2-89 from Syscom for USD 88 before delivery. It is listed as new and in online stock.\n\nIt meets all your requirements: a 23.8-inch IPS screen, 100 Hz refresh rate and HDMI input. Its 1920 × 1080 resolution is suitable for spreadsheets and documents at this size, while 100 Hz makes scrolling smoother than a standard 60 Hz display. It is also USD 42 below your budget.\n\nProduct link: https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html\n\nThis is the cheapest suitable option I could verify, not a confirmed market-wide lowest price. Delivery is excluded; showroom stock was not verified.",
+      "rendered_cards": [
+        {
+          "text": "AOC Monitor 23.8\" 100Hz Fhd IPS HDMI port, Anti-Blue Light 1920 X 1080 AOC 24B15H2-89 FM01-24SD-VH44 · Syscom.com.lbUSD 88 · Current listed priceIn stock · Online listingView at Syscom.com.lb ↗Delivery to the requested destination and mandatory charges still need checking.Payable total incompleteInspect configuration, costs & evidenceConfiguration & seller termsWidth (px)UnknownHeight (px)UnknownRefresh rate (Hz)UnknownSize (inches)UnknownPanelUnknownColorUnknownConditionnewActivationUnknownPaymentUnknownWarranty providerUnknownWarranty monthsUnknownWarranty territoryUnknownPrice, charges & freshnessSubtotal unknown · incompleteDevice price · knownUSD 88Missing: Delivery to the requested destination and mandatory charges still need checking.. This is not a complete payable total.Price observed: 11/27/2026, 9:50:33 PM; 11/27/2026, 9:50:33 PMStock observed: 11/27/2026, 9:50:33 PMLebanese seller · Delivery to Lebanon unconfirmedDelivery timing: UnknownEvidenceseller.name11/27/2026, 9:50:33 PM · variantView source ↗Syscom.com.lbseller.market11/27/2026, 9:50:33 PM · variantView source ↗New Slav Street, Bu Chaaya Center, Dekweneh, Lebanon.variant.product.model11/27/2026, 9:50:33 PM · variantView source ↗AOC Monitor 23.8&quot; 100Hz Fhd IPS HDMI port, Anti-Blue Light 1920 X 1080 AOC 24B15H2-89  FM01-24SD-VH44price11/27/2026, 9:50:33 PM · variantView source ↗\"price\":\"88\"price11/27/2026, 9:50:33 PM · variantView source ↗\"currency\":\"USD\"stock11/27/2026, 9:50:33 PM · variantView source ↗\"availability\": \"https://schema.org/InStock\"condition11/27/2026, 9:50:33 PM · variantView source ↗&quot;condition&quot;:&quot;new&quot;",
+          "links": [
+            "https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html",
+            "https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html",
+            "https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html",
+            "https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html",
+            "https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html",
+            "https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html",
+            "https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html",
+            "https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html"
+          ]
+        }
+      ],
+      "actions": [
+        "Inspect selected listing https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html with Firecrawl",
+        "Inspect selected listing https://pcandparts.com/product-category/monitor/ https://pcandparts.com/product-category/monitor/ with Firecrawl",
+        "Render listing with Playwright https://pcandparts.com/product-category/monitor/",
+        "Present checked offers, partial evidence or a blocker"
+      ],
+      "evidence": [
+        {
+          "field": "seller.name",
+          "source": "https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html",
+          "sha256": "cd38fceea58dad7874bda33c38002878000292cd3510831721b30216c54b43e9",
+          "excerpt": "Syscom.com.lb"
+        },
+        {
+          "field": "seller.market",
+          "source": "https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html",
+          "sha256": "cd38fceea58dad7874bda33c38002878000292cd3510831721b30216c54b43e9",
+          "excerpt": "New Slav Street, Bu Chaaya Center, Dekweneh, Lebanon."
+        },
+        {
+          "field": "variant.product.model",
+          "source": "https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html",
+          "sha256": "cd38fceea58dad7874bda33c38002878000292cd3510831721b30216c54b43e9",
+          "excerpt": "AOC Monitor 23.8&quot; 100Hz Fhd IPS HDMI port, Anti-Blue Light 1920 X 1080 AOC 24B15H2-89  FM01-24SD-VH44"
+        },
+        {
+          "field": "price",
+          "source": "https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html",
+          "sha256": "cd38fceea58dad7874bda33c38002878000292cd3510831721b30216c54b43e9",
+          "excerpt": "\"price\":\"88\""
+        },
+        {
+          "field": "price",
+          "source": "https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html",
+          "sha256": "cd38fceea58dad7874bda33c38002878000292cd3510831721b30216c54b43e9",
+          "excerpt": "\"currency\":\"USD\""
+        },
+        {
+          "field": "stock",
+          "source": "https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html",
+          "sha256": "cd38fceea58dad7874bda33c38002878000292cd3510831721b30216c54b43e9",
+          "excerpt": "\"availability\": \"https://schema.org/InStock\""
+        },
+        {
+          "field": "condition",
+          "source": "https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html",
+          "sha256": "cd38fceea58dad7874bda33c38002878000292cd3510831721b30216c54b43e9",
+          "excerpt": "&quot;condition&quot;:&quot;new&quot;"
+        }
+      ]
+    },
+    {
+      "case": "headphones-01",
+      "starting_pages": [
+        "https://www.carrefourlebanon.com/maflbn/en/pc-speakers/gm-jbl-t520btblkeu-headset/p/482904?srsltid=AY6E960y1hvrcLneUxzwi00hYP8Sk35rpQVyxfRtBAANDSuZhpkjTRWw"
+      ],
+      "worker_revision": "fb76284",
+      "run_id": "3e145483-2a7e-4c40-bc7a-c107c6f43a97",
+      "limits": {
+        "active_seconds": 299.794,
+        "concurrent_workers": 3,
+        "final_by_s": 297.77000000000135,
+        "ledger_buyer_caps": {
+          "calls": 40,
+          "research_spend_usd": "20",
+          "seconds": 300,
+          "spend_usd": "25"
+        },
+        "nonfinal_by_s": 265,
+        "recommendation_groups": 3
+      },
+      "elapsed_ms": 91938,
+      "spend": {
+        "attempts": {
+          "model": 12
+        },
+        "known_usd": "0.1203569",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0"
+      },
+      "archived_reads": [
+        {
+          "archive": "https://www.carrefourlebanon.com/maflbn/en/pc-speakers/gm-jbl-t520btblkeu-headset/p/482904?srsltid=AY6E960y1hvrcLneUxzwi00hYP8Sk35rpQVyxfRtBAANDSuZhpkjTRWw",
+          "digest": "0b5c574567c15422ab523245bb6d69387a35d3a4301c67202ee62fb234304ecd"
+        }
+      ],
+      "status": "abstained",
+      "answer": "I couldn’t verify a lowest-price winner across Lebanese sellers.\n\nThe one exact listing I could check was:\nCarrefour — new black JBL Tune 520BT, listed at LBP 3,498,300 including VAT, with online stock shown. Delivery is excluded.\nhttps://www.carrefourlebanon.com/maflbn/en/p/482904\n\nHowever, I couldn’t establish the named merchant’s Lebanese location from the checked page. Other seller pages failed to load, so I can’t provide a verified comparison or claim Carrefour is cheapest.",
+      "rendered_cards": [],
+      "actions": [
+        "Inspect selected listing https://www.carrefourlebanon.com/ Home with Firecrawl",
+        "Inspect selected listing https://www.carrefourlebanon.com/helpcenter/articles/topic/177-Shipping-&-Delivery shipping & delivery with Firecrawl",
+        "Render listing with Playwright https://www.carrefourlebanon.com/",
+        "Inspect selected listing https://www.carrefourlebanon.com/newspress News & Press Releases with Firecrawl",
+        "Inspect selected listing https://www.carrefourlebanon.com/helpcenter/articles/topic/175-Valet-trolley Valet trolley & home delivery with Firecrawl",
+        "Render listing with Playwright https://www.carrefourlebanon.com/helpcenter/articles/topic/177-Shipping-&-Delivery",
+        "Inspect selected listing https://www.carrefourlebanon.com/helpcenter/articles/service/178-Payments Cash on Delivery with Firecrawl",
+        "Present checked offers, partial evidence or a blocker"
+      ],
+      "evidence": []
+    },
+    {
+      "case": "headphones-02",
+      "starting_pages": [
+        "https://www.carrefourlebanon.com/maflbn/en/pc-speakers/gm-jbl-t520btblkeu-headset/p/482904?srsltid=AY6E960y1hvrcLneUxzwi00hYP8Sk35rpQVyxfRtBAANDSuZhpkjTRWw"
+      ],
+      "worker_revision": "47ff9fd",
+      "run_id": "6bf0b631-c6d7-48b8-99bf-fd42342af4fc",
+      "limits": {
+        "active_seconds": 299.856,
+        "concurrent_workers": 3,
+        "final_by_s": 297.8649999999967,
+        "ledger_buyer_caps": {
+          "calls": 40,
+          "research_spend_usd": "20",
+          "seconds": 300,
+          "spend_usd": "25"
+        },
+        "nonfinal_by_s": 265,
+        "recommendation_groups": 3
+      },
+      "elapsed_ms": 67640,
+      "spend": {
+        "attempts": {
+          "model": 9
+        },
+        "known_usd": "0.1021428",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0"
+      },
+      "archived_reads": [
+        {
+          "archive": "https://www.carrefourlebanon.com/maflbn/en/pc-speakers/gm-jbl-t520btblkeu-headset/p/482904?srsltid=AY6E960y1hvrcLneUxzwi00hYP8Sk35rpQVyxfRtBAANDSuZhpkjTRWw",
+          "digest": "0b5c574567c15422ab523245bb6d69387a35d3a4301c67202ee62fb234304ecd"
+        }
+      ],
+      "status": "abstained",
+      "answer": "I couldn’t verify a lowest-price winner across Lebanese shops.\n\nThe one exact match I could check was Carrefour’s new black JBL Tune 520BT:\nListed item price: LBP 3,498,300, including VAT, excluding delivery.\nOnline stock: “Only 5 left” at the time checked.\nExact listing: https://www.carrefourlebanon.com/maflbn/en/p/482904\n\nThis is partial evidence, not a completed seller comparison: I couldn’t independently establish the merchant’s Lebanese location from the accessible pages, and other page reads timed out. I therefore can’t claim Carrefour has the lowest verified price.",
+      "rendered_cards": [],
+      "actions": [
+        "Inspect selected listing https://www.carrefourlebanon.com/ Home with Firecrawl",
+        "Render listing with Playwright https://www.carrefourlebanon.com/",
+        "Inspect selected listing https://www.carrefourlebanon.com/helpcenter/articles/topic/177-Shipping-&-Delivery shipping & delivery with Firecrawl",
+        "Inspect selected listing https://www.carrefourlebanon.com/newspress News & Press Releases with Firecrawl",
+        "Present checked offers, partial evidence or a blocker"
+      ],
+      "evidence": []
+    },
+    {
+      "case": "headphones-03",
+      "starting_pages": [
+        "https://www.carrefourlebanon.com/maflbn/en/pc-speakers/gm-jbl-t520btblkeu-headset/p/482904?srsltid=AY6E960y1hvrcLneUxzwi00hYP8Sk35rpQVyxfRtBAANDSuZhpkjTRWw"
+      ],
+      "worker_revision": "a4dfe84",
+      "run_id": "8c352156-6b0e-477c-8d6d-63b1888088ea",
+      "limits": {
+        "active_seconds": 299.852,
+        "concurrent_workers": 3,
+        "final_by_s": 297.8540000000019,
+        "ledger_buyer_caps": {
+          "calls": 40,
+          "research_spend_usd": "20",
+          "seconds": 300,
+          "spend_usd": "25"
+        },
+        "nonfinal_by_s": 265,
+        "recommendation_groups": 3
+      },
+      "elapsed_ms": 119766,
+      "spend": {
+        "attempts": {
+          "model": 17
+        },
+        "known_usd": "0.2043911",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0"
+      },
+      "archived_reads": [
+        {
+          "archive": "https://www.carrefourlebanon.com/maflbn/en/pc-speakers/gm-jbl-t520btblkeu-headset/p/482904?srsltid=AY6E960y1hvrcLneUxzwi00hYP8Sk35rpQVyxfRtBAANDSuZhpkjTRWw",
+          "digest": "0b5c574567c15422ab523245bb6d69387a35d3a4301c67202ee62fb234304ecd"
+        },
+        {
+          "archive": "https://www.carrefourlebanon.com/helpcenter/articles/service/186-Help-&-Support",
+          "digest": "c46b02d36795fd99dd46a249a72878eb23216a1fcd507a0ea002d8139ab8c999"
+        }
+      ],
+      "status": "abstained",
+      "answer": "I couldn’t verify a lowest-priced Lebanese seller across shops.\n\nThe exact listing I could check was:\nCarrefour — JBL Tune 520BT, black, new: LBP 3,498,300, shown in online stock. Delivery excluded.\nhttps://www.carrefourlebanon.com/maflbn/en/p/482904\n\nLimitations: I couldn’t independently verify Carrefour’s Lebanese premises from its store pages, and I don’t have a second seller’s verified matching offer to compare. This is a checked listed price, not a confirmed lowest-price recommendation.",
+      "rendered_cards": [],
+      "actions": [
+        "Inspect selected listing https://www.carrefourlebanon.com/helpcenter/articles/service/186-Help-&-Support https://www.carrefourlebanon.com/helpcenter/articles/service/186-Help-&-Support with Firecrawl",
+        "Inspect selected listing https://www.carrefourlebanon.com/store-finder https://www.carrefourlebanon.com/store-finder with Firecrawl",
+        "Render listing with Playwright https://www.carrefourlebanon.com/store-finder",
+        "Inspect selected listing https://www.carrefourlebanon.com/ Home with Firecrawl",
+        "Inspect selected listing https://www.carrefourlebanon.com/helpcenter/articles/topic/173-In-Store In-Store with Firecrawl",
+        "Inspect selected listing https://www.carrefourlebanon.com/helpcenter/articles/topic/177-Shipping-&-Delivery Shipping & Delivery with Firecrawl",
+        "Find a published link by its text or URL on https://www.carrefourlebanon.com/helpcenter/articles/service/186-Help-&-Support (enter a short term in query)",
+        "Find a published link by its text or URL on https://www.carrefourlebanon.com/helpcenter/articles/service/186-Help-&-Support (enter a short term in query)",
+        "Render listing with Playwright https://www.carrefourlebanon.com/",
+        "Present checked offers, partial evidence or a blocker"
+      ],
+      "evidence": []
+    },
+    {
+      "case": "headphones-positive",
+      "starting_pages": [
+        "https://www.carrefourlebanon.com/maflbn/en/pc-speakers/gm-jbl-t520btblkeu-headset/p/482904?srsltid=AY6E960y1hvrcLneUxzwi00hYP8Sk35rpQVyxfRtBAANDSuZhpkjTRWw",
+        "https://compuonelb.com/jbl-tune-520bt-black-headset/"
+      ],
+      "worker_revision": "a4dfe84",
+      "run_id": "6dcd6195-c5ba-4dd2-87c2-a70b95edf100",
+      "limits": {
+        "active_seconds": 299.715,
+        "concurrent_workers": 3,
+        "final_by_s": 297.7130000000006,
+        "ledger_buyer_caps": {
+          "calls": 40,
+          "research_spend_usd": "20",
+          "seconds": 300,
+          "spend_usd": "25"
+        },
+        "nonfinal_by_s": 265,
+        "recommendation_groups": 3
+      },
+      "elapsed_ms": 133266,
+      "spend": {
+        "attempts": {
+          "model": 18
+        },
+        "known_usd": "0.2755483",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0"
+      },
+      "archived_reads": [
+        {
+          "archive": "https://www.carrefourlebanon.com/maflbn/en/pc-speakers/gm-jbl-t520btblkeu-headset/p/482904?srsltid=AY6E960y1hvrcLneUxzwi00hYP8Sk35rpQVyxfRtBAANDSuZhpkjTRWw",
+          "digest": "0b5c574567c15422ab523245bb6d69387a35d3a4301c67202ee62fb234304ecd"
+        },
+        {
+          "archive": "https://compuonelb.com/jbl-tune-520bt-black-headset/",
+          "digest": "c4f4c62063a2a6f7e6305e6908afa6bce9d3b39172c38e8bfd1be02ef2badfd2"
+        }
+      ],
+      "status": "partial",
+      "answer": "CompuOne is the fully verified Lebanese-shop match at US$38, but I couldn’t conclusively establish the lowest price across sellers.\n\n• CompuOne — US$38.00. New, black JBL Tune 520BT, listed in online stock. Its Lebanese address is verified.\nhttps://compuonelb.com/jbl-tune-520bt-black-headset/\n\n• Carrefour Lebanon — LBP 3,498,300 including VAT. The exact black JBL Tune 520BT is listed as new, with 5 left online. I couldn’t independently verify its Lebanese premises from the pages retrieved.\nhttps://www.carrefourlebanon.com/maflbn/en/p/482904\n\nDelivery is excluded from both prices. Because the listings use different currencies and I haven’t verified an applicable exchange rate, I can’t reliably declare which is cheaper. Other seller pages could not be read, so this is a partial comparison—not a confirmed market-wide lowest price.",
+      "rendered_cards": [
+        {
+          "text": "JBL TUNE 520BT Black Headset · CompuOneBlackUSD 38.00 · Current listed priceIn stock · Online listingView at CompuOne ↗Delivery to the requested destination and mandatory charges still need checking.Payable total incompleteInspect configuration, costs & evidenceConfiguration & seller termsForm factorUnknownConnectivityUnknownNoise cancellationUnknownColorBlackConditionnewActivationUnknownPaymentUnknownWarranty providerUnknownWarranty monthsUnknownWarranty territoryUnknownPrice, charges & freshnessSubtotal unknown · incompleteDevice price · knownUSD 38.00Missing: Delivery to the requested destination and mandatory charges still need checking.. This is not a complete payable total.Price observed: 11/27/2026, 9:56:57 PM; 11/27/2026, 9:56:57 PMStock observed: 11/27/2026, 9:56:57 PMLebanese seller · Delivery to Lebanon unconfirmedDelivery timing: UnknownEvidenceseller.name11/27/2026, 9:56:57 PM · variantView source ↗CompuOneseller.market11/27/2026, 9:56:57 PM · variantView source ↗CompuOne – Tayeh Ctr – Adonis – Zouk Mosbeh – Lebanonvariant.product.model11/27/2026, 9:56:57 PM · variantView source ↗JBL TUNE 520BT Black Headsetprice11/27/2026, 9:56:57 PM · variantView source ↗\"price\":\"38.00\"price11/27/2026, 9:56:57 PM · variantView source ↗\"priceCurrency\":\"USD\"variant.color11/27/2026, 9:56:57 PM · variantView source ↗Blackstock11/27/2026, 9:56:57 PM · variantView source ↗\"availability\":\"http://schema.org/InStock\"condition11/27/2026, 9:56:57 PM · variantView source ↗\"itemCondition\":\"NewCondition\"",
+          "links": [
+            "https://compuonelb.com/jbl-tune-520bt-black-headset/",
+            "https://compuonelb.com/jbl-tune-520bt-black-headset/",
+            "https://compuonelb.com/jbl-tune-520bt-black-headset/",
+            "https://compuonelb.com/jbl-tune-520bt-black-headset/",
+            "https://compuonelb.com/jbl-tune-520bt-black-headset/",
+            "https://compuonelb.com/jbl-tune-520bt-black-headset/",
+            "https://compuonelb.com/jbl-tune-520bt-black-headset/",
+            "https://compuonelb.com/jbl-tune-520bt-black-headset/",
+            "https://compuonelb.com/jbl-tune-520bt-black-headset/"
+          ]
+        }
+      ],
+      "actions": [
+        "Inspect selected listing https://www.carrefourlebanon.com/helpcenter/articles/service/186-Help-&-Support https://www.carrefourlebanon.com/helpcenter/articles/service/186-Help-&-Support with Firecrawl",
+        "Find a published link by its text or URL on https://www.carrefourlebanon.com/maflbn/en/pc-speakers/gm-jbl-t520btblkeu-headset/p/482904?srsltid=AY6E960y1hvrcLneUxzwi00hYP8Sk35rpQVyxfRtBAANDSuZhpkjTRWw (enter a short term in query)",
+        "Inspect selected listing https://www.carrefourlebanon.com/ Home with Firecrawl",
+        "Inspect selected listing https://www.carrefourlebanon.com/instorefaqs Need Help? with Firecrawl",
+        "Render listing with Playwright https://www.carrefourlebanon.com/instorefaqs",
+        "Inspect selected listing https://www.carrefourlebanon.com/newspress News & Press Releases with Firecrawl",
+        "Find a published link by its text or URL on https://www.carrefourlebanon.com/maflbn/en/pc-speakers/gm-jbl-t520btblkeu-headset/p/482904?srsltid=AY6E960y1hvrcLneUxzwi00hYP8Sk35rpQVyxfRtBAANDSuZhpkjTRWw (enter a short term in query)",
+        "Render listing with Playwright https://www.carrefourlebanon.com/helpcenter/articles/service/186-Help-&-Support",
+        "Find a published link by its text or URL on https://www.carrefourlebanon.com/maflbn/en/pc-speakers/gm-jbl-t520btblkeu-headset/p/482904?srsltid=AY6E960y1hvrcLneUxzwi00hYP8Sk35rpQVyxfRtBAANDSuZhpkjTRWw (enter a short term in query)",
+        "Inspect selected listing https://www.carrefourlebanon.com/helpcenter/articles/topic/177-Shipping-&-Delivery shipping & delivery with Firecrawl",
+        "Present checked offers, partial evidence or a blocker"
+      ],
+      "evidence": [
+        {
+          "field": "seller.name",
+          "source": "https://compuonelb.com/jbl-tune-520bt-black-headset/",
+          "sha256": "c4f4c62063a2a6f7e6305e6908afa6bce9d3b39172c38e8bfd1be02ef2badfd2",
+          "excerpt": "CompuOne"
+        },
+        {
+          "field": "seller.market",
+          "source": "https://compuonelb.com/jbl-tune-520bt-black-headset/",
+          "sha256": "c4f4c62063a2a6f7e6305e6908afa6bce9d3b39172c38e8bfd1be02ef2badfd2",
+          "excerpt": "CompuOne – Tayeh Ctr – Adonis – Zouk Mosbeh – Lebanon"
+        },
+        {
+          "field": "variant.product.model",
+          "source": "https://compuonelb.com/jbl-tune-520bt-black-headset/",
+          "sha256": "c4f4c62063a2a6f7e6305e6908afa6bce9d3b39172c38e8bfd1be02ef2badfd2",
+          "excerpt": "JBL TUNE 520BT Black Headset"
+        },
+        {
+          "field": "price",
+          "source": "https://compuonelb.com/jbl-tune-520bt-black-headset/",
+          "sha256": "c4f4c62063a2a6f7e6305e6908afa6bce9d3b39172c38e8bfd1be02ef2badfd2",
+          "excerpt": "\"price\":\"38.00\""
+        },
+        {
+          "field": "price",
+          "source": "https://compuonelb.com/jbl-tune-520bt-black-headset/",
+          "sha256": "c4f4c62063a2a6f7e6305e6908afa6bce9d3b39172c38e8bfd1be02ef2badfd2",
+          "excerpt": "\"priceCurrency\":\"USD\""
+        },
+        {
+          "field": "variant.color",
+          "source": "https://compuonelb.com/jbl-tune-520bt-black-headset/",
+          "sha256": "c4f4c62063a2a6f7e6305e6908afa6bce9d3b39172c38e8bfd1be02ef2badfd2",
+          "excerpt": "Black"
+        },
+        {
+          "field": "stock",
+          "source": "https://compuonelb.com/jbl-tune-520bt-black-headset/",
+          "sha256": "c4f4c62063a2a6f7e6305e6908afa6bce9d3b39172c38e8bfd1be02ef2badfd2",
+          "excerpt": "\"availability\":\"http://schema.org/InStock\""
+        },
+        {
+          "field": "condition",
+          "source": "https://compuonelb.com/jbl-tune-520bt-black-headset/",
+          "sha256": "c4f4c62063a2a6f7e6305e6908afa6bce9d3b39172c38e8bfd1be02ef2badfd2",
+          "excerpt": "\"itemCondition\":\"NewCondition\""
+        }
+      ]
+    }
+  ],
+  "paired_headphone_choices": {
+    "step2-models": [
+      {
+        "frame": "headphones-01\\frame-01.json",
+        "input_sha256": "8535fa9046c86c11eff3d450a06b9863fd6f56f682bb12281d65cc44ef8c3c00",
+        "model": "opus-medium",
+        "run_id": "875fa7a6-b0a2-4324-924a-a94f5e5c3e2c",
+        "status": "completed",
+        "seconds": 9.11,
+        "selected": "Inspect selected listing https://www.carrefourlebanon.com/ Home with Firecrawl",
+        "decision": {
+          "action_id": "inspect-b14b4971b5e20bd2",
+          "question": null,
+          "material_reason": null,
+          "offer_ids": [],
+          "query": null,
+          "language": "en",
+          "answer": null
+        }
+      },
+      {
+        "frame": "headphones-01\\frame-01.json",
+        "input_sha256": "8535fa9046c86c11eff3d450a06b9863fd6f56f682bb12281d65cc44ef8c3c00",
+        "model": "sol-low",
+        "run_id": "8b80d37a-2549-4a83-94b7-4fb9ff62d4db",
+        "status": "completed",
+        "seconds": 7.58,
+        "selected": "Inspect selected listing https://www.carrefourlebanon.com/ Home with Firecrawl",
+        "decision": {
+          "action_id": "inspect-b14b4971b5e20bd2",
+          "question": null,
+          "material_reason": null,
+          "offer_ids": [],
+          "query": null,
+          "language": "en",
+          "answer": null
+        }
+      },
+      {
+        "frame": "headphones-01\\frame-01.json",
+        "input_sha256": "8535fa9046c86c11eff3d450a06b9863fd6f56f682bb12281d65cc44ef8c3c00",
+        "model": "sol-medium",
+        "run_id": "d546bccf-d792-41fa-afbe-9ca8fc280ed0",
+        "status": "completed",
+        "seconds": 6.78,
+        "selected": "Inspect selected listing https://www.carrefourlebanon.com/ Home with Firecrawl",
+        "decision": {
+          "action_id": "inspect-b14b4971b5e20bd2",
+          "question": null,
+          "material_reason": null,
+          "offer_ids": [],
+          "query": null,
+          "language": "en",
+          "answer": null
+        }
+      }
+    ],
+    "step2-final-models": [
+      {
+        "frame": "headphones-03\\frame-01.json",
+        "input_sha256": "12209dff2ea92516ec901ad241f323f38190592b2dff2d70de88e99914a8b153",
+        "model": "opus-medium",
+        "run_id": "dcebade2-4643-4276-beb5-7270296f8868",
+        "status": "completed",
+        "seconds": 6.3,
+        "selected": "Inspect selected listing https://www.carrefourlebanon.com/helpcenter/articles/service/186-Help-&-Support https://www.carrefourlebanon.com/helpcenter/articles/service/186-Help-&-Support with Firecrawl",
+        "decision": {
+          "action_id": "inspect-a33e856a86c6bfb6",
+          "question": null,
+          "material_reason": null,
+          "offer_ids": [],
+          "query": null,
+          "language": "en",
+          "answer": null
+        }
+      },
+      {
+        "frame": "headphones-03\\frame-01.json",
+        "input_sha256": "12209dff2ea92516ec901ad241f323f38190592b2dff2d70de88e99914a8b153",
+        "model": "sol-low",
+        "run_id": "2ddbaede-e984-4fd8-b197-1ad8be27158a",
+        "status": "completed",
+        "seconds": 5.28,
+        "selected": "Inspect selected listing https://www.carrefourlebanon.com/helpcenter/articles/service/186-Help-&-Support https://www.carrefourlebanon.com/helpcenter/articles/service/186-Help-&-Support with Firecrawl",
+        "decision": {
+          "action_id": "inspect-a33e856a86c6bfb6",
+          "question": null,
+          "material_reason": null,
+          "offer_ids": [],
+          "query": null,
+          "language": "en",
+          "answer": null
+        }
+      },
+      {
+        "frame": "headphones-03\\frame-01.json",
+        "input_sha256": "12209dff2ea92516ec901ad241f323f38190592b2dff2d70de88e99914a8b153",
+        "model": "sol-medium",
+        "run_id": "d38c1e4f-21d1-4c68-b5b2-94b0120fcbdd",
+        "status": "completed",
+        "seconds": 5.39,
+        "selected": "Inspect selected listing https://www.carrefourlebanon.com/helpcenter/articles/service/186-Help-&-Support https://www.carrefourlebanon.com/helpcenter/articles/service/186-Help-&-Support with Firecrawl",
+        "decision": {
+          "action_id": "inspect-a33e856a86c6bfb6",
+          "question": null,
+          "material_reason": null,
+          "offer_ids": [],
+          "query": null,
+          "language": "en",
+          "answer": null
+        }
+      }
+    ]
+  },
+  "separate_diagnostics": [
+    {
+      "url": "https://www.carrefourlebanon.com/helpcenter/articles/service/186-Help-&-Support",
+      "job": "8e5cdeb4-07e7-4cc8-bbea-c8fe194aa5a0",
+      "start": "2026-11-27T19:52:21.824885+00:00",
+      "sha256": "c46b02d36795fd99dd46a249a72878eb23216a1fcd507a0ea002d8139ab8c999",
+      "final_url": "https://www.carrefourlebanon.com/helpcenter/articles/service/186-Help-&-Support",
+      "observed_at": "2026-11-27T19:52:30.812841+00:00",
+      "seconds": 10.7
+    },
+    {
+      "url": "https://www.carrefourlebanon.com/instorefaqs",
+      "job": "27797185-2843-4884-8dde-dc3104798a5a",
+      "start": "2026-11-27T19:52:31.127123+00:00",
+      "error": "ValueError",
+      "detail": "Managed page provenance, freshness or status is not established",
+      "seconds": 3.6
+    },
+    {
+      "url": "https://www.carrefourlebanon.com/store-finder",
+      "job": "4db8ab4a-ac29-4f68-b53b-31d4727f5f06",
+      "start": "2026-11-27T19:53:06.003692+00:00",
+      "error": "ValueError",
+      "detail": "Managed page provenance, freshness or status is not established",
+      "seconds": 4.5
+    },
+    {
+      "url": "https://www.carrefourlebanon.com/contact-us",
+      "job": "61e3cc69-046d-4e2f-b4b1-e84985c95739",
+      "start": "2026-11-27T19:53:09.428095+00:00",
+      "error": "ValueError",
+      "detail": "Managed page provenance, freshness or status is not established",
+      "seconds": 3.3
+    },
+    {
+      "url": "https://www.carrefourlebanon.com/helpcenter/articles/service/184-About-Us",
+      "job": "c36569a0-e48a-4838-b0c2-3e42980b35d0",
+      "start": "2026-11-27T19:53:52.917244+00:00",
+      "sha256": "bdb137a0700ed7a790f67b1f44fd04478736d0027f3e45c371b8059e61cd9694",
+      "final_url": "https://www.carrefourlebanon.com/helpcenter/articles/service/184-About-Us",
+      "observed_at": "2026-11-27T19:53:58.988472+00:00",
+      "seconds": 8.0
+    },
+    {
+      "url": "https://www.carrefourlebanon.com/aboutcarrefour",
+      "job": "ea9cef46-e1c2-42c5-98f3-5b0bb90c1247",
+      "start": "2026-11-27T19:53:59.314956+00:00",
+      "error": "ValueError",
+      "detail": "Managed page provenance, freshness or status is not established",
+      "seconds": 4.1
+    }
+  ],
+  "limitations": [
+    "The seller contact link appeared twentieth among 24 links. With 16 suggested links and no reader proposal, each route selected the home page. All three chose the contact page when its actual anchor became available.",
+    "The returned help page offered a store finder but did not establish premises. The diagnostic reads of that destination did not provide valid captures. The independent audit had operator evidence on a different source. The same-source merchant association cannot use it.",
+    "The positive CompuOne case measures use of verified premises and offer evidence when discovery has already supplied that listing. No blind discovery or lowest price across currencies was demonstrated."
+  ]
+}

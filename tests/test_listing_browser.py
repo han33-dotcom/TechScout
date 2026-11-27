@@ -163,7 +163,7 @@ class BuyerBrowserTests(FlowCase):
         item, = run.uncertain
         self.assertEqual((item.offer.source_variant_id, item.offer.variant.specs.storage_gb.value,
                           str(item.offer.price.value.amount)), ('tab-128', 128, '349'))
-        menus = [json.loads(r['body']['messages'][1]['content']).get('available', []) for r in self.openrouter.requests]
+        menus = [json.loads(r['body']['messages'][1]['content']).get('available', {}).values() for r in self.openrouter.requests]
         self.assertFalse(any('Playwright' in s for s in menus[0]))
         self.assertTrue(any(any('?sku=128' in s for s in menu) and any('Select 128 GB' in s for s in menu)
                             for menu in menus))

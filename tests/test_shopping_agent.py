@@ -42,9 +42,9 @@ class Decisions(FakeOpenRouter):
 
     def answer(self, role, data):
         prefix = next(self.sequence)
-        index = next(i for i, label in enumerate(data['available']) if label.startswith(prefix))
+        key = next(key for key, label in data['available'].items() if label.startswith(prefix))
         intent = data['request']['intent']
-        return dict(action_index=index, offer_ids=[v['offer_id'] for v in data['verified']],
+        return dict(action_id=key, offer_ids=[v['offer_id'] for v in data['verified']],
                     answer='Here is the checked listing evidence.' if prefix.startswith('Present') else None,
                     query=intent.get('model', 'headphones') if prefix.startswith(('Search', 'Look up')) else None,
                     question='Which configuration do you need?' if prefix == 'Ask' else None,
@@ -107,8 +107,8 @@ class ShoppingAgentTests(FlowCase):
         class AgentQueries(Decisions):
             def answer(self, role, data):
                 prefix, query = next(self.sequence)
-                i = next(i for i, label in enumerate(data['available']) if label.startswith(prefix))
-                return dict(action_index=i, query=query, language='ar' if query and 'لبنان' in query else 'en')
+                key = next(key for key, label in data['available'].items() if label.startswith(prefix))
+                return dict(action_id=key, query=query, language='ar' if query and 'لبنان' in query else 'en')
 
         self.openrouter = AgentQueries(choices)
         deps = development_tools(self.deps(), 'TestBrand H14')
@@ -183,7 +183,7 @@ class ShoppingAgentTests(FlowCase):
         decision = json.loads(self.openrouter.requests[1]['body']['messages'][1]['content'])
         self.assertEqual(decision['observations'][0]['unreviewed_search_titles'],
                          [dict(host='other.example', title='W8 Plus listed')])
-        self.assertFalse(any('other.example' in action for action in decision['available']))
+        self.assertFalse(any('other.example' in action for action in decision['available'].values()))
 
     def test_question_and_feedback_reach_resumed_agent(self):
         run = self.agent('Rowan Slate W8', 32, ['Ask'])
