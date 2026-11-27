@@ -4,6 +4,7 @@ from functools import partial
 import json
 from threading import Event
 from unittest.mock import patch
+from unittest import TestCase
 
 import httpx2
 
@@ -11,12 +12,45 @@ from app.agent_inspection import inspect_public_listing
 from app.domestic_discovery import ChannelAttempt, SearchReport
 from app.firecrawl import Firecrawl
 from app.onboarding import ActivationRegistry
+from app.pending_listing_reads import PendingListingReads
+from app.provider_http import request_json
 from app.sources import SourceGate
 from fixture_page_agent import fixture_read
 from test_buyer_flow import FlowCase
 from test_domestic_buyer import lead
 from test_public_listing_buyer import URL, listing
 from test_shopping_agent import Decisions, development_tools
+
+
+class TransferLifetimeTests(TestCase):
+    def test_closing_during_transfer_discards_the_body_and_releases_worker(self):
+        headers_received, continue_body = Event(), Event()
+
+        class Phase:
+            stop = Event()
+            cancel = stop.set
+
+        class Body(httpx2.SyncByteStream):
+            def __iter__(self):
+                headers_received.set()
+                if not continue_body.wait(5):
+                    raise AssertionError('Buyer did not close the transfer')
+                yield b'{}'
+
+        def read(job, url, browser):
+            response = httpx2.Response(200, headers={'content-type': 'application/json'}, stream=Body())
+            return request_json('GET', url, headers={}, transport=httpx2.MockTransport(lambda _: response))
+
+        reads = PendingListingReads(lambda: 0)
+        transfer = reads.start(0, URL, Phase(), read)
+        try:
+            self.assertTrue(headers_received.wait(5))
+            events = reads.close()
+            self.assertEqual(events[-1]['stage'], 'unconsumed_at_close')
+        finally:
+            continue_body.set()
+        with self.assertRaises(InterruptedError):
+            transfer.future.result(timeout=5)
 
 
 class PendingReadTests(FlowCase):

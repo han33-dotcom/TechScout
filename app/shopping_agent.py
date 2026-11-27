@@ -541,10 +541,15 @@ class ShoppingAgent(DomesticBuyerFlow):
             merchant=row.selection.seller, merchant_quote=row.selection.excerpt(row.selection.seller))
             for i, row in enumerate(listings)], locations=[dict(index=i, url=loc.source.final_url,
             merchant_quote=loc.merchant_quote, address_quote=loc.address_quote) for i, loc in enumerate(locations)])
-        self.reads.record(obs.origin_url, 'capture_delivered', sha256=obs.response_sha256)
-        reading = inspect_capture(page, self.request.model_dump(mode='json'),
-            lambda instructions, payload, schema: self.generate(instructions, payload, schema,
-                self.elapsed() + room(), call_seconds=30),
+        first_view = True
+        def read_view(instructions, payload, schema):
+            nonlocal first_view
+            if first_view:
+                self.reads.record(obs.origin_url, 'capture_delivered', sha256=obs.response_sha256)
+                first_view = False
+            return self.generate(instructions, payload, schema, self.elapsed() + room(), call_seconds=30)
+
+        reading = inspect_capture(page, self.request.model_dump(mode='json'), read_view,
             feedback=self.context.answers, checked=browser or (), seller_context=seller_context,
             max_input_bytes=self.roles.settings.max_input_tokens if self.roles else 32768)
         self.page_links[url] = tuple(dict.fromkeys((*reading.links, *self.page_links[url])))

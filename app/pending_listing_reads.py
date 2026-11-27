@@ -3,14 +3,15 @@ from concurrent.futures import FIRST_COMPLETED, Future, ThreadPoolExecutor, wait
 from dataclasses import dataclass
 from queue import SimpleQueue
 
-from app.provider_http import _read_observer
+from app.domestic_buyer import PhaseJob
+from app.provider_http import observe_provider_read
 
 
 @dataclass
 class ListingTransfer:
     index: int
     url: str
-    job: object
+    job: PhaseJob
     future: Future
 
 
@@ -31,11 +32,8 @@ class PendingListingReads:
             raise ValueError('A listing transfer is already pending or both reader slots are busy')
 
         def fetch():
-            token = _read_observer.set(lambda stage, **details: self.record(url, stage, **details))
-            try:
+            with observe_provider_read(lambda stage, **details: self.record(url, stage, **details), job.stop):
                 return inspect(job, url, browser=None)
-            finally:
-                _read_observer.reset(token)
 
         self.record(url, 'read_requested')
         transfer = ListingTransfer(index, url, job, self.pool.submit(fetch))
