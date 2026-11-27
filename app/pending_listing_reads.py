@@ -16,10 +16,9 @@ class ListingTransfer:
 
 
 class PendingListingReads:
-    capacity = 3
-
-    def __init__(self, elapsed):
+    def __init__(self, elapsed, capacity):
         self.elapsed = elapsed
+        self.capacity = capacity
         self.pool = ThreadPoolExecutor(max_workers=self.capacity, thread_name_prefix='buyer-page')
         self.pending = {}
         self.events = SimpleQueue()

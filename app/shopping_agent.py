@@ -208,7 +208,7 @@ class ShoppingAgent(DomesticBuyerFlow):
             if self.deps.retailer_browser:
                 self.browser = stack.enter_context(self.deps.retailer_browser(self.request, self.run_ref))
             self.trace['capabilities'] = dict(search_channels=self.channels, retailer_browser=bool(self.browser))
-            self.reads = PendingListingReads(self.elapsed)
+            self.reads = PendingListingReads(self.elapsed, self.deps.research_parallelism)
             try:
                 return self.decide()
             finally:
@@ -264,7 +264,7 @@ class ShoppingAgent(DomesticBuyerFlow):
             actions.append(Action('ask', 'Ask the buyer a material follow-up question'))
         if self.reads.pending:
             if len(self.reads.pending) >= self.reads.capacity:
-                actions = [a for a in actions if a.kind not in ('inspect', 'follow', 'recheck')]
+                actions = [a for a in actions if a.kind in ('catalog', 'directory', 'ask')]
             can_inspect = any(a.kind in ('inspect', 'follow') and (a.kind, a.args) not in self.used for a in actions)
             label = 'Wait up to 10 seconds for a pending page while other listings are available' if can_inspect else (
                 'Wait for the next pending listing transfer')
@@ -291,6 +291,8 @@ class ShoppingAgent(DomesticBuyerFlow):
                 break
             room = partial(self.left, by)
             self.consume_ready(room)
+            if room() <= 1:
+                continue
             actions = self.menu(final)
             choice = self.generate(PROMPT, dict(
                 request=self.request.model_dump(mode='json'), feedback=list(self.context.answers),
@@ -299,6 +301,8 @@ class ShoppingAgent(DomesticBuyerFlow):
                 available=[a.label for a in actions]), Decision, by)
             if choice is None or choice.action_index >= len(actions):
                 self._note_denials()
+                if self.consume_ready(room):
+                    continue
                 if not final and 'spend' in self.limits:
                     self.job.enter_final_phase()
                     final = True

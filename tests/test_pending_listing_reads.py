@@ -41,10 +41,12 @@ class TransferLifetimeTests(TestCase):
             response = httpx2.Response(200, headers={'content-type': 'application/json'}, stream=Body())
             return request_json('GET', url, headers={}, transport=httpx2.MockTransport(lambda _: response))
 
-        reads = PendingListingReads(lambda: 0)
+        reads = PendingListingReads(lambda: 0, capacity=1)
         transfer = reads.start(0, URL, Phase(), read)
         try:
             self.assertTrue(headers_received.wait(5))
+            with self.assertRaisesRegex(ValueError, 'reader slots'):
+                reads.start(1, URL + '/other', Phase(), read)
             events = reads.close()
             self.assertEqual(events[-1]['stage'], 'unconsumed_at_close')
         finally:
