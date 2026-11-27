@@ -184,7 +184,8 @@ strings) across the entire source, or start (character offset) for a contiguous 
 matches repeat find with start after the last matching offset. The outline and tail are optional
 previews; the source is accessible at every offset. Search for
 the actual model, price, itemCondition, availability, seller, city or business/contact address as
-needed. Keep useful exact quotes in notes across reads. A missing field in one window says nothing
+needed. Keep useful exact quotes in notes across reads. When paging as the buyer, also report already checked
+facts with exact citations in findings so another candidate can be inspected before you finish here. In reason, give the question you are trying to settle. A missing field in one window says nothing
 about the rest of the page. Once ready, leave find empty and start null.
 
 Identify the actual selected offer. Bind the seller, brand, exact variant, current unconditional
@@ -223,6 +224,17 @@ def wire_size(data):
     return len(json.dumps(json.dumps(data, ensure_ascii=False), ensure_ascii=False).encode())
 
 
+@dataclass(frozen=True)
+class ReadPosition:
+    start: int
+    terms: tuple[str, ...]
+    notes: str
+    problem: str
+    question: str
+    findings: tuple
+    links: tuple
+
+
 @dataclass
 class CaptureReading:
     selection: Selection | None = None
@@ -233,6 +245,7 @@ class CaptureReading:
     location: MerchantLocation | None = None
     listing_indices: tuple = ()
     use_location_index: int | None = None
+    position: ReadPosition | None = None
 
 
 class PageSource:
@@ -347,12 +360,19 @@ class PageSource:
 
 
 def inspect_capture(page, objective, generate, *, feedback=(), checked=(), max_input_bytes=32768, agent='buyer',
-                    seller_context=None):
+                    seller_context=None, position=None, yield_after=None):
     source = PageSource(page)
     schema = BuyerPageDecision if agent == 'buyer' else PageDecision
     envelope = FRAMING_BYTES + 1024 + len(json.dumps(_schema(schema)).encode()) + len(json.dumps(PAGE_PROMPT).encode())
     start, terms, notes, problem = 0, [], '', ''
+    collected = {}
+    published = {}
+    if position:
+        start, terms, notes, problem = position.start, position.terms, position.notes, position.problem
+        collected = {(row['statement'], row['quote']): row for row in position.findings}
+        published = dict(position.links)
     last_invalid = None
+    stalled = 0
     while True:
         payload = dict(agent=agent, objective=objective, feedback=list(feedback), url=source.url, reader=page.provider,
                        interaction=[dict(name=o.name, value=o.value) for o in checked],
@@ -364,11 +384,14 @@ def inspect_capture(page, objective, generate, *, feedback=(), checked=(), max_i
         payload['page'] = source.view(start, terms, allowance)
         answer = generate(PAGE_PROMPT, payload, schema)
         if not isinstance(answer, PageDecision):
-            return CaptureReading(reason=problem or 'The agent could not finish reading the capture.')
-        if answer.start is not None or answer.find:
+            return CaptureReading(reason=problem or 'The agent could not finish reading the capture.',
+                                  findings=tuple(collected.values()), links=tuple(published.items()))
+        paging = answer.start is not None or bool(answer.find)
+        if paging and yield_after is None:
             start, terms, notes = answer.start or 0, answer.find, answer.notes
             continue
-        links = tuple((link, href) for href in answer.follow_hrefs if (link := source.link(href)))
+        published.update((link, href) for href in answer.follow_hrefs if (link := source.link(href)))
+        links = tuple(published.items())
         try:
             findings = []
             for finding in answer.findings:
@@ -380,7 +403,17 @@ def inspect_capture(page, objective, generate, *, feedback=(), checked=(), max_i
                                      'intervening markup when needed. Reassess any conflicting evidence.') from exc
                 findings.append(dict(statement=finding.statement, quote=quote, url=source.url,
                                      sha256=page.outcome.response_sha256))
-            findings = tuple(findings)
+            previous_quotes = {row['quote'] for row in collected.values()}
+            collected.update(((row['statement'], row['quote']), row) for row in findings)
+            findings = tuple(collected.values())
+            if paging:
+                start, terms, notes, problem = answer.start or 0, answer.find, answer.notes, ''
+                stalled = 0 if any(row['quote'] not in previous_quotes for row in findings) else stalled + 1
+                if stalled >= yield_after:
+                    position = ReadPosition(start, tuple(terms), notes, problem, answer.reason, findings, links)
+                    return CaptureReading(reason='Further reading is needed to settle the outstanding checks.',
+                                          links=links, findings=findings, position=position)
+                continue
             selection = source.selection(answer.offer) if answer.offer else None
             location = None
             indices = ()
@@ -396,10 +429,16 @@ def inspect_capture(page, objective, generate, *, feedback=(), checked=(), max_i
                 if used is not None and (selection is None or used >= len(seller_context['locations'])):
                     raise ValueError('Select a known location for the merchant on this listing.')
         except ValueError as exc:
-            if answer == last_invalid:
-                return CaptureReading(reason=str(exc), links=links)
-            last_invalid = answer
             problem, notes = str(exc), answer.notes
+            if answer == last_invalid:
+                return CaptureReading(reason=problem, links=links, findings=tuple(collected.values()))
+            last_invalid = answer
+            stalled += 1
+            if yield_after and stalled >= yield_after:
+                findings = tuple(collected.values())
+                position = ReadPosition(start, tuple(terms), notes, problem, answer.reason, findings, links)
+                return CaptureReading(reason='Some proposed fields still lack a matching retailer excerpt.',
+                                      links=links, findings=findings, position=position)
             continue
         if selection is None:
             return CaptureReading(reason=answer.reason or 'No selected offer established.', links=links,
