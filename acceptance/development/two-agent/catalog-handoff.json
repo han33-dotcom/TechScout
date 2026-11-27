@@ -1,0 +1,519 @@
+{
+  "checkpoint": 3,
+  "implementation_commit": "4f0320a5df0056b881a8d8114a3f37c2cee90cc5",
+  "experiment": "One manually seeded IT Promax product and two independent app roles on one isolated durable catalog. Public Internet and configured models with shared accounting. No references from the frozen benchmark.",
+  "setup": {
+    "catalog": "Initially zero offer documents and zero buyer runs. Catalog input included the retailer, the exact public product URL, product 13897, SKU Q20i-ANC-black and color Black.",
+    "buyer": "Fresh API session and worker process, same database and reviewed retailer settings as catalog. No product links in the seller directory entry. No shop name, SKU or link in the buyer request.",
+    "limits": "One seller; new condition, service to destination and full delivered total need evidence. The daily operating schedule stayed paused during live development."
+  },
+  "prior_catalog": {
+    "job": "refresh:handoff-d9076c7742b1485290a78f4cf00b9feb",
+    "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+    "before": {
+      "documents": 0,
+      "observations": 0,
+      "matching": 0
+    },
+    "after": {
+      "documents": 1,
+      "observations": 5,
+      "matching": 0
+    },
+    "after_replay": {
+      "documents": 1,
+      "observations": 5,
+      "matching": 0
+    },
+    "identical_replay": true,
+    "page": {
+      "status": "new",
+      "checked_at": "2026-11-27T08:42:27.449006+00:00",
+      "attempts": 1,
+      "http_status": 200,
+      "bytes": 234341,
+      "rows": 1,
+      "extractions": 1,
+      "reader": "firecrawl-v2",
+      "decisions": [
+        {
+          "reader": "firecrawl-v2",
+          "action": "Finish with current evidence",
+          "sha256": "7af5b8d51376941e45ed5dc32cf2ffb0e6eb9147b744fea68e6926d0f24e38c0"
+        }
+      ],
+      "changed_fields": [
+        "price",
+        "stock",
+        "variant.color",
+        "variant.product.manufacturer",
+        "variant.product.model"
+      ],
+      "changed_passages": 0,
+      "sha256": "7af5b8d51376941e45ed5dc32cf2ffb0e6eb9147b744fea68e6926d0f24e38c0"
+    },
+    "source_attempts": 1,
+    "spend_usd": "0.0004246",
+    "unresolved_usd": "0"
+  },
+  "catalog": {
+    "job": "refresh:handoff-736e076cc8064056ae683d7a048a9e33",
+    "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+    "before": {
+      "documents": 1,
+      "observations": 5,
+      "matching": 0
+    },
+    "after": {
+      "documents": 2,
+      "observations": 10,
+      "matching": 1
+    },
+    "after_replay": {
+      "documents": 2,
+      "observations": 10,
+      "matching": 1
+    },
+    "identical_replay": true,
+    "page": {
+      "status": "new",
+      "checked_at": "2026-11-27T08:43:36.064596+00:00",
+      "attempts": 1,
+      "http_status": 200,
+      "bytes": 235253,
+      "rows": 1,
+      "extractions": 1,
+      "reader": "firecrawl-v2",
+      "decisions": [
+        {
+          "reader": "firecrawl-v2",
+          "action": "Finish with current evidence",
+          "sha256": "10e50e7b11e123cebd3207ac8082b9929321d5cda095d47d8e02354626152995"
+        }
+      ],
+      "exact_listing_extracted": true,
+      "changed_fields": [
+        "price",
+        "stock",
+        "variant.color",
+        "variant.product.manufacturer",
+        "variant.product.model"
+      ],
+      "changed_passages": 0,
+      "sha256": "10e50e7b11e123cebd3207ac8082b9929321d5cda095d47d8e02354626152995"
+    },
+    "source_attempts": 1,
+    "spend_usd": "0.0002446",
+    "unresolved_usd": "0"
+  },
+  "buyer_runs": [
+    {
+      "run": "c0709628-4218-45ab-b2e2-fa10455f95d9",
+      "entry": "POST /api/runs and buyer worker with shared development registry and pinned model",
+      "request": {
+        "request_id": "1f8efa05e6294559869e98d9ec962a47",
+        "implementation": "single_agent",
+        "intent": {
+          "kind": "exact_model",
+          "model": "Soundcore Q20i",
+          "wording": "I'm looking for new black Soundcore Q20i headphones. Which Lebanese shop has the lower total for one pair delivered to Batroun?"
+        },
+        "requirements": {
+          "category": "audio"
+        },
+        "allowed_colors": [
+          "Black"
+        ],
+        "fulfillment": {
+          "mode": "delivery",
+          "destination": {
+            "city": "Batroun"
+          }
+        }
+      },
+      "started": "2026-11-27T08:43:48.445814+00:00",
+      "finished": "2026-11-27T08:44:43.827198+00:00",
+      "status": "partial",
+      "elapsed_ms": 55375,
+      "known_usd": "0.0229900",
+      "unresolved_usd": "0",
+      "hits": [
+        {
+          "color": "Black",
+          "lead": 0,
+          "model": "Soundcore Q20i ANC Headphones",
+          "seller": "IT Promax",
+          "sku": "Q20i-ANC-black"
+        }
+      ],
+      "actions": [
+        {
+          "count": 1,
+          "status": "leads",
+          "tool": "catalog",
+          "turn": 1
+        },
+        {
+          "item_fits": true,
+          "lead": 0,
+          "merchant_located": true,
+          "reader": "firecrawl-v2",
+          "receipts": [
+            "8e28d3a1baccf72831a85f59c2d62fd3e9ce48a06684fab82433499ae7f57f6a"
+          ],
+          "status": "priced_partial",
+          "tool": "inspect",
+          "turn": 2
+        },
+        {
+          "item_fits": true,
+          "lead": 0,
+          "merchant_located": true,
+          "reader": "playwright",
+          "receipts": [
+            "46d4af716ccaab0190818f842b780a6094c22b6b9256d0a701a0d5d049d18e6d"
+          ],
+          "status": "priced_partial",
+          "tool": "render",
+          "turn": 3
+        },
+        {
+          "channel": "serpapi",
+          "count": 8,
+          "query_index": 1,
+          "query_sha256": "549b86e0ddd4e10ac960e1b37e75687aafb8c99e9cc3024d22ae5c0f6ef14664",
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 4
+        }
+      ],
+      "offers": [
+        {
+          "seller": "IT Promax",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "model": "Soundcore Q20i ANC Headphones",
+          "sku": "3034",
+          "color": "Black",
+          "price": {
+            "amount": "48",
+            "currency": "USD"
+          },
+          "online_stock": true,
+          "condition": "unknown",
+          "cost": "incomplete",
+          "gaps": [
+            "Delivery to the requested destination and mandatory charges still need checking.",
+            "The retailer did not confirm the condition of this selected variant."
+          ],
+          "evidence": [
+            {
+              "field_path": "price",
+              "variant_id": "3034",
+              "observed_at": "2026-11-27T08:44:27.633028Z",
+              "origin": "runtime",
+              "response_sha256": "46d4af716ccaab0190818f842b780a6094c22b6b9256d0a701a0d5d049d18e6d",
+              "excerpt": "$48.00"
+            },
+            {
+              "field_path": "price",
+              "variant_id": "3034",
+              "observed_at": "2026-11-27T08:44:27.633028Z",
+              "origin": "runtime",
+              "response_sha256": "46d4af716ccaab0190818f842b780a6094c22b6b9256d0a701a0d5d049d18e6d",
+              "excerpt": "USD"
+            },
+            {
+              "field_path": "variant.color",
+              "variant_id": "3034",
+              "observed_at": "2026-11-27T08:44:27.633028Z",
+              "origin": "runtime",
+              "response_sha256": "46d4af716ccaab0190818f842b780a6094c22b6b9256d0a701a0d5d049d18e6d",
+              "excerpt": "Black"
+            },
+            {
+              "field_path": "stock",
+              "variant_id": "3034",
+              "observed_at": "2026-11-27T08:44:27.633028Z",
+              "origin": "runtime",
+              "response_sha256": "46d4af716ccaab0190818f842b780a6094c22b6b9256d0a701a0d5d049d18e6d",
+              "excerpt": "In stock, ready to ship"
+            }
+          ]
+        }
+      ],
+      "recommendations": 0,
+      "stop_reason": "The shopping agent could not complete its decision.",
+      "final_model_status": "input_too_large"
+    },
+    {
+      "run": "2806b26e-a0c5-4b7a-a29e-e6ab100f52ac",
+      "entry": "POST /api/runs and buyer worker with shared development registry and pinned model",
+      "request": {
+        "request_id": "321a81e09f014c42b12ebf82d88d44d8",
+        "implementation": "single_agent",
+        "intent": {
+          "kind": "exact_model",
+          "model": "I'm looking for new black Soundcore Q20i headphones. Which Lebanese shop has the lower total for one pair delivered to Batroun?"
+        },
+        "buyer_text": "I'm looking for new black Soundcore Q20i headphones. Which Lebanese shop has the lower total for one pair delivered to Batroun?",
+        "requirements": {
+          "category": "audio"
+        },
+        "fulfillment": {
+          "mode": "delivery",
+          "destination": {
+            "city": "Batroun"
+          }
+        }
+      },
+      "started": "2026-11-27T08:45:45.226105+00:00",
+      "finished": "2026-11-27T08:46:39.195890+00:00",
+      "status": "partial",
+      "elapsed_ms": 53968,
+      "known_usd": "0.0231925",
+      "unresolved_usd": "0",
+      "hits": [
+        {
+          "color": "Black",
+          "lead": 0,
+          "model": "Soundcore Q20i ANC Headphones",
+          "seller": "IT Promax",
+          "sku": "Q20i-ANC-black"
+        }
+      ],
+      "actions": [
+        {
+          "count": 1,
+          "status": "leads",
+          "tool": "catalog",
+          "turn": 1
+        },
+        {
+          "item_fits": true,
+          "lead": 0,
+          "merchant_located": true,
+          "reader": "firecrawl-v2",
+          "receipts": [
+            "a693001bf471b8dae7ba7e5a73853b39e6f0a4ea340c027ba08bb136150ee8d3"
+          ],
+          "status": "priced_partial",
+          "tool": "inspect",
+          "turn": 2
+        },
+        {
+          "item_fits": true,
+          "lead": 0,
+          "merchant_located": true,
+          "reader": "playwright",
+          "receipts": [
+            "31146048aaba4d35ba39c84928f2e0bb87c4ff1b65d13926535141db288cf056"
+          ],
+          "status": "priced_partial",
+          "tool": "render",
+          "turn": 3
+        },
+        {
+          "channel": "serpapi",
+          "count": 8,
+          "query_index": 1,
+          "query_sha256": "3918ff93fc0c029c355c08ea982c4feee25cd08a4cb9755c250b6b8b8eace75c",
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 4
+        }
+      ],
+      "offers": [
+        {
+          "seller": "IT Promax",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "model": "Soundcore Q20i ANC Headphones",
+          "sku": "3034",
+          "color": "Black",
+          "price": {
+            "amount": "48",
+            "currency": "USD"
+          },
+          "online_stock": true,
+          "condition": "unknown",
+          "cost": "incomplete",
+          "gaps": [
+            "Delivery to the requested destination and mandatory charges still need checking.",
+            "The retailer did not confirm the condition of this selected variant."
+          ],
+          "evidence": [
+            {
+              "field_path": "price",
+              "variant_id": "3034",
+              "observed_at": "2026-11-27T08:46:23.930711Z",
+              "origin": "runtime",
+              "response_sha256": "31146048aaba4d35ba39c84928f2e0bb87c4ff1b65d13926535141db288cf056",
+              "excerpt": "$48.00"
+            },
+            {
+              "field_path": "price",
+              "variant_id": "3034",
+              "observed_at": "2026-11-27T08:46:23.930711Z",
+              "origin": "runtime",
+              "response_sha256": "31146048aaba4d35ba39c84928f2e0bb87c4ff1b65d13926535141db288cf056",
+              "excerpt": "USD"
+            },
+            {
+              "field_path": "variant.color",
+              "variant_id": "3034",
+              "observed_at": "2026-11-27T08:46:23.930711Z",
+              "origin": "runtime",
+              "response_sha256": "31146048aaba4d35ba39c84928f2e0bb87c4ff1b65d13926535141db288cf056",
+              "excerpt": "Black"
+            },
+            {
+              "field_path": "stock",
+              "variant_id": "3034",
+              "observed_at": "2026-11-27T08:46:23.930711Z",
+              "origin": "runtime",
+              "response_sha256": "31146048aaba4d35ba39c84928f2e0bb87c4ff1b65d13926535141db288cf056",
+              "excerpt": "In stock, ready to ship"
+            }
+          ]
+        }
+      ],
+      "recommendations": 0,
+      "stop_reason": "The shopping agent could not complete its decision.",
+      "final_model_status": "input_too_large"
+    },
+    {
+      "run": "e125177d-d17c-495d-a4bb-71ab110baeb2",
+      "entry": "POST /api/runs and app.buyer_flow.run",
+      "request": {
+        "request_id": "bfccad094f6a4b96b704cb7777634600",
+        "implementation": "single_agent",
+        "intent": {
+          "kind": "exact_model",
+          "model": "I'm looking for new black Soundcore Q20i headphones. Which Lebanese shop has the lower total for one pair delivered to Batroun?"
+        },
+        "buyer_text": "I'm looking for new black Soundcore Q20i headphones. Which Lebanese shop has the lower total for one pair delivered to Batroun?",
+        "requirements": {
+          "category": "audio"
+        },
+        "fulfillment": {
+          "mode": "delivery",
+          "destination": {
+            "city": "Batroun"
+          }
+        }
+      },
+      "started": "2026-11-27T08:48:48.002770+00:00",
+      "finished": "2026-11-27T08:49:43.641528+00:00",
+      "status": "partial",
+      "elapsed_ms": 55641,
+      "known_usd": "0.0233205",
+      "unresolved_usd": "0",
+      "hits": [
+        {
+          "color": "Black",
+          "lead": 0,
+          "model": "Soundcore Q20i ANC Headphones",
+          "seller": "IT Promax",
+          "sku": "Q20i-ANC-black"
+        }
+      ],
+      "actions": [
+        {
+          "count": 1,
+          "status": "leads",
+          "tool": "catalog",
+          "turn": 1
+        },
+        {
+          "item_fits": true,
+          "lead": 0,
+          "merchant_located": true,
+          "reader": "firecrawl-v2",
+          "receipts": [
+            "a1620cb24b7550982e3d2cc34cde5034d3f3a9e087d7db0bd52faf4db426f13c"
+          ],
+          "status": "priced_partial",
+          "tool": "inspect",
+          "turn": 2
+        },
+        {
+          "item_fits": true,
+          "lead": 0,
+          "merchant_located": true,
+          "reader": "playwright",
+          "receipts": [
+            "c221d96cda3a262c5788a136c67b74a298593b024b9b6595b8c3cb6e585fc7a8"
+          ],
+          "status": "priced_partial",
+          "tool": "render",
+          "turn": 3
+        },
+        {
+          "channel": "serpapi",
+          "count": 8,
+          "query_index": 1,
+          "query_sha256": "3918ff93fc0c029c355c08ea982c4feee25cd08a4cb9755c250b6b8b8eace75c",
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 4
+        }
+      ],
+      "offers": [
+        {
+          "seller": "IT Promax",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "model": "Soundcore Q20i ANC Headphones",
+          "sku": "3034",
+          "color": "Black",
+          "price": {
+            "amount": "48",
+            "currency": "USD"
+          },
+          "online_stock": true,
+          "condition": "unknown",
+          "cost": "incomplete",
+          "gaps": [
+            "Delivery to the requested destination and mandatory charges still need checking.",
+            "The retailer did not confirm the condition of this selected variant."
+          ],
+          "evidence": [
+            {
+              "field_path": "price",
+              "variant_id": "3034",
+              "observed_at": "2026-11-27T08:49:27.614547Z",
+              "origin": "runtime",
+              "response_sha256": "c221d96cda3a262c5788a136c67b74a298593b024b9b6595b8c3cb6e585fc7a8",
+              "excerpt": "$48.00"
+            },
+            {
+              "field_path": "price",
+              "variant_id": "3034",
+              "observed_at": "2026-11-27T08:49:27.614547Z",
+              "origin": "runtime",
+              "response_sha256": "c221d96cda3a262c5788a136c67b74a298593b024b9b6595b8c3cb6e585fc7a8",
+              "excerpt": "USD"
+            },
+            {
+              "field_path": "variant.color",
+              "variant_id": "3034",
+              "observed_at": "2026-11-27T08:49:27.614547Z",
+              "origin": "runtime",
+              "response_sha256": "c221d96cda3a262c5788a136c67b74a298593b024b9b6595b8c3cb6e585fc7a8",
+              "excerpt": "Black"
+            },
+            {
+              "field_path": "stock",
+              "variant_id": "3034",
+              "observed_at": "2026-11-27T08:49:27.614547Z",
+              "origin": "runtime",
+              "response_sha256": "c221d96cda3a262c5788a136c67b74a298593b024b9b6595b8c3cb6e585fc7a8",
+              "excerpt": "In stock, ready to ship"
+            }
+          ]
+        }
+      ],
+      "recommendations": 0,
+      "stop_reason": "The shopping agent could not complete its decision.",
+      "final_model_status": "input_too_large"
+    }
+  ]
+}

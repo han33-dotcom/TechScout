@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 import json
 from pathlib import Path
@@ -36,9 +36,39 @@ class ScheduleTests(unittest.TestCase):
         self.roles = Mock()
         self.roles.settings.timeout_seconds = 16
         self.roles.generate.side_effect = choose
+        self.settings = Settings.model_validate_json(Path('config/maintenance.json').read_bytes())
         self.runner = Maintenance(self.ledger, f.fixture.corpus, f.gate, f.manifest,
-                Settings.model_validate_json(Path('config/maintenance.json').read_bytes()),
+                self.settings.model_copy(update={'daily_at_beirut': None}),
                 discovery=self.tools, queue=self.queue, roles=self.roles)
+
+    def test_daily_jobs_follow_beirut_clock_across_restart_and_dst(self):
+        # Beirut switches to summer time overnight on March 29, 2026.
+        self.runner.settings = self.settings
+        f = self.fixture
+        f.now = datetime(2026, 3, 28, 1, 59, tzinfo=timezone.utc)
+        control(self.ledger, True)
+        signal(self.ledger, 'audio')
+        for kind in ('discovery', 'catalog', 'offers'):
+            self.assertIsNone(self.runner.run(kind))
+        self.assertIsNotNone(self.runner.run('offers', force=True))
+        f.now += timedelta(minutes=1)
+        for kind in ('discovery', 'catalog', 'offers'):
+            self.assertIsNotNone(self.runner.run(kind))
+        restarted = Maintenance(self.ledger, f.fixture.corpus, f.gate, f.manifest, self.settings,
+                                discovery=self.tools, queue=self.queue, roles=self.roles)
+        tomorrow = datetime(2026, 3, 29, 1, tzinfo=timezone.utc)
+        for kind, state in status(self.ledger)['jobs'].items():
+            self.assertEqual(state['next_due'], tomorrow.timestamp())
+            self.assertIsNone(restarted.run(kind))
+        f.now = tomorrow - timedelta(seconds=1)
+        self.assertIsNone(restarted.run('offers'))
+        f.now = tomorrow + timedelta(minutes=30)
+        active = restarted.claim('offers', False)
+        self.assertIsNotNone(active)
+        self.assertIsNone(self.runner.run('offers'))
+        f.now += timedelta(minutes=5)
+        self.assertEqual(self.runner.run('offers')['job_id'], active['job'])
+        self.assertIsNone(restarted.run('offers'))
 
     def test_control_rotation_gap_privacy_and_interrupted_agent(self):
         self.assertIsNone(self.runner.run('discovery', force=True))

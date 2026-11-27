@@ -1,7 +1,7 @@
 """Opt-in domestic discovery, catalog and offer maintenance in a separate local process."""
 import argparse
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import datetime, time as local_time, timedelta, timezone
 from decimal import Decimal
 from functools import partial
 from hashlib import sha256
@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 import time
 from uuid import uuid4
+from zoneinfo import ZoneInfo
 
 from pydantic import Field
 
@@ -46,10 +47,21 @@ class Schedule(Model):
 
 
 class Settings(Model):
+    daily_at_beirut: str | None = Field(default=None, pattern=r'^(?:[01]\d|2[0-3]):[0-5]\d$')
     discovery: Schedule
     catalog: Schedule
     offers: Schedule
     manufacturer_pages: tuple[DirectoryPage, ...] = Field(max_length=10)
+
+
+def daily_window(now, at, served):
+    zone = ZoneInfo('Asia/Beirut')
+    today = datetime.fromtimestamp(now, zone).date()
+    hour = local_time.fromisoformat(at)
+    scheduled = datetime.combine(today, hour, zone).timestamp()
+    if served == today.isoformat():
+        return None, datetime.combine(today + timedelta(days=1), hour, zone).timestamp()
+    return today.isoformat() if now >= scheduled else None, scheduled
 
 
 def initial():
@@ -116,12 +128,20 @@ class Maintenance:
             if active and active['lease'] > now:
                 return
             if not active:
-                gap_due = (kind == 'discovery' and schedule['gaps'] and now >= slot.get('gap_after', 0))
-                if not force and now < slot['due'] and not gap_due:
-                    return
+                service_date = None
+                if self.settings.daily_at_beirut:
+                    service_date, slot['due'] = daily_window(now, self.settings.daily_at_beirut, slot.get('served_date'))
+                    if not force and service_date is None:
+                        return
+                else:
+                    gap_due = (kind == 'discovery' and schedule['gaps'] and now >= slot.get('gap_after', 0))
+                    if not force and now < slot['due'] and not gap_due:
+                        return
                 batch = kind + '-' + uuid4().hex
                 active = dict(batch=batch, job=('discovery:' if kind == 'discovery' else 'refresh:') + batch,
                               cursor=slot['cursor'], started=now, gap_counts=dict(schedule['gaps']))
+                if service_date:
+                    active['service_date'] = service_date
                 if kind != 'discovery':
                     seeds = {str(s.url): s for s in self.manifest.seeds if (s.format == 'catalog') == (kind == 'catalog')}
                     if kind == 'offers':
@@ -212,6 +232,10 @@ class Maintenance:
             slot.pop('active')
             slot.update(last=report, due=now + limits.interval_seconds, cursor=slot['cursor'] + 1,
                         gap_after=now + min(3600, limits.interval_seconds))
+            if self.settings.daily_at_beirut:
+                if active.get('service_date'):
+                    slot['served_date'] = active['service_date']
+                _, slot['due'] = daily_window(now, self.settings.daily_at_beirut, slot.get('served_date'))
             return report
 
 
