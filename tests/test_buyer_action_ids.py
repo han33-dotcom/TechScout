@@ -3,8 +3,9 @@ from unittest.mock import patch
 
 from app.domestic_buyer import Listing
 from app.shopping_agent import ShoppingAgent
-from test_buyer_flow import FlowCase
+from test_buyer_flow import FlowCase, inference_config
 from test_listing_browser import retailer
+from test_merchant_location import ADDRESS, CONTACT, LISTING, PRODUCT, LocationChoices
 from test_public_listing_buyer import BuyerDecisions, URL, WORDING, listing
 from test_shopping_agent import development_tools
 
@@ -45,3 +46,38 @@ class TargetedActionTests(FlowCase):
         self.assertEqual(reads, [('firecrawl', URL)])
         self.assertEqual(str(run.uncertain[0].offer.listing_url), URL)
         self.assertIn('49.00', run.explanation.text)
+
+    def test_buyer_finds_a_deep_contact_link_and_only_saves_supported_seller(self):
+        navigation = ''.join(f'<a href="/category/{i}">Category {i}</a>' for i in range(40))
+        body = LISTING + navigation + f'<a href="{CONTACT}">Contact the shop</a>'
+        for contact, expected_cards in ((ADDRESS, 1), ('<p>Contact form unavailable</p>', 0)):
+            with self.subTest(available=bool(expected_cards)):
+                class Buyer(LocationChoices):
+                    def __init__(self):
+                        super().__init__([], True)
+                        self.moves = iter(['Inspect selected listing ' + PRODUCT, 'Find a published link',
+                                           'Inspect selected listing ' + CONTACT, 'Present'])
+
+                    def answer(self, role, data):
+                        if 'page' in data:
+                            if data['url'] == CONTACT and not expected_cards:
+                                return dict(fits=False, reason='The contact form gives no business address.')
+                            return super().answer(role, data)
+                        move = next(self.moves)
+                        key = next(key for key, label in data['available'].items() if label.startswith(move))
+                        if move.startswith('Find'):
+                            assert not any(CONTACT in label for label in data['available'].values())
+                        return dict(action_id=key, query='contact' if move.startswith('Find') else None,
+                                    answer='USD 13 at Fixture Audio.' if expected_cards else 'Seller location unconfirmed.')
+
+                self.openrouter = Buyer()
+                config = inference_config(roles={'max_input_tokens': 32768, 'max_output_tokens': 2048})
+                deps = development_tools(self.deps(config=config), 'H111')
+                with retailer(self.storage, PRODUCT, html=body, links={CONTACT: contact}) as (deps.inspect_listing, reads):
+                    _, run = self.browse(deps, implementation='single_agent', requirements=dict(category='audio'),
+                        intent=dict(kind='product_link', url=PRODUCT), request_id=f'deep-contact-{expected_cards}')
+                self.assertEqual(reads, [('firecrawl', PRODUCT), ('firecrawl', CONTACT)])
+                self.assertEqual(len(run.uncertain), expected_cards)
+                if expected_cards:
+                    self.assertTrue(run.uncertain[0].offer.domestic_seller())
+                    self.assertIn(CONTACT, [str(e.final_url) for e in run.uncertain[0].offer.evidence])
