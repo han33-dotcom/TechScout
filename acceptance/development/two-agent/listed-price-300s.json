@@ -1,7 +1,7 @@
 {
   "buyer_revision": "99789c0",
   "clock": "300 active seconds per fresh experimental buyer, including final publication. Elapsed time is worker trace latency.",
-  "method": "The evaluator checked merchant listings outside the buyer runs. Each fresh run used the same one-seller catalog snapshot. Independent reference links, prices and compared part numbers were withheld from the buyer. Diagnostic repeats supply only the model from the same wording via the structured request API.",
+  "method": "The evaluator checked merchant listings outside the buyer runs. Each fresh run used the same one-seller catalog snapshot. Independent reference links, prices and compared part numbers were withheld from the buyer. Diagnostic repeats supply only the model from the same wording via the structured request API. The live structured controls bypassed form parsing, including its inferred form-factor, connectivity and residual clauses. They are diagnostic examples. The offline query replays isolate the model field alone.",
   "comparison_reference": [
     {
       "shop": "MobileLeb",
@@ -524,6 +524,24 @@
         "still_held_usd": "0",
         "uncertain_usd": "0"
       }
+    }
+  ],
+  "model_only_replay": [
+    {
+      "case": "one",
+      "method": "Offline query construction from the stored natural request. Change only intent.model. No network or model calls.",
+      "original_query": "one Lebanese shop",
+      "corrected_query": "Soundcore Q20i",
+      "original_first_web_query": "one Lebanese shop Lebanon retailer headphones black",
+      "corrected_first_web_query": "Soundcore Q20i Lebanon retailer headphones black"
+    },
+    {
+      "case": "pair",
+      "method": "Offline query construction from the stored natural request. Change only intent.model. No network or model calls.",
+      "original_query": null,
+      "corrected_query": "Logitech H111",
+      "original_first_web_query": "audio Lebanon retailer headphones wired",
+      "corrected_first_web_query": "Logitech H111 Lebanon retailer headphones wired"
     }
   ]
 }
