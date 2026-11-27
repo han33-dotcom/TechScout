@@ -483,7 +483,7 @@ class Selection:
         def receipt(path, excerpt):
             eid = f'{identity}:{path}:{len(evidence)}:{obs.response_sha256[:16]}'
             evidence.append(v2.Evidence(evidence_id=eid, source_id=obs.source_id, product_id=product,
-                variant_id=self.sku, scope='variant', field_path=path, origin_url=url, final_url=url,
+                variant_id=self.sku, scope='variant', field_path=path, origin_url=obs.origin_url, final_url=url,
                 observed_at=obs.observed_at, response_sha256=obs.response_sha256, adapter_version='public-listing/1',
                 origin='runtime', corpus_version='public-listing/1', run=run, excerpt=excerpt))
             return eid

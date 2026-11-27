@@ -80,7 +80,18 @@ def inspect_public_listing(job, url: str, registry: ActivationRegistry, *, envir
         provider = Firecrawl.from_env(SourceGate(scope), os.environ if environ is None else environ)
         if provider is None:
             raise ValueError('Configure Firecrawl and its credit allowance for listing inspection')
-        return provider.scrape(job, scope.source_id, url)
+        def resolve_landing(final_url):
+            destination = canonical(final_url)
+            if destination is None:
+                raise ValueError('Expected a public HTTPS landing page')
+            landing_scope = _ListingScope(registry, *destination, final_url)
+            try:
+                limits = SourceGate(landing_scope).check_provider_target(landing_scope.source_id, final_url, expect='html')
+                return landing_scope.source_id, limits
+            finally:
+                landing_scope.close()
+
+        return provider.scrape(job, scope.source_id, url, resolve_landing=resolve_landing)
     finally:
         scope.close()
 
@@ -113,6 +124,12 @@ def read_catalog_listing(inspect, job, url, *, objective, roles, trace=None):
         try:
             page = inspect(job, url, browser=browser)
             last_capture = page
+            if page.outcome.final_url != url:
+                if trace is not None:
+                    trace.append(dict(reader=page.provider, requested_url=url, final_url=page.outcome.final_url,
+                                      sha256=page.outcome.response_sha256))
+                url = page.outcome.final_url
+                attempted.add((url, browser))
         except (OSError, ValueError, httpx2.HTTPError, BudgetDenied) as exc:
             if trace is not None:
                 trace.append(dict(reader='playwright' if browser is not None else 'firecrawl-v2',

@@ -100,6 +100,7 @@ class ShoppingAgent(DomesticBuyerFlow):
         self.trace.update(controller='single_agent', actions=[], prompt_version='shopping-agent-6')
         self.trace['request'].pop('model', None)
         self.leads = []
+        self.redirected_urls = set()
         self.used = set()
         self.observations = []
         self.blockers = {}
@@ -136,7 +137,8 @@ class ShoppingAgent(DomesticBuyerFlow):
             return self.decide()
 
     def add_lead(self, listing):
-        if self.deps.inspect_listing and any(row.url == listing.url for row in self.leads):
+        if self.deps.inspect_listing and (listing.url in self.redirected_urls
+                                          or any(row.url == listing.url for row in self.leads)):
             return
         if listing not in self.leads and len(self.leads) < 36:
             self.leads.append(listing)
@@ -160,6 +162,8 @@ class ShoppingAgent(DomesticBuyerFlow):
                         actions.append(Action('seller_search', f'Search {host} for exact model "{model}"',
                                               (host, model)))
         for i, listing in enumerate(self.leads):
+            if listing.url in self.redirected_urls:
+                continue
             title = self.titles.get(listing.url, '')
             actions.append(Action('inspect', f'Inspect selected listing {listing.url[:200]} {title}'.rstrip(), (i,)))
             if self.deps.inspect_listing:
@@ -176,7 +180,7 @@ class ShoppingAgent(DomesticBuyerFlow):
                     actions.append(Action('browser', label, (i, key)))
         if self.deps.inspect_listing and len(self.leads) < 36:
             # A shop's navigation should not consume places reserved for discovered sellers.
-            known_urls = {listing.url for listing in self.leads}
+            known_urls = {listing.url for listing in self.leads} | self.redirected_urls
             for links in reversed(self.page_links.values()):
                 for link, label in links:
                     if link not in known_urls:
@@ -238,7 +242,7 @@ class ShoppingAgent(DomesticBuyerFlow):
                 observation = dict(status=type(exc).__name__)
             self.observations.append(dict(tool=action.kind, **observation))
             self.trace['actions'][-1].update({k: v for k, v in observation.items()
-                if k in ('status', 'count', 'channel', 'query_index', 'query_sha256', 'checks', 'lead', 'receipts', 'reader', 'error', 'item_fits', 'merchant_located')})
+                if k in ('status', 'count', 'channel', 'query_index', 'query_sha256', 'checks', 'lead', 'receipts', 'reader', 'error', 'item_fits', 'merchant_located', 'requested_url', 'final_url')})
         return self.present([], 'The agent reached its search limit.')
 
     def perform(self, action, job, room, query):
@@ -349,11 +353,29 @@ class ShoppingAgent(DomesticBuyerFlow):
                     self.sources[source] = (target[1], 'failed', reason)
             return dict(status='read_failed', lead=index, reason=reason, error=type(exc).__name__)
         obs = page.outcome
-        if (obs.origin_url != url or obs.final_url != url or obs.status != 'ok' or obs.status_code != 200 or not obs.body or not obs.observed_at
+        if (obs.origin_url != url or not canonical(obs.final_url) or obs.status != 'ok' or obs.status_code != 200 or not obs.body or not obs.observed_at
                 or not self.started_at <= obs.observed_at <= self.deps.wall_clock()
                 or sha256(obs.body).hexdigest() != obs.response_sha256):
             return dict(status='invalid_capture', lead=index)
         result = dict(lead=index, reader=page.provider, receipts=[obs.response_sha256])
+        if obs.final_url != url:
+            result.update(requested_url=url, final_url=obs.final_url)
+            self.redirected_urls.add(url)
+            self.redirected_urls.discard(obs.final_url)
+            self.withdraw_public(url)
+            self.publish_partials(prior)
+            prior = tuple(self.uncertain.values())[:MAX_UNCERTAIN]
+            self.page_links.pop(url, None)
+            self.blockers.pop(url, None)
+            url = obs.final_url
+            # Reuse an existing landing lead so all subsequent actions address one page.
+            landing_index = next((i for i, lead in enumerate(self.leads) if lead.url == url), index)
+            if landing_index == index:
+                self.used = {(kind, args) for kind, args in self.used
+                             if kind not in ('render', 'select_option', 'recheck') or args[0] != index}
+            self.leads[landing_index] = Listing(url, obs.source_id)
+            self.used.add(('inspect', (landing_index,)))
+            result['lead'] = landing_index
         self.sources[obs.source_id] = (urlsplit(url).hostname, 'checked', None)
         document = ListingDocument(obs.body.decode('utf-8', errors='replace'))
         self.product_options[url] = tuple(option for option in dict.fromkeys(document.options)

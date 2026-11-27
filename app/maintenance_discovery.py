@@ -73,7 +73,8 @@ def discover(job, *, category, cursor, coverage, discovery, queue, roles, steps,
                     obs.final_url, obs.observed_at, rendered=page.provider == 'playwright')
                 if decision.color and selected.color.casefold() != decision.color.casefold():
                     raise ValueError('The inspected item differs from the requested color.')
-                inspections.append(dict(url=obs.final_url, reader=page.provider, observed_at=obs.observed_at.isoformat(),
+                inspections.append(dict(url=obs.final_url, requested_url=url, source_id=obs.source_id,
+                    reader=page.provider, observed_at=obs.observed_at.isoformat(),
                     sha256=obs.response_sha256, sku=selected.sku, color=selected.color, seller=selected.seller,
                     options=dict(selected.options), price=selected.money.model_dump(mode='json'), stock=selected.availability))
                 reason = 'public listing inspected'

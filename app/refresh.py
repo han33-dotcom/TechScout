@@ -190,7 +190,20 @@ def check_page(seed, manifest, corpus, gate, budget, rows_left, embedding=None, 
                 needed='Refresh the price and stock for this exact catalog item.'))
             outcome, reader = page.outcome, page.provider
             if outcome.source_id != seed.source_id:
-                raise ValueError('The listing source changed during catalog inspection.')
+                # Keep the observed merchant's evidence separate from the seed being refreshed.
+                landing = dict(reader=reader, requested_url=str(seed.url), final_url=outcome.final_url,
+                               source_id=outcome.source_id, sha256=outcome.response_sha256,
+                               observed_at=outcome.observed_at.isoformat())
+                try:
+                    landing['selected'] = ListingDocument(outcome.body.decode('utf-8', errors='replace')).selected(
+                        outcome.final_url, outcome.observed_at, rendered=reader == 'playwright').facts()
+                except ValueError:
+                    landing['selection_status'] = 'unconfirmed'
+                corpus.record_failed_check(key, outcome.observed_at)
+                return dict(status='failed', reason='The landing page belongs to a different shop.',
+                            checked_at=outcome.observed_at.isoformat(), reader=reader, landing=landing,
+                            decisions=decisions, rows=0, extractions=0, attempts=outcome.attempts,
+                            bytes=len(outcome.body), http_status=outcome.status_code)
             linked = outcome.final_url != str(seed.url)
             if linked and not seed.sku:
                 raise ValueError('A linked listing cannot be bound to this catalog seed without a variant ID.')

@@ -51,6 +51,75 @@ class BuyerDecisions(Decisions):
 
 
 class PublicListingBuyerTests(FlowCase):
+    def redirected_journey(self, queried, landed, color):
+        self.openrouter = BuyerDecisions(['Inspect', 'Present'])
+        deps = development_tools(self.deps(), 'Q20i')
+        deps.inspect_listing = partial(inspect_public_listing, registry=ActivationRegistry(self.storage),
+            environ=dict(FIRECRAWL_API_KEY='fixture', FIRECRAWL_SCRAPE_USD_PER_CREDIT='.001'))
+        html = listing(color, '48.00').replace(URL, landed).replace('Fixture Audio', 'Landing Audio')
+        reply = dict(success=True, data=dict(rawHtml=html, metadata=dict(url=landed, sourceURL=queried,
+            contentType='text/html', statusCode=200, provider=dict(creditsCost=1))))
+        with (patch('app.agent_inspection.SourceGate', side_effect=lambda scope:
+                    SourceGate._for_tests(scope, resolver=lambda *_: ['8.8.8.8'])),
+              patch('app.firecrawl.post_json', return_value=reply) as send):
+            _, run = self.browse(deps, implementation='single_agent', requirements=dict(category='audio'),
+                intent=dict(kind='exact_model', model='Soundcore Q20i', wording=WORDING),
+                refinement_note='Check ' + queried, allowed_colors=['black'])
+        self.assertEqual([c.args[2]['url'] for c in send.call_args_list], [queried])
+        return run
+
+    def test_tracking_removed_uses_the_captured_page_in_one_read(self):
+        queried = URL + '?srsltid=test'
+        run = self.redirected_journey(queried, URL, 'Black')
+        item, = run.uncertain
+        self.assertEqual(str(item.offer.listing_url), URL)
+        self.assertTrue(all((str(e.origin_url), str(e.final_url)) == (queried, URL) for e in item.offer.evidence))
+
+    def test_changed_shop_credits_the_landing_seller_and_selected_variant(self):
+        landed = 'https://landing-shop.example/item/q20i?variant=black'
+        run = self.redirected_journey(URL, landed, 'Black')
+        item, = run.uncertain
+        self.assertEqual(item.offer.source_id, source_id_for('landing-shop.example'))
+        self.assertEqual(item.offer.seller.name, 'Landing Audio')
+        self.assertEqual(item.offer.domestic_seller(), 'listing')
+        self.assertEqual(str(item.offer.listing_url), landed)
+        self.assertEqual(str(item.offer.price.value.amount), '48.00')
+        self.assertEqual(item.cost.status, 'incomplete')
+
+    def test_redirect_to_wrong_variant_does_not_supply_requested_price(self):
+        run = self.redirected_journey(URL + '?variant=black', URL + '?variant=white', 'White')
+        self.assertFalse(run.uncertain or run.recommendations)
+
+    def test_second_landing_preserves_first_offer_and_reuses_existing_destination_lead(self):
+        tracked = URL + '?srsltid=test'
+        other = 'https://second-shop.example/headphones/black'
+        self.openrouter = BuyerDecisions(['Inspect selected listing ' + URL, 'Search serpapi',
+                                          'Inspect selected listing ' + tracked, 'Present'])
+        deps = development_tools(self.deps(), 'Q20i')
+        deps.research.workers.domestic_tools.search = lambda query, job, alternatives: SearchReport(
+            job.run_id, (ChannelAttempt('serpapi', 'ok'),), (lead(tracked), lead(other)))
+        deps.inspect_listing = partial(inspect_public_listing, registry=ActivationRegistry(self.storage),
+            environ=dict(FIRECRAWL_API_KEY='fixture', FIRECRAWL_SCRAPE_USD_PER_CREDIT='.001'))
+
+        def provider(endpoint, key, payload, **_):
+            queried = payload['url']
+            landed = other if queried == tracked else URL
+            html = listing('Black', '48.00' if landed == other else '50.00').replace(URL, landed)
+            if landed == other:
+                html = html.replace('Fixture Audio', 'Second Audio')
+            return dict(success=True, data=dict(rawHtml=html, metadata=dict(url=landed, sourceURL=queried,
+                contentType='text/html', statusCode=200, provider=dict(creditsCost=1))))
+
+        with (patch('app.agent_inspection.SourceGate', side_effect=lambda scope:
+                    SourceGate._for_tests(scope, resolver=lambda *_: ['8.8.8.8'])),
+              patch('app.firecrawl.post_json', side_effect=provider) as send):
+            _, run = self.browse(deps, implementation='single_agent', requirements=dict(category='audio'),
+                intent=dict(kind='exact_model', model='Soundcore Q20i', wording=WORDING),
+                refinement_note='Check ' + URL, allowed_colors=['black'])
+        self.assertEqual([c.args[2]['url'] for c in send.call_args_list], [URL, tracked])
+        self.assertEqual({(str(i.offer.listing_url), i.offer.seller.name, str(i.offer.price.value.amount))
+                          for i in run.uncertain}, {(URL, 'Fixture Audio', '50.00'), (other, 'Second Audio', '48.00')})
+
     def journey(self, last, *, make_page=listing):
         self.openrouter = BuyerDecisions(['Search serpapi', 'Inspect', 'Select Black', 'Recheck', 'Present'])
         deps = development_tools(self.deps(), 'Q20i')
