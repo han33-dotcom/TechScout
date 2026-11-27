@@ -282,10 +282,11 @@ def _start(context, *, checkpoint):
         deps = worker_dependencies(checkpoint=checkpoint)
         if not checkpoint and context.request.implementation == 'single_agent':
             from app.shopping_agent import BUYER_SETTINGS, pinned_inference
-            deps = replace(deps, inference=pinned_inference(), versions=dict(deps.versions,
+            inference = pinned_inference()
+            deps = replace(deps, inference=inference, versions=dict(deps.versions,
                 inference_config_sha256=_sha256(ROOT / 'config/evaluation.json'),
                 shopping_agent_config_sha256=_sha256(BUYER_SETTINGS),
-                inference_config_section='evaluation_inference', reasoning_effort='low'))
+                inference_config_section='evaluation_inference', reasoning_effort=inference.config.effort))
     except (InferenceUnavailable, BudgetDenied) as exc:
         # The operator reads the detail in the worker log; the buyer sees a fixed message.
         log.warning('Buyer worker is not configured: %s', exc)
