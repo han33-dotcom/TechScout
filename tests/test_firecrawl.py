@@ -4,7 +4,7 @@ from decimal import Decimal
 from uuid import uuid4
 import json
 import unittest
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 import httpx2
 
@@ -152,6 +152,14 @@ class FirecrawlTests(unittest.TestCase):
         self.assertEqual(page.request_id, job_id)
         self.assertEqual([m for m, _ in self.calls], ['POST', 'GET', 'GET'])
         self.assertEqual(self.ledger.snapshot()['scopes']['project'][4], 3)
+
+    def test_large_active_transfer_can_finish_on_its_original_connection(self):
+        with patch('app.firecrawl.post_json', return_value=self.response()) as send:
+            self.provider().scrape(self.job, SOURCE, URL, agent_read=True)
+        seconds = send.call_args.kwargs['seconds']
+        self.assertGreater(seconds, 40)
+        self.assertLessEqual(seconds + send.call_args.kwargs['idle_seconds'], 115)
+        self.assertEqual(self.ledger.snapshot()['scopes']['project'][4], 1)
 
     def test_agent_declines_ambiguous_archive_jobs_without_reading_either_one(self):
         def send(request):

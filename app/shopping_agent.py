@@ -82,6 +82,7 @@ asks to compare shops and you have one seller's matching item price, use web sea
 a second seller while the search tools are available. Return to the finalists for unresolved
 stock or costs that the buyer asked to compare. When asked specifically for listed prices
 before delivery, check the exact item, condition, seller, stock, listed price and link.
+Describe online availability as online stock. Only claim showroom stock when the page verifies stock at that branch.
 Finish a one-shop request when it is supported. For a comparison look for independent
 sellers of the same variant. Delivery fees are outside a listed-price comparison.
 Use SerpApi for general search. Read the original wording as the buyer wrote it. An earlier
@@ -442,6 +443,9 @@ class ShoppingAgent(DomesticBuyerFlow):
                 self.product_options.setdefault(url, ())
             # A provider error contains no observation about the product. Keep its last receipt.
             reason = 'A further listing read failed.' if url in self.current_selections else 'The listing could not be read.'
+            if isinstance(exc, (TimeoutError, httpx2.TimeoutException)):
+                reader = 'Playwright' if browser is not None else 'Firecrawl'
+                reason += f' The {reader} read timed out before the agent received a usable page.'
             self.blockers[url] = [reason]
             if target := canonical(url):
                 source = self.leads[index].source_id or source_id_for(target[0])

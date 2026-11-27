@@ -124,8 +124,10 @@ class Firecrawl:
         try:
             try:
                 idle = min(12, lease / 4) if agent_read else 5
+                # A progressing transfer can use its read budget. Interruptions, such as
+                # an idle socket, leave the remaining time for recovering the stored job.
                 raw = post_json(API+'scrape',self.api_key,payload,transport=self.transport,
-                                seconds=min(40, lease-idle-2) if agent_read else 15,
+                                seconds=lease-idle-2 if agent_read else 15,
                                 idle_seconds=idle, max_bytes=wire_bytes)
             except (TimeoutError, httpx2.TimeoutException, httpx2.RemoteProtocolError):
                 if not agent_read:
