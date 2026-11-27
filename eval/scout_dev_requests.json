@@ -1,0 +1,13 @@
+{
+  "purpose": "Development requests for the scout agent. None of these come from the frozen 20 (acceptance/buyer-v1) or the six reserved confirmation requests (acceptance/architecture-v2/confirmation-inputs.json). H111 and Q20i are Hasan's development journeys on test/two-agent.",
+  "requests": [
+    {"id": "D01", "text": "Compare two Lebanese shops selling a new Logitech H111 wired 3.5 mm headset. Which is cheaper delivered to Beirut?", "mode": "delivery", "destination": "Beirut", "category": "audio"},
+    {"id": "D02", "text": "I'm looking for new black Soundcore Q20i headphones. Which Lebanese shop has the lower total for one pair delivered to Batroun?", "mode": "delivery", "destination": "Batroun", "category": "audio"},
+    {"id": "D03", "text": "New Samsung Galaxy S24 Ultra 256GB in Titanium Black, delivered to Jounieh. Cheapest shop?", "mode": "delivery", "destination": "Jounieh", "category": "phone"},
+    {"id": "D04", "text": "I need a new laptop for programming with at least 16 GB RAM and 512 GB SSD, under $800, delivered to Beirut.", "mode": "delivery", "destination": "Beirut", "category": "laptop"},
+    {"id": "D05", "text": "I want the new iPad Pro M4 11-inch with 32 GB of RAM and 512 GB storage, delivered to Tripoli.", "mode": "delivery", "destination": "Tripoli", "category": "tablet"},
+    {"id": "D06", "text": "Where can I pick up a new 27-inch 4K monitor for photo editing around $300 in Beirut?", "mode": "pickup", "destination": "Beirut", "category": "monitor"},
+    {"id": "D07", "text": "New Apple AirPods Pro 2 with USB-C, delivered to Zahle. What is the best price?", "mode": "delivery", "destination": "Zahle", "category": "audio"},
+    {"id": "D08", "text": "Cheapest new iPhone 16 128GB black delivered to Saida", "mode": "delivery", "destination": "Saida", "category": "phone"}
+  ]
+}
