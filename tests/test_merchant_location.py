@@ -25,7 +25,8 @@ class LocationChoices(Decisions):
             return dict(fits=False, seller_location=dict(merchant_quote='Fixture Audio',
                 address_quote='Ashrafieh, Beirut, Lebanon',
                 listing_indices=[0] if self.associate and context['listings'] else []))
-        return dict(fits=True, offer=dict(title='Logitech H111', brand='Logitech', seller='Fixture Audio',
+        return dict(fits=True, offer=dict(merchant_address_quote=(context['locations'][0]['address_quote']
+                if self.associate and context['locations'] else ''), title='Logitech H111', brand='Logitech', seller='Fixture Audio',
             price=dict(amount='13.00', currency='USD'), price_quote='USD 13.00', currency_quote='USD',
             condition='NewCondition', condition_quote='New', stock='InStock', stock_quote='In stock'),
             use_location_index=0 if self.associate and context['locations'] else None)
@@ -69,4 +70,39 @@ class MerchantLocationTests(flow.FlowCase):
 
     def test_shared_host_alone_does_not_link_two_pages(self):
         run = self.check_pages([PRODUCT, CONTACT], associate=False)
+        self.assertFalse(run.uncertain or run.recommendations)
+
+    def check_deferred_product(self, item_fits):
+        class Buyer(LocationChoices):
+            def __init__(self):
+                super().__init__([PRODUCT, CONTACT], True)
+                self.sequence = iter(['Inspect selected listing ' + PRODUCT, 'Inspect selected listing ' + CONTACT,
+                                      'Resume the captured listing', 'Present'])
+
+            def answer(self, role, data):
+                if 'page' not in data or data['url'] == CONTACT:
+                    return super().answer(role, data)
+                response = super().answer(role, data)
+                has_location = bool(data['seller_evidence']['locations'])
+                # The first assessment conflates the missing premises with the item check, as in the live run.
+                response.pop('fits')
+                response.pop('use_location_index', None)
+                response['offer'].pop('merchant_address_quote')
+                response.update(item_meets_buyer_requirements=has_location and item_fits,
+                                reason='Product fit evaluated with available merchant evidence.')
+                return response
+
+        self.openrouter = Buyer()
+        deps = development_tools(self.deps(), 'H111')
+        with retailer(self.storage, PRODUCT, html=LISTING, links={CONTACT: ADDRESS}) as (deps.inspect_listing, reads):
+            _, run = self.browse(deps, implementation='single_agent', requirements=dict(category='audio'),
+                intent=dict(kind='exact_model', model='Logitech H111'), refinement_note='Check ' + PRODUCT + ' and ' + CONTACT)
+        self.assertEqual(reads, [('firecrawl', PRODUCT), ('firecrawl', CONTACT)])
+        return run
+
+    def test_later_premises_allow_fresh_product_judgment_on_the_original_capture(self):
+        self.assert_sources(self.check_deferred_product(True))
+
+    def test_matching_merchant_cannot_promote_an_excluded_item(self):
+        run = self.check_deferred_product(False)
         self.assertFalse(run.uncertain or run.recommendations)

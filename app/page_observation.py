@@ -10,7 +10,7 @@ import re
 from typing import Literal
 from urllib.parse import urljoin
 
-from pydantic import Field
+from pydantic import AliasChoices, Field
 
 from app.contracts import Model, Money
 from app.model_provider import _schema
@@ -171,7 +171,9 @@ class LocationReading(Model):
 
 
 class BuyerPageDecision(PageDecision):
-    fits: bool
+    fits: bool = Field(validation_alias=AliasChoices('item_meets_buyer_requirements', 'fits'),
+                       description='Does the product and its specific variant meet the item requirements? '
+                                   'Assess seller premises separately. A missing address does not disqualify the item.')
     seller_location: LocationReading | None = None
     use_location_index: int | None = Field(default=None, ge=0)
 
@@ -212,8 +214,9 @@ In listing_indices select every supplied listing whose actual seller you can ide
 Conversely, on a product page you can select an already observed location using use_location_index.
 Judge the identity using both pages. A shared website, marketplace operator, delivery area, service
 partner or unrelated business address alone is insufficient. Leave uncertain associations empty.
-For a buyer, set fits and explain your judgment (fits is ignored while paging or when there is no offer)
-against all the buyer's words and controls. State what you did find when something is missing."""
+For a buyer, judge the actual item and selected configuration against the requested product and use case.
+Set item_meets_buyer_requirements independently of seller identity, premises and delivery checks.
+The judgment is ignored while paging or when there is no offer. State what you did find when something is missing."""
 
 
 def normalized(text):
@@ -414,10 +417,19 @@ def inspect_capture(page, objective, generate, *, feedback=(), checked=(), max_i
                     return CaptureReading(reason='Further reading is needed to settle the outstanding checks.',
                                           links=links, findings=findings, position=position)
                 continue
-            selection = source.selection(answer.offer) if answer.offer else None
+            used = getattr(answer, 'use_location_index', None)
+            offer = answer.offer
+            if used is not None:
+                if not seller_context or not offer or used >= len(seller_context['locations']):
+                    raise ValueError('Select a known location for the merchant on this listing.')
+                # A repeated contact-page quote belongs to the selected location receipt.
+                # Every product field and any independent listing address still require this capture.
+                address = seller_context['locations'][used]['address_quote']
+                if offer.merchant_address_quote and normalized(offer.merchant_address_quote) == normalized(address):
+                    offer = offer.model_copy(update={'merchant_address_quote': ''})
+            selection = source.selection(offer) if offer else None
             location = None
             indices = ()
-            used = getattr(answer, 'use_location_index', None)
             if seller_context is not None:
                 fields = getattr(answer, 'seller_location', None)
                 if fields:
@@ -426,8 +438,6 @@ def inspect_capture(page, objective, generate, *, feedback=(), checked=(), max_i
                     indices = tuple(dict.fromkeys(fields.listing_indices))
                     if any(i < 0 or i >= len(seller_context['listings']) for i in indices):
                         raise ValueError('Choose an observed seller listing index.')
-                if used is not None and (selection is None or used >= len(seller_context['locations'])):
-                    raise ValueError('Select a known location for the merchant on this listing.')
         except ValueError as exc:
             problem, notes = str(exc), answer.notes
             if answer == last_invalid:

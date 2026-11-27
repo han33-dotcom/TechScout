@@ -1,0 +1,228 @@
+{
+  "issue": 258,
+  "base": "7f29917",
+  "observations": [
+    {
+      "revision": "759a16e",
+      "kind": "fresh Sol low",
+      "run_id": "630449d3-2109-42d4-93f1-80e0ae10a38d",
+      "status": "abstained",
+      "answer": "Mobileleb lists the Sony WH-CH520 in Black / Brand New at USD 42.00, with the black variant marked in online stock.\n\nExact product link: https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?variant=41750795845764\n\nMobileleb has a published location in Dekwaneh, Lebanon. This confirms online availability, not stock at that showroom. The price above excludes delivery.",
+      "cards": [],
+      "stop_reason": "No qualifying offer was confirmed in the listings checked. The agent could not finish reading the capture. The separately published black, brand-new offer is in stock at USD 42.00. Does Mobileleb's Hours and Locations page establish its own Lebanese shop premises? That location requirement remains unverified. Is the black Sony WH-CH520 in stock? The product's variation data explicitly marks Black out of stock, so this shop does not meet the request despite other colors being available.",
+      "evidence": []
+    },
+    {
+      "revision": "759a16e",
+      "kind": "fresh Sol medium",
+      "run_id": "07f0494a-b9dd-4a5d-9e48-edc48e352989",
+      "status": "partial",
+      "answer": "Mobileleb lists the Sony WH-CH520 in Black, Brand New (SKU WH-CH520-Black), as in online stock for US$42, before delivery.\n\nExact product link: https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone\n\nThe shop advertises Lebanon-wide delivery. Physical shop location and branch stock were not verified.",
+      "cards": [],
+      "stop_reason": "The shopping agent could not complete its next decision. Does this offer meet the requirement for a new black Sony WH-CH520 from a Lebanese shop? 961Souq-Zalka lists the selected black pair in stock at USD 45.00 excluding VAT, with Lebanese premises established in the footer. However, the capture The agent could not finish reading the capture. The listing could not be read.",
+      "evidence": []
+    },
+    {
+      "revision": "2d9cc0a",
+      "kind": "Sol low archive, product supplied",
+      "run_id": "4cfa75e8-1cb1-4a2d-8b39-f1efc1f4f31e",
+      "status": "partial",
+      "answer": "Mobileleb, a Lebanese shop with premises in Dekwaneh, lists the Sony WH-CH520 in Black / Brand New at USD 42, in online stock.\n\nExact black-variant product link:\nhttps://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?variant=41750795845764\n\nThis is the checked listed price before delivery. Stock at the physical showroom was not verified.",
+      "cards": [
+        {
+          "text": "Sony WH-CH520, Wireless Headphones Bluetooth On-Ear Headset with Microphone · MobilelebBlackUSD 42.0 · Current listed priceIn stock · Online listingView at Mobileleb ↗Delivery to the requested destination and mandatory charges still need checking.Payable total incompleteInspect configuration, costs & evidenceConfiguration & seller termsForm factorUnknownConnectivityUnknownNoise cancellationUnknownColorBlackConditionnewActivationUnknownPaymentUnknownWarranty providerUnknownWarranty monthsUnknownWarranty territoryUnknownPrice, charges & freshnessSubtotal unknown · incompleteDevice price · knownUSD 42.0Missing: Delivery to the requested destination and mandatory charges still need checking.. This is not a complete payable total.Price observed: 11/27/2026, 10:25:27 PM; 11/27/2026, 10:25:27 PMStock observed: 11/27/2026, 10:25:27 PMLebanese seller · Delivery to Lebanon unconfirmedDelivery timing: UnknownEvidenceseller.name11/27/2026, 10:25:27 PM · variantView source ↗Mobilelebseller.location_identity11/27/2026, 10:26:29 PM · variantView source ↗\"url\": \"https://mobileleb.com\", \"name\": \"Mobileleb\"seller.market11/27/2026, 10:26:29 PM · variantView source ↗Location: Dekwaneh, Slave Street, near Bank of Beirut, Sader Buildingvariant.product.model11/27/2026, 10:25:27 PM · variantView source ↗Sony WH-CH520, Wireless Headphones Bluetooth On-Ear Headset with Microphonelisting_url11/27/2026, 10:25:27 PM · variantView source ↗https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?variant=41750795845764price11/27/2026, 10:25:27 PM · variantView source ↗\"price\": 42.0price11/27/2026, 10:25:27 PM · variantView source ↗\"priceCurrency\": \"USD\"variant.color11/27/2026, 10:25:27 PM · variantView source ↗Blackstock11/27/2026, 10:25:27 PM · variantView source ↗\"inventoryLevel\": { \"@type\": \"QuantitativeValue\", \"value\": \"300\" }condition11/27/2026, 10:25:27 PM · variantView source ↗\"itemCondition\": \"https://schema.org/NewCondition\"",
+          "links": [
+            "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?variant=41750795845764",
+            "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+            "https://mobileleb.com/pages/hours-and-locations",
+            "https://mobileleb.com/pages/hours-and-locations",
+            "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+            "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+            "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+            "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+            "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+            "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+            "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8"
+          ]
+        }
+      ],
+      "stop_reason": "These listings still have unresolved checks. The listing could not be read. The Playwright read timed out before the agent received a usable page.",
+      "evidence": [
+        {
+          "field": "seller.name",
+          "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+          "sha256": "f384d02821629bf04df3ab82fe69fd98134404d86bb7bf705aa1551b1253b328",
+          "excerpt": "Mobileleb"
+        },
+        {
+          "field": "seller.location_identity",
+          "url": "https://mobileleb.com/pages/hours-and-locations",
+          "sha256": "51c73a4c355865fd11938e390ee91e4963c92d16e62f13c453619626f98ef943",
+          "excerpt": "\"url\": \"https://mobileleb.com\", \"name\": \"Mobileleb\""
+        },
+        {
+          "field": "seller.market",
+          "url": "https://mobileleb.com/pages/hours-and-locations",
+          "sha256": "51c73a4c355865fd11938e390ee91e4963c92d16e62f13c453619626f98ef943",
+          "excerpt": "Location: Dekwaneh, Slave Street, near Bank of Beirut, Sader Building"
+        },
+        {
+          "field": "variant.product.model",
+          "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+          "sha256": "f384d02821629bf04df3ab82fe69fd98134404d86bb7bf705aa1551b1253b328",
+          "excerpt": "Sony WH-CH520, Wireless Headphones Bluetooth On-Ear Headset with Microphone"
+        },
+        {
+          "field": "listing_url",
+          "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+          "sha256": "f384d02821629bf04df3ab82fe69fd98134404d86bb7bf705aa1551b1253b328",
+          "excerpt": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?variant=41750795845764"
+        },
+        {
+          "field": "price",
+          "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+          "sha256": "f384d02821629bf04df3ab82fe69fd98134404d86bb7bf705aa1551b1253b328",
+          "excerpt": "\"price\": 42.0"
+        },
+        {
+          "field": "price",
+          "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+          "sha256": "f384d02821629bf04df3ab82fe69fd98134404d86bb7bf705aa1551b1253b328",
+          "excerpt": "\"priceCurrency\": \"USD\""
+        },
+        {
+          "field": "variant.color",
+          "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+          "sha256": "f384d02821629bf04df3ab82fe69fd98134404d86bb7bf705aa1551b1253b328",
+          "excerpt": "Black"
+        },
+        {
+          "field": "stock",
+          "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+          "sha256": "f384d02821629bf04df3ab82fe69fd98134404d86bb7bf705aa1551b1253b328",
+          "excerpt": "\"inventoryLevel\": { \"@type\": \"QuantitativeValue\", \"value\": \"300\" }"
+        },
+        {
+          "field": "condition",
+          "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+          "sha256": "f384d02821629bf04df3ab82fe69fd98134404d86bb7bf705aa1551b1253b328",
+          "excerpt": "\"itemCondition\": \"https://schema.org/NewCondition\""
+        }
+      ]
+    },
+    {
+      "revision": "2d9cc0a",
+      "kind": "Sol medium archive, product supplied",
+      "run_id": "793334b9-ca4c-4920-8c7a-d027011b860b",
+      "status": "abstained",
+      "answer": "Mobileleb, a Lebanese shop with premises in Dekwaneh, lists the Sony WH-CH520 in Black / Brand New for USD 42, excluding delivery.\n\nThe black variant (SKU WH-CH520-Black) is marked in stock in the product page’s variant-specific data. This is online stock; showroom stock was not verified.\n\nExact black-variant product link:\nhttps://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?variant=41750795845764",
+      "cards": [],
+      "stop_reason": "No qualifying offer was confirmed in the listings checked. The listing could not be read. The Playwright read timed out before the agent received a usable page.",
+      "evidence": []
+    },
+    {
+      "revision": "af91d71",
+      "kind": "Control setup error, missing evaluator variables before the stored decision was injected",
+      "run_id": "9a3fd0ed-9cf8-4d1d-b0eb-16d95847c81b",
+      "status": "error",
+      "answer": null,
+      "cards": null,
+      "stop_reason": "Shopping controller failed",
+      "evidence": []
+    },
+    {
+      "revision": "af91d71",
+      "kind": "Same previously rejected Sol medium decisions, contact then product supplied; model-written closing",
+      "run_id": "dea8baf5-c32c-4180-9507-61b43073205b",
+      "status": "partial",
+      "answer": "Mobileleb lists the Sony WH-CH520 in Black, Brand New, as in stock online for USD 42.00.\n\nExact black-variant product link:\nhttps://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?variant=41750795845764\n\nMobileleb has verified premises in Dekwaneh, Lebanon. This is the checked listed price before delivery; showroom stock has not been verified.",
+      "cards": [
+        {
+          "text": "Sony WH-CH520, Wireless Headphones Bluetooth On-Ear Headset with Microphone · MobilelebBlackUSD 42.0 · Current listed priceIn stock · Online listingView at Mobileleb ↗Delivery to the requested destination and mandatory charges still need checking.Payable total incompleteInspect configuration, costs & evidenceConfiguration & seller termsForm factorUnknownConnectivityUnknownNoise cancellationUnknownColorBlackConditionnewActivationUnknownPaymentUnknownWarranty providerUnknownWarranty monthsUnknownWarranty territoryUnknownPrice, charges & freshnessSubtotal unknown · incompleteDevice price · knownUSD 42.0Missing: Delivery to the requested destination and mandatory charges still need checking.. This is not a complete payable total.Price observed: 11/27/2026, 10:31:03 PM; 11/27/2026, 10:31:03 PMStock observed: 11/27/2026, 10:31:03 PMLebanese seller · Delivery to Lebanon unconfirmedDelivery timing: UnknownEvidenceseller.name11/27/2026, 10:31:03 PM · variantView source ↗Mobilelebseller.location_identity11/27/2026, 10:31:03 PM · variantView source ↗\"name\": \"Mobileleb\"seller.market11/27/2026, 10:31:03 PM · variantView source ↗Location: Dekwaneh, Slave Street, near Bank of Beirut, Sader Buildingvariant.product.model11/27/2026, 10:31:03 PM · variantView source ↗Sony WH-CH520, Wireless Headphones Bluetooth On-Ear Headset with Microphonelisting_url11/27/2026, 10:31:03 PM · variantView source ↗https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?variant=41750795845764price11/27/2026, 10:31:03 PM · variantView source ↗<meta itemprop=\"price\" content=\"42.0\">price11/27/2026, 10:31:03 PM · variantView source ↗<meta itemprop=\"priceCurrency\" content=\"USD\">variant.color11/27/2026, 10:31:03 PM · variantView source ↗Blackstock11/27/2026, 10:31:03 PM · variantView source ↗<meta itemprop=\"sku\" content=\"WH-CH520-Black\"><link itemprop=\"availability\" href=\"http://schema.org/InStock\">condition11/27/2026, 10:31:03 PM · variantView source ↗Sony Audio Black / Brand New Sony WH-CH520, Wireless Headphones Bluetooth On-Ear Headset with Microphone",
+          "links": [
+            "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?variant=41750795845764",
+            "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+            "https://mobileleb.com/pages/hours-and-locations",
+            "https://mobileleb.com/pages/hours-and-locations",
+            "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+            "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+            "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+            "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+            "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+            "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+            "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8"
+          ]
+        }
+      ],
+      "stop_reason": "These listings still have unresolved checks.",
+      "evidence": [
+        {
+          "field": "seller.name",
+          "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+          "sha256": "f384d02821629bf04df3ab82fe69fd98134404d86bb7bf705aa1551b1253b328",
+          "excerpt": "Mobileleb"
+        },
+        {
+          "field": "seller.location_identity",
+          "url": "https://mobileleb.com/pages/hours-and-locations",
+          "sha256": "51c73a4c355865fd11938e390ee91e4963c92d16e62f13c453619626f98ef943",
+          "excerpt": "\"name\": \"Mobileleb\""
+        },
+        {
+          "field": "seller.market",
+          "url": "https://mobileleb.com/pages/hours-and-locations",
+          "sha256": "51c73a4c355865fd11938e390ee91e4963c92d16e62f13c453619626f98ef943",
+          "excerpt": "Location: Dekwaneh, Slave Street, near Bank of Beirut, Sader Building"
+        },
+        {
+          "field": "variant.product.model",
+          "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+          "sha256": "f384d02821629bf04df3ab82fe69fd98134404d86bb7bf705aa1551b1253b328",
+          "excerpt": "Sony WH-CH520, Wireless Headphones Bluetooth On-Ear Headset with Microphone"
+        },
+        {
+          "field": "listing_url",
+          "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+          "sha256": "f384d02821629bf04df3ab82fe69fd98134404d86bb7bf705aa1551b1253b328",
+          "excerpt": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?variant=41750795845764"
+        },
+        {
+          "field": "price",
+          "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+          "sha256": "f384d02821629bf04df3ab82fe69fd98134404d86bb7bf705aa1551b1253b328",
+          "excerpt": "<meta itemprop=\"price\" content=\"42.0\">"
+        },
+        {
+          "field": "price",
+          "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+          "sha256": "f384d02821629bf04df3ab82fe69fd98134404d86bb7bf705aa1551b1253b328",
+          "excerpt": "<meta itemprop=\"priceCurrency\" content=\"USD\">"
+        },
+        {
+          "field": "variant.color",
+          "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+          "sha256": "f384d02821629bf04df3ab82fe69fd98134404d86bb7bf705aa1551b1253b328",
+          "excerpt": "Black"
+        },
+        {
+          "field": "stock",
+          "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+          "sha256": "f384d02821629bf04df3ab82fe69fd98134404d86bb7bf705aa1551b1253b328",
+          "excerpt": "<meta itemprop=\"sku\" content=\"WH-CH520-Black\"><link itemprop=\"availability\" href=\"http://schema.org/InStock\">"
+        },
+        {
+          "field": "condition",
+          "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?srsltid=AY6E960G1PqlMtjR3JzppJXxa4qjkPjwLeGxPl0FmN0t4WgNcyv_Hql8",
+          "sha256": "f384d02821629bf04df3ab82fe69fd98134404d86bb7bf705aa1551b1253b328",
+          "excerpt": "Sony Audio Black / Brand New Sony WH-CH520, Wireless Headphones Bluetooth On-Ear Headset with Microphone"
+        }
+      ]
+    }
+  ],
+  "scope": "First two sessions were unguided model-selection runs on the pinned ordinary worker. Subsequent controls start at archived pages, never contact a shop, and do not replace those attempts.",
+  "findings": [
+    "The first live Sol low product selection had black, new, USD 42, online stock and an exact variant URL. It marked overall fit false while asking about premises. The later shop-address read had no pending selection to associate.",
+    "The Sol medium archive also supplied the location index, but repeated the separately verified street address in the product-only address field. The worker correctly could not find that text on the product page. It now binds an exact repeat to the selected contact receipt. All product fields still require matching product-page excerpts.",
+    "A product initially marked unresolved can be reread from its original capture with the verified identity. A wrong item remains ineligible. The offline tests verify the condition and the absence of a second shop transfer."
+  ]
+}
