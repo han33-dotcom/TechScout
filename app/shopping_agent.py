@@ -26,13 +26,14 @@ from app.onboarding import canonical, source_id_for
 from app.selected_listing import (ConflictingSelection, ListingDocument, MATCH_PROMPT, Match,
                                   PageReading, READ_TEXT, ReadPageText, with_option)
 
+BUYER_SETTINGS = ROOT / 'config/two-agent-buyer.json'
+
 
 def pinned_inference():
     load_env_file(names=('OPENROUTER_API_KEY',))
     raw = json.loads((ROOT / 'config/evaluation.json').read_text(encoding='utf-8'))
     settings = raw['evaluation_inference']
-    if (limit := raw.get('shopping_agent_max_input_tokens')) is not None:
-        settings['roles']['max_input_tokens'] = limit
+    settings['roles']['max_input_tokens'] = json.loads(BUYER_SETTINGS.read_text(encoding='utf-8'))['max_input_tokens']
     return build_inference(InferenceConfig.model_validate(settings))
 
 
