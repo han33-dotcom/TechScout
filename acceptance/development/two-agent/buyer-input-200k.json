@@ -1,0 +1,522 @@
+{
+  "baseline_run": "e125177d-d17c-495d-a4bb-71ab110baeb2",
+  "setup": "Fresh buyer API sessions using app.buyer_flow.run and copied checkpoint 3 catalog, registry and public evidence. Only one relevant catalog listing. Public web search and live page reads. Observers recorded size and URL attribution without changing model inputs or choices.",
+  "request": "I'm looking for new black Soundcore Q20i headphones. Which Lebanese shop has the lower total for one pair delivered to Batroun?",
+  "destination": "Batroun",
+  "role_input_limit": 200000,
+  "previous_limit": 16384,
+  "framing_bytes": 4096,
+  "max_payload_bytes": 195904,
+  "previous_max_payload_bytes": 12288,
+  "measurement": "Payload is the serialized OpenRouter request in UTF-8 bytes before framing. Sections are incremental serialized bytes. Search tracking IDs omitted from public URLs. Web attribution uses exact URL comparisons before display redaction.",
+  "runs": [
+    {
+      "run": "36d2fea7-7494-47f2-8906-0a98be9b0a32",
+      "code": "6a02442df6fb150aeb246b869341cf9a46398485",
+      "started": "2026-11-27T09:14:51.683118+00:00",
+      "elapsed_ms": 117187,
+      "spend": {
+        "known_usd": "0.0772655",
+        "uncertain_usd": "0",
+        "still_held_usd": "0.5204800"
+      },
+      "search_counts": [
+        8
+      ],
+      "post_search_decisions": [
+        {
+          "turn": 5,
+          "payload_bytes": 13334,
+          "sections_bytes": {
+            "instructions_schema_and_envelope": 3901,
+            "request": 1054,
+            "feedback": 18,
+            "observations": 2974,
+            "verified": 18,
+            "public_search_terms": 201,
+            "available": 5168
+          },
+          "model_input_tokens": 3195,
+          "status": "completed",
+          "dispatched": true
+        }
+      ],
+      "largest_decision_bytes": 13334,
+      "reads": [
+        {
+          "turn": 2,
+          "tool": "inspect",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "from_web": false,
+          "status": "priced_partial",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "receipts": [
+            "19dead500eb976d1fb639461bdbaebb57d4c5eb59eb2a0c66ce13687e6b172f0"
+          ]
+        },
+        {
+          "turn": 3,
+          "tool": "render",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "from_web": false,
+          "status": "priced_partial",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "receipts": [
+            "379c1de0dbeb9be5f432aed0a59078f15e9b8dffdbe67ec3a3ca8d7c1efcfcfa"
+          ]
+        },
+        {
+          "turn": 5,
+          "tool": "inspect",
+          "url": "https://outgeeked.net/products/anker-soundcore-q20i-black",
+          "from_web": true,
+          "status": "read_failed",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "error": "ValueError"
+        },
+        {
+          "turn": 6,
+          "tool": "inspect",
+          "url": "https://www.dslr-zone.com/product/soundcore-q20i-hybrid-anc-headphones-black/",
+          "from_web": true,
+          "status": "read_failed",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "error": "BudgetDenied"
+        },
+        {
+          "turn": 7,
+          "tool": "inspect",
+          "url": "https://www.spinneyslebanon.com/default/soundcore-q20i-anc-black-629707-v001.html",
+          "from_web": true,
+          "status": "read_failed",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "error": "ReadTimeout"
+        },
+        {
+          "turn": 8,
+          "tool": "inspect",
+          "url": "https://mobileleb.com/products/anker-soundcore-q20i-hybrid-active-noise-cancelling-headphones-wireless-over-ear-bluetooth",
+          "from_web": true,
+          "status": "read_failed",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "error": "ValueError"
+        },
+        {
+          "turn": 9,
+          "tool": "inspect",
+          "url": "https://www.classic-phones.com/products/anker-soundcore-q20i",
+          "from_web": true,
+          "status": "read_failed",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "error": "BudgetDenied"
+        },
+        {
+          "turn": 10,
+          "tool": "render",
+          "url": "https://www.spinneyslebanon.com/default/soundcore-q20i-anc-black-629707-v001.html",
+          "from_web": true,
+          "status": "read_failed",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "error": "ValueError"
+        },
+        {
+          "turn": 11,
+          "tool": "inspect",
+          "url": "https://961souq.com/products/anker-soundcore-q20i-hybrid-active-noise-cancelling-headphones",
+          "from_web": true,
+          "status": "read_failed",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "error": "BudgetDenied"
+        }
+      ],
+      "offers": [
+        {
+          "seller": "IT Promax",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "model": "Soundcore Q20i ANC Headphones",
+          "color": "Black",
+          "price": {
+            "amount": "48",
+            "currency": "USD"
+          },
+          "online_stock": true,
+          "condition": "unknown",
+          "cost_status": "incomplete",
+          "missing": [
+            "Delivery to the requested destination and mandatory charges still need checking.",
+            "The retailer did not confirm the condition of this selected variant."
+          ]
+        }
+      ],
+      "recommendation_count": 0,
+      "status": "partial",
+      "stop_reason": "The shopping agent could not complete its decision. The listing could not be read."
+    },
+    {
+      "run": "352e18a4-ec20-4eea-9e3a-e1e089f4080b",
+      "code": "6a02442df6fb150aeb246b869341cf9a46398485",
+      "started": "2026-11-27T09:17:42.697982+00:00",
+      "elapsed_ms": 117110,
+      "spend": {
+        "known_usd": "0.0619475",
+        "uncertain_usd": "0.5204800",
+        "still_held_usd": "0"
+      },
+      "search_counts": [
+        8
+      ],
+      "post_search_decisions": [
+        {
+          "turn": 5,
+          "payload_bytes": 13334,
+          "sections_bytes": {
+            "instructions_schema_and_envelope": 3901,
+            "request": 1054,
+            "feedback": 18,
+            "observations": 2974,
+            "verified": 18,
+            "public_search_terms": 201,
+            "available": 5168
+          },
+          "model_input_tokens": 3190,
+          "status": "completed",
+          "dispatched": true
+        }
+      ],
+      "largest_decision_bytes": 13334,
+      "reads": [
+        {
+          "turn": 2,
+          "tool": "inspect",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "from_web": false,
+          "status": "priced_partial",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "receipts": [
+            "f4a7b563e540224b80c7e28552dfdc7506c195fd0b8f7ebb9cdd92d8952efec9"
+          ],
+          "reader": "firecrawl",
+          "http": 200,
+          "source_matches": true,
+          "final_matches": true,
+          "bytes": 234976
+        },
+        {
+          "turn": 3,
+          "tool": "render",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "from_web": false,
+          "status": "priced_partial",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "receipts": [
+            "73c52fb6db840add09dc4f8495456cf99d4e55f7f92840ca965250aa0b1954e2"
+          ],
+          "reader": "playwright"
+        },
+        {
+          "turn": 5,
+          "tool": "inspect",
+          "url": "https://outgeeked.net/products/anker-soundcore-q20i-black",
+          "from_web": true,
+          "status": "read_failed",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "error": "BudgetDenied",
+          "reader": "firecrawl",
+          "reason": "The research objective has reached its deadline"
+        },
+        {
+          "turn": 6,
+          "tool": "inspect",
+          "url": "https://www.spinneyslebanon.com/default/soundcore-q20i-anc-black-629707-v001.html",
+          "from_web": true,
+          "status": "read_failed",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "error": "ValueError",
+          "reader": "firecrawl",
+          "http": 200,
+          "source_matches": true,
+          "final_matches": false,
+          "bytes": 572474,
+          "reason": "Managed page provenance, freshness or status is not established"
+        },
+        {
+          "turn": 7,
+          "tool": "inspect",
+          "url": "https://www.dslr-zone.com/product/soundcore-q20i-hybrid-anc-headphones-black/",
+          "from_web": true,
+          "status": "read_failed",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "error": "ValueError",
+          "reader": "firecrawl",
+          "http": 200,
+          "source_matches": true,
+          "final_matches": false,
+          "bytes": 542278,
+          "reason": "Managed page provenance, freshness or status is not established"
+        },
+        {
+          "turn": 8,
+          "tool": "inspect",
+          "url": "https://www.classic-phones.com/products/anker-soundcore-q20i",
+          "from_web": true,
+          "status": "read_failed",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "error": "BudgetDenied",
+          "reader": "firecrawl",
+          "reason": "The research objective has reached its deadline"
+        },
+        {
+          "turn": 9,
+          "tool": "inspect",
+          "url": "https://mobileleb.com/products/anker-soundcore-q20i-hybrid-active-noise-cancelling-headphones-wireless-over-ear-bluetooth",
+          "from_web": true,
+          "status": "read_failed",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "error": "BudgetDenied",
+          "reader": "firecrawl",
+          "reason": "The research objective has reached its deadline"
+        }
+      ],
+      "offers": [
+        {
+          "seller": "IT Promax",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "model": "Soundcore Q20i ANC Headphones",
+          "color": "Black",
+          "price": {
+            "amount": "48",
+            "currency": "USD"
+          },
+          "online_stock": true,
+          "condition": "unknown",
+          "cost_status": "incomplete",
+          "missing": [
+            "Delivery to the requested destination and mandatory charges still need checking.",
+            "The retailer did not confirm the condition of this selected variant."
+          ]
+        }
+      ],
+      "recommendation_count": 0,
+      "status": "partial",
+      "stop_reason": "The shopping agent could not complete its decision. The listing could not be read."
+    },
+    {
+      "run": "8026da31-a3a0-4b4f-a661-ae78f443a611",
+      "code": "4681b5d3e06e7355fe981dfb53ed0cf02894f8f5",
+      "started": "2026-11-27T09:20:16.555978+00:00",
+      "elapsed_ms": 117375,
+      "spend": {
+        "known_usd": "0.0637545",
+        "uncertain_usd": "0.5204800",
+        "still_held_usd": "0"
+      },
+      "search_counts": [
+        8
+      ],
+      "post_search_decisions": [
+        {
+          "turn": 5,
+          "payload_bytes": 13334,
+          "sections_bytes": {
+            "instructions_schema_and_envelope": 3901,
+            "request": 1054,
+            "feedback": 18,
+            "observations": 2974,
+            "verified": 18,
+            "public_search_terms": 201,
+            "available": 5168
+          },
+          "model_input_tokens": 3189,
+          "status": "completed",
+          "dispatched": true
+        }
+      ],
+      "largest_decision_bytes": 13334,
+      "reads": [
+        {
+          "turn": 2,
+          "tool": "inspect",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "from_web": false,
+          "status": "priced_partial",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "receipts": [
+            "1957716d9e5e76517c7acb7de6e4987f00b4bf9d3a9d14d424123098078e2d5a"
+          ],
+          "reader": "firecrawl",
+          "http": 200,
+          "source_matches": true,
+          "final_matches": true,
+          "bytes": 235442,
+          "seconds_remaining_in_phase": 74.0
+        },
+        {
+          "turn": 3,
+          "tool": "render",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "from_web": false,
+          "status": "priced_partial",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "receipts": [
+            "655083e491e950232efb7cbab85384db1513582fb7348a12a2bd4b11aeaa4aa3"
+          ],
+          "reader": "playwright",
+          "seconds_remaining_in_phase": 57.23
+        },
+        {
+          "turn": 5,
+          "tool": "inspect",
+          "url": "https://outgeeked.net/products/anker-soundcore-q20i-black",
+          "from_web": true,
+          "status": "read_failed",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "error": "ValueError",
+          "reader": "firecrawl",
+          "http": 200,
+          "source_matches": true,
+          "final_matches": false,
+          "bytes": 825633,
+          "seconds_remaining_in_phase": 22.19,
+          "reason": "Managed page provenance, freshness or status is not established",
+          "returned_url": "https://outgeeked.net/products/anker-soundcore-q20i-black",
+          "differed_only_by_search_attribution": true
+        },
+        {
+          "turn": 6,
+          "tool": "inspect",
+          "url": "https://www.spinneyslebanon.com/default/soundcore-q20i-anc-black-629707-v001.html",
+          "from_web": true,
+          "status": "read_failed",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "error": "BudgetDenied",
+          "reader": "firecrawl",
+          "seconds_remaining_in_phase": 8.84,
+          "reason": "The research objective has reached its deadline"
+        },
+        {
+          "turn": 7,
+          "tool": "inspect",
+          "url": "https://www.dslr-zone.com/product/soundcore-q20i-hybrid-anc-headphones-black/",
+          "from_web": true,
+          "status": "read_failed",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "error": "ValueError",
+          "reader": "firecrawl",
+          "http": 200,
+          "source_matches": true,
+          "final_matches": false,
+          "bytes": 542316,
+          "seconds_remaining_in_phase": 33.45,
+          "reason": "Managed page provenance, freshness or status is not established",
+          "returned_url": "https://www.dslr-zone.com/product/soundcore-q20i-hybrid-anc-headphones-black/",
+          "differed_only_by_search_attribution": true
+        },
+        {
+          "turn": 8,
+          "tool": "inspect",
+          "url": "https://961souq.com/products/anker-soundcore-q20i-hybrid-active-noise-cancelling-headphones",
+          "from_web": true,
+          "status": "read_failed",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "error": "BudgetDenied",
+          "reader": "firecrawl",
+          "seconds_remaining_in_phase": 18.22,
+          "reason": "The research objective has reached its deadline"
+        },
+        {
+          "turn": 9,
+          "tool": "inspect",
+          "url": "https://ayoubcomputers.com/soundcore-by-anker-q20i-hybrid-active-noise-cancelling-headphones-white-a3004h22/",
+          "from_web": true,
+          "status": "read_failed",
+          "retained_sellers": [
+            "itpromax.store"
+          ],
+          "error": "BudgetDenied",
+          "reader": "firecrawl",
+          "seconds_remaining_in_phase": 7.77,
+          "reason": "The research objective has reached its deadline"
+        }
+      ],
+      "offers": [
+        {
+          "seller": "IT Promax",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "model": "Soundcore Q20i ANC Headphones",
+          "color": "Black",
+          "price": {
+            "amount": "48",
+            "currency": "USD"
+          },
+          "online_stock": true,
+          "condition": "unknown",
+          "cost_status": "incomplete",
+          "missing": [
+            "Delivery to the requested destination and mandatory charges still need checking.",
+            "The retailer did not confirm the condition of this selected variant."
+          ]
+        }
+      ],
+      "recommendation_count": 0,
+      "status": "partial",
+      "stop_reason": "The shopping agent could not complete its decision. The listing could not be read."
+    }
+  ],
+  "returned_url_check": {
+    "mode": "Separate diagnostic; one ordinary Firecrawl read of the exact same-shop URL returned in the buyer run. The buyer did not receive this URL.",
+    "source_run": "8026da31-a3a0-4b4f-a661-ae78f443a611",
+    "url": "https://www.dslr-zone.com/product/soundcore-q20i-hybrid-anc-headphones-black/",
+    "job": "buyer-input-confirm-06be8565fe364f6b93cd0a41faf845ce",
+    "reader": "firecrawl-v2",
+    "http_status": 200,
+    "final_url": "https://www.dslr-zone.com/product/soundcore-q20i-hybrid-anc-headphones-black/",
+    "sha256": "9c8cbc824c9e13d7142ef92fb4499ff9274cf57665430116c9ced0024138d9b6",
+    "observed_at": "2026-11-27T09:22:57.545932+00:00",
+    "bytes": 542278,
+    "selection_status": "ValueError"
+  }
+}
