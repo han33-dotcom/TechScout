@@ -117,11 +117,12 @@ A request is identified by its seller, variant, quantity and destination.
 
 ## What the buyer sees
 
-`GET /api/runs/{id}/destination` (`DestinationState`) gains three additive fields:
+`GET /api/runs/{id}/destination` (`DestinationState`) gains four additive fields:
 
 - **`waiting`:** the sellers to name once in the prompt.
 - **`quotes`:** the quotes that apply to the latest search and current destination.
 - **`revised`:** the comparison after those quotes.
+- **`awaiting_quotes`:** the latest search implies a quote that the worker has not planned yet, so the chat should read again shortly.
 
 The search snapshot itself never changes.
 
@@ -141,7 +142,7 @@ Retailer text never becomes a reason. Only a sanitized option name, at most 60 c
 `frontend/src/Destination.tsx` shows the delivery panel under the comparison:
 
 - **The address question.** It appears only when `waiting` names a seller. It names those sellers once, explains why an address could change their totals, and lets the buyer tick which of them may receive a saved address. Because no live seller needs a street address yet, the question does not appear in live searches today. City-level quotes and the revised totals still do.
-- **Progress.** After a choice, the panel shows the quote state in plain words and rereads it every 1.5 seconds while a quote is pending or in flight.
+- **Progress.** After a choice, the panel shows the quote state in plain words. It rereads it every 1.5 seconds while a quote is expected but not yet planned (`awaiting_quotes`), pending or in flight. A failed read schedules the next one too. After about three minutes the panel stops looking by itself and asks the buyer to reload.
 - **Quotes.** Each quote shows the fee once, the item price, the charges already in the price, when and from which route it was quoted, or the reason it is unusable.
 - **Revised totals.** A table shows each seller's total before and after, its rank or why it is not ranked, and a link to its listing, with the advice above it.
 

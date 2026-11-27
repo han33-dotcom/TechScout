@@ -9,8 +9,10 @@ type Revised = NonNullable<DestinationState['revised']>;
 type Cost = Revised['offers'][number]['after'];
 type QuoteState = NonNullable<DestinationState['selection']>['quote_state'];
 
-/** How often the chat rereads its quotes while a seller is still being asked. */
+/** How often the chat rereads its quotes while a quote is expected, pending or being asked. */
 export const QUOTE_POLL_MS = 1500;
+/** Rereads before the chat stops looking by itself (about three minutes) and asks for a reload. */
+export const MAX_QUOTE_POLLS = 120;
 const WAITING = new Set<string>(['pending', 'requested']);
 
 function total(cost?: Cost | null): string {
@@ -78,21 +80,27 @@ export default function Destination({ api, runId, status, refresh, onChoose, pol
 }) {
   const [state, setState] = useState<DestinationState>(), [error, setError] = useState('');
   const [busy, setBusy] = useState(false), [editing, setEditing] = useState(false), [chosen, setChosen] = useState<string[]>([]);
-  const [tick, setTick] = useState(0);
+  // tick asks for another read. reads counts finished reads, failed ones included, so a failed
+  // read still schedules the next one while quotes are outstanding. polls caps the rereads.
+  const [tick, setTick] = useState(0), [reads, setReads] = useState(0), [polls, setPolls] = useState(0);
   const locked = useRef(false);
   useEffect(() => {
     let live = true;
     api.destination(runId).then(next => { if (live) { setState(next); setError(''); } })
-      .catch(e => { if (live) setError(explain(e, 'Could not load the delivery address choice for this search.')); });
+      .catch(e => { if (live) setError(explain(e, 'Could not load the delivery address choice for this search.')); })
+      .finally(() => { if (live) setReads(value => value + 1); });
     return () => { live = false; };
   }, [api, runId, status, refresh, tick]);
-  useEffect(() => { setEditing(false); setChosen([]); }, [runId, refresh]);
-  const inFlight = !!state && (WAITING.has(state.selection?.quote_state ?? '') || state.quotes.some(quote => WAITING.has(quote.status)));
+  useEffect(() => { setEditing(false); setChosen([]); setPolls(0); }, [runId, refresh]);
+  // Outstanding: a quote the search implies is not planned yet, or one is pending or being asked.
+  const outstanding = !!state && (state.awaiting_quotes || WAITING.has(state.selection?.quote_state ?? '')
+    || state.quotes.some(quote => WAITING.has(quote.status)));
+  const exhausted = polls >= MAX_QUOTE_POLLS;
   useEffect(() => {
-    if (!inFlight) return;
-    const timer = setTimeout(() => setTick(value => value + 1), pollMs);
+    if (!outstanding || exhausted) return;
+    const timer = setTimeout(() => { setPolls(value => value + 1); setTick(value => value + 1); }, pollMs);
     return () => clearTimeout(timer);
-  }, [inFlight, state, pollMs]);
+  }, [outstanding, exhausted, reads, pollMs]);
   async function decline() {
     if (locked.current) return;
     locked.current = true; setBusy(true); setError('');
@@ -129,6 +137,7 @@ export default function Destination({ api, runId, status, refresh, onChoose, pol
       <p>No seller receives an address in this search. Delivery totals that depend on one remain unknown; every product link still opens the retailer's page.</p>
       {waiting.length > 0 && <button disabled={busy} onClick={() => setEditing(true)}>Use a saved address instead</button>}
     </> : <h2>Delivery quotes for this search</h2>}
+    {outstanding && exhausted && <p className="muted" role="status">Still waiting for delivery quotes. Reload the page to check again.</p>}
     {quotes.length > 0 && <div className="quotes"><h3>Delivery quotes</h3><ul>{quotes.map(quote => <QuoteLine key={quote.quote_id} quote={quote} />)}</ul></div>}
     {revised && <RevisedTotals revised={revised} />}
     {error && <p role="alert" className="error">{error}</p>}

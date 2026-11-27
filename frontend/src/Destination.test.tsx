@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
-import Destination from './Destination';
+import Destination, { MAX_QUOTE_POLLS } from './Destination';
 import type { DestinationState } from './api';
 
 // Synthetic chat for #186: City-Shop is quoted for the search's city at once; Street-A and Street-B
@@ -40,7 +40,8 @@ function chat(states: DestinationState[]) {
   return { destination: vi.fn(async () => sequence.length > 1 ? sequence.shift()! : sequence[0]), declineDestination: vi.fn() };
 }
 const base = (extra: Partial<DestinationState>): DestinationState =>
-  ({ request_id: 'needs-q', signed_in: true, sellers: [streetA, streetB], selection: null, waiting: [], quotes: [], ...extra });
+  ({ request_id: 'needs-q', signed_in: true, sellers: [streetA, streetB], selection: null, waiting: [], quotes: [],
+    awaiting_quotes: false, ...extra });
 
 describe('delivery quotes in the chat (#186)', () => {
   it('hides the address question when no seller needs a street address but still shows a city quote', async () => {
@@ -128,6 +129,44 @@ describe('delivery quotes in the chat (#186)', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Use a saved address instead' }));
     expect(screen.getByLabelText('Street-A')).toBeTruthy();
     expect(screen.getAllByRole('checkbox')).toHaveLength(1);
+  });
+
+  it('looks again while a city quote is expected but not planned yet, then shows it without a reload', async () => {
+    const quotedState = base({ quotes: [quoted('City-Shop', '915', '5.00', '920.00')], revised: revision(
+      [row('City-Shop', open('915'), verified('920.00'), 1)], 'For delivery to Beirut, City-Shop has the lowest verified total: USD 920.') });
+    const api = chat([base({ awaiting_quotes: true }), base({ awaiting_quotes: true }), quotedState]);
+    const { container } = render(<Destination api={api} runId="run-q" status="complete" refresh={0} onChoose={vi.fn()} pollMs={5} />);
+    await waitFor(() => expect(api.destination).toHaveBeenCalledTimes(1));
+    expect(container.textContent).toBe('');
+    expect(await screen.findByText(/City-Shop has the lowest verified total/)).toBeTruthy();
+    const reads = api.destination.mock.calls.length;
+    await new Promise(done => setTimeout(done, 40));
+    expect(api.destination.mock.calls.length).toBe(reads);
+  });
+
+  it('keeps looking after a failed read while a quote is being asked', async () => {
+    const selection = (quote_state: NonNullable<DestinationState['selection']>['quote_state']) =>
+      ({ status: 'selected' as const, location: home, recipients: [streetA], quote_state, decided_at: '2026-11-27T10:00:00Z' });
+    const api = { declineDestination: vi.fn(), destination: vi.fn()
+      .mockResolvedValueOnce(base({ waiting: [streetA], selection: selection('requested') }))
+      .mockRejectedValueOnce(new Error('network'))
+      .mockResolvedValue(base({ waiting: [streetA], selection: selection('quoted'),
+        quotes: [quoted('Street-A', '905', '5.00', '910.00', { destination: street })] })) };
+    render(<Destination api={api} runId="run-q" status="complete" refresh={0} onChoose={vi.fn()} pollMs={5} />);
+    expect(await screen.findByText('Asking Street-A for a delivery quote for this address…')).toBeTruthy();
+    expect(await screen.findByText('Delivery quotes received. The revised totals are below.')).toBeTruthy();
+    expect(api.destination.mock.calls.length).toBeGreaterThanOrEqual(3);
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+
+  it('stops looking by itself after the polling limit and asks for a reload', async () => {
+    const api = chat([base({ waiting: [streetA], selection: { status: 'selected', location: home, recipients: [streetA],
+      quote_state: 'pending', decided_at: '2026-11-27T10:00:00Z' } })]);
+    render(<Destination api={api} runId="run-q" status="complete" refresh={0} onChoose={vi.fn()} pollMs={1} />);
+    expect(await screen.findByText('Still waiting for delivery quotes. Reload the page to check again.', {}, { timeout: 4000 })).toBeTruthy();
+    expect(api.destination).toHaveBeenCalledTimes(MAX_QUOTE_POLLS + 1);
+    await new Promise(done => setTimeout(done, 30));
+    expect(api.destination).toHaveBeenCalledTimes(MAX_QUOTE_POLLS + 1);
   });
 
   it('shows a choice that needed no quote without offering to change sellers that are not waiting', async () => {
