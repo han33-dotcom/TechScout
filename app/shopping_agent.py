@@ -420,12 +420,20 @@ class ShoppingAgent(DomesticBuyerFlow):
         # The request and feedback are fixed for this worker. A fresh receipt of identical
         # facts renews the same judgment, even if another model call would answer differently.
         match = self.accepted_matches.get(url)
+        if match is None and reading and reading.match:
+            address = (document.lines[reading.address_line] if reading.address_line is not None
+                       and reading.address_line < len(document.lines) else None)
+            index = selected.address_lines.index(address) if address in selected.address_lines else None
+            match = reading.match.model_copy(update={'merchant_address_line': index})
         if match is None:
             match = self.generate(MATCH_PROMPT, dict(request=self.request.model_dump(mode='json'),
                 feedback=list(self.context.answers), selected=selected.facts()), Match, self.elapsed() + room())
         if match is None:
-            self.blockers[url] = ['The selected item could not be assessed against the request.']
-            return dict(status='match_unavailable', **result)
+            reason = 'The selected item could not be assessed against the request.'
+            if selected.published_link:
+                reason = selected.published_summary(url) + ' ' + reason
+            self.blockers[url] = [reason]
+            return dict(status='match_unavailable', selected=selected.facts(), reason=reason, **result)
         result['item_fits'] = match.selected_item_fits
         result['merchant_located'] = selected.structured_address or (
             match.merchant_address_line is not None and match.merchant_address_line < len(selected.address_lines))
@@ -437,10 +445,7 @@ class ShoppingAgent(DomesticBuyerFlow):
             # Do not leak contract-validation or raw provider data into the buyer response.
             reason = str(exc) if type(exc) is ValueError else 'The captured fields could not establish an offer.'
             if selected.published_link and match.selected_item_fits:
-                stock = {'OutOfStock': 'out of stock', 'InStock': 'in stock', 'SoldOut': 'sold out'}.get(
-                    selected.availability, 'stock unverified')
-                reason = (f'{urlsplit(url).hostname} lists {selected.title} for {selected.money.currency} '
-                          f'{selected.money.amount} ({stock}). ' + reason)
+                reason = selected.published_summary(url) + ' ' + reason
             self.blockers[url] = [reason]
             return dict(status='no_match', reason=reason, selected=selected.facts(), **result)
         self.accepted_matches[url] = match

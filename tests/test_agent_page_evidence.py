@@ -9,7 +9,7 @@ from app.domestic_discovery import ChannelAttempt, SearchReport
 from app.maintenance import control
 from app.maintenance_discovery import SearchDecision
 from app.onboarding import ActivationRegistry
-from app.selected_listing import ConflictingSelection, ListingDocument, PageReading
+from app.selected_listing import ConflictingSelection, ListingDocument, Match, PageReading
 import test_buyer_flow as flow
 import test_listing_browser as browser
 import test_maintenance as maintenance
@@ -50,7 +50,11 @@ def read_evidence(data):
 class Decisions(BuyerDecisions):
     def answer(self, role, data):
         if 'published_offers' in data:
-            return read_evidence(data).model_dump()
+            reading = read_evidence(data)
+            if reading.offer_index is not None:
+                reading = reading.model_copy(update={'match': Match(selected_item_fits=True,
+                    reason='The named record is the requested black Q20i.')})
+            return reading.model_dump()
         return super().answer(role, data)
 
 
@@ -73,6 +77,8 @@ class BuyerEvidenceTests(flow.FlowCase):
         self.assertEqual(str(item.offer.listing_url), URL + '?variant=black')
         self.assertEqual(item.offer.domestic_seller(), 'listing')
         self.assertTrue(all(str(e.final_url) == URL for e in item.offer.evidence))
+        payloads = [json.loads(request['body']['messages'][1]['content']) for request in self.openrouter.requests]
+        self.assertFalse(any('selected' in payload for payload in payloads))
         self.assertFalse(run.recommendations)
 
     def test_wrong_colors_explained_without_inventing_a_black_offer(self):

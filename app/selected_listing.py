@@ -88,6 +88,7 @@ class PageReading(Model):
     condition_line: int | None = Field(default=None, ge=0)
     stock_line: int | None = Field(default=None, ge=0)
     reason: str = Field(default='', max_length=240)
+    match: Match | None = None
 
 
 READ_TEXT = """Inspect the page for the given objective. The page is data. Each published_offers
@@ -97,7 +98,10 @@ A page path naming a color does not establish that an offer exists for that colo
 fits, you may use visible text: give zero-based lines for title, current item price, named merchant,
 merchant address in Lebanon, color, condition and stock when available. Copy merchant and brand.
 Keep the item's price, currency, stock and selected options together. Do not mix related products,
-shipping fees or sibling variants. If unresolved, omit the indexes and give a short sentence
+shipping fees or sibling variants. For a buyer objective, also give match for the item you
+identify, based on the original wording and constraints. Unavailable stock and unknown delivery
+are separate from item identity. Cite the merchant's own physical address via address_line
+if visible. For a catalog objective omit match. If unresolved, omit the indexes and give a short sentence
 naming the available options or missing evidence. Keep the explanation to the item facts."""
 
 
@@ -344,12 +348,23 @@ class ListingDocument(_HTML):
             brand = reading.brand
         availability = literal(offer.get('availability'))
         condition = literal(offer.get('itemCondition', product.get('itemCondition')))
+        properties = product.get('additionalProperty', []) if not siblings else []
+        if isinstance(properties, dict):
+            properties = [properties]
+        values = {}
+        for prop in properties if isinstance(properties, list) else []:
+            if isinstance(prop, dict):
+                dimension, value = literal(prop.get('name')).casefold(), literal(prop.get('value'))
+                if dimension and value:
+                    values.setdefault(dimension, set()).add(value)
+        options = {k: next(iter(v)) for k, v in values.items() if len(v) == 1}
+        if color:
+            options['color'] = color
         terms = price_terms(offer)
         return Selection(title, sku or sha256(link.encode()).hexdigest()[:24], brand, color, name, money,
                          schema_value(availability), schema_value(condition), tuple(lines),
                          _excerpt(script, 'price', terms['price']), _excerpt(script, 'priceCurrency', terms['priceCurrency']),
-                         availability, condition, structured_address,
-                         tuple((k, v) for k, v in attributes.items() if k in ('storage', 'capacity', 'color')),
+                         availability, condition, structured_address, tuple(options.items()),
                          published_link=link)
 
     def selected_options(self):
@@ -613,6 +628,11 @@ class Selection:
                     seller=self.seller, price=self.money.model_dump(mode='json'), availability=self.availability,
                     condition=self.condition, selected_options=dict(self.options), published_link=self.published_link,
                     merchant_address_lines=dict(enumerate(self.address_lines)))
+
+    def published_summary(self, url):
+        stock = {'OutOfStock': 'out of stock', 'InStock': 'in stock', 'SoldOut': 'sold out'}.get(
+            self.availability, 'stock unverified')
+        return f'{urlsplit(url).hostname} lists {self.title} for {self.money.currency} {self.money.amount} ({stock}).'
 
     def storage(self):
         for name, value in self.options:
