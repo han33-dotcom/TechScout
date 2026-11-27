@@ -13,7 +13,9 @@ import os
 import uuid
 
 from sqlalchemy import select, update, func
+from pydantic import model_validator
 
+from app.contracts import Amount, Model
 from app.storage import Storage, accounting_state
 
 
@@ -40,6 +42,19 @@ class Charge:
         return sum((money(v) for v in (self.provider, self.gateway, self.payment, self.byok)), Decimal(0))
 
 
+class BuyerSpendLimits(Model):
+    research_spend_usd: Amount = Decimal('0.75')
+    spend_usd: Amount = Decimal('1')
+
+    @model_validator(mode='after')
+    def final_phase_has_room(self):
+        if not 0 < self.research_spend_usd < self.spend_usd:
+            raise ValueError('Buyer research and final verification both need a positive allowance')
+        return self
+
+
+DEFAULT_BUYER_LIMITS = BuyerSpendLimits()
+
 # fetch attempts, paid attempts, active worker milliseconds, USD, all external calls
 LIMITS = {
     'project': (None, None, None, '500', None),
@@ -47,7 +62,7 @@ LIMITS = {
     'bootstrap:international': (1000, 60, 3_600_000, '15', None),
     'maintenance': (300, 30, 1_800_000, '3', None),
     'maintenance:international': (100, 10, 900_000, '1', None),
-    'buyer': (40, 40, None, '1', 40),
+    'buyer': (40, 40, None, str(DEFAULT_BUYER_LIMITS.spend_usd), 40),
 }
 KINDS = {'model', 'search', 'retrieval', 'embedding', 'work', 'worker'}
 
@@ -107,11 +122,13 @@ class Ledger:
                 return
             state.update(project=self.project, blocked=False, scopes={}, jobs={}, attempts={}, credits={})
 
-    def open_job(self, job_id, kind='buyer', *, international=False, envelope=None):
+    def open_job(self, job_id, kind='buyer', *, international=False, envelope=None, buyer_limits=None):
         if not isinstance(job_id, str) or not job_id.strip() or kind not in {'buyer', 'bootstrap', 'maintenance'}:
             raise ValueError('A stable job ID and supported job kind are required')
         if type(international) is not bool:
             raise ValueError('International opt-in must be explicit')
+        if buyer_limits is not None and (kind != 'buyer' or not isinstance(buyer_limits, BuyerSpendLimits)):
+            raise ValueError('Buyer spending limits apply only to buyer jobs')
         if envelope is not None:
             if (kind != 'maintenance' or set(envelope) != {'calls', 'seconds', 'usd'}
                     or any(type(envelope[k]) is not int or envelope[k] < 1 for k in ('calls', 'seconds'))):
@@ -131,7 +148,11 @@ class Ledger:
                                     started=now, cancelled=False, final=False)
                 if envelope is not None:
                     jobs[job_id]['envelope'] = envelope
-        return Job(self, job_id)
+                if buyer_limits is not None:
+                    jobs[job_id]['buyer_limits'] = buyer_limits.model_dump(mode='json')
+            # Resumed jobs keep the limits under which their reservations were made.
+            effective = BuyerSpendLimits.model_validate(jobs[job_id].get('buyer_limits', {})) if kind == 'buyer' else None
+        return Job(self, job_id, effective)
 
     def _scope_keys(self, job_id, job, international):
         keys = [('project', 'project')]
@@ -198,8 +219,11 @@ class Ledger:
             for key, profile in keys:
                 used = state['scopes'].setdefault(key, [0, 0, 0, '0', 0])
                 cap = list(LIMITS[profile])
-                if profile == 'buyer' and not job['final']:
-                    cap[0], cap[1], cap[3], cap[4] = 30, 30, '0.75', 30
+                if profile == 'buyer':
+                    limits_usd = BuyerSpendLimits.model_validate(job.get('buyer_limits', {}))
+                    cap[3] = limits_usd.spend_usd if job['final'] else limits_usd.research_spend_usd
+                    if not job['final']:
+                        cap[0], cap[1], cap[4] = 30, 30, 30
                 if profile == 'project' and job['kind'] != 'buyer':
                     cap[3] = '499'
                 for i, bound in enumerate(cap):
@@ -340,8 +364,9 @@ class Attempt:
 
 
 class Job:
-    def __init__(self, ledger, job_id):
+    def __init__(self, ledger, job_id, buyer_limits):
         self.ledger, self.run_id = ledger, job_id
+        self.buyer_limits = buyer_limits
 
     def reserve(self, kind, charge, seconds, **kwargs):
         return self.ledger.reserve(self.run_id, kind, charge, seconds, **kwargs)

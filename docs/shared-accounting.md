@@ -99,7 +99,7 @@ Nested calls may count overlapping time twice, which stops earlier, never later.
 Persist partial corpus results incrementally. Scheduling, queue idle time and pauses
 are outside active windows. A resumed job starts new windows without resetting sums.
 
-Provisional buyer caps are $1, 40 external calls and 120 seconds total. Exploration
+The baseline buyer caps are $1, 40 external calls and 120 seconds total. Exploration
 can use $0.75, 30 calls and the first 90 seconds. The remaining $0.25, 10 calls and
 30 seconds serve final verification/writing; `enter_final_phase()` unlocks them
 inside the same deadline. Background work has at most two in-flight slots and
@@ -107,6 +107,14 @@ cannot consume the final $1 of campaign funds. Retailer concurrency, per-minute
 and per-job request caps apply across API and ingestion processes using the same
 registry limits; the SourceGate still revalidates endpoint admission and network
 safety. A busy source is refused rather than silently bypassed.
+
+On `test/two-agent`, new shopping-agent runs take their dollar limits from
+[the experiment settings](../config/two-agent-buyer.json). The ledger pins $20
+for research and $25 for the whole run when the job starts. A dispatched call
+with unknown cost still counts at its full reservation. The existing 30 research
+calls, 40 total calls and elapsed-time limits continue to apply. A resumed
+job uses its original limits, including the baseline profile for older jobs.
+Frozen evaluation runs use the budget specified by their protocol.
 
 ## Role execution and integration
 

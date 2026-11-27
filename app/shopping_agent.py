@@ -11,7 +11,7 @@ import httpx2
 from pydantic import Field
 
 from app import contracts_v2 as v2
-from app.accounting import BudgetDenied
+from app.accounting import BudgetDenied, BuyerSpendLimits
 from app.agent_inspection import INSPECTION_POLICY, recoverable_read_error
 from app.assessment import shortlist
 from app.buyer_flow import MAX_UNCERTAIN
@@ -23,18 +23,29 @@ from app.directory import DirectoryQuery
 from app.eligibility import check_full_product
 from app.inference import ROOT, InferenceConfig, build_inference, load_env_file
 from app.onboarding import canonical, source_id_for
+from app.openrouter import InputTokenLimit
 from app.selected_listing import (ConflictingSelection, ListingDocument, MATCH_PROMPT, Match,
                                   PageReading, READ_TEXT, with_option)
 
 BUYER_SETTINGS = ROOT / 'config/two-agent-buyer.json'
 
 
+class BuyerSettings(Model):
+    max_input_tokens: InputTokenLimit
+    buyer_limits: BuyerSpendLimits
+
+
+def buyer_settings():
+    return BuyerSettings.model_validate_json(BUYER_SETTINGS.read_bytes())
+
+
 def pinned_inference():
     load_env_file(names=('OPENROUTER_API_KEY',))
     raw = json.loads((ROOT / 'config/evaluation.json').read_text(encoding='utf-8'))
     settings = raw['evaluation_inference']
-    settings['roles']['max_input_tokens'] = json.loads(BUYER_SETTINGS.read_text(encoding='utf-8'))['max_input_tokens']
-    return build_inference(InferenceConfig.model_validate(settings))
+    experiment = buyer_settings()
+    settings['roles']['max_input_tokens'] = experiment.max_input_tokens
+    return build_inference(InferenceConfig.model_validate(settings, context={'buyer_limits': experiment.buyer_limits}))
 
 
 class BrowserSession(Protocol):
@@ -122,7 +133,8 @@ class ShoppingAgent(DomesticBuyerFlow):
 
     def _run(self):
         self.publish(status='running', phase='research')
-        self.job = self.deps.ledger.open_job(self.run_ref.run_id)
+        self.job = self.deps.ledger.open_job(self.run_ref.run_id, buyer_limits=buyer_settings().buyer_limits)
+        self.trace['limits']['ledger_buyer_caps'].update(self.job.buyer_limits.model_dump(mode='json'))
         if self.request.intent.kind == 'product_link':
             self.add_lead(Listing(str(self.request.intent.url)))
         notes = [self.request.refinement_note or '', *(entry['answer'] for entry in self.context.answers)]
@@ -197,7 +209,7 @@ class ShoppingAgent(DomesticBuyerFlow):
         self.queries = search_options(self.request, ())
         terms = {word for query in self.queries for word in query.query.split()}
         public_terms = {word.casefold(): word for word in sorted(terms)}
-        # Research may not consume the reserved last 30 seconds, ten calls or USD 0.25.
+        # Research leaves time, calls and spending room for final verification.
         # In the final phase only selected reads and presentation remain possible.
         final = False
         for turn in range(16):

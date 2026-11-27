@@ -41,7 +41,7 @@ import time
 
 from app import contracts_v2 as v2
 from app import verification
-from app.accounting import BudgetDenied
+from app.accounting import BudgetDenied, DEFAULT_BUYER_LIMITS
 from app.assessment import _doubts, assess_full_product
 from app.buyer_runs import RunError
 from app.buyer_sources import (
@@ -336,7 +336,7 @@ class _Flow:
                           started_at=self.started_at.isoformat(),
                           limits=dict(active_seconds=round(allowance, 3), nonfinal_by_s=self.nonfinal_by,
                                       final_by_s=self.final_by, finalists=MAX_FINALISTS,
-                                      ledger_buyer_caps=dict(spend_usd='1', research_spend_usd='0.75',
+                                      ledger_buyer_caps=dict(**DEFAULT_BUYER_LIMITS.model_dump(mode='json'),
                                                              calls=40, seconds=120)),
                           versions=dict(deps.versions, inference=deps.inference.versions() if deps.inference else
                                         dict(provider='openrouter', status='unavailable', fallback='disabled')),
