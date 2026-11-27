@@ -25,7 +25,8 @@ class LocationChoices(Decisions):
             return dict(fits=False, seller_location=dict(merchant_quote='Fixture Audio',
                 address_quote='Ashrafieh, Beirut, Lebanon',
                 listing_indices=[0] if self.associate and context['listings'] else []))
-        return dict(fits=True, offer=dict(title='Logitech H111', brand='Logitech', seller='Fixture Audio',
+        return dict(fits=True, offer=dict(merchant_address_quote=(context['locations'][0]['address_quote']
+                if self.associate and context['locations'] else ''), title='Logitech H111', brand='Logitech', seller='Fixture Audio',
             price=dict(amount='13.00', currency='USD'), price_quote='USD 13.00', currency_quote='USD',
             condition='NewCondition', condition_quote='New', stock='InStock', stock_quote='In stock'),
             use_location_index=0 if self.associate and context['locations'] else None)
@@ -86,6 +87,7 @@ class MerchantLocationTests(flow.FlowCase):
                 # The first assessment conflates the missing premises with the item check, as in the live run.
                 response.pop('fits')
                 response.pop('use_location_index', None)
+                response['offer'].pop('merchant_address_quote')
                 response.update(item_meets_buyer_requirements=has_location and item_fits,
                                 reason='Product fit evaluated with available merchant evidence.')
                 return response

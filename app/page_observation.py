@@ -417,10 +417,19 @@ def inspect_capture(page, objective, generate, *, feedback=(), checked=(), max_i
                     return CaptureReading(reason='Further reading is needed to settle the outstanding checks.',
                                           links=links, findings=findings, position=position)
                 continue
-            selection = source.selection(answer.offer) if answer.offer else None
+            used = getattr(answer, 'use_location_index', None)
+            offer = answer.offer
+            if used is not None:
+                if not seller_context or not offer or used >= len(seller_context['locations']):
+                    raise ValueError('Select a known location for the merchant on this listing.')
+                # A repeated contact-page quote belongs to the selected location receipt.
+                # Every product field and any independent listing address still require this capture.
+                address = seller_context['locations'][used]['address_quote']
+                if offer.merchant_address_quote and normalized(offer.merchant_address_quote) == normalized(address):
+                    offer = offer.model_copy(update={'merchant_address_quote': ''})
+            selection = source.selection(offer) if offer else None
             location = None
             indices = ()
-            used = getattr(answer, 'use_location_index', None)
             if seller_context is not None:
                 fields = getattr(answer, 'seller_location', None)
                 if fields:
@@ -429,8 +438,6 @@ def inspect_capture(page, objective, generate, *, feedback=(), checked=(), max_i
                     indices = tuple(dict.fromkeys(fields.listing_indices))
                     if any(i < 0 or i >= len(seller_context['listings']) for i in indices):
                         raise ValueError('Choose an observed seller listing index.')
-                if used is not None and (selection is None or used >= len(seller_context['locations'])):
-                    raise ValueError('Select a known location for the merchant on this listing.')
         except ValueError as exc:
             problem, notes = str(exc), answer.notes
             if answer == last_invalid:
