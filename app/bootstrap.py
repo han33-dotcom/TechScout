@@ -342,7 +342,7 @@ def collect(manifest, *, ledger, corpus, gate, embedder=None, rate=None, embeddi
             record = state['bootstrap_manifests'][job.run_id]
             if record.get('owner') == token:
                 record.update(owner=None,lease_until=0)
-    report = ledger.snapshot()['bootstrap_manifests'][job.run_id]
+    report = ledger.record('bootstrap_manifests', job.run_id)
     if embedding_gap or busy_gap or not embedder:
         report['semantic_gap'] = embedding_gap or busy_gap or 'embeddings not configured'
     return report

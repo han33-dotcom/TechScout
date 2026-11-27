@@ -3,7 +3,7 @@
 No provider calls occur here. Every attempt (including retries/fallbacks) obtains a
 fresh reservation before dispatch. Uncertain attempts retain their entire bound.
 """
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from decimal import Decimal
@@ -12,10 +12,12 @@ from hashlib import sha256
 import os
 import uuid
 
+from psycopg import Pipeline
 from sqlalchemy import select, update, func
 from pydantic import Field, model_validator
 
 from app.contracts import Amount, Model
+from app.ledger_storage import entries, materialize, read_postgres_transaction, read_state, save_state
 from app.storage import Storage, accounting_state
 
 
@@ -76,10 +78,8 @@ def check_source_workload(attempts, source, limits, job_id, now):
     positive = (limits.requests_per_minute, limits.concurrency, limits.max_requests_per_run)
     if any(type(v) is not int or v <= 0 for v in positive):
         raise ValueError('Source workload bounds must be positive integers')
-    matching = [a for a in attempts if source in (a['source'], a.get('landing_source')) and a['status'] != 'released']
-    if (sum(a['status'] in {'held', 'sent'} and a['expires'] > now for a in matching) >= limits.concurrency
-        or sum(a['created'] > now - 60 for a in matching) >= limits.requests_per_minute
-        or sum(a['job'] == job_id for a in matching) >= limits.max_requests_per_run):
+    live, recent, in_job = attempts.source_counts(source, job_id, now)
+    if live >= limits.concurrency or recent >= limits.requests_per_minute or in_job >= limits.max_requests_per_run:
         raise BudgetDenied('Shared source workload limit')
 
 
@@ -101,22 +101,38 @@ class Ledger:
         return cls(Storage(url), project)
 
     @contextmanager
-    def _transaction(self, *, initializing=False):
+    def _transaction(self, *, initializing=False, readonly=False, job_id=None, token=None):
         with self.storage.transaction() as db:
-            # A real write serializes SQLite fixtures too; PG holds the row lock
-            # until commit. No locks are held across provider/network calls.
-            changed = db.execute(update(accounting_state).where(accounting_state.c.id == 1)
-                                 .values(id=1)).rowcount
-            if changed != 1:
+            pipelined = db.dialect.driver == 'psycopg' and Pipeline.is_supported()
+            prefetched = []
+            if pipelined:
+                header, now, prefetched = read_postgres_transaction(db, readonly, job_id, token)
+            else:
+                query = select(accounting_state.c.payload).where(accounting_state.c.id == 1)
+                if db.dialect.name == 'postgresql':
+                    query = query.with_for_update(read=readonly)
+                elif readonly:
+                    db.exec_driver_sql('BEGIN')
+                else:
+                    db.execute(update(accounting_state).where(accounting_state.c.id == 1).values(id=1))
+                header = db.execute(query).scalar_one_or_none()
+                clock = func.clock_timestamp() if db.dialect.name == 'postgresql' else func.current_timestamp()
+                now = db.scalar(select(clock))
+            if header is None:
                 raise BudgetDenied('Accounting database has not been migrated')
-            state = db.execute(select(accounting_state.c.payload).where(accounting_state.c.id == 1)).scalar_one()
+            state = read_state(db, header)
             if not initializing and state['project'] != self.project:
                 raise BudgetDenied('Central project has not been provisioned or identifier differs')
-            now = self.clock() if self.clock else db.execute(select(func.current_timestamp())).scalar_one()
+            for section, key, value in prefetched:
+                state[section].remember(key, value)
+            if self.clock:
+                now = self.clock()
             if now.tzinfo is None:
                 now = now.replace(tzinfo=timezone.utc)
             yield state, now.timestamp()
-            db.execute(update(accounting_state).where(accounting_state.c.id == 1).values(payload=state))
+            if not readonly:
+                with db.connection.driver_connection.pipeline() if pipelined else nullcontext():
+                    save_state(db, header, state)
 
     def provision(self):
         """Explicit administrative initialization; never resets an existing campaign."""
@@ -125,6 +141,8 @@ class Ledger:
                 if state['project'] != self.project:
                     raise BudgetDenied('A different campaign already owns this ledger')
                 return
+            if state != {'project': None}:
+                raise BudgetDenied('Unidentified ledger contains prior state; restore or reconcile it')
             state.update(project=self.project, blocked=False, scopes={}, jobs={}, attempts={}, credits={})
 
     def open_job(self, job_id, kind='buyer', *, international=False, envelope=None, buyer_limits=None):
@@ -139,7 +157,7 @@ class Ledger:
                     or any(type(envelope[k]) is not int or envelope[k] < 1 for k in ('calls', 'seconds'))):
                 raise ValueError('Maintenance jobs need positive call and time limits')
             envelope = {**envelope, 'usd': str(money(Decimal(envelope['usd'])))}
-        with self._transaction() as (state, now):
+        with self._transaction(job_id=job_id) as (state, now):
             jobs = state['jobs']
             if job_id in jobs:
                 job = jobs[job_id]
@@ -184,7 +202,7 @@ class Ledger:
             raise ValueError('Retrieval needs an admitted source')
         values = [int(kind == 'retrieval' or source is not None), int(cost > 0),
                   math.ceil(seconds * 1000), str(cost), int(kind not in {'work', 'worker'})]
-        with self._transaction() as (state, now):
+        with self._transaction(job_id=job_id) as (state, now):
             job = state['jobs'][job_id]
             if state['blocked'] or job['cancelled']:
                 raise BudgetDenied('Project or job is stopped')
@@ -199,15 +217,15 @@ class Ledger:
             if job['kind'] == 'maintenance' and datetime.fromtimestamp(now, timezone.utc).date().isoformat() != job['day']:
                 raise BudgetDenied('A new UTC maintenance day requires a new job ID')
             if job['kind'] == 'maintenance':
-                days = {key for key, usage in state['scopes'].items()
+                days = {key for key, usage in state['scopes'].matching_items(entries.c.key.startswith('maintenance:'))
                         if key.startswith('maintenance:') and key.count(':') == 1 and any(map(Decimal, usage))}
                 if 'maintenance:' + job['day'] not in days and len(days) >= 14:
                     raise BudgetDenied('The 14 maintenance days are exhausted')
             attempts = state['attempts']
-            live = [a for a in attempts.values() if a['status'] in {'held', 'sent'} and a['expires'] > now]
+            live = attempts.matching(entries.c.status.in_(('held', 'sent')) & (entries.c.expires > now))
             envelope = job.get('envelope')
             if envelope:
-                consumed = [a for a in attempts.values() if a['job'] == job_id and a['status'] != 'released']
+                consumed = attempts.matching((entries.c.job_id == job_id) & (entries.c.status != 'released'))
                 if (now + seconds > job['started'] + envelope['seconds']
                         or sum(a['values'][4] for a in consumed) + values[4] > envelope['calls']
                         or sum(Decimal(a['values'][3]) for a in consumed) + cost > Decimal(envelope['usd'])):
@@ -223,7 +241,7 @@ class Ledger:
             if job['kind'] != 'buyer' and sum(a['background'] for a in live) >= 2:
                 raise BudgetDenied('Background capacity is busy')
             if source is not None:
-                check_source_workload(attempts.values(), source, limits, job_id, now)
+                check_source_workload(attempts, source, limits, job_id, now)
             keys = self._scope_keys(job_id, job, international)
             for key, profile in keys:
                 used = state['scopes'].setdefault(key, [0, 0, 0, '0', 0])
@@ -240,10 +258,11 @@ class Ledger:
             for key, _ in keys:
                 self._add(state['scopes'][key], values)
             token = uuid.uuid4().hex
-            attempts[token] = dict(job=job_id, kind=kind, source=source, created=now, expires=now + seconds,
+            receipt = dict(job=job_id, kind=kind, source=source, created=now, expires=now + seconds,
                 status='held', owner=uuid.uuid4().hex, scopes=[key for key, _ in keys], values=values,
                 background=job['kind'] != 'buyer', fees={k: str(getattr(charge, k)) for k in ('provider','gateway','payment','byok')})
-            owner = attempts[token]['owner']
+            attempts.insert_new(token, receipt)
+            owner = receipt['owner']
             if resource_id:
                 attempts[token]['resource'] = resource_id
         return Attempt(self, token, owner)
@@ -255,7 +274,7 @@ class Ledger:
 
     def _change(self, token, owner, action, actual=None, elapsed=None):
         overrun = False
-        with self._transaction() as (state, now):
+        with self._transaction(token=token) as (state, now):
             attempt = state['attempts'][token]
             if attempt['owner'] != owner or attempt['status'] not in {'held', 'sent'}:
                 raise BudgetDenied('Reservation owner is stale or attempt is already settled')
@@ -295,10 +314,10 @@ class Ledger:
     def recover(self):
         """Expire ownership; keep ALL attempted/held resources, never replay calls."""
         with self._transaction() as (state, now):
-            for attempt in state['attempts'].values():
-                if attempt['status'] in {'held', 'sent'} and attempt['expires'] <= now:
-                    attempt['status'] = 'uncertain'
-                    attempt['owner'] = None
+            expired = entries.c.status.in_(('held', 'sent')) & (entries.c.expires <= now)
+            for attempt in state['attempts'].matching(expired):
+                attempt['status'] = 'uncertain'
+                attempt['owner'] = None
 
     def credit_purchase(self, receipt_id, credit_usd, fee_usd):
         """Funding is not consumption; only purchase fees enter spend here."""
@@ -317,9 +336,17 @@ class Ledger:
             used[3] = str(Decimal(used[3]) + fee_usd)
             state['credits'][receipt_id] = receipt
 
+    def record(self, section, key):
+        with self._transaction(readonly=True) as (state, _):
+            return state[section][key]
+
+    def job_attempts(self, job_id, *, prefix=False):
+        with self._transaction(readonly=True) as (state, _):
+            return state['attempts'].for_job(job_id, prefix=prefix)
+
     def snapshot(self):
-        with self._transaction() as (state, _):
-            return state
+        with self._transaction(readonly=True) as (state, _):
+            return materialize(state)
 
 
 class Attempt:
@@ -332,13 +359,13 @@ class Attempt:
     def record_landing(self, source, limits):
         """Count a provider-reported second shop on this already-dispatched retrieval."""
         denied = False
-        with self.ledger._transaction() as (state, now):
+        with self.ledger._transaction(token=self.token) as (state, now):
             attempt = state['attempts'][self.token]
             if (attempt['owner'] != self.owner or attempt['status'] != 'sent' or attempt['kind'] != 'retrieval'
                     or attempt.get('landing_source') is not None or attempt['source'] == source):
                 raise BudgetDenied('Invalid landing receipt')
             try:
-                check_source_workload(state['attempts'].values(), source, limits, attempt['job'], now)
+                check_source_workload(state['attempts'], source, limits, attempt['job'], now)
             except BudgetDenied:
                 denied = True
             # The provider already reached this shop, even if its allowance was exhausted.
@@ -354,7 +381,7 @@ class Attempt:
         """
         import json
         safe = json.loads(json.dumps(metadata, allow_nan=False))
-        with self.ledger._transaction() as (state, now):
+        with self.ledger._transaction(token=self.token) as (state, now):
             attempt = state['attempts'][self.token]
             if (attempt['owner'] != self.owner or attempt['status'] not in {'held', 'sent'}
                     or now >= attempt['expires']):
@@ -381,7 +408,7 @@ class Job:
 
     def room(self):
         """Time available to the next tool under this job's current phase or envelope."""
-        with self.ledger._transaction() as (state, now):
+        with self.ledger._transaction(readonly=True) as (state, now):
             job = state['jobs'][self.run_id]
             if self.buyer_limits:
                 seconds = self.buyer_limits.seconds if job['final'] else self.buyer_limits.research_seconds
@@ -401,7 +428,8 @@ class Job:
 
     @property
     def cancelled(self):
-        return self.ledger.snapshot()['jobs'][self.run_id]['cancelled']
+        with self.ledger._transaction(readonly=True) as (state, _):
+            return state['jobs'].boolean_field(self.run_id, 'cancelled')
 
     def source_budget(self, registry_path, *, international=False):
         return SourceBudget(self, registry_path, international)

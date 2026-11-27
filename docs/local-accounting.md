@@ -3,12 +3,14 @@
 The user selected local PostgreSQL on November 17, 2026 in
 [#125](https://github.com/han33-dotcom/TechScout/issues/125), superseding the earlier
 requirement to choose an online host before local development. One dedicated
-`techscout_accounting` database is the accounting authority on Hassan's PC for
+`techscout_accounting` database was the initial accounting authority on Hassan's PC for
 `techscout-december-2026`. Other machines must not create independent copies and
 spend the same allowance. Remote access, firewall changes and online hosting were
 not configured. This database is separate from the product corpus.
 
-## Verified deployment
+The current shared endpoint and cutover status are recorded in [#248](https://github.com/han33-dotcom/TechScout/issues/248).
+
+## Original local deployment
 
 PostgreSQL 18.1 runs on loopback port 5432. A separate `techscout_accounting` login
 has database CONNECT, schema USAGE, table SELECT/UPDATE and sequence SELECT for
@@ -53,13 +55,25 @@ python -m app.accounting_admin reconcile --receipts config/accounting-reconcilia
 python -m app.accounting_admin status
 ```
 
-The initializer creates only `accounting_state` and its primary-key sequence on
-PostgreSQL. It does not need pgvector and does not claim that application Alembic
-migrations ran. Existing state is preserved; another campaign identity is refused.
-After initialization, grant the runtime login SELECT/UPDATE on `accounting_state`,
-SELECT on `accounting_state_id_seq`, schema USAGE and database CONNECT. Keep DDL
-and provisioning with an administrator. Full corpus deployment still needs its
-normal migrations and extensions.
+The administrator's `initialize` command creates the dedicated version 2
+accounting tables or converts an existing version 1 ledger in one transaction.
+It verifies the reconstructed state against the full original payload before commit.
+The campaign ID, historical usage, reservations, owners, receipts, credits, blocked
+status and extra checkpoint fields survive the conversion. A second invocation
+preserves existing records. Full corpus migrations and pgvector are separate.
+
+Stop **all** ledger clients before changing the storage version. Build each client
+from a revision that supports version 2, including experiment workers. Version 1
+clients cannot operate a migrated ledger. Take a final database backup and keep
+the source inactive during verification. If the destination has accepted writes,
+use its latest state for recovery.
+
+Give each runtime login CONNECT on the database, schema USAGE, SELECT/UPDATE on
+`accounting_state` and SELECT/INSERT/UPDATE/DELETE on `accounting_entries`.
+DELETE supports lease cleanup. A login used for backups also needs SELECT on
+`accounting_state_id_seq`. The administrator retains DDL privileges. Compare the
+restored snapshot before enabling clients and confirm both logins share the same
+budget. Use TLS for remote connections.
 
 The committed receipt file retains these **conservative debits**, not measured
 provider invoices:

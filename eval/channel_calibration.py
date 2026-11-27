@@ -65,7 +65,7 @@ def measure(ledger, discovery, reader, category, model, city, query, lang, serie
             if assessed.decision == 'recommendable' and current_problem(offer,assessed,read,run,start,now) is None:
                 verified.append(VerifiedOffer(offer=offer,cost=assessed.cost,verification=dict(run=run,checked_at=now)))
     with ledger._transaction() as (state, now):
-        attempts=[a for a in state['attempts'].values() if a['job']==job_id and a['status']!='released']
+        attempts=[a for a in state['attempts'].for_job(job_id) if a['status']!='released']
         seller_keys = {lead.seller_key for lead in report.leads}
         result=dict(job_id=job_id,category=category,language=lang,query=query,started_at=start.isoformat(),
             channels=[asdict(a) for a in report.attempts],coverage=report.coverage(verified),direct_checks=checked,
