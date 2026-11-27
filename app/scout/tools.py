@@ -100,8 +100,12 @@ class Tools:
                 break
         if not chosen:
             return []
-        with ThreadPoolExecutor(max_workers=k) as pool:
-            results = list(pool.map(self._safe_open, chosen))
+        from concurrent.futures import wait
+        pool = ThreadPoolExecutor(max_workers=k)
+        futures = [pool.submit(self._safe_open, url) for url in chosen]
+        done, _ = wait(futures, timeout=10)
+        pool.shutdown(wait=False, cancel_futures=True)
+        results = [f.result() for f in futures if f in done]
         return [_compact_product(r) for r in results if r and 'error' not in r]
 
     def _safe_open(self, url: str) -> dict | None:

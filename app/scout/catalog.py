@@ -13,7 +13,7 @@ claim a price or stock state.
 """
 from __future__ import annotations
 
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor, wait
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
@@ -30,6 +30,7 @@ from app.scout.web import FetchError, SafeWeb
 ROOT = Path(__file__).resolve().parents[2]
 CACHE_DIR = ROOT / 'var' / 'scout-catalog'
 INDEX_MAX_AGE = timedelta(days=2)
+SEARCH_SECONDS = 15.0  # shops that have not answered by then are reported as SLOW and skipped
 TOKEN = re.compile(r'[a-z0-9]+(?:\.[0-9]+)?')
 STOP = {'the', 'a', 'an', 'and', 'or', 'for', 'with', 'new', 'of', 'in', 'to', 'by', 'gb', 'inch'}
 
@@ -99,18 +100,23 @@ class ShopSearch:
         failures: dict[str, str] = {}
         results: list[Hit] = []
         answered = 0
-        with ThreadPoolExecutor(max_workers=self.workers) as pool:
-            futures = {pool.submit(self._one, s, query, per_shop, deadline): s for s in chosen}
-            for fut in as_completed(futures):
-                shop = futures[fut]
-                try:
-                    hits = fut.result()
-                    answered += 1
-                    results.extend(hits)
-                except FetchError as exc:
-                    failures[shop.shop_id] = exc.code
-                except Exception as exc:  # noqa: BLE001 - one shop never sinks the search
-                    failures[shop.shop_id] = type(exc).__name__
+        wait_s = SEARCH_SECONDS if deadline is None else max(1.0, min(SEARCH_SECONDS, deadline - time.monotonic()))
+        pool = ThreadPoolExecutor(max_workers=self.workers)
+        futures = {pool.submit(self._one, s, query, per_shop, deadline): s for s in chosen}
+        done, late = wait(futures, timeout=wait_s)
+        pool.shutdown(wait=False, cancel_futures=True)  # a slow shop is dropped, never waited for
+        for fut in late:
+            failures[futures[fut].shop_id] = 'SLOW'
+        for fut in done:
+            shop = futures[fut]
+            try:
+                hits = fut.result()
+                answered += 1
+                results.extend(hits)
+            except FetchError as exc:
+                failures[shop.shop_id] = exc.code
+            except Exception as exc:  # noqa: BLE001 - one shop never sinks the search
+                failures[shop.shop_id] = type(exc).__name__
         ranked = sorted(results, key=lambda h: (-score(query, h.title), h.available is False,
                                                 h.price if h.price is not None else Decimal('1e9')))
         kept = [h for h in ranked if score(query, h.title) > 0][:limit]

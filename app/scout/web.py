@@ -264,7 +264,8 @@ class SafeWeb:
                     if not location:
                         raise FetchError('REDIRECTS', 'redirect without a location')
                     return urljoin(url, location)
-                body = self._read(response, deadline)
+                # A hard wall-clock limit for the whole body: a shop trickling bytes cannot stall a run.
+                body = self._read(response, min(deadline, t0 + timeout + 2) if deadline else t0 + timeout + 2)
             finally:
                 response.close()
         except httpx2.TimeoutException:

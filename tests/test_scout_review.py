@@ -165,5 +165,28 @@ class ReviewRegressionTests(unittest.TestCase):
                 w.get(url)
 
 
+class SlowShopTests(unittest.TestCase):
+    def test_a_slow_shop_is_dropped_not_waited_for(self):
+        import time
+        from app.scout import catalog
+        from tests.test_scout import ALPHA, BETA, web
+        search = catalog.ShopSearch(web(), [ALPHA, BETA])
+        real = search._one
+
+        def slow(shop, *args):
+            if shop.shop_id == 'beta':
+                time.sleep(2)
+            return real(shop, *args)
+        search._one = slow
+        old = catalog.SEARCH_SECONDS
+        catalog.SEARCH_SECONDS = 0.5
+        self.addCleanup(setattr, catalog, 'SEARCH_SECONDS', old)
+        started = time.monotonic()
+        report = search.search('sony wh-ch520')
+        self.assertLess(time.monotonic() - started, 1.5)
+        self.assertEqual(report.failures.get('beta'), 'SLOW')
+        self.assertTrue(any(h.shop_id == 'alpha' for h in report.hits))
+
+
 if __name__ == '__main__':
     unittest.main()
