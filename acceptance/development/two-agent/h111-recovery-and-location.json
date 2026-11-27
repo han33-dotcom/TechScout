@@ -1,0 +1,918 @@
+{
+  "issue": 244,
+  "branch": "test/two-agent",
+  "retrieval_replay": {
+    "method": "Original seven completed Firecrawl job bodies. Simulated interrupted POST and provider history using the matching archived job. The buyer worker and page-reading interface ran normally. A scripted model requested the last 400 HTML characters and checked them against the archived body.",
+    "pages": [
+      {
+        "provider_job": "01a21d41-7a5e-7122-926e-7ac038706658",
+        "host": "ayoubcomputers.com",
+        "sha256": "dd001da19aae1c739b0352d3bed3838a7e1a0f0c97863b0b0ecf50d0fc3b28ed",
+        "html_bytes": 2639136,
+        "buyer_observed_offsets": [
+          0,
+          2638683
+        ],
+        "provider_calls": [
+          "POST /v2/scrape",
+          "GET /v2/team/activity",
+          "GET /v2/scrape/01a21d41-7a5e-7122-926e-7ac038706658"
+        ]
+      },
+      {
+        "provider_job": "01a21d41-b01b-7199-bbca-80c17b9991ac",
+        "host": "jakcomputer.com",
+        "sha256": "e7d87ef4303ca50d451c255d56576329e826a19eadd9d95ce0a98ece9368a234",
+        "html_bytes": 595296,
+        "buyer_observed_offsets": [
+          0,
+          594782
+        ],
+        "provider_calls": [
+          "POST /v2/scrape",
+          "GET /v2/team/activity",
+          "GET /v2/scrape/01a21d41-b01b-7199-bbca-80c17b9991ac"
+        ]
+      },
+      {
+        "provider_job": "01a21d42-0d42-704a-a2ff-d218dc774a0e",
+        "host": "www.dslr-zone.com",
+        "sha256": "449110e2d58e57e7867e9a1428ae284a49f66f1db65447b95cb14c8440938936",
+        "html_bytes": 556587,
+        "buyer_observed_offsets": [
+          0,
+          556044
+        ],
+        "provider_calls": [
+          "POST /v2/scrape",
+          "GET /v2/team/activity",
+          "GET /v2/scrape/01a21d42-0d42-704a-a2ff-d218dc774a0e"
+        ]
+      },
+      {
+        "provider_job": "01a21d42-9586-766e-8921-86b0c1dea2dc",
+        "host": "961souq.com",
+        "sha256": "ef462a60894fa2156ffd2086f7cc2551dff2334f0f3e50e0635a3d132927d0b6",
+        "html_bytes": 91040,
+        "buyer_observed_offsets": [
+          0,
+          90583
+        ],
+        "provider_calls": [
+          "POST /v2/scrape",
+          "GET /v2/team/activity",
+          "GET /v2/scrape/01a21d42-9586-766e-8921-86b0c1dea2dc"
+        ]
+      },
+      {
+        "provider_job": "01a21d43-262d-726f-8606-268c46bd5fdd",
+        "host": "mobileleb.com",
+        "sha256": "1591733edab8830256edc87a7a2a658ac222bac354456b8b9196006c525bbea4",
+        "html_bytes": 1804050,
+        "buyer_observed_offsets": [
+          0,
+          1803236
+        ],
+        "provider_calls": [
+          "POST /v2/scrape",
+          "GET /v2/team/activity",
+          "GET /v2/scrape/01a21d43-262d-726f-8606-268c46bd5fdd"
+        ]
+      },
+      {
+        "provider_job": "01a21d43-8153-727c-a11f-f77a6a381374",
+        "host": "electroslab.com",
+        "sha256": "e59b08486d1930d974c36deada5fba9459cd6a0a0cff2b6ee304a1396bcbc26e",
+        "html_bytes": 345005,
+        "buyer_observed_offsets": [
+          0,
+          344470
+        ],
+        "provider_calls": [
+          "POST /v2/scrape",
+          "GET /v2/team/activity",
+          "GET /v2/scrape/01a21d43-8153-727c-a11f-f77a6a381374"
+        ]
+      },
+      {
+        "provider_job": "01a21d44-149f-711f-8e73-d5952b725665",
+        "host": "www.carrefourlebanon.com",
+        "sha256": "783f1181306a72fb0dec07e07b49b4ed4346a6c82a1ce997aedcedba94ffac5e",
+        "html_bytes": 573628,
+        "buyer_observed_offsets": [
+          0,
+          568775
+        ],
+        "provider_calls": [
+          "POST /v2/scrape",
+          "GET /v2/team/activity",
+          "GET /v2/scrape/01a21d44-149f-711f-8e73-d5952b725665"
+        ]
+      }
+    ]
+  },
+  "linked": {
+    "method": "Archived original product and locations pages, supplied navigation. Live buyer model selected and linked quotes and wrote the answer. Rendered and checked both offer cards against the saved API response.",
+    "run": "fe101975-c8d6-4e7c-80b9-6b6b34d39bb8",
+    "buyer_text": "Compare the listed prices of the new, in-stock Logitech H111 wired 3.5 mm headset at these two Lebanese shops before delivery. Show both sellers, prices and links.",
+    "status": "partial",
+    "elapsed_ms": 91485,
+    "answer": {
+      "text": "Both Lebanese shops list the Logitech H111 wired 3.5 mm headset as new and in online stock:\n\n• Mobileleb: USD 13.00, tax included. Listed part number: 981-000593.\nhttps://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm\n\n• JAK Computer: USD 25.00. Listed part number: 981-000612.\nhttps://jakcomputer.com/products/logitech-h111-stereo-headset\n\nMobileleb’s listed price is USD 12.00 lower before delivery. Both listings identify the H111, though their listed part numbers differ. Online stock does not confirm stock at a particular showroom.",
+      "evidence_ids": [
+        "auto-mobileleb-com-d68c54d5:92109c0910194f02678960ef:981-000593:seller.name:0:89f904864b4ee6bd",
+        "auto-mobileleb-com-d68c54d5:92109c0910194f02678960ef:981-000593:seller.location_identity:1:fcde7db44ce0554f",
+        "auto-mobileleb-com-d68c54d5:92109c0910194f02678960ef:981-000593:seller.market:2:fcde7db44ce0554f",
+        "auto-mobileleb-com-d68c54d5:92109c0910194f02678960ef:981-000593:variant.product.model:3:89f904864b4ee6bd",
+        "auto-mobileleb-com-d68c54d5:92109c0910194f02678960ef:981-000593:price:4:89f904864b4ee6bd",
+        "auto-mobileleb-com-d68c54d5:92109c0910194f02678960ef:981-000593:price:5:89f904864b4ee6bd",
+        "auto-mobileleb-com-d68c54d5:92109c0910194f02678960ef:981-000593:variant.color:6:89f904864b4ee6bd",
+        "auto-mobileleb-com-d68c54d5:92109c0910194f02678960ef:981-000593:stock:7:89f904864b4ee6bd",
+        "auto-mobileleb-com-d68c54d5:92109c0910194f02678960ef:981-000593:condition:8:89f904864b4ee6bd",
+        "auto-jakcomputer-com-ac130207:9184bb63be60178684da436b:981-000612:seller.name:0:cd19b7338de2af04",
+        "auto-jakcomputer-com-ac130207:9184bb63be60178684da436b:981-000612:seller.market:1:cd19b7338de2af04",
+        "auto-jakcomputer-com-ac130207:9184bb63be60178684da436b:981-000612:variant.product.model:2:cd19b7338de2af04",
+        "auto-jakcomputer-com-ac130207:9184bb63be60178684da436b:981-000612:price:3:cd19b7338de2af04",
+        "auto-jakcomputer-com-ac130207:9184bb63be60178684da436b:981-000612:stock:4:cd19b7338de2af04",
+        "auto-jakcomputer-com-ac130207:9184bb63be60178684da436b:981-000612:condition:5:cd19b7338de2af04"
+      ],
+      "source": "model"
+    },
+    "offers": [
+      {
+        "seller": "Mobileleb",
+        "url": "https://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm",
+        "sku": "981-000593",
+        "price": {
+          "amount": "13.00",
+          "currency": "USD"
+        },
+        "condition": "new",
+        "stock": true,
+        "receipts": [
+          {
+            "field_path": "seller.name",
+            "excerpt": "Mobileleb",
+            "final_url": "https://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm",
+            "response_sha256": "89f904864b4ee6bd674e2271c244e8cbec884702e61c0669f2ffabd9c712eb44",
+            "observed_at": "2026-11-27T14:53:13.618910Z"
+          },
+          {
+            "field_path": "seller.location_identity",
+            "excerpt": "\"name\": \"Mobileleb\"",
+            "final_url": "https://mobileleb.com/pages/hours-and-locations",
+            "response_sha256": "fcde7db44ce0554fe366101bd08e466c9b4f39119c8f9d30bcc685db333e3aea",
+            "observed_at": "2026-11-27T14:53:39.026317Z"
+          },
+          {
+            "field_path": "seller.market",
+            "excerpt": "Location: Dekwaneh, Slave Street, near Bank of Beirut, Sader Building",
+            "final_url": "https://mobileleb.com/pages/hours-and-locations",
+            "response_sha256": "fcde7db44ce0554fe366101bd08e466c9b4f39119c8f9d30bcc685db333e3aea",
+            "observed_at": "2026-11-27T14:53:39.026317Z"
+          },
+          {
+            "field_path": "variant.product.model",
+            "excerpt": "Logitech, H111 Wired Headset, Stereo Headphones with Noise, Cancelling Microphone, 3.5 mm Audio Jack, PC/Mac/Laptop/Smartphone/Tablet - 981-000593",
+            "final_url": "https://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm",
+            "response_sha256": "89f904864b4ee6bd674e2271c244e8cbec884702e61c0669f2ffabd9c712eb44",
+            "observed_at": "2026-11-27T14:53:13.618910Z"
+          },
+          {
+            "field_path": "price",
+            "excerpt": "<span class=\"new-price\">$13.00</span>",
+            "final_url": "https://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm",
+            "response_sha256": "89f904864b4ee6bd674e2271c244e8cbec884702e61c0669f2ffabd9c712eb44",
+            "observed_at": "2026-11-27T14:53:13.618910Z"
+          },
+          {
+            "field_path": "price",
+            "excerpt": "<meta itemprop=\"priceCurrency\" content=\"USD\">",
+            "final_url": "https://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm",
+            "response_sha256": "89f904864b4ee6bd674e2271c244e8cbec884702e61c0669f2ffabd9c712eb44",
+            "observed_at": "2026-11-27T14:53:13.618910Z"
+          },
+          {
+            "field_path": "stock",
+            "excerpt": "<link itemprop=\"availability\" href=\"http://schema.org/InStock\">",
+            "final_url": "https://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm",
+            "response_sha256": "89f904864b4ee6bd674e2271c244e8cbec884702e61c0669f2ffabd9c712eb44",
+            "observed_at": "2026-11-27T14:53:13.618910Z"
+          },
+          {
+            "field_path": "condition",
+            "excerpt": "\"name\" : \"Product Condition\", \"value\": [ \"Brand New\" ]",
+            "final_url": "https://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm",
+            "response_sha256": "89f904864b4ee6bd674e2271c244e8cbec884702e61c0669f2ffabd9c712eb44",
+            "observed_at": "2026-11-27T14:53:13.618910Z"
+          }
+        ]
+      },
+      {
+        "seller": "JAK Computer",
+        "url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+        "sku": "981-000612",
+        "price": {
+          "amount": "25.00",
+          "currency": "USD"
+        },
+        "condition": "new",
+        "stock": true,
+        "receipts": [
+          {
+            "field_path": "seller.name",
+            "excerpt": "JAK Computer",
+            "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+            "response_sha256": "cd19b7338de2af042ec0a4d237f91b2be5654b9a5d7ad1e6080f07045db66351",
+            "observed_at": "2026-11-27T14:53:48.751878Z"
+          },
+          {
+            "field_path": "seller.market",
+            "excerpt": "<p>Zarif<br>Zarif Mohammad Lababidi Street, Rose Garden Building Block A Ground Floor<br>Beirut 0000<br>Lebanon</p>",
+            "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+            "response_sha256": "cd19b7338de2af042ec0a4d237f91b2be5654b9a5d7ad1e6080f07045db66351",
+            "observed_at": "2026-11-27T14:53:48.751878Z"
+          },
+          {
+            "field_path": "variant.product.model",
+            "excerpt": "Logitech H111 Stereo Headset 981-000612",
+            "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+            "response_sha256": "cd19b7338de2af042ec0a4d237f91b2be5654b9a5d7ad1e6080f07045db66351",
+            "observed_at": "2026-11-27T14:53:48.751878Z"
+          },
+          {
+            "field_path": "price",
+            "excerpt": "$25.00 USD",
+            "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+            "response_sha256": "cd19b7338de2af042ec0a4d237f91b2be5654b9a5d7ad1e6080f07045db66351",
+            "observed_at": "2026-11-27T14:53:48.751878Z"
+          },
+          {
+            "field_path": "stock",
+            "excerpt": "Pickup available,\n              usually ready in 24 hours",
+            "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+            "response_sha256": "cd19b7338de2af042ec0a4d237f91b2be5654b9a5d7ad1e6080f07045db66351",
+            "observed_at": "2026-11-27T14:53:48.751878Z"
+          },
+          {
+            "field_path": "condition",
+            "excerpt": "Condition:</strong>\n        BRAND NEW",
+            "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+            "response_sha256": "cd19b7338de2af042ec0a4d237f91b2be5654b9a5d7ad1e6080f07045db66351",
+            "observed_at": "2026-11-27T14:53:48.751878Z"
+          }
+        ]
+      }
+    ],
+    "spend": {
+      "attempts": {
+        "model": 8,
+        "retrieval": 3
+      },
+      "known_usd": "0.1482215",
+      "ledger": "read",
+      "note": "uncertain amounts are full reservations kept because the cost was not reported",
+      "still_held_usd": "0",
+      "uncertain_usd": "0"
+    },
+    "actions": [
+      {
+        "tool": "inspect",
+        "status": "needs_seller_location",
+        "url": "https://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm",
+        "reason": "mobileleb.com lists Logitech, H111 Wired Headset, Stereo Headphones with Noise, Cancelling Microphone, 3.5 mm Audio Jack, PC/Mac/Laptop/Smartphone/Tablet - 981-000593 for USD 13.00 (in stock). The named merchant's Lebanese location could not be established."
+      },
+      {
+        "tool": "inspect",
+        "status": "merchant_location_checked",
+        "url": "https://mobileleb.com/pages/hours-and-locations",
+        "linked_listings": [
+          "https://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm"
+        ]
+      },
+      {
+        "tool": "inspect",
+        "status": "priced_partial",
+        "url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+        "linked_listings": []
+      }
+    ],
+    "reader_calls": []
+  },
+  "initial_blind": {
+    "method": "First fresh blind run. Same original wording, ordinary buyer worker. Before removing the separate 40-second transfer cutoff.",
+    "run": "82b66203-2c2c-4d36-ac01-e2f7b1060fe3",
+    "buyer_text": "Which of two Lebanese shops has the lower listed price for a new Logitech H111 wired 3.5 mm stereo headset? Show both in-stock listings and their links. Compare item prices before delivery.",
+    "status": "partial",
+    "elapsed_ms": 292703,
+    "answer": {
+      "text": "I could verify only one fully qualifying listing, so I can’t yet confirm the cheaper of two in-stock, new headsets.\n\nJAK Computer — $25.00 USD before delivery. The Logitech H111 (981-000612) is explicitly brand new and in stock at its Beirut showroom; wired 3.5 mm stereo connectivity is confirmed.\nhttps://jakcomputer.com/products/logitech-h111-stereo-headset\n\n961Souq — $12.00 USD excluding VAT. Its H111 page has structured “InStock” data but also says “Check for availability.” New condition was not explicitly confirmed, so this is not a verified second qualifying offer.\nhttps://961souq.com/products/logitech-h111-headset\n\n961Souq shows the lower advertised figure, but its stock, new condition and VAT-inclusive item price need confirmation before calling it the cheaper qualifying option. Delivery charges are excluded from this comparison.",
+      "evidence_ids": [
+        "auto-jakcomputer-com-ac130207:9184bb63be60178684da436b:981-000612:seller.name:0:57e95a5a4f5ef669",
+        "auto-jakcomputer-com-ac130207:9184bb63be60178684da436b:981-000612:seller.market:1:57e95a5a4f5ef669",
+        "auto-jakcomputer-com-ac130207:9184bb63be60178684da436b:981-000612:variant.product.model:2:57e95a5a4f5ef669",
+        "auto-jakcomputer-com-ac130207:9184bb63be60178684da436b:981-000612:price:3:57e95a5a4f5ef669",
+        "auto-jakcomputer-com-ac130207:9184bb63be60178684da436b:981-000612:price:4:57e95a5a4f5ef669",
+        "auto-jakcomputer-com-ac130207:9184bb63be60178684da436b:981-000612:stock:5:57e95a5a4f5ef669",
+        "auto-jakcomputer-com-ac130207:9184bb63be60178684da436b:981-000612:condition:6:57e95a5a4f5ef669"
+      ],
+      "source": "model"
+    },
+    "offers": [
+      {
+        "seller": "JAK Computer",
+        "url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+        "sku": "981-000612",
+        "price": {
+          "amount": "25.00",
+          "currency": "USD"
+        },
+        "condition": "new",
+        "stock": true,
+        "receipts": [
+          {
+            "field_path": "seller.name",
+            "excerpt": "JAK Computer",
+            "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+            "response_sha256": "57e95a5a4f5ef66974f2b852dfad788497391afb29f1606104448a24384413fd",
+            "observed_at": "2026-11-27T14:42:40.158869Z"
+          },
+          {
+            "field_path": "seller.market",
+            "excerpt": "Beirut Showroom: Mohammad Lababidi Street, Rose Garden Building, Block A, Ground Floor, Zarif, Beirut",
+            "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+            "response_sha256": "57e95a5a4f5ef66974f2b852dfad788497391afb29f1606104448a24384413fd",
+            "observed_at": "2026-11-27T14:42:40.158869Z"
+          },
+          {
+            "field_path": "variant.product.model",
+            "excerpt": "Logitech H111 Stereo Headset 981-000612",
+            "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+            "response_sha256": "57e95a5a4f5ef66974f2b852dfad788497391afb29f1606104448a24384413fd",
+            "observed_at": "2026-11-27T14:42:40.158869Z"
+          },
+          {
+            "field_path": "price",
+            "excerpt": "\"price\": \"25.0\",\"priceCurrency\": \"USD\"",
+            "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+            "response_sha256": "57e95a5a4f5ef66974f2b852dfad788497391afb29f1606104448a24384413fd",
+            "observed_at": "2026-11-27T14:42:40.158869Z"
+          },
+          {
+            "field_path": "price",
+            "excerpt": "\"priceCurrency\": \"USD\"",
+            "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+            "response_sha256": "57e95a5a4f5ef66974f2b852dfad788497391afb29f1606104448a24384413fd",
+            "observed_at": "2026-11-27T14:42:40.158869Z"
+          },
+          {
+            "field_path": "stock",
+            "excerpt": "\"availability\": \"https://schema.org/InStock\"",
+            "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+            "response_sha256": "57e95a5a4f5ef66974f2b852dfad788497391afb29f1606104448a24384413fd",
+            "observed_at": "2026-11-27T14:42:40.158869Z"
+          },
+          {
+            "field_path": "condition",
+            "excerpt": "\"itemCondition\": \"https:\\/\\/schema.org\\/NewCondition\"",
+            "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+            "response_sha256": "57e95a5a4f5ef66974f2b852dfad788497391afb29f1606104448a24384413fd",
+            "observed_at": "2026-11-27T14:42:40.158869Z"
+          }
+        ]
+      }
+    ],
+    "spend": {
+      "attempts": {
+        "model": 14,
+        "provider_read": 3,
+        "retrieval": 5,
+        "search": 2
+      },
+      "known_usd": "0.2542200",
+      "ledger": "read",
+      "note": "uncertain amounts are full reservations kept because the cost was not reported",
+      "still_held_usd": "0",
+      "uncertain_usd": "0.5204800"
+    },
+    "actions": [
+      {
+        "tool": "catalog",
+        "status": "leads",
+        "sent_query": "Logitech H111"
+      },
+      {
+        "tool": "web_search",
+        "status": "ok",
+        "sent_query": "Logitech H111 headset Lebanon in stock price"
+      },
+      {
+        "tool": "inspect",
+        "status": "read_failed",
+        "url": "https://ayoubcomputers.com/logitech-h111-headset-microphone-h111/?srsltid=AY6E961H8VH3rqbPXArBFa-7wDTqK1k4eDTO36wQtRQrg68Mu6RgN64R",
+        "reason": "The listing could not be read."
+      },
+      {
+        "tool": "inspect",
+        "status": "priced_partial",
+        "url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+        "requested_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset?srsltid=AY6E960Sz8MClRf7QlYSHEhEwumUI6R6YljNFMlPOH5th8i7bO7l2Fuk",
+        "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+        "linked_listings": []
+      },
+      {
+        "tool": "web_search",
+        "status": "ok",
+        "sent_query": "Logitech H111 headset Lebanon price in stock -site:jakcomputer.com"
+      },
+      {
+        "tool": "inspect",
+        "status": "no_match",
+        "url": "https://961souq.com/products/logitech-h111-headset",
+        "requested_url": "https://961souq.com/products/logitech-h111-headset?srsltid=AY6E960FoFjavkiYgo3EA_rlK8ISh3kx2AQdbXFZlM8zf9GFC6N9anDG",
+        "final_url": "https://961souq.com/products/logitech-h111-headset",
+        "linked_listings": [],
+        "reason": "Found the Logitech H111 at a Lebanese shop for USD 12.00 excluding VAT, with structured data marking it in stock and an enabled Add to cart button. New condition is not explicitly established. The description confirms a wired headset, but d"
+      },
+      {
+        "tool": "inspect",
+        "status": "read_failed",
+        "url": "https://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm?srsltid=AY6E9631LmEhtWpZ-MVNSpZcfOwS6hfZ7dmXUHaKc3nDXyfG2-2blgD1",
+        "reason": "The listing could not be read."
+      },
+      {
+        "tool": "inspect",
+        "status": "read_failed",
+        "url": "https://pcandparts.com/product/logitech-h111-stereo-headset-981-000593/",
+        "reason": "The listing could not be read."
+      }
+    ],
+    "reader_calls": [
+      {
+        "host": "ayoubcomputers.com",
+        "reader": "firecrawl",
+        "start": "2026-11-27T14:40:21.464759+00:00",
+        "seconds_remaining_in_phase": 235.97,
+        "outcome": "TimeoutError",
+        "reason": "Provider deadline exceeded",
+        "cause": "NoneType",
+        "detail": "None"
+      },
+      {
+        "host": "jakcomputer.com",
+        "reader": "firecrawl",
+        "start": "2026-11-27T14:42:09.971885+00:00",
+        "seconds_remaining_in_phase": 127.45,
+        "outcome": "capture",
+        "sha256": "57e95a5a4f5ef66974f2b852dfad788497391afb29f1606104448a24384413fd",
+        "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+        "source_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset?srsltid=AY6E960Sz8MClRf7QlYSHEhEwumUI6R6YljNFMlPOH5th8i7bO7l2Fuk",
+        "http": 200,
+        "source_matches": true,
+        "final_matches": false,
+        "warning": false,
+        "has_error": false,
+        "bytes": 594843,
+        "content_type": "text/html; charset=utf-8",
+        "cache": null,
+        "cached_at": false
+      },
+      {
+        "host": "961souq.com",
+        "reader": "firecrawl",
+        "start": "2026-11-27T14:43:42.619534+00:00",
+        "seconds_remaining_in_phase": 34.81,
+        "outcome": "capture",
+        "sha256": "ef462a60894fa2156ffd2086f7cc2551dff2334f0f3e50e0635a3d132927d0b6",
+        "final_url": "https://961souq.com/products/logitech-h111-headset",
+        "source_url": "https://961souq.com/products/logitech-h111-headset?srsltid=AY6E960FoFjavkiYgo3EA_rlK8ISh3kx2AQdbXFZlM8zf9GFC6N9anDG",
+        "http": 200,
+        "source_matches": true,
+        "final_matches": false,
+        "warning": false,
+        "has_error": false,
+        "bytes": 91040,
+        "content_type": "text/html",
+        "cache": null,
+        "cached_at": false
+      },
+      {
+        "host": "mobileleb.com",
+        "reader": "firecrawl",
+        "start": "2026-11-27T14:44:09.482551+00:00",
+        "seconds_remaining_in_phase": 7.95,
+        "outcome": "TimeoutError",
+        "reason": "No time remains to recover the Firecrawl result",
+        "cause": "NoneType",
+        "detail": "None"
+      },
+      {
+        "host": "pcandparts.com",
+        "reader": "firecrawl",
+        "start": "2026-11-27T14:44:19.870400+00:00",
+        "seconds_remaining_in_phase": 16.28,
+        "outcome": "TimeoutError",
+        "reason": "No time remains to recover the Firecrawl result",
+        "cause": "NoneType",
+        "detail": "None"
+      }
+    ]
+  },
+  "pair": {
+    "method": "Fresh isolated copy of the catalog. Buyer submitted only the original wording. Live model, live tools, ordinary buyer worker and no scripted choices.",
+    "run": "3cd47366-9411-4755-8fec-f23cf11c88a1",
+    "buyer_text": "Which of two Lebanese shops has the lower listed price for a new Logitech H111 wired 3.5 mm stereo headset? Show both in-stock listings and their links. Compare item prices before delivery.",
+    "status": "partial",
+    "elapsed_ms": 293453,
+    "answer": {
+      "text": "I Fix LB has the lower observed listed price: US$11 versus Tech Zone’s US$25, a US$14 difference before delivery.\n\n• I Fix LB — Logitech H111–1 JACK: US$11, new, listed in online stock.\nhttps://ifixlb.com/product/logitech-stereo-headset-h111-1-jack/\n\n• Tech Zone — Logitech H111 wired stereo headset: US$25, listed in online stock.\nhttps://techzone.com.lb/product/logitech-headset-wired-h111-stereo/\n\nCaveat: Tech Zone’s page did not explicitly confirm new condition or the 3.5 mm connector, so it is not a fully verified match to all your requirements. I could verify only I Fix LB as a qualifying listing. Prices above exclude delivery; online stock does not establish showroom availability.",
+      "evidence_ids": [
+        "auto-ifixlb-com-a24b7516:4d8acf9fcc9526277cb51271:34813:seller.name:0:c780399e8b8c84b9",
+        "auto-ifixlb-com-a24b7516:4d8acf9fcc9526277cb51271:34813:seller.market:1:c780399e8b8c84b9",
+        "auto-ifixlb-com-a24b7516:4d8acf9fcc9526277cb51271:34813:variant.product.model:2:c780399e8b8c84b9",
+        "auto-ifixlb-com-a24b7516:4d8acf9fcc9526277cb51271:34813:price:3:c780399e8b8c84b9",
+        "auto-ifixlb-com-a24b7516:4d8acf9fcc9526277cb51271:34813:price:4:c780399e8b8c84b9",
+        "auto-ifixlb-com-a24b7516:4d8acf9fcc9526277cb51271:34813:stock:5:c780399e8b8c84b9",
+        "auto-ifixlb-com-a24b7516:4d8acf9fcc9526277cb51271:34813:condition:6:c780399e8b8c84b9"
+      ],
+      "source": "model"
+    },
+    "offers": [
+      {
+        "seller": "I Fix LB",
+        "url": "https://ifixlb.com/product/logitech-stereo-headset-h111-1-jack/",
+        "sku": "34813",
+        "price": {
+          "amount": "11.00",
+          "currency": "USD"
+        },
+        "condition": "new",
+        "stock": true,
+        "receipts": [
+          {
+            "field_path": "seller.name",
+            "excerpt": "I Fix LB",
+            "final_url": "https://ifixlb.com/product/logitech-stereo-headset-h111-1-jack/",
+            "response_sha256": "c780399e8b8c84b95aaf799ec4bb4ef06e3335ed5d0dd45d7fbb6ec4a6ee237f",
+            "observed_at": "2026-11-27T14:55:38.271467Z"
+          },
+          {
+            "field_path": "seller.market",
+            "excerpt": "Makdisi Street, Hamra · +961 76 999 983",
+            "final_url": "https://ifixlb.com/product/logitech-stereo-headset-h111-1-jack/",
+            "response_sha256": "c780399e8b8c84b95aaf799ec4bb4ef06e3335ed5d0dd45d7fbb6ec4a6ee237f",
+            "observed_at": "2026-11-27T14:55:38.271467Z"
+          },
+          {
+            "field_path": "variant.product.model",
+            "excerpt": "Logitech Stereo Headset H111–1 JACK",
+            "final_url": "https://ifixlb.com/product/logitech-stereo-headset-h111-1-jack/",
+            "response_sha256": "c780399e8b8c84b95aaf799ec4bb4ef06e3335ed5d0dd45d7fbb6ec4a6ee237f",
+            "observed_at": "2026-11-27T14:55:38.271467Z"
+          },
+          {
+            "field_path": "price",
+            "excerpt": "\"price\":\"11.00\",\"priceCurrency\":\"USD\",\"valueAddedTaxIncluded\":true",
+            "final_url": "https://ifixlb.com/product/logitech-stereo-headset-h111-1-jack/",
+            "response_sha256": "c780399e8b8c84b95aaf799ec4bb4ef06e3335ed5d0dd45d7fbb6ec4a6ee237f",
+            "observed_at": "2026-11-27T14:55:38.271467Z"
+          },
+          {
+            "field_path": "price",
+            "excerpt": "\"priceCurrency\":\"USD\"",
+            "final_url": "https://ifixlb.com/product/logitech-stereo-headset-h111-1-jack/",
+            "response_sha256": "c780399e8b8c84b95aaf799ec4bb4ef06e3335ed5d0dd45d7fbb6ec4a6ee237f",
+            "observed_at": "2026-11-27T14:55:38.271467Z"
+          },
+          {
+            "field_path": "stock",
+            "excerpt": "\"availability\":\"https:\\/\\/schema.org\\/InStock\"",
+            "final_url": "https://ifixlb.com/product/logitech-stereo-headset-h111-1-jack/",
+            "response_sha256": "c780399e8b8c84b95aaf799ec4bb4ef06e3335ed5d0dd45d7fbb6ec4a6ee237f",
+            "observed_at": "2026-11-27T14:55:38.271467Z"
+          },
+          {
+            "field_path": "condition",
+            "excerpt": "<meta property=\"product:condition\" content=\"new\">",
+            "final_url": "https://ifixlb.com/product/logitech-stereo-headset-h111-1-jack/",
+            "response_sha256": "c780399e8b8c84b95aaf799ec4bb4ef06e3335ed5d0dd45d7fbb6ec4a6ee237f",
+            "observed_at": "2026-11-27T14:55:38.271467Z"
+          }
+        ]
+      }
+    ],
+    "spend": {
+      "attempts": {
+        "model": 12,
+        "provider_read": 2,
+        "retrieval": 4,
+        "search": 2
+      },
+      "known_usd": "0.1367905",
+      "ledger": "read",
+      "note": "uncertain amounts are full reservations kept because the cost was not reported",
+      "still_held_usd": "0",
+      "uncertain_usd": "0.5204800"
+    },
+    "actions": [
+      {
+        "tool": "web_search",
+        "status": "ok",
+        "sent_query": "Logitech H111 headset Lebanon price in stock"
+      },
+      {
+        "tool": "inspect",
+        "status": "priced_partial",
+        "url": "https://ifixlb.com/product/logitech-stereo-headset-h111-1-jack/"
+      },
+      {
+        "tool": "inspect",
+        "status": "no_match",
+        "url": "https://techzone.com.lb/product/logitech-headset-wired-h111-stereo/",
+        "requested_url": "https://techzone.com.lb/product/logitech-headset-wired-h111-stereo/?srsltid=AY6E960Wk_tXzfAW1PEQtWpYTHBPiZ-_tXF3ugSpIMx1vZvQUC7GrLRJ",
+        "final_url": "https://techzone.com.lb/product/logitech-headset-wired-h111-stereo/",
+        "linked_listings": [],
+        "reason": "Found Tech Zone's in-stock Logitech H111 wired stereo headset for USD 25.00 before delivery. The page does not explicitly establish new condition or the 3.5 mm connector. Only one shop's listing is available in this capture, so a two-shop p"
+      },
+      {
+        "tool": "web_search",
+        "status": "ok",
+        "sent_query": "Logitech H111 3.5mm headset Lebanon in stock price"
+      },
+      {
+        "tool": "inspect",
+        "status": "read_failed",
+        "url": "https://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm?srsltid=AY6E962Faq_fuSqf3UdMAJOtAhBVNTs77oGXstAi8gz4bnhLIdxDnXFq",
+        "reason": "The listing could not be read. The Firecrawl read timed out before the agent received a usable page."
+      },
+      {
+        "tool": "inspect",
+        "status": "read_failed",
+        "url": "https://ayoubcomputers.com/logitech-h111-headset-microphone-h111/?srsltid=AY6E963h-BOHRQO-KPyTmAL481rf2WJRao2I0_UIp4qd74__OVZlaoK6",
+        "reason": "The listing could not be read. The Firecrawl read timed out before the agent received a usable page."
+      }
+    ],
+    "reader_calls": [
+      {
+        "host": "ifixlb.com",
+        "reader": "firecrawl",
+        "start": "2026-11-27T14:55:13.297839+00:00",
+        "seconds_remaining_in_phase": 246.42,
+        "outcome": "capture",
+        "sha256": "c780399e8b8c84b95aaf799ec4bb4ef06e3335ed5d0dd45d7fbb6ec4a6ee237f",
+        "final_url": "https://ifixlb.com/product/logitech-stereo-headset-h111-1-jack/",
+        "source_url": "https://ifixlb.com/product/logitech-stereo-headset-h111-1-jack/",
+        "http": 200,
+        "source_matches": true,
+        "final_matches": true,
+        "warning": false,
+        "has_error": false,
+        "bytes": 303829,
+        "content_type": "text/html; charset=UTF-8",
+        "cache": null,
+        "cached_at": false
+      },
+      {
+        "host": "techzone.com.lb",
+        "reader": "firecrawl",
+        "start": "2026-11-27T14:56:14.424191+00:00",
+        "seconds_remaining_in_phase": 185.3,
+        "outcome": "capture",
+        "sha256": "58352f3146ccd1654a544b815ac5d8a5d35e4b605dc034e6fffd55379ecaefdc",
+        "final_url": "https://techzone.com.lb/product/logitech-headset-wired-h111-stereo/",
+        "source_url": "https://techzone.com.lb/product/logitech-headset-wired-h111-stereo/?srsltid=AY6E960Wk_tXzfAW1PEQtWpYTHBPiZ-_tXF3ugSpIMx1vZvQUC7GrLRJ",
+        "http": 200,
+        "source_matches": true,
+        "final_matches": false,
+        "warning": false,
+        "has_error": false,
+        "bytes": 527533,
+        "content_type": "text/html; charset=UTF-8",
+        "cache": null,
+        "cached_at": false
+      },
+      {
+        "host": "mobileleb.com",
+        "reader": "firecrawl",
+        "start": "2026-11-27T14:57:25.350683+00:00",
+        "seconds_remaining_in_phase": 114.38,
+        "outcome": "TimeoutError",
+        "reason": "No time remains to recover the Firecrawl result",
+        "cause": "NoneType",
+        "detail": "None"
+      },
+      {
+        "host": "ayoubcomputers.com",
+        "reader": "firecrawl",
+        "start": "2026-11-27T14:59:22.938780+00:00",
+        "seconds_remaining_in_phase": 15.55,
+        "outcome": "ConnectTimeout",
+        "reason": "_ssl.c:989: The handshake operation timed out",
+        "cause": "ConnectTimeout",
+        "detail": "_ssl.c:989: The handshake operation timed out"
+      }
+    ]
+  },
+  "controlled_stock_note": "One byte-preserving controlled replay cited JAK's pickup availability for stock. Its archived selected offer also contained schema.org/InStock. The earlier replay cited that field directly.",
+  "other_trials": [
+    {
+      "run": "c4a4e997-dcd8-4945-85c1-c59938ab8431",
+      "case": "linked",
+      "note": "Supplied navigation, live model. Both cards and answer passed. The replay decoded archive files using universal newline translation. The byte-preserving controlled replay is recorded separately.",
+      "answer": {
+        "text": "Both Lebanese shops list the Logitech H111 wired 3.5 mm headset as new and in stock:\n\n• Mobileleb: USD 13.00 before delivery. SKU: 981-000593.\nhttps://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm\n\n• JAK Computer: USD 25.00 before delivery. SKU: 981-000612.\nhttps://jakcomputer.com/products/logitech-h111-stereo-headset?variant=44593484431407\n\nMobileleb is USD 12.00 cheaper. Both listings identify the H111 with a 3.5 mm connection, though their listed SKUs differ. Delivery fees are excluded from this comparison.",
+        "evidence_ids": [
+          "auto-mobileleb-com-d68c54d5:92109c0910194f02678960ef:981-000593:seller.name:0:db12a9a41c924d75",
+          "auto-mobileleb-com-d68c54d5:92109c0910194f02678960ef:981-000593:seller.location_identity:1:adb0bcc94f12b357",
+          "auto-mobileleb-com-d68c54d5:92109c0910194f02678960ef:981-000593:seller.market:2:adb0bcc94f12b357",
+          "auto-mobileleb-com-d68c54d5:92109c0910194f02678960ef:981-000593:variant.product.model:3:db12a9a41c924d75",
+          "auto-mobileleb-com-d68c54d5:92109c0910194f02678960ef:981-000593:price:4:db12a9a41c924d75",
+          "auto-mobileleb-com-d68c54d5:92109c0910194f02678960ef:981-000593:price:5:db12a9a41c924d75",
+          "auto-mobileleb-com-d68c54d5:92109c0910194f02678960ef:981-000593:variant.color:6:db12a9a41c924d75",
+          "auto-mobileleb-com-d68c54d5:92109c0910194f02678960ef:981-000593:stock:7:db12a9a41c924d75",
+          "auto-mobileleb-com-d68c54d5:92109c0910194f02678960ef:981-000593:condition:8:db12a9a41c924d75",
+          "auto-jakcomputer-com-ac130207:bdb992145731c499afe50160:981-000612:seller.name:0:cbd017d82eb91545",
+          "auto-jakcomputer-com-ac130207:bdb992145731c499afe50160:981-000612:seller.market:1:cbd017d82eb91545",
+          "auto-jakcomputer-com-ac130207:bdb992145731c499afe50160:981-000612:variant.product.model:2:cbd017d82eb91545",
+          "auto-jakcomputer-com-ac130207:bdb992145731c499afe50160:981-000612:listing_url:3:cbd017d82eb91545",
+          "auto-jakcomputer-com-ac130207:bdb992145731c499afe50160:981-000612:price:4:cbd017d82eb91545",
+          "auto-jakcomputer-com-ac130207:bdb992145731c499afe50160:981-000612:price:5:cbd017d82eb91545",
+          "auto-jakcomputer-com-ac130207:bdb992145731c499afe50160:981-000612:stock:6:cbd017d82eb91545",
+          "auto-jakcomputer-com-ac130207:bdb992145731c499afe50160:981-000612:condition:7:cbd017d82eb91545"
+        ],
+        "source": "model"
+      },
+      "stored_sellers": [
+        "Mobileleb",
+        "JAK Computer"
+      ],
+      "reader_calls": [
+        {
+          "host": "mobileleb.com",
+          "reader": "firecrawl",
+          "start": "2026-11-27T14:35:27.785089+00:00",
+          "seconds_remaining_in_phase": 264.56,
+          "outcome": "capture",
+          "sha256": "db12a9a41c924d7552c9b3d1e0e9227cc2b93516e8dd4d92370d21688c9f2f89"
+        },
+        {
+          "host": "mobileleb.com",
+          "reader": "firecrawl",
+          "start": "2026-11-27T14:36:03.227948+00:00",
+          "seconds_remaining_in_phase": 229.12,
+          "outcome": "capture",
+          "sha256": "adb0bcc94f12b3570b91be2e221f9dc8eb81fa87ef897c746f93bbd12044e1b2"
+        },
+        {
+          "host": "jakcomputer.com",
+          "reader": "firecrawl",
+          "start": "2026-11-27T14:36:15.787000+00:00",
+          "seconds_remaining_in_phase": 216.56,
+          "outcome": "capture",
+          "sha256": "cbd017d82eb9154562631c400f3c577de6e0c2fbc61e18fe6453793da5f3f5f1"
+        }
+      ]
+    },
+    {
+      "run": "94e5a6f1-a8c2-42f5-b14c-e51fa276a764",
+      "case": "linked",
+      "note": "Byte-preserving replay overlapped a live run. A TechScout shared-source workload refusal prevented the archived address read. Included for transparency.",
+      "answer": {
+        "text": "Listed prices before delivery for the new Logitech H111 wired 3.5 mm headset:\n\nMobileleb — USD 13.00; listed as brand new and in online stock.\nhttps://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm?variant=41750882910340\n\nJAK Computer — USD 25.00; listed as new and in online stock. Its Beirut, Lebanon premises were verified.\nhttps://jakcomputer.com/products/logitech-h111-stereo-headset?variant=44593484431407\n\nMobileleb’s listed price is USD 12.00 lower. However, its Lebanese location could not be verified from the available evidence, so the two-Lebanese-shop comparison remains partially verified.\n\nThe listings use different Logitech part numbers: 981-000593 at Mobileleb and 981-000612 at JAK Computer. Both identify the headset as H111. Delivery charges are excluded.",
+        "evidence_ids": [
+          "auto-jakcomputer-com-ac130207:bdb992145731c499afe50160:981-000612:seller.name:0:cd19b7338de2af04",
+          "auto-jakcomputer-com-ac130207:bdb992145731c499afe50160:981-000612:seller.market:1:cd19b7338de2af04",
+          "auto-jakcomputer-com-ac130207:bdb992145731c499afe50160:981-000612:variant.product.model:2:cd19b7338de2af04",
+          "auto-jakcomputer-com-ac130207:bdb992145731c499afe50160:981-000612:listing_url:3:cd19b7338de2af04",
+          "auto-jakcomputer-com-ac130207:bdb992145731c499afe50160:981-000612:price:4:cd19b7338de2af04",
+          "auto-jakcomputer-com-ac130207:bdb992145731c499afe50160:981-000612:stock:5:cd19b7338de2af04",
+          "auto-jakcomputer-com-ac130207:bdb992145731c499afe50160:981-000612:condition:6:cd19b7338de2af04"
+        ],
+        "source": "model"
+      },
+      "stored_sellers": [
+        "JAK Computer"
+      ],
+      "reader_calls": [
+        {
+          "host": "mobileleb.com",
+          "reader": "firecrawl",
+          "start": "2026-11-27T14:48:30.569486+00:00",
+          "seconds_remaining_in_phase": 264.34,
+          "outcome": "capture",
+          "sha256": "89f904864b4ee6bd674e2271c244e8cbec884702e61c0669f2ffabd9c712eb44"
+        },
+        {
+          "host": "mobileleb.com",
+          "reader": "firecrawl",
+          "start": "2026-11-27T14:49:31.657762+00:00",
+          "seconds_remaining_in_phase": 203.25,
+          "outcome": "BudgetDenied",
+          "reason": "Shared source workload limit",
+          "cause": "NoneType",
+          "detail": "None"
+        },
+        {
+          "host": "jakcomputer.com",
+          "reader": "firecrawl",
+          "start": "2026-11-27T14:49:32.077457+00:00",
+          "seconds_remaining_in_phase": 202.83,
+          "outcome": "capture",
+          "sha256": "cd19b7338de2af042ec0a4d237f91b2be5654b9a5d7ad1e6080f07045db66351"
+        }
+      ]
+    },
+    {
+      "run": "53cc64cd-3312-4e5a-8c45-9ab600fdfa2b",
+      "case": "pair",
+      "note": "Original blind request with a fresh catalog database. A controlled replay overlapped this run in the shared workload ledger. Playwright reported RATE_LIMIT, whose origin the returned label does not establish.",
+      "answer": {
+        "text": "I verified one qualifying listing, but couldn’t verify a second shop’s current price and stock, so I can’t reliably name the cheaper shop.\n\nDSLR Zone — USD 13 before delivery\nNew Logitech H111 wired stereo headset with a 3.5 mm jack; listed in online stock.\nhttps://www.dslr-zone.com/product/logitech-h111/\n\nOther shops’ product pages could not be read, leaving the two-shop comparison incomplete. Delivery charges are excluded.",
+        "evidence_ids": [
+          "auto-dslr-zone-com-cb8a4313:e0b4538f59f70232459c60f4:096f203b8ff0c2fcf3217d0d:seller.name:0:91f7720a7a319fc6",
+          "auto-dslr-zone-com-cb8a4313:e0b4538f59f70232459c60f4:096f203b8ff0c2fcf3217d0d:seller.market:1:91f7720a7a319fc6",
+          "auto-dslr-zone-com-cb8a4313:e0b4538f59f70232459c60f4:096f203b8ff0c2fcf3217d0d:variant.product.model:2:91f7720a7a319fc6",
+          "auto-dslr-zone-com-cb8a4313:e0b4538f59f70232459c60f4:096f203b8ff0c2fcf3217d0d:price:3:91f7720a7a319fc6",
+          "auto-dslr-zone-com-cb8a4313:e0b4538f59f70232459c60f4:096f203b8ff0c2fcf3217d0d:price:4:91f7720a7a319fc6",
+          "auto-dslr-zone-com-cb8a4313:e0b4538f59f70232459c60f4:096f203b8ff0c2fcf3217d0d:stock:5:91f7720a7a319fc6",
+          "auto-dslr-zone-com-cb8a4313:e0b4538f59f70232459c60f4:096f203b8ff0c2fcf3217d0d:condition:6:91f7720a7a319fc6"
+        ],
+        "source": "model"
+      },
+      "stored_sellers": [
+        "DSLR Zone"
+      ],
+      "reader_calls": [
+        {
+          "host": "mobileleb.com",
+          "reader": "firecrawl",
+          "start": "2026-11-27T14:48:48.510703+00:00",
+          "seconds_remaining_in_phase": 204.7,
+          "outcome": "ConnectTimeout",
+          "reason": "_ssl.c:989: The handshake operation timed out",
+          "cause": "ConnectTimeout",
+          "detail": "_ssl.c:989: The handshake operation timed out"
+        },
+        {
+          "host": "www.dslr-zone.com",
+          "reader": "firecrawl",
+          "start": "2026-11-27T14:50:47.280233+00:00",
+          "seconds_remaining_in_phase": 85.94,
+          "outcome": "capture",
+          "sha256": "91f7720a7a319fc66c7c64a1f3d2b3bf60fc5a3b47e61dfcf1dc02e5e29e3e37",
+          "final_url": "https://www.dslr-zone.com/product/logitech-h111/",
+          "source_url": "https://www.dslr-zone.com/product/logitech-h111/?srsltid=AY6E962FTMxZuhABxU9xB3Ts_4Ng44WO37nB_-Sxh0aB1N2K290YZ4k6",
+          "http": 200,
+          "source_matches": true,
+          "final_matches": false,
+          "warning": false,
+          "has_error": false,
+          "bytes": 556587,
+          "content_type": "text/html; charset=UTF-8",
+          "cache": null,
+          "cached_at": false
+        },
+        {
+          "host": "jakcomputer.com",
+          "reader": "firecrawl",
+          "start": "2026-11-27T14:52:02.784223+00:00",
+          "seconds_remaining_in_phase": 10.42,
+          "outcome": "TimeoutError",
+          "reason": "No time remains to recover the Firecrawl result",
+          "cause": "NoneType",
+          "detail": "None"
+        },
+        {
+          "host": "mobileleb.com",
+          "reader": "playwright",
+          "start": "2026-11-27T14:52:14.964029+00:00",
+          "seconds_remaining_in_phase": 16.95,
+          "outcome": "ValueError",
+          "reason": "The browser could not load the retailer listing (RATE_LIMIT).",
+          "cause": "NoneType",
+          "detail": "None"
+        },
+        {
+          "host": "mobileleb.com",
+          "reader": "firecrawl",
+          "start": "2026-11-27T14:52:25.632483+00:00",
+          "seconds_remaining_in_phase": 6.28,
+          "outcome": "TimeoutError",
+          "reason": "No time remains for the listing read",
+          "cause": "NoneType",
+          "detail": "None"
+        }
+      ]
+    }
+  ],
+  "independent_ayoub_transfer": {
+    "method": "Downloaded the completed first blind-run job separately, requesting gzip. The server returned an uncompressed JSON response. Elapsed time is measured on this machine.",
+    "id": "01a21d73-4931-7039-b6b2-acef3138fc31",
+    "encoding": "identity",
+    "transfer_bytes": 2769122,
+    "html_bytes": 2584401,
+    "seconds": 170.875,
+    "status": 200
+  },
+  "application_revision": "3cee7f06481b00003ca9716a43945527ee769d59"
+}
