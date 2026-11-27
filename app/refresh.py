@@ -20,7 +20,7 @@ from app.corpus import Corpus
 from app.corpus_contracts import DocumentCapture, Extraction, FieldObservation
 from app.contracts_v2 import Evidence
 from app.selected_listing import ListingDocument
-from app.directory import Directory
+from app.directory import Directory, normalized_alias
 from app.onboarding import ActivationRegistry
 from app.source_registry import get_active_source
 from app.sources import CacheValidators, MAX_RESPONSE_BYTES, SourceGate
@@ -41,13 +41,19 @@ def cadence(seed, high_use):
 def target(seed, corpus, gate):
     if seed.source_id in RETIRED_IMPORT_SOURCES:
         raise ValueError('Retired international source')
-    key, profile = seed_target(seed, corpus, gate._registry_path)
     seller = seed.listing or seed.dispatch_for
     directory = Directory(corpus.storage, registry_path=gate._registry_path)
     record = directory.get(seller.retailer_id if seller else seed.source_id)
     if (not record or not record.background_collection or record.entry.discovery_status == 'retired'
             or record.role != 'domestic' or record.source_country != 'LB' or record.source_id != seed.source_id):
         raise PermissionError('Domestic background collection is disabled for this retailer')
+    # Older single-variant jobs supplied the source, product and SKU without
+    # repeating the retailer ID. Index eligible first-party offers for buyers too.
+    if (not seller and seed.format == 'html' and seed.content == 'listing' and seed.product_id and seed.sku
+            and record.seller_identity == 'retailer' and seed.category in record.entry.categories
+            and 'LB' in record.entry.markets):
+        seed = seed.model_copy(update={'listing': ListingSeed(retailer_id=record.entry.retailer_id)})
+    key, profile = seed_target(seed, corpus, gate._registry_path)
     options = dict(expect='json' if seed.format == 'catalog' else 'html',
                    capability=seed.capability or (profile.capability if seed.listing else None))
     gate.check_scope(seed.source_id, str(seed.url), **options)
@@ -193,6 +199,10 @@ def check_page(seed, manifest, corpus, gate, budget, rows_left, embedding=None, 
                     outcome.final_url, outcome.observed_at, rendered=reader == 'playwright')
                 if selected.sku != seed.sku or seed.selection_color and selected.color.casefold() != seed.selection_color.casefold():
                     raise ValueError('The observed variant differs from the catalog seed.')
+                if profile and normalized_alias(selected.seller) not in {
+                    normalized_alias(name) for name in (profile.seller_name, *profile.seller_aliases)
+                }:
+                    raise ValueError('The selected offer names a different merchant from the catalog seller.')
         except (ValueError, OSError, BudgetDenied, httpx2.HTTPError) as exc:
             with budget.ledger._transaction() as (_, now):
                 checked = datetime.fromtimestamp(now, timezone.utc)
@@ -251,7 +261,7 @@ def check_page(seed, manifest, corpus, gate, budget, rows_left, embedding=None, 
     status = receipt.status
     if seed.format == 'catalog':
         result['product_links'] = catalog_links(outcome, seed, corpus, gate, min(100, rows_left))
-    if seed.listing:
+    if profile and not seed.dispatch_for:
         current = corpus.state(key)
         if current.retirement_status:
             return dict(result, status='removed', sha256=outcome.response_sha256)

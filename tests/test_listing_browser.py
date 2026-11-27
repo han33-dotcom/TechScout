@@ -11,12 +11,16 @@ import httpx2
 
 from app.agent_inspection import InspectionChoice, inspect_public_listing, read_catalog_listing
 from app.bootstrap import seed_target
+from app.buyer_api import DomesticShoppingRequest
+from app.directory import Directory
+from app.domestic_buyer_sources import DomesticBuyerSources
 from app.domestic_discovery import ChannelAttempt, SearchReport
 from app.maintenance import control
 from app.maintenance_discovery import SearchDecision
 from app.onboarding import ActivationRegistry
 from app.selected_listing import ConflictingSelection, ListingDocument
 from app.sources import SourceGate, SourceLimiter
+from app.storage import Storage
 from test_buyer_flow import FlowCase
 from test_domestic_buyer import lead
 import test_maintenance as maintenance
@@ -208,22 +212,42 @@ class CatalogBrowserTests(TestCase):
 
     def test_manual_offer_job_persists_only_clicked_variant(self):
         f, runner = self.f, self.schedule.runner
-        seed = f.manifest.seeds[0].model_copy(update={'sku': '3035', 'selection_color': 'Black'})
+        store = f.fixture.directory.get('one')
+        f.fixture.directory.upsert(store.model_copy(update={
+            'entry': store.entry.model_copy(update={'categories': ('audio',)}),
+            'product_urls': (), 'updated_at': datetime.now(timezone.utc)}))
+        seed = f.manifest.seeds[0].model_copy(update={'category': 'audio', 'listing': None,
+                                                      'sku': '3035', 'selection_color': 'Black'})
         runner.manifest = f.manifest.model_copy(update={'seeds': (seed,)})
         self.decisions('Select Black', 'Finish')
-        with retailer(f.fixture.storage, f.url, registry=self.registry) as (runner.inspect_listing, reads):
+        html = storefront(f.url, False).replace('Fixture Audio', 'one ltd')
+        with retailer(f.fixture.storage, f.url, registry=self.registry, html=html) as (runner.inspect_listing, reads):
             control(self.schedule.ledger, True)
             report = runner.run('offers', force=True)
         page = report['pages'][f.url]
         self.assertEqual((page['status'], page.get('reader')), ('new', 'playwright'), report)
         self.assertEqual(reads, [('firecrawl', f.url), ('GET', '/devices/selected'), ('GET', '/static/colors.js')])
-        state = f.fixture.corpus.state(seed_target(seed, f.fixture.corpus, f.fixture.registry)[0])
-        observations = f.fixture.corpus.observations(state.document_id)
-        facts = {o.evidence[0].field_path: o.fact.value for o in observations}
-        self.assertEqual((facts['variant.color'], facts['price'], facts['stock']),
-                         ('Black', {'amount': '49', 'currency': 'USD'}, True))
-        self.assertEqual({(o.evidence[0].variant_id, o.evidence[0].response_sha256) for o in observations},
-                         {('3035', page['sha256'])})
+        buyer_storage = Storage(f.fixture.database_url, evidence_dir=f.fixture.storage.snapshots.root)
+        self.addCleanup(buyer_storage.engine.dispose)
+        sources = DomesticBuyerSources(buyer_storage, f.gate, Directory(buyer_storage, registry_path=self.registry))
+        request = DomesticShoppingRequest(request_id='handoff', buyer_text=WORDING, requirements={'category': 'audio'},
+            intent={'kind': 'exact_model', 'model': WORDING}, fulfillment={'destination': {'city': 'Batroun'}}).interpreted()
+        offer, = sources.lookup(request)
+        self.assertEqual((str(offer.listing_url), offer.source_variant_id, offer.variant.color.value,
+                          str(offer.price.value.amount), offer.stock.value), (f.url, '3035', 'Black', '49', True))
+        self.assertEqual({(e.variant_id, e.response_sha256, e.origin) for e in offer.evidence},
+                         {('3035', page['sha256'], 'maintenance')})
+
+    def test_selected_marketplace_seller_cannot_be_attributed_to_the_catalog_owner(self):
+        f, runner = self.f, self.schedule.runner
+        seed = f.manifest.seeds[0].model_copy(update={'sku': 'Q20i-White', 'selection_color': 'White'})
+        runner.manifest = f.manifest.model_copy(update={'seeds': (seed,)})
+        self.decisions('Finish')
+        with retailer(f.fixture.storage, f.url, registry=self.registry) as (runner.inspect_listing, _):
+            control(self.schedule.ledger, True)
+            report = runner.run('offers', force=True)
+        self.assertEqual(report['counts']['failed'], 1)
+        self.assertEqual(runner.catalog.lookup(category=seed.category), ())
 
     def test_catalog_default_needs_no_browser_and_inert_radio_gives_no_offer(self):
         f = self.f
