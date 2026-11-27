@@ -1,0 +1,338 @@
+{
+  "issue": 251,
+  "base": "8e9141d",
+  "scope": "Controlled development runs. Archived phone listing, fixed first navigation, paid page interpretation, then injected unavailable controller decisions. Each replay timestamps its archived response at replay time. No claim of live stock or market coverage.",
+  "source_capture": "53dfae3d7c9aede8",
+  "model": "openai/gpt-6.1-sol",
+  "effort": "low",
+  "limits": {
+    "active_seconds": 300,
+    "calls": 40,
+    "research_usd": 20,
+    "total_usd": 25
+  },
+  "stages": {
+    "before": [
+      {
+        "run_id": "09be997d-cb07-4a6e-b7ab-768b7b19f089",
+        "case": "archived phone positive control",
+        "status": "partial",
+        "answer": "The shopping agent could not finish writing its answer.",
+        "answer_source": "fallback",
+        "card_count": 1,
+        "cards": [
+          {
+            "seller": "961Souq",
+            "price": {
+              "amount": "179.00",
+              "currency": "USD"
+            },
+            "url": "https://961souq.com/products/samsung-galaxy-a16",
+            "rendered_text": "Samsung Galaxy A16 - 4GB - 128 · 961SouqUSD 179.00 · Current listed priceIn stock · Online listingView at 961Souq ↗Delivery to the requested destination and mandatory charges still need checking.Payable total incompleteInspect configuration, costs & evidenceConfiguration & seller",
+            "rendered_product_href": true
+          }
+        ],
+        "active_ms": 18860,
+        "spend": {
+          "attempts": {
+            "model": 1
+          },
+          "known_usd": "0.128601",
+          "ledger": "read",
+          "note": "uncertain amounts are full reservations kept because the cost was not reported",
+          "still_held_usd": "0",
+          "uncertain_usd": "0"
+        },
+        "receipts": [
+          {
+            "field": "seller.name",
+            "excerpt": "961Souq",
+            "sha256": "53dfae3d7c9aede8a032f091e98b61a2ae7d87cffe87a597abb207d491bb9c86"
+          },
+          {
+            "field": "seller.market",
+            "excerpt": "Zalka Highway, facing White Tower Hotel.<br>Ground floor, Zalka, Lebanon.",
+            "sha256": "53dfae3d7c9aede8a032f091e98b61a2ae7d87cffe87a597abb207d491bb9c86"
+          },
+          {
+            "field": "variant.product.model",
+            "excerpt": "Samsung Galaxy A16 - 4GB - 128",
+            "sha256": "53dfae3d7c9aede8a032f091e98b61a2ae7d87cffe87a597abb207d491bb9c86"
+          },
+          {
+            "field": "price",
+            "excerpt": "$179.00",
+            "sha256": "53dfae3d7c9aede8a032f091e98b61a2ae7d87cffe87a597abb207d491bb9c86"
+          },
+          {
+            "field": "price",
+            "excerpt": "\"priceCurrency\":\"USD\"",
+            "sha256": "53dfae3d7c9aede8a032f091e98b61a2ae7d87cffe87a597abb207d491bb9c86"
+          },
+          {
+            "field": "stock",
+            "excerpt": "\"availability\":\"http://schema.org/InStock\"",
+            "sha256": "53dfae3d7c9aede8a032f091e98b61a2ae7d87cffe87a597abb207d491bb9c86"
+          },
+          {
+            "field": "condition",
+            "excerpt": "Condition:  Brand New",
+            "sha256": "53dfae3d7c9aede8a032f091e98b61a2ae7d87cffe87a597abb207d491bb9c86"
+          }
+        ]
+      }
+    ],
+    "after": [
+      {
+        "run_id": "54500f52-a0bf-4766-b07d-7f65865b9909",
+        "case": "archived phone positive control",
+        "status": "partial",
+        "answer": "961Souq lists Samsung Galaxy A16 - 4GB - 128 at USD 179.00, new, in online stock. https://961souq.com/products/samsung-galaxy-a16\nThe selected single offer is a new Samsung Galaxy A16 with 4GB RAM, 128GB storage and LTE connectivity, listed at USD 179 excluding delivery. Structured offer data marks it in stock and Add to cart is enabled, although the visible availability control invites checking availability. The merchant has Lebanese premises. No competing shop or market-lowest price is established by this page.\nDelivery to the requested destination and mandatory charges still need checking.",
+        "answer_source": "fallback",
+        "card_count": 1,
+        "cards": [
+          {
+            "seller": "961Souq",
+            "price": {
+              "amount": "179.00",
+              "currency": "USD"
+            },
+            "url": "https://961souq.com/products/samsung-galaxy-a16",
+            "rendered_text": "Samsung Galaxy A16 - 4GB - 128 · 961SouqUSD 179.00 · Current listed priceIn stock · Online listingView at 961Souq ↗Delivery to the requested destination and mandatory charges still need checking.Payable total incompleteInspect configuration, costs & evidenceConfiguration & seller",
+            "rendered_product_href": true
+          }
+        ],
+        "active_ms": 14078,
+        "spend": {
+          "attempts": {
+            "model": 1
+          },
+          "known_usd": "0.124609",
+          "ledger": "read",
+          "note": "uncertain amounts are full reservations kept because the cost was not reported",
+          "still_held_usd": "0",
+          "uncertain_usd": "0"
+        },
+        "receipts": [
+          {
+            "field": "seller.name",
+            "excerpt": "961Souq",
+            "sha256": "53dfae3d7c9aede8a032f091e98b61a2ae7d87cffe87a597abb207d491bb9c86"
+          },
+          {
+            "field": "seller.market",
+            "excerpt": "Zalka Highway, facing White Tower Hotel.<br>Ground floor, Zalka, Lebanon.",
+            "sha256": "53dfae3d7c9aede8a032f091e98b61a2ae7d87cffe87a597abb207d491bb9c86"
+          },
+          {
+            "field": "variant.product.model",
+            "excerpt": "Samsung Galaxy A16 - 4GB - 128",
+            "sha256": "53dfae3d7c9aede8a032f091e98b61a2ae7d87cffe87a597abb207d491bb9c86"
+          },
+          {
+            "field": "price",
+            "excerpt": "$179.00",
+            "sha256": "53dfae3d7c9aede8a032f091e98b61a2ae7d87cffe87a597abb207d491bb9c86"
+          },
+          {
+            "field": "price",
+            "excerpt": "\"priceCurrency\":\"USD\"",
+            "sha256": "53dfae3d7c9aede8a032f091e98b61a2ae7d87cffe87a597abb207d491bb9c86"
+          },
+          {
+            "field": "stock",
+            "excerpt": "\"availability\":\"http://schema.org/InStock\"",
+            "sha256": "53dfae3d7c9aede8a032f091e98b61a2ae7d87cffe87a597abb207d491bb9c86"
+          },
+          {
+            "field": "condition",
+            "excerpt": "Condition:  Brand New",
+            "sha256": "53dfae3d7c9aede8a032f091e98b61a2ae7d87cffe87a597abb207d491bb9c86"
+          }
+        ]
+      }
+    ],
+    "synthetic": [
+      {
+        "run_id": "fb1c6d67-5b3b-4dd5-bbcf-a6a167e6d2a8",
+        "case": "test_failed_first_read_never_claims_availability",
+        "status": "partial",
+        "answer": "I could not read the retailer listing to check the item, price or stock. https://new-shop.example/products/soundcore-q20i",
+        "answer_source": "fallback",
+        "card_count": 0,
+        "cards": []
+      },
+      {
+        "run_id": "38d50fe4-c97d-4186-9b38-a062ae204645",
+        "case": "test_new_wrong_variant_removes_old_price_from_card_and_fallback",
+        "status": "partial",
+        "answer": "Fixture Audio lists Soundcore Q20i Hybrid ANC Headphones at USD 39.00. Only the white variant is listed. https://new-shop.example/products/soundcore-q20i",
+        "answer_source": "fallback",
+        "card_count": 0,
+        "cards": []
+      },
+      {
+        "run_id": "960dcceb-0475-4d20-ab6d-615bd4ac5c10",
+        "case": "test_partial_finding_reaches_answer_without_a_card",
+        "status": "partial",
+        "answer": "The pen is included. The page gives no price for the bundle. https://new-shop.example/tablets/pen-bundle",
+        "answer_source": "fallback",
+        "card_count": 0,
+        "cards": []
+      },
+      {
+        "run_id": "babe3523-c70e-45f7-83bd-ccd0c9673755",
+        "case": "test_priced_card_and_receipts_survive_model_failure_and_unreadable_refresh",
+        "status": "partial",
+        "answer": "Fixture Audio lists Soundcore Q20i Hybrid ANC Headphones at USD 49.00, new, in online stock. https://new-shop.example/products/soundcore-q20i\nChecked the selected fixture configuration.\nDelivery to the requested destination and mandatory charges still need checking.",
+        "answer_source": "fallback",
+        "card_count": 1,
+        "cards": [
+          {
+            "seller": "Fixture Audio",
+            "price": {
+              "amount": "49.00",
+              "currency": "USD"
+            },
+            "url": "https://new-shop.example/products/soundcore-q20i",
+            "rendered_text": "Soundcore Q20i Hybrid ANC Headphones · Fixture AudioBlackUSD 49.00 · Current listed priceIn stock · Online listingView at Fixture Audio ↗Delivery to the requested destination and mandatory charges still need checking.Payable total incompleteInspect configuration, costs & evidence",
+            "rendered_product_href": true
+          }
+        ]
+      }
+    ]
+  },
+  "paired_decisions": {
+    "method": "Four reconstructed single-decision snapshots, same original buyer request, recent observations, checked listings and action labels per model. This tests one choice at a time. Only the phone frame asks for an answer. These choices do not execute a retailer action or create a new card.",
+    "deadline_seconds": 12,
+    "controller_sha256": "d1edb2ce03fb5f4f4539fa8faa69958c5e4a4d641ed16b7fa72c07b40a7f7d5e",
+    "models": {
+      "opus-medium": {
+        "model": "anthropic/claude-opus-5.5",
+        "effort": "medium",
+        "frames": [
+          {
+            "frame": "tablet",
+            "job": "cc465efe-2edd-43f5-a8f5-6bb9300a65a9",
+            "input_sha256": "478fe3d30140537e5ac7487e82ee5dc2004f292de7595c7d04065a818500b783",
+            "status": "completed",
+            "seconds": 10.53,
+            "selected": "Inspect selected listing https://isolvedit.me/products/samsung-galaxy-tab-s6-lite-sm-p613-10-4-tablet-4gb-128gb-wifi",
+            "answer": null
+          },
+          {
+            "frame": "merchant",
+            "job": "cc465efe-2edd-43f5-a8f5-6bb9300a65a9",
+            "input_sha256": "bcbd38927aab764e65e59b01b31daaec5e04d8cddbcd8d556926bd476f7dedd0",
+            "status": "completed",
+            "seconds": 9.53,
+            "selected": "Render listing with Playwright https://ayoubcomputers.com/jbl-tune-520bt-headphones-black-tune-520bt/",
+            "answer": null
+          },
+          {
+            "frame": "monitor",
+            "job": "cc465efe-2edd-43f5-a8f5-6bb9300a65a9",
+            "input_sha256": "c504cbe5c7d70481c344107737114eda9430bd74b211f571f310789278e2b95d",
+            "status": "completed",
+            "seconds": 7.97,
+            "selected": "Inspect selected listing https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html with Firecrawl",
+            "answer": null
+          },
+          {
+            "frame": "answer",
+            "job": "cc465efe-2edd-43f5-a8f5-6bb9300a65a9",
+            "input_sha256": "548f3a9506c705ba17f46df14d0388d7c6a9ad9a12e10213c80cc22a36526a3a",
+            "status": "cancelled",
+            "seconds": 13.14,
+            "selected": null,
+            "answer": null
+          }
+        ]
+      },
+      "sol-low": {
+        "model": "openai/gpt-6.1-sol",
+        "effort": "low",
+        "frames": [
+          {
+            "frame": "tablet",
+            "job": "6df4bfeb-e576-4867-99c4-441e2857e425",
+            "input_sha256": "478fe3d30140537e5ac7487e82ee5dc2004f292de7595c7d04065a818500b783",
+            "status": "completed",
+            "seconds": 5.99,
+            "selected": "Inspect selected listing https://isolvedit.me/products/samsung-galaxy-tab-s6-lite-sm-p613-10-4-tablet-4gb-128gb-wifi",
+            "answer": null
+          },
+          {
+            "frame": "merchant",
+            "job": "6df4bfeb-e576-4867-99c4-441e2857e425",
+            "input_sha256": "bcbd38927aab764e65e59b01b31daaec5e04d8cddbcd8d556926bd476f7dedd0",
+            "status": "completed",
+            "seconds": 5.14,
+            "selected": "Render listing with Playwright https://ayoubcomputers.com/jbl-tune-520bt-headphones-black-tune-520bt/",
+            "answer": null
+          },
+          {
+            "frame": "monitor",
+            "job": "6df4bfeb-e576-4867-99c4-441e2857e425",
+            "input_sha256": "c504cbe5c7d70481c344107737114eda9430bd74b211f571f310789278e2b95d",
+            "status": "completed",
+            "seconds": 4.59,
+            "selected": "Inspect selected listing https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html with Firecrawl",
+            "answer": null
+          },
+          {
+            "frame": "answer",
+            "job": "6df4bfeb-e576-4867-99c4-441e2857e425",
+            "input_sha256": "548f3a9506c705ba17f46df14d0388d7c6a9ad9a12e10213c80cc22a36526a3a",
+            "status": "completed",
+            "seconds": 8.48,
+            "selected": "Present checked offers and the answer now",
+            "answer": "Lowest listed price I could verify with online stock: US$179 at 961Souq for a new Samsung Galaxy A16 LTE (4G), 4GB RAM / 128GB storage.\nhttps://961souq.com/products/samsung-galaxy-a16\n\nThe page reports online stock and enables Add to cart, but also says “Check for availability,” so confirm availability before paying. Showroom stock was not verified.\n\nCompeting shops checked:\n• Najem Starcall: US$175, but out of stock.\nhttps://najemstarcall.com/product/samsung-galaxy-a16/\n• DSLR Zone: 4GB/128GB variant listed at 175, but out of stock.\nhttps://www.dslr-zone.com/product/samsung-galaxy-a16/\n\nI could not verify a second in-stock seller. Prices above exclude delivery."
+          }
+        ]
+      },
+      "sol-medium": {
+        "model": "openai/gpt-6.1-sol",
+        "effort": "medium",
+        "frames": [
+          {
+            "frame": "tablet",
+            "job": "b276b147-ce72-452a-bad1-48b4a42a7ef1",
+            "input_sha256": "478fe3d30140537e5ac7487e82ee5dc2004f292de7595c7d04065a818500b783",
+            "status": "completed",
+            "seconds": 6.36,
+            "selected": "Inspect selected listing https://isolvedit.me/products/samsung-galaxy-tab-s6-lite-sm-p613-10-4-tablet-4gb-128gb-wifi",
+            "answer": null
+          },
+          {
+            "frame": "merchant",
+            "job": "b276b147-ce72-452a-bad1-48b4a42a7ef1",
+            "input_sha256": "bcbd38927aab764e65e59b01b31daaec5e04d8cddbcd8d556926bd476f7dedd0",
+            "status": "completed",
+            "seconds": 4.95,
+            "selected": "Render listing with Playwright https://ayoubcomputers.com/jbl-tune-520bt-headphones-black-tune-520bt/",
+            "answer": null
+          },
+          {
+            "frame": "monitor",
+            "job": "b276b147-ce72-452a-bad1-48b4a42a7ef1",
+            "input_sha256": "c504cbe5c7d70481c344107737114eda9430bd74b211f571f310789278e2b95d",
+            "status": "completed",
+            "seconds": 4.56,
+            "selected": "Inspect selected listing https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html with Firecrawl",
+            "answer": null
+          },
+          {
+            "frame": "answer",
+            "job": "b276b147-ce72-452a-bad1-48b4a42a7ef1",
+            "input_sha256": "548f3a9506c705ba17f46df14d0388d7c6a9ad9a12e10213c80cc22a36526a3a",
+            "status": "completed",
+            "seconds": 8.98,
+            "selected": "Present checked offers and the answer now",
+            "answer": "Lowest qualifying listed price I could verify: USD 179 at 961Souq for a new Samsung Galaxy A16 LTE (4G), 4GB RAM / 128GB storage, excluding delivery.\nhttps://961souq.com/products/samsung-galaxy-a16\n\nOnline stock: the listing reports in stock and allows adding to cart, although it also says “Check for availability.” Showroom stock was not verified.\n\nCompeting shops checked:\n• DSLR Zone: USD 175 for the 4GB/128GB variant, but explicitly out of stock.\nhttps://www.dslr-zone.com/product/samsung-galaxy-a16/\n• Najem Starcall: USD 175 for 4GB/128GB, also out of stock.\nhttps://najemstarcall.com/product/samsung-galaxy-a16/\n\nThe USD 175 listings are cheaper, but neither qualifies as an in-stock alternative."
+          }
+        ]
+      }
+    }
+  }
+}

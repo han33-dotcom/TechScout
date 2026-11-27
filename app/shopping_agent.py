@@ -118,7 +118,7 @@ Use plain text and only current checked observations. For listed-price compariso
 product links and the lower price or tie. Name outstanding evidence where it matters. Select verified offer_ids that meet the
 original request AND feedback; for needs-based choices check the supplied specifications.
 Include comparable sellers. If none fit, leave offer_ids empty. Checked partial evidence and
-observed blockers are rendered separately. Never invent missing facts or monetary amounts.""" + ' ' + INSPECTION_POLICY
+observed blockers are rendered separately. Consult checked_pages for the latest evidence per listing. A newer capture supersedes earlier observations for that URL. Preserve material caveats and exclusions in the answer. Never invent missing facts or monetary amounts.""" + ' ' + INSPECTION_POLICY
 
 
 @dataclass(frozen=True)
@@ -159,7 +159,7 @@ class ShoppingAgent(DomesticBuyerFlow):
 
     def __init__(self, context, deps):
         super().__init__(context, deps)
-        self.trace.update(controller='single_agent', actions=[], prompt_version='shopping-agent-11')
+        self.trace.update(controller='single_agent', actions=[], prompt_version='shopping-agent-12')
         self.trace['request'].pop('model', None)
         self.leads = []
         self.redirected_urls = set()
@@ -175,6 +175,8 @@ class ShoppingAgent(DomesticBuyerFlow):
         self.current_selections = {}
         self.latest_capture = {}
         self.priced_listings = {}
+        self.checked_pages = {}
+        self.trace['checked_pages'] = self.checked_pages
         self.merchant_locations = {}
         self.discovery = deps.research.workers.domestic_tools if deps.research else None
         self.directory = getattr(deps.research.workers, 'directory', None) if deps.research else None
@@ -297,7 +299,8 @@ class ShoppingAgent(DomesticBuyerFlow):
             choice = self.generate(PROMPT, dict(
                 request=self.request.model_dump(mode='json'), feedback=list(self.context.answers),
                 pending_pages=[t.url for t in self.reads.pending.values()], seconds_for_tools=max(0, int(room())),
-                observations=self.observations[-12:], verified=self.verified_choices(), checked_listings=self.checked_listings(),
+                observations=self.observations[-12:], verified=self.verified_choices(),
+                checked_listings=self.checked_listings(), checked_pages=list(self.checked_pages.values()),
                 available=[a.label for a in actions]), Decision, by)
             if choice is None or choice.action_index >= len(actions):
                 self._note_denials()
@@ -315,7 +318,7 @@ class ShoppingAgent(DomesticBuyerFlow):
                     self.observations.append(dict(tool='decision', status=failure,
                         reason='No shopping action ran. Choose an available action by its zero-based index.'))
                     continue
-                if self.left(self.final_by) > 2 and self.checked_listings():
+                if self.left(self.final_by) > 2 and (self.checked_pages or self.checked_listings()):
                     closing_reason = 'The shopping agent could not complete its next decision.'
                     break
                 return self.present([], 'The shopping agent could not complete its decision.')
@@ -364,7 +367,8 @@ class ShoppingAgent(DomesticBuyerFlow):
         if self.left(self.final_by) > 2 and not self.stopped():
             self.consume_ready(partial(self.left, self.final_by - 14))
             closing = self.generate(PROMPT, dict(request=self.request.model_dump(mode='json'),
-                feedback=list(self.context.answers), verified=self.verified_choices(), checked_listings=self.checked_listings(),
+                feedback=list(self.context.answers), verified=self.verified_choices(),
+                checked_listings=self.checked_listings(), checked_pages=list(self.checked_pages.values()),
                 observations=self.observations[-12:], available=['Present checked offers and the answer now']),
                 Decision, self.final_by)
             if closing and closing.action_index == 0 and (closing.answer or '').strip():
@@ -528,6 +532,7 @@ class ShoppingAgent(DomesticBuyerFlow):
             self.forget_merchant_capture(url)
             self.publish_partials(prior)
             prior = tuple(self.uncertain.values())[:MAX_UNCERTAIN]
+            self.checked_pages.pop(url, None)
             self.page_links.pop(url, None)
             self.blockers.pop(url, None)
             url = obs.final_url
@@ -540,6 +545,7 @@ class ShoppingAgent(DomesticBuyerFlow):
             self.used.add(('inspect', (landing_index,)))
             result['lead'] = landing_index
         self.forget_merchant_capture(url)
+        self.checked_pages.pop(url, None)
         self.sources[obs.source_id] = (urlsplit(url).hostname, 'checked', None)
         document = PageNavigation(obs.body.decode('utf-8', errors='replace'), url)
         self.product_options[url] = tuple(option for option in dict.fromkeys(document.options)
@@ -591,6 +597,11 @@ class ShoppingAgent(DomesticBuyerFlow):
             result.update(merchant_quote=reading.location.merchant_quote, address_quote=reading.location.address_quote,
                           linked_listings=saved)
         selected = reading.selection
+        if selected or reading.findings:
+            self.checked_pages[url] = dict(url=url, sha256=obs.response_sha256,
+                observed_at=obs.observed_at.isoformat(), findings=reading.findings,
+                selected=selected.facts() if selected else None, assessment=reading.reason,
+                follow_up=[link for link, _ in reading.links])
         if selected is None:
             self.withdraw_public(url)
             self.publish_partials(prior)
@@ -628,6 +639,7 @@ class ShoppingAgent(DomesticBuyerFlow):
             self.publish_partials(prior)
             # Do not leak contract-validation or raw provider data into the buyer response.
             reason = str(exc) if type(exc) in (ValueError, MissingSellerLocation) else 'The captured fields could not establish an offer.'
+            self.checked_pages[url]['gap'] = reason
             if selected.published_link and match.selected_item_fits:
                 reason = selected.published_summary(url) + ' ' + reason
             self.blockers[url] = [reason]
@@ -739,6 +751,55 @@ class ShoppingAgent(DomesticBuyerFlow):
                 listed_price=offer.price.value.model_dump(mode='json') if offer.price.value else None, gaps=item.reasons))
         return rows
 
+    def fallback_answer(self, uncertain):
+        """Present what survived verification even when the final inference is unavailable."""
+        lines = []
+        evidence_ids = []
+        shown = set()
+        for item in uncertain:
+            offer = item.offer
+            price = offer.price.value
+            url = str(offer.listing_url)
+            availability = {True: 'in online stock', False: 'out of online stock'}.get(
+                offer.stock.value, 'online stock unconfirmed')
+            amount = f'{price.currency} {price.amount}' if price else 'listed price unconfirmed'
+            condition = offer.condition.value or 'condition unconfirmed'
+            lines.append(f'{offer.seller.name} lists {offer.variant.product.model} at {amount}, '
+                         f'{condition}, {availability}. {url}')
+            evidence_ids.extend(e.evidence_id for e in offer.evidence)
+            origins = {str(e.final_url) for e in offer.evidence if e.field_path == 'price'}
+            shown.update(origins | {url})
+            for origin in sorted(origins):
+                review = self.checked_pages.get(origin)
+                if review and review['assessment']:
+                    lines.append(review['assessment'])
+            lines.extend(item.reasons)
+        for url, review in self.checked_pages.items():
+            if url in shown:
+                continue
+            details = []
+            selected = review['selected']
+            if selected:
+                price = selected['price']
+                details.append(f"{selected['seller']} lists {selected['title']} at {price['currency']} {price['amount']}.")
+            details.extend(f['statement'] for f in review['findings'])
+            if review['assessment']:
+                details.append(review['assessment'])
+            if review.get('gap'):
+                details.append(review['gap'])
+            if details:
+                lines.append(' '.join(dict.fromkeys(details)) + ' ' + url)
+        if not lines:
+            failed = [url for url, reasons in self.blockers.items()
+                      if any('listing could not be read' in reason for reason in reasons)]
+            if failed:
+                lines.append('I could not read the retailer listing to check the item, price or stock. '
+                             + ' '.join(failed))
+            else:
+                lines.append('I could not verify a retailer offer for this request before the search ended.')
+        return v2.RunExplanation(text='\n'.join(dict.fromkeys(lines)),
+                                 evidence_ids=tuple(dict.fromkeys(evidence_ids)), source='fallback')
+
     def present(self, selected, reason=None, *, answer=None):
         interrupted = reason is not None
         chosen = set(selected).intersection(row['offer_id'] for row in self.verified_choices())
@@ -765,8 +826,7 @@ class ShoppingAgent(DomesticBuyerFlow):
                 *(item.offer for item in uncertain), *(v.offer for g in groups for v in g.offers())) for e in o.evidence)
             explanation = v2.RunExplanation(text=answer.strip(), source='model', evidence_ids=tuple(receipts))
         elif self.deps.inspect_listing:
-            explanation = v2.RunExplanation(text='The shopping agent could not finish writing its answer.',
-                                            source='fallback')
+            explanation = self.fallback_answer(uncertain)
         else:
             explanation = self._write(groups, uncertain)
         status = 'partial' if interrupted else 'complete' if groups else 'partial' if uncertain else 'abstained'
