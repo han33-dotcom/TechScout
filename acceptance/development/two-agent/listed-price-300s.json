@@ -1,0 +1,529 @@
+{
+  "buyer_revision": "99789c0",
+  "clock": "300 active seconds per fresh experimental buyer, including final publication. Elapsed time is worker trace latency.",
+  "method": "The evaluator checked merchant listings outside the buyer runs. Each fresh run used the same one-seller catalog snapshot. Independent reference links, prices and compared part numbers were withheld from the buyer. Diagnostic repeats supply only the model from the same wording via the structured request API.",
+  "comparison_reference": [
+    {
+      "shop": "MobileLeb",
+      "retailer_url": "https://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm",
+      "inspected_utc": "2026-11-27T11:50:34.290999+00:00",
+      "sha256": "6c0ee4e6ed098453f13514e203bb8b2cd1eb20c63da706f62b0fbf5b3c3b810b",
+      "model": "Logitech H111 stereo headset, single 3.5 mm jack",
+      "retailer_part": "981-000593",
+      "listed_price_usd": "13.00",
+      "condition": "new",
+      "stock": "in stock",
+      "basis": "Product itemCondition and selected black variant identify new condition. Item-scoped microdata ties the SKU to online stock, USD and price.",
+      "shop_location": "Dekwaneh",
+      "location_source": "https://mobileleb.com/pages/hours-and-locations"
+    },
+    {
+      "shop": "JAK Computer",
+      "retailer_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+      "inspected_utc": "2026-11-27T11:53:51.398240+00:00",
+      "sha256": "8b74eab50bf7b00a1912ff7648a8133b6cf5e3a77ea46ac2923066ef4dfad430",
+      "model": "Logitech H111 stereo headset, single 3.5 mm jack",
+      "retailer_part": "981-000612",
+      "listed_price_usd": "25.00",
+      "condition": "new",
+      "stock": "in stock",
+      "basis": "Both product offer records identify online stock and the listed USD price. The offer supplies NewCondition and the page names the Beirut showroom.",
+      "shop_location": "Beirut",
+      "location_source": "https://jakcomputer.com/products/logitech-h111-stereo-headset"
+    }
+  ],
+  "manufacturer_model_sources": [
+    "https://www.logitech.com/en-gb/shop/p/h111-stereo-headset.981-000593",
+    "https://www.logitech.com/en-us/shop/p/h111-stereo-headset.981-000612"
+  ],
+  "comparison_basis": "Both manufacturer part numbers identify the single-jack H111 requested by the buyer. The buyer specified no regional packaging SKU. The comparison is for displayed USD item prices. Taxes, delivery and checkout terms are outside the price comparison.",
+  "attempts": [
+    {
+      "case": "one",
+      "run_id": "7f1ae7ee-65b3-4ab7-90d0-4e10c0e75a67",
+      "start": "2026-11-27T11:49:30.925597+00:00",
+      "input": "Find one Lebanese shop with new black Soundcore Q20i headphones in stock. Give me the listed item price before delivery and the product link.",
+      "model_field_seen_by_worker": "one Lebanese shop",
+      "exact_model_search_term": "one Lebanese shop",
+      "initial_search_options": [
+        "one Lebanese shop Lebanon retailer headphones black",
+        "one Lebanese shop Lebanon retailer price headphones black",
+        "one Lebanese shop \u0644\u0628\u0646\u0627\u0646 \u0645\u062a\u062c\u0631 headphones black"
+      ],
+      "elapsed_seconds": 123.109,
+      "active_allowance_s": 300,
+      "controller_final_by_s": 297.709,
+      "research_by_s": 265,
+      "status": "partial",
+      "stop_reason": "The shopping agent could not complete its decision. Black is unverified at wincell.store. Published options include Anker Soundcore H30i Wireless On-Ear Headphones \u2013 Black. The listing could not be read.",
+      "stop_flags": [],
+      "terminal_action": {
+        "error": "BudgetDenied",
+        "lead": 14,
+        "status": "read_failed",
+        "tool": "follow",
+        "turn": 8
+      },
+      "final_model_call": {
+        "schema": "Decision",
+        "status": "completed"
+      },
+      "actions": [
+        {
+          "action": "catalog",
+          "status": "leads",
+          "new_leads": 0
+        },
+        {
+          "action": "retailer_search",
+          "status": "leads"
+        },
+        {
+          "action": "web_search",
+          "status": "ok",
+          "new_leads": 8
+        },
+        {
+          "action": "directory",
+          "status": "reviewed_retailers"
+        },
+        {
+          "action": "inspect",
+          "status": "selection_unconfirmed",
+          "url": "https://wincell.store/products/anker-soundcore-h30i-wireless-on-ear-headphones-black?variant=53481525805354",
+          "observed_gap": "Black is unverified at wincell.store. Published options include Anker Soundcore H30i Wireless On-Ear Headphones \u2013 Black."
+        },
+        {
+          "action": "follow",
+          "status": "read_failed",
+          "url": "https://wincell.store/collections/audio",
+          "observed_gap": "The listing could not be read."
+        },
+        {
+          "action": "render",
+          "status": "read_failed",
+          "url": "https://wincell.store/collections/audio",
+          "observed_gap": "The listing could not be read."
+        },
+        {
+          "action": "follow",
+          "status": "read_failed",
+          "url": "https://wincell.store/collections/all",
+          "observed_gap": "The listing could not be read."
+        }
+      ],
+      "visible_offers": [],
+      "delivered_recommendation_count": 0,
+      "explanation": "No offer was verified in this run.\nOpen questions:\n- Search coverage in this run: 2 retailers found, 2 attempted, 1 read successfully, 0 with a qualifying offer; retailers outside this search were not checked.",
+      "spend": {
+        "attempts": {
+          "model": 10,
+          "retrieval": 5,
+          "search": 1
+        },
+        "known_usd": "0.0811950",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0"
+      }
+    },
+    {
+      "case": "pair",
+      "run_id": "5b1d175e-1864-4ce1-9e1d-eac8077e0d65",
+      "start": "2026-11-27T11:53:49.252757+00:00",
+      "input": "Which of two Lebanese shops has the lower listed price for a new Logitech H111 wired 3.5 mm stereo headset? Show both in-stock listings and their links. Compare item prices before delivery.",
+      "model_field_seen_by_worker": "Which of two Lebanese shops has the lower listed price for a new Logitech H111 3.5 mm stereo",
+      "exact_model_search_term": null,
+      "initial_search_options": [
+        "audio Lebanon retailer headphones wired",
+        "audio Lebanon retailer price headphones wired",
+        "audio \u0644\u0628\u0646\u0627\u0646 \u0645\u062a\u062c\u0631 headphones wired"
+      ],
+      "elapsed_seconds": 246.687,
+      "active_allowance_s": 300,
+      "controller_final_by_s": 297.776,
+      "research_by_s": 265,
+      "status": "partial",
+      "stop_reason": "The agent reached its search limit. The listing could not be read. The requested variant is unverified at 961souq.com.",
+      "stop_flags": [],
+      "terminal_action": {
+        "error": "TimeoutError",
+        "lead": 18,
+        "status": "read_failed",
+        "tool": "inspect",
+        "turn": 16
+      },
+      "final_model_call": {
+        "schema": "Decision",
+        "status": "completed"
+      },
+      "actions": [
+        {
+          "action": "catalog",
+          "status": "leads",
+          "new_leads": 0
+        },
+        {
+          "action": "retailer_search",
+          "status": "leads"
+        },
+        {
+          "action": "web_search",
+          "status": "ok",
+          "new_leads": 8
+        },
+        {
+          "action": "directory",
+          "status": "reviewed_retailers"
+        },
+        {
+          "action": "web_search",
+          "status": "ok",
+          "new_leads": 8
+        },
+        {
+          "action": "inspect",
+          "status": "read_failed",
+          "url": "https://ayoubcomputers.com/wired-headsets/",
+          "observed_gap": "The listing could not be read."
+        },
+        {
+          "action": "web_search",
+          "status": "ok",
+          "new_leads": 8
+        },
+        {
+          "action": "inspect",
+          "status": "read_failed",
+          "url": "https://compuline-lb.com/en/computers/shop",
+          "observed_gap": "The listing could not be read."
+        },
+        {
+          "action": "inspect",
+          "status": "selection_unconfirmed",
+          "url": "https://961souq.com/collections/wired-headphones",
+          "observed_gap": "The requested variant is unverified at 961souq.com."
+        },
+        {
+          "action": "render",
+          "status": "read_failed",
+          "url": "https://ayoubcomputers.com/wired-headsets/",
+          "observed_gap": "The listing could not be read."
+        },
+        {
+          "action": "inspect",
+          "status": "read_failed",
+          "url": "https://ayoubcomputers.com/wired-headsets/",
+          "observed_gap": "The listing could not be read."
+        },
+        {
+          "action": "inspect",
+          "status": "read_failed",
+          "url": "https://maliks.com/product-category/multimedia/phone-accessories/earphones-headsets/",
+          "observed_gap": "The listing could not be read."
+        },
+        {
+          "action": "render",
+          "status": "read_failed",
+          "url": "https://compuline-lb.com/en/computers/shop",
+          "observed_gap": "The listing could not be read."
+        },
+        {
+          "action": "follow",
+          "status": "read_failed",
+          "url": "https://961souq.com/",
+          "observed_gap": "The listing could not be read."
+        },
+        {
+          "action": "render",
+          "status": "selection_unconfirmed",
+          "url": "https://961souq.com/",
+          "observed_gap": "The requested variant is unverified at 961souq.com."
+        },
+        {
+          "action": "inspect",
+          "status": "read_failed",
+          "url": "https://mobileleb.com/collections/headphones-headsets",
+          "observed_gap": "The listing could not be read."
+        }
+      ],
+      "visible_offers": [],
+      "delivered_recommendation_count": 0,
+      "explanation": "No offer was verified in this run.\nOpen questions:\n- Search coverage in this run: 7 retailers found, 5 attempted, 1 read successfully, 0 with a qualifying offer; retailers outside this search were not checked.",
+      "spend": {
+        "attempts": {
+          "model": 18,
+          "retrieval": 10,
+          "search": 3,
+          "work": 1
+        },
+        "known_usd": "0.1911905",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0"
+      }
+    },
+    {
+      "case": "one-structured",
+      "run_id": "0b29b74f-31e7-480f-862e-a87e0f640704",
+      "start": "2026-11-27T11:54:41.439217+00:00",
+      "input": "Find one Lebanese shop with new black Soundcore Q20i headphones in stock. Give me the listed item price before delivery and the product link.",
+      "model_field_seen_by_worker": "Soundcore Q20i",
+      "exact_model_search_term": "Soundcore Q20i",
+      "initial_search_options": [
+        "Soundcore Q20i Lebanon retailer black",
+        "Soundcore Q20i Lebanon retailer price black",
+        "Soundcore Q20i \u0644\u0628\u0646\u0627\u0646 \u0645\u062a\u062c\u0631 black"
+      ],
+      "elapsed_seconds": 86.547,
+      "active_allowance_s": 300,
+      "controller_final_by_s": 297.753,
+      "research_by_s": 265,
+      "status": "partial",
+      "stop_reason": "These listings still have unresolved checks.",
+      "stop_flags": [],
+      "terminal_action": {
+        "tool": "present",
+        "turn": 5
+      },
+      "final_model_call": {
+        "schema": "Decision",
+        "status": "completed"
+      },
+      "actions": [
+        {
+          "action": "web_search",
+          "status": "rate_limited",
+          "new_leads": 0
+        },
+        {
+          "action": "catalog",
+          "status": "leads",
+          "new_leads": 1
+        },
+        {
+          "action": "inspect",
+          "status": "priced_partial",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones"
+        },
+        {
+          "action": "render",
+          "status": "priced_partial",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones"
+        }
+      ],
+      "visible_offers": [
+        {
+          "seller": "IT Promax",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "item": "Soundcore Q20i ANC Headphones",
+          "color": {
+            "state": "known",
+            "value": "Black"
+          },
+          "condition": {
+            "state": "unknown",
+            "value": null
+          },
+          "stock": {
+            "state": "known",
+            "value": true
+          },
+          "price": {
+            "state": "known",
+            "value": {
+              "amount": "48",
+              "currency": "USD"
+            }
+          },
+          "gaps": [
+            "Delivery to the requested destination and mandatory charges still need checking.",
+            "The retailer did not confirm the condition of this selected variant."
+          ]
+        }
+      ],
+      "delivered_recommendation_count": 0,
+      "explanation": "No offer was verified in this run.\nOpen questions:\n- Search coverage in this run: 1 retailers found, 1 attempted, 1 read successfully, 0 with a qualifying offer; retailers outside this search were not checked.\nNot verified, shown separately:\n- soundcore Soundcore Q20i ANC Headphones from IT Promax (Lebanon), delivery by the Lebanese seller to Lebanon: not verified (Delivery to the requested destination and mandatory charges still need checking.; The retailer did not confirm the condition of this selected variant.); missing: a cost component (details withheld) (not counted as zero).",
+      "spend": {
+        "attempts": {
+          "model": 7,
+          "retrieval": 3,
+          "work": 1
+        },
+        "known_usd": "0.0290205",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0"
+      }
+    },
+    {
+      "case": "pair-structured",
+      "run_id": "5988cffe-122f-41f7-b84c-7ac40e20f5c5",
+      "start": "2026-11-27T11:58:19.676977+00:00",
+      "input": "Which of two Lebanese shops has the lower listed price for a new Logitech H111 wired 3.5 mm stereo headset? Show both in-stock listings and their links. Compare item prices before delivery.",
+      "model_field_seen_by_worker": "Logitech H111",
+      "exact_model_search_term": "Logitech H111",
+      "initial_search_options": [
+        "Logitech H111 Lebanon retailer",
+        "Logitech H111 Lebanon retailer price",
+        "Logitech H111 \u0644\u0628\u0646\u0627\u0646 \u0645\u062a\u062c\u0631"
+      ],
+      "elapsed_seconds": 291.469,
+      "active_allowance_s": 300,
+      "controller_final_by_s": 297.521,
+      "research_by_s": 265,
+      "status": "partial",
+      "stop_reason": "The agent reached its search limit. The listing could not be read. www.karizmamegastore.com lists Logitech H111 Office Headset for USD 18.0 (in stock). The named merchant's Lebanese location could not be established. The model and new condition match, but the listing is preorder/on order rather than the requested in-stock listing.",
+      "stop_flags": [],
+      "terminal_action": {
+        "error": "ValueError",
+        "lead": 3,
+        "status": "read_failed",
+        "tool": "render",
+        "turn": 16
+      },
+      "final_model_call": {
+        "schema": "Decision",
+        "status": "completed"
+      },
+      "actions": [
+        {
+          "action": "web_search",
+          "status": "ok",
+          "new_leads": 8
+        },
+        {
+          "action": "inspect",
+          "status": "selection_unconfirmed",
+          "url": "https://ifixlb.com/product/logitech-stereo-headset-h111-1-jack/",
+          "observed_gap": "The requested variant is unverified at ifixlb.com. Published options include Logitech Stereo Headset H111\u20131 JACK."
+        },
+        {
+          "action": "inspect",
+          "status": "read_failed",
+          "url": "https://technodel.net/product/logitech-h111-stereo-headset-981-000612",
+          "observed_gap": "The listing could not be read."
+        },
+        {
+          "action": "inspect",
+          "status": "read_failed",
+          "url": "https://techzone.com.lb/product/logitech-headset-wired-h111-stereo/",
+          "observed_gap": "The listing could not be read."
+        },
+        {
+          "action": "render",
+          "status": "read_failed",
+          "url": "https://technodel.net/product/logitech-h111-stereo-headset-981-000612",
+          "observed_gap": "The listing could not be read."
+        },
+        {
+          "action": "inspect",
+          "status": "priced_partial",
+          "url": "https://safalb.com/product-logitech-h111-stereo-headset-1608"
+        },
+        {
+          "action": "web_search",
+          "status": "ok",
+          "new_leads": 8
+        },
+        {
+          "action": "inspect",
+          "status": "read_failed",
+          "url": "https://technodel.net/product/logitech-h111-stereo-headset-981-000612",
+          "observed_gap": "The listing could not be read."
+        },
+        {
+          "action": "render",
+          "status": "read_failed",
+          "url": "https://technodel.net/product/logitech-h111-stereo-headset-981-000612",
+          "observed_gap": "The listing could not be read."
+        },
+        {
+          "action": "inspect",
+          "status": "priced_partial",
+          "url": "https://www.karizmamegastore.com/products/logitech-h111-office-headset"
+        },
+        {
+          "action": "render",
+          "status": "priced_partial",
+          "url": "https://safalb.com/product-logitech-h111-stereo-headset-1608"
+        },
+        {
+          "action": "render",
+          "status": "no_match",
+          "url": "https://www.karizmamegastore.com/products/logitech-h111-office-headset",
+          "observed_gap": "www.karizmamegastore.com lists Logitech H111 Office Headset for USD 18.0 (in stock). The named merchant's Lebanese location could not be established."
+        },
+        {
+          "action": "inspect",
+          "status": "no_match",
+          "url": "https://www.gomicrocity.com/product/097855112873",
+          "observed_gap": "The model and new condition match, but the listing is preorder/on order rather than the requested in-stock listing."
+        },
+        {
+          "action": "inspect",
+          "status": "read_failed",
+          "url": "https://sbeitycomputer.com/product-tag/logitech-headset/",
+          "observed_gap": "The listing could not be read."
+        },
+        {
+          "action": "render",
+          "status": "read_failed",
+          "url": "https://ifixlb.com/product/logitech-stereo-headset-h111-1-jack/",
+          "observed_gap": "The listing could not be read."
+        },
+        {
+          "action": "render",
+          "status": "read_failed",
+          "url": "https://techzone.com.lb/product/logitech-headset-wired-h111-stereo/",
+          "observed_gap": "The listing could not be read."
+        }
+      ],
+      "visible_offers": [
+        {
+          "seller": "Safa Computers",
+          "url": "https://safalb.com/product-logitech-h111-stereo-headset-1608",
+          "item": "Logitech H111 Stereo Headset",
+          "color": null,
+          "condition": {
+            "state": "unknown",
+            "value": null
+          },
+          "stock": {
+            "state": "known",
+            "value": true
+          },
+          "price": {
+            "state": "known",
+            "value": {
+              "amount": "10.00",
+              "currency": "USD"
+            }
+          },
+          "gaps": [
+            "Delivery to the requested destination and mandatory charges still need checking.",
+            "The retailer did not confirm the condition of this selected variant."
+          ]
+        }
+      ],
+      "delivered_recommendation_count": 0,
+      "explanation": "No offer was verified in this run.\nOpen questions:\n- Search coverage in this run: 8 retailers found, 7 attempted, 4 read successfully, 0 with a qualifying offer; retailers outside this search were not checked.\nNot verified, shown separately:\n- Logitech Logitech H111 Stereo Headset from Safa Computers (Lebanon), delivery by the Lebanese seller to Lebanon: not verified (Delivery to the requested destination and mandatory charges still need checking.; The retailer did not confirm the condition of this selected variant.); missing: a cost component (details withheld) (not counted as zero).",
+      "spend": {
+        "attempts": {
+          "model": 21,
+          "retrieval": 13,
+          "search": 2,
+          "work": 2
+        },
+        "known_usd": "0.2700050",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0"
+      }
+    }
+  ]
+}
