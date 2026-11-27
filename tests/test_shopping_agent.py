@@ -58,8 +58,12 @@ class ShoppingAgentTests(FlowCase):
         run = self.agent('Aster Finch Q14', 16, ['Search serpapi', 'Search brave', 'Inspect', 'Present'])
         self.assertEqual(run.status, 'complete', self.trace(run))
         self.assertEqual(str(run.recommendations[0].primary.cost.total.amount), '722.35')
-        trace = self.trace(run)['actions']
-        self.assertEqual([a.get('count') for a in trace], [0, 1, 1, None])
+        trace = self.trace(run)
+        self.assertEqual([a.get('count') for a in trace['actions']], [0, 1, 1, None])
+        self.assertEqual(trace['limits']['ledger_buyer_caps']['seconds'], 300)
+        self.assertEqual(trace['limits']['nonfinal_by_s'], 265)
+        self.assertGreater(trace['limits']['final_by_s'], 290)
+        self.assertLessEqual(trace['limits']['final_by_s'], 298)
 
     def test_wrong_selected_memory_is_rejected(self):
         run = self.agent('Rowan Slate W8', 32, ['Search serpapi', 'Inspect', 'Present'])

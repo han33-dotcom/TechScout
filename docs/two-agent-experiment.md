@@ -113,4 +113,12 @@ Two fresh Batroun sessions started from the same one-seller catalog. In the ordi
 
 In the controlled run we shortened the wait for the first dispatched page-reading model call at OutGeeked to 250 milliseconds. The ledger retained USD 0.52048. The very next decision completed and the agent read DSLR Zone, where it could verify only the blue and white options. Six more shopping actions followed the timeout, including a browser read and a retailer link follow-up. The run stopped on its deadline after 117.7 seconds. Both runs produced zero verified delivered totals. [Before-and-after model dispatches, retailer reads and spending](../acceptance/development/two-agent/buyer-allowance.json)
 
-The remaining checkpoint is to verify delivery and mandatory fees for each viable seller and compare delivered totals for Batroun. The next diagnostic should trace when the buyer can investigate delivery on an already-priced offer and how much time remains when it tries. The original buyer thresholds remain unmeasured on this branch.
+The delivered-total checkpoint is open. The original buyer thresholds remain unmeasured on this branch.
+
+### Listed-price development experiment
+
+Before making a permanent scope decision, test whether the buyer can find one qualifying listing, then compare two shops on the advertised item price. Give each fresh experimental buyer up to 300 active seconds. Keep the existing dollar and call allowances. Record elapsed time, early stops, and what the buyer actually sees. The original 20 delivered-total requests retain their own scorecard.
+
+For one shop, require a matching exact item at a Lebanese merchant, a working product link, the current listed price and currency, online stock and evidence of the requested condition. For two shops, require the same requested configuration, independently owned sellers, both qualifying listings in the answer, and the correct lower listed price or tie. Retain a priced partial when condition or stock is unknown. Delivery fees are outside these two requests. A seller's listed price cannot stand in for an amount payable at checkout.
+
+Use the normal buyer form wording and API/worker path. The evaluator checks the retailer references independently and keeps seller links and reference prices out of the buyer's inputs. Record any repeat with an explicitly populated model field as a diagnostic, separately from the scored natural-language submission. The existing full-product UI still labels incomplete payable totals as partial. Score the visible item evidence against the listed-price request and record the UI's actual disposition as well.

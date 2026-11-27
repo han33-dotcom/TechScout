@@ -13,7 +13,7 @@ import os
 import uuid
 
 from sqlalchemy import select, update, func
-from pydantic import model_validator
+from pydantic import Field, model_validator
 
 from app.contracts import Amount, Model
 from app.storage import Storage, accounting_state
@@ -42,9 +42,14 @@ class Charge:
         return sum((money(v) for v in (self.provider, self.gateway, self.payment, self.byok)), Decimal(0))
 
 
-class BuyerSpendLimits(Model):
+class BuyerLimits(Model):
     research_spend_usd: Amount = Decimal('0.75')
     spend_usd: Amount = Decimal('1')
+    seconds: int = Field(default=120, gt=30, le=300, strict=True)
+
+    @property
+    def research_seconds(self):
+        return self.seconds - 30
 
     @model_validator(mode='after')
     def final_phase_has_room(self):
@@ -53,7 +58,7 @@ class BuyerSpendLimits(Model):
         return self
 
 
-DEFAULT_BUYER_LIMITS = BuyerSpendLimits()
+DEFAULT_BUYER_LIMITS = BuyerLimits()
 
 # fetch attempts, paid attempts, active worker milliseconds, USD, all external calls
 LIMITS = {
@@ -127,7 +132,7 @@ class Ledger:
             raise ValueError('A stable job ID and supported job kind are required')
         if type(international) is not bool:
             raise ValueError('International opt-in must be explicit')
-        if buyer_limits is not None and (kind != 'buyer' or not isinstance(buyer_limits, BuyerSpendLimits)):
+        if buyer_limits is not None and (kind != 'buyer' or not isinstance(buyer_limits, BuyerLimits)):
             raise ValueError('Buyer spending limits apply only to buyer jobs')
         if envelope is not None:
             if (kind != 'maintenance' or set(envelope) != {'calls', 'seconds', 'usd'}
@@ -151,7 +156,7 @@ class Ledger:
                 if buyer_limits is not None:
                     jobs[job_id]['buyer_limits'] = buyer_limits.model_dump(mode='json')
             # Resumed jobs keep the limits under which their reservations were made.
-            effective = BuyerSpendLimits.model_validate(jobs[job_id].get('buyer_limits', {})) if kind == 'buyer' else None
+            effective = BuyerLimits.model_validate(jobs[job_id].get('buyer_limits', {})) if kind == 'buyer' else None
         return Job(self, job_id, effective)
 
     def _scope_keys(self, job_id, job, international):
@@ -185,8 +190,12 @@ class Ledger:
                 raise BudgetDenied('Project or job is stopped')
             if international and not job['international']:
                 raise BudgetDenied('International work requires opt-in')
-            if job['kind'] == 'buyer' and now + seconds > job['started'] + (120 if job['final'] else 90):
-                raise BudgetDenied('Run deadline includes final verification and writer')
+            buyer_limits = None
+            if job['kind'] == 'buyer':
+                buyer_limits = BuyerLimits.model_validate(job.get('buyer_limits', {}))
+                window = buyer_limits.seconds if job['final'] else buyer_limits.research_seconds
+                if now + seconds > job['started'] + window:
+                    raise BudgetDenied('Run deadline includes final verification and writer')
             if job['kind'] == 'maintenance' and datetime.fromtimestamp(now, timezone.utc).date().isoformat() != job['day']:
                 raise BudgetDenied('A new UTC maintenance day requires a new job ID')
             if job['kind'] == 'maintenance':
@@ -220,8 +229,7 @@ class Ledger:
                 used = state['scopes'].setdefault(key, [0, 0, 0, '0', 0])
                 cap = list(LIMITS[profile])
                 if profile == 'buyer':
-                    limits_usd = BuyerSpendLimits.model_validate(job.get('buyer_limits', {}))
-                    cap[3] = limits_usd.spend_usd if job['final'] else limits_usd.research_spend_usd
+                    cap[3] = buyer_limits.spend_usd if job['final'] else buyer_limits.research_spend_usd
                     if not job['final']:
                         cap[0], cap[1], cap[4] = 30, 30, 30
                 if profile == 'project' and job['kind'] != 'buyer':
