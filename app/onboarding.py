@@ -1376,8 +1376,8 @@ def _local_work(job):
 def lead_usage(ledger, lead_id):
     """Recorded usage of every onboarding attempt for one lead (uncertain attempts keep their bound)."""
     totals, usd = dict(fetch_attempts=0, paid_calls=0, active_ms=0, external_calls=0), Decimal(0)
-    for attempt in ledger.snapshot()['attempts'].values():
-        if not str(attempt['job']).startswith(f'onboarding:{lead_id}:') or attempt['status'] == 'released':
+    for attempt in ledger.job_attempts(f'onboarding:{lead_id}:', prefix=True):
+        if attempt['status'] == 'released':
             continue
         fetches, paid, active, spend, calls = attempt['values']
         totals['fetch_attempts'] += fetches
@@ -1457,15 +1457,16 @@ class OnboardingWorker:
         """The next UTC day when today's maintenance or the project allowance is spent or the
         campaign is stopped; otherwise a short pause, because a busy slot or source lease frees up."""
         tomorrow = (now + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
-        state = self.ledger.snapshot()
-        if state.get('blocked'):
-            return tomorrow
         base = 'maintenance:' + now.date().isoformat()
         scopes = [('project', 'project'), (base, 'maintenance')]
         # The next probe needs one fetch and up to 15 s; local work needs 10 s of the active-time cap.
         need = (1, 0, 15_000, Decimal('0.01'), 0)
+        with self.ledger._transaction(readonly=True) as (state, _):
+            if state['blocked']:
+                return tomorrow
+            usage = {key: state['scopes'].get(key, [0, 0, 0, '0', 0]) for key, _ in scopes}
         for key, profile in scopes:
-            used = state['scopes'].get(key, [0, 0, 0, '0', 0])
+            used = usage[key]
             caps = list(LIMITS[profile])
             if profile == 'project':
                 caps[3] = '499'  # background work cannot use the final $1

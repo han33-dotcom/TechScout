@@ -5,11 +5,11 @@ from tempfile import TemporaryDirectory
 import unittest
 from unittest.mock import patch
 
-from sqlalchemy import inspect
+from sqlalchemy import inspect, update
 
 from app.accounting import BudgetDenied, Charge, Ledger
 from app.accounting_admin import initialize, reconcile
-from app.storage import Storage, accounting_state
+from app.storage import Storage, accounting_entries, accounting_state
 
 
 class LedgerAdministrationTests(unittest.TestCase):
@@ -25,12 +25,39 @@ class LedgerAdministrationTests(unittest.TestCase):
                             basis='offline test evidence', status='conservative_hold')
 
     def test_standalone_initialization_needs_no_corpus_or_vector_tables(self):
-        self.assertEqual(inspect(self.storage.engine).get_table_names(), ['accounting_state'])
+        self.assertEqual(inspect(self.storage.engine).get_table_names(), ['accounting_entries', 'accounting_state'])
         reconcile(self.ledger, self.receipt)
         initialize(self.ledger)
         self.assertEqual(self.ledger.snapshot()['scopes']['project'][3], '3.00')
         with self.assertRaises(BudgetDenied):
             initialize(Ledger(self.storage, 'different-campaign', fixture=True))
+
+    def test_v1_upgrade_preserves_every_field_and_outstanding_owner(self):
+        reconcile(self.ledger, self.receipt)
+        self.ledger.credit_purchase('funding', Decimal('10'), Decimal('0.01'))
+        job = self.ledger.open_job('before-migration')
+        attempt = job.reserve('model', Charge(Decimal('0.4')), 60)
+        attempt.dispatch()
+        with self.ledger._transaction() as (state, _):
+            state['blocked'] = True
+            state['custom_checkpoints'] = {'some-key': {'data': ['1.200', None, False]}}
+        original = self.ledger.snapshot()
+        with self.storage.engine.begin() as db:
+            accounting_entries.drop(db)
+            db.execute(update(accounting_state).values(payload=original))
+        initialize(self.ledger)
+        self.assertEqual(self.ledger.snapshot(), original)
+        initialize(self.ledger)
+        self.assertEqual(self.ledger.snapshot(), original)
+        attempt.uncertain()
+        self.assertEqual(self.ledger.record('attempts', attempt.token)['status'], 'uncertain')
+        self.assertEqual(self.ledger.record('scopes', 'project'), original['scopes']['project'])
+
+    def test_missing_v2_entries_table_cannot_be_reinitialized_empty(self):
+        with self.storage.engine.begin() as db:
+            accounting_entries.drop(db)
+        with self.assertRaisesRegex(BudgetDenied, 'missing its entries'):
+            initialize(self.ledger)
 
     def test_blank_configuration_cannot_fall_back_to_application_database(self):
         for config in [dict(TECHSCOUT_ACCOUNTING_URL='', TECHSCOUT_ACCOUNTING_PROJECT='campaign'),

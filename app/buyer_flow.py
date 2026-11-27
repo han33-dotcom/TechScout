@@ -690,13 +690,11 @@ class _Flow:
         if self.job is None:
             return dict(ledger='not_opened')
         try:
-            state = self.deps.ledger.snapshot()
+            attempts = self.deps.ledger.job_attempts(self.run_ref.run_id)
         except Exception as exc:  # noqa: BLE001
             return dict(ledger='unreadable', error=type(exc).__name__)
         known, uncertain, held, counts = Decimal(0), Decimal(0), Decimal(0), {}
-        for attempt in state['attempts'].values():
-            if attempt['job'] != self.run_ref.run_id:
-                continue
+        for attempt in attempts:
             counts[attempt['kind']] = counts.get(attempt['kind'], 0) + (attempt['status'] != 'released')
             amount = Decimal(str(attempt['values'][3]))
             if attempt['status'] == 'completed':

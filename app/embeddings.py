@@ -208,7 +208,7 @@ class EmbeddingService:
                 self.job.ledger.recover()
                 # A late result cannot release or settle the held reservation. A
                 # genuine billed overrun, however, is already posted as completed.
-                settled = self.job.ledger.snapshot()['attempts'][attempt.token]
+                settled = self.job.ledger.record('attempts', attempt.token)
                 status = 'completed' if settled['status'] == 'completed' else 'uncertain'
                 if status == 'uncertain':
                     actual = None
@@ -271,8 +271,7 @@ def check_route(route, ledger, storage):
     except EmbeddingUnavailable:
         # The sanitized failure receipt is the evidence for #80.
         pass
-    attempts = ledger.snapshot()['attempts'].values()
-    attempt, = (a for a in attempts if a['job'] == job.run_id)
+    attempt, = ledger.job_attempts(job.run_id)
     return dict(job=job.run_id, status=attempt['status'], **attempt.get('provider_usage', {}))
 
 
