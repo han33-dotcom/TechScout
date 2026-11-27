@@ -8,7 +8,7 @@ from uuid import UUID
 import httpx2
 
 from app.accounting import Charge, BudgetDenied, money
-from app.provider_http import post_json, request_json
+from app.provider_http import post_json, record_read_event, request_json
 from app.sources import FetchOutcome, MAX_RESPONSE_BYTES
 
 
@@ -60,6 +60,7 @@ class Firecrawl:
             raise TimeoutError('No time remains to recover the Firecrawl result')
         attempt = job.reserve('provider_read', Charge(Decimal(0)), seconds)
         attempt.dispatch()
+        record_read_event('lookup_dispatched', lookup='activity' if params else 'stored_scrape')
         started = time.monotonic()
         try:
             idle = min(12, seconds / 3)
@@ -100,6 +101,7 @@ class Firecrawl:
         if len(matches) != 1:
             raise TimeoutError('Firecrawl job history did not identify one result for this request')
         job_id = str(UUID(matches.pop()))
+        record_read_event('job_visible', job_id=job_id, via='activity')
         result = self._archive_get(job, 'scrape/' + job_id, None, deadline, wire_bytes)
         if (result.get('data') or {}).get('metadata', {}).get('scrapeId') != job_id:
             raise ValueError('Firecrawl returned a different stored job')
@@ -120,6 +122,7 @@ class Firecrawl:
         started = time.monotonic()
         attempt.dispatch()
         submitted = datetime.now(timezone.utc)
+        record_read_event('scrape_dispatched')
         recovered = False
         try:
             try:
@@ -138,6 +141,8 @@ class Firecrawl:
                 raise ValueError('Managed extraction did not succeed')
             data = raw['data']
             metadata = data['metadata']
+            if not recovered and isinstance(metadata.get('scrapeId'), str):
+                record_read_event('job_visible', job_id=metadata['scrapeId'], via='scrape_response')
             final_url = metadata.get('url')
             if (metadata.get('sourceURL') != url or type(final_url) is not str or not final_url
                 or metadata.get('statusCode') != 200 or metadata.get('error')
