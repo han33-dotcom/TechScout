@@ -17,7 +17,8 @@ const session = (account: SessionInfo['account'] = null): SessionInfo => ({ csrf
 
 function accounts(signedIn = false, saved: SavedLocation[] = []) {
   const items = [...saved];
-  let state: DestinationState = { request_id: 'needs-1', signed_in: signedIn, sellers, selection: null, waiting: [], quotes: [] };
+  // Both sellers wait for a street address (#186), so the chat asks once.
+  let state: DestinationState = { request_id: 'needs-1', signed_in: signedIn, sellers, selection: null, waiting: sellers, quotes: [] };
   const mock = {
     session: vi.fn(async () => session(signedIn ? { username: buyer.username } : null)),
     register: vi.fn(async (username: string) => { state = { ...state, signed_in: true }; return session({ username }); }),
@@ -172,7 +173,7 @@ describe('same-chat round trip', () => {
     // The same chat: its earlier revision, current offers and links, without a new search.
     expect(screen.getByText(/Previous search · revision 1/)).toBeTruthy();
     expect(screen.getAllByRole('link', { name: /View at Book-Local/ }).length).toBeGreaterThan(0);
-    expect(screen.getByText(/have not been requested yet/)).toBeTruthy();
+    expect(screen.getByText('Waiting to ask Book-Other for a delivery quote for this address.')).toBeTruthy();
     expect(transport.start).not.toHaveBeenCalled();
     expect(transport.refine).not.toHaveBeenCalled();
     expect(transport.read).toHaveBeenCalledTimes(1);

@@ -136,6 +136,17 @@ The revised comparison works like this:
 
 Retailer text never becomes a reason. Only a sanitized option name, at most 60 characters, labels the fee.
 
+## In the chat
+
+`frontend/src/Destination.tsx` shows the delivery panel under the comparison:
+
+- **The address question.** It appears only when `waiting` names a seller. It names those sellers once, explains why an address could change their totals, and lets the buyer tick which of them may receive a saved address. Because no live seller needs a street address yet, the question does not appear in live searches today. City-level quotes and the revised totals still do.
+- **Progress.** After a choice, the panel shows the quote state in plain words and rereads it every 1.5 seconds while a quote is pending or in flight.
+- **Quotes.** Each quote shows the fee once, the item price, the charges already in the price, when and from which route it was quoted, or the reason it is unusable.
+- **Revised totals.** A table shows each seller's total before and after, its rank or why it is not ranked, and a link to its listing, with the advice above it.
+
+The fixture-backed browser walkthrough in `acceptance/development/issue-186/` drives this end to end on the real API, quote loop, gate and a fixture ledger. Only the network is scripted (a Shopify storefront for synthetic sellers). It records screenshots and `evidence.json`.
+
 ## Privacy
 
 A precise address exists only inside the single quote request to a seller the buyer named. It is never stored in quote rows, plans, snapshots, history, exports or logs. The quote records the saved location's ID, label and city. `release_address(..., location_id=…)` returns nothing once that location is no longer the chat's choice. Signing in moves the chat's quotes with its runs.
