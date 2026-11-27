@@ -223,7 +223,10 @@ class DeliveryQuoteTests(unittest.TestCase):
         before = self.destination(snapshot)
         self.assertEqual([seller['name'] for seller in before['waiting']], ['Street-A', 'Street-B'])
         self.assertEqual((before['quotes'], before['revised'], before['selection']), ([], None, None))
+        # The city quote is implied but not planned yet, so the chat knows to look again.
+        self.assertTrue(before['awaiting_quotes'])
         self.settle()
+        self.assertFalse(self.destination(snapshot)['awaiting_quotes'])
         self.assertEqual(self.to('City-Shop'), [{'country': 'Lebanon', 'city': 'Beirut'}])
         self.assertEqual(self.to('Street-A') + self.to('Street-B') + self.to('No-Route'), [])
         state = self.destination(snapshot)

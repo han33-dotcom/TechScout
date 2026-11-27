@@ -51,7 +51,7 @@ A buyer who is not signed in gets 401 "Sign in to use saved locations". Each acc
 | `POST /api/runs/{id}/destination` | `location_id`, `recipients` (1–20 retailer IDs) | Selection replaces any earlier choice |
 | `POST /api/runs/{id}/destination/decline` | `{}` | Buyer keeps shopping without an address |
 
-A chat is one request ID in one session, across all its revisions. `DestinationState` lists the Lebanese sellers in the chat's latest revision (`sellers`), whether the buyer is signed in, and the current `selection`. Since #186 it also carries `waiting` (the sellers whose delivery total a street address could settle, to name once), `quotes` and `revised`; see [delivery-quotes.md](delivery-quotes.md).
+A chat is one request ID in one session, across all its revisions. `DestinationState` lists the Lebanese sellers in the chat's latest revision (`sellers`), whether the buyer is signed in, and the current `selection`. Since #186 it also carries `waiting` (the sellers whose delivery total a street address could settle, to name once), `quotes`, `revised` and `awaiting_quotes`; see [delivery-quotes.md](delivery-quotes.md).
 
 - **Selecting** needs a signed-in session that owns both the chat and the location. Recipients must be sellers shown in that chat. Overseas sellers are never offered. The choice is saved for this chat only. A later chat, or a seller that appears later, needs a new choice. Saving a location and choosing its recipients stay separate actions.
 - **Declining** works with or without an account. No seller receives an address. The comparison, exact product links and unknown fees stay as they were. The buyer can still select a location later.

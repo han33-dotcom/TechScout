@@ -166,6 +166,9 @@ class DestinationState(Model):
     waiting: tuple[DestinationSeller, ...] = ()
     quotes: tuple[DeliveryQuote, ...] = ()
     revised: RevisedComparison | None = None
+    # Additive since #186 part 2: the latest search implies a quote the worker has not planned
+    # yet. The chat reads again shortly instead of concluding that no quote is coming.
+    awaiting_quotes: bool = False
 
 
 class PendingQuote(Model):
@@ -408,12 +411,12 @@ class BuyerAccounts:
                                              recipients=decision['recipients'], quote_state=decision['quote_state'],
                                              decided_at=decision['decided_at'])
         decision, _ = read_decision(db, session['session_hash'], request_id)
-        quotes, revised = chat_quotes(db, session['session_hash'], request_id, snapshot, decision, routes)
+        quotes, revised, awaiting = chat_quotes(db, session['session_hash'], request_id, snapshot, decision, routes)
         waiting = tuple(DestinationSeller(retailer_id=retailer, name=name)
                         for retailer, name in waiting_sellers(snapshot, routes))
         return DestinationState(request_id=request_id, signed_in=self._signed_in(db, session) is not None,
                                 sellers=sellers, selection=selection, waiting=waiting, quotes=quotes,
-                                revised=revised)
+                                revised=revised, awaiting_quotes=awaiting)
 
     def _decide(self, db, now, session, request_id, **values):
         key = (buyer_destinations.c.session_hash == session['session_hash'],

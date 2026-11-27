@@ -573,16 +573,18 @@ def _rows(db, session_hash, request_id, wanted):
 
 
 def chat_quotes(db, session_hash, request_id, snapshot, decision, routes):
-    """The quotes that apply to the chat's latest search and destination, and its revision."""
+    """The quotes that apply to the chat's latest search and destination, its revision, and whether
+    a quote the search implies has not been planned yet (so the chat should look again soon)."""
     wanted = wanted_quotes(snapshot, decision, routes)
     found = _rows(db, session_hash, request_id, wanted)
     quotes = tuple(found[item.key] for item in wanted if item.key in found)
+    awaiting = len(quotes) < len(wanted)
     selected = decision is not None and decision.status == 'selected' and decision.city
     city = snapshot.request.fulfillment.destination.city
     place = f'{decision.label} · {decision.city}' if selected and any(
         quote.destination.detail == 'street' for quote in quotes) else (city or 'Lebanon')
     revised = revise(snapshot, {quote.offer_id: quote for quote in quotes}, place)
-    return quotes, revised
+    return quotes, revised, awaiting
 
 
 def summary(db, session_hash, request_id, snapshot, decision, routes) -> str:
