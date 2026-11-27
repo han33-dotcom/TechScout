@@ -575,11 +575,11 @@ class DomesticBuyerFlow(_Flow):
                 reasons=tuple(dict.fromkeys([*reasons, *([problem] if problem else [])])))
             self.retries.append(Listing(listing.url, offer.source_id, offer))
 
-    def generate(self, instructions, payload, schema, by):
+    def generate(self, instructions, payload, schema, by, *, call_seconds=12):
         if self.roles is None:
             self.trace['reasoning_failure'] = 'OpenRouter inference route unavailable'
             return None
-        seconds = min(12, self.left(by) - .5)
+        seconds = min(call_seconds, self.left(by) - .5)
         if seconds <= 0 or self.stopped():
             return None
         deadline = self.elapsed() + seconds

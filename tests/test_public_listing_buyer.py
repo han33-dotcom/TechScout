@@ -1,4 +1,5 @@
 """Checkpoint 2: buyer API and worker, with offline model and Firecrawl transports."""
+from fixture_page_agent import fixture_read
 from functools import partial
 from datetime import datetime, timezone
 from hashlib import sha256
@@ -34,6 +35,9 @@ def listing(color, price):
 
 class BuyerDecisions(Decisions):
     def answer(self, role, data):
+        if 'page' in data:
+            assert data['objective']['intent']['wording'] == WORDING
+            return fixture_read(data, lambda evidence: self.answer(role, evidence)).model_dump(mode='json')
         if 'lines' in data:
             lines = data['lines']
             return dict(title_line=lines.index('Soundcore Q20i Hybrid ANC Headphones'), brand='Soundcore',
@@ -195,7 +199,7 @@ class PublicListingBuyerTests(FlowCase):
     def test_a_contradictory_display_price_withdraws_the_structured_price(self):
         run = self.journey(listing('Black', '49.00') + '<span data-variant-price>USD 72.00</span>')
         self.assertFalse(run.uncertain or run.recommendations)
-        self.assertIn('could not confirm', run.stop_reason)
+        self.assertIn('price conflicts', run.stop_reason)
 
     def test_agent_can_choose_the_published_option_url_while_playwright_is_available(self):
         black_url = URL + '?variant=black'
@@ -230,11 +234,11 @@ class PublicListingBuyerTests(FlowCase):
         self.assertEqual(item.offer.variant.color.value, 'Black')
         self.assertEqual(str(item.offer.price.value.amount), '49.00')
 
-    def test_identical_recheck_renews_the_receipt_without_redeciding_fit(self):
+    def test_identical_recheck_renews_the_receipt_and_the_agent_sees_each_capture(self):
         run = self.journey(listing('Black', '49.00'))
         self.assertEqual(run.status, 'partial', self.trace(run))
-        matches = [json.loads(r['body']['messages'][1]['content']) for r in self.openrouter.requests]
-        self.assertEqual([m['selected']['color'] for m in matches if 'selected' in m], ['White', 'Black'])
+        reads = [json.loads(r['body']['messages'][1]['content']) for r in self.openrouter.requests]
+        self.assertEqual(len([r for r in reads if 'page' in r]), 3)
         first = next(s.uncertain[0].offer for s in self.published if s.uncertain)
         self.assertGreater(run.uncertain[0].offer.evidence[0].observed_at, first.evidence[0].observed_at)
 

@@ -1,4 +1,6 @@
 """Real Chromium, with all retailer and Firecrawl responses supplied offline."""
+from fixture_page_agent import fixture_read
+from app.page_observation import PageDecision
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from functools import partial
@@ -84,6 +86,8 @@ TABLET_CHANGE = """document.querySelector('select').addEventListener('change', (
 
 class TabletDecisions(Decisions):
     def answer(self, role, data):
+        if 'page' in data:
+            return fixture_read(data).model_dump(mode='json')
         if 'selected' in data:
             fits = data['selected']['selected_options'].get('storage') == '128 GB'
             return dict(selected_item_fits=fits, merchant_address_line=None, reason='Checked the selected storage.')
@@ -204,6 +208,8 @@ class CatalogBrowserTests(TestCase):
     def decisions(self, *prefixes):
         choices = iter(prefixes)
         def choose(prompt, data, schema, **kwargs):
+            if schema is PageDecision:
+                return SimpleNamespace(status='completed', value=fixture_read(data))
             prefix = next(choices)
             if isinstance(prefix, SearchDecision):
                 return SimpleNamespace(status='completed', value=prefix)

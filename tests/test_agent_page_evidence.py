@@ -4,6 +4,8 @@ import json
 from types import SimpleNamespace
 from unittest import TestCase
 
+from app.page_observation import PageDecision
+from fixture_page_agent import fixture_read
 from app.agent_inspection import InspectionChoice
 from app.domestic_discovery import ChannelAttempt, SearchReport
 from app.maintenance import control
@@ -49,12 +51,8 @@ def read_evidence(data):
 
 class Decisions(BuyerDecisions):
     def answer(self, role, data):
-        if 'published_offers' in data:
-            reading = read_evidence(data)
-            if reading.offer_index is not None:
-                reading = reading.model_copy(update={'match': Match(selected_item_fits=True,
-                    reason='The named record is the requested black Q20i.')})
-            return reading.model_dump()
+        if 'page' in data:
+            return fixture_read(data, read_evidence).model_dump(mode='json')
         return super().answer(role, data)
 
 
@@ -74,7 +72,7 @@ class BuyerEvidenceTests(flow.FlowCase):
         with browser.retailer(self.storage, URL, html=records(['Navy', 'Black'])) as (deps.inspect_listing, _):
             self.work(deps)
         payloads = [json.loads(r['body']['messages'][1]['content']) for r in self.openrouter.requests]
-        reading = next(p for p in payloads if 'published_offers' in p)
+        reading = next(p for p in payloads if 'page' in p)
         self.assertEqual(reading['objective']['intent']['wording'], WORDING)
         self.assertEqual(reading['feedback'][0]['answer'], answer)
 
@@ -132,7 +130,7 @@ class CatalogEvidenceTests(TestCase):
                         SearchDecision(action='inspect', listing_index=0, color='Black')])
         def decide(prompt, data, schema, **kwargs):
             choice = (next(choices) if schema is SearchDecision else
-                      InspectionChoice(action_index=0, reading=read_evidence(data['evidence'])))
+                      fixture_read(data, read_evidence) if schema is PageDecision else InspectionChoice(action_index=0))
             return SimpleNamespace(status='completed', value=choice)
         schedule.roles.generate.side_effect = decide
         with browser.retailer(self.f.fixture.storage, URL, html=html) as (schedule.runner.inspect_listing, reads):
@@ -160,8 +158,7 @@ class CatalogEvidenceTests(TestCase):
         seed = f.manifest.seeds[0].model_copy(update={'sku': 'sku-black', 'selection_color': 'Black'})
         runner.manifest = f.manifest.model_copy(update={'seeds': (seed,)})
         def decide(prompt, data, schema, **kwargs):
-            return SimpleNamespace(status='completed', value=InspectionChoice(
-                action_index=0, reading=read_evidence(data['evidence'])))
+            return SimpleNamespace(status='completed', value=fixture_read(data, read_evidence) if schema is PageDecision else InspectionChoice(action_index=0))
         self.schedule.roles.generate.side_effect = decide
         html = records(['Navy', 'Black'], url=f.url, seller='one ltd')
         with browser.retailer(f.fixture.storage, f.url, registry=ActivationRegistry(
