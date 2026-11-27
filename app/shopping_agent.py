@@ -284,6 +284,10 @@ class ShoppingAgent(DomesticBuyerFlow):
             action = actions[choice.action_index]
             self.trace['actions'].append(dict(turn=turn + 1, tool=action.kind))
             if action.kind == 'present':
+                if self.deps.inspect_listing and not (choice.answer or '').strip():
+                    self.trace['actions'][-1]['status'] = 'missing_answer'
+                    closing_reason = None
+                    break
                 return self.present(choice.offer_ids, answer=choice.answer)
             if action.kind == 'ask' and choice.question and choice.material_reason:
                 return self._finish('clarification', 'One detail could change your comparison.',
@@ -319,11 +323,11 @@ class ShoppingAgent(DomesticBuyerFlow):
         if self.left(self.final_by) > 2 and not self.stopped():
             closing = self.generate(PROMPT, dict(request=self.request.model_dump(mode='json'),
                 feedback=list(self.context.answers), verified=self.verified_choices(), checked_listings=self.checked_listings(),
-                observations=self.observations[-4:], available=['Present checked offers and the answer now']),
+                observations=self.observations[-12:], available=['Present checked offers and the answer now']),
                 Decision, self.final_by)
-            if closing and closing.action_index == 0 and closing.answer:
+            if closing and closing.action_index == 0 and (closing.answer or '').strip():
                 return self.present(closing.offer_ids, closing_reason, answer=closing.answer)
-        return self.present([], closing_reason)
+        return self.present([], closing_reason or 'The shopping agent could not finish writing its answer.')
 
     def perform(self, action, job, room, query, language):
         if action.kind == 'catalog':
@@ -625,6 +629,9 @@ class ShoppingAgent(DomesticBuyerFlow):
             receipts = dict.fromkeys(e.evidence_id for o in (
                 *(item.offer for item in uncertain), *(v.offer for g in groups for v in g.offers())) for e in o.evidence)
             explanation = v2.RunExplanation(text=answer.strip(), source='model', evidence_ids=tuple(receipts))
+        elif self.deps.inspect_listing:
+            explanation = v2.RunExplanation(text='The shopping agent could not finish writing its answer.',
+                                            source='fallback')
         else:
             explanation = self._write(groups, uncertain)
         status = 'partial' if interrupted else 'complete' if groups else 'partial' if uncertain else 'abstained'
