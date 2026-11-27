@@ -27,7 +27,7 @@ from pydantic import Field, StrictBool, ValidationError, ValidationInfo, model_v
 
 from app.accounting import DEFAULT_BUYER_LIMITS
 from app.contracts import Model
-from app.openrouter import ENDPOINTS, InputTokenLimit, OpenRouterConfig, OpenRouterProvider, ProviderUnavailable, Route, _bound
+from app.openrouter import ENDPOINTS, InputTokenLimit, OpenRouterConfig, OpenRouterProvider, ProviderUnavailable, ReasoningEffort, Route, _bound
 from app.writer import PROMPTS as WRITER_PROMPTS, WRITER_MAX_INPUT_TOKENS, WRITER_PROMPT_VERSION
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -61,7 +61,7 @@ class InferenceConfig(Model):
     endpoint: Literal[ENDPOINTS] = ENDPOINTS[0]
     data_collection: Literal['allow', 'deny'] = 'deny'
     zdr: StrictBool = False
-    effort: Literal['none', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max'] | None = None
+    effort: ReasoningEffort | None = None
     # Orchestrator, research workers and evidence critique share these limits and the
     # roles-v1 prompts; the writer keeps its own prompt version and token allowance.
     roles: RoleLimits = RoleLimits(max_input_tokens=16384, max_output_tokens=2048)

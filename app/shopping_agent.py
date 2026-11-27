@@ -26,7 +26,7 @@ from app.directory import DirectoryQuery
 from app.eligibility import check_full_product
 from app.inference import ROOT, InferenceConfig, build_inference, load_env_file
 from app.onboarding import canonical, source_id_for
-from app.openrouter import InputTokenLimit
+from app.openrouter import InputTokenLimit, ReasoningEffort
 from app.page_observation import PageNavigation, ReadPosition, inspect_capture
 from app.pending_listing_reads import PendingListingReads
 from app.selected_listing import Match, MerchantLocation, MissingSellerLocation, Selection, with_option
@@ -37,6 +37,7 @@ BUYER_SETTINGS = ROOT / 'config/two-agent-buyer.json'
 
 class BuyerSettings(Model):
     max_input_tokens: InputTokenLimit
+    effort: ReasoningEffort | None = None
     buyer_limits: BuyerLimits
 
 
@@ -49,6 +50,8 @@ def pinned_inference():
     raw = json.loads((ROOT / 'config/evaluation.json').read_text(encoding='utf-8'))
     settings = raw['evaluation_inference']
     experiment = buyer_settings()
+    if experiment.effort is not None:
+        settings['effort'] = experiment.effort
     settings['roles']['max_input_tokens'] = experiment.max_input_tokens
     return build_inference(InferenceConfig.model_validate(settings, context={'buyer_limits': experiment.buyer_limits}))
 

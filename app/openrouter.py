@@ -43,6 +43,7 @@ ENDPOINTS = ('https://openrouter.ai/api/v1/chat/completions',
 REQUIRED_PARAMETERS = ('response_format', 'structured_outputs', 'max_tokens')
 FRAMING_BYTES = 4096
 InputTokenLimit = Annotated[int, Field(strict=True, ge=8192, le=200_000)]
+ReasoningEffort = Literal['none', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max']
 
 # Explicit "author/slug" IDs only: no ":floor"/":nitro"/":online"/":free" variants, which
 # choose providers or add hosted tools, and no router models (checked below).
@@ -90,7 +91,7 @@ class OpenRouterConfig(Model):
     fallback_on: tuple[FallbackTrigger, ...] = ('provider_unavailable', 'rate_limited')
     data_collection: Literal['allow', 'deny'] = 'deny'
     zdr: StrictBool = False
-    effort: Literal['none', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max'] | None = None
+    effort: ReasoningEffort | None = None
     max_output_tokens: int = Field(default=4096, strict=True, ge=16, le=16000)
     max_input_tokens: InputTokenLimit = 65536
     timeout_seconds: float = Field(default=30, gt=0, le=30)
