@@ -1,0 +1,181 @@
+{
+  "issue": 261,
+  "protocol": {
+    "selection_requests_sha256": "81432bf2a0bbb9eb2acc779e0439f02fe557ead983ab1caff36abfe8db6039d3",
+    "rule": "Use two fresh first attempts per route through the repaired worker on clones of the same catalog. Grade supported useful output, verified offers on answerable requests and material evidence errors. Keep Sol low unless the challenger demonstrates better buyer outcomes. Timing and cost are secondary. Counterbalance order by request. Keep these cases separate from both evaluations.",
+    "ceilings": {
+      "seconds": 300,
+      "research_usd": 20,
+      "total_usd": 25,
+      "calls": 40
+    },
+    "checked_inputs": "The reference collector and its SQLite database are outside the buyer worker. No reference prices, links or seller names enter the request."
+  },
+  "catalog_sha256": "03606bdedf2baa46fe8515ea84ffbb2c8e7cee4a1afc9da90fc2fe46f6624c6d",
+  "scope": "Model selection, not the eight-case milestone. Each attempt used an isolated database cloned from the independent catalog handoff, with 24 directory entries, two corpus resources, ten observations and zero offer-table rows. The evaluator database and reference URLs stayed outside the buyer requests.",
+  "cohorts": [
+    {
+      "revision": "759a16e01c28188c947fb39abf32b8626a1a38bd",
+      "cases": [
+        {
+          "id": "headphones-dev",
+          "kind": "exact_model",
+          "category": "audio",
+          "text": "I want new black Sony WH-CH520 headphones. Which Lebanese shop has an in-stock pair? Give me the checked listed price and the exact product link. I do not need delivery included."
+        },
+        {
+          "id": "laptop-dev",
+          "kind": "needs",
+          "category": "laptop",
+          "text": "I need a new laptop for coursework, video calls and a lot of browser tabs. I need 16 GB of RAM and at least a 512 GB SSD. My ceiling is USD 650 before delivery. Find a suitable in-stock option from a Lebanese shop, explain the fit and give me its listed price and product link."
+        }
+      ],
+      "runs": [
+        {
+          "case": "headphones-dev",
+          "route": "sol-low",
+          "run_id": "630449d3-2109-42d4-93f1-80e0ae10a38d",
+          "revision": "759a16e01c28188c947fb39abf32b8626a1a38bd",
+          "status": "abstained",
+          "answer": "Mobileleb lists the Sony WH-CH520 in Black / Brand New at USD 42.00, with the black variant marked in online stock.\n\nExact product link: https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?variant=41750795845764\n\nMobileleb has a published location in Dekwaneh, Lebanon. This confirms online availability, not stock at that showroom. The price above excludes delivery.",
+          "rendered_cards": [],
+          "seconds": 101.657,
+          "spend": {
+            "attempts": {
+              "model": 14,
+              "retrieval": 4,
+              "search": 1
+            },
+            "known_usd": "0.1823658",
+            "ledger": "read",
+            "note": "uncertain amounts are full reservations kept because the cost was not reported",
+            "still_held_usd": "0",
+            "uncertain_usd": "0.5204800"
+          },
+          "assessment": "Correct USD 42 black variant, stock, merchant, link and premises in answer; zero matching cards. Independent verification of both source captures confirms the offer.",
+          "why": "Product was marked a nonmatch while the merchant address was pending. The later location read received no candidate."
+        },
+        {
+          "case": "headphones-dev",
+          "route": "sol-medium",
+          "run_id": "07f0494a-b9dd-4a5d-9e48-edc48e352989",
+          "revision": "759a16e01c28188c947fb39abf32b8626a1a38bd",
+          "status": "partial",
+          "answer": "Mobileleb lists the Sony WH-CH520 in Black, Brand New (SKU WH-CH520-Black), as in online stock for US$42, before delivery.\n\nExact product link: https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone\n\nThe shop advertises Lebanon-wide delivery. Physical shop location and branch stock were not verified.",
+          "rendered_cards": [],
+          "seconds": 291.297,
+          "spend": {
+            "attempts": {
+              "model": 28,
+              "retrieval": 6,
+              "search": 1
+            },
+            "known_usd": "0.6203026",
+            "ledger": "read",
+            "note": "uncertain amounts are full reservations kept because the cost was not reported",
+            "still_held_usd": "0",
+            "uncertain_usd": "0.5204800"
+          },
+          "assessment": "Correct USD 42 lead and explicit unresolved premises; zero cards. Returned the general product URL. The archive identifies a separate exact black-variant URL.",
+          "why": "Spent turns looking for premises. The location was not established on this run."
+        },
+        {
+          "case": "laptop-dev",
+          "route": "sol-medium",
+          "run_id": "d7aa918d-1ff4-4eb9-b96d-0e1eee3fdd50",
+          "revision": "759a16e01c28188c947fb39abf32b8626a1a38bd",
+          "status": "partial",
+          "answer": "This Lenovo IdeaPad Slim 3 exceeds the budget by USD 19. The exact model has an Intel Core i5-13420H, 16 GB RAM and a 512 GB NVMe SSD, but no operating system. The product offer is listed in stock. The offer identifies PC and Parts Lebanon as the seller. The shop publishes premises in Furn El Chebback, Lebanon. The listed price is USD 669, which exceeds the USD 650 ceiling by USD 19. The laptop has the requested 16 GB RAM and 512 GB SSD and is listed in stock, but it cannot meet the budget. It also ships without an operating system. https://pcandparts.com/product/lenovo-ideapad-slim-3-83k100c1dp-i5-16gb-512gb-ssd-15-3-tax-included/\nThe inspected product is the Lenovo IdeaPad Slim 3 15IRH8, model 83EM0093DP, with an Intel Core i7-13620H, 16 GB RAM and a 512 GB SSD. The product is out of stock and is listed as new. The published offer specifies USD but leaves the price empty; a price within the buyer's budget is not established. The retailer SKU is 198153542116. The page warns that some items are sold by third-party vendors, so the website operator alone does not establish this product's seller. Listed prices exclude 11% VAT, which must be considered when assessing the before-delivery budget. This model meets the 16 GB RAM and 512 GB SSD requirements and is listed as new, but it is explicitly out of stock. Its published offer also has no price, so it cannot satisfy the in-stock requirement or establish compliance with the USD 650 ceiling. The page's marketplace notice does not identify the actual seller. https://ayoubcomputers.com/lenovo-ideapad-slim-3-15irh8-15-6-laptop-intel-core-i7-13620h-ram-16gb-ssd-512gb-intel-uhd-graphics-83em0093dp/\nThe structured offer marks this laptop as new but out of stock and publishes no numeric price. The laptop meets the requested RAM and SSD capacities. The purchase area says it is out of stock. Additional Information contradicts the purchase-area stock status. A published category link allows searching for another suitable laptop. The listed configuration is an Acer Aspire Lite AL15-72P-76WK with an Intel Core i7-13620H, 16 GB RAM and 512 GB SSD. The product condition is listed as new. The retailer SKU is 08645759645856. The website identifies itself as a marketplace; its name alone does not establish the seller of this laptop. The page labels its pricing as excluding VAT, which must be considered when checking the USD 650 ceiling. This Acer has the requested 16 GB RAM and 512 GB SSD, but previous purchase-area checks indicated it is unavailable. Which alternative in the business/everyday laptop category is in stock, new, and within USD 650? The marketplace notice also means the actual seller must be established rather than assumed from the website name. https://ayoubcomputers.com/acer-aspire-lite-al15-72p-76wk-15-6-laptop-intel-core-i7-13620h-ram-16gb-ssd-512gb-intel-uhd-nx-d5hem-001/\nThe store currency is USD. The listed Lenovo Yoga 7 has 16 GB RAM and a 512 GB SSD, but is out of stock. The site publishes Lebanese premises in Furn El Chebback. The navigation publishes a dedicated laptop product category. The shop lists premises in Furn El Chebback, Lebanon. Which laptop in the shop's laptop category is new, in stock, has 16 GB RAM and at least a 512 GB SSD, and costs no more than USD 650 before delivery? The current page supplies the laptop-category link and a Lebanese premises address, but this window does not establish a qualifying offer. https://pcandparts.com/cpu-type/amd-ryzen-5/\nAS Store identifies its own premises in Lebanon. The merchant's structured address is in Kferhata, Zgharta, North Lebanon. AS Store identifies its own Lebanese premises in Kferhata, Zgharta. The agent could not finish reading the capture. https://store.as.com.lb/category/laptops",
+          "rendered_cards": [],
+          "seconds": 240.485,
+          "spend": {
+            "attempts": {
+              "model": 26,
+              "retrieval": 8,
+              "search": 6
+            },
+            "known_usd": "0.4296805",
+            "ledger": "read",
+            "note": "uncertain amounts are full reservations kept because the cost was not reported",
+            "still_held_usd": "0",
+            "uncertain_usd": "0"
+          },
+          "assessment": "No qualifying card. The USD 669 Lenovo is USD 19 over budget; an out-of-stock laptop is also correctly excluded. The 3,763-character fallback repeats findings.",
+          "why": "Consumed 26 model calls, eight retrievals and six searches. Both closing decision attempts were denied after the shared 40-call allowance."
+        },
+        {
+          "case": "laptop-dev",
+          "route": "sol-low",
+          "run_id": "86f912b1-753c-4b90-ba66-93a5b3a35f21",
+          "revision": "759a16e01c28188c947fb39abf32b8626a1a38bd",
+          "status": "partial",
+          "answer": "The collection displays all ten items, rather than just a partial page of results. The lowest-priced new listing with sufficient RAM and SSD capacity is the HP 14-em0085cl, listed at $740, above the $650 ceiling. The HP's listed price exceeds the budget. The $450 ASUS does not meet either the RAM or storage requirement and is open box. The Dell Latitude 7440 shown elsewhere on this page has sufficient memory and storage but is explicitly used. Does this shop list a new laptop with 16 GB RAM and at least a 512 GB SSD for USD 650 or less? None of the ten items in this collection qualifies: the lowest-priced listing with sufficient memory and storage is $740, while the $450 model has only 8 GB RAM and a 256 GB SSD. The $620 Dell with 16 GB RAM and 512 GB storage is explicitly used, so it does not satisfy the new-condition requirement. https://electroslab.com/collections/new-laptops\nAS Store identifies its own Lebanese premises in structured store data. AS Store identifies its own physical shop in Lebanon. The Lenovo Core Ultra 7 model has the required memory and SSD but exceeds budget before VAT. Its category starting price is $880 plus VAT. The HP 15-FD2023NE has only 8 GB RAM, below the requirement. The Acer Aspire 14 AI has 16 GB RAM and a 1 TB SSD but exceeds the budget even before VAT. The Acer's displayed starting price is $855 plus VAT. The Lenovo V15 G5 83GW006AEQ does not meet the RAM requirement. The Lenovo V15 G5 83GW006XED shown here has only 8 GB RAM. The HP ProBook has the requested memory and storage, but its starting price already exceeds USD 650, excluding VAT. HP AI 15-FD2003NE has 16GB DDR5 and a 512GB SSD, but starts at $660 plus VAT, exceeding the ceiling. The HP AI model's description confirms memory and SSD capacity. The two visible ZBook candidates are advertised as like-new, so do not satisfy the new-condition requirement. HP OMEN 16-AM0005NE has 16GB RAM and a 1TB SSD but starts at $2,010 plus VAT, exceeding the budget. Surface Laptop 15-inch Copilot+ PC 7th Edition has 16GB RAM and a 512GB SSD but starts at $1,365 plus VAT, exceeding the budget. The Lenovo IdeaPad Slim 3x has 16 GB RAM but only 256 GB storage, below the requested minimum. The HP AI 15-FD2002NE starts above the USD 650 ceiling, before VAT. The HP AI 15-FD2003NE also starts above the ceiling, before VAT. The visible remaining cards do not meet the budget and storage requirements. Can page 2 provide a new 16 GB RAM laptop with at least a 512 GB SSD for no more than USD 650 before delivery? https://store.as.com.lb/category/laptops\nThe requested HP laptop is unavailable. Its configuration meets the memory and storage requirements, but it comes without an operating system. The merchant lists premises in Lebanon. This HP 250 G10 meets the 16 GB RAM and 512 GB SSD requirements, but it is explicitly out of stock, so it cannot satisfy your request. No price for this laptop is shown in the supplied page preview, so the USD 650 ceiling is not verified. The laptop category could provide another in-stock candidate within budget. https://pcandparts.com/product/hp-250-g10-i7-16gb-512gb-ssd-mx550-15-6-tax-included/\nFurther reading is needed to settle the outstanding checks. https://ayoubcomputers.com/laptops/\nCompuOne's category includes both new and refurbished laptops; condition must be checked individually. CompuOne lists its own Lebanese premises. The category publishes a dedicated product link for the HP EliteBook 840 G9. Its image description advertises Core i7, 16GB RAM and a 512GB SSD. The category lists HP EliteBook 840 G9 with 16GB RAM and a 512GB SSD. The candidate card lists a $600.00 price. The candidate has a published product link. The card identifies retailer SKU L-H-038 and permits adding the laptop to the cart. Does the HP EliteBook 840 G9 product page confirm a new, in-stock 16GB/512GB SSD configuration at the listed $600, establish USD currency, and identify CompuOne's Lebanese premises? The category card is promising but does not establish condition. https://compuonelb.com/laptops-lebanon/",
+          "rendered_cards": [],
+          "seconds": 246.172,
+          "spend": {
+            "attempts": {
+              "model": 29,
+              "retrieval": 6,
+              "search": 5
+            },
+            "known_usd": "0.5170052",
+            "ledger": "read",
+            "note": "uncertain amounts are full reservations kept because the cost was not reported",
+            "still_held_usd": "0",
+            "uncertain_usd": "0"
+          },
+          "assessment": "No qualifying card. Returned a 4,058-character fallback with individual category and product checks rather than a purchasable recommendation.",
+          "why": "Consumed 29 model calls, six retrievals and five searches. Both closing decisions were denied at the 40-call limit."
+        }
+      ],
+      "references": {
+        "headphones-dev": [
+          {
+            "at": "2026-11-27T20:04:24.456239+00:00",
+            "url": "https://961souq.com/products/sony-wh-ch520-wireless-headphones",
+            "final_url": "https://961souq.com/products/sony-wh-ch520-wireless-headphones",
+            "observed": "2026-11-27T20:04:24.456239+00:00",
+            "sha256": "df500cc52e202d6b188cc812c2111ee9f2ab7a92dbe8291384f18f12bf78edcd"
+          },
+          {
+            "at": "2026-11-27T20:04:28.551947+00:00",
+            "url": "https://www.classic-phones.com/products/sony-wh-ch520-headphones",
+            "final_url": "https://www.classic-phones.com/products/sony-wh-ch520-headphones",
+            "observed": "2026-11-27T20:04:28.550924+00:00",
+            "sha256": "a4c8c45841ad56d767477edae57a5cacc2b7ed5bf75f2a66b29e644caf740706"
+          }
+        ],
+        "laptop-dev": [
+          {
+            "at": "2026-11-27T20:04:49.635331+00:00",
+            "url": "https://pcandparts.com/product/lenovo-ideapad-slim-3-83k100c1dp-i5-16gb-512gb-ssd-15-3-tax-included/",
+            "final_url": "https://pcandparts.com/product/lenovo-ideapad-slim-3-83k100c1dp-i5-16gb-512gb-ssd-15-3-tax-included/",
+            "observed": "2026-11-27T20:04:49.633578+00:00",
+            "sha256": "68068baf9c176575eb510dfab43ed8983477f49dec523977e9c14be9fac3facb"
+          },
+          {
+            "at": "2026-11-27T20:04:55.060201+00:00",
+            "url": "https://pcandparts.com/product/lenovo-ideapad-slim-3-83ur00bpdp-ultra-5-16gb-512gb-ssd-15-3-tax-included/",
+            "final_url": "https://pcandparts.com/product/lenovo-ideapad-slim-3-83ur00bpdp-ultra-5-16gb-512gb-ssd-15-3-tax-included/",
+            "observed": "2026-11-27T20:04:55.060201+00:00",
+            "sha256": "be839ded0101a7e6aed08df75904206575f7ea2012a59f6ecf9685ae564eaaa3"
+          },
+          {
+            "at": "2026-11-27T20:06:15.139637+00:00",
+            "url": "https://outgeeked.net/products/lenovo-ip1-15amn7-82vg00wxus",
+            "final_url": "https://outgeeked.net/products/lenovo-ip1-15amn7-82vg00wxus",
+            "observed": "2026-11-27T20:06:15.132428+00:00",
+            "sha256": "831de8fb3a97b825696ae8fd4e67b29a5e5dddfe16d19de634de7a28ae5dd40d"
+          },
+          {
+            "at": "2026-11-27T20:06:20.875763+00:00",
+            "url": "https://outgeeked.net/products/lenovo-ideapad-5-2-in-1-16ahp9-83ds0056us",
+            "final_url": "https://outgeeked.net/products/lenovo-ideapad-5-2-in-1-16ahp9-83ds0056us",
+            "observed": "2026-11-27T20:06:20.875763+00:00",
+            "sha256": "38e7ae2286f50b53212225560c064364918e733c6cccff20085886554517fe7d"
+          }
+        ]
+      }
+    }
+  ]
+}
