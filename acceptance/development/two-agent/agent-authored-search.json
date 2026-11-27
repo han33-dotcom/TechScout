@@ -1,0 +1,613 @@
+{
+  "runtime_revision_for_confirmation": "823ced604b6fa55f955661be51af43d9e575a856",
+  "method": "Fresh normal buyer API and worker runs with the exact same two sentences as the baseline, an audio category, and unrestricted fulfillment mode. Each run began with its own copy of the same one-seller IT Promax catalog. The model received no separate normalized product name, target shop or evaluator link. The harness recorded the query at tool execution and checked it against the ordinary trace hash. Public product links omit tracking parameters. All six live attempts are included.",
+  "allowance": {
+    "seconds": 300,
+    "research_usd": "20",
+    "total_usd": "25"
+  },
+  "requests": {
+    "pair": "Which of two Lebanese shops has the lower listed price for a new Logitech H111 wired 3.5 mm stereo headset? Show both in-stock listings and their links. Compare item prices before delivery.",
+    "one": "Find one Lebanese shop with new black Soundcore Q20i headphones in stock. Give me the listed item price before delivery and the product link."
+  },
+  "previous_natural_requests": [
+    {
+      "case": "one",
+      "first_offered_search": "one Lebanese shop Lebanon retailer headphones black",
+      "exact_model_search_term": "one Lebanese shop",
+      "visible_offers": 0
+    },
+    {
+      "case": "pair",
+      "first_offered_search": "audio Lebanon retailer headphones wired",
+      "exact_model_search_term": null,
+      "visible_offers": 0
+    }
+  ],
+  "trials": [
+    {
+      "stage": "initial",
+      "case": "one",
+      "run": "f51dccf7-ad42-4313-b406-8424427eb6a9",
+      "started_at": "2026-11-27T12:20:16.896595+00:00",
+      "elapsed_seconds": 36.3,
+      "status": "partial",
+      "explanation_at_stop": "The shopping agent could not complete its decision. The listing could not be read.",
+      "stopped_by": [],
+      "failure": null,
+      "searches": [
+        {
+          "tool": "catalog",
+          "agent_query": "Soundcore Q20i black",
+          "tool_query": "Soundcore Q20i black",
+          "status": "leads",
+          "leads": 1
+        }
+      ],
+      "page_checks": [
+        {
+          "tool": "inspect",
+          "page": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "status": "read_failed"
+        }
+      ],
+      "action_counts": {
+        "catalog/leads": 1,
+        "inspect/read_failed": 1
+      },
+      "model_call_status_counts": {
+        "completed": 2,
+        "transport_error": 1
+      },
+      "partial_offers": [],
+      "full_recommendation_count": 0,
+      "spend": {
+        "attempts": {
+          "model": 3,
+          "retrieval": 1
+        },
+        "known_usd": "0.0071645",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0.5204800"
+      }
+    },
+    {
+      "stage": "initial",
+      "case": "pair",
+      "run": "4d38c987-efc8-4638-9fb0-e3baad348495",
+      "started_at": "2026-11-27T12:20:54.982423+00:00",
+      "elapsed_seconds": 51.4,
+      "status": "error",
+      "explanation_at_stop": "Shopping controller failed",
+      "stopped_by": [],
+      "failure": "ValueError",
+      "searches": [
+        {
+          "tool": "catalog",
+          "agent_query": "Logitech H111",
+          "tool_query": "Logitech H111",
+          "status": "leads",
+          "leads": 0
+        },
+        {
+          "tool": "web_search",
+          "agent_query": "Logitech H111 headset Lebanon in stock price",
+          "tool_query": "Logitech H111 headset Lebanon in stock price",
+          "status": "ok",
+          "leads": 8
+        }
+      ],
+      "page_checks": [
+        {
+          "tool": "inspect",
+          "page": "https://ayoubcomputers.com/logitech-h111-headset-microphone-h111/",
+          "status": "read_failed"
+        }
+      ],
+      "action_counts": {
+        "catalog/leads": 1,
+        "inspect/dispatched": 1,
+        "inspect/read_failed": 1,
+        "web_search/ok": 1
+      },
+      "model_call_status_counts": {
+        "completed": 4
+      },
+      "partial_offers": [],
+      "full_recommendation_count": 0,
+      "spend": {
+        "attempts": {
+          "model": 4,
+          "retrieval": 2,
+          "search": 1
+        },
+        "known_usd": "0.0176565",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0"
+      }
+    },
+    {
+      "stage": "after_fixes",
+      "case": "one",
+      "run": "9a4bad8e-7f26-4c72-940d-45eb6f1271e7",
+      "started_at": "2026-11-27T12:23:05.140506+00:00",
+      "elapsed_seconds": 51.0,
+      "status": "partial",
+      "explanation_at_stop": "These listings still have unresolved checks.",
+      "stopped_by": [],
+      "failure": null,
+      "searches": [
+        {
+          "tool": "catalog",
+          "agent_query": "Soundcore Q20i black",
+          "tool_query": "Soundcore Q20i black",
+          "status": "leads",
+          "leads": 1
+        }
+      ],
+      "page_checks": [
+        {
+          "tool": "inspect",
+          "page": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "status": "priced_partial"
+        },
+        {
+          "tool": "render",
+          "page": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "status": "priced_partial"
+        }
+      ],
+      "action_counts": {
+        "catalog/leads": 1,
+        "inspect/priced_partial": 1,
+        "present/dispatched": 1,
+        "render/priced_partial": 1
+      },
+      "model_call_status_counts": {
+        "completed": 6
+      },
+      "partial_offers": [
+        {
+          "seller": "IT Promax",
+          "market": "LB",
+          "model": "Soundcore Q20i ANC Headphones",
+          "color": "Black",
+          "listed_price": {
+            "amount": "48",
+            "currency": "USD"
+          },
+          "online_stock": true,
+          "condition": null,
+          "condition_state": "unknown",
+          "product_link": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones"
+        }
+      ],
+      "full_recommendation_count": 0,
+      "spend": {
+        "attempts": {
+          "model": 6,
+          "retrieval": 3,
+          "work": 1
+        },
+        "known_usd": "0.0235630",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0"
+      }
+    },
+    {
+      "stage": "after_fixes",
+      "case": "pair",
+      "run": "f6b6098f-877a-4797-b8b0-a9903ba2dccd",
+      "started_at": "2026-11-27T12:23:58.479146+00:00",
+      "elapsed_seconds": 213.9,
+      "status": "partial",
+      "explanation_at_stop": "The agent reached its search limit. The listing could not be read. The current capture could not confirm the selected item and its price.",
+      "stopped_by": [],
+      "failure": null,
+      "searches": [
+        {
+          "tool": "catalog",
+          "agent_query": "Logitech H111",
+          "tool_query": "Logitech H111",
+          "status": "leads",
+          "leads": 0
+        },
+        {
+          "tool": "web_search",
+          "agent_query": "Logitech H111 headset Lebanon in stock price",
+          "tool_query": "Logitech H111 headset Lebanon in stock price",
+          "status": "ok",
+          "leads": 8
+        }
+      ],
+      "page_checks": [
+        {
+          "tool": "inspect",
+          "page": "https://ayoubcomputers.com/logitech-h111-headset-microphone-h111/",
+          "status": "read_failed"
+        },
+        {
+          "tool": "inspect",
+          "page": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+          "status": "selection_unconfirmed"
+        },
+        {
+          "tool": "inspect",
+          "page": "https://961souq.com/products/logitech-h111-headset",
+          "status": "selection_unconfirmed"
+        },
+        {
+          "tool": "render",
+          "page": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+          "status": "read_failed"
+        },
+        {
+          "tool": "inspect",
+          "page": "https://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm",
+          "status": "read_failed"
+        },
+        {
+          "tool": "inspect",
+          "page": "https://www.dslr-zone.com/product/logitech-h111/",
+          "status": "read_failed"
+        },
+        {
+          "tool": "inspect",
+          "page": "https://electroslab.com/products/headset-logitech-stereo-h111",
+          "status": "read_failed"
+        },
+        {
+          "tool": "render",
+          "page": "https://961souq.com/products/logitech-h111-headset",
+          "status": "selection_unconfirmed"
+        },
+        {
+          "tool": "render",
+          "page": "https://ayoubcomputers.com/logitech-h111-headset-microphone-h111/",
+          "status": "read_failed"
+        },
+        {
+          "tool": "render",
+          "page": "https://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm",
+          "status": "read_failed"
+        },
+        {
+          "tool": "inspect",
+          "page": "https://www.carrefourlebanon.com/maflbn/en/gaming-headphone/logitech-h111-wired-headset-lgh111/p/524963",
+          "status": "read_failed"
+        },
+        {
+          "tool": "render",
+          "page": "https://electroslab.com/products/headset-logitech-stereo-h111",
+          "status": "read_failed"
+        },
+        {
+          "tool": "render",
+          "page": "https://www.dslr-zone.com/product/logitech-h111/",
+          "status": "read_failed"
+        },
+        {
+          "tool": "render",
+          "page": "https://www.carrefourlebanon.com/maflbn/en/gaming-headphone/logitech-h111-wired-headset-lgh111/p/524963",
+          "status": "read_failed"
+        }
+      ],
+      "action_counts": {
+        "catalog/leads": 1,
+        "inspect/read_failed": 5,
+        "inspect/selection_unconfirmed": 2,
+        "render/read_failed": 6,
+        "render/selection_unconfirmed": 1,
+        "web_search/ok": 1
+      },
+      "model_call_status_counts": {
+        "completed": 16,
+        "cancelled": 3
+      },
+      "partial_offers": [],
+      "full_recommendation_count": 0,
+      "spend": {
+        "attempts": {
+          "model": 19,
+          "retrieval": 15,
+          "search": 1,
+          "work": 1
+        },
+        "known_usd": "0.3162360",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "1.5614400"
+      }
+    },
+    {
+      "stage": "confirmation",
+      "case": "one",
+      "run": "15003302-1372-469f-8a39-c21346bfc072",
+      "started_at": "2026-11-27T12:28:04.574795+00:00",
+      "elapsed_seconds": 204.5,
+      "status": "partial",
+      "explanation_at_stop": "The agent reached its search limit. The listing could not be read. The requested variant is unverified at www.spinneyslebanon.com. The named merchant's Lebanese location could not be established.",
+      "stopped_by": [],
+      "failure": null,
+      "searches": [
+        {
+          "tool": "catalog",
+          "agent_query": "Soundcore Q20i black",
+          "tool_query": "Soundcore Q20i black",
+          "status": "leads",
+          "leads": 1
+        },
+        {
+          "tool": "web_search",
+          "agent_query": "Soundcore Q20i black new in stock Lebanon headphones",
+          "tool_query": "Soundcore Q20i black new in stock Lebanon headphones",
+          "status": "ok",
+          "leads": 8
+        }
+      ],
+      "page_checks": [
+        {
+          "tool": "inspect",
+          "page": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "status": "read_failed"
+        },
+        {
+          "tool": "render",
+          "page": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "status": "priced_partial"
+        },
+        {
+          "tool": "inspect",
+          "page": "https://ayoubcomputers.com/soundcore-by-anker-q20i-hybrid-active-noise-cancelling-headphones-black-a3004h11/",
+          "status": "read_failed"
+        },
+        {
+          "tool": "render",
+          "page": "https://ayoubcomputers.com/soundcore-by-anker-q20i-hybrid-active-noise-cancelling-headphones-black-a3004h11/",
+          "status": "read_failed"
+        },
+        {
+          "tool": "inspect",
+          "page": "https://outgeeked.net/products/anker-soundcore-q20i-black",
+          "status": "read_failed"
+        },
+        {
+          "tool": "render",
+          "page": "https://outgeeked.net/products/anker-soundcore-q20i-black",
+          "status": "read_failed"
+        },
+        {
+          "tool": "inspect",
+          "page": "https://www.spinneyslebanon.com/default/soundcore-q20i-anc-black-629707-v001.html",
+          "status": "read_failed"
+        },
+        {
+          "tool": "inspect",
+          "page": "https://www.dslr-zone.com/product/soundcore-q20i-hybrid-anc-headphones-black/",
+          "status": "read_failed"
+        },
+        {
+          "tool": "inspect",
+          "page": "https://martixstores.com/products/soundcore-sound-core-q20i-black",
+          "status": "read_failed"
+        },
+        {
+          "tool": "render",
+          "page": "https://www.dslr-zone.com/product/soundcore-q20i-hybrid-anc-headphones-black/",
+          "status": "read_failed"
+        },
+        {
+          "tool": "render",
+          "page": "https://martixstores.com/products/soundcore-sound-core-q20i-black",
+          "status": "no_match"
+        },
+        {
+          "tool": "follow",
+          "page": "https://martixstores.com/products/home.php",
+          "status": "read_failed"
+        },
+        {
+          "tool": "follow",
+          "page": "https://martixstores.com/products/stores/expert-mobile",
+          "status": "read_failed"
+        },
+        {
+          "tool": "render",
+          "page": "https://www.spinneyslebanon.com/default/soundcore-q20i-anc-black-629707-v001.html",
+          "status": "selection_unconfirmed"
+        }
+      ],
+      "action_counts": {
+        "catalog/leads": 1,
+        "follow/read_failed": 2,
+        "inspect/read_failed": 6,
+        "render/no_match": 1,
+        "render/priced_partial": 1,
+        "render/read_failed": 3,
+        "render/selection_unconfirmed": 1,
+        "web_search/ok": 1
+      },
+      "model_call_status_counts": {
+        "completed": 19
+      },
+      "partial_offers": [
+        {
+          "seller": "IT Promax",
+          "market": "LB",
+          "model": "Soundcore Q20i ANC Headphones",
+          "color": "Black",
+          "listed_price": {
+            "amount": "48",
+            "currency": "USD"
+          },
+          "online_stock": true,
+          "condition": null,
+          "condition_state": "unknown",
+          "product_link": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones"
+        }
+      ],
+      "full_recommendation_count": 0,
+      "spend": {
+        "attempts": {
+          "model": 19,
+          "retrieval": 15,
+          "search": 1,
+          "work": 3
+        },
+        "known_usd": "0.1361840",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0"
+      }
+    },
+    {
+      "stage": "confirmation",
+      "case": "pair",
+      "run": "50eb75d8-5611-4434-bf6a-14e2b2d68450",
+      "started_at": "2026-11-27T12:31:31.446928+00:00",
+      "elapsed_seconds": 181.5,
+      "status": "partial",
+      "explanation_at_stop": "The agent reached its search limit. The listing could not be read. www.lebanonstores.com lists Logitech H111 Stereo Headset – 3.5mm Audio Jack with Rotating Microphone for USD 12.00 (in stock). The named merchant's Lebanese location could not be established.",
+      "stopped_by": [],
+      "failure": null,
+      "searches": [
+        {
+          "tool": "catalog",
+          "agent_query": "Logitech H111",
+          "tool_query": "Logitech H111",
+          "status": "leads",
+          "leads": 0
+        },
+        {
+          "tool": "web_search",
+          "agent_query": "Logitech H111 3.5mm headset Lebanon price in stock",
+          "tool_query": "Logitech H111 3.5mm headset Lebanon price in stock",
+          "status": "ok",
+          "leads": 8
+        }
+      ],
+      "page_checks": [
+        {
+          "tool": "inspect",
+          "page": "https://ayoubcomputers.com/logitech-h111-headset-microphone-h111/",
+          "status": "read_failed"
+        },
+        {
+          "tool": "inspect",
+          "page": "https://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm",
+          "status": "read_failed"
+        },
+        {
+          "tool": "inspect",
+          "page": "https://www.dslr-zone.com/product/logitech-h111/",
+          "status": "read_failed"
+        },
+        {
+          "tool": "render",
+          "page": "https://ayoubcomputers.com/logitech-h111-headset-microphone-h111/",
+          "status": "read_failed"
+        },
+        {
+          "tool": "inspect",
+          "page": "https://www.lebanonstores.com/shop-1/logitech-h111-stereo-headset-35mm-audio-jack-with-rotating-microphone",
+          "status": "read_failed"
+        },
+        {
+          "tool": "render",
+          "page": "https://www.dslr-zone.com/product/logitech-h111/",
+          "status": "read_failed"
+        },
+        {
+          "tool": "inspect",
+          "page": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+          "status": "read_failed"
+        },
+        {
+          "tool": "render",
+          "page": "https://www.lebanonstores.com/shop-1/logitech-h111-stereo-headset-35mm-audio-jack-with-rotating-microphone",
+          "status": "no_match"
+        },
+        {
+          "tool": "render",
+          "page": "https://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm",
+          "status": "read_failed"
+        },
+        {
+          "tool": "inspect",
+          "page": "https://www.zaytounsolutions.com/store/products/As1GdhuNzKhxH5vwAF57",
+          "status": "read_failed"
+        },
+        {
+          "tool": "render",
+          "page": "https://www.zaytounsolutions.com/store/products/As1GdhuNzKhxH5vwAF57",
+          "status": "priced_partial"
+        },
+        {
+          "tool": "render",
+          "page": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+          "status": "read_failed"
+        },
+        {
+          "tool": "follow",
+          "page": "https://www.lebanonstores.com/",
+          "status": "read_failed"
+        },
+        {
+          "tool": "render",
+          "page": "https://www.lebanonstores.com/",
+          "status": "read_failed"
+        }
+      ],
+      "action_counts": {
+        "catalog/leads": 1,
+        "follow/read_failed": 1,
+        "inspect/read_failed": 6,
+        "render/no_match": 1,
+        "render/priced_partial": 1,
+        "render/read_failed": 5,
+        "web_search/ok": 1
+      },
+      "model_call_status_counts": {
+        "completed": 18
+      },
+      "partial_offers": [
+        {
+          "seller": "Zaytoun Solutions",
+          "market": "LB",
+          "model": "Logitech H111 Wired Headset With Stereo Sound, Noise-Reducing Rotating Microphone, Adjustable Lightweight Headband, 3.5mm Audio Jack, Multi-Device",
+          "color": null,
+          "listed_price": {
+            "amount": "10.70",
+            "currency": "USD"
+          },
+          "online_stock": true,
+          "condition": "new",
+          "condition_state": "known",
+          "product_link": "https://www.zaytounsolutions.com/store/products/As1GdhuNzKhxH5vwAF57"
+        }
+      ],
+      "full_recommendation_count": 0,
+      "spend": {
+        "attempts": {
+          "model": 18,
+          "retrieval": 14,
+          "search": 1,
+          "work": 2
+        },
+        "known_usd": "0.1125405",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0"
+      }
+    }
+  ]
+}
