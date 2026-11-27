@@ -189,7 +189,7 @@ class Maintenance:
             slot = schedule['jobs'][kind]
             if slot['active']['owner'] != active['owner']:
                 raise BudgetDenied('Lost maintenance lease')
-            attempts = [a for a in state['attempts'].values() if a['job'] == job.run_id and a['status'] != 'released']
+            attempts = [a for a in state['attempts'].for_job(job.run_id) if a['status'] != 'released']
             report.update(job_id=job.run_id, started_at=started.isoformat(),
                           finished_at=datetime.fromtimestamp(now, timezone.utc).isoformat(), calls=len(attempts),
                           spend_usd=str(sum((Decimal(a['values'][3]) for a in attempts if a['status']=='completed'), Decimal(0))),

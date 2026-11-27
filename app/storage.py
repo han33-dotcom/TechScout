@@ -18,7 +18,7 @@ import uuid
 from pgvector.sqlalchemy import VECTOR
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import (
-    JSON, Boolean, CheckConstraint, Column, Date, DateTime, ForeignKey, Index, Integer, MetaData, Numeric,
+    JSON, Boolean, CheckConstraint, Column, Date, DateTime, Float, ForeignKey, Index, Integer, MetaData, Numeric,
     String, Table, Text, TypeDecorator, URL, UniqueConstraint, create_engine, delete, func,
     event, insert, literal_column, select, update,
 )
@@ -425,6 +425,18 @@ accounting_state = Table(
     'accounting_state', metadata,
     Column('id', Integer, primary_key=True),
     Column('payload', JSON, nullable=False),
+)
+
+accounting_entries = Table(
+    'accounting_entries', metadata,
+    Column('section', Text, primary_key=True),
+    Column('key', Text, primary_key=True),
+    Column('payload', JSON, nullable=False),
+    Column('job_id', Text), Column('status', Text), Column('source', Text),
+    Column('created', Float), Column('expires', Float),
+    Index('ix_accounting_entries_job', 'job_id'),
+    Index('ix_accounting_entries_status_expires', 'status', 'expires'),
+    Index('ix_accounting_entries_source_created', 'source', 'created'),
 )
 
 # Automatic retailer onboarding (app.onboarding, issue #99). The guard row serializes
