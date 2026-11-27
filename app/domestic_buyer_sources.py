@@ -333,12 +333,14 @@ class DomesticBuyerSources:
             ranked.append((sum(hit.score for hit in hits), _offer(item, item.observations, request.fulfillment.destination)))
         return tuple(o for _, o in sorted(ranked, key=lambda entry: -entry[0])), semantic_hits
 
-    def lookup(self, request, *, limit=20):
+    def lookup(self, request, *, limit=20, query=None):
         intent = request.intent
-        text = ' '.join(intent.model.split()[:20])[:300] if isinstance(intent, v2.ModelIntent) else None
+        text = query
+        if text is None and isinstance(intent, v2.ModelIntent):
+            text = ' '.join(intent.model.split()[:20])[:300]
         items = self.catalog.lookup(category=request.requirements.category,
             text=text,
-            listing_url=str(intent.url) if isinstance(intent, v2.LinkIntent) else None, limit=limit)
+            listing_url=str(intent.url) if query is None and isinstance(intent, v2.LinkIntent) else None, limit=limit)
         return tuple(_offer(item, item.observations, request.fulfillment.destination)
                      for item in items if item.manufacturer and item.model)
 
@@ -358,10 +360,10 @@ class DomesticBuyerSources:
                   and any(origin.host == host for origin in (r.entry.origin, *r.entry.related_origins))]
         return source_id, owners[0] if len(owners) == 1 else None
 
-    def search_listings(self, request, job, *, room):
+    def search_listings(self, request, job, *, room, query=None):
         """Search category-capable shops. Search results supply URLs only."""
         category = request.requirements.category
-        term = retailer_query(request)
+        term = retailer_query(request) if query is None else query
         if not term:
             return
         bounded = _ReadJob(job, room)

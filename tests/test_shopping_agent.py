@@ -1,7 +1,10 @@
 """Separate development inputs. No scored requests or evaluation evidence are loaded."""
 from contextlib import contextmanager
 import json
+from unittest.mock import Mock, patch
 
+import httpx2
+from app import contracts_v2 as v2
 from app.domestic_buyer_sources import ReadResult
 from app.domestic_discovery import Attribution, ChannelAttempt, SearchLead, SearchReport
 from test_buyer_flow import FakeOpenRouter, FlowCase
@@ -40,12 +43,69 @@ class Decisions(FakeOpenRouter):
     def answer(self, role, data):
         prefix = next(self.sequence)
         index = next(i for i, label in enumerate(data['available']) if label.startswith(prefix))
+        intent = data['request']['intent']
         return dict(action_index=index, offer_ids=[v['offer_id'] for v in data['verified']],
+                    query=intent.get('model', 'headphones') if prefix.startswith(('Search', 'Look up')) else None,
                     question='Which configuration do you need?' if prefix == 'Ask' else None,
                     material_reason='Memory changes the available models.' if prefix == 'Ask' else None)
 
 
 class ShoppingAgentTests(FlowCase):
+    def test_connection_failure_retries_the_decision_without_repeating_a_tool(self):
+        self.openrouter = Decisions(['Look up', 'Present'])
+        attempts = iter([False, True, False])
+        def fail_second_call(_role):
+            if next(attempts):
+                raise httpx2.ConnectError('connection dropped before response')
+        self.openrouter.gate = fail_second_call
+        deps = development_tools(self.deps(), 'TestBrand H14')
+        deps.domestic_sources.lookup = Mock(return_value=())
+        _, run = self.browse(deps, implementation='single_agent', requirements=dict(category='audio'),
+                             intent=dict(kind='exact_model', model='TestBrand H14'))
+        deps.domestic_sources.lookup.assert_called_once()
+        trace = self.trace(run)
+        self.assertEqual([c['status'] for c in trace['model_calls']], ['completed', 'transport_error', 'completed'])
+        self.assertEqual([a['tool'] for a in trace['actions']], ['catalog', 'present'])
+
+    def test_original_request_drives_catalog_and_reformulated_searches(self):
+        wording = ('Which of two Lebanese shops has the lower price for a new wired TestBrand H14? '
+                   'Show both listings before delivery.')
+        choices = [('Look up', 'TestBrand H14'), ('Search serpapi', 'buyer@example.org'),
+                   ('Search serpapi', 'TestBrand H14 Beirut'), ('Search serpapi', 'سماعة H14 لبنان'),
+                   ('Search reviewed retailer', 'H14'), ('Present', None)]
+
+        class AgentQueries(Decisions):
+            def answer(self, role, data):
+                prefix, query = next(self.sequence)
+                i = next(i for i, label in enumerate(data['available']) if label.startswith(prefix))
+                return dict(action_index=i, query=query, language='ar' if query and 'لبنان' in query else 'en')
+
+        self.openrouter = AgentQueries(choices)
+        deps = development_tools(self.deps(), 'TestBrand H14')
+        catalog = deps.domestic_sources.lookup = Mock(return_value=())
+        retailer = deps.domestic_sources.search_listings = Mock(return_value=())
+        search = deps.research.workers.domestic_tools
+        search.search = Mock(side_effect=lambda objective, job, **_: SearchReport(job.run_id, (), ()))
+        with patch('app.buyer_api.interpret', side_effect=AssertionError('legacy interpretation')):
+            response = self.client.post('/api/runs', headers=self.headers, json=dict(
+                request_id='agent-authored-search', implementation='single_agent', buyer_text=wording,
+                intent=dict(kind='exact_model', model=wording), requirements=dict(category='audio'),
+                budget=dict(maximum=dict(amount='50', currency='USD'))))
+        self.assertEqual(response.status_code, 202, response.text)
+        snapshot = v2.RunSnapshot.model_validate(response.json())
+        self.work(deps)
+        _, finished = self.read(snapshot)
+        self.assertEqual(finished.request.intent.wording, wording)
+        self.assertEqual(str(finished.request.budget.maximum.amount), '50')
+        self.assertEqual(catalog.call_args.kwargs['query'], 'TestBrand H14')
+        self.assertEqual(retailer.call_args.kwargs['query'], 'H14')
+        self.assertEqual([(call.args[0].query, call.args[0].language) for call in search.search.call_args_list],
+                         [('TestBrand H14 Beirut', 'en'), ('سماعة H14 لبنان', 'ar')])
+        decisions = [json.loads(call['body']['messages'][1]['content']) for call in self.openrouter.requests]
+        self.assertTrue(all(d['request']['intent']['wording'] == wording for d in decisions))
+        self.assertEqual(decisions[2]['observations'][-1]['status'], 'invalid_query')
+        self.assertNotIn('buyer@example.org', json.dumps(self.trace(finished)))
+
     def agent(self, model, ram, sequence):
         self.openrouter = Decisions(sequence)
         deps = development_tools(self.deps(), model)
@@ -74,7 +134,7 @@ class ShoppingAgentTests(FlowCase):
 
     def test_unreviewed_title_informs_scoped_search_without_becoming_an_inspection(self):
         model = 'Rowan Slate W8 Plus'
-        self.openrouter = Decisions(['Search serpapi', 'Search workbench.example for exact', 'Present'])
+        self.openrouter = Decisions(['Search serpapi', 'Search workbench.example', 'Present'])
         deps = development_tools(self.deps(), model)
         search = deps.research.workers.domestic_tools
         queries = []
@@ -89,7 +149,7 @@ class ShoppingAgentTests(FlowCase):
         search.search = results
         self.browse(deps, implementation='single_agent', requirements=dict(category='laptop'),
                     intent=dict(kind='exact_model', model=model))
-        self.assertEqual(queries[1], 'site:workbench.example "Rowan Slate W8 Plus"')
+        self.assertEqual(queries[1], 'site:workbench.example Rowan Slate W8 Plus')
         decision = json.loads(self.openrouter.requests[1]['body']['messages'][1]['content'])
         self.assertEqual(decision['observations'][0]['unreviewed_search_titles'],
                          [dict(host='other.example', title='W8 Plus listed')])

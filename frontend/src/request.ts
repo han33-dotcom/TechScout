@@ -26,9 +26,10 @@ export function toRequest(draft: Draft, base?: EditableRequest): ShoppingRequest
   if (/^https?:\/\//i.test(text)) {
     const url = new URL(text);
     if (url.protocol !== 'https:' || url.username || url.password) throw new Error('Use a public HTTPS product link.');
-    intent = { kind: 'product_link', url: url.href };
+    intent = base?.intent.kind === 'product_link' && base.intent.url === url.href
+      ? base.intent : { kind: 'product_link', url: url.href };
   } else if (draft.kind === 'exact_model') {
-    const selection = /^(.+?)\s+in\s+(black|white|red|blue|green|yellow|purple|pink|silver|gold|gray|grey)$/i.exec(text);
+    const selection = draft.implementation === 'single_agent' ? null : /^(.+?)\s+in\s+(black|white|red|blue|green|yellow|purple|pink|silver|gold|gray|grey)$/i.exec(text);
     const model = selection ? selection[1].trim() : text;
     if (selection && (!base || fromRequest(base).text !== text)) colors = [selection[2].toLowerCase()];
     if (base?.intent.kind === 'exact_model' && base.intent.wording === text) intent = base.intent;

@@ -79,7 +79,7 @@ class Sources:
         self.calls = []
         self.stale = set()
 
-    def lookup(self, request, *, limit):
+    def lookup(self, request, *, limit, query=None):
         return self.earlier[:limit]
 
     def read(self, request, url, job, run, *, earlier, room):

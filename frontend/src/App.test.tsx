@@ -28,6 +28,13 @@ describe('request boundaries',()=>{
   expect(toRequest({...initialDraft,text:'https://retailer.example/device'}).intent.kind).toBe('product_link');
   expect(()=>toRequest({...initialDraft,text:'http://retailer.example/device'})).toThrow();
  });
+ it('passes a single-agent request through without inferring a color or shortening the model',()=>{
+  const text = 'Find a matte monitor with a stand available in black';
+  const request = toRequest({...initialDraft, implementation:'single_agent', kind:'exact_model', category:'monitor', text});
+  expect(request.buyer_text).toBe(text);
+  expect(request.intent).toMatchObject({kind:'exact_model', model:text});
+  expect(request.allowed_colors).toEqual([]);
+ });
  it('refines a saved international comparison as a domestic request',()=>{
   const saved = (fixture.current as unknown as RunSnapshot).request;
   expect(saved.market_scope?.include_international).toBe(true);

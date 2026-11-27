@@ -65,7 +65,9 @@ class Match(Model):
 
 MATCH_PROMPT = """Check the currently selected item against the buyer's original wording, category,
 constraints and feedback. Decide whether the item itself fits, using its actual attributes and
-identifiers. A longer retail title can identify the requested model. Do not assume a feature or
+identifiers. Read price ceilings, condition, exclusions and required options from the original
+wording as well as the form controls. Reject an observed violation of a hard requirement.
+A longer retail title can identify the requested model. Do not assume a feature or
 accept an unselected sibling. Unverified delivery and fees belong to the separate fulfillment check.
 An unpublished condition can be shown as an explicit gap on an otherwise matching priced partial.
 For merchant_address_line give the zero-based index of a line establishing this named merchant's own physical
@@ -99,7 +101,8 @@ fits, you may use visible text: give zero-based lines for title, current item pr
 merchant address in Lebanon, color, condition and stock when available. Copy merchant and brand.
 Keep the item's price, currency, stock and selected options together. Do not mix related products,
 shipping fees or sibling variants. For a buyer objective, also give match for the item you
-identify, based on the original wording and constraints. Unavailable stock and unknown delivery
+identify, based on the original wording and constraints including price ceilings, condition and
+excluded variants. Unavailable stock and unknown delivery
 are separate from item identity. Cite the merchant's own physical address via address_line
 if visible. For a catalog objective omit match. If unresolved, omit the indexes and give a short sentence
 naming the available options or missing evidence. Keep the explanation to the item facts."""
