@@ -23,8 +23,9 @@ import threading
 import time
 from typing import Literal
 
-from pydantic import Field, StrictBool, ValidationError, model_validator
+from pydantic import Field, StrictBool, ValidationError, ValidationInfo, model_validator
 
+from app.accounting import DEFAULT_BUYER_LIMITS
 from app.contracts import Model
 from app.openrouter import ENDPOINTS, InputTokenLimit, OpenRouterConfig, OpenRouterProvider, ProviderUnavailable, Route, _bound
 from app.writer import PROMPTS as WRITER_PROMPTS, WRITER_MAX_INPUT_TOKENS, WRITER_PROMPT_VERSION
@@ -34,10 +35,9 @@ DEFAULT_PATH = ROOT / 'var' / 'inference.json'
 PATH_VARIABLE = 'TECHSCOUT_INFERENCE_CONFIG'
 KEY_VARIABLE = 'OPENROUTER_API_KEY'
 ROLE_PROMPT_VERSION = 'roles-v1'
-# app.accounting keeps the last USD 0.25 of a buyer run's USD 1 for the final phase
-# (verification and writer); everything before it shares USD 0.75.
-FINAL_RESERVE_USD = Decimal('0.25')
-RESEARCH_SPEND_USD = Decimal('0.75')
+# The default buyer profile also supplies the allowances displayed by the baseline live check.
+RESEARCH_SPEND_USD = DEFAULT_BUYER_LIMITS.research_spend_usd
+FINAL_RESERVE_USD = DEFAULT_BUYER_LIMITS.spend_usd - RESEARCH_SPEND_USD
 Role = Literal['roles', 'writer']
 
 
@@ -68,16 +68,18 @@ class InferenceConfig(Model):
     writer: RoleLimits = RoleLimits(max_input_tokens=WRITER_MAX_INPUT_TOKENS, max_output_tokens=4096)
 
     @model_validator(mode='after')
-    def _fits_the_buyer_ledger(self):
+    def _fits_the_buyer_ledger(self, info: ValidationInfo):
         # The adapter's own rules (positive verified rates, an explicit model, no router or
         # variant IDs) apply now, when the file is loaded, not at the first paid call.
         self.provider_config('roles'), self.provider_config('writer')
         roles, writer = self.reservation('roles'), self.reservation('writer')
-        if roles > RESEARCH_SPEND_USD:
-            raise ValueError(f'One role call would reserve USD {roles}, above the USD {RESEARCH_SPEND_USD} '
+        limits = (info.context or {}).get('buyer_limits', DEFAULT_BUYER_LIMITS)
+        final_reserve = limits.spend_usd - limits.research_spend_usd
+        if roles > limits.research_spend_usd:
+            raise ValueError(f'One role call would reserve USD {roles}, above the USD {limits.research_spend_usd} '
                              'research allowance of a buyer run')
-        if writer > FINAL_RESERVE_USD:
-            raise ValueError(f'One writer call would reserve USD {writer}, above the USD {FINAL_RESERVE_USD} '
+        if writer > final_reserve:
+            raise ValueError(f'One writer call would reserve USD {writer}, above the USD {final_reserve} '
                              'final-phase reserve; lower writer.max_input_tokens or max_output_tokens')
         return self
 

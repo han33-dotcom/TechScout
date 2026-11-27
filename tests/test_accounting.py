@@ -75,6 +75,31 @@ class AccountingTests(unittest.TestCase):
         with self.assertRaises(BudgetDenied):
             same.reserve('model', Charge(D(0)), 30)
 
+    def test_experimental_buyer_continues_after_uncertain_reservation_and_keeps_phase_caps(self):
+        from app.shopping_agent import buyer_settings
+        limits = buyer_settings().buyer_limits
+        self.assertEqual((limits.research_spend_usd, limits.spend_usd), (D('20'), D('25')))
+        legacy = self.ledger.open_job('legacy')
+        self.assertEqual(self.ledger.open_job('legacy', buyer_limits=limits).buyer_limits, legacy.buyer_limits)
+        job = self.ledger.open_job('experimental', buyer_limits=limits)
+        call = Charge(D('0.52048'))
+        timed_out = job.reserve('model', call, 12)
+        timed_out.dispatch()
+        timed_out.uncertain()
+        resumed = self.ledger.open_job('experimental')
+        self.assertEqual(resumed.buyer_limits, limits)
+        next_call = resumed.reserve('model', call, 12)
+        next_call.dispatch()
+        next_call.complete(D('.01'), 1)
+        remaining = limits.research_spend_usd - call.total - D('.01')
+        with self.assertRaisesRegex(BudgetDenied, 'spend'):
+            resumed.reserve('model', Charge(remaining + D('.01')), 2)
+        resumed.reserve('model', Charge(remaining), 2)
+        resumed.enter_final_phase()
+        resumed.reserve('model', Charge(limits.spend_usd - limits.research_spend_usd), 2)
+        with self.assertRaisesRegex(BudgetDenied, 'spend'):
+            resumed.reserve('model', Charge(D('.01')), 2)
+
     def test_all_attempt_kinds_and_retries_charge_once(self):
         job = self.ledger.open_job('bootstrap', 'bootstrap')
         for kind in ('model', 'search', 'embedding', 'model'):

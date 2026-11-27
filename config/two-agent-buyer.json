@@ -1,3 +1,4 @@
 {
-  "max_input_tokens": 200000
+  "max_input_tokens": 200000,
+  "buyer_limits": {"research_spend_usd": "20", "spend_usd": "25"}
 }

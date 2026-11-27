@@ -24,6 +24,7 @@ from app.domestic_catalog import CATEGORIES, DomesticCatalog
 from app.domestic_discovery import DISCOVERY_ENV, DomesticDiscovery
 from app.embeddings import EmbeddingRoute, RATE_VARIABLE
 from app.inference import InferenceUnavailable, build_inference, load_env_file, load_inference_config
+from app.openrouter import InputTokenLimit
 from app.maintenance_discovery import discover
 from app.onboarding import ActivationRegistry, OnboardingQueue
 from app.refresh import refresh
@@ -47,11 +48,20 @@ class Schedule(Model):
 
 
 class Settings(Model):
+    inspection_input_tokens: InputTokenLimit | None = None
     daily_at_beirut: str | None = Field(default=None, pattern=r'^(?:[01]\d|2[0-3]):[0-5]\d$')
     discovery: Schedule
     catalog: Schedule
     offers: Schedule
     manufacturer_pages: tuple[DirectoryPage, ...] = Field(max_length=10)
+
+
+def maintenance_roles(settings):
+    config = load_inference_config()
+    if settings.inspection_input_tokens and settings.inspection_input_tokens > config.roles.max_input_tokens:
+        roles = config.roles.model_copy(update={'max_input_tokens': settings.inspection_input_tokens})
+        config = config.model_copy(update={'roles': roles})
+    return build_inference(config).roles
 
 
 def daily_window(now, at, served):
@@ -268,7 +278,7 @@ def main(argv=None):
             env = dict(os.environ)
             env.setdefault('TECHSCOUT_MANUFACTURER_DIRECTORIES', json.dumps(settings.model_dump(mode='json')['manufacturer_pages']))
             try:
-                roles = build_inference(load_inference_config()).roles
+                roles = maintenance_roles(settings)
             except InferenceUnavailable:
                 roles = None
             runner = Maintenance(ledger, Corpus(storage), gate, manifest, settings, roles=roles,

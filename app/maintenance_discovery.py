@@ -11,7 +11,6 @@ from app.agent_inspection import read_catalog_listing
 from app.domestic_discovery import CHANNELS, Channel, SearchObjective
 from app.model_provider import JobBudget
 from app.onboarding import canonical
-from app.selected_listing import ListingDocument
 
 
 class SearchDecision(Model):
@@ -69,14 +68,17 @@ def discover(job, *, category, cursor, coverage, discovery, queue, roles, steps,
                 page = read_catalog_listing(inspect_listing, job, url, roles=roles, trace=decisions,
                     objective=dict(category=category, color=decision.color, needed=decision.objective or 'Identify seller, SKU, price and stock'))
                 obs = page.outcome
-                selected = ListingDocument(obs.body.decode('utf-8')).selected(
-                    obs.final_url, obs.observed_at, rendered=page.provider == 'playwright')
+                selected = page.selection
+                if selected is None:
+                    reason = page.reason or 'The requested variant could not be verified.'
+                    break
                 if decision.color and selected.color.casefold() != decision.color.casefold():
                     raise ValueError('The inspected item differs from the requested color.')
                 inspections.append(dict(url=obs.final_url, requested_url=url, source_id=obs.source_id,
                     reader=page.provider, observed_at=obs.observed_at.isoformat(),
-                    sha256=obs.response_sha256, sku=selected.sku, color=selected.color, seller=selected.seller,
-                    options=dict(selected.options), price=selected.money.model_dump(mode='json'), stock=selected.availability))
+                    sha256=obs.response_sha256, sku=selected.sku, color=selected.color, seller=selected.seller or None,
+                    options=dict(selected.options), offer_url=selected.published_link,
+                    price=selected.money.model_dump(mode='json'), stock=selected.availability))
                 reason = 'public listing inspected'
             except (ValueError, OSError, BudgetDenied, httpx2.HTTPError) as exc:
                 reason = 'listing inspection incomplete: ' + type(exc).__name__
