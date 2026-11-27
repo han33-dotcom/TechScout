@@ -559,6 +559,34 @@ class OpenRouterTests(unittest.TestCase):
         self.assertEqual(len(self.attempts()), 1)  # only the test's own hold
         held.release()
 
+    def test_shopping_agent_measures_and_dispatches_up_to_its_own_input_limit(self):
+        from app.inference import sanitize_usage
+        from app.openrouter import FRAMING_BYTES
+        from app.shopping_agent import pinned_inference
+        from eval.deployment import pinned_inference as baseline
+
+        with patch.dict('os.environ', {'OPENROUTER_API_KEY': KEY}):
+            settings = pinned_inference().roles.settings
+        self.assertEqual(settings.max_input_tokens, 200_000)
+        self.assertEqual(baseline(api_key=KEY).roles.settings.max_input_tokens, 16_384)
+        provider = self.provider(settings=settings)
+        instructions = 'Compare public offers.'
+        data = {'observations': 'لبنان'}
+        payload = provider._payload(settings.routes[0], instructions, data, Answer)
+        remaining = settings.max_input_tokens - FRAMING_BYTES - len(json.dumps(payload, ensure_ascii=False).encode())
+        data['observations'] += 'x' * remaining
+        result = provider.generate(instructions, data, Answer, budget=self.budget)
+        self.assertEqual(result.status, 'completed')
+        attempt, = sanitize_usage(result.usage)['attempts']
+        self.assertEqual(attempt['payload_bytes'], settings.max_input_tokens - FRAMING_BYTES)
+        self.assertEqual(Decimal(attempt['reserved_usd']), Decimal('0.52048'))
+
+        data['observations'] += 'x'
+        refused = provider.generate(instructions, data, Answer, budget=self.budget)
+        attempt, = sanitize_usage(refused.usage)['attempts']
+        self.assertEqual((refused.status, attempt['payload_bytes'], len(self.sent)),
+                         ('input_too_large', settings.max_input_tokens - FRAMING_BYTES + 1, 1))
+
     def test_unknown_billed_attempts_keep_the_full_reservation(self):
         def changed(**usage):
             r = reply()

@@ -81,4 +81,14 @@ Three fresh buyer sessions found the catalog entry on their first action and ind
 
 Offline tests cover price changes, batch replay, interrupted work and daily scheduling across a Beirut daylight-saving transition. The development schedule defaults to 04:00 Asia/Beirut and remains opt-in. The live exercise ran the offer job manually. [Schedule and commands](catalog-refresh.md)
 
-**Next checkpoint.** Each buyer run also found eight web leads, then the next decision failed the model input-size check before dispatch. The priced catalog offer survived. Start checkpoint 4 by reproducing that failure, then demonstrate a previously unknown second seller and a delivered-total comparison. The original buyer thresholds remain unmeasured on this branch.
+Each buyer run also found eight web leads, then the next decision failed the model input-size check before dispatch. The priced catalog offer survived.
+
+## Checkpoint 4 progress
+
+The buyer now uses the 200,000 input allowance in [the experiment settings](../config/two-agent-buyer.json). The shared provider guard counts serialized UTF-8 bytes plus a 4,096-byte framing allowance. The new setting admits a 195,904-byte payload and reserves up to USD 0.52048 per role call. Each attempted model call with a constructed payload records its size. Baseline evaluation and catalog role settings keep their original values.
+
+Three fresh sessions repeated the checkpoint 3 request. Each found eight web leads, dispatched the next decision, selected an independent seller and retained the black IT Promax Q20i at USD 48 in online stock. The decision used 13,334 bytes, 1,046 bytes above the previous ceiling. OpenRouter reported 3,189–3,195 input tokens. The action menu accounted for 5,168 bytes, earlier observations for 2,974. These figures are for the measured repeats.
+
+The second offer remains unverified. In the last run Firecrawl returned HTTP 200 for OutGeeked and DSLR Zone. Both final URLs differed from the requested URL only in the removal of Google's search attribution parameter (`srsltid`). The listing reader rejected those responses on its exact-URL check. Three other attempts in that run had less than the reader's required 20 seconds left in the current phase and ended before dispatch. A separate ordinary Firecrawl read of DSLR Zone's returned URL passed the same check, captured 542,278 bytes of HTML and did not establish a priced selection in the direct structured extraction. The buyer was never given that URL. The three buyer runs ended with one priced partial. The run-end spending records distinguish settled charges from outstanding model reservations. [Live decisions, reads and spending](../acceptance/development/two-agent/buyer-input-200k.json)
+
+The next development check is to handle that tracking-only URL difference while preserving seller, path and variant parameters, then rerun the buyer through a second accepted listing and compare delivered totals. The original buyer thresholds remain unmeasured on this branch.

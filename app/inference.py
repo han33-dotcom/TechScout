@@ -26,7 +26,7 @@ from typing import Literal
 from pydantic import Field, StrictBool, ValidationError, model_validator
 
 from app.contracts import Model
-from app.openrouter import ENDPOINTS, OpenRouterConfig, OpenRouterProvider, ProviderUnavailable, Route, _bound
+from app.openrouter import ENDPOINTS, InputTokenLimit, OpenRouterConfig, OpenRouterProvider, ProviderUnavailable, Route, _bound
 from app.writer import PROMPTS as WRITER_PROMPTS, WRITER_MAX_INPUT_TOKENS, WRITER_PROMPT_VERSION
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -47,7 +47,7 @@ class InferenceUnavailable(ValueError):
 
 class RoleLimits(Model):
     """Token allowances and the per-call wait for one group of roles."""
-    max_input_tokens: int = Field(strict=True, ge=8192, le=100000)
+    max_input_tokens: InputTokenLimit
     max_output_tokens: int = Field(strict=True, ge=16, le=16000)
     timeout_seconds: float = Field(default=30, gt=0, le=30)
 
@@ -221,7 +221,7 @@ _USAGE_KEYS = ('provider', 'purpose', 'route_fingerprint', 'endpoint', 'prompt_v
                'response_id', 'system_fingerprint', 'tokens', 'reserved_usd', 'actual_usd', 'billing',
                'latency_ms', 'fallback', 'metadata_unavailable', 'deviations', 'routing')
 _ATTEMPT_KEYS = ('index', 'status', 'billing', 'dispatched', 'reserved_usd', 'actual_usd', 'rate_estimate_usd',
-                 'latency_ms', 'error_code', 'tokens', 'serving_provider', 'actual_model')
+                 'latency_ms', 'error_code', 'tokens', 'serving_provider', 'actual_model', 'payload_bytes')
 
 
 def _plain(value, depth=0):
