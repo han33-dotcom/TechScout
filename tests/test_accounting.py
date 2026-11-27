@@ -100,6 +100,25 @@ class AccountingTests(unittest.TestCase):
         with self.assertRaisesRegex(BudgetDenied, 'spend'):
             resumed.reserve('model', Charge(D('.01')), 2)
 
+    def test_five_minute_experiment_admits_late_research_and_reserves_final_time(self):
+        from app.shopping_agent import buyer_settings
+        limits = buyer_settings().buyer_limits
+        self.assertEqual(limits.seconds, 300)
+        legacy = self.ledger.open_job('legacy')
+        job = self.ledger.open_job('five-minutes', buyer_limits=limits)
+        self.now += timedelta(seconds=150)
+        with self.assertRaisesRegex(BudgetDenied, 'deadline'):
+            legacy.reserve('model', Charge(D('.1')), 10)
+        job.reserve('model', Charge(D('.1')), 10).release()
+        self.now += timedelta(seconds=115)
+        job = self.ledger.open_job('five-minutes')
+        with self.assertRaisesRegex(BudgetDenied, 'deadline'):
+            job.reserve('model', Charge(D('.1')), 6)
+        job.enter_final_phase()
+        job.reserve('model', Charge(D('.1')), 35).release()
+        with self.assertRaisesRegex(BudgetDenied, 'deadline'):
+            job.reserve('model', Charge(D('.1')), 36)
+
     def test_all_attempt_kinds_and_retries_charge_once(self):
         job = self.ledger.open_job('bootstrap', 'bootstrap')
         for kind in ('model', 'search', 'embedding', 'model'):

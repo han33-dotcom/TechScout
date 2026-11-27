@@ -11,7 +11,7 @@ import httpx2
 from pydantic import Field
 
 from app import contracts_v2 as v2
-from app.accounting import BudgetDenied, BuyerSpendLimits
+from app.accounting import BudgetDenied, BuyerLimits
 from app.agent_inspection import INSPECTION_POLICY, recoverable_read_error
 from app.assessment import shortlist
 from app.buyer_flow import MAX_UNCERTAIN
@@ -32,7 +32,7 @@ BUYER_SETTINGS = ROOT / 'config/two-agent-buyer.json'
 
 class BuyerSettings(Model):
     max_input_tokens: InputTokenLimit
-    buyer_limits: BuyerSpendLimits
+    buyer_limits: BuyerLimits
 
 
 def buyer_settings():
@@ -76,7 +76,11 @@ after misses. The shared local catalog contains listings collected by the catalo
 For a named model, check it early and inspect a promising matching variant. When the buyer
 asks to compare shops and you have one seller's matching item price, use web search for
 a second seller while the search tools are available. Return to the finalists for unresolved
-delivery fees or stock. Use SerpApi for general search.
+stock or costs that the buyer asked to compare. When asked specifically for listed prices
+before delivery, check the exact item, condition, seller, stock, listed price and link.
+Finish a one-shop request when it is supported. For a comparison look for independent
+sellers of the same variant. Delivery fees are outside a listed-price comparison.
+Use SerpApi for general search.
 For web searches use the
 offered query or reformulate by selecting and ordering words from public_search_terms in
 search_terms. Use an empty list for the offered query. Inspect relevant public listings including first-seen shops. For a buyer-supplied link open it first.
@@ -110,7 +114,7 @@ class ShoppingAgent(DomesticBuyerFlow):
 
     def __init__(self, context, deps):
         super().__init__(context, deps)
-        self.trace.update(controller='single_agent', actions=[], prompt_version='shopping-agent-6')
+        self.trace.update(controller='single_agent', actions=[], prompt_version='shopping-agent-7')
         self.trace['request'].pop('model', None)
         self.leads = []
         self.redirected_urls = set()
@@ -134,7 +138,13 @@ class ShoppingAgent(DomesticBuyerFlow):
     def _run(self):
         self.publish(status='running', phase='research')
         self.job = self.deps.ledger.open_job(self.run_ref.run_id, buyer_limits=buyer_settings().buyer_limits)
-        self.trace['limits']['ledger_buyer_caps'].update(self.job.buyer_limits.model_dump(mode='json'))
+        limits = self.job.buyer_limits
+        # Leave two seconds to publish before the worker's active allowance expires.
+        allowance = self.elapsed() + self.context.remaining_seconds()
+        self.final_by = max(0, min(allowance, limits.seconds) - 2)
+        self.nonfinal_by = max(0, min(limits.research_seconds - 5, self.final_by - 30))
+        self.trace['limits'].update(final_by_s=self.final_by, nonfinal_by_s=self.nonfinal_by)
+        self.trace['limits']['ledger_buyer_caps'].update(limits.model_dump(mode='json'))
         if self.request.intent.kind == 'product_link':
             self.add_lead(Listing(str(self.request.intent.url)))
         notes = [self.request.refinement_note or '', *(entry['answer'] for entry in self.context.answers)]

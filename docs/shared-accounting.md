@@ -108,12 +108,15 @@ and per-job request caps apply across API and ingestion processes using the same
 registry limits; the SourceGate still revalidates endpoint admission and network
 safety. A busy source is refused rather than silently bypassed.
 
-On `test/two-agent`, new shopping-agent runs take their dollar limits from
+On `test/two-agent`, new shopping-agent runs take their time and dollar limits from
 [the experiment settings](../config/two-agent-buyer.json). The ledger pins $20
 for research and $25 for the whole run when the job starts. A dispatched call
-with unknown cost still counts at its full reservation. The existing 30 research
-calls, 40 total calls and elapsed-time limits continue to apply. A resumed
-job uses its original limits, including the baseline profile for older jobs.
+with unknown cost still counts at its full reservation. Each new run has 300 active
+seconds and 40 external calls. Research can use the first 270 seconds and 30 calls.
+The controller aims to publish within 298 seconds and respects any shorter worker
+allowance. Earlier phase transitions, action limits, per-call timeouts and early
+answers can end research sooner. A resumed job keeps its pinned limits. Jobs created
+before the time setting was introduced retain the original 120-second ledger limit.
 Frozen evaluation runs use the budget specified by their protocol.
 
 ## Role execution and integration
