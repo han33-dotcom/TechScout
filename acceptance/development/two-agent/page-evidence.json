@@ -1,0 +1,492 @@
+{
+  "method": "Both configured model roles interpreted previously captured retailer HTML. Additional retailer requests were disabled in the archived replay. The fresh buyer runs used the first-journey IT Promax catalog through the buyer API and worker, with no second-seller URLs supplied.",
+  "replays": [
+    {
+      "agent": "buyer",
+      "page": "https://outgeeked.net/products/anker-soundcore-q20i-black",
+      "capture_sha256": "20757fb4ff72de1c1cb84a28010a947303e8d587545f34cc039219f9b03315a4",
+      "capture_time": "2026-11-27T10:01:59.422591+00:00",
+      "model_job": "page-evidence-4835c54f51ba4c37a2116f7656d01e07",
+      "item": "Soundcore Q20i - Black",
+      "color": "Black",
+      "price": {
+        "amount": "40.00",
+        "currency": "USD"
+      },
+      "stock": "OutOfStock",
+      "variant_link": "https://outgeeked.net/products/anker-soundcore-q20i-black?variant=47694450950402",
+      "agent_reason": "The black Soundcore Q20i is listed at USD 40.00 and is out of stock. Nationwide Lebanon delivery includes Batroun, with cash on delivery, but the item cannot currently be ordered."
+    },
+    {
+      "agent": "catalog",
+      "page": "https://outgeeked.net/products/anker-soundcore-q20i-black",
+      "capture_sha256": "20757fb4ff72de1c1cb84a28010a947303e8d587545f34cc039219f9b03315a4",
+      "capture_time": "2026-11-27T10:01:59.422591+00:00",
+      "model_job": "page-evidence-e3c2a2bb0a154f4da100b91e54876cc4",
+      "item": "Soundcore Q20i - Black",
+      "color": "Black",
+      "price": {
+        "amount": "40.00",
+        "currency": "USD"
+      },
+      "stock": "OutOfStock",
+      "variant_link": "https://outgeeked.net/products/anker-soundcore-q20i-black?variant=47694450950402",
+      "agent_reason": "",
+      "actions": [
+        {
+          "action": "Finish with current evidence",
+          "offer_index": 0
+        }
+      ]
+    },
+    {
+      "agent": "buyer",
+      "page": "https://www.dslr-zone.com/product/soundcore-q20i-hybrid-anc-headphones-black/",
+      "capture_sha256": "89ec2514c48112110ac245857a251073cc2bcc91076d6c43018c7579b64a4d61",
+      "capture_time": "2026-11-27T10:02:40.926936+00:00",
+      "model_job": "page-evidence-347179caa88b4a4c9f0cfbc89331dbe6",
+      "item": null,
+      "color": null,
+      "price": null,
+      "stock": null,
+      "variant_link": null,
+      "agent_reason": "Only Blue and White Q20i offers are listed; no black offer is evidenced, so its price and availability for delivery to Batroun cannot be confirmed."
+    },
+    {
+      "agent": "catalog",
+      "page": "https://www.dslr-zone.com/product/soundcore-q20i-hybrid-anc-headphones-black/",
+      "capture_sha256": "89ec2514c48112110ac245857a251073cc2bcc91076d6c43018c7579b64a4d61",
+      "capture_time": "2026-11-27T10:02:40.926936+00:00",
+      "model_job": "page-evidence-1bdd0ffdba734422841ac1bf51acfdea",
+      "item": null,
+      "color": null,
+      "price": null,
+      "stock": null,
+      "variant_link": null,
+      "agent_reason": "Only Blue and White options are listed, each offered at USD 61 and in stock. No black offer is identified, so its price and availability for delivery to Batroun cannot be verified. The page advertises delivery in Lebanon.",
+      "actions": [
+        {
+          "action": "Finish with current evidence",
+          "offer_index": null
+        }
+      ]
+    }
+  ],
+  "development_runs": [
+    {
+      "run": "2238f920-c38a-4f38-9170-ff461764117c",
+      "request": "I'm looking for new black Soundcore Q20i headphones. Which Lebanese shop has the lower total for one pair delivered to Batroun?",
+      "elapsed_ms": 118969,
+      "status": "error",
+      "stop_reason": "Shopping controller failed",
+      "verified_count": 0,
+      "partials": [
+        {
+          "seller": "IT Promax",
+          "item_price": {
+            "amount": "48",
+            "currency": "USD"
+          },
+          "stock": true,
+          "listing": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "cost": {
+            "status": "incomplete",
+            "known_subtotal": null,
+            "missing": [
+              "Delivery to the requested destination and mandatory charges still need checking."
+            ]
+          }
+        }
+      ],
+      "actions": [
+        {
+          "tool": "catalog",
+          "status": "leads",
+          "new_leads": 1
+        },
+        {
+          "tool": "inspect",
+          "status": "priced_partial",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "observed_item": {
+            "title": "Soundcore Q20i ANC Headphones",
+            "sku": "Q20i-ANC-black",
+            "color": "Black",
+            "seller": "IT Promax",
+            "price": {
+              "amount": "48.00",
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "published_link": null
+          }
+        },
+        {
+          "tool": "render",
+          "status": "priced_partial",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "observed_item": {
+            "title": "Soundcore Q20i ANC Headphones",
+            "sku": "3034",
+            "color": "Black",
+            "seller": "IT Promax",
+            "price": {
+              "amount": "48",
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "published_link": null
+          }
+        },
+        {
+          "tool": "web_search",
+          "status": "ok",
+          "new_leads": 8
+        },
+        {
+          "tool": "inspect",
+          "status": "read_failed",
+          "url": "https://ayoubcomputers.com/soundcore-by-anker-q20i-hybrid-active-noise-cancelling-headphones-black-a3004h11/",
+          "reason": "The listing could not be read."
+        },
+        {
+          "tool": "inspect",
+          "status": "read_failed",
+          "url": "https://outgeeked.net/products/anker-soundcore-q20i-black",
+          "reason": "The listing could not be read."
+        },
+        {
+          "tool": "render",
+          "status": "read_failed",
+          "url": "https://ayoubcomputers.com/soundcore-by-anker-q20i-hybrid-active-noise-cancelling-headphones-black-a3004h11/",
+          "reason": "The listing could not be read."
+        },
+        {
+          "tool": "inspect",
+          "status": "no_match",
+          "url": "https://phonefinity.net/products/soundcore-by-anker-q20i/",
+          "reason": "phonefinity.net lists Soundcore By Anker Q20i - black for USD 42 (stock unverified). The actual merchant or product brand still needs verification.",
+          "observed_item": {
+            "title": "Soundcore By Anker Q20i - black",
+            "sku": "e4640b5faa77f54d3fb32643",
+            "color": "black",
+            "seller": "",
+            "price": {
+              "amount": "42",
+              "currency": "USD"
+            },
+            "availability": "",
+            "published_link": "https://phonefinity.net/products/soundcore-by-anker-q20i/?attribute_pa_color=black"
+          }
+        }
+      ],
+      "spend": {
+        "attempts": {
+          "model": 13,
+          "retrieval": 6,
+          "search": 1,
+          "work": 1
+        },
+        "known_usd": "0.0653055",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0.5204800"
+      }
+    },
+    {
+      "run": "f7807c7f-9890-407f-8920-1d62085ab635",
+      "request": "I'm looking for new black Soundcore Q20i headphones. Which Lebanese shop has the lower total for one pair delivered to Batroun?",
+      "elapsed_ms": 108859,
+      "status": "partial",
+      "stop_reason": "These listings still have unresolved checks. The listing could not be read.",
+      "verified_count": 0,
+      "partials": [
+        {
+          "seller": "IT Promax",
+          "item_price": {
+            "amount": "48",
+            "currency": "USD"
+          },
+          "stock": true,
+          "listing": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "cost": {
+            "status": "incomplete",
+            "known_subtotal": null,
+            "missing": [
+              "Delivery to the requested destination and mandatory charges still need checking."
+            ]
+          }
+        }
+      ],
+      "actions": [
+        {
+          "tool": "catalog",
+          "status": "leads",
+          "new_leads": 1
+        },
+        {
+          "tool": "inspect",
+          "status": "priced_partial",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "observed_item": {
+            "title": "Soundcore Q20i ANC Headphones",
+            "sku": "Q20i-ANC-black",
+            "color": "Black",
+            "seller": "IT Promax",
+            "price": {
+              "amount": "48.00",
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "published_link": null
+          }
+        },
+        {
+          "tool": "render",
+          "status": "priced_partial",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "observed_item": {
+            "title": "Soundcore Q20i ANC Headphones",
+            "sku": "3034",
+            "color": "Black",
+            "seller": "IT Promax",
+            "price": {
+              "amount": "48",
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "published_link": null
+          }
+        },
+        {
+          "tool": "follow",
+          "status": "read_failed",
+          "url": "https://itpromax.store/en",
+          "reason": "The listing could not be read."
+        }
+      ],
+      "spend": {
+        "attempts": {
+          "model": 7,
+          "retrieval": 3,
+          "work": 1
+        },
+        "known_usd": "0.0294250",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0"
+      }
+    },
+    {
+      "run": "05a45710-6852-4906-b298-5bd71527044b",
+      "request": "I'm looking for new black Soundcore Q20i headphones. Which Lebanese shop has the lower total for one pair delivered to Batroun?",
+      "elapsed_ms": 101593,
+      "status": "partial",
+      "stop_reason": "These listings still have unresolved checks. The listing could not be read.",
+      "verified_count": 0,
+      "partials": [
+        {
+          "seller": "IT Promax",
+          "item_price": {
+            "amount": "48",
+            "currency": "USD"
+          },
+          "stock": true,
+          "listing": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "cost": {
+            "status": "incomplete",
+            "known_subtotal": null,
+            "missing": [
+              "Delivery to the requested destination and mandatory charges still need checking."
+            ]
+          }
+        }
+      ],
+      "actions": [
+        {
+          "tool": "catalog",
+          "status": "leads",
+          "new_leads": 1
+        },
+        {
+          "tool": "inspect",
+          "status": "priced_partial",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "observed_item": {
+            "title": "Soundcore Q20i ANC Headphones",
+            "sku": "Q20i-ANC-black",
+            "color": "Black",
+            "seller": "IT Promax",
+            "price": {
+              "amount": "48.00",
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "published_link": null
+          }
+        },
+        {
+          "tool": "render",
+          "status": "priced_partial",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "observed_item": {
+            "title": "Soundcore Q20i ANC Headphones",
+            "sku": "3034",
+            "color": "Black",
+            "seller": "IT Promax",
+            "price": {
+              "amount": "48",
+              "currency": "USD"
+            },
+            "availability": "InStock",
+            "published_link": null
+          }
+        },
+        {
+          "tool": "follow",
+          "status": "read_failed",
+          "url": "https://itpromax.store/en",
+          "reason": "The listing could not be read."
+        }
+      ],
+      "spend": {
+        "attempts": {
+          "model": 7,
+          "retrieval": 3,
+          "work": 1
+        },
+        "known_usd": "0.0285530",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0"
+      }
+    },
+    {
+      "run": "94cea58c-eb00-41a5-94a8-46e3e322297f",
+      "request": "I'm looking for new black Soundcore Q20i headphones. Which Lebanese shop has the lower total for one pair delivered to Batroun?",
+      "elapsed_ms": 68610,
+      "status": "partial",
+      "stop_reason": "The shopping agent could not complete its decision. The selected item could not be assessed against the request.",
+      "verified_count": 0,
+      "partials": [],
+      "actions": [
+        {
+          "tool": "web_search",
+          "status": "ok",
+          "new_leads": 7
+        },
+        {
+          "tool": "inspect",
+          "status": "match_unavailable",
+          "url": "https://outgeeked.net/products/anker-soundcore-q20i-black"
+        }
+      ],
+      "spend": {
+        "attempts": {
+          "model": 3,
+          "retrieval": 1,
+          "search": 1
+        },
+        "known_usd": "0.008472",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0.5204800"
+      }
+    },
+    {
+      "run": "e962870b-8864-4618-8c28-3fe6428e0235",
+      "request": "I'm looking for new black Soundcore Q20i headphones. Which Lebanese shop has the lower total for one pair delivered to Batroun?",
+      "elapsed_ms": 102500,
+      "status": "partial",
+      "stop_reason": "The shopping agent could not complete its decision. outgeeked.net lists Soundcore Q20i - Black for USD 40.00 (out of stock). The actual merchant or product brand still needs verification. Only Blue and White Q20i options are offered; no black offer is evidenced despite the page URL. A delivered-total comparison for the requested black pair cannot be established. The listing could not be read.",
+      "verified_count": 0,
+      "partials": [],
+      "actions": [
+        {
+          "tool": "web_search",
+          "status": "ok",
+          "new_leads": 7
+        },
+        {
+          "tool": "inspect",
+          "status": "no_match",
+          "url": "https://outgeeked.net/products/anker-soundcore-q20i-black",
+          "reason": "outgeeked.net lists Soundcore Q20i - Black for USD 40.00 (out of stock). The actual merchant or product brand still needs verification.",
+          "observed_item": {
+            "title": "Soundcore Q20i - Black",
+            "sku": "OG-STK-1081",
+            "color": "Black",
+            "seller": "",
+            "price": {
+              "amount": "40.00",
+              "currency": "USD"
+            },
+            "availability": "OutOfStock",
+            "published_link": "https://outgeeked.net/products/anker-soundcore-q20i-black?variant=47694450950402"
+          }
+        },
+        {
+          "tool": "inspect",
+          "status": "selection_unconfirmed",
+          "url": "https://www.dslr-zone.com/product/soundcore-q20i-hybrid-anc-headphones-black/",
+          "reason": "Only Blue and White Q20i options are offered; no black offer is evidenced despite the page URL. A delivered-total comparison for the requested black pair cannot be established."
+        },
+        {
+          "tool": "inspect",
+          "status": "read_failed",
+          "url": "https://martixstores.com/products/soundcore-sound-core-q20i-black",
+          "reason": "The listing could not be read."
+        },
+        {
+          "tool": "inspect",
+          "status": "selection_unconfirmed",
+          "url": "https://www.spinneyslebanon.com/default/soundcore-q20i-anc-black-629707-v001.html",
+          "reason": "Spinneys Lebanon lists SOUNDCORE Q20I ANC BLACK at $82.00 per pair. New condition is not explicitly confirmed. Batroun delivery availability and fees are not provided, and no competing shop total is supplied, so the lower delivered total is"
+        }
+      ],
+      "spend": {
+        "attempts": {
+          "model": 8,
+          "retrieval": 3,
+          "search": 1
+        },
+        "known_usd": "0.1497270",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0.5204800"
+      }
+    },
+    {
+      "run": "6dbc9cd2-727e-439b-9cd0-030d9065d58c",
+      "request": "I'm looking for new black Soundcore Q20i headphones. Which Lebanese shop has the lower total for one pair delivered to Batroun?",
+      "elapsed_ms": 989203,
+      "status": "partial",
+      "stop_reason": "Controller stopped or active execution allowance exhausted",
+      "verified_count": 0,
+      "partials": [],
+      "actions": [
+        {
+          "tool": "web_search",
+          "status": "ok",
+          "new_leads": 7
+        }
+      ],
+      "spend": {
+        "attempts": {
+          "model": 2,
+          "search": 1
+        },
+        "known_usd": "0.0034985",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0.5204800"
+      }
+    }
+  ]
+}
