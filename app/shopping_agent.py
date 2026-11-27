@@ -403,7 +403,7 @@ class ShoppingAgent(DomesticBuyerFlow):
                     dict(before.options).get(o.dimension) != o.value for o in document.checked)):
                 self.withdraw_public(url)
                 self.publish_partials(prior)
-            reason = reading.reason if reading and reading.offer_index is None and reading.reason else (
+            reason = document.selection_gap(url, self.request.allowed_colors) if reading else (
                 'The current capture could not confirm the selected item and its price.')
             self.blockers[url] = [reason]
             return dict(status='selection_unconfirmed', reason=reason,

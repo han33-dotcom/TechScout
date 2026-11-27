@@ -367,6 +367,21 @@ class ListingDocument(_HTML):
                          availability, condition, structured_address, tuple(options.items()),
                          published_link=link)
 
+    def selection_gap(self, url, colors=()):
+        subject = ', '.join(colors).capitalize() if colors else 'The requested variant'
+        labels = []
+        for _, product, offer in self.offers:
+            link = public_offer_url(url, product, offer)
+            options = {ProductOption(k, v).dimension: v for k, v in parse_qsl(urlsplit(link or '').query)}
+            label = (literal(offer.get('color')) or options.get('color') or literal(product.get('color'))
+                     or literal(offer.get('name') or product.get('name')))
+            if label and label not in labels:
+                labels.append(label)
+        reason = f'{subject} is unverified at {urlsplit(url).hostname}.'
+        if labels:
+            reason += ' Published options include ' + ', '.join(labels[:6]) + '.'
+        return reason
+
     def selected_options(self):
         values = {o.dimension: o.value for o in self.checked}
         if len(values) != len(self.checked) or {o.dimension for o in self.options} - values.keys():
@@ -666,7 +681,7 @@ class Selection:
 
         obs = page.outcome
         url = obs.final_url
-        product = sha256(url.encode()).hexdigest()[:24]
+        product = sha256((self.published_link or url).encode()).hexdigest()[:24]
         identity = f'{obs.source_id}:{product}:{self.sku}'
         evidence = []
 

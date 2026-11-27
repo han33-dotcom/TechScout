@@ -194,8 +194,9 @@ def read_catalog_listing(inspect, job, url, *, objective, roles, trace=None):
                 selection = document.interpret(choice.reading, url, page.outcome.observed_at)
                 last_capture = replace(last_capture, selection=selection, reading_used=True)
             except ValueError:
-                last_capture = replace(last_capture, reading_used=True,
-                    reason=choice.reading.reason or 'The requested variant could not be verified.')
+                    color = objective.get('color') if isinstance(objective, dict) else None
+                    last_capture = replace(last_capture, reading_used=True,
+                        reason=document.selection_gap(url, [color] if color else ()))
             if trace is not None:
                 trace[-1].update(offer_index=choice.reading.offer_index,
                                  selected=selection.facts() if selection else None, reason=last_capture.reason)
