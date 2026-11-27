@@ -35,6 +35,16 @@ describe('request boundaries',()=>{
   expect(request.intent).toMatchObject({kind:'exact_model', model:text});
   expect(request.allowed_colors).toEqual([]);
  });
+ it('keeps a leading product link and the buyer instructions together through edit and reload',()=>{
+  const url = 'https://retailer.example/device';
+  const text = url + ' compare the 256 GB version at two shops';
+  const request = toRequest({...initialDraft, implementation:'single_agent', text});
+  expect(request.intent).toEqual({kind:'product_link', url, wording:text});
+  const draft = fromRequest(request);
+  expect(draft.text).toBe(text);
+  expect(toRequest({...draft, maximum:'900'}, request).intent).toEqual(request.intent);
+  expect(toRequest({...draft, text:url}, request).intent).toEqual({kind:'product_link', url});
+ });
  it('refines a saved international comparison as a domestic request',()=>{
   const saved = (fixture.current as unknown as RunSnapshot).request;
   expect(saved.market_scope?.include_international).toBe(true);

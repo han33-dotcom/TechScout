@@ -456,8 +456,10 @@ class ShoppingAgent(DomesticBuyerFlow):
                 raise
             except ValueError:
                 evidence = document.evidence(url, obs.observed_at)
-                reading = self.generate(READ_TEXT, dict(objective=self.request.model_dump(mode='json'),
-                    url=url, **evidence), PageReading, self.elapsed() + room())
+                page_input = dict(objective=self.request.model_dump(mode='json'), url=url, **evidence)
+                if self.context.answers:
+                    page_input['feedback'] = list(self.context.answers)
+                reading = self.generate(READ_TEXT, page_input, PageReading, self.elapsed() + room())
                 selected = document.interpret(reading, url, obs.observed_at)
         except (ValueError, RecursionError) as exc:
             before = self.current_selections.get(url)

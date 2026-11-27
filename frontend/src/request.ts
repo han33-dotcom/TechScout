@@ -23,11 +23,13 @@ export function toRequest(draft: Draft, base?: EditableRequest): ShoppingRequest
   if (!text) throw new Error('Describe what you need, enter a model, or paste a retailer link.');
   let intent: ShoppingRequest['intent'];
   let colors = base?.allowed_colors ?? [];
-  if (/^https?:\/\//i.test(text)) {
-    const url = new URL(text);
+  if (base?.intent.kind === 'product_link' && text === fromRequest(base).text) {
+    intent = base.intent;
+  } else if (/^https?:\/\//i.test(text)) {
+    const link = draft.implementation === 'single_agent' ? text.split(/\s+/, 1)[0] : text;
+    const url = new URL(link);
     if (url.protocol !== 'https:' || url.username || url.password) throw new Error('Use a public HTTPS product link.');
-    intent = base?.intent.kind === 'product_link' && base.intent.url === url.href
-      ? base.intent : { kind: 'product_link', url: url.href };
+    intent = link === text ? { kind: 'product_link', url: url.href } : { kind: 'product_link', url: url.href, wording: text };
   } else if (draft.kind === 'exact_model') {
     const selection = draft.implementation === 'single_agent' ? null : /^(.+?)\s+in\s+(black|white|red|blue|green|yellow|purple|pink|silver|gold|gray|grey)$/i.exec(text);
     const model = selection ? selection[1].trim() : text;
@@ -55,7 +57,7 @@ export function toRequest(draft: Draft, base?: EditableRequest): ShoppingRequest
 }
 
 export function fromRequest(r: EditableRequest): Draft {
-  return { implementation: r.implementation ?? 'control', text: r.intent.kind === 'needs' ? r.intent.description : r.intent.kind === 'product_link' ? r.intent.url : r.intent.wording ?? r.intent.model,
+  return { implementation: r.implementation ?? 'control', text: r.intent.kind === 'needs' ? r.intent.description : r.intent.wording ?? (r.intent.kind === 'product_link' ? r.intent.url : r.intent.model),
     kind: r.intent.kind === 'exact_model' ? 'exact_model' : 'needs', category: r.requirements.category,
     target: String(r.budget?.target?.amount ?? ''), maximum: String(r.budget?.maximum?.amount ?? ''),
     currency: r.budget?.target?.currency ?? r.budget?.maximum?.currency ?? 'USD', city: r.fulfillment?.destination?.city ?? '', mode: r.fulfillment?.mode ?? 'any',
