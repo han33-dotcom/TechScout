@@ -101,9 +101,10 @@ class SelectedCapacityTests(TestCase):
 
 
 @contextmanager
-def retailer(storage, url, *, registry=None, script=CHANGE, dropdown=False, html=None, first_read=None, links=None):
+def retailer(storage, url, *, registry=None, script=CHANGE, dropdown=False, html=None, first_read=None, links=None,
+             landing=None):
     reads = []
-    body = storefront(url, dropdown) if html is None else html
+    body = storefront(landing or url, dropdown) if html is None else html
     limiter = SourceLimiter()
 
     def provider(endpoint, key, payload, **kwargs):
@@ -111,12 +112,13 @@ def retailer(storage, url, *, registry=None, script=CHANGE, dropdown=False, html
         assert 'actions' not in payload
         content = (body if first_read is None else first_read) if target == url else (links or {})[target]
         reads.append(('firecrawl', target))
-        return dict(success=True, data=dict(rawHtml=content, metadata=dict(url=target, sourceURL=target,
+        final_url = landing if target == url and landing else target
+        return dict(success=True, data=dict(rawHtml=content, metadata=dict(url=final_url, sourceURL=target,
             statusCode=200, contentType='text/html', provider=dict(creditsCost=1))))
 
     def respond(request):
         reads.append((request.method, request.url.path))
-        if str(request.url) == url:
+        if str(request.url) == (landing or url):
             content, mime = body, 'text/html'
         elif request.url.path == '/static/colors.js':
             content, mime = script, 'application/javascript'
@@ -323,3 +325,34 @@ class CatalogBrowserTests(TestCase):
         self.assertEqual((receipt['reader'], receipt['color'], receipt['sku'], receipt['price']['amount']),
                          ('playwright', 'Black', '3035', '49'))
         self.assertEqual(reads, [('firecrawl', URL), ('GET', '/products/soundcore-q20i'), ('GET', '/static/colors.js')])
+
+    def test_catalog_discovery_uses_landing_page_for_selection_and_attribution(self):
+        schedule = self.schedule
+        landing = 'https://landing-shop.example/item/headphones'
+        schedule.tools.search.side_effect = lambda objective, job: SearchReport(job.run_id, (
+            ChannelAttempt(objective.channel, 'ok'),), (lead(URL),))
+        self.decisions(SearchDecision(action='search', channel='serpapi', query='Q20i'),
+                       SearchDecision(action='inspect', listing_index=0, color='Black'), 'Select Black', 'Finish')
+        with retailer(self.f.fixture.storage, URL, registry=self.registry, landing=landing) as (schedule.runner.inspect_listing, reads):
+            control(schedule.ledger, True)
+            report = schedule.runner.run('discovery', force=True)
+        receipt, = report['inspections']
+        self.assertEqual((receipt['requested_url'], receipt['url'], receipt['sku'], receipt['price']['amount']),
+                         (URL, landing, '3035', '49'))
+        self.assertEqual(reads, [('firecrawl', URL), ('GET', '/item/headphones'), ('GET', '/static/colors.js')])
+
+    def test_refresh_preserves_other_sellers_observation_without_changing_seed(self):
+        f, runner = self.f, self.schedule.runner
+        runner.manifest = f.manifest.model_copy(update={'seeds': (f.manifest.seeds[0],)})
+        landing = 'https://other-shop.example/item/q20i'
+        self.decisions('Finish')
+        with retailer(f.fixture.storage, f.url, registry=self.registry, landing=landing) as (runner.inspect_listing, reads):
+            control(self.schedule.ledger, True)
+            report = runner.run('offers', force=True)
+        page = report['pages'][f.url]
+        self.assertEqual(page['status'], 'failed')
+        observation = page['landing']
+        self.assertEqual((observation['final_url'], observation['selected']['seller'],
+                          observation['selected']['price']['amount']), (landing, 'Fixture Audio', '39.00'))
+        self.assertEqual(reads, [('firecrawl', f.url)])
+        self.assertEqual(runner.catalog.lookup(category=f.manifest.seeds[0].category), ())

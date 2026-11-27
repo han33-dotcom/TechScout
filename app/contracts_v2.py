@@ -413,11 +413,10 @@ class Offer(Contract):
     evidence: tuple[Evidence, ...] = ()
 
     def domestic_merchant_receipts(self):
-        """Item-scoped identity and domicile from the actual seller's listing."""
+        """Item-scoped identity and domicile on the landing page that supplied the offer."""
         records = tuple(e for e in self.evidence if e.field_path in ('seller.market', 'seller.name')
                         and e.scope == 'variant' and e.product_id == self.source_product_id
-                        and e.variant_id == self.source_variant_id and e.origin_url == self.listing_url
-                        and e.final_url == self.listing_url)
+                        and e.variant_id == self.source_variant_id and e.final_url == self.listing_url)
         if (self.seller.market == 'LB' and not any(e.conflicts for e in records)
                 and {e.field_path for e in records} == {'seller.market', 'seller.name'}):
             return records

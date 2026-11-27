@@ -52,6 +52,17 @@ LIMITS = {
 KINDS = {'model', 'search', 'retrieval', 'embedding', 'work', 'worker'}
 
 
+def check_source_workload(attempts, source, limits, job_id, now):
+    positive = (limits.requests_per_minute, limits.concurrency, limits.max_requests_per_run)
+    if any(type(v) is not int or v <= 0 for v in positive):
+        raise ValueError('Source workload bounds must be positive integers')
+    matching = [a for a in attempts if source in (a['source'], a.get('landing_source')) and a['status'] != 'released']
+    if (sum(a['status'] in {'held', 'sent'} and a['expires'] > now for a in matching) >= limits.concurrency
+        or sum(a['created'] > now - 60 for a in matching) >= limits.requests_per_minute
+        or sum(a['job'] == job_id for a in matching) >= limits.max_requests_per_run):
+        raise BudgetDenied('Shared source workload limit')
+
+
 class Ledger:
     def __init__(self, storage: Storage, project: str, *, fixture=False, clock=None):
         if not project or not project.strip():
@@ -182,14 +193,7 @@ class Ledger:
             if job['kind'] != 'buyer' and sum(a['background'] for a in live) >= 2:
                 raise BudgetDenied('Background capacity is busy')
             if source is not None:
-                positive = (limits.requests_per_minute, limits.concurrency, limits.max_requests_per_run)
-                if any(type(v) is not int or v <= 0 for v in positive):
-                    raise ValueError('Source workload bounds must be positive integers')
-                matching = [a for a in attempts.values() if a['source'] == source and a['status'] != 'released']
-                if (sum(a['source'] == source for a in live) >= limits.concurrency
-                    or sum(a['created'] > now - 60 for a in matching) >= limits.requests_per_minute
-                    or sum(a['job'] == job_id for a in matching) >= limits.max_requests_per_run):
-                    raise BudgetDenied('Shared source workload limit')
+                check_source_workload(attempts.values(), source, limits, job_id, now)
             keys = self._scope_keys(job_id, job, international)
             for key, profile in keys:
                 used = state['scopes'].setdefault(key, [0, 0, 0, '0', 0])
@@ -292,6 +296,23 @@ class Attempt:
 
     def dispatch(self):
         self.ledger._change(self.token, self.owner, 'send')
+
+    def record_landing(self, source, limits):
+        """Count a provider-reported second shop on this already-dispatched retrieval."""
+        denied = False
+        with self.ledger._transaction() as (state, now):
+            attempt = state['attempts'][self.token]
+            if (attempt['owner'] != self.owner or attempt['status'] != 'sent' or attempt['kind'] != 'retrieval'
+                    or attempt.get('landing_source') is not None or attempt['source'] == source):
+                raise BudgetDenied('Invalid landing receipt')
+            try:
+                check_source_workload(state['attempts'].values(), source, limits, attempt['job'], now)
+            except BudgetDenied:
+                denied = True
+            # The provider already reached this shop, even if its allowance was exhausted.
+            attempt['landing_source'] = source
+        if denied:
+            raise BudgetDenied('Shared source workload limit')
 
     def record(self, metadata):
         """Attach credential-free provider accounting evidence to this attempt.

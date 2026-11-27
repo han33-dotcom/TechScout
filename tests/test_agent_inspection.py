@@ -5,7 +5,7 @@ from unittest.mock import Mock, patch
 from app.agent_inspection import inspect_public_listing, read_catalog_listing
 from app.onboarding import ActivationRegistry, source_id_for
 from app.sources import SourceGate
-from app.accounting import Ledger
+from app.accounting import BudgetDenied, Ledger
 import test_corpus as fixtures
 
 
@@ -95,3 +95,37 @@ class AgentInspectionTests(unittest.TestCase):
         self.assertEqual(inspect.call_count, 1)
         self.assertIsNone(inspect.call_args.kwargs['browser'])
         roles.generate.assert_not_called()
+
+    def test_stopped_landing_shop_cannot_supply_an_observation(self):
+        landing = 'https://paused.example/products/headphones'
+        document = {'sources': [{'id': 'paused', 'origin': 'https://paused.example', 'status': 'paused'}],
+                    'live_release': {'admitted_source_ids': []}}
+        registry = ActivationRegistry(self.storage, base=Mock(read_registry=lambda: document))
+        reply = dict(success=True, data=dict(rawHtml='<p>Fixture</p>', metadata=dict(
+            sourceURL=self.url, url=landing, statusCode=200, contentType='text/html')))
+        with (patch('app.agent_inspection.SourceGate', side_effect=lambda scope:
+                    SourceGate._for_tests(scope, resolver=lambda *_: ['8.8.8.8'])),
+              patch('app.firecrawl.post_json', return_value=reply) as send):
+            with self.assertRaisesRegex(ValueError, 'disabled'):
+                inspect_public_listing(self.ledger.open_job('paused-landing'), self.url, registry, environ=self.env)
+            send.assert_called_once()
+
+    def test_cross_shop_landing_counts_toward_both_shops_on_one_provider_call(self):
+        landing = 'https://limited.example/item'
+        document = {'sources': [{'id': 'limited', 'origin': 'https://limited.example', 'status': 'active',
+                        'limits': dict(requests_per_minute=1, concurrency=1, max_requests_per_run=1)}],
+                    'live_release': {'admitted_source_ids': ['limited']}}
+        registry = ActivationRegistry(self.storage, base=Mock(read_registry=lambda: document))
+        reply = dict(success=True, data=dict(rawHtml='<p>Fixture</p>', metadata=dict(
+            sourceURL=self.url, url=landing, statusCode=200, contentType='text/html', provider=dict(creditsCost=1))))
+        job = self.ledger.open_job('limited-landing')
+        with (patch('app.agent_inspection.SourceGate', side_effect=lambda scope:
+                    SourceGate._for_tests(scope, resolver=lambda *_: ['8.8.8.8'])),
+              patch('app.firecrawl.post_json', return_value=reply) as send):
+            page = inspect_public_listing(job, self.url, registry, environ=self.env)
+            self.assertEqual(page.outcome.source_id, 'limited')
+            with self.assertRaisesRegex(BudgetDenied, 'source workload'):
+                inspect_public_listing(job, landing, registry, environ=self.env)
+            send.assert_called_once()
+        attempt, = self.ledger.snapshot()['attempts'].values()
+        self.assertEqual((attempt['source'], attempt['landing_source']), (source_id_for('unseen-shop.example'), 'limited'))
