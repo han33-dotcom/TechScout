@@ -265,7 +265,10 @@ class ShoppingAgent(DomesticBuyerFlow):
         if self.reads.pending:
             if len(self.reads.pending) >= self.reads.capacity:
                 actions = [a for a in actions if a.kind not in ('inspect', 'follow', 'recheck')]
-            actions.append(Action('wait', 'Wait for the next pending listing transfer'))
+            can_inspect = any(a.kind in ('inspect', 'follow') and (a.kind, a.args) not in self.used for a in actions)
+            label = 'Wait up to 10 seconds for a pending page while other listings are available' if can_inspect else (
+                'Wait for the next pending listing transfer')
+            actions.append(Action('wait', label, (can_inspect,)))
         actions.append(Action('present', 'Present checked offers, partial evidence or a blocker'))
         return [a for a in actions if (a.kind, a.args) not in self.used]
 
@@ -366,7 +369,8 @@ class ShoppingAgent(DomesticBuyerFlow):
 
     def perform(self, action, job, room, query, language):
         if action.kind == 'wait':
-            self.reads.wait_for_page(room, self.stopped)
+            wait_room = partial(self.left, self.elapsed() + min(10, room())) if action.args[0] else room
+            self.reads.wait_for_page(wait_room, self.stopped)
             return dict(status='wait_ended')
         if action.kind == 'catalog':
             offers = self.deps.domestic_sources.lookup(self.request, limit=12, query=query)
@@ -545,12 +549,22 @@ class ShoppingAgent(DomesticBuyerFlow):
             for i, row in enumerate(listings)], locations=[dict(index=i, url=loc.source.final_url,
             merchant_quote=loc.merchant_quote, address_quote=loc.address_quote) for i, loc in enumerate(locations)])
         first_view = True
+        retried_view = False
+
         def read_view(instructions, payload, schema):
-            nonlocal first_view
+            nonlocal first_view, retried_view
             if first_view:
                 self.reads.record(obs.origin_url, 'capture_delivered', sha256=obs.response_sha256)
                 first_view = False
-            return self.generate(instructions, payload, schema, self.elapsed() + room(), call_seconds=30)
+            by = self.elapsed() + room()
+            decision = self.generate(instructions, payload, schema, by, call_seconds=30)
+            if decision is None and not retried_view and room() > 12 and not self.stopped():
+                calls = self.calls.entries()
+                if calls and calls[-1]['status'] in {'timeout', 'transport_error', 'provider_error'}:
+                    retried_view = True
+                    self.reads.record(obs.origin_url, 'retry_page_view', reason=calls[-1]['status'])
+                    decision = self.generate(instructions, payload, schema, by, call_seconds=30)
+            return decision
 
         reading = inspect_capture(page, self.request.model_dump(mode='json'), read_view,
             feedback=self.context.answers, checked=browser or (), seller_context=seller_context,

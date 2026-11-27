@@ -59,10 +59,15 @@ class PendingReadTests(FlowCase):
         fast = 'https://fast-shop.example/products/h111'
         wording = 'Compare two new in-stock Logitech H111 wired 3.5 mm stereo headsets before delivery.'
         release_body = Event()
+        slow_views = []
 
         class Buyer(Decisions):
             def answer(self, role, data):
                 if 'page' in data:
+                    if data['url'] == slow:
+                        slow_views.append(data['page'])
+                        if len(slow_views) == 1:
+                            raise httpx2.ReadTimeout('Interrupted fixture model response')
                     decision = fixture_read(data)
                     fits = 'Logitech H111 wired 3.5 mm stereo headset' in decision.offer.title
                     return decision.model_copy(update={'fits': fits}).model_dump(mode='json')
@@ -112,7 +117,9 @@ class PendingReadTests(FlowCase):
                            Firecrawl('fixture', gate, usd_per_credit='included', transport=httpx2.MockTransport(provider)))):
             _, run = self.browse(deps, implementation='single_agent', requirements=dict(category='audio'),
                 intent=dict(kind='exact_model', model='H111', wording=wording))
-        self.assertEqual({str(i.offer.listing_url) for i in run.uncertain}, {slow, fast})
+        self.assertEqual({(str(i.offer.listing_url), i.offer.seller.name, i.offer.price.value.amount)
+                          for i in run.uncertain},
+                         {(slow, 'Slow Audio', Decimal('18.00')), (fast, 'Fast Audio', Decimal('21.00'))})
         self.assertTrue(all(i.offer.stock.value and i.offer.condition.value == 'new' for i in run.uncertain))
         self.assertEqual(run.explanation.text, f'Slow Audio USD 18.00 {slow} is USD 3.00 lower than Fast Audio USD 21.00 {fast}.')
         events = [(e['url'], e['stage']) for e in self.trace(run)['listing_transfers']]
@@ -120,3 +127,6 @@ class PendingReadTests(FlowCase):
         self.assertLess(events.index((fast, 'review_finished')), events.index((slow, 'body_complete')))
         self.assertLess(events.index((slow, 'job_visible')), events.index((slow, 'capture_delivered')))
         self.assertEqual(events.count((slow, 'scrape_dispatched')), 1)
+        self.assertEqual(events.count((slow, 'retry_page_view')), 1)
+        self.assertEqual(len(slow_views), 2)
+        self.assertEqual(slow_views[0], slow_views[1])

@@ -83,3 +83,15 @@ class PageAccessTests(TestCase):
         self.assertIsNone(result.selection)
         self.assertEqual(result.findings[0]['quote'], 'Weekend pickup &amp; returns\n   until 19:00')
         self.assertEqual(result.findings[0]['url'], self.url)
+
+    def test_buyer_can_correct_the_specific_unmatched_finding_in_the_same_capture(self):
+        self.html = 'Check <strong>availability</strong> before ordering'
+        attempts = []
+        def generate(prompt, data, schema):
+            attempts.append(data['citation_feedback'])
+            quote = 'Check availability' if len(attempts) == 1 else self.html
+            return PageDecision(findings=[dict(statement='Check before ordering.', quote=quote)])
+        result = inspect_capture(self.page('firecrawl-v2'), 'Check stock', generate)
+        self.assertEqual(len(attempts), 2)
+        self.assertIn('"Check availability"', attempts[1])
+        self.assertEqual(result.findings[0]['quote'], self.html)
