@@ -80,12 +80,17 @@ class Firecrawl:
         params = {'endpoint': 'scrape', 'limit': 100}
         while True:
             activity = self._archive_get(job, 'team/activity', params, deadline, 1048576)
-            rows = activity.get('data') or []
-            if activity.get('success') is not True or not rows:
+            rows = activity.get('data')
+            if activity.get('success') is not True or not isinstance(rows, list):
+                raise TimeoutError('Firecrawl job history was unavailable for the interrupted request')
+            if not rows:
                 break
-            times = [_utc_timestamp(row['created_at']) for row in rows]
-            matches.update(row['id'] for row, at in zip(rows, times)
-                if submitted <= at <= interrupted and row.get('endpoint') == 'scrape' and row.get('target') == url)
+            try:
+                times = [_utc_timestamp(row['created_at']) for row in rows]
+                matches.update(row['id'] for row, at in zip(rows, times) if submitted <= at <= interrupted
+                               and row['endpoint'] == 'scrape' and row.get('target') == url)
+            except (KeyError, TypeError, ValueError) as exc:
+                raise TimeoutError('Firecrawl job history could not identify the interrupted request') from exc
             if min(times) < submitted or not activity.get('has_more'):
                 break
             cursor = activity.get('cursor')
