@@ -10,8 +10,8 @@
     14,
     15
   ],
-  "revision": "8292860a34158a6bc7ba882ea27b68e2dca8a0ac",
-  "recorded_at": "2026-11-27T00:02:53.191Z",
+  "revision": "666409c507d88f0855ce22c78a99deca799b14fc",
+  "recorded_at": "2026-11-27T00:32:49.742Z",
   "source_mode": "Offline fixtures. The real API, accounts, quote planner, quote loop, source gate and a fixture ledger ran on a fresh local SQLite database; the only fake was the network transport, a scripted Shopify Storefront for the synthetic sellers City-Shop, Street-A and Street-B (serve.py). The chats are the offline test chat (seed_chat.py). No retailer, model or provider key was contacted. The real ITWorks route stays pending its live check.",
   "runtime": {
     "api": "acceptance/development/issue-186/serve.py on 127.0.0.1 (FastAPI app, quote loop, TECHSCOUT_COOKIE_SECURE=0, built frontend)",
@@ -409,11 +409,11 @@
         "cookie_sent": false
       },
       {
-        "seller": "Street-B",
-        "host": "street-b.example",
+        "seller": "Street-A",
+        "host": "street-a.example",
         "method": "POST",
         "path": "/api/2025-01/graphql.json",
-        "variant": "4102",
+        "variant": "4101",
         "quantity": 1,
         "city": "Beirut",
         "street_sent": true,
@@ -421,11 +421,11 @@
         "cookie_sent": false
       },
       {
-        "seller": "Street-A",
-        "host": "street-a.example",
+        "seller": "Street-B",
+        "host": "street-b.example",
         "method": "POST",
         "path": "/api/2025-01/graphql.json",
-        "variant": "4101",
+        "variant": "4102",
         "quantity": 1,
         "city": "Beirut",
         "street_sent": true,
