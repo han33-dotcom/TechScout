@@ -43,6 +43,26 @@ dispatching an external call. Read-only status and cancellation checks leave
 the records untouched. An explicit `Ledger.snapshot()` reconstructs the full
 historical snapshot for audit and export.
 
+## Developing from two laptops
+
+Run the ordinary test suite on local fixtures. A PostgreSQL suite uses its own
+disposable `TEST_DATABASE_URL` and resets its schema. Each developer's app database
+and test database are separate from the live accounting URL. Live jobs on both
+laptops use the same project, each with its own runtime login.
+
+PostgreSQL clients pipeline the header lock, database clock and targeted record
+reads. Each statement after the lock sees the preceding writer's committed changes
+under the default READ COMMITTED isolation. Writes finish before dispatch. An
+original shop and a second shop observed on landing each count towards that shop's
+workload allowance. Busy or exhausted live limits can defer or refuse an action.
+
+On Neon Free, monitor project compute and transfer for real runs in the Neon
+console. A continuously running maintenance `serve` process checks the ledger
+every minute and can keep it awake. Schedule `python -m app.maintenance tick`
+at the intended collection times for intermittent development. On a network or
+quota outage, keep outstanding reservations and resume live work against the
+shared ledger after it recovers. Offline fixture development can continue.
+
 ## Reservations and recovery
 
 Use a stable `job_id` across resumes and clarification. `open_job` retains its start,

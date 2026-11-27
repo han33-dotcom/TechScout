@@ -18,6 +18,34 @@ def row_values(section, key, value):
     return result
 
 
+def read_postgres_transaction(db, readonly, job_id, token):
+    """Queue reads in order. At READ COMMITTED each statement after the lock sees the winning writer."""
+    pg = db.connection.driver_connection
+    with pg.pipeline():
+        header = pg.execute("SELECT payload FROM accounting_state WHERE id=1 " +
+                            ("FOR SHARE" if readonly else "FOR UPDATE"))
+        clock = pg.execute("SELECT clock_timestamp()")
+        records = None
+        if token is not None:
+            records = pg.execute("""
+                WITH attempt AS (
+                    SELECT section, key, payload, job_id FROM accounting_entries WHERE section='attempts' AND key=%s
+                )
+                SELECT section, key, payload FROM attempt
+                UNION ALL
+                SELECT e.section, e.key, e.payload FROM accounting_entries e, attempt a
+                WHERE (e.section='jobs' AND e.key=a.job_id) OR
+                      (e.section='scopes' AND e.key IN (SELECT json_array_elements_text(a.payload->'scopes')))
+            """, (token,))
+        elif job_id is not None:
+            records = pg.execute("""
+                SELECT section, key, payload FROM accounting_entries
+                WHERE (section='jobs' AND key=%s) OR (section='scopes' AND key IN ('project', %s))
+            """, (job_id, 'buyer:' + job_id))
+    row = header.fetchone()
+    return row[0] if row else None, clock.fetchone()[0], records.fetchall() if records else []
+
+
 class Records(MutableMapping):
     """Load records on demand and write back only entries edited inside the transaction."""
 
@@ -28,12 +56,20 @@ class Records(MutableMapping):
         self.current = {}
         self.loaded_all = False
 
+    def remember(self, key, value):
+        if key not in self.original:
+            self.original[key] = deepcopy(value)
+            self.current[key] = value
+
+    def insert_new(self, key, value):
+        # The primary key rejects a collision when the transaction inserts the new token.
+        self.original[key] = MISSING
+        self.current[key] = value
+
     def _load(self, where):
         query = select(entries.c.key, entries.c.payload).where(entries.c.section == self.section, where)
         for key, value in self.db.execute(query):
-            if key not in self.original:
-                self.original[key] = deepcopy(value)
-                self.current[key] = value
+            self.remember(key, value)
             if key in self.current:
                 yield key, self.current[key]
 

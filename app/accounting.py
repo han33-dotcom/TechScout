@@ -3,7 +3,7 @@
 No provider calls occur here. Every attempt (including retries/fallbacks) obtains a
 fresh reservation before dispatch. Uncertain attempts retain their entire bound.
 """
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from decimal import Decimal
@@ -12,9 +12,10 @@ from hashlib import sha256
 import os
 import uuid
 
+from psycopg import Pipeline
 from sqlalchemy import select, update, func
 
-from app.ledger_storage import entries, materialize, read_state, save_state
+from app.ledger_storage import entries, materialize, read_postgres_transaction, read_state, save_state
 from app.storage import Storage, accounting_state
 
 
@@ -80,29 +81,38 @@ class Ledger:
         return cls(Storage(url), project)
 
     @contextmanager
-    def _transaction(self, *, initializing=False, readonly=False):
+    def _transaction(self, *, initializing=False, readonly=False, job_id=None, token=None):
         with self.storage.transaction() as db:
-            query = select(accounting_state.c.payload).where(accounting_state.c.id == 1)
-            if db.dialect.name == 'postgresql':
-                query = query.with_for_update(read=readonly)
-            elif readonly:
-                # sqlite3 legacy transaction control doesn't BEGIN on SELECT in Python 3.11.
-                db.exec_driver_sql('BEGIN')
+            pipelined = db.dialect.driver == 'psycopg' and Pipeline.is_supported()
+            prefetched = []
+            if pipelined:
+                header, now, prefetched = read_postgres_transaction(db, readonly, job_id, token)
             else:
-                db.execute(update(accounting_state).where(accounting_state.c.id == 1).values(id=1))
-            header = db.execute(query).scalar_one_or_none()
+                query = select(accounting_state.c.payload).where(accounting_state.c.id == 1)
+                if db.dialect.name == 'postgresql':
+                    query = query.with_for_update(read=readonly)
+                elif readonly:
+                    db.exec_driver_sql('BEGIN')
+                else:
+                    db.execute(update(accounting_state).where(accounting_state.c.id == 1).values(id=1))
+                header = db.execute(query).scalar_one_or_none()
+                clock = func.clock_timestamp() if db.dialect.name == 'postgresql' else func.current_timestamp()
+                now = db.scalar(select(clock))
             if header is None:
                 raise BudgetDenied('Accounting database has not been migrated')
             state = read_state(db, header)
             if not initializing and state['project'] != self.project:
                 raise BudgetDenied('Central project has not been provisioned or identifier differs')
-            clock = func.clock_timestamp() if db.dialect.name == 'postgresql' else func.current_timestamp()
-            now = self.clock() if self.clock else db.execute(select(clock)).scalar_one()
+            for section, key, value in prefetched:
+                state[section].remember(key, value)
+            if self.clock:
+                now = self.clock()
             if now.tzinfo is None:
                 now = now.replace(tzinfo=timezone.utc)
             yield state, now.timestamp()
             if not readonly:
-                save_state(db, header, state)
+                with db.connection.driver_connection.pipeline() if pipelined else nullcontext():
+                    save_state(db, header, state)
 
     def provision(self):
         """Explicit administrative initialization; never resets an existing campaign."""
@@ -125,7 +135,7 @@ class Ledger:
                     or any(type(envelope[k]) is not int or envelope[k] < 1 for k in ('calls', 'seconds'))):
                 raise ValueError('Maintenance jobs need positive call and time limits')
             envelope = {**envelope, 'usd': str(money(Decimal(envelope['usd'])))}
-        with self._transaction() as (state, now):
+        with self._transaction(job_id=job_id) as (state, now):
             jobs = state['jobs']
             if job_id in jobs:
                 job = jobs[job_id]
@@ -166,7 +176,7 @@ class Ledger:
             raise ValueError('Retrieval needs an admitted source')
         values = [int(kind == 'retrieval' or source is not None), int(cost > 0),
                   math.ceil(seconds * 1000), str(cost), int(kind not in {'work', 'worker'})]
-        with self._transaction() as (state, now):
+        with self._transaction(job_id=job_id) as (state, now):
             job = state['jobs'][job_id]
             if state['blocked'] or job['cancelled']:
                 raise BudgetDenied('Project or job is stopped')
@@ -216,10 +226,11 @@ class Ledger:
             for key, _ in keys:
                 self._add(state['scopes'][key], values)
             token = uuid.uuid4().hex
-            attempts[token] = dict(job=job_id, kind=kind, source=source, created=now, expires=now + seconds,
+            receipt = dict(job=job_id, kind=kind, source=source, created=now, expires=now + seconds,
                 status='held', owner=uuid.uuid4().hex, scopes=[key for key, _ in keys], values=values,
                 background=job['kind'] != 'buyer', fees={k: str(getattr(charge, k)) for k in ('provider','gateway','payment','byok')})
-            owner = attempts[token]['owner']
+            attempts.insert_new(token, receipt)
+            owner = receipt['owner']
             if resource_id:
                 attempts[token]['resource'] = resource_id
         return Attempt(self, token, owner)
@@ -231,7 +242,7 @@ class Ledger:
 
     def _change(self, token, owner, action, actual=None, elapsed=None):
         overrun = False
-        with self._transaction() as (state, now):
+        with self._transaction(token=token) as (state, now):
             attempt = state['attempts'][token]
             if attempt['owner'] != owner or attempt['status'] not in {'held', 'sent'}:
                 raise BudgetDenied('Reservation owner is stale or attempt is already settled')
@@ -321,7 +332,7 @@ class Attempt:
         """
         import json
         safe = json.loads(json.dumps(metadata, allow_nan=False))
-        with self.ledger._transaction() as (state, now):
+        with self.ledger._transaction(token=self.token) as (state, now):
             attempt = state['attempts'][self.token]
             if (attempt['owner'] != self.owner or attempt['status'] not in {'held', 'sent'}
                     or now >= attempt['expires']):
