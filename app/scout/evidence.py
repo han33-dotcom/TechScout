@@ -68,7 +68,7 @@ _QUOTES = str.maketrans({'’': "'", '‘': "'", '“': '"', '”': '"', '–': 
 
 def normalize(text: str) -> str:
     text = (text or '').translate(_QUOTES).lower()
-    text = text.replace('\\"', '"').replace('\\/', '/')
+    text = text.replace('\\"', '"').replace('\\/', '/').replace('|', ' ')  # page passages join lines with ' | '
     return _WS.sub(' ', text).strip()
 
 

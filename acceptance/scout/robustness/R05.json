@@ -1,0 +1,412 @@
+{
+ "run_id": "scout-r05-20261127T225125",
+ "request": {
+  "id": "R05",
+  "text": "A new MacBook Pro M4 Max for under $500 delivered to Beirut",
+  "mode": "delivery",
+  "destination": "Beirut",
+  "run_id": "scout-r05-20261127T225125"
+ },
+ "status": "no_match",
+ "message": "I found no new MacBook Pro M4 Max under $500 delivered to Beirut after searching all 36 shops.\nFor price context, verified exact-model listings were:\n• Tech Zone: 14.2-inch, 36GB/1TB — $3050.00, out of stock.\n• JAK Computer: 16-inch, 36GB — $3325.00, out of stock.\nNeither listing explicitly confirms new condition; delivery fees were not verified.\nJAK’s $0.10 listings are also unavailable—not purchasable bargains.\nIf $500 is firm, consider an older used/refurbished MacBook or a budget Windows laptop instead.",
+ "question": null,
+ "offers": [],
+ "proposed": [],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Check exact model across shops; budget likely far below current pricing, but verify.",
+   "at_s": 11.8,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "MacBook Pro M4 Max"
+    },
+    {
+     "tool": "search",
+     "query": "MacBook M4 Max 14"
+    },
+    {
+     "tool": "search",
+     "query": "MacBook M4 Max 16"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Verify realistic exact-model prices at two shops before concluding no match; sub-dollar unavailable listings are not purchasable offers.",
+   "at_s": 37.0,
+   "calls": [
+    {
+     "tool": "open",
+     "url": "https://techzone.com.lb/product/apple-macbook-pro-m4-max-14-core-cpu-36gb-ram-1tb-ssd-14-2-inch-32-core-gpu-space-black/"
+    },
+    {
+     "tool": "open",
+     "url": "https://jakcomputer.com/products/apple-macbook-pro-2"
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Exact model exists, but no purchasable match within the budget. Verified realistic prices at two shops; neither is in stock. No delivery recommendation is being made.",
+   "at_s": 48.7,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 15531,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 15546,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 15906,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 219,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 1219,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 9610,
+   "usage": {
+    "actual_usd": "0.0041277",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3180,
+     "output_tokens": 114,
+     "total_tokens": 3294
+    },
+    "latency_ms": 4015,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 9328,
+   "usage": {
+    "actual_usd": "0.0186227",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 8882,
+     "output_tokens": 138,
+     "total_tokens": 9020
+    },
+    "latency_ms": 4813,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 10500,
+   "usage": {
+    "actual_usd": "0.0219977",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 9924,
+     "output_tokens": 215,
+     "total_tokens": 10139
+    },
+    "latency_ms": 6031,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  }
+ ],
+ "retailer_requests": 74,
+ "seconds": 48.7,
+ "spend": {
+  "settled_usd": "0.0447481",
+  "uncertain_usd": "0",
+  "model_calls": 3,
+  "ledger_job": "scout-r05-20261127T225125"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://jakcomputer.com/products/apple-macbook-pro-3",
+   "shop_id": "jak_computer",
+   "observed_at": "2026-11-27T22:51:50+00:00",
+   "sha256": "48ea04fa8fe4d8ac2caa6e64208d1b935046fd066134eab816ad6e6560a6b652",
+   "product": {
+    "shop": "JAK Computer",
+    "shop_id": "jak_computer",
+    "title": "Apple MacBook Pro MX2G3LL/A - Apple M4 MAX 14-Core - 32-Core GPU | 16-Core Neural Engine - 36GB RAM",
+    "url": "https://jakcomputer.com/products/apple-macbook-pro-3",
+    "vendor": "Apple",
+    "product_type": "simple",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-27T22:51:50+00:00",
+    "variants": [
+     {
+      "variant_id": "44593416667183",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "0.10",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "MX2G3LL/A -56",
+      "url": "https://jakcomputer.com/products/apple-macbook-pro-3?variant=44593416667183"
+     }
+    ],
+    "description": "Apple MacBook Pro MX2G3LL/A: Peerless Performance in a Portable Design\nThe Apple MacBook Pro MX2G3LL/A exemplifies Apple's commitment to pushing the boundaries of mobile computing, offering a potent blend of raw power, advanced graphics, and intelligent AI capabilities within a stunningly portable form factor. Launched in late 2024, this 14-inch MacBook Pro is meticulously engineered for creative professionals, data scientists, and developers who require desktop-class performance for intensive applications and workflows, even when on the move.\nAt the core of the Apple MacBook Pro MX2G3LL/A is the groundbreaking Apple M4 Max chip. This System on a Chip (SoC) features a 14-core CPU, comprised of 10 high-performance cores and 4 high-efficiency cores. This advanced CPU architecture delivers extraordinary multi-threaded performance, making light work of complex calculations, large software compilations, and demanding multi-application workflows. The integrated 32-core GPU is a powerhouse for graphics-intensive tasks, benefiting from hardware-accelerated ray tracing and Dynamic Caching to provide exceptional speed and visual fidelity in 3D rendering, video editing, and advanced graphics applications. Furthermore, the 16-core Neural Engine significantly accelerates on-device machine learning operations, powering the next generation of AI features within macOS and professional software with remarkable efficiency.\nThe visual experience on the Apple MacBook Pro MX2G3LL/A is truly immer"
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://shop.itworkslb.net/products/apple-macbook-pro-16-m4-max-chip-64gb-ram-2tb-ssd-774913",
+   "shop_id": "itworks",
+   "observed_at": "2026-11-27T22:51:51+00:00",
+   "sha256": "a471f45a6ea61219e8d266f53e3749560655bcb1a4d7c6f9c61938c3d82a67d6",
+   "excerpt": "Apple MacBook Pro 16\" M4 Max Chip - 64GB Ram - 2TB SSD | ITWorks LebanonSkip to content\nCART\n×\nLoading cart ...\nSEARCH\n×\nSearch\nStart typing to search…\nMENU\n×\nHomeAccountVisit\nShop by category\nDesktop PCs & SystemsGaming PCs, Business PCs, Mini PCs & more\nLaptopsGaming Laptops, Business Laptops, Ultrabooks & more\nPC ComponentsGraphics Cards, Processors, Motherboards & more\nMonitors & DisplaysGaming Monitors, Office Monitors, 4K Monitors & more\nPeripheralsKeyboards, Mice, Headsets & more\nPrinters, Office & POSLaser Printers, Inkjet Printers, Multifunction Printers & more\nNetworkingRouters, Mesh Wi-Fi, Switches & more\nStorageSSDs & NVMe, Hard Drives, External SSDs & more\nGaming & ConsolesConsoles, Video Games, Console Accessories & more\nMobile Devices & WearablesSmartphones, iPads, Android Tablets & more\nCCTV, Security & Smart DevicesIP Cameras, CCTV Cameras, DVR & NVR & more\nCameras & Creator GearDSLR Cameras, Mirrorless Cameras, Action Cameras & more\nAccessories & CablesLaptop Chargers, Laptop Bags & Sleeves, Docking Stations & more\nPower & BackupUPS, Surge Protectors, Power Banks & more\nSoftwareWindows, Microsoft Office, Antivirus & Security\nHome & Personal CareAir Purifiers & Humidifiers, Fans & Dehumidifiers, Desk Lamps & Lighting & more\nITWorksAll CategoriesPC BuilderIT Services\nAsk AI\nSearch/Sign in\nHome\n/\nLaptops\n/\nApple MacBook Pro 16\" M4 Max Chip - 64GB Ram - 2TB SSD\nApple\nApple MacBook Pro 16\" M4 Max Chip - 64GB Ram - 2TB SSD\nCall for availability\nCall for availabili",
+   "quoted": []
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://shop.itworkslb.net/products/apple-macbook-pro-mx2g3lla-apple-m4-max-14-core-32-core-gpu-794900",
+   "shop_id": "itworks",
+   "observed_at": "2026-11-27T22:51:51+00:00",
+   "sha256": "5cd86ab18c96d3ebb8b9739bafea23e7e40f566e78b7878e33b9d59689583fd5",
+   "excerpt": "Apple MacBook Pro MX2G3LL/A - Apple M4 MAX 14-Core - 32-Core GPU | ITWorks LebanonSkip to content\nCART\n×\nLoading cart ...\nSEARCH\n×\nSearch\nStart typing to search…\nMENU\n×\nHomeAccountVisit\nShop by category\nDesktop PCs & SystemsGaming PCs, Business PCs, Mini PCs & more\nLaptopsGaming Laptops, Business Laptops, Ultrabooks & more\nPC ComponentsGraphics Cards, Processors, Motherboards & more\nMonitors & DisplaysGaming Monitors, Office Monitors, 4K Monitors & more\nPeripheralsKeyboards, Mice, Headsets & more\nPrinters, Office & POSLaser Printers, Inkjet Printers, Multifunction Printers & more\nNetworkingRouters, Mesh Wi-Fi, Switches & more\nStorageSSDs & NVMe, Hard Drives, External SSDs & more\nGaming & ConsolesConsoles, Video Games, Console Accessories & more\nMobile Devices & WearablesSmartphones, iPads, Android Tablets & more\nCCTV, Security & Smart DevicesIP Cameras, CCTV Cameras, DVR & NVR & more\nCameras & Creator GearDSLR Cameras, Mirrorless Cameras, Action Cameras & more\nAccessories & CablesLaptop Chargers, Laptop Bags & Sleeves, Docking Stations & more\nPower & BackupUPS, Surge Protectors, Power Banks & more\nSoftwareWindows, Microsoft Office, Antivirus & Security\nHome & Personal CareAir Purifiers & Humidifiers, Fans & Dehumidifiers, Desk Lamps & Lighting & more\nITWorksAll CategoriesPC BuilderIT Services\nAsk AI\nSearch/Sign in\nHome\n/\nLaptops\n/\nApple MacBook Pro MX2G3LL/A - Apple M4 MAX 14-Core - 32-Core GPU\nApple\nApple MacBook Pro MX2G3LL/A - Apple M4 MAX 14-Core - 32-Core GPU\nCall for av",
+   "quoted": []
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://jakcomputer.com/products/apple-macbook-pro-mx2k3ll-a-apple-m4-max-14-core-32-core-gpu-16-core-neural-engine-36gb-ram",
+   "shop_id": "jak_computer",
+   "observed_at": "2026-11-27T22:51:52+00:00",
+   "sha256": "29c99d0357bc8222adf63e21cb9fa7579dada6ceafb75c74d5eb28050b6ce0c7",
+   "product": {
+    "shop": "JAK Computer",
+    "shop_id": "jak_computer",
+    "title": "Apple MacBook Pro MX2K3LL/A - Apple M4 MAX 14-Core - 32-Core GPU | 16-Core Neural Engine - 36GB RAM",
+    "url": "https://jakcomputer.com/products/apple-macbook-pro-mx2k3ll-a-apple-m4-max-14-core-32-core-gpu-16-core-neural-engine-36gb-ram",
+    "vendor": "Apple",
+    "product_type": "simple",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-27T22:51:52+00:00",
+    "variants": [
+     {
+      "variant_id": "44593416831023",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "0.10",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "MX2K3LL/A -56",
+      "url": "https://jakcomputer.com/products/apple-macbook-pro-mx2k3ll-a-apple-m4-max-14-core-32-core-gpu-16-core-neural-engine-36gb-ram?variant=44593416831023"
+     }
+    ],
+    "description": "Apple MacBook Pro MX2K3LL/A: Compact Powerhouse with M4 Max\nThe Apple MacBook Pro MX2K3LL/A redefines what's possible in a compact professional laptop, blending extraordinary power with remarkable portability. Introduced in late 2024, this 14-inch MacBook Pro is engineered for demanding creative and technical professionals who require top-tier performance for tasks like intensive video editing, complex 3D rendering, and sophisticated software development, all while maintaining a highly mobile setup.\nAt the core of the Apple MacBook Pro MX2K3LL/A is the groundbreaking Apple M4 Max chip. This System on a Chip (SoC) boasts a 14-core CPU, configured with 10 high-performance cores and 4 high-efficiency cores. This advanced CPU architecture delivers a significant leap in multi-threaded performance, enabling rapid execution of challenging computational tasks and seamless multitasking across professional applications. The integrated 32-core GPU is a powerhouse for graphics-intensive workflows, offering hardware-accelerated ray tracing and Dynamic Caching to provide incredible speed and visual fidelity in design, animation, and gaming. Furthermore, the 16-core Neural Engine dramatically accelerates on-device machine learning capabilities, powering cutting-edge AI features within macOS and specialized applications with unmatched efficiency.\nThe visual experience on the Apple MacBook Pro MX2K3LL/A is nothing short of stunning, thanks to its 14.2-inch Liquid Retina XDR display. With a na"
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://jakcomputer.com/products/apple-macbook-pro",
+   "shop_id": "jak_computer",
+   "observed_at": "2026-11-27T22:51:52+00:00",
+   "sha256": "c0465caf7b8767179bdc14d26488bcce66aa5063368be81859fb62379337264c",
+   "product": {
+    "shop": "JAK Computer",
+    "shop_id": "jak_computer",
+    "title": "Apple MacBook Pro MX313LL/A - Apple M4 MAX 16-Core - 40-Core GPU | 16-Core Neural Engine - 48GB RAM",
+    "url": "https://jakcomputer.com/products/apple-macbook-pro",
+    "vendor": "Apple",
+    "product_type": "simple",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-27T22:51:52+00:00",
+    "variants": [
+     {
+      "variant_id": "44593416863791",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "0.10",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "MX313LL/A-56",
+      "url": "https://jakcomputer.com/products/apple-macbook-pro?variant=44593416863791"
+     }
+    ],
+    "description": "Apple MacBook Pro MX313LL/A: Unrivaled Power for Professionals\nThe Apple MacBook Pro MX313LL/A represents the pinnacle of Apple's professional laptop lineup, offering an unparalleled combination of raw processing power, advanced graphics capabilities, and groundbreaking AI acceleration. Launched in late 2024, this 16-inch model is engineered to tackle the most intensive creative and scientific workloads with remarkable efficiency and speed, setting a new benchmark for high-performance mobile workstations.\nAt the heart of the Apple MacBook Pro MX313LL/A is the formidable Apple M4 Max chip. This System on a Chip (SoC) features a 16-core CPU, comprised of 12 high-performance cores and 4 high-efficiency cores, delivering astonishing multi-threaded performance for tasks like complex software compilation, intricate 3D rendering, and professional video editing. Complementing the CPU is a powerful 40-core GPU, which, alongside hardware-accelerated ray tracing and Dynamic Caching, provides exceptional graphics performance for visually demanding applications, games, and creative content. Furthermore, the integrated 16-core Neural Engine is significantly faster than previous generations, unlocking transformative on-device AI experiences and accelerating machine learning workflows, a cornerstone of Apple Intelligence features.\nThe visual experience on the Apple MacBook Pro MX313LL/A is nothing short of spectacular, thanks to its 16.2-inch Liquid Retina XDR display. With a native resoluti"
+   }
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://shop.itworkslb.net/products/apple-macbook-pro-14-inch-m4-max-36gb-1tb-mx2k3-mx2g3-782637",
+   "shop_id": "itworks",
+   "observed_at": "2026-11-27T22:51:52+00:00",
+   "sha256": "4abb1a4b77a7d20d8569d134998ad8227061b131ebd215f39569923991deb10b",
+   "excerpt": "Apple MacBook Pro 14-inch M4 Max, 36GB, 1TB MX2K3, MX2G3 | ITWorks LebanonSkip to content\nCART\n×\nLoading cart ...\nSEARCH\n×\nSearch\nStart typing to search…\nMENU\n×\nHomeAccountVisit\nShop by category\nDesktop PCs & SystemsGaming PCs, Business PCs, Mini PCs & more\nLaptopsGaming Laptops, Business Laptops, Ultrabooks & more\nPC ComponentsGraphics Cards, Processors, Motherboards & more\nMonitors & DisplaysGaming Monitors, Office Monitors, 4K Monitors & more\nPeripheralsKeyboards, Mice, Headsets & more\nPrinters, Office & POSLaser Printers, Inkjet Printers, Multifunction Printers & more\nNetworkingRouters, Mesh Wi-Fi, Switches & more\nStorageSSDs & NVMe, Hard Drives, External SSDs & more\nGaming & ConsolesConsoles, Video Games, Console Accessories & more\nMobile Devices & WearablesSmartphones, iPads, Android Tablets & more\nCCTV, Security & Smart DevicesIP Cameras, CCTV Cameras, DVR & NVR & more\nCameras & Creator GearDSLR Cameras, Mirrorless Cameras, Action Cameras & more\nAccessories & CablesLaptop Chargers, Laptop Bags & Sleeves, Docking Stations & more\nPower & BackupUPS, Surge Protectors, Power Banks & more\nSoftwareWindows, Microsoft Office, Antivirus & Security\nHome & Personal CareAir Purifiers & Humidifiers, Fans & Dehumidifiers, Desk Lamps & Lighting & more\nITWorksAll CategoriesPC BuilderIT Services\nAsk AI\nSearch/Sign in\nHome\n/\nLaptops\n/\nApple MacBook Pro 14-inch M4 Max, 36GB, 1TB MX2K3, MX2G3\nApple\nApple MacBook Pro 14-inch M4 Max, 36GB, 1TB MX2K3, MX2G3\nCall for availability\nCall for avai",
+   "quoted": []
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://shop.itworkslb.net/products/apple-macbook-pro-14-inch-m4-max-36gb-1tb-mx2k3-mx2g3-782637",
+   "shop_id": "itworks",
+   "observed_at": "2026-11-27T22:51:52+00:00",
+   "sha256": "35f47abec64b1d71d61936b968e74afd11e279db92a1146ecd9ecfbd31b53aca",
+   "excerpt": "Apple MacBook Pro 14-inch M4 Max, 36GB, 1TB MX2K3, MX2G3 | ITWorks LebanonSkip to content\nCART\n×\nLoading cart ...\nSEARCH\n×\nSearch\nStart typing to search…\nMENU\n×\nHomeAccountVisit\nShop by category\nDesktop PCs & SystemsGaming PCs, Business PCs, Mini PCs & more\nLaptopsGaming Laptops, Business Laptops, Ultrabooks & more\nPC ComponentsGraphics Cards, Processors, Motherboards & more\nMonitors & DisplaysGaming Monitors, Office Monitors, 4K Monitors & more\nPeripheralsKeyboards, Mice, Headsets & more\nPrinters, Office & POSLaser Printers, Inkjet Printers, Multifunction Printers & more\nNetworkingRouters, Mesh Wi-Fi, Switches & more\nStorageSSDs & NVMe, Hard Drives, External SSDs & more\nGaming & ConsolesConsoles, Video Games, Console Accessories & more\nMobile Devices & WearablesSmartphones, iPads, Android Tablets & more\nCCTV, Security & Smart DevicesIP Cameras, CCTV Cameras, DVR & NVR & more\nCameras & Creator GearDSLR Cameras, Mirrorless Cameras, Action Cameras & more\nAccessories & CablesLaptop Chargers, Laptop Bags & Sleeves, Docking Stations & more\nPower & BackupUPS, Surge Protectors, Power Banks & more\nSoftwareWindows, Microsoft Office, Antivirus & Security\nHome & Personal CareAir Purifiers & Humidifiers, Fans & Dehumidifiers, Desk Lamps & Lighting & more\nITWorksAll CategoriesPC BuilderIT Services\nAsk AI\nSearch/Sign in\nHome\n/\nLaptops\n/\nApple MacBook Pro 14-inch M4 Max, 36GB, 1TB MX2K3, MX2G3\nApple\nApple MacBook Pro 14-inch M4 Max, 36GB, 1TB MX2K3, MX2G3\nCall for availability\nCall for avai",
+   "quoted": []
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://shop.itworkslb.net/products/apple-macbook-pro-mx2g3lla-apple-m4-max-14-core-32-core-gpu-794900",
+   "shop_id": "itworks",
+   "observed_at": "2026-11-27T22:51:52+00:00",
+   "sha256": "f9accf594fde99d0f15d5e416577ec97a412c1e2ef6794f9bd1b7c60d304e4ef",
+   "excerpt": "Apple MacBook Pro MX2G3LL/A - Apple M4 MAX 14-Core - 32-Core GPU | ITWorks LebanonSkip to content\nCART\n×\nLoading cart ...\nSEARCH\n×\nSearch\nStart typing to search…\nMENU\n×\nHomeAccountVisit\nShop by category\nDesktop PCs & SystemsGaming PCs, Business PCs, Mini PCs & more\nLaptopsGaming Laptops, Business Laptops, Ultrabooks & more\nPC ComponentsGraphics Cards, Processors, Motherboards & more\nMonitors & DisplaysGaming Monitors, Office Monitors, 4K Monitors & more\nPeripheralsKeyboards, Mice, Headsets & more\nPrinters, Office & POSLaser Printers, Inkjet Printers, Multifunction Printers & more\nNetworkingRouters, Mesh Wi-Fi, Switches & more\nStorageSSDs & NVMe, Hard Drives, External SSDs & more\nGaming & ConsolesConsoles, Video Games, Console Accessories & more\nMobile Devices & WearablesSmartphones, iPads, Android Tablets & more\nCCTV, Security & Smart DevicesIP Cameras, CCTV Cameras, DVR & NVR & more\nCameras & Creator GearDSLR Cameras, Mirrorless Cameras, Action Cameras & more\nAccessories & CablesLaptop Chargers, Laptop Bags & Sleeves, Docking Stations & more\nPower & BackupUPS, Surge Protectors, Power Banks & more\nSoftwareWindows, Microsoft Office, Antivirus & Security\nHome & Personal CareAir Purifiers & Humidifiers, Fans & Dehumidifiers, Desk Lamps & Lighting & more\nITWorksAll CategoriesPC BuilderIT Services\nAsk AI\nSearch/Sign in\nHome\n/\nLaptops\n/\nApple MacBook Pro MX2G3LL/A - Apple M4 MAX 14-Core - 32-Core GPU\nApple\nApple MacBook Pro MX2G3LL/A - Apple M4 MAX 14-Core - 32-Core GPU\nCall for av",
+   "quoted": []
+  },
+  {
+   "obs": "T6",
+   "kind": "page",
+   "url": "https://shop.itworkslb.net/products/apple-macbook-pro-16-m4-max-chip-64gb-ram-2tb-ssd-774913",
+   "shop_id": "itworks",
+   "observed_at": "2026-11-27T22:51:53+00:00",
+   "sha256": "6a9128e770d1918fccd76b272578df3991a0db1d8f97302e62ee599c7a3aadc3",
+   "excerpt": "Apple MacBook Pro 16\" M4 Max Chip - 64GB Ram - 2TB SSD | ITWorks LebanonSkip to content\nCART\n×\nLoading cart ...\nSEARCH\n×\nSearch\nStart typing to search…\nMENU\n×\nHomeAccountVisit\nShop by category\nDesktop PCs & SystemsGaming PCs, Business PCs, Mini PCs & more\nLaptopsGaming Laptops, Business Laptops, Ultrabooks & more\nPC ComponentsGraphics Cards, Processors, Motherboards & more\nMonitors & DisplaysGaming Monitors, Office Monitors, 4K Monitors & more\nPeripheralsKeyboards, Mice, Headsets & more\nPrinters, Office & POSLaser Printers, Inkjet Printers, Multifunction Printers & more\nNetworkingRouters, Mesh Wi-Fi, Switches & more\nStorageSSDs & NVMe, Hard Drives, External SSDs & more\nGaming & ConsolesConsoles, Video Games, Console Accessories & more\nMobile Devices & WearablesSmartphones, iPads, Android Tablets & more\nCCTV, Security & Smart DevicesIP Cameras, CCTV Cameras, DVR & NVR & more\nCameras & Creator GearDSLR Cameras, Mirrorless Cameras, Action Cameras & more\nAccessories & CablesLaptop Chargers, Laptop Bags & Sleeves, Docking Stations & more\nPower & BackupUPS, Surge Protectors, Power Banks & more\nSoftwareWindows, Microsoft Office, Antivirus & Security\nHome & Personal CareAir Purifiers & Humidifiers, Fans & Dehumidifiers, Desk Lamps & Lighting & more\nITWorksAll CategoriesPC BuilderIT Services\nAsk AI\nSearch/Sign in\nHome\n/\nLaptops\n/\nApple MacBook Pro 16\" M4 Max Chip - 64GB Ram - 2TB SSD\nApple\nApple MacBook Pro 16\" M4 Max Chip - 64GB Ram - 2TB SSD\nCall for availability\nCall for availabili",
+   "quoted": []
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://jakcomputer.com/products/apple-macbook-pro-2",
+   "shop_id": "jak_computer",
+   "observed_at": "2026-11-27T22:52:02+00:00",
+   "sha256": "cc9d5800913a30847fef7f3892a8a54c00f4d0e470b35dac32ce68d79d702225",
+   "product": {
+    "shop": "JAK Computer",
+    "shop_id": "jak_computer",
+    "title": "Apple MacBook Pro MX303LL/A - Apple M4 MAX 14-Core - 32-Core GPU | 16-Core Neural Engine - 36GB RAM",
+    "url": "https://jakcomputer.com/products/apple-macbook-pro-2",
+    "vendor": "Apple",
+    "product_type": "simple",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-27T22:52:02+00:00",
+    "variants": [
+     {
+      "variant_id": "44593416208431",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "3325.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "MX303LL/A -56",
+      "url": "https://jakcomputer.com/products/apple-macbook-pro-2?variant=44593416208431"
+     }
+    ],
+    "description": "Apple MacBook Pro MX303LL/A: Commanding Power and Visual Brilliance\nThe Apple MacBook Pro MX303LL/A stands as a testament to Apple's relentless pursuit of performance and efficiency in a professional-grade laptop. This 16-inch model, part of the late 2024 MacBook Pro lineup, is tailored for advanced users, including video editors, 3D artists, software developers, and researchers, who require immense computational power and a stunning visual canvas on the go.\nAt its core, the Apple MacBook Pro MX303LL/A is supercharged by the Apple M4 Max chip, configured with a 14-core CPU. This CPU layout, featuring 10 performance cores and 4 efficiency cores, delivers robust multi-threaded performance, making light work of complex calculations, code compilation, and simultaneous demanding applications. The integrated 32-core GPU provides exceptional graphics rendering capabilities, accelerated by hardware-based ray tracing and Dynamic Caching,\nensuring smooth performance in graphics-intensive tasks and modern gaming. Furthermore, the 16-core Neural Engine vastly accelerates on-device machine learning workflows, supporting cutting-edge AI features with incredible speed and efficiency. With a substantial 36GB of unified memory, this machine ensures that the CPU and GPU have rapid access to a massive pool of shared data, facilitating seamless multitasking and fluid operation even with memory-hungry applications.\nThe visual experience on the Apple MacBook Pro MX303LL/A is nothing short of breat"
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://techzone.com.lb/product/apple-macbook-pro-m4-max-14-core-cpu-36gb-ram-1tb-ssd-14-2-inch-32-core-gpu-space-black/",
+   "shop_id": "tech_zone",
+   "observed_at": "2026-11-27T22:52:03+00:00",
+   "sha256": "3113fd07b154d4fd6d4a8177325e43bbdf50ed81a80e0e3141f88856304ba18b",
+   "product": {
+    "shop": "Tech Zone",
+    "shop_id": "tech_zone",
+    "title": "Apple MacBook Pro M4 Max 14-Core CPU, 36GB Ram, 1TB SSD, 14.2 Inch, 32-Core GPU, Space Black",
+    "url": "https://techzone.com.lb/product/apple-macbook-pro-m4-max-14-core-cpu-36gb-ram-1tb-ssd-14-2-inch-32-core-gpu-space-black/",
+    "vendor": null,
+    "product_type": null,
+    "condition": null,
+    "source": "woo_store_api",
+    "observed_at": "2026-11-27T22:52:03+00:00",
+    "variants": [
+     {
+      "variant_id": "35209",
+      "title": "Apple MacBook Pro M4 Max 14-Core CPU, 36GB Ram, 1TB SSD, 14.2 Inch, 32-Core GPU, Space Black",
+      "options": {},
+      "price": "3050.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": "<span>Out of stock</span>",
+      "sku": "MX2K3HN/A",
+      "url": "https://techzone.com.lb/product/apple-macbook-pro-m4-max-14-core-cpu-36gb-ram-1tb-ssd-14-2-inch-32-core-gpu-space-black/"
+     }
+    ],
+    "description": "1 Year Warranty\nM4 Max 14-Core CPU, 36GB Ram, 1TB SSD, 14.2 Inch, 32-Core GPU, Space Black",
+    "extra": {
+     "attributes": {
+      "Brand": [
+       "Apple"
+      ],
+      "LPT Screen": [
+       "14\""
+      ]
+     }
+    }
+   }
+  }
+ ]
+}

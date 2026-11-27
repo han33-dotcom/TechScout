@@ -1,0 +1,444 @@
+{
+ "run_id": "scout-d01-20261127T223615",
+ "request": {
+  "id": "D01",
+  "text": "Compare two Lebanese shops selling a new Logitech H111 wired 3.5 mm headset. Which is cheaper delivered to Beirut?",
+  "mode": "delivery",
+  "destination": "Beirut",
+  "category": "audio",
+  "run_id": "scout-d01-20261127T223615"
+ },
+ "status": "offers",
+ "message": "Technodel has the lowest confirmed delivered total: $10.00 + $4 delivery = $14.00 to Beirut.\n• Technodel: in stock, explicitly marked new; flat $4 delivery throughout Lebanon.\n• iSolved IT Solutions: $13.00, in stock and described as “New, original”; prices include VAT, but shipping is calculated at checkout.\nA definitive delivered-price winner cannot be confirmed: iSolved would be cheaper only if its shipping costs less than $1.\nSuggestion: choose Technodel for the confirmed $14.00 total, or check iSolved’s shipping charge before deciding. Technodel’s VAT treatment was not stated.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "best",
+   "shop": "Technodel",
+   "shop_id": "technodel",
+   "title": "Logitech Wired Headset H111 Stereo Business (Black) 981-000593",
+   "variant": "Logitech Wired Headset H111 Stereo Business (Black) 981-000593",
+   "url": "https://technodel.net/product/logitech-logitech-wired-headset-h111-stereo-business-black-981-000593",
+   "price": "10.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "Logitech H111 wired headset, part 981-000593, the requested 3.5 mm model.",
+   "delivery_fee": "4.00",
+   "total": "14.00",
+   "total_basis": "listed price + delivery fee published by technodel (\"Flat $4 anywhere in Lebanon; free on orders of $500 or more\", T3)",
+   "complete": false,
+   "gaps": [
+    "not confirmed: 3.5 mm connection",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "Logitech H111 wired headset",
+     "status": "met",
+     "quote": "Logitech Wired Headset H111 Stereo Business (Black) 981-000593",
+     "obs": "P7",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "3.5 mm connection",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "NewCondition",
+     "obs": "P7",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P7",
+     "url": "https://technodel.net/product/logitech-logitech-wired-headset-h111-stereo-business-black-981-000593",
+     "read": "https://technodel.net/product/logitech-logitech-wired-headset-h111-stereo-business-black-981-000593",
+     "source": "schema_org_jsonld",
+     "observed_at": "2026-11-27T22:36:35+00:00",
+     "sha256": "758031afa630f32e75ef9d6a8a2c83a7f7fd19b3f6f65b68ff50d5929c66f065"
+    },
+    {
+     "obs": "T3",
+     "url": "https://technodel.net/api/llm-context",
+     "source": "shop delivery terms",
+     "observed_at": "2026-11-27T22:36:44+00:00",
+     "sha256": "b55d9346dff533ed1909b1f8a99169bed1f5e262d2fdf59ad12d96d780aa7c84"
+    }
+   ],
+   "seller_basis": "Technodel: Lebanese shop in the reviewed directory",
+   "downgrades": []
+  },
+  {
+   "tier": "best",
+   "shop": "iSolved IT Solutions",
+   "shop_id": "isolvedit",
+   "title": "Logitech H111 Stereo Headset with Mic (Single 3.5mm Jack)",
+   "variant": "Default Title",
+   "url": "https://isolvedit.me/products/logitech-h111-stereo-headset-with-mic-single-3-5mm-jack?variant=68472651350127",
+   "price": "13.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "Logitech H111 with a single 3.5mm jack, part 981-000593.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "delivery fee to your area is not published or not confirmed"
+   ],
+   "requirements": [
+    {
+     "requirement": "Logitech H111 wired 3.5 mm headset",
+     "status": "met",
+     "quote": "Logitech H111 Stereo Headset with Mic (Single 3.5mm Jack)",
+     "obs": "P3",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "New, original",
+     "obs": "P3",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P3",
+     "url": "https://isolvedit.me/products/logitech-h111-stereo-headset-with-mic-single-3-5mm-jack",
+     "read": "https://isolvedit.me/products/logitech-h111-stereo-headset-with-mic-single-3-5mm-jack.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-27T22:36:34+00:00",
+     "sha256": "c33a8941efe738a00f8ef6423dce554bde1387224b74a77cb8ad3d3d120fc1c6"
+    }
+   ],
+   "seller_basis": "iSolved IT Solutions: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P7",
+   "variant_id": "RK-MVHFP2VJ",
+   "identity": "exact",
+   "identity_reason": "Logitech H111 wired headset, part 981-000593, the requested 3.5 mm model.",
+   "condition": "new",
+   "condition_quote": "NewCondition",
+   "condition_obs": "P7",
+   "requirements": [
+    {
+     "requirement": "Logitech H111 wired headset",
+     "status": "met",
+     "evidence_obs": "P7",
+     "quote": "Logitech Wired Headset H111 Stereo Business (Black) 981-000593"
+    },
+    {
+     "requirement": "3.5 mm connection",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "P7",
+     "quote": "NewCondition"
+    }
+   ],
+   "delivery_obs": "T3",
+   "delivery_quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more",
+   "delivery_fee_usd": "4",
+   "free_delivery_over_usd": "500",
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P3",
+   "variant_id": "68472651350127",
+   "identity": "exact",
+   "identity_reason": "Logitech H111 with a single 3.5mm jack, part 981-000593.",
+   "condition": "new",
+   "condition_quote": "New, original",
+   "condition_obs": "P3",
+   "requirements": [
+    {
+     "requirement": "Logitech H111 wired 3.5 mm headset",
+     "status": "met",
+     "evidence_obs": "P3",
+     "quote": "Logitech H111 Stereo Headset with Mic (Single 3.5mm Jack)"
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "P3",
+     "quote": "New, original"
+    }
+   ],
+   "delivery_obs": "T5",
+   "delivery_quote": "Discounts and shipping calculated at checkout.",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": "✅ All prices include VAT — nothing extra to pay",
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "",
+   "at_s": 10.7,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "Logitech H111"
+    },
+    {
+     "tool": "search",
+     "query": "Logitech H111 3.5"
+    },
+    {
+     "tool": "search",
+     "query": "981-000593"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Check delivery terms for explicitly new offers, including lowest-priced Technodel.",
+   "at_s": 28.4,
+   "calls": [
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "technodel"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "mobileleb"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "isolvedit"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Check Mobileleb's published shipping fee to compare two explicitly new headsets delivered to Beirut.",
+   "at_s": 38.9,
+   "calls": [
+    {
+     "tool": "read",
+     "url": "https://mobileleb.com/policies/shipping-policy",
+     "terms": [
+      "delivery",
+      "shipping",
+      "Beirut",
+      "$"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 4,
+   "notes": "Check iSolved's shipping policy for a second confirmed delivered total.",
+   "at_s": 47.2,
+   "calls": [
+    {
+     "tool": "read",
+     "url": "https://isolvedit.me/policies/shipping-policy",
+     "terms": [
+      "Beirut",
+      "delivery",
+      "$",
+      "shipping"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 5,
+   "notes": "",
+   "at_s": 63.5,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 8719,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 9906,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 10453,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 1141,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 2391,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 2641,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 688,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 656,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7719,
+   "usage": {
+    "actual_usd": "0.008926",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3195,
+     "output_tokens": 94,
+     "total_tokens": 3289
+    },
+    "latency_ms": 3984,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7234,
+   "usage": {
+    "actual_usd": "0.0181802",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 8837,
+     "output_tokens": 105,
+     "total_tokens": 8942
+    },
+    "latency_ms": 3797,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7906,
+   "usage": {
+    "actual_usd": "0.0229427",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 10810,
+     "output_tokens": 88,
+     "total_tokens": 10898
+    },
+    "latency_ms": 3891,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 4,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7547,
+   "usage": {
+    "actual_usd": "0.0243027",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 11362,
+     "output_tokens": 86,
+     "total_tokens": 11448
+    },
+    "latency_ms": 3812,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 5,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 15610,
+   "usage": {
+    "actual_usd": "0.0317777",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 12444,
+     "output_tokens": 563,
+     "total_tokens": 13007
+    },
+    "latency_ms": 11672,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  }
+ ],
+ "retailer_requests": 80,
+ "seconds": 63.5,
+ "spend": {
+  "settled_usd": "0.1061293",
+  "uncertain_usd": "0",
+  "model_calls": 5,
+  "ledger_job": "scout-d01-20261127T223615"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1"
+}

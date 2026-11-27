@@ -1,6 +1,6 @@
 """Run the scout agent over a request file and save every report.
 
-    python eval/run_scout.py eval/scout_dev_requests.json --out var/scout-eval/dev [--ids D01 D03]
+    python eval/run_scout.py acceptance/scout/requests/development.json --out var/scout-eval/dev [--ids D01 D03]
 
 Runs are sequential (one buyer ledger job each). Each report is the full RunResult JSON:
 the request, every turn's notes and tool calls, model-call usage, the checked offers with

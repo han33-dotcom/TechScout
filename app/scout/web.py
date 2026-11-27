@@ -25,7 +25,8 @@ import socket
 import threading
 import time
 from typing import Callable
-from urllib.parse import urljoin, urlsplit
+import posixpath
+from urllib.parse import unquote, urljoin, urlsplit
 
 import httpcore2
 import httpx2
@@ -47,6 +48,8 @@ BLOCKED_NETWORKS = tuple(ipaddress.ip_network(n) for n in (
     '198.51.100.0/24', '203.0.113.0/24', '224.0.0.0/4', '240.0.0.0/4',
     '2001::/23', '2001:db8::/32', '2002::/16', '3fff::/20', 'fc00::/7', 'fe80::/10', '::/128', '::1/128'))
 GLOBAL_UNICAST_V6 = ipaddress.ip_network('2000::/3')
+ACTION_QUERY = re.compile(r'(^|&)(add-to-cart|add_to_cart|wc-ajax|remove_item|customer-logout|action|'
+                          r'removed_item|apply_coupon)=', re.IGNORECASE)
 
 
 class FetchError(Exception):
@@ -141,6 +144,9 @@ class SafeWeb:
             if len(chain) > MAX_REDIRECTS:
                 raise FetchError('REDIRECTS', 'too many redirects')
             self._check_url(target)
+            if not same_site(url, target):
+                # A redirect to another site would credit that site's page to the shop that was asked.
+                raise FetchError('OFF_SITE', 'the shop redirected to a different website')
             if self.obey_robots and not self.robots_for(target, deadline=deadline).allows(target):
                 raise FetchError('ROBOTS', "the shop's robots.txt does not allow the redirect target")
             chain.append(target)
@@ -154,7 +160,10 @@ class SafeWeb:
                 try:
                     page = self._once(robots_url, 'any', deadline, self._clock(), robots_url,
                                       allow_status=True, count_robots=False)
-                    if isinstance(page, str):  # redirected robots.txt: one more hop, same host family
+                    if isinstance(page, str):  # redirected robots.txt: one more checked hop on the same site
+                        self._check_url(page)
+                        if not same_site(robots_url, page):
+                            raise FetchError('OFF_SITE', 'robots.txt redirected to a different website')
                         page = self._once(page, 'any', deadline, self._clock(), robots_url,
                                           allow_status=True, count_robots=False)
                     status = page.status if isinstance(page, Page) else None
@@ -174,8 +183,19 @@ class SafeWeb:
             raise FetchError('BAD_URL', 'only plain https URLs are read')
         if parts.port not in (None, 443):
             raise FetchError('BAD_URL', 'only the standard https port is read')
-        if DENIED_PATH.search(parts.path.lower() + '/'):
+        if '%2f' in parts.path.lower() or '%5c' in parts.path.lower():
+            raise FetchError('BAD_URL', 'encoded slashes in the path are refused')
+        path = parts.path
+        for _ in range(3):  # decode repeatedly so %2563art cannot hide /cart
+            decoded = unquote(path)
+            if decoded == path:
+                break
+            path = decoded
+        path = posixpath.normpath(path or '/').lower()
+        if DENIED_PATH.search(path + '/'):
             raise FetchError('DENIED_PATH', 'cart, checkout, account and admin pages are never read')
+        if ACTION_QUERY.search(unquote(parts.query or '')):
+            raise FetchError('DENIED_PATH', 'store actions (add to cart, log out, ajax actions) are never requested')
 
     def _address(self, host: str) -> str:
         try:
@@ -285,6 +305,11 @@ class SafeWeb:
                 raise FetchError('DEADLINE', 'no time left for this read')
             chunks.append(chunk)
         return b''.join(chunks)
+
+
+def same_site(a: str, b: str) -> bool:
+    """Same host, allowing only a www. prefix difference."""
+    return _host(a).removeprefix('www.') == _host(b).removeprefix('www.')
 
 
 def _host(url: str) -> str:

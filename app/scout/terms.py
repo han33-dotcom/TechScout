@@ -89,19 +89,18 @@ If something is not stated, leave it out. Never guess."""
 
 
 def _amount_in(quote: str, value: str | None) -> bool:
+    """The stated amount appears in the quote next to a currency marker ("$5", "5$", "USD 5");
+    0 also matches an explicit "free". Bare numbers (days, kilograms) never count."""
+    from app.scout.verify import currency_amounts
     if value in (None, ''):
         return True
     try:
         want = Decimal(value)
     except Exception:  # noqa: BLE001
         return False
-    for raw in re.findall(r'\d[\d,]*(?:\.\d+)?', quote or ''):
-        try:
-            if Decimal(raw.replace(',', '')) == want:
-                return True
-        except Exception:  # noqa: BLE001
-            continue
-    return want == 0 and 'free' in (quote or '').lower()
+    if want == 0:
+        return 'free' in (quote or '').lower()
+    return any(a[0] == want and a[1] == 'USD' for a in currency_amounts(quote))
 
 
 def candidate_pages(web: SafeWeb, shop) -> list[str]:

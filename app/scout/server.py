@@ -32,7 +32,8 @@ class RunRequest(BaseModel):
     destination: str | None = Field(default=None, max_length=60)
 
 
-def create_app(*, provider=None, budget_factory=ledger_budget, agent_factory=None, runs_dir=RUNS) -> FastAPI:
+def create_app(*, provider=None, budget_factory=ledger_budget, agent_factory=None, runs_dir=RUNS,
+               allowed_hosts=(f'{HOST}:{PORT}', f'localhost:{PORT}')) -> FastAPI:
     app = FastAPI(title='TechScout scout', docs_url=None, redoc_url=None, openapi_url=None)
     runs: dict[str, dict] = {}
     lock = threading.Lock()
@@ -64,12 +65,17 @@ def create_app(*, provider=None, budget_factory=ledger_budget, agent_factory=Non
             record['status'] = 'error'
             record['error'] = f'The search could not run ({type(exc).__name__}). Check the worker setup.'
 
+    origins = {f'http://{h}' for h in allowed_hosts}
+
     @app.middleware('http')
     async def same_origin(request: Request, call_next):
+        # A fixed Host list stops DNS rebinding; POSTs must come from this page itself.
+        if request.headers.get('host') not in allowed_hosts:
+            return JSONResponse({'detail': 'unknown host'}, status_code=403)
         if request.method == 'POST':
             origin = request.headers.get('origin')
-            if origin and origin not in (f'http://{HOST}:{PORT}', f'http://localhost:{PORT}',
-                                         str(request.base_url).rstrip('/')):
+            fetch_site = request.headers.get('sec-fetch-site')
+            if not (origin in origins or (origin is None and fetch_site == 'same-origin')):
                 return JSONResponse({'detail': 'cross-origin request refused'}, status_code=403)
         response = await call_next(request)
         response.headers['Cache-Control'] = 'no-store'
@@ -179,7 +185,10 @@ async function poll(id){const r=await fetch('/api/runs/'+id);const j=await r.jso
   $('progress').appendChild(d)} seen=j.events.length;
  $('state').textContent=j.status==='running'?'Searching...':j.status;
  if(j.status==='done'||j.status==='error'){clearInterval(timer);$('go').disabled=false;if(j.error){$('answer').textContent=j.error}else{render(j.result)}}}
-function render(r){const box=$('answer');const p=el('div','panel');p.appendChild(el('div','msg',r.message));if(r.question)p.appendChild(el('p','', 'Question: '+r.question));
+function render(r){const box=$('answer');const p=el('div','panel');
+ const checked=(r.warnings||[]).some(w=>w.includes('not verified'))||r.fallback;
+ p.appendChild(el('div','ev',checked?'Summary of the checked offers':"Assistant's summary - the offer cards below are the checked facts"));
+ p.appendChild(el('div','msg',r.message));if(r.question)p.appendChild(el('p','', 'Question: '+r.question));
  for(const w of r.warnings||[])p.appendChild(el('p','ev','Note: '+w));box.appendChild(p);
  const groups=[['best','Best matches'],['alternative','Close alternatives'],['unavailable','Checked but out of stock'],['rejected','Checked and excluded']];
  for(const [tier,label] of groups){const items=r.offers.filter(o=>o.tier===tier);if(!items.length)continue;box.appendChild(el('h2','',label));const cards=el('div','cards');

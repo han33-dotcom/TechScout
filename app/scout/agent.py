@@ -30,7 +30,8 @@ from pydantic import BaseModel, ConfigDict, Field
 from app.scout.catalog import ShopSearch, score
 from app.scout.evidence import Evidence, contains_quote
 from app.scout.tools import Tools
-from app.scout.verify import CheckedOffer, Final, OfferClaim, check_offers
+from app.scout.verify import (CONDITIONAL_FREE, CheckedOffer, Final, OfferClaim, check_offers,
+                              currency_amounts)
 from app.scout.web import SafeWeb
 
 PROMPT_VERSION = 'scout-1'
@@ -113,7 +114,8 @@ stock state or address: code checks every quote and takes prices and stock from 
 
 final.message: a short, plain answer for the buyer (max ~12 lines): the best options (2-4 shops when
 available) with shop and price, what is confirmed, what is not (delivery fee, new condition, branch
-stock...), and one suggestion. Mention prices only as they appear in the observations. For pickup,
+stock...), and one suggestion. Mention a price, fee or total only for an offer you include in final.offers
+(include the checked-but-excluded ones you mention; they are shown as excluded), exactly as observed. For pickup,
 online stock is not branch stock: say which store address you found and that branch stock is unconfirmed. status: "offers" when you propose
 offers, "no_match" when nothing suitable was found (explain what you checked), "clarify" only when a
 missing detail would change the answer and no sensible default exists (put the question in
@@ -365,8 +367,32 @@ def _shrink(data: dict, limit: int = MAX_DATA_BYTES) -> None:
         if turn.get('trimmed'):
             continue
         turn['trimmed'] = True
-        turn['results'] = [dict(call=r.get('call'), result=dict(trimmed=True, obs=(r.get('result') or {}).get('obs')))
+        turn['results'] = [dict(call=r.get('call'), result=_index(r.get('result') or {}))
                            for r in turn.get('results', [])]
+
+
+def _index(res: dict) -> dict:
+    """What an old tool result shrinks to: every observation ID the model may still cite, with the
+    product title and each variant's ID, price and stock, and any shop-terms quote and fee."""
+    out: dict = {'trimmed': True}
+    if res.get('obs'):
+        out['obs'] = res['obs']
+    if res.get('error'):
+        out['error'] = res['error']
+    if res.get('kind') == 'product' or res.get('variants'):
+        out.update(shop=res.get('shop'), title=str(res.get('title') or '')[:80],
+                   variants=[{k: v.get(k) for k in ('variant_id', 'title', 'price', 'available')}
+                             for v in (res.get('variants') or [])[:10]])
+    if res.get('details'):
+        out['details'] = [_index(d) for d in res['details']]
+    if res.get('hits'):
+        out['hits'] = len(res['hits'])
+    terms = res.get('shop_terms')
+    if terms:
+        out['shop_terms'] = dict(delivery=[{k: r.get(k) for k in ('obs', 'region', 'fee_usd', 'free_over_usd', 'quote')}
+                                           for r in (terms.get('delivery') or [])[:4]],
+                                 vat=terms.get('vat'))
+    return out
 
 
 def _usage(usage: dict) -> dict:
@@ -387,41 +413,53 @@ def _spend(model_calls: list[dict]) -> dict:
     return dict(settled_usd=format(settled, 'f'), uncertain_usd=format(uncertain, 'f'), model_calls=len(model_calls))
 
 
-AMOUNT = re.compile(r'(?:USD|US\$|\$)\s?(\d[\d,]*(?:\.\d{1,2})?)|(\d[\d,]*(?:\.\d{1,2})?)\s?(?:USD|\$)', re.IGNORECASE)
+COMPARISON = re.compile(r'(cheaper|more|less|difference|differ|sav(?:e|es|ing)|extra|higher|lower|over|under|'
+                        r'additional|plus)', re.IGNORECASE)
+FREE_WORDING = re.compile(r"(free (?:delivery|shipping)|delivery is free|no delivery (?:fee|charge)|"
+                          r"\$\s?0(?:\.00)? delivery|deliver\w* for free|toward free)", re.IGNORECASE)
 
 
 def unsupported_amounts(message: str, offers: list[CheckedOffer], request: dict,
                         evidence: Evidence | None = None) -> list[str]:
-    """Money amounts in the model's summary that nothing read in this run (or the buyer) supports.
+    """Statements in the model's summary that the checked offer cards do not support.
 
-    Allowed: checked offer prices, totals and fees; any variant price the shops published in a
-    product read of this run; amounts written in this run's quoted delivery terms; the buyer's own."""
-    allowed = set()
+    Allowed amounts are those of a checked card the buyer sees (its price, delivery fee, total, or
+    price + fee), the amounts inside the delivery quote a total was built from, and the buyer's own
+    figures. A difference between two card amounts is allowed only in comparison wording ("USD 12
+    cheaper"). Free-delivery wording needs a card with an evidenced zero fee. USD and LBP amounts are
+    both checked. ``evidence`` is accepted for compatibility and not used."""
+    allowed: set[tuple[Decimal, str]] = set()
+    card_amounts: list[Decimal] = []
     for o in offers:
+        cur = (o.currency or 'USD').upper()
         for v in (o.price, o.total, o.delivery_fee):
             if v is not None:
-                allowed.add(v.normalize())
-    for obs in (evidence.products() if evidence else []):
-        for v in obs.product.variants:
-            for amount in (v.price, v.compare_at):
-                if amount is not None:
-                    allowed.add(amount.normalize())
-    for m in AMOUNT.finditer(request.get('text', '')):
-        allowed.add(Decimal((m.group(1) or m.group(2)).replace(',', '')).normalize())
-    base = list(allowed)[:200]
-    for a in base:  # "USD 12 cheaper" or "USD 47 with delivery": differences and sums of supported amounts
-        for b in base:
-            allowed.add(abs(a - b).normalize())
-            allowed.add((a + b).normalize())
+                allowed.add((v.normalize(), cur))
+                card_amounts.append(v)
+        if o.price is not None and o.delivery_fee is not None:
+            allowed.add(((o.price + o.delivery_fee).normalize(), cur))
+        if o.total_basis:
+            for amount, c, _, _ in currency_amounts(o.total_basis):
+                allowed.add((amount.normalize(), c))
+    for amount, c, _, _ in currency_amounts(request.get('text', '')):
+        allowed.add((amount.normalize(), c))
+    differences = {abs(a - b).normalize() for a in card_amounts for b in card_amounts if a != b}
     bad = []
-    for m in AMOUNT.finditer(message or ''):
-        raw = (m.group(1) or m.group(2)).replace(',', '')
-        try:
-            value = Decimal(raw).normalize()
-        except Exception:  # noqa: BLE001
+    text = message or ''
+    for amount, cur, start, end in currency_amounts(text):
+        if (amount.normalize(), cur) in allowed or amount == 0 and cur == 'USD' and \
+                any(o.delivery_fee == 0 for o in offers):
             continue
-        if value not in allowed and value != 0:
-            bad.append(m.group(0).strip())
+        window = text[max(0, start - 30):end + 30]
+        if cur == 'USD' and amount.normalize() in differences and COMPARISON.search(window):
+            continue
+        bad.append(text[start:end].strip())
+    for m in FREE_WORDING.finditer(text):
+        after = text[m.end():m.end() + 40]
+        if CONDITIONAL_FREE.search(after):
+            continue  # "free delivery on orders over USD 500" describes the policy, not this offer
+        if not any(o.delivery_fee == 0 for o in offers):
+            bad.append(m.group(0))
     return bad
 
 

@@ -97,13 +97,42 @@ class CheckedOffer:
 USED = re.compile(r'\b(used|pre-?owned|refurb\w*|renewed|open[- ]?box|second[- ]?hand|like[- ]new|grade [abc]|'
                   r'cpo|ex[- ]?demo|demo unit|activated|مستعمل)\b', re.IGNORECASE)
 NEW = re.compile(r'(brand[- ]new|\bnew\b|sealed|newcondition|جديد)', re.IGNORECASE)
+DEADLINE = re.compile(r'\b(by|before|within|tomorrow|today|tonight|deadline|same[- ]day|next[- ]day|'
+                      r'monday|tuesday|wednesday|thursday|friday|saturday|sunday|\d+\s?(?:days?|hours?))\b',
+                      re.IGNORECASE)
+VAT_WORD = re.compile(r'(\bvat\b|\btax(?:es)?\b|\btva\b|ضريبة)', re.IGNORECASE)
+VAT_INCLUDED = re.compile(r"(includ\w*|inclusive|\bttc\b|no vat|not charg\w*|don.?t charge|do not charge|exempt|"
+                          r"free of (?:vat|tax))", re.IGNORECASE)
+VAT_EXCLUDED = re.compile(r'(exclud\w*|not included|\+\s?vat|plus vat|added at checkout|calculated at checkout|'
+                          r'will be added)', re.IGNORECASE)
+CONDITIONAL_FREE = re.compile(r'\b(over|above|orders? of|minimum|more than|exceed\w*|starting|from|at least)\b',
+                              re.IGNORECASE)
+NATIONWIDE = re.compile(r'(all (?:of )?lebanon|anywhere|nationwide|all (?:areas|regions|over)|across lebanon|flat|'
+                        r'all lebanese|any region|everywhere)', re.IGNORECASE)
 TIER_WORDS = ('max', 'plus', 'ultra', 'mini', 'lite', 'pro', 'fe', 'air', 'slim', 'edge')
 GB = re.compile(r'(\d{1,4})\s?(gb|tb)\b', re.IGNORECASE)
 INCH = re.compile(r'(\d{2}(?:\.\d)?)\s?(?:-?\s?inch|in\b|"|”|\'\')', re.IGNORECASE)
 MONEY_IN = re.compile(r'(\d[\d,]*(?:\.\d+)?)')
-BUDGET = re.compile(r'(?:at most|no more than|max(?:imum)?|under|below|up to|budget(?: of| is)?|less than|'
-                    r'within)\s*(?:of\s*)?(?:usd|us\$|\$)?\s*(\d[\d,]*(?:\.\d+)?)\s*(?:usd|\$|dollars)?',
-                    re.IGNORECASE)
+_NUM = r'(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)'
+_USD_BEFORE = re.compile(r'(?:US\$|\$|\bUSD)\s?' + _NUM, re.IGNORECASE)
+_USD_AFTER = re.compile(_NUM + r'\s?(?:\$|USD\b|US\s?dollars?\b|dollars?\b)', re.IGNORECASE)
+_LBP_BEFORE = re.compile(r'(?:\bLBP|\bL\.L\.?|ل\.ل\.?)\s?' + _NUM, re.IGNORECASE)
+_LBP_AFTER = re.compile(_NUM + r'\s?(?:LBP\b|L\.L\.?|ل\.ل\.?|lira\b|ليرة)', re.IGNORECASE)
+BUDGET_WORDS = re.compile(r'\b(?:at most|no more than|max(?:imum)?|under|below|up to|budget(?: of| is)?|less than|'
+                          r'not (?:more|over) than|cap(?:ped)? at)\b', re.IGNORECASE)
+UNIT_AFTER = re.compile(r'^\s?(?:gb|tb|mb|inch|in\b|"|hz|kg|g\b|days?|hours?|hrs?|years?|months?|weeks?|mah|w\b|'
+                        r'mm|cm|ms|nits|%)', re.IGNORECASE)
+
+
+def currency_amounts(text: str) -> list[tuple[Decimal, str, int, int]]:
+    """Amounts written next to a currency marker: (amount, 'USD'|'LBP', start, end). Bare numbers never count."""
+    found = []
+    for rx, cur in ((_USD_BEFORE, 'USD'), (_USD_AFTER, 'USD'), (_LBP_BEFORE, 'LBP'), (_LBP_AFTER, 'LBP')):
+        for m in rx.finditer(text or ''):
+            amount = dec(m.group(1))
+            if amount is not None and not any(a == amount and abs(st - m.start()) < 3 for a, _, st, _ in found):
+                found.append((amount, cur, m.start(), m.end()))
+    return sorted(found, key=lambda x: x[2])
 
 
 def dec(value) -> Decimal | None:
@@ -129,8 +158,14 @@ def tier_words(text: str) -> set[str]:
 
 
 def hard_budget(text: str) -> Decimal | None:
-    m = BUDGET.search(text or '')
-    return dec(m.group(1)) if m else None
+    """A stated maximum ("at most $60", "under 800 USD", "budget is $1,000"). The number must carry a
+    currency marker, so "Pro Max 256GB", "within 3 days" or "up to 1TB" never become a budget."""
+    for m in BUDGET_WORDS.finditer(text or ''):
+        tail = (text or '')[m.end():m.end() + 30]
+        amounts = [a for a in currency_amounts(tail) if a[1] == 'USD' and a[2] <= 6]
+        if amounts and not UNIT_AFTER.match(tail[amounts[0][3]:]):
+            return amounts[0][0]
+    return None
 
 
 def identity_conflicts(request_text: str, offer_text: str, kind: str) -> list[str]:
@@ -191,6 +226,8 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
                 continue
             product = obs.product
             price, currency, available = variant.price, variant.currency, variant.available
+            published_condition = variant.condition or product.condition or ''
+            stock_text = variant.stock_text
             title, vtitle = product.title, variant.title
             url = variant.url or product.url
             offer_text = ' '.join([product.title, variant.title, ' '.join(variant.options.values())])
@@ -200,9 +237,11 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
             # A page without structured product data: the price must be quoted from the capture.
             if not (claim.price_quote and contains_quote(obs.text, claim.price_quote)):
                 continue
-            m = MONEY_IN.search(claim.price_quote)
-            price = dec(m.group(1)) if m else None
-            currency = 'USD' if '$' in claim.price_quote or 'usd' in claim.price_quote.lower() else None
+            amounts = {(a[0], a[1]) for a in currency_amounts(claim.price_quote)}
+            if len(amounts) != 1:
+                continue  # no currency amount, or several: the price cannot be read safely from this quote
+            price, currency = next(iter(amounts))
+            published_condition, stock_text = '', None
             available, title, vtitle, url = None, obs.meta.get('title', ''), '', obs.url
             offer_text = title
             evidence_rows = [dict(obs=obs.obs_id, url=obs.url, read=obs.url, source='page text quote',
@@ -218,11 +257,13 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
             identity = 'near'
             downgrades.extend(conflicts)
         # Condition: used markers in the listing win over anything the model says.
-        marker = USED.search(offer_text)
+        published = re.sub(r'condition$', '', published_condition.strip().lower())  # schema 'UsedCondition'
+        marker = USED.search(offer_text) or USED.search(published) or (
+            re.search(r'damaged|refurbished', published) if published else None)
         if marker:
-            condition = 'used' if 'refurb' not in marker.group(0).lower() else 'refurbished'
+            condition = 'refurbished' if 'refurb' in marker.group(0).lower() else 'used'
             downgrades.append(f'listing says "{marker.group(0)}"')
-        elif obs.kind == 'product' and (obs.product.condition or '').lower().startswith('new'):
+        elif published.startswith('new') or published in ('brand new', 'sealed'):
             condition = 'new'
         elif claim.condition == 'new' and claim.condition_quote and NEW.search(claim.condition_quote) \
                 and not USED.search(claim.condition_quote) \
@@ -240,9 +281,15 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
             if status == 'met' and not (r.quote and contains_quote(src.text, r.quote)
                                         and (src.shop_id == obs.shop_id)):
                 status = 'unknown'
-            covered = re.search(r'\b(new|condition|deliver\w*|shipping|stock|available|price|vat|pick ?up|branch)\b',
-                                r.requirement, re.IGNORECASE)
-            if status == 'unknown' and not covered:
+            deadline = bool(DEADLINE.search(r.requirement))
+            if deadline and status == 'met':
+                status = 'unknown'  # a published delivery estimate is not a guaranteed date
+            covered = not deadline and re.search(
+                r'\b(new|condition|deliver\w*|shipping|stock|available|price|vat|pick ?up|branch)\b',
+                r.requirement, re.IGNORECASE)
+            if deadline and status == 'unknown':
+                gaps.append(f'not guaranteed: {r.requirement} (delivery estimates are not guarantees)')
+            elif status == 'unknown' and not covered:
                 # condition, delivery, stock, price and VAT already have their own gap wording
                 gaps.append(f'not confirmed: {r.requirement}')
             if status == 'unmet':
@@ -251,31 +298,33 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
                              obs=src.obs_id if status == 'met' else None, covered_elsewhere=bool(covered)))
         if price is None:
             gaps.append('no current price published')
-        if currency and currency.upper() not in ('USD',):
+        usd = bool(currency) and currency.upper() == 'USD'
+        if price is not None and not currency:
+            gaps.append('currency is not published; no total is computed')
+        elif currency and not usd:
             gaps.append(f'price is in {currency}; no USD total is computed')
         if available is None:
-            gaps.append('stock is not published')
+            gaps.append(f'stock is not confirmed ({stock_text})' if stock_text else 'stock is not published')
         # Delivery fee and total.
         fee, total, basis = None, None, None
         if mode == 'delivery':
             dobs = evidence.get(claim.delivery_obs)
             fee = dec(claim.delivery_fee_usd)
-            threshold = dec(claim.free_delivery_over_usd)
-            ok = (dobs is not None and dobs.shop_id == obs.shop_id and claim.delivery_quote
-                  and contains_quote(dobs.text, claim.delivery_quote) and fee is not None
-                  and (_amount_in(claim.delivery_quote, fee) or (fee == 0 and 'free' in claim.delivery_quote.lower())))
-            region_problem = region_mismatch(claim.delivery_quote or '', request.get('destination') or '')
-            if ok and region_problem:
+            quote = claim.delivery_quote or ''
+            threshold = dec(claim.free_delivery_over_usd) or free_threshold(quote)
+            ok = (dobs is not None and dobs.shop_id == obs.shop_id and quote
+                  and contains_quote(dobs.text, quote) and fee is not None)
+            problem = fee_problem(quote, fee, threshold, price, request.get('destination') or '') if ok else None
+            if problem:
                 ok = False
-                downgrades.append(region_problem)
-            if ok and threshold is not None and not _amount_in(claim.delivery_quote, threshold):
-                threshold = None
-            if ok and price is not None and (currency or 'USD').upper() == 'USD':
-                if threshold is not None and price >= threshold:
+                downgrades.append(problem)
+            if ok and price is not None and usd:
+                if threshold is not None and price >= threshold and any(
+                        a[0] == threshold for a in currency_amounts(quote)) and 'free' in quote.lower():
                     fee = Decimal('0.00')
                 total = (price + fee).quantize(Decimal('0.01'))
                 basis = (f'listed price + delivery fee published by {obs.shop_id} '
-                         f'("{claim.delivery_quote[:120]}", {dobs.obs_id})')
+                         f'("{quote[:120]}", {dobs.obs_id})')
                 evidence_rows.append(dict(obs=dobs.obs_id, url=dobs.url, source='shop delivery terms',
                                           observed_at=dobs.observed_at.isoformat(timespec='seconds'),
                                           sha256=dobs.sha256))
@@ -284,9 +333,13 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
                 gaps.append('delivery fee to your area is not published or not confirmed')
         else:
             gaps.append('pickup branch stock is not confirmed (online stock only)')
-        vat_ok = bool(claim.vat_quote) and any(contains_quote(o.text, claim.vat_quote)
-                                               for o in evidence.all() if o.shop_id == obs.shop_id)
-        if not vat_ok:
+        vat_found = bool(claim.vat_quote) and any(contains_quote(o.text, claim.vat_quote)
+                                                  for o in evidence.all() if o.shop_id == obs.shop_id)
+        vat = vat_status(claim.vat_quote, vat_found)
+        vat_ok = vat == 'included'
+        if vat == 'excluded':
+            gaps.append('VAT is added on top of the listed price (the total excludes it)')
+        elif not vat_ok:
             gaps.append('VAT not stated by the shop')
         # Seller location basis from the directory (Shopify: the shop's own meta.json).
         if shop is not None:
@@ -310,7 +363,9 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
                 tier = 'unavailable'
             elif identity == 'near':
                 tier = 'alternative'
-        if budget is not None and tier in ('best', 'alternative'):
+        if budget is not None and tier in ('best', 'alternative') and not usd and price is not None:
+            gaps.append(f'cannot compare with your USD {budget} maximum (price not in USD)')
+        if budget is not None and tier in ('best', 'alternative') and usd:
             amount = total if total is not None else price
             if amount is not None and amount > budget:
                 tier = 'rejected'
@@ -319,7 +374,7 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
                 gaps.append(f'may exceed USD {budget} once delivery is added')
         complete = (tier == 'best' and identity == 'exact' and available is True and condition == 'new'
                     and all(r['status'] == 'met' for r in reqs if not r['covered_elsewhere'])
-                    and (total is not None or mode != 'delivery')
+                    and mode == 'delivery' and total is not None and usd
                     and vat_ok and shop is not None)
         out.append(CheckedOffer(
             tier=tier, shop=obs.product.shop_name if obs.product else (shop.name if shop else obs.shop_id or ''),
@@ -350,6 +405,90 @@ def region_mismatch(quote: str, destination: str) -> str | None:
     if outside and not inside and in_beirut:
         return f'the quoted fee is for outside Beirut, not {destination}'
     return None
+
+
+def fee_problem(quote: str, fee: Decimal, threshold: Decimal | None, price: Decimal | None,
+                destination: str) -> str | None:
+    """Why a claimed delivery fee cannot be applied to this offer, or None when it can.
+
+    The fee must be a currency amount in the quote (or an unconditional "free"); a free-delivery
+    threshold only applies when the price reaches it; when the quote names several fees, the fee
+    must be the one written next to the buyer's region or a nationwide rule."""
+    if not destination:
+        return 'no delivery destination was given'
+    amounts = [a for a in currency_amounts(quote) if a[1] == 'USD']
+    if fee == 0:
+        q = quote.lower()
+        if 'free' not in q:
+            return 'the quote does not say delivery is free'
+        if CONDITIONAL_FREE.search(q):
+            limit = threshold if threshold is not None else (amounts[0][0] if amounts else None)
+            if limit is None or price is None or price < limit or not any(a[0] == limit for a in amounts):
+                return 'free delivery in the quote depends on a minimum order this price does not reach'
+        return None
+    if not any(a[0] == fee for a in amounts):
+        return 'the fee is not written as a currency amount in the quote'
+    problem = region_mismatch(quote, destination)
+    if problem:
+        return problem
+    for amount, _, a_start, a_end in amounts:
+        if amount != fee:
+            continue
+        kind = nearest_region(quote, a_start, a_end, destination)
+        if kind is None and len({a[0] for a in amounts}) == 1:
+            return None  # a single fee with no region named: the shop's general delivery fee
+        d = destination.lower()
+        in_beirut = 'beirut' in d or 'بيروت' in d
+        if kind in ('destination', 'nationwide') or (kind == 'inside' and in_beirut) \
+                or (kind == 'outside' and not in_beirut):
+            return None
+    return 'the quote lists several fees and this one is not stated for your area'
+
+
+REGION_MENTIONS = (
+    ('inside', re.compile(r'(inside|within|in)\s+(greater\s+)?beirut', re.IGNORECASE)),
+    ('outside', re.compile(r'(outside|out of|beyond)\s+(of\s+)?beirut', re.IGNORECASE)),
+    ('nationwide', NATIONWIDE),
+    ('inside', re.compile(r'\bbeirut\b|بيروت', re.IGNORECASE)),  # a bare "Beirut:" label means Beirut itself
+)
+
+
+def nearest_region(quote: str, start: int, end: int, destination: str) -> str | None:
+    """The region label written closest to an amount, without crossing a comma, semicolon or full stop
+    (a crossing costs heavily). 'destination' when the buyer's own city is the nearest label."""
+    mentions = []
+    for kind, rx in REGION_MENTIONS:
+        mentions += [(kind, m.start(), m.end()) for m in rx.finditer(quote)]
+    city = destination.lower().split(',')[0].strip()
+    if city and city != 'beirut':
+        mentions += [('destination', m.start(), m.end()) for m in re.finditer(re.escape(city), quote.lower())]
+    best, best_score = None, None
+    for kind, m_start, m_end in mentions:
+        gap = quote[m_end:start] if m_end <= start else quote[end:m_start] if m_start >= end else ''
+        score = len(gap) + 100 * sum(gap.count(c) for c in ',;.|\n')
+        if best_score is None or score < best_score:
+            best, best_score = kind, score
+    return best
+
+
+def free_threshold(quote: str) -> Decimal | None:
+    """'Free delivery on orders over $100' -> 100 (a currency amount after the condition word)."""
+    m = re.search(r'free[^.;|]*?' + CONDITIONAL_FREE.pattern, quote or '', re.IGNORECASE)
+    if not m:
+        return None
+    after = [a for a in currency_amounts((quote or '')[m.end():m.end() + 40]) if a[1] == 'USD']
+    return after[0][0] if after else None
+
+
+def vat_status(quote: str | None, found: bool) -> str:
+    """'included' (stated included or not charged), 'excluded' (added on top), or 'unknown'."""
+    if not quote or not found or not VAT_WORD.search(quote):
+        return 'unknown'
+    if VAT_EXCLUDED.search(quote):
+        return 'excluded'
+    if VAT_INCLUDED.search(quote):
+        return 'included'
+    return 'unknown'
 
 
 POLICY_PATH = re.compile(r'polic|shipping|delivery|faq|terms|about|warranty|llm-context|meta\.json', re.IGNORECASE)

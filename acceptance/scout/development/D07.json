@@ -1,0 +1,434 @@
+{
+ "run_id": "scout-d07-20261127T224325",
+ "request": {
+  "id": "D07",
+  "text": "New Apple AirPods Pro 2 with USB-C, delivered to Zahle. What is the best price?",
+  "mode": "delivery",
+  "destination": "Zahle",
+  "category": "audio",
+  "run_id": "scout-d07-20261127T224325"
+ },
+ "status": "offers",
+ "message": "Best verified in-stock price for new AirPods Pro 2 USB-C: iSolved IT Solutions at $195.00, VAT included.\nThey deliver throughout Lebanon, covering Zahle, but shipping is calculated at checkout—so the final delivered total is not yet confirmed.\nIT Promax lists the same model new at $179.00, but it is out of stock.\nThe cheaper $178.00 Classic Phones listing is described as refurbished, so it does not meet your new-condition requirement.\nMy suggestion: choose iSolved if you need them now, and check the Zahle shipping charge on the shop’s site before paying.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "best",
+   "shop": "iSolved IT Solutions",
+   "shop_id": "isolvedit",
+   "title": "Apple AirPods Pro 2 (USB-C)",
+   "variant": "Default Title",
+   "url": "https://isolvedit.me/products/apple-airpods-pro-2-usb-c?variant=67708494086255",
+   "price": "195.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "exact",
+   "identity_reason": "Apple AirPods Pro 2 with USB-C charging case, explicitly listed new.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "delivery fee to your area is not published or not confirmed"
+   ],
+   "requirements": [
+    {
+     "requirement": "Apple AirPods Pro 2 with USB-C",
+     "status": "met",
+     "quote": "Apple AirPods Pro 2 (USB-C)",
+     "obs": "P4",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Zahle",
+     "status": "met",
+     "quote": "Delivery all over Lebanon",
+     "obs": "T2",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P4",
+     "url": "https://isolvedit.me/products/apple-airpods-pro-2-usb-c",
+     "read": "https://isolvedit.me/products/apple-airpods-pro-2-usb-c.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-27T22:43:46+00:00",
+     "sha256": "c6594898cfa0016fce34eff4c71575baae4f44a640dd1e453341ec79b53a4fd6"
+    }
+   ],
+   "seller_basis": "iSolved IT Solutions: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  },
+  {
+   "tier": "unavailable",
+   "shop": "IT Promax",
+   "shop_id": "itpromax",
+   "title": "AirPods Pro 2 USB-C MagSafe case Lebanon | IT Promax",
+   "variant": "Apple AirPods Pro 2 USB-C with MagSafe Case",
+   "url": "https://itpromax.store/en/p/apple-airpods-pro-2-usb-c-with-magsafe-case",
+   "price": "179.00",
+   "currency": "USD",
+   "in_stock": false,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "Same second-generation AirPods Pro with USB-C MagSafe case; currently out of stock.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "Apple AirPods Pro 2 with USB-C",
+     "status": "met",
+     "quote": "Apple AirPods Pro 2 with USB-C MagSafe Case",
+     "obs": "P13",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "NewCondition",
+     "obs": "P13",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Zahle",
+     "status": "met",
+     "quote": "Delivered to all towns in 1–3 days",
+     "obs": "P13",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P13",
+     "url": "https://itpromax.store/en/p/apple-airpods-pro-2-usb-c-with-magsafe-case",
+     "read": "https://itpromax.store/en/p/apple-airpods-pro-2-usb-c-with-magsafe-case",
+     "source": "schema_org_jsonld",
+     "observed_at": "2026-11-27T22:44:06+00:00",
+     "sha256": "78a6185ef80c4936a9639fb975967ac478b7f38431f7c110221dda1756cabbd5"
+    }
+   ],
+   "seller_basis": "IT Promax: Lebanese shop in the reviewed directory",
+   "downgrades": []
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P4",
+   "variant_id": "67708494086255",
+   "identity": "exact",
+   "identity_reason": "Apple AirPods Pro 2 with USB-C charging case, explicitly listed new.",
+   "condition": "new",
+   "condition_quote": "Condition\nNew",
+   "condition_obs": "P4",
+   "requirements": [
+    {
+     "requirement": "Apple AirPods Pro 2 with USB-C",
+     "status": "met",
+     "evidence_obs": "P4",
+     "quote": "Apple AirPods Pro 2 (USB-C)"
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "P4",
+     "quote": "Condition\nNew"
+    },
+    {
+     "requirement": "Delivery to Zahle",
+     "status": "met",
+     "evidence_obs": "T2",
+     "quote": "Delivery all over Lebanon"
+    }
+   ],
+   "delivery_obs": "T3",
+   "delivery_quote": "Discounts and shipping calculated at checkout.",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": "All prices include VAT — nothing extra to pay",
+   "price_quote": null
+  },
+  {
+   "obs": "P13",
+   "variant_id": "AppleAirPodsPro2USBC",
+   "identity": "exact",
+   "identity_reason": "Same second-generation AirPods Pro with USB-C MagSafe case; currently out of stock.",
+   "condition": "new",
+   "condition_quote": "NewCondition",
+   "condition_obs": "P13",
+   "requirements": [
+    {
+     "requirement": "Apple AirPods Pro 2 with USB-C",
+     "status": "met",
+     "evidence_obs": "P13",
+     "quote": "Apple AirPods Pro 2 with USB-C MagSafe Case"
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "P13",
+     "quote": "NewCondition"
+    },
+    {
+     "requirement": "Delivery to Zahle",
+     "status": "met",
+     "evidence_obs": "P13",
+     "quote": "Delivered to all towns in 1–3 days"
+    }
+   ],
+   "delivery_obs": "P13",
+   "delivery_quote": "Delivered to all towns in 1–3 days",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Compare USB-C second-generation AirPods Pro listings and verify new condition and Zahle delivery.",
+   "at_s": 10.9,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "AirPods Pro 2 USB-C"
+    },
+    {
+     "tool": "search",
+     "query": "AirPods Pro MTJV3"
+    },
+    {
+     "tool": "search",
+     "query": "AirPods Pro 2 Type C"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Check cheaper ambiguous listings and delivery terms for the confirmed new option.",
+   "at_s": 28.5,
+   "calls": [
+    {
+     "tool": "open",
+     "url": "https://classic-phones.com/products/apple-airpods-pro-2"
+    },
+    {
+     "tool": "open",
+     "url": "https://outgeeked.net/products/apple-airpods-pro-2nd-generation"
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "isolvedit"
+     ]
+    },
+    {
+     "tool": "open",
+     "url": "https://itpromax.store/en/p/apple-airpods-pro-2-usb-c"
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Check remaining exact USB-C leads and the shipping policy to establish the best available delivered price.",
+   "at_s": 39.0,
+   "calls": [
+    {
+     "tool": "read",
+     "url": "https://isolvedit.me/policies/shipping-policy",
+     "terms": [
+      "delivery",
+      "Zahle",
+      "fee",
+      "$"
+     ]
+    },
+    {
+     "tool": "open",
+     "url": "https://shop.itworkslb.net/products/apple-airpods-pro-2-usb-c-815019"
+    },
+    {
+     "tool": "open",
+     "url": "https://itpromax.store/en/p/apple-airpods-pro-2-usb-c-with-magsafe-case"
+    }
+   ]
+  },
+  {
+   "turn": 4,
+   "notes": "The lowest verified in-stock new USB-C listing is iSolved; shipping is calculated at checkout, so a delivered total cannot be confirmed. Include the cheaper out-of-stock new listing for comparison.",
+   "at_s": 57.7,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 8953,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 9234,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 9250,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 344,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 641,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 1219,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 1969,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 703,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 735,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 1844,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 8125,
+   "usage": {
+    "actual_usd": "0.0041777",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3192,
+     "output_tokens": 116,
+     "total_tokens": 3308
+    },
+    "latency_ms": 3578,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 8312,
+   "usage": {
+    "actual_usd": "0.0214502",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 9917,
+     "output_tokens": 162,
+     "total_tokens": 10079
+    },
+    "latency_ms": 4750,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 8516,
+   "usage": {
+    "actual_usd": "0.0272327",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 12246,
+     "output_tokens": 158,
+     "total_tokens": 12404
+    },
+    "latency_ms": 4641,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 4,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 16828,
+   "usage": {
+    "actual_usd": "0.0372702",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 14485,
+     "output_tokens": 602,
+     "total_tokens": 15087
+    },
+    "latency_ms": 12078,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  }
+ ],
+ "retailer_requests": 83,
+ "seconds": 57.8,
+ "spend": {
+  "settled_usd": "0.0901308",
+  "uncertain_usd": "0",
+  "model_calls": 4,
+  "ledger_job": "scout-d07-20261127T224325"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1"
+}

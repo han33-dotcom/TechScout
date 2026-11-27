@@ -38,6 +38,7 @@ class Variant:
     stock_text: str | None = None
     sku: str | None = None
     url: str | None = None
+    condition: str | None = None   # as the shop published it for this variant (option, itemCondition)
 
 
 @dataclass
@@ -67,7 +68,8 @@ class Product:
             source=self.source, observed_at=self.observed_at.isoformat(timespec='seconds'),
             variants=[dict(variant_id=v.variant_id, title=v.title, options=v.options,
                            price=_s(v.price), compare_at=_s(v.compare_at), currency=v.currency,
-                           available=v.available, stock_text=v.stock_text, sku=v.sku, url=v.url)
+                           available=v.available, stock_text=v.stock_text, sku=v.sku, url=v.url,
+                           **({'condition': v.condition} if v.condition else {}))
                       for v in self.variants[:40]],
             description=self.description[:MAX_DESCRIPTION], **({'extra': self.extra} if self.extra else {}))
 
@@ -101,7 +103,8 @@ def money(value, minor_unit: int | None = None) -> Decimal | None:
         return None
     if minor_unit:
         amount = amount.scaleb(-int(minor_unit))
-    return amount.quantize(Decimal('0.01')) if amount >= 0 else None
+    # Zero is a "call for price" placeholder, never a real price.
+    return amount.quantize(Decimal('0.01')) if amount > 0 else None
 
 
 def strip_html(html: str | None, limit: int = MAX_DESCRIPTION) -> str:
@@ -202,7 +205,9 @@ class Shopify:
                 value = v.get(f'option{i}')
                 if value is not None:
                     opts[str(name)] = str(value)
+            cond = next((val for key, val in opts.items() if 'condition' in key.lower()), None)
             variants.append(Variant(
+                condition=cond,
                 variant_id=str(v.get('id')), title=str(v.get('title', ''))[:160], options=opts,
                 price=money(v.get('price'), 2), compare_at=money(v.get('compare_at_price'), 2), currency=cur,
                 available=v.get('available') if isinstance(v.get('available'), bool) else None,
@@ -286,12 +291,15 @@ def _woo_variant(p: dict, opts: dict) -> Variant:
     stock = p.get('stock_availability') or {}
     if not opts and p.get('variation'):
         opts = {'variation': str(p['variation'])[:120]}
+    stock_words = f"{stock.get('class', '')} {stock.get('text', '')}".lower()
+    backorder = any(w in stock_words for w in ('backorder', 'pre-order', 'preorder', 'on order'))
+    available = None if backorder else (p.get('is_in_stock') if isinstance(p.get('is_in_stock'), bool) else None)
+    cond = next((str(v) for k, v in opts.items() if 'condition' in str(k).lower()), None)
     return Variant(variant_id=str(p.get('id')), title=_unescape(p.get('variation') or p.get('name') or '')[:160],
                    options=opts, price=money(prices.get('price'), prices.get('currency_minor_unit')),
                    compare_at=money(prices.get('regular_price'), prices.get('currency_minor_unit'))
                    if prices.get('regular_price') != prices.get('price') else None,
-                   currency=prices.get('currency_code'),
-                   available=p.get('is_in_stock') if isinstance(p.get('is_in_stock'), bool) else None,
+                   currency=prices.get('currency_code'), available=available, condition=cond,
                    stock_text=str(stock.get('text'))[:80] if stock.get('text') else None,
                    sku=(str(p['sku'])[:80] if p.get('sku') else None), url=p.get('permalink'))
 
@@ -348,8 +356,8 @@ def product_from_html(page: Page, shop) -> tuple[Product | None, pages.ParsedPag
         for i, offer in enumerate(pages.offers_of(item)):
             availability = pages.schema_value(offer.get('availability'))
             cond = pages.schema_value(offer.get('itemCondition') or item.get('itemCondition')) or None
-            condition = condition or cond
             variants.append(Variant(
+                condition=cond,
                 variant_id=str(offer.get('sku') or item.get('sku') or f'offer-{len(variants)}')[:80],
                 title=name or title, options={k: str(item[k])[:60] for k in ('color', 'size', 'material') if item.get(k)},
                 price=money(offer.get('price') or (offer.get('priceSpecification') or {}).get('price')
@@ -367,6 +375,8 @@ def product_from_html(page: Page, shop) -> tuple[Product | None, pages.ParsedPag
                                     available=None, stock_text=parsed.meta.get('product:availability')))
     if not variants:
         return None, parsed
+    conditions = {v.condition for v in variants}
+    condition = conditions.pop() if len(conditions) == 1 else None
     return Product(shop.shop_id, shop.name, getattr(shop, 'platform', 'html'), variants[0].variant_id, title,
                    page.final_url, 'schema_org_jsonld' if found else 'opengraph', page.final_url, page.sha256,
                    page.observed_at, vendor=vendor, condition=condition,

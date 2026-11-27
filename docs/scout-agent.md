@@ -88,7 +88,7 @@ python -m app.scout.catalog refresh          # daily: sitemap and /products.json
 python -m app.scout.terms refresh            # daily: shop delivery/VAT/address terms (about 6 model calls)
 python -m app.scout "New black Sony WH-CH520 headphones, cheapest delivered to Batroun" --destination Batroun
 python -m app.scout.server                   # local demo page at http://127.0.0.1:8010
-python eval/run_scout.py eval/scout_dev_requests.json --out var/scout-eval/dev
+python eval/run_scout.py acceptance/scout/requests/development.json --out var/scout-eval/dev
 python -m unittest tests.test_scout -v       # offline: synthetic shops, scripted model, no network
 ```
 

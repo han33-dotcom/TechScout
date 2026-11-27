@@ -469,14 +469,19 @@ class DemoServerTests(unittest.TestCase):
         from pathlib import Path
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)
-        client = TestClient(create_app(agent_factory=SlowAgent, budget_factory=None, runs_dir=Path(tmp.name) / 'runs'))
+        client = TestClient(create_app(agent_factory=SlowAgent, budget_factory=None, runs_dir=Path(tmp.name) / 'runs',
+                                       allowed_hosts=('testserver',)))
+        same = {'origin': 'http://testserver'}
         self.assertIn('TechScout', client.get('/').text)
+        # DNS rebinding: a page served under another host name is refused before anything runs.
+        self.assertEqual(client.get('/api/saved', headers={'host': 'attacker.example'}).status_code, 403)
         refused = client.post('/api/runs', json=dict(text='sony headphones'), headers={'origin': 'https://evil.example'})
         self.assertEqual(refused.status_code, 403)
-        self.assertEqual(client.post('/api/runs', json=dict(text='x' * 1501)).status_code, 422)
-        first = client.post('/api/runs', json=dict(text='sony headphones', destination='Beirut'))
+        self.assertEqual(client.post('/api/runs', json=dict(text='sony headphones')).status_code, 403)  # no Origin
+        self.assertEqual(client.post('/api/runs', json=dict(text='x' * 1501), headers=same).status_code, 422)
+        first = client.post('/api/runs', json=dict(text='sony headphones', destination='Beirut'), headers=same)
         self.assertEqual(first.status_code, 200)
-        busy = client.post('/api/runs', json=dict(text='another search'))
+        busy = client.post('/api/runs', json=dict(text='another search'), headers=same)
         self.assertEqual(busy.status_code, 429)
         gate.set()
         run_id = first.json()['run_id']
@@ -488,3 +493,57 @@ class DemoServerTests(unittest.TestCase):
             _time.sleep(0.05)
         self.assertEqual(body['status'], 'done')
         self.assertEqual(body['result']['status'], 'no_match')
+
+
+class TermsAndIndexTests(unittest.TestCase):
+    def test_live_terms_keep_only_quotes_still_on_the_page(self):
+        import tempfile
+        from pathlib import Path
+        from app.scout import terms as terms_mod
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        stored = dict(status='ok', fetched_at='2026-11-27T10:00:00+00:00',
+                      delivery=[dict(region='Outside Beirut', fee_usd='5', free_over_usd=None,
+                                     quote='Outside Beirut: $5', url='https://alpha.example/pages/shipping'),
+                                dict(region='All Lebanon', fee_usd='2', free_over_usd=None,
+                                     quote='Flat $2 anywhere', url='https://alpha.example/pages/shipping')],
+                      vat=dict(statement='included', quote='All prices include VAT',
+                               url='https://alpha.example/pages/shipping'),
+                      addresses=[])
+        (Path(tmp.name) / 'alpha.json').write_text(json.dumps(stored), encoding='utf-8')
+        old = terms_mod.TERMS_DIR
+        terms_mod.TERMS_DIR = Path(tmp.name)
+        self.addCleanup(setattr, terms_mod, 'TERMS_DIR', old)
+        ev = Evidence()
+        out = terms_mod.live_terms(web(), ev, ALPHA)
+        # "Flat $2 anywhere" is no longer on the live page, so it is dropped; the others are re-observed now.
+        self.assertEqual([r['quote'] for r in out['delivery']], ['Outside Beirut: $5'])
+        self.assertEqual(out['vat']['statement'], 'included')
+        self.assertEqual(ev.get(out['delivery'][0]['obs']).observed_at, NOW)
+
+    def test_sitemap_index_reads_product_urls_only(self):
+        def sitemap_handler(request):
+            path = request.url.path
+            if path == '/robots.txt':
+                return httpx2.Response(200, text='User-agent: *\nAllow: /\nSitemap: https://shop.example/sitemap.xml\n')
+            if path == '/sitemap.xml':
+                return httpx2.Response(200, text='<sitemapindex><sitemap><loc>https://shop.example/sitemap/products.xml</loc>'
+                                       '</sitemap></sitemapindex>', headers={'content-type': 'application/xml'})
+            if path == '/sitemap/products.xml':
+                return httpx2.Response(200, text='<urlset><url><loc>https://shop.example/product/apple-ipad-a16-128gb-md4a4</loc></url>'
+                                       '<url><loc>https://shop.example/category/tablets</loc></url></urlset>',
+                                       headers={'content-type': 'application/xml'})
+            return httpx2.Response(404)
+        w = SafeWeb(transport=httpx2.MockTransport(sitemap_handler), resolver=lambda h, p: [PUBLIC],
+                    sleep=lambda s: None, min_interval_s=0)
+        shop = Shop('shop', 'Shop', 'https://shop.example', platform='html', provenance='test')
+        import tempfile
+        from pathlib import Path
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        search = ShopSearch(w, [shop], cache_dir=Path(tmp.name))
+        report = search.refresh(shop)
+        self.assertEqual(report['rows'], 1)
+        hits = search.search('ipad a16 128gb').hits
+        self.assertEqual([h.url for h in hits], ['https://shop.example/product/apple-ipad-a16-128gb-md4a4'])
+        self.assertIsNone(hits[0].price)  # index rows are leads: the agent must open the page for facts
