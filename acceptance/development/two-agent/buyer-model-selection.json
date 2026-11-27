@@ -1,0 +1,659 @@
+{
+  "issue": 261,
+  "protocol": {
+    "selection_requests_sha256": "81432bf2a0bbb9eb2acc779e0439f02fe557ead983ab1caff36abfe8db6039d3",
+    "rule": "Use two fresh first attempts per route through the repaired worker on clones of the same catalog. Grade supported useful output, verified offers on answerable requests and material evidence errors. Keep Sol low unless the challenger demonstrates better buyer outcomes. Timing and cost are secondary. Counterbalance order by request. Keep these cases separate from both evaluations.",
+    "ceilings": {
+      "seconds": 300,
+      "research_usd": 20,
+      "total_usd": 25,
+      "calls": 40
+    },
+    "checked_inputs": "The reference collector and its SQLite database are outside the buyer worker. No reference prices, links or seller names enter the request."
+  },
+  "catalog_sha256": "03606bdedf2baa46fe8515ea84ffbb2c8e7cee4a1afc9da90fc2fe46f6624c6d",
+  "scope": "Model selection, not the eight-case milestone. Each attempt used an isolated database cloned from the independent catalog handoff, with 24 directory entries, two corpus resources, ten observations and zero offer-table rows. The evaluator database and reference URLs stayed outside the buyer requests.",
+  "cohorts": [
+    {
+      "revision": "759a16e01c28188c947fb39abf32b8626a1a38bd",
+      "cases": [
+        {
+          "id": "headphones-dev",
+          "kind": "exact_model",
+          "category": "audio",
+          "text": "I want new black Sony WH-CH520 headphones. Which Lebanese shop has an in-stock pair? Give me the checked listed price and the exact product link. I do not need delivery included."
+        },
+        {
+          "id": "laptop-dev",
+          "kind": "needs",
+          "category": "laptop",
+          "text": "I need a new laptop for coursework, video calls and a lot of browser tabs. I need 16 GB of RAM and at least a 512 GB SSD. My ceiling is USD 650 before delivery. Find a suitable in-stock option from a Lebanese shop, explain the fit and give me its listed price and product link."
+        }
+      ],
+      "runs": [
+        {
+          "case": "headphones-dev",
+          "route": "sol-low",
+          "run_id": "630449d3-2109-42d4-93f1-80e0ae10a38d",
+          "revision": "759a16e01c28188c947fb39abf32b8626a1a38bd",
+          "status": "abstained",
+          "answer": "Mobileleb lists the Sony WH-CH520 in Black / Brand New at USD 42.00, with the black variant marked in online stock.\n\nExact product link: https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?variant=41750795845764\n\nMobileleb has a published location in Dekwaneh, Lebanon. This confirms online availability, not stock at that showroom. The price above excludes delivery.",
+          "rendered_cards": [],
+          "seconds": 101.657,
+          "spend": {
+            "attempts": {
+              "model": 14,
+              "retrieval": 4,
+              "search": 1
+            },
+            "known_usd": "0.1823658",
+            "ledger": "read",
+            "note": "uncertain amounts are full reservations kept because the cost was not reported",
+            "still_held_usd": "0",
+            "uncertain_usd": "0.5204800"
+          },
+          "assessment": "Correct USD 42 black variant, stock, merchant, link and premises in answer; zero matching cards. Independent verification of both source captures confirms the offer.",
+          "why": "Product was marked a nonmatch while the merchant address was pending. The later location read received no candidate."
+        },
+        {
+          "case": "headphones-dev",
+          "route": "sol-medium",
+          "run_id": "07f0494a-b9dd-4a5d-9e48-edc48e352989",
+          "revision": "759a16e01c28188c947fb39abf32b8626a1a38bd",
+          "status": "partial",
+          "answer": "Mobileleb lists the Sony WH-CH520 in Black, Brand New (SKU WH-CH520-Black), as in online stock for US$42, before delivery.\n\nExact product link: https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone\n\nThe shop advertises Lebanon-wide delivery. Physical shop location and branch stock were not verified.",
+          "rendered_cards": [],
+          "seconds": 291.297,
+          "spend": {
+            "attempts": {
+              "model": 28,
+              "retrieval": 6,
+              "search": 1
+            },
+            "known_usd": "0.6203026",
+            "ledger": "read",
+            "note": "uncertain amounts are full reservations kept because the cost was not reported",
+            "still_held_usd": "0",
+            "uncertain_usd": "0.5204800"
+          },
+          "assessment": "Correct USD 42 lead and explicit unresolved premises; zero cards. Returned the general product URL. The archive identifies a separate exact black-variant URL.",
+          "why": "Spent turns looking for premises. The location was not established on this run."
+        },
+        {
+          "case": "laptop-dev",
+          "route": "sol-medium",
+          "run_id": "d7aa918d-1ff4-4eb9-b96d-0e1eee3fdd50",
+          "revision": "759a16e01c28188c947fb39abf32b8626a1a38bd",
+          "status": "partial",
+          "answer": "This Lenovo IdeaPad Slim 3 exceeds the budget by USD 19. The exact model has an Intel Core i5-13420H, 16 GB RAM and a 512 GB NVMe SSD, but no operating system. The product offer is listed in stock. The offer identifies PC and Parts Lebanon as the seller. The shop publishes premises in Furn El Chebback, Lebanon. The listed price is USD 669, which exceeds the USD 650 ceiling by USD 19. The laptop has the requested 16 GB RAM and 512 GB SSD and is listed in stock, but it cannot meet the budget. It also ships without an operating system. https://pcandparts.com/product/lenovo-ideapad-slim-3-83k100c1dp-i5-16gb-512gb-ssd-15-3-tax-included/\nThe inspected product is the Lenovo IdeaPad Slim 3 15IRH8, model 83EM0093DP, with an Intel Core i7-13620H, 16 GB RAM and a 512 GB SSD. The product is out of stock and is listed as new. The published offer specifies USD but leaves the price empty; a price within the buyer's budget is not established. The retailer SKU is 198153542116. The page warns that some items are sold by third-party vendors, so the website operator alone does not establish this product's seller. Listed prices exclude 11% VAT, which must be considered when assessing the before-delivery budget. This model meets the 16 GB RAM and 512 GB SSD requirements and is listed as new, but it is explicitly out of stock. Its published offer also has no price, so it cannot satisfy the in-stock requirement or establish compliance with the USD 650 ceiling. The page's marketplace notice does not identify the actual seller. https://ayoubcomputers.com/lenovo-ideapad-slim-3-15irh8-15-6-laptop-intel-core-i7-13620h-ram-16gb-ssd-512gb-intel-uhd-graphics-83em0093dp/\nThe structured offer marks this laptop as new but out of stock and publishes no numeric price. The laptop meets the requested RAM and SSD capacities. The purchase area says it is out of stock. Additional Information contradicts the purchase-area stock status. A published category link allows searching for another suitable laptop. The listed configuration is an Acer Aspire Lite AL15-72P-76WK with an Intel Core i7-13620H, 16 GB RAM and 512 GB SSD. The product condition is listed as new. The retailer SKU is 08645759645856. The website identifies itself as a marketplace; its name alone does not establish the seller of this laptop. The page labels its pricing as excluding VAT, which must be considered when checking the USD 650 ceiling. This Acer has the requested 16 GB RAM and 512 GB SSD, but previous purchase-area checks indicated it is unavailable. Which alternative in the business/everyday laptop category is in stock, new, and within USD 650? The marketplace notice also means the actual seller must be established rather than assumed from the website name. https://ayoubcomputers.com/acer-aspire-lite-al15-72p-76wk-15-6-laptop-intel-core-i7-13620h-ram-16gb-ssd-512gb-intel-uhd-nx-d5hem-001/\nThe store currency is USD. The listed Lenovo Yoga 7 has 16 GB RAM and a 512 GB SSD, but is out of stock. The site publishes Lebanese premises in Furn El Chebback. The navigation publishes a dedicated laptop product category. The shop lists premises in Furn El Chebback, Lebanon. Which laptop in the shop's laptop category is new, in stock, has 16 GB RAM and at least a 512 GB SSD, and costs no more than USD 650 before delivery? The current page supplies the laptop-category link and a Lebanese premises address, but this window does not establish a qualifying offer. https://pcandparts.com/cpu-type/amd-ryzen-5/\nAS Store identifies its own premises in Lebanon. The merchant's structured address is in Kferhata, Zgharta, North Lebanon. AS Store identifies its own Lebanese premises in Kferhata, Zgharta. The agent could not finish reading the capture. https://store.as.com.lb/category/laptops",
+          "rendered_cards": [],
+          "seconds": 240.485,
+          "spend": {
+            "attempts": {
+              "model": 26,
+              "retrieval": 8,
+              "search": 6
+            },
+            "known_usd": "0.4296805",
+            "ledger": "read",
+            "note": "uncertain amounts are full reservations kept because the cost was not reported",
+            "still_held_usd": "0",
+            "uncertain_usd": "0"
+          },
+          "assessment": "No qualifying card. The USD 669 Lenovo is USD 19 over budget; an out-of-stock laptop is also correctly excluded. The 3,763-character fallback repeats findings.",
+          "why": "Consumed 26 model calls, eight retrievals and six searches. Both closing decision attempts were denied after the shared 40-call allowance."
+        },
+        {
+          "case": "laptop-dev",
+          "route": "sol-low",
+          "run_id": "86f912b1-753c-4b90-ba66-93a5b3a35f21",
+          "revision": "759a16e01c28188c947fb39abf32b8626a1a38bd",
+          "status": "partial",
+          "answer": "The collection displays all ten items, rather than just a partial page of results. The lowest-priced new listing with sufficient RAM and SSD capacity is the HP 14-em0085cl, listed at $740, above the $650 ceiling. The HP's listed price exceeds the budget. The $450 ASUS does not meet either the RAM or storage requirement and is open box. The Dell Latitude 7440 shown elsewhere on this page has sufficient memory and storage but is explicitly used. Does this shop list a new laptop with 16 GB RAM and at least a 512 GB SSD for USD 650 or less? None of the ten items in this collection qualifies: the lowest-priced listing with sufficient memory and storage is $740, while the $450 model has only 8 GB RAM and a 256 GB SSD. The $620 Dell with 16 GB RAM and 512 GB storage is explicitly used, so it does not satisfy the new-condition requirement. https://electroslab.com/collections/new-laptops\nAS Store identifies its own Lebanese premises in structured store data. AS Store identifies its own physical shop in Lebanon. The Lenovo Core Ultra 7 model has the required memory and SSD but exceeds budget before VAT. Its category starting price is $880 plus VAT. The HP 15-FD2023NE has only 8 GB RAM, below the requirement. The Acer Aspire 14 AI has 16 GB RAM and a 1 TB SSD but exceeds the budget even before VAT. The Acer's displayed starting price is $855 plus VAT. The Lenovo V15 G5 83GW006AEQ does not meet the RAM requirement. The Lenovo V15 G5 83GW006XED shown here has only 8 GB RAM. The HP ProBook has the requested memory and storage, but its starting price already exceeds USD 650, excluding VAT. HP AI 15-FD2003NE has 16GB DDR5 and a 512GB SSD, but starts at $660 plus VAT, exceeding the ceiling. The HP AI model's description confirms memory and SSD capacity. The two visible ZBook candidates are advertised as like-new, so do not satisfy the new-condition requirement. HP OMEN 16-AM0005NE has 16GB RAM and a 1TB SSD but starts at $2,010 plus VAT, exceeding the budget. Surface Laptop 15-inch Copilot+ PC 7th Edition has 16GB RAM and a 512GB SSD but starts at $1,365 plus VAT, exceeding the budget. The Lenovo IdeaPad Slim 3x has 16 GB RAM but only 256 GB storage, below the requested minimum. The HP AI 15-FD2002NE starts above the USD 650 ceiling, before VAT. The HP AI 15-FD2003NE also starts above the ceiling, before VAT. The visible remaining cards do not meet the budget and storage requirements. Can page 2 provide a new 16 GB RAM laptop with at least a 512 GB SSD for no more than USD 650 before delivery? https://store.as.com.lb/category/laptops\nThe requested HP laptop is unavailable. Its configuration meets the memory and storage requirements, but it comes without an operating system. The merchant lists premises in Lebanon. This HP 250 G10 meets the 16 GB RAM and 512 GB SSD requirements, but it is explicitly out of stock, so it cannot satisfy your request. No price for this laptop is shown in the supplied page preview, so the USD 650 ceiling is not verified. The laptop category could provide another in-stock candidate within budget. https://pcandparts.com/product/hp-250-g10-i7-16gb-512gb-ssd-mx550-15-6-tax-included/\nFurther reading is needed to settle the outstanding checks. https://ayoubcomputers.com/laptops/\nCompuOne's category includes both new and refurbished laptops; condition must be checked individually. CompuOne lists its own Lebanese premises. The category publishes a dedicated product link for the HP EliteBook 840 G9. Its image description advertises Core i7, 16GB RAM and a 512GB SSD. The category lists HP EliteBook 840 G9 with 16GB RAM and a 512GB SSD. The candidate card lists a $600.00 price. The candidate has a published product link. The card identifies retailer SKU L-H-038 and permits adding the laptop to the cart. Does the HP EliteBook 840 G9 product page confirm a new, in-stock 16GB/512GB SSD configuration at the listed $600, establish USD currency, and identify CompuOne's Lebanese premises? The category card is promising but does not establish condition. https://compuonelb.com/laptops-lebanon/",
+          "rendered_cards": [],
+          "seconds": 246.172,
+          "spend": {
+            "attempts": {
+              "model": 29,
+              "retrieval": 6,
+              "search": 5
+            },
+            "known_usd": "0.5170052",
+            "ledger": "read",
+            "note": "uncertain amounts are full reservations kept because the cost was not reported",
+            "still_held_usd": "0",
+            "uncertain_usd": "0"
+          },
+          "assessment": "No qualifying card. Returned a 4,058-character fallback with individual category and product checks rather than a purchasable recommendation.",
+          "why": "Consumed 29 model calls, six retrievals and five searches. Both closing decisions were denied at the 40-call limit."
+        }
+      ],
+      "references": {
+        "headphones-dev": [
+          {
+            "at": "2026-11-27T20:04:24.456239+00:00",
+            "url": "https://961souq.com/products/sony-wh-ch520-wireless-headphones",
+            "final_url": "https://961souq.com/products/sony-wh-ch520-wireless-headphones",
+            "observed": "2026-11-27T20:04:24.456239+00:00",
+            "sha256": "df500cc52e202d6b188cc812c2111ee9f2ab7a92dbe8291384f18f12bf78edcd"
+          },
+          {
+            "at": "2026-11-27T20:04:28.551947+00:00",
+            "url": "https://www.classic-phones.com/products/sony-wh-ch520-headphones",
+            "final_url": "https://www.classic-phones.com/products/sony-wh-ch520-headphones",
+            "observed": "2026-11-27T20:04:28.550924+00:00",
+            "sha256": "a4c8c45841ad56d767477edae57a5cacc2b7ed5bf75f2a66b29e644caf740706"
+          }
+        ],
+        "laptop-dev": [
+          {
+            "at": "2026-11-27T20:04:49.635331+00:00",
+            "url": "https://pcandparts.com/product/lenovo-ideapad-slim-3-83k100c1dp-i5-16gb-512gb-ssd-15-3-tax-included/",
+            "final_url": "https://pcandparts.com/product/lenovo-ideapad-slim-3-83k100c1dp-i5-16gb-512gb-ssd-15-3-tax-included/",
+            "observed": "2026-11-27T20:04:49.633578+00:00",
+            "sha256": "68068baf9c176575eb510dfab43ed8983477f49dec523977e9c14be9fac3facb"
+          },
+          {
+            "at": "2026-11-27T20:04:55.060201+00:00",
+            "url": "https://pcandparts.com/product/lenovo-ideapad-slim-3-83ur00bpdp-ultra-5-16gb-512gb-ssd-15-3-tax-included/",
+            "final_url": "https://pcandparts.com/product/lenovo-ideapad-slim-3-83ur00bpdp-ultra-5-16gb-512gb-ssd-15-3-tax-included/",
+            "observed": "2026-11-27T20:04:55.060201+00:00",
+            "sha256": "be839ded0101a7e6aed08df75904206575f7ea2012a59f6ecf9685ae564eaaa3"
+          },
+          {
+            "at": "2026-11-27T20:06:15.139637+00:00",
+            "url": "https://outgeeked.net/products/lenovo-ip1-15amn7-82vg00wxus",
+            "final_url": "https://outgeeked.net/products/lenovo-ip1-15amn7-82vg00wxus",
+            "observed": "2026-11-27T20:06:15.132428+00:00",
+            "sha256": "831de8fb3a97b825696ae8fd4e67b29a5e5dddfe16d19de634de7a28ae5dd40d"
+          },
+          {
+            "at": "2026-11-27T20:06:20.875763+00:00",
+            "url": "https://outgeeked.net/products/lenovo-ideapad-5-2-in-1-16ahp9-83ds0056us",
+            "final_url": "https://outgeeked.net/products/lenovo-ideapad-5-2-in-1-16ahp9-83ds0056us",
+            "observed": "2026-11-27T20:06:20.875763+00:00",
+            "sha256": "38e7ae2286f50b53212225560c064364918e733c6cccff20085886554517fe7d"
+          }
+        ]
+      }
+    },
+    {
+      "revision": "af91d710ebe029d5f02d7087b1cae15772d76388",
+      "cases": [
+        {
+          "id": "phone-dev2",
+          "kind": "exact_model",
+          "category": "phone",
+          "text": "I want a new Samsung Galaxy A26 5G with 8 GB RAM and 256 GB storage, any colour. Find an in-stock one from a Lebanese shop and give me the exact listing and listed price before delivery."
+        },
+        {
+          "id": "earbuds-dev2",
+          "kind": "needs",
+          "category": "audio",
+          "text": "I want new true wireless earbuds for a noisy bus commute. I need active noise cancellation and silicone ear tips. My maximum is USD 65 before delivery. Recommend an in-stock pair at a Lebanese shop, explain why it fits, and link the exact product and listed price."
+        }
+      ],
+      "runs": [
+        {
+          "case": "phone-dev2",
+          "route": "sol-low",
+          "run_id": "2728397f-546d-4392-b23a-7e2c9c17c5b4",
+          "revision": "af91d710ebe029d5f02d7087b1cae15772d76388",
+          "status": "abstained",
+          "stop_reason": "No qualifying offer was confirmed in the listings checked. Is the matching new 8GB/256GB Galaxy A26 5G actually available at a purchasable price? The page indicates it is out of stock; its structured USD 0.0 is not a usable purchase price. Is an 8GB/256GB Galaxy A26 5G available to buy? No: all three published colour variants are out of stock. The matching variant is listed at USD 320, not the USD 215 shown for the 6GB/128GB version. Condition is not explicitly established. Is the 8GB/256GB Galaxy A26 available in stock? The separately published Peach variant lists USD 314.00 but explicitly reports OutOfStock, so it cannot satisfy the request.",
+          "answer": "The closest checked listing is at Multimedia Megastore (M2), a Lebanese shop:\n\nSamsung Galaxy A26 5G — 8 GB RAM / 256 GB, Black\nListed price before delivery: US$410\nAvailability: the published matching variant reports online stock and is purchasable.\nExact variant link: https://www.m2.com.lb/shop/smartphones/samsung/samsung-galaxy-a26/?attribute_pa_color=black&attribute_pa_capacity=256gb&attribute_pa_ram=8gb-ram\n\nImportant caveat: I could not verify that M2 explicitly describes its condition as new, so I cannot confirm it meets every requirement. Showroom stock was not verified.\n\nThe matching configurations checked at BMS Samsung, OutGeeked, Mobileleb and Carrefour were out of stock.",
+          "rendered_cards": [],
+          "seconds": 271.672,
+          "spend": {
+            "attempts": {
+              "model": 29,
+              "retrieval": 7,
+              "search": 2,
+              "work": 1
+            },
+            "known_usd": "0.5806701",
+            "ledger": "read",
+            "note": "uncertain amounts are full reservations kept because the cost was not reported",
+            "still_held_usd": "0",
+            "uncertain_usd": "0"
+          },
+          "source_receipts": [
+            {
+              "url": "https://mobileleb.com/products/samsung-galaxy-a26-5g-8gb-256gb",
+              "reader": "firecrawl",
+              "start": "2026-11-27T20:33:08.692442+00:00",
+              "end": "2026-11-27T20:33:13.803607+00:00",
+              "sha256": "981cdbe6f495729c49ccf02d29fab53fee7399c228084fc2f5926d495e69fe20",
+              "job": "01a21eb6-41d7-7344-8675-4bb4a16f0bdc"
+            },
+            {
+              "url": "https://lb.bmsmena.com/products/sm-a266b",
+              "reader": "firecrawl",
+              "start": "2026-11-27T20:33:15.390724+00:00",
+              "end": "2026-11-27T20:33:21.556306+00:00",
+              "sha256": "0bbf8aa2015619d958d069eabee8674d6bfaed7083c5b6589ba36fedd85f50fa",
+              "job": "01a21eb6-5be6-7111-8209-53b64367c958"
+            },
+            {
+              "url": "https://outgeeked.net/products/samsung-galaxy-a26",
+              "reader": "firecrawl",
+              "start": "2026-11-27T20:33:55.133553+00:00",
+              "end": "2026-11-27T20:34:01.164828+00:00",
+              "sha256": "be6f2fe9626b21d82e0bfbace273641dbac6c9009abe2b5b86dd998d95ec06d0",
+              "job": "01a21eb6-f818-74ad-8877-e87e0de89639"
+            },
+            {
+              "url": "https://www.m2.com.lb/shop/smartphones/samsung/samsung-galaxy-a26/",
+              "reader": "firecrawl",
+              "start": "2026-11-27T20:34:02.637561+00:00",
+              "end": "2026-11-27T20:34:09.338485+00:00",
+              "sha256": "cb16d96040a95b8e01e23ddaaf9766735a9bc443c7d66073c338417f1723ac7e",
+              "job": "01a21eb7-1452-730e-b3a5-6ab1cbbfcdb5"
+            },
+            {
+              "url": "https://www.m2.com.lb/shop/smartphones/samsung/samsung-galaxy-a26/",
+              "reader": "playwright",
+              "start": "2026-11-27T20:36:02.282484+00:00",
+              "end": "2026-11-27T20:36:14.403444+00:00",
+              "sha256": "304b5db9b66e58e58ff35f1d10b31ceb42cff3ad68bdd9885dd335b0d4719036",
+              "job": null
+            },
+            {
+              "url": "https://www.m2.com.lb/shop/smartphones/samsung/samsung-galaxy-a26/",
+              "reader": "playwright",
+              "start": "2026-11-27T20:36:21.160089+00:00",
+              "end": "2026-11-27T20:36:21.814055+00:00",
+              "error": "ValueError"
+            },
+            {
+              "url": "https://www.carrefourlebanon.com/maflbn/en/smartphones/gm-samsung-a26-256-8gb-black/p/478488",
+              "reader": "firecrawl",
+              "start": "2026-11-27T20:36:27.183287+00:00",
+              "end": "2026-11-27T20:36:34.210992+00:00",
+              "sha256": "e3f236d6db2c5caa80496613646e4b3eadfc6f9f8101452044bdfa90d312bdc6",
+              "job": "01a21eb9-50b6-741b-a650-8d4824246765"
+            },
+            {
+              "url": "https://www.m2.com.lb/shop/smartphones/samsung/samsung-galaxy-a26/",
+              "reader": "playwright",
+              "start": "2026-11-27T20:36:51.054843+00:00",
+              "end": "2026-11-27T20:36:51.670586+00:00",
+              "error": "ValueError"
+            }
+          ],
+          "assessment": "Useful exact-variant lead. No qualifying card and no claim that condition was established.",
+          "why": "Both saved M2 captures contain the exact published black 8 GB/256 GB query URL, its USD 410 price and in-stock purchase state. The merchant's structured data identifies premises in Matn, Lebanon. Attempts to select the variant interactively failed. Neither capture established new condition. Three BMS matching colours at USD 320 were sold out."
+        },
+        {
+          "case": "phone-dev2",
+          "route": "sol-medium",
+          "run_id": "dfa06256-5edc-4bf7-b34a-18f9dcc869ab",
+          "revision": "af91d710ebe029d5f02d7087b1cae15772d76388",
+          "status": "partial",
+          "stop_reason": "The remaining time was reserved for the buyer answer. Does this listing provide the requested new 8 GB/256 GB Galaxy A26 5G in stock at a positive listed price? No: all four published variants are out of stock, and the schema price of USD 0.0 is not a verified sale price. Does this listing establish an in-stock, new Galaxy A26 5G with 8 GB RAM and 256 GB storage? No: the product is explicitly out of stock. USD 315 is a product-level price, not a confirmed selected-colour offer. The agent could not finish reading the capture.",
+          "answer": "I couldn’t fully verify an in-stock, new Galaxy A26 5G with 8 GB RAM and 256 GB storage.\n\nThe closest lead is Multimedia Megastore (M2), a Lebanese shop. Its Galaxy A26 page lists US$410 before delivery and online stock, but the latest page check did not confirm those details for the selected 8 GB/256 GB variant or verify new condition.\nListing: https://www.m2.com.lb/shop/smartphones/samsung/samsung-galaxy-a26/\n\nThe exact 8 GB/256 GB listings checked at Mobileleb and Najem Starcall were out of stock, so I can’t recommend them as available.",
+          "rendered_cards": [],
+          "seconds": 290.703,
+          "spend": {
+            "attempts": {
+              "model": 29,
+              "retrieval": 6,
+              "search": 2,
+              "work": 1
+            },
+            "known_usd": "0.5287013",
+            "ledger": "read",
+            "note": "uncertain amounts are full reservations kept because the cost was not reported",
+            "still_held_usd": "0",
+            "uncertain_usd": "0.5204800"
+          },
+          "source_receipts": [
+            {
+              "url": "https://mobileleb.com/products/samsung-galaxy-a26-5g-8gb-256gb",
+              "reader": "firecrawl",
+              "start": "2026-11-27T20:38:31.738569+00:00",
+              "end": "2026-11-27T20:38:37.042177+00:00",
+              "sha256": "6c15f2d6b70dec45acc3982b44fd9fb7b9e29a9939f3cd531fb5a00aee9e8e65",
+              "job": "01a21ebb-2fcc-73e8-880c-d1cc7bdc2f35"
+            },
+            {
+              "url": "https://najemstarcall.com/product/samsung-galaxy-a26-5g/",
+              "reader": "firecrawl",
+              "start": "2026-11-27T20:38:38.165138+00:00",
+              "end": "2026-11-27T20:38:44.972715+00:00",
+              "sha256": "c8b818f5e397ca3b60ef8ddbe6cc0d1e01289ee68b62ce8c2b716a88a76a8990",
+              "job": "01a21ebb-489d-734f-be04-789c60271aa1"
+            },
+            {
+              "url": "https://www.m2.com.lb/shop/smartphones/samsung/samsung-galaxy-a26/",
+              "reader": "firecrawl",
+              "start": "2026-11-27T20:39:58.494490+00:00",
+              "end": "2026-11-27T20:40:05.257683+00:00",
+              "sha256": "7cbb2f7200c76cf9d2ed56d8bc97aaaf631057aa34861e1a43da8b0c30a0463d",
+              "job": "01a21ebc-82c2-70a3-9d59-b994e3bc3ce9"
+            },
+            {
+              "url": "https://lb.bmsmena.com/products/sm-a266b",
+              "reader": "firecrawl",
+              "start": "2026-11-27T20:40:05.081353+00:00",
+              "end": "2026-11-27T20:40:11.814252+00:00",
+              "sha256": "c802da5b8a02f6aa5173568a03d2c0db1eff35f3aa290620d5f1182e9a1e3e68",
+              "job": "01a21ebc-9ca2-71fe-a7f9-35a8e4a9609a"
+            },
+            {
+              "url": "https://www.m2.com.lb/shop/smartphones/samsung/samsung-galaxy-a26/",
+              "reader": "playwright",
+              "start": "2026-11-27T20:42:07.976547+00:00",
+              "end": "2026-11-27T20:42:21.434066+00:00",
+              "sha256": "304b5db9b66e58e58ff35f1d10b31ceb42cff3ad68bdd9885dd335b0d4719036",
+              "job": null
+            }
+          ],
+          "assessment": "Useful cautious lead. General M2 product link, USD 410, and specific missing variant confirmation and condition. No qualifying card.",
+          "why": "The same shop and listed price were found independently of the other model run. The medium buyer required a further variant confirmation and returned the parent URL. The low buyer surfaced the exact variant URL published by the retailer."
+        },
+        {
+          "case": "earbuds-dev2",
+          "route": "sol-medium",
+          "run_id": "0068b68d-3dce-42c7-a22a-fe25b5eac7d3",
+          "revision": "af91d710ebe029d5f02d7087b1cae15772d76388",
+          "status": "partial",
+          "stop_reason": "The remaining time was reserved for the buyer answer. The listing could not be read. The agent could not finish reading the capture.",
+          "answer": "The closest checked option is the Anker Soundcore R50i NC at OutGeeked, listed at USD 25 before delivery, with online stock indicated. The shop states its products are brand-new and offers delivery across Lebanon.\n\nExact product: https://outgeeked.net/products/anker-soundcore-r50i-nc?variant=47351073669378\n\nIts advertised adaptive active noise cancellation makes it a promising option for reducing steady bus noise, and it is comfortably below your USD 65 limit.\n\nHowever, I couldn’t verify silicone ear tips from the checked listing, so I can’t yet recommend it as meeting all your requirements. Confirm that the included tips are silicone before ordering.",
+          "rendered_cards": [],
+          "seconds": 293.328,
+          "spend": {
+            "attempts": {
+              "model": 27,
+              "provider_read": 1,
+              "retrieval": 4,
+              "search": 1
+            },
+            "known_usd": "0.4010777",
+            "ledger": "read",
+            "note": "uncertain amounts are full reservations kept because the cost was not reported",
+            "still_held_usd": "0",
+            "uncertain_usd": "1.0409600"
+          },
+          "source_receipts": [
+            {
+              "url": "https://outgeeked.net/products/anker-soundcore-r50i-nc",
+              "reader": "firecrawl",
+              "start": "2026-11-27T20:44:18.811102+00:00",
+              "end": "2026-11-27T20:44:24.854799+00:00",
+              "sha256": "78e7269f133023e33456581ff73e157953e700db499cf1db085a2ef316c52569",
+              "job": "01a21ec0-7bba-717a-b65f-f672f6f60abe"
+            },
+            {
+              "url": "https://gamebroslb.com/products/soundcore-by-anker-soundcore-r50i-nc-true-wireless-noise-cancelling-earbuds",
+              "reader": "firecrawl",
+              "start": "2026-11-27T20:44:25.227961+00:00",
+              "end": "2026-11-27T20:44:29.441940+00:00",
+              "sha256": "d92a64d8a1ee57c9319377aa83be709913deea019a6311c0d0432556da5dca97",
+              "job": "01a21ec0-944b-757d-b4b2-e6eff9460418"
+            },
+            {
+              "url": "https://outgeeked.net/products/anker-soundcore-r50i-nc",
+              "reader": "playwright",
+              "start": "2026-11-27T20:48:17.754364+00:00",
+              "end": "2026-11-27T20:48:18.040680+00:00",
+              "error": "ValueError"
+            },
+            {
+              "url": "https://www.dslr-zone.com/product/soundcore-r50i-nc-earbuds-by-anker/",
+              "reader": "firecrawl",
+              "start": "2026-11-27T20:48:25.529128+00:00",
+              "end": "2026-11-27T20:48:31.491493+00:00",
+              "sha256": "9ef6836c58880e568896ecea3db300dd6b7e2e3a65ba41ed7cefe678232643a1",
+              "job": "01a21ec4-3f79-7307-b9dc-70cd2a9632b7"
+            },
+            {
+              "url": "https://ayoubcomputers.com/anker-soundcore-r50i-nc-true-wireless-noise-cancelling-earbuds-pink-a3959h51/",
+              "reader": "firecrawl",
+              "start": "2026-11-27T20:48:34.181759+00:00",
+              "end": "2026-11-27T20:48:40.950571+00:00",
+              "error": "TimeoutError"
+            }
+          ],
+          "assessment": "Useful partial. No qualifying card, with silicone tip material explicitly unresolved.",
+          "why": "OutGeeked's retained SKU OG-STK-4697 receipt publishes USD 25 in stock, an exact variant URL, 42 dB adaptive noise cancelling, a brand-new range and Lebanon delivery. No silicone claim occurs in its visible text. The later alternate supplier checks did not settle tip material before presentation."
+        },
+        {
+          "case": "earbuds-dev2",
+          "route": "sol-low",
+          "run_id": "e276b18e-5d91-466f-8d0f-3b4917d08bb8",
+          "revision": "af91d710ebe029d5f02d7087b1cae15772d76388",
+          "status": "partial",
+          "stop_reason": "The shopping agent could not complete its next decision. Further reading is needed to settle the outstanding checks. Can this exact product be verified as new, in stock, with active noise cancellation and silicone tips for USD 65 or less, from a shop with Lebanese premises? The capture is an access-denied page, so none of those requirements can be verified. Does the linked Soundcore R50i NC product offer confirm an in-stock, new pair with active noise cancellation and silicone tips for no more than USD 65? The contact page identifies a promising product link but does not establish its complete configuration or condition.",
+          "answer": "The product's structured offer lists the R50i NC at USD 25 and in stock, with SKU OG-STK-4697. The product description advertises adaptive noise cancellation. The product variant is priced at USD 25. The store states its items are new. The selected product is Anker Soundcore R50i NC, SKU OG-STK-4697, variant 47351073669378, priced USD 25 and available. The product description advertises in-ear earbuds with adaptive noise cancelling and Bluetooth 5.4. The merchant describes all its items as new and genuine. Structured offer data lists this variant at USD 25, in stock, with SKU OG-STK-4697. The footer states a Beirut shipping origin, but this does not by itself establish merchant premises. The R50i NC has adaptive noise cancellation and an in-ear design. The published offer identifies SKU OG-STK-4697 and selected variant 47351073669378 at USD 25, in stock. The merchant says every item is brand-new and genuine. The captured product data identifies Soundcore R50i NC by Anker at USD 25, SKU OG-STK-4697. OutGeeked states its merchandise is new and genuine. The product's default variant is listed at USD 25. The selected Soundcore R50i NC offer is USD 25 and in stock; its SKU is OG-STK-4697. The product specifies in-ear earbuds with adaptive noise cancellation. Further reading is needed to settle the outstanding checks. https://outgeeked.net/products/anker-soundcore-r50i-nc\nThe retailer blocked access; the capture contains no product offer or merchant address. The page attributes the access failure to site restrictions. Can this exact product be verified as new, in stock, with active noise cancellation and silicone tips for USD 65 or less, from a shop with Lebanese premises? The capture is an access-denied page, so none of those requirements can be verified. https://gamebroslb.com/products/soundcore-by-anker-soundcore-r50i-nc-true-wireless-noise-cancelling-earbuds\nThe footer states a Beirut shipping origin, not a physical shop address. The page links a Soundcore R50i NC product. A promotional listing displays $25.00, with $33.00 crossed out; confirm currency and current offer on the product page. The contact panel describes an online store rather than a physical office address. The footer claims shipping origin in Beirut, Lebanon, but this is not a merchant premises address. Does the linked Soundcore R50i NC product offer confirm an in-stock, new pair with active noise cancellation and silicone tips for no more than USD 65? The contact page identifies a promising product link but does not establish its complete configuration or condition. https://outgeeked.net/pages/contact\nThe manufacturer's support page identifies P30i and R50i NC together, with user guide model A3959. Soundcore's support capture lists model-specific noise-cancellation troubleshooting; this is not a retail offer or evidence of price, stock, condition, or Lebanese seller premises. The agent could not finish reading the capture. https://service.soundcore.com/article-description/soundcore-P30i-R50i-NC-Earbuds-FAQ",
+          "rendered_cards": [],
+          "seconds": 262.891,
+          "spend": {
+            "attempts": {
+              "model": 31,
+              "retrieval": 6,
+              "search": 3,
+              "work": 1
+            },
+            "known_usd": "0.5407747",
+            "ledger": "read",
+            "note": "uncertain amounts are full reservations kept because the cost was not reported",
+            "still_held_usd": "0",
+            "uncertain_usd": "0"
+          },
+          "source_receipts": [
+            {
+              "url": "https://outgeeked.net/products/anker-soundcore-r50i-nc",
+              "reader": "firecrawl",
+              "start": "2026-11-27T20:50:16.435564+00:00",
+              "end": "2026-11-27T20:50:22.849595+00:00",
+              "sha256": "f6ed686885329b176880cd3e235323428fa26f589fba9365b03017e99cf1edf4",
+              "job": "01a21ec5-f12b-7707-9f45-aca3daac80aa"
+            },
+            {
+              "url": "https://gamebroslb.com/products/soundcore-by-anker-soundcore-r50i-nc-true-wireless-noise-cancelling-earbuds",
+              "reader": "firecrawl",
+              "start": "2026-11-27T20:50:22.976682+00:00",
+              "end": "2026-11-27T20:50:27.546737+00:00",
+              "sha256": "507a0ac5488a072bb2bdde2ebd693b6385d0f505fa44221ec8299975d2f4c605",
+              "job": "01a21ec6-0a0e-737f-a560-ebf3e0390afd"
+            },
+            {
+              "url": "https://outgeeked.net/pages/contact",
+              "reader": "firecrawl",
+              "start": "2026-11-27T20:52:31.736543+00:00",
+              "end": "2026-11-27T20:52:37.466661+00:00",
+              "sha256": "34182dfff1fd639b5aa6b7619190c809cf7cf736a933c8dc6dcde48538431b83",
+              "job": "01a21ec8-0195-7443-9a6e-6829048e3620"
+            },
+            {
+              "url": "https://service.soundcore.com/article-description/How-to-Wear-soundcore-P30i-R50i-NC-Earbuds-Correctly",
+              "reader": "firecrawl",
+              "start": "2026-11-27T20:53:03.613025+00:00",
+              "end": "2026-11-27T20:53:09.738599+00:00",
+              "sha256": "13f5d8cc12167b0e971f5804672c4bcad6ee791e71b42fe5fee4cf60e9dc6140",
+              "job": "01a21ec8-7df9-706b-86b2-72c3a4b83ccb"
+            },
+            {
+              "url": "https://service.soundcore.com/article-description/soundcore-P30i-R50i-NC-Earbuds-FAQ",
+              "reader": "firecrawl",
+              "start": "2026-11-27T20:53:17.186287+00:00",
+              "end": "2026-11-27T20:53:23.299658+00:00",
+              "sha256": "bb58aef07230e012a13296b83fcca420356ec2787548d63e1015e8e4074cd917",
+              "job": "01a21ec8-b268-72ba-9945-4fcc3fa05ecc"
+            },
+            {
+              "url": "https://outgeeked.net/pages/contact",
+              "reader": "playwright",
+              "start": "2026-11-27T20:53:25.339407+00:00",
+              "end": "2026-11-27T20:53:34.992743+00:00",
+              "sha256": "f67809ab5d443079e0315c74090189a3dac88c290ed2963408d2f4a091b4b4de",
+              "job": null
+            }
+          ],
+          "assessment": "Buyer usefulness failed. No card. The 3,025-character fallback repeated scattered findings and did not identify the silicone-tip question as the decisive gap in a clear answer.",
+          "why": "The worker found the same USD 25 R50i NC and investigated the shop and manufacturer. It exhausted permitted calls and both closing decision attempts were budget_denied. The price and stock appear repeatedly, with multiple near-identical descriptions under one product link."
+        }
+      ]
+    }
+  ],
+  "selection": {
+    "chosen": "sol-medium",
+    "model": "openai/gpt-6.1-sol",
+    "effort": "medium",
+    "reason": "On the final repaired worker, medium delivered two useful, qualified partial answers in two first attempts. Low delivered one in two. Neither produced a qualifying card. Low gave a more precise published Galaxy variant URL. Medium produced a clear earbuds answer with an exact link and the unresolved tip material, where low exhausted its calls and returned repeated findings. The choice is based on the first buyer-visible milestone. No gain in qualifying-offer coverage was demonstrated. In the first cohort both models lost the Sony card and both exhausted closing calls on laptops.",
+    "scope": "This small paired development sample selects a candidate. The eight new blind cases decide reliability."
+  },
+  "archived_comparison": {
+    "sol-low": [
+      {
+        "frame": "tablet",
+        "input_sha256": "478fe3d30140537e5ac7487e82ee5dc2004f292de7595c7d04065a818500b783",
+        "run_id": "6df4bfeb-e576-4867-99c4-441e2857e425",
+        "status": "completed",
+        "selected": "Inspect selected listing https://isolvedit.me/products/samsung-galaxy-tab-s6-lite-sm-p613-10-4-tablet-4gb-128gb-wifi?srsltid=AY6E963SB59okUKwyirZfDYSQPEEnpb6ewjnKK8NROT5K-G45ZxmkJsG Samsung Galaxy Tab S6 Lite SM-P613 10.4\" Tablet 4GB",
+        "seconds": 5.99
+      },
+      {
+        "frame": "merchant",
+        "input_sha256": "bcbd38927aab764e65e59b01b31daaec5e04d8cddbcd8d556926bd476f7dedd0",
+        "run_id": "6df4bfeb-e576-4867-99c4-441e2857e425",
+        "status": "completed",
+        "selected": "Render listing with Playwright https://ayoubcomputers.com/jbl-tune-520bt-headphones-black-tune-520bt/?srsltid=AY6E961FL0iokntrJQbCPFUPMnzuj4aGgB97adzGCxlIIMjJTG2VU1mR",
+        "seconds": 5.14
+      },
+      {
+        "frame": "monitor",
+        "input_sha256": "c504cbe5c7d70481c344107737114eda9430bd74b211f571f310789278e2b95d",
+        "run_id": "6df4bfeb-e576-4867-99c4-441e2857e425",
+        "status": "completed",
+        "selected": "Inspect selected listing https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html with Firecrawl",
+        "seconds": 4.59
+      },
+      {
+        "frame": "answer",
+        "input_sha256": "548f3a9506c705ba17f46df14d0388d7c6a9ad9a12e10213c80cc22a36526a3a",
+        "run_id": "6df4bfeb-e576-4867-99c4-441e2857e425",
+        "status": "completed",
+        "selected": "Present checked offers and the answer now",
+        "seconds": 8.48
+      },
+      {
+        "frame": "tablet-01\\frame-01.json",
+        "input_sha256": "f169eac547f291afd71061df6c8728c4296963e2227caa60f941499ace308bd6",
+        "run_id": "16d5b943-ba96-4385-a55d-a4f06c89625c",
+        "status": "completed",
+        "selected": "Inspect selected listing https://www.dslr-zone.com/product/huawei-matepad-se-11-8gb128gb-nebula-gray-bundle-m-pen-lite-folio-cover/ huawei matepad se 11 8gb128gb nebula gray bundle m pen lite folio cover",
+        "seconds": 5.05
+      },
+      {
+        "frame": "headphones-03\\frame-01.json",
+        "input_sha256": "12209dff2ea92516ec901ad241f323f38190592b2dff2d70de88e99914a8b153",
+        "run_id": "16d5b943-ba96-4385-a55d-a4f06c89625c",
+        "status": "completed",
+        "selected": "Inspect selected listing https://www.carrefourlebanon.com/helpcenter/articles/service/186-Help-&-Support https://www.carrefourlebanon.com/helpcenter/articles/service/186-Help-&-Support with Firecrawl",
+        "seconds": 6.22
+      }
+    ],
+    "sol-medium": [
+      {
+        "frame": "tablet",
+        "input_sha256": "478fe3d30140537e5ac7487e82ee5dc2004f292de7595c7d04065a818500b783",
+        "run_id": "b276b147-ce72-452a-bad1-48b4a42a7ef1",
+        "status": "completed",
+        "selected": "Inspect selected listing https://isolvedit.me/products/samsung-galaxy-tab-s6-lite-sm-p613-10-4-tablet-4gb-128gb-wifi?srsltid=AY6E963SB59okUKwyirZfDYSQPEEnpb6ewjnKK8NROT5K-G45ZxmkJsG Samsung Galaxy Tab S6 Lite SM-P613 10.4\" Tablet 4GB",
+        "seconds": 6.36
+      },
+      {
+        "frame": "merchant",
+        "input_sha256": "bcbd38927aab764e65e59b01b31daaec5e04d8cddbcd8d556926bd476f7dedd0",
+        "run_id": "b276b147-ce72-452a-bad1-48b4a42a7ef1",
+        "status": "completed",
+        "selected": "Render listing with Playwright https://ayoubcomputers.com/jbl-tune-520bt-headphones-black-tune-520bt/?srsltid=AY6E961FL0iokntrJQbCPFUPMnzuj4aGgB97adzGCxlIIMjJTG2VU1mR",
+        "seconds": 4.95
+      },
+      {
+        "frame": "monitor",
+        "input_sha256": "c504cbe5c7d70481c344107737114eda9430bd74b211f571f310789278e2b95d",
+        "run_id": "b276b147-ce72-452a-bad1-48b4a42a7ef1",
+        "status": "completed",
+        "selected": "Inspect selected listing https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html with Firecrawl",
+        "seconds": 4.56
+      },
+      {
+        "frame": "answer",
+        "input_sha256": "548f3a9506c705ba17f46df14d0388d7c6a9ad9a12e10213c80cc22a36526a3a",
+        "run_id": "b276b147-ce72-452a-bad1-48b4a42a7ef1",
+        "status": "completed",
+        "selected": "Present checked offers and the answer now",
+        "seconds": 8.98
+      },
+      {
+        "frame": "tablet-01\\frame-01.json",
+        "input_sha256": "f169eac547f291afd71061df6c8728c4296963e2227caa60f941499ace308bd6",
+        "run_id": "e0a2bf43-3a5a-4959-b73d-a7a1712c1906",
+        "status": "completed",
+        "selected": "Inspect selected listing https://www.dslr-zone.com/product/huawei-matepad-se-11-8gb128gb-nebula-gray-bundle-m-pen-lite-folio-cover/ huawei matepad se 11 8gb128gb nebula gray bundle m pen lite folio cover",
+        "seconds": 5.91
+      },
+      {
+        "frame": "headphones-03\\frame-01.json",
+        "input_sha256": "12209dff2ea92516ec901ad241f323f38190592b2dff2d70de88e99914a8b153",
+        "run_id": "e0a2bf43-3a5a-4959-b73d-a7a1712c1906",
+        "status": "completed",
+        "selected": "Inspect selected listing https://www.carrefourlebanon.com/helpcenter/articles/service/186-Help-&-Support https://www.carrefourlebanon.com/helpcenter/articles/service/186-Help-&-Support with Firecrawl",
+        "seconds": 6.62
+      }
+    ],
+    "opus-medium": [
+      {
+        "frame": "tablet",
+        "input_sha256": "478fe3d30140537e5ac7487e82ee5dc2004f292de7595c7d04065a818500b783",
+        "run_id": "cc465efe-2edd-43f5-a8f5-6bb9300a65a9",
+        "status": "completed",
+        "selected": "Inspect selected listing https://isolvedit.me/products/samsung-galaxy-tab-s6-lite-sm-p613-10-4-tablet-4gb-128gb-wifi?srsltid=AY6E963SB59okUKwyirZfDYSQPEEnpb6ewjnKK8NROT5K-G45ZxmkJsG Samsung Galaxy Tab S6 Lite SM-P613 10.4\" Tablet 4GB",
+        "seconds": 10.53
+      },
+      {
+        "frame": "merchant",
+        "input_sha256": "bcbd38927aab764e65e59b01b31daaec5e04d8cddbcd8d556926bd476f7dedd0",
+        "run_id": "cc465efe-2edd-43f5-a8f5-6bb9300a65a9",
+        "status": "completed",
+        "selected": "Render listing with Playwright https://ayoubcomputers.com/jbl-tune-520bt-headphones-black-tune-520bt/?srsltid=AY6E961FL0iokntrJQbCPFUPMnzuj4aGgB97adzGCxlIIMjJTG2VU1mR",
+        "seconds": 9.53
+      },
+      {
+        "frame": "monitor",
+        "input_sha256": "c504cbe5c7d70481c344107737114eda9430bd74b211f571f310789278e2b95d",
+        "run_id": "cc465efe-2edd-43f5-a8f5-6bb9300a65a9",
+        "status": "completed",
+        "selected": "Inspect selected listing https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html https://syscom.com.lb/monitor-projector/1260-monitor-projector-aoc-monitor-238-100hz-fhd-ips-hdmi-port-anti-blue-light-1920-x-1080-aoc-24b15h2-89-fm01-24sd-vh44.html with Firecrawl",
+        "seconds": 7.97
+      },
+      {
+        "frame": "answer",
+        "input_sha256": "548f3a9506c705ba17f46df14d0388d7c6a9ad9a12e10213c80cc22a36526a3a",
+        "run_id": "cc465efe-2edd-43f5-a8f5-6bb9300a65a9",
+        "status": "cancelled",
+        "selected": null,
+        "seconds": 13.14
+      },
+      {
+        "frame": "tablet-01\\frame-01.json",
+        "input_sha256": "f169eac547f291afd71061df6c8728c4296963e2227caa60f941499ace308bd6",
+        "run_id": "3451eec1-4826-44a9-a1a1-eebb1602fa53",
+        "status": "completed",
+        "selected": "Resume the captured listing at its saved reading position: https://mediatechlb.com/product/samsung-galaxy-tab-s6-sm-p613nza-lite-with-s-pen-10-4-128gb-grey-1-year-warranty-tablet-in-lebanon/?srsltid=AY6E962AQtWaklD5YsuoDGprnYlFs8dsWKH2zpbAmyz6GMiKuBNeLGn2",
+        "seconds": 5.12
+      },
+      {
+        "frame": "headphones-03\\frame-01.json",
+        "input_sha256": "12209dff2ea92516ec901ad241f323f38190592b2dff2d70de88e99914a8b153",
+        "run_id": "3451eec1-4826-44a9-a1a1-eebb1602fa53",
+        "status": "completed",
+        "selected": "Inspect selected listing https://www.carrefourlebanon.com/helpcenter/articles/service/186-Help-&-Support https://www.carrefourlebanon.com/helpcenter/articles/service/186-Help-&-Support with Firecrawl",
+        "seconds": 7.81
+      }
+    ]
+  }
+}

@@ -568,7 +568,10 @@ class OpenRouterTests(unittest.TestCase):
         with patch.dict('os.environ', {'OPENROUTER_API_KEY': KEY}):
             settings = pinned_inference().roles.settings
         self.assertEqual(settings.max_input_tokens, 200_000)
-        self.assertEqual(baseline(api_key=KEY).roles.settings.max_input_tokens, 16_384)
+        self.assertEqual(settings.effort, 'medium')
+        baseline_settings = baseline(api_key=KEY).roles.settings
+        self.assertEqual(baseline_settings.max_input_tokens, 16_384)
+        self.assertEqual(baseline_settings.effort, 'low')
         provider = self.provider(settings=settings)
         instructions = 'Compare public offers.'
         data = {'observations': 'لبنان'}

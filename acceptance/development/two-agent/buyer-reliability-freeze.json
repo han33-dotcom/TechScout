@@ -1,0 +1,74 @@
+{
+  "frozen_at": "2026-11-27T20:56:02.392339+00:00",
+  "revision": "341a09ccf250660f23e480a8c46181329147138a",
+  "model_config": {
+    "route": {
+      "model": "openai/gpt-6.1-sol",
+      "provider": "openai",
+      "rates": {
+        "input": "2.000000",
+        "cached": "0.1000000",
+        "cache_write": "2.5000000",
+        "output": "10.00000"
+      },
+      "supported_parameters": [
+        "reasoning",
+        "include_reasoning",
+        "seed",
+        "max_tokens",
+        "response_format",
+        "structured_outputs",
+        "tools",
+        "tool_choice",
+        "verbosity",
+        "reasoning_effort"
+      ]
+    },
+    "pricing_checked_on": "2026-11-23",
+    "effort": "medium",
+    "provider": "openrouter",
+    "roles": {
+      "max_input_tokens": 200000,
+      "max_output_tokens": 2048,
+      "timeout_seconds": 30
+    },
+    "writer": {
+      "max_input_tokens": 32768,
+      "max_output_tokens": 4096,
+      "timeout_seconds": 30
+    }
+  },
+  "model_config_file_sha256": "c4d0f0f248fad81c8d7eb262a722c4ed90ecaae9c2306b931cc01495ef0f1621",
+  "checkout_config_sha256": {
+    "config/two-agent-buyer.json": "cfecb5f0a7a8c6646932c3ded5228c0421013f45c28a5ac764f5884a731f258e",
+    "config/evaluation.json": "8dfe1227b7bf3b4cb25e9b719cb217a0ed373a1f60446e57a50448cab1c72685"
+  },
+  "catalog_sha256": "03606bdedf2baa46fe8515ea84ffbb2c8e7cee4a1afc9da90fc2fe46f6624c6d",
+  "catalog_rows": {
+    "directory": 24,
+    "corpus_resources": 2,
+    "observations": 10,
+    "offers": 0
+  },
+  "limits": {
+    "seconds": 300,
+    "research_usd": 20,
+    "total_usd": 25,
+    "calls": 40
+  },
+  "selection_evidence_sha256": "77280f72b37e5a03837d1bfa2509475d21081110bc44f234428564a49789dc49",
+  "grading": {
+    "purpose": "First buyer-visible reliability milestone for listed prices before delivery in Lebanon.",
+    "first_attempts": "Run two fixed batches of four requests. Each contains two exact-product and two needs-based requests. Clone the pinned catalog separately for every first attempt. Score each original output, including errors, with no replacements or retries.",
+    "buyer_inputs": "Only the original wording, request kind, broad category and any-fulfillment mode enter the normal API. No reference seller, product lead, hint or expected price enters the worker.",
+    "assessors": "Collect independent search and receipt observations outside the buyer sessions. Check actual seller, physical premises, suitability, condition, listed price and currency, and online availability. Keep the observation time and exact retailer link. A snippet is a lead. A time-separated price or stock conflict is recorded as drift.",
+    "scoring": {
+      "written_usefulness": "For a checked purchase require the exact product, shop, checked listed price, link, fit and material caveats. For a partial require the strongest checked lead or concrete exclusion and the precise unresolved fact. A catalog of raw findings that leaves the buyer to reconstruct the conclusion can fail usefulness.",
+      "qualifying_coverage": "For an independently established available purchase require a fitting offer in the written answer and a consistent saved card. Either the buyer's alternative or the reference product may qualify. A better price is reported separately. For a genuine blocker require a supported explanation of the binding constraint.",
+      "claim_accuracy": "Check material assertions against product- and seller-specific source receipts. Record unknowns, unsupported assertions and stale or contradictory facts. Explicitly distinguish a candidate price from a verified price for the requested variant.",
+      "unassessable": "When independent checks cannot settle purchasability or a real blocker, retain the case in the denominator and withhold milestone pass credit.",
+      "gate": "Eight supported useful outcomes, a qualifying offer on every independently answerable request and zero misleading claims. A failure or unassessable case keeps the original acceptance suite pending."
+    },
+    "parallel_research": "Consider a separate development experiment only for recurring missed, independently verified suitable product families where traces show inadequate exploration. Record the missed family and evidence distinguishing exploration from retrieval, merchant proof, item matching or answer delivery."
+  }
+}
