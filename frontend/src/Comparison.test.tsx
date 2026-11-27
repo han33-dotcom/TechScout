@@ -1,11 +1,24 @@
 import { describe,it,expect,vi } from 'vitest';
 import { render,screen,fireEvent,within } from '@testing-library/react';
-import Comparison,{safeLink,costText,currentRecommendations,compareDecimal} from './Comparison';
+import Comparison,{safeLink,costText,currentRecommendations,compareDecimal,lebaneseSeller} from './Comparison';
 import App from './App';
 import type { ComparisonWorkspace } from './api';
 import fixture from './fixtures/workspace.json';
 const data=()=>structuredClone(fixture) as ComparisonWorkspace;
 describe('comparison evidence boundaries',()=>{
+ it('recognizes a named merchant at its separately cited premises in the same run',()=>{
+  const w=data(), offer=w.current.recommendations[0].primary.offer;
+  offer.seller={...offer.seller,market:'LB',first_party:false};
+  const price=offer.evidence.find(e=>e.field_path==='price')!;
+  const receipt={...price,adapter_version:'public-listing/2',run:w.current.run};
+  const contact={...receipt,final_url:'https://shop.example/contact',response_sha256:'a'.repeat(64)};
+  const identity={...contact,field_path:'seller.location_identity',excerpt:'Named merchant'};
+  offer.evidence=[{...receipt,field_path:'seller.name',excerpt:'Sold by Named merchant'},identity,
+    {...contact,field_path:'seller.market',excerpt:'Beirut, Lebanon'}];
+  expect(lebaneseSeller(offer)).toBe(true);
+  identity.response_sha256='b'.repeat(64);
+  expect(lebaneseSeller(offer)).toBe(false);
+ });
  it('changes reading advice with the stated use while retaining the same listing',()=>{
   const w=data(), item=w.current.uncertain[0];
   w.current.recommendations=[];

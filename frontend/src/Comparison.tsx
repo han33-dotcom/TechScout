@@ -52,9 +52,27 @@ export function lebaneseSeller(offer: Offer): boolean {
   const records = offer.evidence.filter(e => e.field_path === 'seller.name' || e.field_path === 'seller.market');
   if (records.some(e => e.conflicts?.length)) return false;
   if (offer.seller.first_party) return true;
-  const bound = records.filter(e => e.scope === 'variant' && e.product_id === offer.source_product_id &&
-    e.variant_id === offer.source_variant_id && e.origin_url === offer.listing_url && e.final_url === offer.listing_url);
-  return ['seller.name','seller.market'].every(path => bound.some(e => e.field_path === path));
+  const scoped = offer.evidence.filter(e => e.scope === 'variant' && e.source_id === offer.source_id &&
+    e.product_id === offer.source_product_id && e.variant_id === offer.source_variant_id);
+  const sameCapture = (a: typeof scoped[number], b: typeof scoped[number]) =>
+    a.final_url === b.final_url && a.response_sha256 === b.response_sha256 && a.observed_at === b.observed_at;
+  const links = scoped.filter(e => {
+    if (e.field_path !== 'listing_url' || !e.excerpt || e.conflicts?.length) return false;
+    try {
+      return new URL(e.final_url).host === new URL(offer.listing_url).host &&
+        new URL(e.excerpt.replace(/&amp;/g, '&'), e.final_url).href === offer.listing_url;
+    } catch { return false; }
+  });
+  const bound = scoped.filter(e => e.final_url === offer.listing_url || links.some(link => sameCapture(e, link)));
+  if (['seller.name','seller.market'].every(path => bound.some(e => e.field_path === path))) return true;
+  return bound.some(name => {
+    if (name.field_path !== 'seller.name' || !name.run || !name.excerpt || name.adapter_version !== 'public-listing/2') return false;
+    const run = name.run;
+    const companions = scoped.filter(e => e.excerpt && !e.conflicts?.length && e.adapter_version === name.adapter_version &&
+      e.run && matchesRun(run, e.run));
+    return companions.some(id => id.field_path === 'seller.location_identity' &&
+      companions.some(market => market.field_path === 'seller.market' && sameCapture(market, id)));
+  });
 }
 function route(offer: Offer) {
   const r = offer.route;

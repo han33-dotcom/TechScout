@@ -2,7 +2,8 @@
 from collections.abc import Mapping
 from decimal import Context, Inexact, MAX_EMAX, MIN_EMIN, ROUND_CEILING
 from typing import Annotated, Literal
-from urllib.parse import urlsplit
+from html import unescape
+from urllib.parse import urljoin
 
 from pydantic import Field, StrictBool, StringConstraints, model_validator
 
@@ -415,19 +416,37 @@ class Offer(Contract):
     evidence: tuple[Evidence, ...] = ()
 
     def domestic_merchant_receipts(self):
-        """Item-scoped identity and domicile on the landing page that supplied the offer."""
-        linked = {(e.final_url, e.response_sha256, e.observed_at) for e in self.evidence
-                  if e.field_path == 'listing_url' and e.scope == 'variant' and not e.conflicts
-                  and e.excerpt == str(self.listing_url) and urlsplit(str(e.final_url)).netloc == urlsplit(str(self.listing_url)).netloc
-                  and e.product_id == self.source_product_id
-                  and e.variant_id == self.source_variant_id}
-        records = tuple(e for e in self.evidence if e.field_path in ('seller.market', 'seller.name')
-                        and e.scope == 'variant' and e.product_id == self.source_product_id
-                        and e.variant_id == self.source_variant_id and (e.final_url == self.listing_url
-                            or (e.final_url, e.response_sha256, e.observed_at) in linked))
-        if (self.seller.market == 'LB' and not any(e.conflicts for e in records)
-                and {e.field_path for e in records} == {'seller.market', 'seller.name'}):
+        """Listing identity plus domicile on that capture or an agent-bound merchant page."""
+        if self.seller.market != 'LB':
+            return ()
+        scoped = [e for e in self.evidence if e.scope == 'variant' and e.product_id == self.source_product_id
+                  and e.variant_id == self.source_variant_id and e.source_id == self.source_id]
+        linked = set()
+        for e in scoped:
+            if e.field_path != 'listing_url' or e.conflicts or not e.excerpt:
+                continue
+            try:
+                target = urljoin(str(e.final_url), unescape(e.excerpt))
+            except ValueError:
+                continue
+            if (target == str(self.listing_url) and e.final_url.host == self.listing_url.host
+                    and e.final_url.port == self.listing_url.port):
+                linked.add((e.final_url, e.response_sha256, e.observed_at))
+        records = tuple(e for e in scoped if e.field_path in ('seller.market', 'seller.name')
+                        and (e.final_url == self.listing_url or (e.final_url, e.response_sha256, e.observed_at) in linked))
+        if not any(e.conflicts for e in records) and {e.field_path for e in records} == {'seller.market', 'seller.name'}:
             return records
+        names = tuple(e for e in records if e.field_path == 'seller.name' and e.run
+                      and e.adapter_version == 'public-listing/2' and e.excerpt and not e.conflicts)
+        for name in names:
+            companions = [e for e in scoped if e.run == name.run and e.adapter_version == name.adapter_version
+                          and e.excerpt and not e.conflicts]
+            identities = {(e.final_url, e.response_sha256, e.observed_at): e for e in companions
+                          if e.field_path == 'seller.location_identity'}
+            for market in companions:
+                identity = identities.get((market.final_url, market.response_sha256, market.observed_at))
+                if market.field_path == 'seller.market' and identity:
+                    return name, identity, market
         return ()
 
     def domestic_seller(self) -> Literal['listing', 'first_party'] | None:

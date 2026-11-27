@@ -101,6 +101,9 @@ class SeedBudget:
     def cancelled(self):
         return self.job.cancelled
 
+    def room(self):
+        return self.job.room()
+
     def reserve(self, kind, charge, seconds, **kwargs):
         is_fetch = kind == 'retrieval'
         if is_fetch and kwargs.get('limits'):

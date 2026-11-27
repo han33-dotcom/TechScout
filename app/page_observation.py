@@ -16,7 +16,7 @@ from app.contracts import Model, Money
 from app.model_provider import _schema
 from app.onboarding import canonical
 from app.openrouter import FRAMING_BYTES
-from app.selected_listing import Match, ProductOption, Selection
+from app.selected_listing import Match, MerchantLocation, ProductOption, Selection
 
 
 class PageNavigation(HTMLParser):
@@ -164,8 +164,16 @@ class PageDecision(Model):
     notes: str = Field(default='', max_length=2500)
 
 
+class LocationReading(Model):
+    merchant_quote: str
+    address_quote: str
+    listing_indices: list[int] = Field(default_factory=list)
+
+
 class BuyerPageDecision(PageDecision):
     fits: bool
+    seller_location: LocationReading | None = None
+    use_location_index: int | None = Field(default=None, ge=0)
 
 
 PAGE_PROMPT = """You are the agent inspecting your retailer tool response. Use the buyer's original
@@ -194,6 +202,12 @@ Copy title, brand, seller, options and the selected retailer SKU or variant ID f
 omit SKU if absent. Use the URL being read unless a distinct, valid selected variant href is published.
 Use findings for any other facts material to this objective, including on pages without an offer.
 Give the statement and an exact supporting excerpt. You can propose relevant page hrefs to follow.
+For a buyer given seller_evidence, a merchant's own contact or locations page can prove its Lebanese
+premises without showing a product. Return seller_location with exact merchant and address quotes.
+In listing_indices select every supplied listing whose actual seller you can identify as this merchant.
+Conversely, on a product page you can select an already observed location using use_location_index.
+Judge the identity using both pages. A shared website, marketplace operator, delivery area, service
+partner or unrelated business address alone is insufficient. Leave uncertain associations empty.
 For a buyer, set fits and explain your judgment (fits is ignored while paging or when there is no offer)
 against all the buyer's words and controls. State what you did find when something is missing."""
 
@@ -213,6 +227,9 @@ class CaptureReading:
     reason: str = ''
     links: tuple = ()
     findings: tuple = ()
+    location: MerchantLocation | None = None
+    listing_indices: tuple = ()
+    use_location_index: int | None = None
 
 
 class PageSource:
@@ -326,7 +343,8 @@ class PageSource:
                          options=options, published_link=link, source_excerpts=tuple(excerpts.items()))
 
 
-def inspect_capture(page, objective, generate, *, feedback=(), checked=(), max_input_bytes=32768, agent='buyer'):
+def inspect_capture(page, objective, generate, *, feedback=(), checked=(), max_input_bytes=32768, agent='buyer',
+                    seller_context=None):
     source = PageSource(page)
     schema = BuyerPageDecision if agent == 'buyer' else PageDecision
     envelope = FRAMING_BYTES + 1024 + len(json.dumps(_schema(schema)).encode()) + len(json.dumps(PAGE_PROMPT).encode())
@@ -336,6 +354,8 @@ def inspect_capture(page, objective, generate, *, feedback=(), checked=(), max_i
         payload = dict(agent=agent, objective=objective, feedback=list(feedback), url=source.url, reader=page.provider,
                        interaction=[dict(name=o.name, value=o.value) for o in checked],
                        notes=notes, citation_feedback=problem)
+        if seller_context is not None:
+            payload['seller_evidence'] = seller_context
         # Leave space for the wire envelope, schema, instructions and original objective.
         allowance = max(1, max_input_bytes - envelope - wire_size(payload))
         payload['page'] = source.view(start, terms, allowance)
@@ -350,6 +370,19 @@ def inspect_capture(page, objective, generate, *, feedback=(), checked=(), max_i
             findings = tuple(dict(statement=f.statement, quote=source.quote(f.quote), url=source.url,
                                   sha256=page.outcome.response_sha256) for f in answer.findings)
             selection = source.selection(answer.offer) if answer.offer else None
+            location = None
+            indices = ()
+            used = getattr(answer, 'use_location_index', None)
+            if seller_context is not None:
+                fields = getattr(answer, 'seller_location', None)
+                if fields:
+                    location = MerchantLocation.from_page(page, source.quote(fields.merchant_quote),
+                                                          source.quote(fields.address_quote))
+                    indices = tuple(dict.fromkeys(fields.listing_indices))
+                    if any(i < 0 or i >= len(seller_context['listings']) for i in indices):
+                        raise ValueError('Choose an observed seller listing index.')
+                if used is not None and (selection is None or used >= len(seller_context['locations'])):
+                    raise ValueError('Select a known location for the merchant on this listing.')
         except ValueError as exc:
             if answer == last_invalid:
                 return CaptureReading(reason=str(exc), links=links)
@@ -357,7 +390,8 @@ def inspect_capture(page, objective, generate, *, feedback=(), checked=(), max_i
             problem, notes = str(exc), answer.notes
             continue
         if selection is None:
-            return CaptureReading(reason=answer.reason or 'No selected offer established.', links=links, findings=findings)
+            return CaptureReading(reason=answer.reason or 'No selected offer established.', links=links,
+                                  findings=findings, location=location, listing_indices=indices)
         match = Match(selected_item_fits=answer.fits, merchant_address_line=0 if selection.address_lines else None,
                       reason=(answer.reason or 'Compared the selected product with the request.')[:240]) if answer.fits is not None else None
-        return CaptureReading(selection, match, answer.reason, links, findings)
+        return CaptureReading(selection, match, answer.reason, links, findings, location, indices, used)

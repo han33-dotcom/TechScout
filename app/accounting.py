@@ -69,7 +69,7 @@ LIMITS = {
     'maintenance:international': (100, 10, 900_000, '1', None),
     'buyer': (40, 40, None, str(DEFAULT_BUYER_LIMITS.spend_usd), 40),
 }
-KINDS = {'model', 'search', 'retrieval', 'embedding', 'work', 'worker'}
+KINDS = {'model', 'search', 'retrieval', 'provider_read', 'embedding', 'work', 'worker'}
 
 
 def check_source_workload(attempts, source, limits, job_id, now):
@@ -378,6 +378,18 @@ class Job:
 
     def reserve(self, kind, charge, seconds, **kwargs):
         return self.ledger.reserve(self.run_id, kind, charge, seconds, **kwargs)
+
+    def room(self):
+        """Time available to the next tool under this job's current phase or envelope."""
+        with self.ledger._transaction() as (state, now):
+            job = state['jobs'][self.run_id]
+            if self.buyer_limits:
+                seconds = self.buyer_limits.seconds if job['final'] else self.buyer_limits.research_seconds
+            elif job.get('envelope'):
+                seconds = job['envelope']['seconds']
+            else:
+                return float('inf')
+            return max(0, job['started'] + seconds - now)
 
     def enter_final_phase(self):
         with self.ledger._transaction() as (state, _):

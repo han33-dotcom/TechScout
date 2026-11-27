@@ -93,7 +93,7 @@ def inspect_public_listing(job, url: str, registry: ActivationRegistry, *, envir
             finally:
                 landing_scope.close()
 
-        return provider.scrape(job, scope.source_id, url, resolve_landing=resolve_landing)
+        return provider.scrape(job, scope.source_id, url, resolve_landing=resolve_landing, agent_read=True)
     finally:
         scope.close()
 

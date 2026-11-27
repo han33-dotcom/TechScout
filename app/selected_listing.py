@@ -1,5 +1,5 @@
 """Turn a current, selected public Product/Offer into a buyer-visible priced partial."""
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from decimal import Decimal
 from hashlib import sha256
 from html import unescape
@@ -14,6 +14,7 @@ from app.catalog_extraction import current_unrestricted_offer
 from app.contracts import Model, Money
 from app.extraction import _HTML, _excerpt, _objects, _unique_pairs
 from app.onboarding import canonical
+from app.sources import FetchOutcome
 
 
 class ReadPageText(ValueError):
@@ -622,6 +623,21 @@ def schema_value(value):
     return literal(value).removeprefix('https://schema.org/').removeprefix('http://schema.org/')
 
 
+class MissingSellerLocation(ValueError):
+    """The matching listing can be completed with a separate merchant receipt."""
+
+
+@dataclass(frozen=True)
+class MerchantLocation:
+    source: FetchOutcome
+    merchant_quote: str
+    address_quote: str
+
+    @classmethod
+    def from_page(cls, page, merchant_quote, address_quote):
+        return cls(replace(page.outcome, body=None), merchant_quote, address_quote)
+
+
 @dataclass(frozen=True)
 class Selection:
     title: str
@@ -662,15 +678,17 @@ class Selection:
                 return int(match[1]), value
         return None
 
-    def partial(self, page, run, request, match, clicked):
+    def partial(self, page, run, request, match, clicked, location=None):
         if not match.selected_item_fits:
             raise ValueError(match.reason)
         if not self.seller or not self.brand:
             raise ValueError('The actual merchant or product brand still needs verification.')
         # The exact Offer.seller.address already identifies whose addressCountry was read.
         index = 0 if self.structured_address else match.merchant_address_line
-        if index is None or index >= len(self.address_lines):
-            raise ValueError("The named merchant's Lebanese location could not be established.")
+        if location is None and (index is None or index >= len(self.address_lines)):
+            raise MissingSellerLocation("The named merchant's Lebanese location could not be established.")
+        if location is not None and location.source.source_id != page.outcome.source_id:
+            raise ValueError('The separate location receipt belongs to a different source.')
         storage = self.storage()
         exact = getattr(request.requirements, 'storage_gb', None)
         minimum = getattr(request.requirements, 'min_storage_gb', None)
@@ -690,11 +708,12 @@ class Selection:
         identity = f'{obs.source_id}:{product}:{self.sku}'
         evidence = []
 
-        def receipt(path, excerpt):
-            eid = f'{identity}:{path}:{len(evidence)}:{obs.response_sha256[:16]}'
+        def receipt(path, excerpt, source=obs):
+            eid = f'{identity}:{path}:{len(evidence)}:{source.response_sha256[:16]}'
             evidence.append(v2.Evidence(evidence_id=eid, source_id=obs.source_id, product_id=product,
-                variant_id=self.sku, scope='variant', field_path=path, origin_url=obs.origin_url, final_url=url,
-                observed_at=obs.observed_at, response_sha256=obs.response_sha256, adapter_version='public-listing/1',
+                variant_id=self.sku, scope='variant', field_path=path, origin_url=source.origin_url, final_url=source.final_url,
+                observed_at=source.observed_at, response_sha256=source.response_sha256,
+                adapter_version='public-listing/2' if location else 'public-listing/1',
                 origin='runtime', corpus_version='public-listing/1', run=run, excerpt=excerpt))
             return eid
 
@@ -703,7 +722,11 @@ class Selection:
 
         unknown = dict(state='unknown', reason='The selected listing did not establish this field.')
         receipt('seller.name', self.excerpt(self.seller))
-        receipt('seller.market', self.address_lines[index])
+        if location:
+            receipt('seller.location_identity', location.merchant_quote, location.source)
+            receipt('seller.market', location.address_quote, location.source)
+        else:
+            receipt('seller.market', self.address_lines[index])
         receipt('variant.product.model', self.excerpt(self.title))
         if self.published_link and self.published_link != url:
             receipt('listing_url', self.excerpt(self.published_link))

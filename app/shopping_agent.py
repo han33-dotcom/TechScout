@@ -1,6 +1,6 @@
 """Single decision loop for the opt-in buyer experiment (architecture freeze v2)."""
 from contextlib import ExitStack
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from hashlib import sha256
 import json
 import re
@@ -26,7 +26,8 @@ from app.inference import ROOT, InferenceConfig, build_inference, load_env_file
 from app.onboarding import canonical, source_id_for
 from app.openrouter import InputTokenLimit
 from app.page_observation import PageNavigation, inspect_capture
-from app.selected_listing import with_option
+from app.selected_listing import Match, MissingSellerLocation, Selection, with_option
+from app.firecrawl import ManagedPage
 
 BUYER_SETTINGS = ROOT / 'config/two-agent-buyer.json'
 
@@ -81,6 +82,7 @@ asks to compare shops and you have one seller's matching item price, use web sea
 a second seller while the search tools are available. Return to the finalists for unresolved
 stock or costs that the buyer asked to compare. When asked specifically for listed prices
 before delivery, check the exact item, condition, seller, stock, listed price and link.
+Describe online availability as online stock. Only claim showroom stock when the page verifies stock at that branch.
 Finish a one-shop request when it is supported. For a comparison look for independent
 sellers of the same variant. Delivery fees are outside a listed-price comparison.
 Use SerpApi for general search. Read the original wording as the buyer wrote it. An earlier
@@ -121,6 +123,14 @@ class Action:
 SEARCH_ACTIONS = {'catalog', 'web_search', 'seller_search', 'retailer_search'}
 
 
+@dataclass(frozen=True)
+class PricedListing:
+    page: ManagedPage
+    selection: Selection
+    match: Match
+    controls: tuple
+
+
 def search_argument_error(kind, query, destination):
     if not query or len(query) > 400:
         return 'Write a public product search query of 1 to 400 characters.'
@@ -155,6 +165,8 @@ class ShoppingAgent(DomesticBuyerFlow):
         self.page_links = {}
         self.selected_controls = {}
         self.current_selections = {}
+        self.priced_listings = {}
+        self.merchant_locations = {}
         self.discovery = deps.research.workers.domestic_tools if deps.research else None
         self.directory = getattr(deps.research.workers, 'directory', None) if deps.research else None
         self.browser: BrowserSession | None = None
@@ -431,6 +443,9 @@ class ShoppingAgent(DomesticBuyerFlow):
                 self.product_options.setdefault(url, ())
             # A provider error contains no observation about the product. Keep its last receipt.
             reason = 'A further listing read failed.' if url in self.current_selections else 'The listing could not be read.'
+            if isinstance(exc, (TimeoutError, httpx2.TimeoutException)):
+                reader = 'Playwright' if browser is not None else 'Firecrawl'
+                reason += f' The {reader} read timed out before the agent received a usable page.'
             self.blockers[url] = [reason]
             if target := canonical(url):
                 source = self.leads[index].source_id or source_id_for(target[0])
@@ -448,6 +463,7 @@ class ShoppingAgent(DomesticBuyerFlow):
             self.redirected_urls.add(url)
             self.redirected_urls.discard(obs.final_url)
             self.withdraw_public(url)
+            self.forget_merchant_capture(url)
             self.publish_partials(prior)
             prior = tuple(self.uncertain.values())[:MAX_UNCERTAIN]
             self.page_links.pop(url, None)
@@ -461,22 +477,48 @@ class ShoppingAgent(DomesticBuyerFlow):
             self.leads[landing_index] = Listing(url, obs.source_id)
             self.used.add(('inspect', (landing_index,)))
             result['lead'] = landing_index
+        self.forget_merchant_capture(url)
         self.sources[obs.source_id] = (urlsplit(url).hostname, 'checked', None)
         document = PageNavigation(obs.body.decode('utf-8', errors='replace'), url)
         self.product_options[url] = tuple(option for option in dict.fromkeys(document.options)
                                           if option not in document.checked)[:32]
         self.selected_controls[url] = browser
         self.page_links[url] = document.suggestions()
+        listings = [row for row in self.priced_listings.values() if row.page.outcome.source_id == obs.source_id]
+        locations = [loc for loc in self.merchant_locations.values() if loc.source.source_id == obs.source_id]
+        seller_context = dict(listings=[dict(index=i, url=row.page.outcome.final_url, title=row.selection.title,
+            merchant=row.selection.seller, merchant_quote=row.selection.excerpt(row.selection.seller))
+            for i, row in enumerate(listings)], locations=[dict(index=i, url=loc.source.final_url,
+            merchant_quote=loc.merchant_quote, address_quote=loc.address_quote) for i, loc in enumerate(locations)])
         reading = inspect_capture(page, self.request.model_dump(mode='json'),
             lambda instructions, payload, schema: self.generate(instructions, payload, schema,
                 self.elapsed() + room(), call_seconds=30),
-            feedback=self.context.answers, checked=browser or (), max_input_bytes=self.roles.settings.max_input_tokens if self.roles else 32768)
+            feedback=self.context.answers, checked=browser or (), seller_context=seller_context,
+            max_input_bytes=self.roles.settings.max_input_tokens if self.roles else 32768)
         self.page_links[url] = tuple(dict.fromkeys((*reading.links, *self.page_links[url])))
         result.update(findings=reading.findings, assessment=reading.reason)
+        if reading.location:
+            self.merchant_locations[url] = reading.location
+            saved = []
+            for i in reading.listing_indices:
+                row = listings[i]
+                try:
+                    item = row.selection.partial(row.page, self.run_ref, self.request, row.match,
+                                                 row.controls, reading.location)
+                except ValueError:
+                    continue
+                self.uncertain[item.offer.offer_id] = item
+                self.blockers.pop(row.page.outcome.final_url, None)
+                saved.append(str(item.offer.listing_url))
+            result.update(merchant_quote=reading.location.merchant_quote, address_quote=reading.location.address_quote,
+                          linked_listings=saved)
         selected = reading.selection
         if selected is None:
             self.withdraw_public(url)
             self.publish_partials(prior)
+            if reading.location:
+                self.blockers.pop(url, None)
+                return dict(status='merchant_location_checked', **result)
             self.blockers[url] = [reading.reason]
             return dict(status='selection_unconfirmed', reason=reading.reason, **result)
         if selected != self.current_selections.get(url):
@@ -495,21 +537,36 @@ class ShoppingAgent(DomesticBuyerFlow):
         result['item_fits'] = match.selected_item_fits
         result['merchant_located'] = selected.structured_address or (
             match.merchant_address_line is not None and match.merchant_address_line < len(selected.address_lines))
+        location = locations[reading.use_location_index] if reading.use_location_index is not None else None
+        if match.selected_item_fits and not result['merchant_located']:
+            self.priced_listings[url] = PricedListing(replace(page, outcome=replace(obs, body=None)),
+                                                       selected, match, tuple(browser or ()))
+        if location:
+            result['merchant_located'] = True
         try:
-            item = selected.partial(page, self.run_ref, self.request, match, browser)
+            item = selected.partial(page, self.run_ref, self.request, match, browser, location)
         except ValueError as exc:
             self.withdraw_public(url)
             self.publish_partials(prior)
             # Do not leak contract-validation or raw provider data into the buyer response.
-            reason = str(exc) if type(exc) is ValueError else 'The captured fields could not establish an offer.'
+            reason = str(exc) if type(exc) in (ValueError, MissingSellerLocation) else 'The captured fields could not establish an offer.'
             if selected.published_link and match.selected_item_fits:
                 reason = selected.published_summary(url) + ' ' + reason
             self.blockers[url] = [reason]
-            return dict(status='no_match', reason=reason, selected=selected.facts(), **result)
+            return dict(status='needs_seller_location' if isinstance(exc, MissingSellerLocation) else 'no_match',
+                        reason=reason, selected=selected.facts(), **result)
         self.uncertain[item.offer.offer_id] = item
         self.blockers.pop(url, None)
         self.publish_partials(prior)
         return dict(status='priced_partial', selected=selected.facts(), outstanding=item.reasons, **result)
+
+    def forget_merchant_capture(self, url):
+        self.priced_listings.pop(url, None)
+        if self.merchant_locations.pop(url, None):
+            for key, item in list(self.uncertain.items()):
+                if any(e.field_path == 'seller.location_identity' and str(e.final_url) == url
+                       for e in item.offer.evidence):
+                    del self.uncertain[key]
 
     def withdraw_public(self, url):
         for key, item in list(self.uncertain.items()):

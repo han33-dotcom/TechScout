@@ -4,9 +4,11 @@ from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 from hashlib import sha256
 import time
+from uuid import UUID
+import httpx2
 
 from app.accounting import Charge, BudgetDenied, money
-from app.provider_http import post_json
+from app.provider_http import post_json, request_json
 from app.sources import FetchOutcome, MAX_RESPONSE_BYTES
 
 
@@ -20,6 +22,17 @@ class ManagedPage:
 
 class EmptyListing(ValueError):
     """Firecrawl confirmed the public page but returned no readable HTML."""
+
+
+API = 'https://api.firecrawl.dev/v2/'
+# The agent pages through the decoded capture. This bound applies to raw HTML,
+# separately from JSON transfer overhead or the model's input window.
+AGENT_HTML_BYTES = 8 * 1024 * 1024
+
+
+def _utc_timestamp(value):
+    stamp = datetime.fromisoformat(value)
+    return stamp.astimezone(timezone.utc) if stamp.tzinfo else stamp.replace(tzinfo=timezone.utc)
 
 
 class Firecrawl:
@@ -41,17 +54,86 @@ class Firecrawl:
         except (ValueError, InvalidOperation):
             return None
 
-    def scrape(self, job, source_id, url, *, capability=None, international=False, resolve_landing=None):
+    def _archive_get(self, job, path, params, deadline, max_bytes):
+        seconds = min(deadline - time.monotonic(), job.room()) - 2
+        if seconds < 3 or job.cancelled:
+            raise TimeoutError('No time remains to recover the Firecrawl result')
+        attempt = job.reserve('provider_read', Charge(Decimal(0)), seconds)
+        attempt.dispatch()
+        started = time.monotonic()
+        try:
+            idle = min(12, seconds / 3)
+            data, _ = request_json('GET', API + path, headers={'Authorization': 'Bearer ' + self.api_key},
+                params=params, transport=self.transport, seconds=seconds-idle, idle_seconds=idle, max_bytes=max_bytes)
+            return data
+        finally:
+            try:
+                attempt.complete(Decimal(0), time.monotonic()-started)
+            except BudgetDenied:
+                job.ledger.recover()
+                raise
+
+    def _recover(self, job, url, submitted, interrupted, deadline, wire_bytes):
+        # The sync endpoint can lose its response before it supplies a job ID.
+        # Recover only a unique dispatch for this exact URL in this call's window.
+        matches = set()
+        params = {'endpoint': 'scrape', 'limit': 100}
+        while True:
+            activity = self._archive_get(job, 'team/activity', params, deadline, 1048576)
+            rows = activity.get('data')
+            if activity.get('success') is not True or not isinstance(rows, list):
+                raise TimeoutError('Firecrawl job history was unavailable for the interrupted request')
+            if not rows:
+                break
+            try:
+                times = [_utc_timestamp(row['created_at']) for row in rows]
+                matches.update(row['id'] for row, at in zip(rows, times) if submitted <= at <= interrupted
+                               and row['endpoint'] == 'scrape' and row.get('target') == url)
+            except (KeyError, TypeError, ValueError) as exc:
+                raise TimeoutError('Firecrawl job history could not identify the interrupted request') from exc
+            if min(times) < submitted or not activity.get('has_more'):
+                break
+            cursor = activity.get('cursor')
+            if not cursor or cursor == params.get('cursor'):
+                raise TimeoutError('Firecrawl job history could not identify the interrupted request')
+            params['cursor'] = cursor
+        if len(matches) != 1:
+            raise TimeoutError('Firecrawl job history did not identify one result for this request')
+        job_id = str(UUID(matches.pop()))
+        result = self._archive_get(job, 'scrape/' + job_id, None, deadline, wire_bytes)
+        if (result.get('data') or {}).get('metadata', {}).get('scrapeId') != job_id:
+            raise ValueError('Firecrawl returned a different stored job')
+        return result
+
+    def scrape(self, job, source_id, url, *, capability=None, international=False, resolve_landing=None,
+               agent_read=False):
         limits = self.gate.check_provider_target(source_id,url,expect='html',capability=capability)
-        attempt = job.reserve('retrieval',Charge(self.rate),20,source=source_id,limits=limits,
+        lease = min(115, job.room()-2) if agent_read else 20
+        if lease < 5:
+            raise TimeoutError('No time remains for the listing read')
+        html_bytes = AGENT_HTML_BYTES if agent_read else MAX_RESPONSE_BYTES
+        wire_bytes = html_bytes + (html_bytes // 2 if agent_read else 262144)
+        attempt = job.reserve('retrieval',Charge(self.rate),lease,source=source_id,limits=limits,
                               international=international,resource=url)
         payload = dict(url=url,formats=['rawHtml'],onlyMainContent=False,maxAge=0,storeInCache=False,
             timeout=10000,proxy='basic',skipTlsVerification=False,parsers=[],blockAds=True)
         started = time.monotonic()
         attempt.dispatch()
+        submitted = datetime.now(timezone.utc)
+        recovered = False
         try:
-            raw = post_json('https://api.firecrawl.dev/v2/scrape',self.api_key,payload,transport=self.transport,
-                            seconds=15,max_bytes=MAX_RESPONSE_BYTES+262144)
+            try:
+                idle = min(12, lease / 4) if agent_read else 5
+                # A progressing transfer can use its read budget. Interruptions, such as
+                # an idle socket, leave the remaining time for recovering the stored job.
+                raw = post_json(API+'scrape',self.api_key,payload,transport=self.transport,
+                                seconds=lease-idle-2 if agent_read else 15,
+                                idle_seconds=idle, max_bytes=wire_bytes)
+            except (TimeoutError, httpx2.TimeoutException, httpx2.RemoteProtocolError):
+                if not agent_read:
+                    raise
+                raw = self._recover(job, url, submitted, datetime.now(timezone.utc), started+lease-2, wire_bytes)
+                recovered = True
             if raw.get('success') is not True:
                 raise ValueError('Managed extraction did not succeed')
             data = raw['data']
@@ -74,7 +156,7 @@ class Firecrawl:
             html = data.get('rawHtml')
             if html is None or isinstance(html, str) and not html.strip():
                 raise EmptyListing('Managed HTML is absent from the confirmed page')
-            if not isinstance(html,str) or len(html.encode('utf-8')) > MAX_RESPONSE_BYTES:
+            if not isinstance(html,str) or len(html.encode('utf-8')) > html_bytes:
                 raise ValueError('Managed HTML is absent or exceeds the source body bound')
             credits = metadata.get('provider',{}).get('creditsCost')
             if type(credits) is int and credits > 1 and self.rate:
@@ -98,7 +180,7 @@ class Firecrawl:
         endpoints = (url,) if url == final_url else (url, final_url)
         outcome = FetchOutcome(landing_source,url,endpoints,1,int((time.monotonic()-started)*1000),
             final_url=final_url,status_code=200,content_type='text/html',body=body,
-            response_sha256=sha256(body).hexdigest(),observed_at=datetime.now(timezone.utc))
+            response_sha256=sha256(body).hexdigest(),observed_at=submitted if recovered else datetime.now(timezone.utc))
         return ManagedPage(outcome,'firecrawl-v2',metadata.get('scrapeId'))
 
 

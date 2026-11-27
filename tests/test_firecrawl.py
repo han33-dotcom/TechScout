@@ -1,8 +1,10 @@
 from copy import deepcopy
+from datetime import datetime, timezone, timedelta
 from decimal import Decimal
+from uuid import uuid4
 import json
 import unittest
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 import httpx2
 
@@ -125,6 +127,51 @@ class FirecrawlTests(unittest.TestCase):
             raw['data'].update(change)
             with self.assertRaises(ValueError):
                 self.provider(raw).scrape(self.job,SOURCE,URL)
+
+    def test_agent_recovers_only_its_current_interrupted_scrape_and_reads_large_html(self):
+        job_id = str(uuid4())
+        html = 'x' * 2_650_000
+        raw = self.response()
+        raw['data'].update(rawHtml=html)
+        raw['data']['metadata']['scrapeId'] = job_id
+        def send(request):
+            self.calls.append((request.method, request.url.path))
+            if request.method == 'POST':
+                self.submitted = datetime.now(timezone.utc)
+                raise httpx2.ReadTimeout('interrupted before delivery')
+            if request.url.path.endswith('/activity'):
+                rows = [dict(endpoint='scrape', target=URL, id=key, created_at=stamp.isoformat())
+                        for key, stamp in [(str(uuid4()), self.submitted-timedelta(hours=1)), (job_id, self.submitted)]]
+                return httpx2.Response(200, json=dict(success=True, data=rows))
+            self.assertTrue(request.url.path.endswith(job_id))
+            return httpx2.Response(200, json=raw)
+
+        provider = Firecrawl('key', self.gate, usd_per_credit='included', transport=httpx2.MockTransport(send))
+        page = provider.scrape(self.job, SOURCE, URL, agent_read=True)
+        self.assertEqual(page.outcome.body, html.encode())
+        self.assertEqual(page.request_id, job_id)
+        self.assertEqual([m for m, _ in self.calls], ['POST', 'GET', 'GET'])
+        self.assertEqual(self.ledger.snapshot()['scopes']['project'][4], 3)
+
+    def test_large_active_transfer_can_finish_on_its_original_connection(self):
+        with patch('app.firecrawl.post_json', return_value=self.response()) as send:
+            self.provider().scrape(self.job, SOURCE, URL, agent_read=True)
+        seconds = send.call_args.kwargs['seconds']
+        self.assertGreater(seconds, 40)
+        self.assertLessEqual(seconds + send.call_args.kwargs['idle_seconds'], 115)
+        self.assertEqual(self.ledger.snapshot()['scopes']['project'][4], 1)
+
+    def test_agent_declines_ambiguous_archive_jobs_without_reading_either_one(self):
+        def send(request):
+            if request.method == 'POST':
+                self.submitted = datetime.now(timezone.utc).isoformat()
+                raise TimeoutError('interrupted')
+            self.assertTrue(request.url.path.endswith('/activity'))
+            rows = [dict(id=str(uuid4()), target=URL, endpoint='scrape', created_at=self.submitted) for _ in range(2)]
+            return httpx2.Response(200, json=dict(success=True, data=rows))
+        provider = Firecrawl('key', self.gate, usd_per_credit='included', transport=httpx2.MockTransport(send))
+        with self.assertRaisesRegex(TimeoutError, 'one result'):
+            provider.scrape(self.job, SOURCE, URL, agent_read=True)
 
     def test_provider_cannot_override_revocation_during_request(self):
         def revoke(req):
