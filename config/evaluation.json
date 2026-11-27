@@ -1,5 +1,6 @@
 {
   "schema_version": 1,
+  "shopping_agent_max_input_tokens": 200000,
   "evaluation_inference": {
     "route": {
       "model": "openai/gpt-6.1-sol",

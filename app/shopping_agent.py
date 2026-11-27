@@ -30,7 +30,10 @@ from app.selected_listing import (ConflictingSelection, ListingDocument, MATCH_P
 def pinned_inference():
     load_env_file(names=('OPENROUTER_API_KEY',))
     raw = json.loads((ROOT / 'config/evaluation.json').read_text(encoding='utf-8'))
-    return build_inference(InferenceConfig.model_validate(raw['evaluation_inference']))
+    settings = raw['evaluation_inference']
+    if (limit := raw.get('shopping_agent_max_input_tokens')) is not None:
+        settings['roles']['max_input_tokens'] = limit
+    return build_inference(InferenceConfig.model_validate(settings))
 
 
 class BrowserSession(Protocol):

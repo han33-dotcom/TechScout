@@ -28,6 +28,7 @@ from app.devices import canonical_manufacturer, match_model
 from app.storage import MAX_RUN_SECONDS
 from app.model_provider import ProviderConfig
 from app.inference import InferenceConfig
+from app.openrouter import InputTokenLimit
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_CONFIG = ROOT / 'config' / 'evaluation.json'
@@ -227,6 +228,7 @@ class EvaluationConfig(Model):
     # New operational model calls use this direct-provider configuration.
     model_provider: ProviderConfig | None = None
     evaluation_inference: InferenceConfig | None = None
+    shopping_agent_max_input_tokens: InputTokenLimit | None = None
     caps: EvaluationCaps
     baselines: list[Literal['rule-planner', 'no-investigation']] = Field(min_length=1)
 

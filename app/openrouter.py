@@ -42,6 +42,7 @@ ENDPOINTS = ('https://openrouter.ai/api/v1/chat/completions',
 # Endpoint capabilities (OpenRouter's supported_parameters names) every request relies on.
 REQUIRED_PARAMETERS = ('response_format', 'structured_outputs', 'max_tokens')
 FRAMING_BYTES = 4096
+InputTokenLimit = Annotated[int, Field(strict=True, ge=8192, le=200_000)]
 
 # Explicit "author/slug" IDs only: no ":floor"/":nitro"/":online"/":free" variants, which
 # choose providers or add hosted tools, and no router models (checked below).
@@ -91,7 +92,7 @@ class OpenRouterConfig(Model):
     zdr: StrictBool = False
     effort: Literal['none', 'minimal', 'low', 'medium', 'high', 'xhigh', 'max'] | None = None
     max_output_tokens: int = Field(default=4096, strict=True, ge=16, le=16000)
-    max_input_tokens: int = Field(default=65536, strict=True, ge=8192, le=100000)
+    max_input_tokens: InputTokenLimit = 65536
     timeout_seconds: float = Field(default=30, gt=0, le=30)
     prompt_version: Text = 'roles-v1'
     pricing_checked_on: date | None = None
@@ -388,7 +389,8 @@ class OpenRouterProvider:
         if not needed <= set(route.supported_parameters):
             return done('unsupported_parameters')
         payload = self._payload(route, instructions, data, output)
-        if len(json.dumps(payload, ensure_ascii=False).encode('utf-8')) + FRAMING_BYTES > s.max_input_tokens:
+        rec['payload_bytes'] = len(json.dumps(payload, ensure_ascii=False).encode('utf-8'))
+        if rec['payload_bytes'] + FRAMING_BYTES > s.max_input_tokens:
             return done('input_too_large')
         reserved = _bound(route.rates, s)
         hold = budget.reserve_spend(reserved)
