@@ -1,0 +1,10 @@
+{
+  "market": "synthetic",
+  "query": "Find the best new iPhone 17 Pro offers across storage sizes",
+  "shops": ["Cedar", "Coast", "Outlet"],
+  "eligible": [
+    {"listing": {"shop": "Cedar", "url": "https://cedar.example/phones/iphone"}, "storage_gb": 256, "color": "Silver", "amount": "1050"},
+    {"listing": {"shop": "Cedar", "url": "https://cedar.example/phones/iphone"}, "storage_gb": 512, "color": "Silver", "amount": "1085"},
+    {"listing": {"shop": "Coast", "url": "https://coast.example/phones/iphone"}, "storage_gb": 256, "color": "Silver", "amount": "1069"}
+  ]
+}

@@ -1,0 +1,14 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Cedar Phones</title>
+<h1>Apple iPhone 17 Pro</h1><p>Cedar Phones · Beirut, Lebanon</p>
+<label>Storage <select id="capacity"><option>256 GB</option><option>512 GB</option></select></label>
+<section id="offer" aria-live="polite">Apple iPhone 17 Pro · 256 GB · Silver · USD 1050<br>Condition: New<br>In stock online<br>Outright purchase</section>
+<script>
+document.querySelector('#capacity').onchange = event => {
+  const size = event.target.value;
+  setTimeout(() => {
+    document.querySelector('#offer').innerHTML = 'Apple iPhone 17 Pro · ' + size +
+      ' · Silver · USD ' + (size === '512 GB' ? '1085' : '1050') +
+      '<br>Condition: New<br>In stock online<br>Outright purchase';
+  }, 450);
+};
+</script></html>

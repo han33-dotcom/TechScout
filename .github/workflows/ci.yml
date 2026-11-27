@@ -29,6 +29,11 @@ jobs:
           python-version: "3.11"
           cache: pip
       - run: python -m pip install -r requirements.txt
+      - name: Install the scratch experiment browser
+        if: github.base_ref == 'scratch'
+        run: |
+          python -m pip install -r scratch_search/requirements.txt
+          python -m playwright install --with-deps --only-shell chromium
       - uses: actions/setup-node@v4
         with:
           node-version: "22"

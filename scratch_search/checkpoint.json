@@ -1,0 +1,258 @@
+[
+  {
+    "market": "synthetic",
+    "strategy": "adaptive",
+    "query": "Find the best new iPhone 17 Pro offers across storage sizes",
+    "model": "openai/gpt-4.1-mini",
+    "status": "finished",
+    "discovery": {
+      "Cedar": {
+        "status": "searched",
+        "listings": 1
+      },
+      "Coast": {
+        "status": "searched",
+        "listings": 1
+      },
+      "Outlet": {
+        "status": "searched",
+        "listings": 1
+      }
+    },
+    "elapsed_seconds": 22.953,
+    "cost_usd": "0.0048576",
+    "run_id": "20261127T202253Z-0cce00b4",
+    "model_call_count": 9,
+    "winner_count": 2,
+    "score": {
+      "unsupported_winners": 0,
+      "missing_or_changed_winner_captures": [],
+      "correctly_won_capacities": 2,
+      "answerable_capacities": 2,
+      "missing_winning_offers_including_ties": 0,
+      "correct_empty": null,
+      "audited_shops": 3,
+      "discovered_shops": 3,
+      "status": "finished",
+      "seconds": 22.953,
+      "cost_usd": "0.0048576"
+    }
+  },
+  {
+    "market": "synthetic",
+    "strategy": "fixed",
+    "query": "Find the best new iPhone 17 Pro offers across storage sizes",
+    "model": "openai/gpt-4.1-mini",
+    "status": "finished",
+    "discovery": {
+      "Cedar": {
+        "status": "searched",
+        "listings": 1
+      },
+      "Coast": {
+        "status": "searched",
+        "listings": 1
+      },
+      "Outlet": {
+        "status": "searched",
+        "listings": 1
+      }
+    },
+    "elapsed_seconds": 30.688,
+    "cost_usd": "0.0062240",
+    "run_id": "20261127T202253Z-26f00474",
+    "model_call_count": 9,
+    "winner_count": 2,
+    "score": {
+      "unsupported_winners": 0,
+      "missing_or_changed_winner_captures": [],
+      "correctly_won_capacities": 2,
+      "answerable_capacities": 2,
+      "missing_winning_offers_including_ties": 0,
+      "correct_empty": null,
+      "audited_shops": 3,
+      "discovered_shops": 3,
+      "status": "finished",
+      "seconds": 30.688,
+      "cost_usd": "0.0062240"
+    }
+  },
+  {
+    "market": "live",
+    "strategy": "adaptive",
+    "query": "Find the best new iPhone 17 Pro offers across storage sizes",
+    "model": "openai/gpt-4.1-mini",
+    "status": "partial",
+    "discovery": {
+      "class_cellulars": {
+        "status": "searched",
+        "listings": 1
+      },
+      "mojitech": {
+        "status": "failed",
+        "error": "INVALID_SCHEMA"
+      },
+      "beytech": {
+        "status": "searched",
+        "listings": 10
+      }
+    },
+    "elapsed_seconds": 44.172,
+    "cost_usd": "0.0227412",
+    "run_id": "20261127T202318Z-063837bb",
+    "model_call_count": 11,
+    "winner_count": 0,
+    "independent_live_reference": null,
+    "inspected": [
+      {
+        "listing": {
+          "shop": "class_cellulars",
+          "url": "https://classcellulars.com/product/iphone-17-pro/",
+          "title": "iPhone 17 Pro"
+        },
+        "status": "inspected",
+        "captures": [
+          "8e5754ea3084dbe3fddfbdc8adc029ae0b4e9ee5aa047616a2bc357f53a19049",
+          "b6e96eab9bcefc98a9dba69dc967b0210a9b248f1c35b85bfb82835f72a15159",
+          "c672f877ad7a93be20ed85eb83c5ab93ab64b748692587dbd317f3c7c4f9341c",
+          "10db6c657ed3349d83a1bbd96d35b781eab10a40af37e960dfa0d11ca3d2f71e"
+        ],
+        "published_variants": [
+          {
+            "form_product_id": "18418",
+            "variation_id": 18420,
+            "attributes": {
+              "attribute_pa_storage-capacity": "256gb",
+              "attribute_pa_color": "silver",
+              "attribute_pa_sim-type": "nano-sim-esim"
+            },
+            "display_price": "1475",
+            "currency": "USD",
+            "is_in_stock": false,
+            "is_purchasable": true,
+            "source": "listing form data-product_variations; currency from matching offer URL"
+          },
+          {
+            "form_product_id": "18418",
+            "variation_id": 18423,
+            "attributes": {
+              "attribute_pa_storage-capacity": "256gb",
+              "attribute_pa_color": "blue",
+              "attribute_pa_sim-type": "nano-sim-esim"
+            },
+            "display_price": "1475",
+            "currency": "USD",
+            "is_in_stock": false,
+            "is_purchasable": true,
+            "source": "listing form data-product_variations; currency from matching offer URL"
+          }
+        ]
+      },
+      {
+        "listing": {
+          "shop": "beytech",
+          "url": "https://beytech.com.lb/product/apple-iphone-17-pro-1-sim-2-years-warranty/",
+          "title": "Apple |  iPhone 17 Pro \u2013 1 Sim \u2013 2  Years Warranty"
+        },
+        "status": "inspected",
+        "captures": [
+          "0652c634dd5e58bb2553a48bcbda6afe6245306dbc460c93d9ba20fa2f0ecb31",
+          "826201e6447b9ff9d1f3fb56fd44a112f7b70f19b21bb7382ab29729ce23ef93"
+        ],
+        "published_variants": [
+          {
+            "form_product_id": "139958",
+            "variation_id": 139959,
+            "attributes": {
+              "attribute_m-size": "256 GB",
+              "attribute_pa_color": "orange"
+            },
+            "display_price": "1499",
+            "currency": "USD",
+            "is_in_stock": true,
+            "is_purchasable": true,
+            "source": "listing form data-product_variations; currency from matching offer URL"
+          },
+          {
+            "form_product_id": "139958",
+            "variation_id": 139960,
+            "attributes": {
+              "attribute_m-size": "256 GB",
+              "attribute_pa_color": "silver"
+            },
+            "display_price": "1499",
+            "currency": "USD",
+            "is_in_stock": true,
+            "is_purchasable": true,
+            "source": "listing form data-product_variations; currency from matching offer URL"
+          },
+          {
+            "form_product_id": "139958",
+            "variation_id": 139961,
+            "attributes": {
+              "attribute_m-size": "512 GB",
+              "attribute_pa_color": "blue"
+            },
+            "display_price": "1799",
+            "currency": "USD",
+            "is_in_stock": true,
+            "is_purchasable": true,
+            "source": "listing form data-product_variations; currency from matching offer URL"
+          },
+          {
+            "form_product_id": "139958",
+            "variation_id": 139962,
+            "attributes": {
+              "attribute_m-size": "512 GB",
+              "attribute_pa_color": "orange"
+            },
+            "display_price": "1799",
+            "currency": "USD",
+            "is_in_stock": true,
+            "is_purchasable": true,
+            "source": "listing form data-product_variations; currency from matching offer URL"
+          },
+          {
+            "form_product_id": "139958",
+            "variation_id": 139963,
+            "attributes": {
+              "attribute_m-size": "512 GB",
+              "attribute_pa_color": "silver"
+            },
+            "display_price": "1799",
+            "currency": "USD",
+            "is_in_stock": true,
+            "is_purchasable": true,
+            "source": "listing form data-product_variations; currency from matching offer URL"
+          },
+          {
+            "form_product_id": "139958",
+            "variation_id": 139967,
+            "attributes": {
+              "attribute_m-size": "256 GB",
+              "attribute_pa_color": "blue"
+            },
+            "display_price": "1499",
+            "currency": "USD",
+            "is_in_stock": true,
+            "is_purchasable": true,
+            "source": "listing form data-product_variations; currency from matching offer URL"
+          }
+        ]
+      },
+      {
+        "listing": {
+          "shop": "beytech",
+          "url": "https://beytech.com.lb/product/is-glass-elite-ag-e-apple-basin-plt-fg-me-iphone-17-pro/",
+          "title": "ZAGG IS-Glass Elite AG E-Apple-Basin-PLT-FG-ME iPhone 17 Pro"
+        },
+        "status": "inspected",
+        "captures": [
+          "d727ee1a5f1f7d1ebd1f033bc583d5901bab29944548036fef294d55a877bd16",
+          "088157725683d16326da9d2ec96ec9d4e06767856c10db473b5c2d2ad51230d6"
+        ],
+        "published_variants": []
+      }
+    ]
+  }
+]
