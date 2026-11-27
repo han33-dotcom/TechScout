@@ -1,0 +1,275 @@
+{
+  "date": "2026-11-27",
+  "scope": "Development requests for listed item prices, before delivery. The original delivery-inclusive threshold was not run.",
+  "method": "Fresh requests through the buyer API and worker, isolated copies of the one-seller IT Promax catalog. The two scored requests supplied no reference prices or seller links.",
+  "scored_buyer": {
+    "revision": "dad5309a87f59219567d38289fbb5eaa79f50217",
+    "runs": [
+      {
+        "run": "a278f7a5-fea3-4056-a136-688595fdc9ec",
+        "case": "one",
+        "seconds": 50.5,
+        "disposition": "partial",
+        "stored_offers": [
+          {
+            "shop": "IT Promax",
+            "price": {
+              "amount": "48.00",
+              "currency": "USD"
+            },
+            "condition": "new",
+            "stock": true,
+            "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones"
+          }
+        ],
+        "request": "Find one Lebanese shop with new black Soundcore Q20i headphones in stock. Give me the listed item price before delivery and the product link.",
+        "visible_answer": "IT Promax in Mar Elias, Beirut lists the Soundcore Q20i headphones in black as new and in stock.\n\nListed item price: USD 48.00 before delivery.\nProduct link: https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+        "actions": [
+          "catalog",
+          "inspect",
+          "present"
+        ],
+        "reads": [
+          {
+            "reader": "firecrawl",
+            "host": "itpromax.store",
+            "result": "capture",
+            "sha256": "ebf49991bcfcc6e0552ef2f896994c31b4c83abc237234f6949373e4f546c3d7"
+          }
+        ]
+      },
+      {
+        "run": "c026ddea-6bb9-439f-a995-a735cee07053",
+        "case": "pair",
+        "seconds": 274.0,
+        "disposition": "partial",
+        "stored_offers": [
+          {
+            "shop": "JAK Computer",
+            "price": {
+              "amount": "25.00",
+              "currency": "USD"
+            },
+            "condition": "new",
+            "stock": true,
+            "url": "https://jakcomputer.com/products/logitech-h111-stereo-headset"
+          }
+        ],
+        "request": "Which of two Lebanese shops has the lower listed price for a new Logitech H111 wired 3.5 mm stereo headset? Show both in-stock listings and their links. Compare item prices before delivery.",
+        "visible_answer": "Mobileleb has the lower listed price: $13 versus $25 at JAK Computer—a $12 difference before delivery.\n\nBoth checked listings describe a new, in-stock Logitech H111 wired 3.5 mm stereo headset:\n\n• Mobileleb — $13. Black / Brand New, listed in stock. The shop’s location page confirms premises in Dekwaneh, Lebanon.\nhttps://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm?variant=41750882910340\n\n• JAK Computer — $25. Listed as new and in stock, with pickup available at its Beirut premises.\nhttps://jakcomputer.com/products/logitech-h111-stereo-headset\n\nThese are the displayed item prices only; delivery is not included in the comparison.",
+        "actions": [
+          "web_search",
+          "inspect",
+          "inspect",
+          "web_search",
+          "inspect",
+          "inspect",
+          "follow",
+          "inspect",
+          "render",
+          "present"
+        ],
+        "reads": [
+          {
+            "reader": "firecrawl",
+            "host": "ayoubcomputers.com",
+            "result": "ReadTimeout"
+          },
+          {
+            "reader": "firecrawl",
+            "host": "jakcomputer.com",
+            "result": "capture",
+            "sha256": "cd19b7338de2af042ec0a4d237f91b2be5654b9a5d7ad1e6080f07045db66351"
+          },
+          {
+            "reader": "firecrawl",
+            "host": "961souq.com",
+            "result": "capture",
+            "sha256": "ef462a60894fa2156ffd2086f7cc2551dff2334f0f3e50e0635a3d132927d0b6"
+          },
+          {
+            "reader": "firecrawl",
+            "host": "mobileleb.com",
+            "result": "capture",
+            "sha256": "89f904864b4ee6bd674e2271c244e8cbec884702e61c0669f2ffabd9c712eb44"
+          },
+          {
+            "reader": "firecrawl",
+            "host": "mobileleb.com",
+            "result": "capture",
+            "sha256": "fcde7db44ce0554fe366101bd08e466c9b4f39119c8f9d30bcc685db333e3aea"
+          },
+          {
+            "reader": "firecrawl",
+            "host": "mobileleb.com",
+            "result": "BudgetDenied"
+          },
+          {
+            "reader": "playwright",
+            "host": "mobileleb.com",
+            "result": "ValueError"
+          }
+        ]
+      }
+    ],
+    "single_shop": "Pass. The visible answer gave the new black Q20i in stock at IT Promax for USD 48 and linked the product.",
+    "two_shops": "Pass for the visible listed-price answer. The agent inspected both products and the Mobileleb location page. The structured offer list retained only JAK Computer because the Mobileleb location evidence was on a separate page.",
+    "location_check": {
+      "url": "https://mobileleb.com/pages/hours-and-locations",
+      "sha256": "fcde7db44ce0554fe366101bd08e466c9b4f39119c8f9d30bcc685db333e3aea",
+      "quote": "Dekwaneh, Slave Street, near Bank of Beirut, Sader Building"
+    }
+  },
+  "earlier_attempts": [
+    {
+      "run": "3a2ca06c-0aec-4e69-8f3f-49353aaabfad",
+      "case": "pair",
+      "seconds": 297.2,
+      "disposition": "partial",
+      "stored_offers": [
+        {
+          "shop": "DSLR Zone",
+          "price": {
+            "amount": "13",
+            "currency": "USD"
+          },
+          "condition": "new",
+          "stock": true,
+          "url": "https://www.dslr-zone.com/product/logitech-h111/"
+        }
+      ]
+    },
+    {
+      "run": "e4614b41-5ca3-4ea9-b7d7-be07f9ac57e1",
+      "case": "one",
+      "seconds": 66.3,
+      "disposition": "partial",
+      "stored_offers": [
+        {
+          "shop": "IT Promax",
+          "price": {
+            "amount": "48.00",
+            "currency": "USD"
+          },
+          "condition": "new",
+          "stock": true,
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones"
+        }
+      ]
+    },
+    {
+      "run": "a6a550b4-dc24-44d2-9980-35300d05697f",
+      "case": "pair",
+      "seconds": 274.0,
+      "disposition": "abstained",
+      "stored_offers": []
+    },
+    {
+      "run": "ebb11d6f-8067-4d92-9369-7ecad137a97a",
+      "case": "one",
+      "seconds": 90.0,
+      "disposition": "partial",
+      "stored_offers": [
+        {
+          "shop": "IT Promax",
+          "price": {
+            "amount": "48.00",
+            "currency": "USD"
+          },
+          "condition": "new",
+          "stock": true,
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones"
+        }
+      ]
+    }
+  ],
+  "supplied_url_buyer": {
+    "run": "6426e74c-f461-418a-870d-fb671070a1d7",
+    "case": "linked-h",
+    "seconds": 105.1,
+    "disposition": "partial",
+    "stored_offers": [
+      {
+        "shop": "Lebanon Store",
+        "price": {
+          "amount": "12.00",
+          "currency": "USD"
+        },
+        "condition": "new",
+        "stock": true,
+        "url": "https://www.lebanonstores.com/shop-1/logitech-h111-stereo-headset-35mm-audio-jack-with-rotating-microphone"
+      }
+    ],
+    "request": "Check this Logitech H111 listing. Is it new and in stock? What is the listed price and where is the seller based?",
+    "visible_answer": "The Logitech H111 listing shows:\n- Condition: New.\n- Stock: Listed as in stock.\n- Listed price: US$12.00.\n- Seller: Lebanon Store, based at Top Center Building, 3rd Floor (company offices), facing Assir Sawas, Bechara El Khoury, Downtown Beirut, Lebanon.\n\nThe condition and stock status appear in the page’s structured product data. Its ordering notice says the team will confirm availability and delivery, so stock is listed rather than independently confirmed.\n\nListing: https://www.lebanonstores.com/shop-1/logitech-h111-stereo-headset-35mm-audio-jack-with-rotating-microphone",
+    "actions": [
+      "inspect",
+      "render",
+      "present"
+    ],
+    "reads": [
+      {
+        "reader": "firecrawl",
+        "host": "www.lebanonstores.com",
+        "result": "capture",
+        "sha256": "849b9d7d22518ee2f25b031fc50160218f05a7d99db03677f638f9d2f0ed8e9b"
+      },
+      {
+        "reader": "playwright",
+        "host": "www.lebanonstores.com",
+        "result": "capture",
+        "sha256": "c48769aeb0d2fe2b0d064037f57288610b2272b25b7579607126b0d71ad13db2"
+      }
+    ],
+    "revision": "6276a6d"
+  },
+  "catalog_live_checks": [
+    {
+      "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+      "reader": "firecrawl-v2",
+      "sha256": "739c750c6d967259e1590991df1cf8bc71d3ac862fb980bc6adc586d7e860be2",
+      "title": "Soundcore Q20i ANC Headphones",
+      "sku": "Q20i-ANC-black",
+      "seller": "IT Promax",
+      "color": "Black",
+      "price": {
+        "amount": "48.00",
+        "currency": "USD"
+      },
+      "stock": "InStock",
+      "condition": "NewCondition",
+      "address_excerpt": "Visit us</small>Mar Elias, Beirut, Lebanon"
+    },
+    {
+      "url": "https://www.lebanonstores.com/shop-1/logitech-h111-stereo-headset-35mm-audio-jack-with-rotating-microphone",
+      "reader": "firecrawl-v2",
+      "sha256": "849b9d7d22518ee2f25b031fc50160218f05a7d99db03677f638f9d2f0ed8e9b",
+      "title": "Logitech H111 Stereo Headset – 3.5mm Audio Jack with Rotating Microphone",
+      "sku": "LOGITECH-H111-STEREO-HEADSET",
+      "seller": "Lebanon Store",
+      "color": "",
+      "price": {
+        "amount": "12.00",
+        "currency": "USD"
+      },
+      "stock": "InStock",
+      "condition": "NewCondition",
+      "address_excerpt": "(Lebanon Store\nTop Center Building, 3rd Floor – Company Offices\nFacing Assir Sawas\nBechara El Khoury, Beirut Downtown\nBeirut, Lebanon)"
+    }
+  ],
+  "catalog_method": "First live reads used each known URL with the catalog role and live Firecrawl. Both also succeeded in a model replay of those same captures on 6276a6d. A later catalog replay could not dispatch after the shared daily allowance was used. This did not exercise the daily trigger.",
+  "buyer_capture_replay": [
+    {
+      "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+      "sha256": "739c750c6d967259e1590991df1cf8bc71d3ac862fb980bc6adc586d7e860be2",
+      "matched": true,
+      "stored_condition": "new"
+    },
+    {
+      "url": "https://www.lebanonstores.com/shop-1/logitech-h111-stereo-headset-35mm-audio-jack-with-rotating-microphone",
+      "sha256": "849b9d7d22518ee2f25b031fc50160218f05a7d99db03677f638f9d2f0ed8e9b",
+      "matched": true,
+      "stored_condition": "new"
+    }
+  ]
+}
