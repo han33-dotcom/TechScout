@@ -32,7 +32,7 @@ class RunRequest(BaseModel):
     destination: str | None = Field(default=None, max_length=60)
 
 
-def create_app(*, provider=None, budget_factory=ledger_budget, agent_factory=None) -> FastAPI:
+def create_app(*, provider=None, budget_factory=ledger_budget, agent_factory=None, runs_dir=RUNS) -> FastAPI:
     app = FastAPI(title='TechScout scout', docs_url=None, redoc_url=None, openapi_url=None)
     runs: dict[str, dict] = {}
     lock = threading.Lock()
@@ -56,8 +56,8 @@ def create_app(*, provider=None, budget_factory=ledger_budget, agent_factory=Non
             record['status'] = 'running'
             result = agent.run(dict(request, run_id=run_id))
             record['result'] = result.public()
-            RUNS.mkdir(parents=True, exist_ok=True)
-            (RUNS / f'{run_id}.json').write_text(json.dumps(record['result'], ensure_ascii=False, indent=1,
+            runs_dir.mkdir(parents=True, exist_ok=True)
+            (runs_dir / f'{run_id}.json').write_text(json.dumps(record['result'], ensure_ascii=False, indent=1,
                                                             default=str), encoding='utf-8')
             record['status'] = 'done'
         except Exception as exc:  # noqa: BLE001 - the buyer sees a fixed message, the log the type
@@ -91,6 +91,34 @@ def create_app(*, provider=None, budget_factory=ledger_budget, agent_factory=Non
             runs[run_id] = dict(status='queued', events=[], result=None, error=None)
         pool.submit(work, run_id, body.model_dump())
         return {'run_id': run_id}
+
+    def saved_index() -> list[dict]:
+        rows = []
+        for folder in (runs_dir, runs_dir.parent / 'scout-eval'):
+            for path in sorted(folder.rglob('*.json')) if folder.is_dir() else []:
+                if path.name == 'summary.json':
+                    continue
+                try:
+                    data = json.loads(path.read_text(encoding='utf-8'))
+                except (OSError, ValueError):
+                    continue
+                if not isinstance(data, dict) or 'offers' not in data or 'request' not in data:
+                    continue
+                rows.append(dict(path=path, run_id=data.get('run_id'), text=str(data['request'].get('text', ''))[:120],
+                                 status=data.get('status'), when=path.stat().st_mtime))
+        rows.sort(key=lambda r: -r['when'])
+        return rows[:200]
+
+    @app.get('/api/saved')
+    def saved_list():
+        return [dict(index=i, run_id=r['run_id'], text=r['text'], status=r['status']) for i, r in enumerate(saved_index())]
+
+    @app.get('/api/saved/{index}')
+    def saved_one(index: int):
+        rows = saved_index()  # looked up by position only: no path ever comes from the browser
+        if not 0 <= index < len(rows):
+            raise HTTPException(404, 'unknown saved run')
+        return json.loads(rows[index]['path'].read_text(encoding='utf-8'))
 
     @app.get('/api/runs/{run_id}')
     def poll(run_id: str):
@@ -129,6 +157,7 @@ a{color:var(--accent)}.foot{font-size:12px;color:var(--muted);margin-top:14px}
 <form id="f"><textarea id="text" placeholder="e.g. New black Sony WH-CH520 headphones, cheapest delivered to Batroun" required maxlength="1500"></textarea>
 <div class="row"><label>Get it by <select id="mode"><option value="delivery">Delivery</option><option value="pickup">Pickup</option></select></label>
 <label>City <input id="dest" maxlength="60" placeholder="Beirut"></label><button id="go">Search</button><span id="state" class="ev"></span></div></form>
+<div class="row ev">Demo without internet: <select id="saved"><option value="">Replay a saved run...</option></select></div>
 <div id="progress" class="panel" hidden></div><div id="answer"></div>
 <script>
 const $=id=>document.getElementById(id);
@@ -136,6 +165,9 @@ function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className
 function link(url,label){if(!/^https:\/\//.test(url||''))return el('span','',label);const a=el('a','',label);a.href=url;a.target='_blank';a.rel='noopener noreferrer';return a}
 function badge(text,kind){return el('span','b '+kind,text)}
 let timer=null,seen=0;
+fetch('/api/saved').then(r=>r.json()).then(list=>{for(const x of list){const o=el('option','',(x.status||'')+' - '+x.text);o.value=x.index;$('saved').appendChild(o)}});
+$('saved').addEventListener('change',async()=>{const v=$('saved').value;if(v==='')return;const r=await fetch('/api/saved/'+v);const j=await r.json();
+ $('answer').textContent='';$('progress').hidden=true;const b=el('div','panel','Replay of saved run '+j.run_id+' - shop prices and stock may have changed since it ran.');$('answer').appendChild(b);render(j)});
 $('f').addEventListener('submit',async ev=>{ev.preventDefault();$('go').disabled=true;$('answer').textContent='';$('progress').hidden=false;$('progress').textContent='';seen=0;$('state').textContent='Starting...';
  const r=await fetch('/api/runs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:$('text').value,mode:$('mode').value,destination:$('dest').value||null})});
  const j=await r.json();if(!r.ok){$('state').textContent=j.detail||'Could not start';$('go').disabled=false;return}
@@ -151,13 +183,16 @@ function render(r){const box=$('answer');const p=el('div','panel');p.appendChild
  for(const w of r.warnings||[])p.appendChild(el('p','ev','Note: '+w));box.appendChild(p);
  const groups=[['best','Best matches'],['alternative','Close alternatives'],['unavailable','Checked but out of stock'],['rejected','Checked and excluded']];
  for(const [tier,label] of groups){const items=r.offers.filter(o=>o.tier===tier);if(!items.length)continue;box.appendChild(el('h2','',label));const cards=el('div','cards');
-  for(const o of items){const c=el('div','card');const top=el('div','top');const left=el('div');left.appendChild(el('div','shop',o.shop));left.appendChild(el('div','title',o.title+(o.variant&&o.variant!=='Default Title'?' - '+o.variant:'')));
+  let lastGroup=null;
+  for(const o of items){const group=(tier==='best'||tier==='alternative')?(o.total?'Delivered total confirmed (fee published by the shop)':(r.request.mode==='pickup'?'Listed price (pickup)':'Listed price - delivery fee still to confirm')):null;
+   if(group&&group!==lastGroup){cards.appendChild(el('div','ev',group));lastGroup=group}
+   const c=el('div','card');const top=el('div','top');const left=el('div');left.appendChild(el('div','shop',o.shop));left.appendChild(el('div','title',o.title+(o.variant&&o.variant!=='Default Title'?' - '+o.variant:'')));
    const right=el('div');right.appendChild(el('div','price',o.price?(o.currency||'')+' '+o.price:'No price'));right.appendChild(el('div','total',o.total?('USD '+o.total+' delivered'):(r.request.mode==='pickup'?'pickup':'delivery fee not confirmed')));
    top.appendChild(left);top.appendChild(right);c.appendChild(top);const bs=el('div','badges');
    if(o.complete)bs.appendChild(badge('Fully checked','ok'));bs.appendChild(badge(o.in_stock===true?'In stock online':o.in_stock===false?'Out of stock':'Stock not published',o.in_stock===true?'ok':o.in_stock===false?'bad':'warn'));
    bs.appendChild(badge(o.condition==='new'?'New (stated by shop)':o.condition==='unknown'?'Condition not stated':o.condition,o.condition==='new'?'ok':o.condition==='unknown'?'warn':'bad'));
    bs.appendChild(badge(o.identity==='exact'?'Exact match':o.identity==='near'?'Close alternative':'Different product',o.identity==='exact'?'ok':'warn'));c.appendChild(bs);
-   if(o.identity_reason)c.appendChild(el('div','title',o.identity_reason));
+   if(o.identity_reason&&o.identity!=='exact')c.appendChild(el('div','title',"Assistant's note (not a checked fact): "+o.identity_reason));
    if(o.gaps.length){const ul=el('ul','gaps');for(const g of o.gaps)ul.appendChild(el('li','',g));c.appendChild(ul)}
    if(o.downgrades.length)c.appendChild(el('div','meta','Checks: '+o.downgrades.join('; ')));
    const m=el('div','meta');m.appendChild(link(o.url,'Open at '+o.shop));m.appendChild(document.createTextNode(' - '+o.seller_basis+(o.total_basis?' - '+o.total_basis:'')));

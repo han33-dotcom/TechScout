@@ -240,7 +240,7 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
             if status == 'met' and not (r.quote and contains_quote(src.text, r.quote)
                                         and (src.shop_id == obs.shop_id)):
                 status = 'unknown'
-            covered = re.search(r'\b(new|condition|deliver\w*|shipping|stock|available|price|vat)\b',
+            covered = re.search(r'\b(new|condition|deliver\w*|shipping|stock|available|price|vat|pick ?up|branch)\b',
                                 r.requirement, re.IGNORECASE)
             if status == 'unknown' and not covered:
                 # condition, delivery, stock, price and VAT already have their own gap wording
@@ -302,12 +302,14 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
             if unmet:
                 downgrades.append('does not meet: ' + '; '.join(unmet))
             # For a request that cannot exist as asked, the closest real product is the useful answer.
-            if final.status == 'impossible' and unmet and identity != 'different'                     and condition not in ('used', 'refurbished', 'open_box'):
+            if (final.status == 'impossible' and unmet and identity != 'different'
+                    and condition not in ('used', 'refurbished', 'open_box')):
                 tier, identity = 'alternative', 'near'
-        elif available is False:
-            tier = 'unavailable'
-        elif identity == 'near':
-            tier = 'alternative'
+        if tier != 'rejected':
+            if available is False:
+                tier = 'unavailable'
+            elif identity == 'near':
+                tier = 'alternative'
         if budget is not None and tier in ('best', 'alternative'):
             amount = total if total is not None else price
             if amount is not None and amount > budget:
@@ -326,8 +328,12 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
             delivery_fee=fee, total=total, total_basis=basis, complete=complete, gaps=_dedupe(gaps),
             requirements=reqs, evidence=evidence_rows, seller_basis=seller, downgrades=downgrades))
     order = {'best': 0, 'alternative': 1, 'unavailable': 2, 'rejected': 3}
-    out.sort(key=lambda o: (order[o.tier], not o.complete, o.total is None,
-                            o.total if o.total is not None else (o.price if o.price is not None else Decimal('1e9'))))
+    # Within a tier: offers with an evidenced delivered total, ranked by total; then listed prices with the
+    # fee still to confirm, established-new first, ranked by price. Totals and listed prices are never
+    # ranked against each other (buyer contract: only comparable totals are ranked).
+    out.sort(key=lambda o: (order[o.tier], o.total is None,
+                            (o.total if o.total is not None else Decimal('1e9')),
+                            o.condition != 'new', o.price if o.price is not None else Decimal('1e9')))
     return out
 
 

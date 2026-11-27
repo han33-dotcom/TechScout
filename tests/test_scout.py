@@ -465,7 +465,11 @@ class DemoServerTests(unittest.TestCase):
                     offers=[], question=None, budget_max_usd=None))]), web=w,
                     search=ShopSearch(w, [ALPHA])).run(request)
 
-        client = TestClient(create_app(agent_factory=SlowAgent, budget_factory=None))
+        import tempfile
+        from pathlib import Path
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        client = TestClient(create_app(agent_factory=SlowAgent, budget_factory=None, runs_dir=Path(tmp.name) / 'runs'))
         self.assertIn('TechScout', client.get('/').text)
         refused = client.post('/api/runs', json=dict(text='sony headphones'), headers={'origin': 'https://evil.example'})
         self.assertEqual(refused.status_code, 403)
