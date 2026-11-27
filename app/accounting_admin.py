@@ -7,6 +7,7 @@ from sqlalchemy import insert, inspect, select, text
 
 from app.accounting import BudgetDenied, Ledger, LIMITS, money
 from app.storage import accounting_state
+from app.ledger_storage import migrate_rows
 
 
 def initialize(ledger):
@@ -20,6 +21,10 @@ def initialize(ledger):
             if existed:
                 raise BudgetDenied('Existing ledger has no state row; restore/reconcile it instead of resetting')
             db.execute(insert(accounting_state).values(id=1, payload={'project': None}))
+        try:
+            migrate_rows(db, expected_project=ledger.project)
+        except ValueError as exc:
+            raise BudgetDenied(str(exc)) from exc
     ledger.provision()
 
 
@@ -74,10 +79,10 @@ def reconcile(ledger, receipt):
 
 
 def summary(ledger):
-    state = ledger.snapshot()
-    return {'project': state['project'], 'blocked': state['blocked'], 'scopes': state['scopes'],
-            'jobs': len(state['jobs']), 'attempts': len(state['attempts']),
-            'reconciliation_receipts': sorted(state.get('reconciliation', {}))}
+    with ledger._transaction(readonly=True) as (state, _):
+        return {'project': state['project'], 'blocked': state['blocked'], 'scopes': dict(state['scopes']),
+                'jobs': len(state['jobs']), 'attempts': len(state['attempts']),
+                'reconciliation_receipts': sorted(state.get('reconciliation', {}))}
 
 
 def main():

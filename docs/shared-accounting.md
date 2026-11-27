@@ -31,16 +31,19 @@ ledger on Hassan's PC for now, with migration to hosted PostgreSQL later if need
 This is the active accounting authority for work on that PC. It does not coordinate
 separate machines automatically: teammates must not independently spend against
 another copy of the same campaign. See [local setup and migration](local-accounting.md).
-For a dedicated ledger, `python -m app.accounting_admin initialize` creates only the
-accounting table and initial row, without requiring the corpus schema or pgvector.
-It is an explicit administrative alternative to full application migrations;
-it does not stamp an Alembic revision or reset an existing campaign.
+For a dedicated ledger, an administrator runs `python -m app.accounting_admin initialize`.
+This creates or migrates just the accounting tables. A full application database
+receives the same storage format through Alembic revision `exp_ledger_rows` on this
+experiment branch (`0012` on main). Run branch-specific application migrations
+against local app/test databases. Both branches share one dedicated live ledger.
 
-Migration 0007 adds a single serialized campaign state row. Every transition takes
-a database write lock, reads the database clock, validates all relevant scopes,
-and commits atomically. It releases the lock before network work. This intentionally
-simple representation fits the small bounded campaign; migrate to indexed attempt
-tables before substantially expanding volume. Never prune usage to reclaim budget.
+Storage version 2 keeps the campaign header in `accounting_state` and one row per
+job, attempt, budget scope, receipt or checkpoint entry in `accounting_entries`.
+A writer locks the campaign header for the duration of its database transaction.
+It checks limits and updates the affected records before releasing the lock and
+dispatching an external call. Read-only status and cancellation checks leave
+the records untouched. An explicit `Ledger.snapshot()` reconstructs the full
+historical snapshot for audit and export.
 
 ## Reservations and recovery
 

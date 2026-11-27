@@ -118,7 +118,8 @@ def main():
             folder.mkdir()  # Unconfirmed partial trial requires inspection before any new dispatch.
             ledger = Ledger.configured()
             try:
-                remaining = Decimal('500')-Decimal(ledger.snapshot()['scopes'].get('project',[0,0,0,'0',0])[3])
+                with ledger._transaction(readonly=True) as (state, _):
+                    remaining = Decimal('500') - Decimal(state['scopes'].get('project', [0, 0, 0, '0', 0])[3])
                 if remaining < Decimal('301'):
                     raise ValueError('Calibration would consume the held-out 300-run allowance')
             finally:

@@ -7,8 +7,10 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 import threading
 import unittest
+from unittest.mock import patch
 
 from app.accounting import Ledger, Charge, BudgetDenied, LIMITS
+from app.ledger_storage import Records
 from app.contracts import SourceLimits
 from app.research import research
 from app.storage import Storage
@@ -58,6 +60,49 @@ class AccountingTests(unittest.TestCase):
         if self.storage.engine.dialect.name == 'sqlite':
             with self.assertRaises(ValueError):
                 Ledger(self.storage, 'test-campaign')
+
+    def test_other_clients_landing_shop_counts_as_a_visit(self):
+        job = self.ledger.open_job('experiment', 'bootstrap')
+        attempt = job.reserve('retrieval', Charge(D(0)), 110, source='origin', limits=LIMIT)
+        attempt.dispatch()
+        with self.ledger._transaction() as (state, _):
+            state['attempts'][attempt.token]['landing_source'] = 'destination'
+        ahmad = self.ledger.open_job('other-client', 'bootstrap')
+        tight = SourceLimits(requests_per_minute=1, concurrency=1, max_requests_per_run=1)
+        for delay in (0, 61):
+            self.now = START + timedelta(seconds=delay)
+            with self.assertRaisesRegex(BudgetDenied, 'Shared source workload'):
+                ahmad.reserve('retrieval', Charge(D(0)), 1, source='destination', limits=tight)
+        attempt.complete(D(0), 65)
+        with self.assertRaisesRegex(BudgetDenied, 'Shared source workload'):
+            job.reserve('retrieval', Charge(D(0)), 1, source='destination', limits=tight)
+        ahmad.reserve('retrieval', Charge(D(0)), 1, source='destination', limits=tight)
+
+    def test_live_search_never_loads_retired_history(self):
+        old = self.ledger.open_job('old')
+        spent = old.reserve('retrieval', Charge(D(0)), 5, source='store', limits=LIMIT)
+        spent.dispatch()
+        spent.complete(D(0), 1)
+        self.now += timedelta(seconds=5)
+        load = Records._load
+        fetched = []
+
+        def track(records, where):
+            for key, value in load(records, where):
+                fetched.append((records.section, key))
+                yield key, value
+
+        with patch.object(Records, '_load', track):
+            current = self.ledger.open_job('new')
+            self.assertIs(current.cancelled, False)
+            attempt = current.reserve('retrieval', Charge(D(0)), 10, source='store', limits=LIMIT)
+            attempt.dispatch()
+            attempt.complete(D(0), 1)
+            self.assertEqual(len(self.ledger.job_attempts('new')), 1)
+            self.ledger.recover()
+        self.assertNotIn(('jobs', 'old'), fetched)
+        self.assertNotIn(('attempts', spent.token), fetched)
+        self.assertNotIn(('scopes', 'buyer:old'), fetched)
 
     def test_final_phase_is_inside_original_run_deadline(self):
         job = self.ledger.open_job('buyer')

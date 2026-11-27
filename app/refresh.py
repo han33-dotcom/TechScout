@@ -368,12 +368,12 @@ def refresh(manifest, *, ledger, corpus, gate, batch_id, limit, high_use=(), emb
             record = state['refresh_batches'][job.run_id]
             if record['owner'] == token:
                 record.update(owner=None, lease_until=0)
-    state = ledger.snapshot()
-    record = state['refresh_batches'][job.run_id]
+    with ledger._transaction(readonly=True) as (state, _):
+        record = state['refresh_batches'][job.run_id]
+        attempts = [a for a in state['attempts'].for_job(job.run_id) if a['status'] != 'released']
     pages = record['pages']
     counts = Counter(page['status'] for page in pages.values())
     counts['pending'] = len(selected) - len(pages)
-    attempts = [a for a in state['attempts'].values() if a['job'] == job.run_id and a['status'] != 'released']
     spend = sum((Decimal(a['values'][3]) for a in attempts if a['status'] == 'completed'), Decimal(0))
     held = sum((Decimal(a['values'][3]) for a in attempts if a['status'] != 'completed'), Decimal(0))
     return dict(job_id=job.run_id, plan=record['plan'], pages=pages, counts=dict(counts),
