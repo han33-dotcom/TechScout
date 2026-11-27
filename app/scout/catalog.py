@@ -38,8 +38,26 @@ def tokens(text: str) -> list[str]:
     return TOKEN.findall((text or '').lower())
 
 
+ACCESSORY = {'case', 'cover', 'protector', 'glass', 'tempered', 'film', 'charger', 'cable', 'adapter', 'strap',
+             'band', 'holder', 'stand', 'mount', 'skin', 'sleeve', 'pouch', 'tips', 'lens', 'replacement',
+             'battery', 'pen', 'stylus', 'keyboard', 'folio', 'wallet', 'magsafe', 'dock', 'hub', 'compatible'}
+
+
+def accessory_penalty(query: str, title: str) -> float:
+    """Listings for cases, chargers and the like rank below the device unless the buyer asked for one."""
+    words = set(tokens(title))
+    wanted = set(tokens(query))
+    extra = (words & ACCESSORY) - wanted
+    if not extra:
+        return 1.0
+    if 'for' in words or 'compatible' in words or len(extra) >= 2:
+        return 0.35
+    return 0.6
+
+
 def score(query: str, title: str, extra: str = '') -> float:
-    """Share of the query's distinctive words that appear in the title (extra text counts half)."""
+    """Share of the query's distinctive words that appear in the title (extra text counts half),
+    scaled down for accessory listings the buyer did not ask for."""
     q = [t for t in tokens(query) if t not in STOP] or tokens(query)
     if not q:
         return 0.0
@@ -51,7 +69,7 @@ def score(query: str, title: str, extra: str = '') -> float:
             got += 1
         elif t in more:
             got += 0.5
-    return got / len(q)
+    return got / len(q) * accessory_penalty(query, title)
 
 
 @dataclass

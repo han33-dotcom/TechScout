@@ -87,7 +87,10 @@ class Tools:
         """Open the strongest few leads at once (free, ~1 s) so the agent can often skip an 'open' turn."""
         from app.scout.catalog import score
         chosen, seen = [], set()
-        for h in sorted(hits, key=lambda h: -score(query, h.title)):
+        from app.scout.verify import USED
+        # Strongest text match first; listings marked used or open box after new ones; in stock first.
+        for h in sorted(hits, key=lambda h: (-round(score(query, h.title), 2), bool(USED.search(h.title)),
+                                             h.available is False)):
             key = h.url.split('?')[0]
             if score(query, h.title) < 0.6 or key in seen or key in self._opened:
                 continue

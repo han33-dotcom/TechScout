@@ -192,6 +192,10 @@ class StorefrontTests(unittest.TestCase):
         self.assertEqual({h.shop_id for h in report.hits}, {'alpha', 'beta'})
         self.assertGreater(score('sony wh-ch520', 'Sony WH-CH520 Wireless'), score('sony wh-ch520', 'Sony XB910'))
         self.assertEqual(slug_title('https://t.lb/product/apple-ipad-a16-128gb-md4a4'), 'apple ipad a16 128gb md4a4')
+        # A phone outranks its case unless the buyer asked for a case.
+        self.assertGreater(score('galaxy s24 ultra', 'Samsung Galaxy S24 Ultra 12GB/256GB'),
+                           score('galaxy s24 ultra', 'Silicone Case for Samsung Galaxy S24 Ultra'))
+        self.assertEqual(score('galaxy s24 ultra case', 'Samsung Galaxy S24 Ultra Case'), 1.0)
 
 
 def product_obs(evidence, product: Product):
@@ -441,3 +445,42 @@ class TermsTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class DemoServerTests(unittest.TestCase):
+    def test_page_runs_and_refuses_cross_origin_posts(self):
+        import threading as _t
+        from fastapi.testclient import TestClient
+        from app.scout.server import create_app
+        gate = _t.Event()
+
+        class SlowAgent:
+            on_event = None
+
+            def run(self, request):
+                gate.wait(5)
+                w = web()
+                return ScoutAgent(ScriptedProvider([step('done', final_=dict(
+                    status='no_match', request_kind='exact', message='Nothing suitable at the shops checked.',
+                    offers=[], question=None, budget_max_usd=None))]), web=w,
+                    search=ShopSearch(w, [ALPHA])).run(request)
+
+        client = TestClient(create_app(agent_factory=SlowAgent, budget_factory=None))
+        self.assertIn('TechScout', client.get('/').text)
+        refused = client.post('/api/runs', json=dict(text='sony headphones'), headers={'origin': 'https://evil.example'})
+        self.assertEqual(refused.status_code, 403)
+        self.assertEqual(client.post('/api/runs', json=dict(text='x' * 1501)).status_code, 422)
+        first = client.post('/api/runs', json=dict(text='sony headphones', destination='Beirut'))
+        self.assertEqual(first.status_code, 200)
+        busy = client.post('/api/runs', json=dict(text='another search'))
+        self.assertEqual(busy.status_code, 429)
+        gate.set()
+        run_id = first.json()['run_id']
+        for _ in range(100):
+            body = client.get(f'/api/runs/{run_id}').json()
+            if body['status'] in ('done', 'error'):
+                break
+            import time as _time
+            _time.sleep(0.05)
+        self.assertEqual(body['status'], 'done')
+        self.assertEqual(body['result']['status'], 'no_match')

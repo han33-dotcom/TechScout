@@ -28,7 +28,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.scout.catalog import ShopSearch, score
-from app.scout.evidence import Evidence
+from app.scout.evidence import Evidence, contains_quote
 from app.scout.tools import Tools
 from app.scout.verify import CheckedOffer, Final, OfferClaim, check_offers
 from app.scout.web import SafeWeb
@@ -147,13 +147,15 @@ class RunResult:
     spend: dict
     fallback: bool = False
     warnings: list[str] = field(default_factory=list)
+    observations: list[dict] = field(default_factory=list)
 
     def public(self) -> dict:
         return dict(run_id=self.run_id, request=self.request, status=self.status, message=self.message,
                     question=self.question, offers=[o.public() for o in self.offers], proposed=self.proposed,
                     turns=self.turns, tool_calls=self.tool_calls, model_calls=self.model_calls,
                     retailer_requests=self.retailer_requests, seconds=self.seconds, spend=self.spend,
-                    fallback=self.fallback, warnings=self.warnings, prompt_version=PROMPT_VERSION)
+                    fallback=self.fallback, warnings=self.warnings, prompt_version=PROMPT_VERSION,
+                    observations=self.observations)
 
 
 class ScoutAgent:
@@ -274,7 +276,33 @@ class ScoutAgent:
             spend['ledger_job'] = run_id
         return RunResult(run_id, request, status, message, final.question, offers,
                          [c.model_dump() for c in final.offers], turns, tools.calls, model_calls,
-                         self.web.requests, round(elapsed(), 1), spend, fallback, warnings)
+                         self.web.requests, round(elapsed(), 1), spend, fallback, warnings,
+                         observations=snapshot(evidence, final))
+
+
+def snapshot(evidence: Evidence, final: Final) -> list[dict]:
+    """Every observation with its URL, time and hash: products in full (compact form), pages as the
+    passages any claim quoted plus the opening text, so a grader can audit each claim offline."""
+    quotes: dict[str, list[str]] = {}
+    for c in final.offers:
+        for oid, q in ((c.delivery_obs, c.delivery_quote), (c.condition_obs, c.condition_quote),
+                       (c.obs, c.price_quote), (c.obs, c.condition_quote)):
+            if oid and q:
+                quotes.setdefault(oid.upper(), []).append(q)
+        for r in c.requirements:
+            if r.evidence_obs and r.quote:
+                quotes.setdefault(r.evidence_obs.upper(), []).append(r.quote)
+    out = []
+    for o in evidence.all():
+        row = dict(obs=o.obs_id, kind=o.kind, url=o.url, shop_id=o.shop_id,
+                   observed_at=o.observed_at.isoformat(timespec='seconds'), sha256=o.sha256)
+        if o.product is not None:
+            row['product'] = o.product.compact()
+        else:
+            row['excerpt'] = o.text[:1500]
+            row['quoted'] = [dict(quote=q, found=contains_quote(o.text, q)) for q in quotes.get(o.obs_id, [])]
+        out.append(row)
+    return out
 
 
 def _brief(r: dict) -> dict:
