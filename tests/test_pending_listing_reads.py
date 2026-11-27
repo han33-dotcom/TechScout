@@ -78,13 +78,13 @@ class PendingReadTests(FlowCase):
                 if cards and len(cards) == 1:
                     assert cards[0]['url'] == fast
                     release_body.set()
-                    return dict(action_index=menu.index('Wait for the next pending listing transfer'))
+                    return dict(action_id=next(key for key, label in menu.items() if label == 'Wait for the next pending listing transfer'))
                 if len(cards) == 2:
                     low, high = sorted(cards, key=lambda c: Decimal(c['listed_price']['amount']))
                     difference = Decimal(high['listed_price']['amount']) - Decimal(low['listed_price']['amount'])
                     answer = (f"{low['seller']} USD {low['listed_price']['amount']} {low['url']} is USD {difference} "
                               f"lower than {high['seller']} USD {high['listed_price']['amount']} {high['url']}.")
-                    return dict(action_index=next(i for i, a in enumerate(menu) if a.startswith('Present')), answer=answer)
+                    return dict(action_id='present', answer=answer)
                 return super().answer(role, data)
 
         class Transfer(httpx2.SyncByteStream):
