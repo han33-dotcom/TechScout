@@ -201,7 +201,10 @@ condition and merchant address (one contiguous excerpt each; whitespace may be n
 Copy title, brand, seller, options and the selected retailer SKU or variant ID from the capture;
 omit SKU if absent. Use the URL being read unless a distinct, valid selected variant href is published.
 Use findings for any other facts material to this objective, including on pages without an offer.
-Give the statement and an exact supporting excerpt. You can propose relevant page hrefs to follow.
+Give the statement and an exact supporting excerpt. A buyer who can settle one missing requirement
+with a public link needs its exact href in follow_hrefs and the question that link could answer in reason.
+For example, when a matching offer only lacks seller premises, look in the entire capture for its store
+locator or contact link. When a category contains a promising item, identify the exact product link.
 For a buyer given seller_evidence, a merchant's own contact or locations page can prove its Lebanese
 premises without showing a product. Return seller_location with exact merchant and address quotes.
 In listing_indices select every supplied listing whose actual seller you can identify as this merchant.
