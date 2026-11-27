@@ -79,7 +79,7 @@ class ShoppingAgentTests(FlowCase):
         _, run = self.browse(deps, implementation='single_agent', requirements=dict(category='audio'),
                              intent=dict(kind='exact_model', model='TestBrand H14'))
         self.assertEqual(run.explanation.source, 'fallback')
-        self.assertEqual(run.explanation.text, 'The shopping agent could not finish writing its answer.')
+        self.assertEqual(run.explanation.text, 'I could not verify a retailer offer for this request before the search ended.')
 
     def test_connection_failure_retries_the_decision_without_repeating_a_tool(self):
         self.openrouter = Decisions(['Look up', 'Present'])
