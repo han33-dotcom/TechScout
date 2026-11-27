@@ -18,6 +18,10 @@ class ManagedPage:
     max_age_ms: int = 0
 
 
+class EmptyListing(ValueError):
+    """Firecrawl confirmed the public page but returned no readable HTML."""
+
+
 class Firecrawl:
     def __init__(self, api_key, gate, *, usd_per_credit, transport=None):
         included = usd_per_credit == 'included'
@@ -62,7 +66,9 @@ class Firecrawl:
                 raise ValueError('Managed page provenance, freshness or status is not established')
             self.gate.check_provider_target(source_id,url,expect='html',capability=capability)
             html = data.get('rawHtml')
-            if not isinstance(html,str) or not html.strip() or len(html.encode('utf-8')) > MAX_RESPONSE_BYTES:
+            if html is None or isinstance(html, str) and not html.strip():
+                raise EmptyListing('Managed HTML is absent from the confirmed page')
+            if not isinstance(html,str) or len(html.encode('utf-8')) > MAX_RESPONSE_BYTES:
                 raise ValueError('Managed HTML is absent or exceeds the source body bound')
             credits = metadata.get('provider',{}).get('creditsCost')
             if type(credits) is int and credits > 1 and self.rate:

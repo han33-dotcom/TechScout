@@ -25,21 +25,36 @@ class ConflictingSelection(ValueError):
 
 
 @dataclass(frozen=True)
-class ColorOption:
+class ProductOption:
     """A named retailer control observed on the listing."""
     name: str
     value: str
     kind: str = 'radio'
 
+    @property
+    def dimension(self):
+        wrapped = re.fullmatch(r'(?:opt|options?)\[([\w -]{1,60})\]|attribute_(?:pa_)?([\w -]{1,60})', self.name, re.I)
+        name = (wrapped[1] or wrapped[2]) if wrapped else self.name
+        return name.strip().casefold().replace('colour', 'color')
+
     def selector(self):
-        if (not re.fullmatch(r'(?:(?:opt|options?)\[colou?r\]|(?:attribute_(?:pa_)?)?colou?r)', self.name, re.I)
-                or not re.fullmatch(r'[\w -]{1,60}', self.value)):
-            raise ValueError('Unsupported product color control')
+        if (not re.fullmatch(r'[\w -]{1,70}(?:\[[\w -]{1,60}\])?', self.name)
+                or not re.fullmatch(r'[\w ./+()-]{1,80}', self.value)
+                or (self.kind != 'button' and self.dimension == self.name.strip().casefold() and self.dimension not in {
+                    'color', 'capacity', 'storage', 'memory', 'ram', 'size', 'connectivity', 'configuration',
+                    'model', 'style', 'finish', 'version', 'edition', 'variant'})):
+            raise ValueError('Unsupported product option')
         if self.kind == 'select':
             return f'select[name="{self.name}"]'
         if self.kind == 'radio':
             return f'input[type="radio"][name="{self.name}"][value="{self.value}"]'
-        raise ValueError('Unsupported product color control')
+        if self.kind == 'button':
+            return f'button[type="button"][data-option-name="{self.name}"][data-option-value="{self.value}"][aria-pressed]'
+        raise ValueError('Unsupported product option')
+
+
+def with_option(path, option):
+    return tuple(o for o in path if o.dimension != option.dimension) + (option,)
 
 
 class Match(Model):
@@ -131,16 +146,24 @@ class ListingDocument(_HTML):
             self.price_tag = tag
         if tag == 'select':
             self.select_name = a.get('name') if 'multiple' not in a and 'disabled' not in a else None
-        if (tag == 'input' and a.get('type') == 'radio') or (tag == 'option' and self.select_name):
-            option = (ColorOption(self.select_name, a.get('value') or '', 'select') if tag == 'option'
-                      else ColorOption(a.get('name') or '', a.get('value') or ''))
+        option = None
+        if tag == 'option' and self.select_name:
+            option = ProductOption(self.select_name, a.get('value') or '', 'select')
+            active = 'selected' in a
+        elif tag == 'input' and a.get('type') == 'radio':
+            option = ProductOption(a.get('name') or '', a.get('value') or '')
+            active = 'checked' in a
+        elif tag == 'button' and a.get('type') == 'button' and a.get('aria-pressed') in ('true', 'false'):
+            option = ProductOption(a.get('data-option-name') or '', a.get('data-option-value') or '', 'button')
+            active = a['aria-pressed'] == 'true'
+        if option is not None:
             try:
                 option.selector()
             except ValueError:
                 return
-            if 'disabled' not in a:
+            if 'disabled' not in a and a.get('aria-disabled') != 'true':
                 self.options.append(option)
-            if ('selected' if tag == 'option' else 'checked') in a:
+            if active:
                 self.checked.append(option)
 
     def handle_startendtag(self, tag, attrs):
@@ -179,10 +202,11 @@ class ListingDocument(_HTML):
                 and line not in self.address_lines and len(self.address_lines) < 100):
             self.address_lines.append(line)
 
-    def variant_links(self, url, colors):
-        """Return retailer-published alternatives, including ordinary links labeled with a requested color."""
+    def inspection_links(self, url, values):
+        """Prioritize option links, then offer labeled public links for further evidence."""
         origin = urlsplit(url)
-        color_labels = {color.casefold() for color in colors}
+        labels = {value.casefold() for value in values}
+        variants, other = {}, {}
         for href, label, attributes in self.links:
             try:
                 link = urljoin(url, href)
@@ -194,18 +218,29 @@ class ListingDocument(_HTML):
             variant_query = target.path == origin.path and any(
                 k.casefold() in ('variant', 'color', 'colour', 'sku') for k, _ in parse_qsl(target.query))
             if variant_query or any(word in attributes.lower() for word in ('swatch', 'variant', 'colour', 'color')) or (
-                    label and label.casefold() in color_labels):
-                yield link, label or 'Retailer variant link'
+                    label and label.casefold() in labels):
+                variants.setdefault(link, label or 'Retailer variant link')
+            elif label:
+                other.setdefault(link, label)
+        for link, label in other.items():
+            variants.setdefault(link, label)
+        return tuple(variants.items())[:16]
 
-    def color_link(self, url, color):
-        """Prefer a retailer-provided option link whose label identifies this color."""
-        label = color.casefold()
-        for link, text in self.variant_links(url, (color,)):
-            if text.casefold().strip() in (label, label + ' ' + label) or any(
-                    k.casefold() in ('color', 'colour') and v.casefold() == label
-                    for k, v in parse_qsl(urlsplit(link).query)):
-                return link
-        return None
+    def selected_options(self):
+        values = {o.dimension: o.value for o in self.checked}
+        if len(values) != len(self.checked) or {o.dimension for o in self.options} - values.keys():
+            raise ConflictingSelection('The currently selected product options are ambiguous.')
+        return values
+
+    def names_option(self, text, dimension, value):
+        named = set()
+        text = text.replace('_', ' ')
+        for option in self.options:
+            if option.dimension == dimension:
+                pattern = r'[\s-]*'.join(re.escape(part) for part in option.value.replace('_', ' ').split())
+                if re.search(r'(?<!\w)' + pattern + r'(?!\w)', text, re.I):
+                    named.add(option.value.casefold())
+        return named == {value.casefold()}
 
     def selected_text(self, reading):
         """A first-visit page may publish the whole offer as text, without JSON-LD or a SKU."""
@@ -235,33 +270,38 @@ class ListingDocument(_HTML):
         if (price not in prices or prices[price].amount <= 0 or
                 len({(p.currency, p.amount) for p in prices.values()}) != 1):
             raise ValueError('The listing text did not establish one unambiguous current price.')
-        color = ''
-        if self.checked or self.options:
-            if len(self.checked) != 1:
-                raise ValueError('The current color selection is ambiguous.')
-            color = self.checked[0].value
+        options = self.selected_options()
+        color = options.get('color', '')
+        for dimension, value in options.items():
+            if dimension != 'color' and not self.names_option(title, dimension, value):
+                raise ConflictingSelection('The displayed title does not identify one selected configuration.')
         condition_line = line(reading.condition_line)
         condition = re.fullmatch(r'(?:condition\s*:\s*)?(new|used|refurbished)', condition_line, re.I)
         if not condition:
             raise ValueError('The item condition could not be established.')
         stock_line = line(reading.stock_line) if reading.stock_line is not None else ''
         availability = {'in stock': 'InStock', 'out of stock': 'OutOfStock'}.get(stock_line.casefold(), '')
-        identity = sha256(json.dumps([title, color]).encode()).hexdigest()[:24]
+        identity = sha256(json.dumps([title, color, sorted(options.items())] if options.keys() - {'color'}
+                                     else [title, color]).encode()).hexdigest()[:24]
         return Selection(title, identity, reading.brand, color, merchant, prices[price], availability,
-                         condition[1].title() + 'Condition', (address,), price, price, stock_line, condition_line)
+                         condition[1].title() + 'Condition', (address,), price, price, stock_line, condition_line,
+                         options=tuple(options.items()))
 
     def rendered_selection(self, product, offer):
         """A storefront can update its selected ID and displayed terms while keeping default JSON-LD."""
-        if (len(self.checked) != 1 or len(self.variant_ids) != 1 or len(self.variant_lists) != 1
+        if (not self.checked or len(self.variant_ids) != 1 or len(self.variant_lists) != 1
                 or len(self.display_prices) != 1 or len(self.currencies) != 1):
             raise ConflictingSelection('The retailer did not bind the displayed price to a selected variant.')
         rows = json.loads(self.variant_lists[0], parse_float=Decimal, object_pairs_hook=_unique_pairs)
         if not isinstance(rows, list):
             raise ConflictingSelection('Invalid retailer variant list.')
         matches = [row for row in rows if isinstance(row, dict) and str(row.get('id')) == self.variant_ids[0]]
-        color = self.checked[0].value
-        if len(matches) != 1 or matches[0].get('options') != {'Color': color}:
-            raise ConflictingSelection('The selected ID and the displayed color disagree.')
+        options = self.selected_options()
+        published = matches[0].get('options') if len(matches) == 1 else None
+        if not isinstance(published, dict) or {
+                k.casefold().replace('colour', 'color'): v for k, v in published.items()} != options:
+            raise ConflictingSelection('The selected ID and the displayed options disagree.')
+        color = options.get('color', '')
         row = matches[0]
         price = self.display_prices[0]
         money = Money(amount=row.get('raw'), currency=next(iter(self.currencies)))
@@ -281,7 +321,7 @@ class ListingDocument(_HTML):
             raise ConflictingSelection('A common product and storefront merchant could not be established.')
         return Selection(title, self.variant_ids[0], brand, color, name, money,
                          'InStock' if stock else 'OutOfStock', '', tuple(self.address_lines[-30:]),
-                         price, money.currency, stock_text, '')
+                         price, money.currency, stock_text, '', options=tuple(options.items()))
 
     def selected(self, url, observed_at, *, rendered=False):
         products = []
@@ -299,8 +339,9 @@ class ListingDocument(_HTML):
         offer = product.get('offers')
         if isinstance(offer, list) and len(offer) == 1:
             offer = offer[0]
+        identities = listing_identities(url, self.options)
         if (not isinstance(offer, dict) or offer.get('@type') != 'Offer'
-                or any(u not in listing_identities(url) for u in (product.get('url', url), offer.get('url', url)))):
+                or any(u not in identities for u in (product.get('url', url), offer.get('url', url)))):
             raise ValueError('The offer and selected listing could not be bound to the same page.')
         if not current_unrestricted_offer(offer, observed_at):
             raise ConflictingSelection('The listing has a restricted or expired offer.')
@@ -310,14 +351,27 @@ class ListingDocument(_HTML):
         if offer.get('sku', sku) != sku:
             raise ConflictingSelection('The listed price could not be confirmed for this SKU and time.')
         color = literal(product.get('color', ''))
-        if self.options or self.checked:
-            if len(self.checked) != 1:
-                raise ValueError('The current color selection is ambiguous.')
-            selected = self.checked[0].value
+        options = self.selected_options()
+        if 'color' in options:
+            selected = options['color']
             matches_sku = re.search(r'(?<!\w)' + re.escape(selected) + r'(?!\w)', sku, re.I)
             if (color and selected.casefold() != color.casefold()) or (not color and not matches_sku):
                 raise ConflictingSelection('The priced SKU and selected color could not be tied together.')
             color = selected
+        properties = product.get('additionalProperty', [])
+        if isinstance(properties, dict):
+            properties = [properties]
+        if not isinstance(properties, list):
+            properties = []
+        for dimension, value in options.items():
+            if dimension == 'color':
+                continue
+            values = {literal(prop.get('value')).casefold() for prop in properties
+                      if isinstance(prop, dict) and literal(prop.get('name')).casefold() == dimension}
+            confirmed = (values == {value.casefold()} if values else
+                         self.names_option(literal(product.get('name')) + ' ' + sku, dimension, value))
+            if not confirmed:
+                raise ConflictingSelection('The priced product does not corroborate the selected option.')
         money = Money(amount=offer.get('price'), currency=offer.get('priceCurrency'))
         for display in self.display_prices:
             amount = re.fullmatch(r'(?:\$|USD\s*)?(\d+(?:\.\d+)?)', display)
@@ -346,15 +400,16 @@ class ListingDocument(_HTML):
         return Selection(title, sku, brand, color, name, money, availability, condition, tuple(lines),
                          _excerpt(script, 'price', offer['price']), _excerpt(script, 'priceCurrency', money.currency),
                          literal(offer.get('availability')), literal(offer.get('itemCondition', product.get('itemCondition'))),
-                         structured_address)
+                         structured_address, tuple(options.items()))
 
 
-def listing_identities(url):
+def listing_identities(url, options=()):
     parsed = urlsplit(url)
     # A shop may publish its base product as the canonical URL on a variant deep link.
     # An explicitly different option URL still conflicts.
     keys = {k.casefold() for k, _ in parse_qsl(parsed.query)}
-    if keys and keys <= {'variant', 'color', 'colour', 'sku'}:
+    option_keys = {key for option in options for key in (option.name.casefold(), option.dimension)}
+    if keys and keys <= {'variant', 'color', 'colour', 'sku'} | option_keys:
         return (url, parsed._replace(query='').geturl())
     return (url,)
 
@@ -383,11 +438,19 @@ class Selection:
     stock_excerpt: str
     condition_excerpt: str
     structured_address: bool = False
+    options: tuple[tuple[str, str], ...] = ()
 
     def facts(self):
         return dict(title=self.title, sku=self.sku, brand=self.brand, color=self.color,
                     seller=self.seller, price=self.money.model_dump(mode='json'), availability=self.availability,
-                    condition=self.condition, merchant_address_lines=dict(enumerate(self.address_lines)))
+                    condition=self.condition, selected_options=dict(self.options),
+                    merchant_address_lines=dict(enumerate(self.address_lines)))
+
+    def storage(self):
+        for name, value in self.options:
+            if name in ('storage', 'capacity') and (match := re.fullmatch(r'([1-9]\d{0,5})\s*GB', value, re.I)):
+                return int(match[1]), value
+        return None
 
     def partial(self, page, run, request, match, clicked):
         if not match.selected_item_fits:
@@ -398,6 +461,11 @@ class Selection:
             raise ValueError("The named merchant's Lebanese location could not be established.")
         if request.allowed_colors and self.color.casefold() not in {c.casefold() for c in request.allowed_colors}:
             raise ValueError('The selected color does not match the requested color.')
+        storage = self.storage()
+        exact = getattr(request.requirements, 'storage_gb', None)
+        minimum = getattr(request.requirements, 'min_storage_gb', None)
+        if storage and ((exact and storage[0] != exact) or (minimum and storage[0] < minimum)):
+            raise ValueError('The selected capacity does not meet the requested storage.')
         conditions = {'NewCondition': 'new', 'UsedCondition': 'used', 'RefurbishedCondition': 'refurbished'}
         condition = conditions.get(self.condition)
         if self.condition and condition not in request.allowed_conditions:
@@ -437,6 +505,8 @@ class Selection:
         specs_type = {'phone': v2.PhoneSpecs, 'tablet': v2.TabletSpecs, 'laptop': v2.LaptopSpecs,
                       'audio': v2.AudioSpecs, 'monitor': v2.MonitorSpecs}[category]
         specs = {f: unknown for f, info in specs_type.model_fields.items() if info.is_required() and f != 'category'}
+        if 'storage_gb' in specs_type.model_fields and storage:
+            specs['storage_gb'] = known('variant.specs.storage_gb', *storage)
         selected_condition = known('condition', condition, self.condition_excerpt) if condition else unknown
         offer = v2.Offer(offer_id=identity, retailer_id=obs.source_id, source_id=obs.source_id,
             source_product_id=product, source_variant_id=self.sku,
@@ -452,6 +522,6 @@ class Selection:
         if not condition:
             reasons.append('The retailer did not confirm the condition of this selected variant.')
         if clicked:
-            reasons.append(f'Select {self.color} on the retailer page for this price.')
+            reasons.append('Select ' + ', '.join(o.value for o in clicked) + ' on the retailer page for this price.')
         return v2.UncertainAlternative(offer=offer, reasons=tuple(reasons),
             cost=v2.IncompleteCost(status='incomplete', missing=(gap,)))

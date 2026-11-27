@@ -164,7 +164,8 @@ class Maintenance:
                 manifest = self.manifest.model_copy(update={'seeds': tuple(Seed.model_validate(s) for s in active['seeds'])})
                 result = refresh(manifest, ledger=self.ledger, corpus=self.corpus, gate=self.gate, batch_id=active['batch'],
                                  limit=limits.pages, high_use=active['high'], embedding=self.embedding,
-                                 envelope=limits.envelope(), rotation=active['cursor'], inspect_listing=self.inspect_listing)
+                                 envelope=limits.envelope(), rotation=active['cursor'], inspect_listing=self.inspect_listing,
+                                 roles=self.roles)
                 counts = Counter(result['counts'])
                 pages = result['pages']
                 for page in pages.values():

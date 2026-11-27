@@ -2,7 +2,7 @@ import hashlib
 import unittest
 from unittest.mock import Mock, patch
 
-from app.agent_inspection import inspect_public_listing
+from app.agent_inspection import inspect_public_listing, read_catalog_listing
 from app.onboarding import ActivationRegistry, source_id_for
 from app.sources import SourceGate
 from app.accounting import Ledger
@@ -85,3 +85,13 @@ class AgentInspectionTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'disabled'):
                 inspect_public_listing(job, self.url, registry, environ=self.env)
             send.assert_not_called()
+
+    def test_catalog_cannot_offer_a_browser_after_a_source_refusal(self):
+        inspect = Mock(side_effect=ValueError('Retailer inspection is disabled'))
+        roles = Mock()
+        with self.assertRaisesRegex(ValueError, 'disabled'):
+            read_catalog_listing(inspect, self.ledger.open_job('blocked-read', 'maintenance'), self.url,
+                                 objective='Check the selected SKU', roles=roles)
+        self.assertEqual(inspect.call_count, 1)
+        self.assertIsNone(inspect.call_args.kwargs['browser'])
+        roles.generate.assert_not_called()

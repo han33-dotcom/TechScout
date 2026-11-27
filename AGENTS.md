@@ -47,8 +47,9 @@ the existing contract. The [documentation index](docs/README.md) links source an
   limits. The existing project assumption permits public-data retrieval without
   retailer permission emails; do not introduce a permission-first gate.
 - On the `test/two-agent` experiment and its topic branches, both agents may inspect
-  a first-seen public retailer page directly through Firecrawl and use Playwright
-  for an observed product option that requires interaction. Use a per-URL scope,
+  a first-seen public retailer page directly through Firecrawl. Let each agent
+  finish when the evidence suffices, follow a public link, or use Playwright when
+  it judges that rendering or interaction could resolve a gap. Use a per-URL scope,
   honor explicit shop stops and workload limits, and assess the seller and item
   after inspection. Target experiment PRs at `test/two-agent`. Follow the
   [design and checkpoint plan](docs/two-agent-experiment.md).

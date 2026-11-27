@@ -7,7 +7,7 @@ from hashlib import sha256
 import time
 from urllib.parse import urlsplit
 
-from playwright.async_api import Error as BrowserError, async_playwright
+from playwright.async_api import Error as BrowserError, TimeoutError as BrowserTimeout, async_playwright
 
 from app.accounting import BudgetDenied, Charge
 from app.firecrawl import ManagedPage
@@ -39,7 +39,7 @@ MERCHANT_STATE = r"""() => JSON.stringify([
 ])"""
 
 
-async def _select(url, option, document, read, cancelled):
+async def _select(url, options, document, read, cancelled):
     host = urlsplit(url).netloc
     async with async_playwright() as playwright:
         # All allowed traffic is fulfilled through SourceGate. Keep the browser's
@@ -79,31 +79,47 @@ async def _select(url, option, document, read, cancelled):
             await context.route('**/*', route_request)
             await context.route_web_socket('**/*', lambda socket: socket.close())
             await page.goto(url, wait_until='load', timeout=14000)
-            control = page.locator(option.selector())
-            if await control.count() != 1 or not await control.is_enabled():
-                raise ValueError('The selected retailer option is unavailable.')
-            async def is_selected():
+            async def is_selected(control, option):
                 if option.kind == 'select':
                     return await control.input_value() == option.value
+                if option.kind == 'button':
+                    return await control.get_attribute('aria-pressed') == 'true'
                 return await control.is_checked()
 
-            if not await is_selected():
-                before = await page.evaluate(MERCHANT_STATE)
-                if option.kind == 'select':
-                    await control.select_option(value=option.value)
-                else:
-                    await control.check()
-                await page.wait_for_function('(before) => (' + MERCHANT_STATE + ')() !== before', arg=before)
-            if page.url != url or not await is_selected() or cancelled():
+            for option in options:
+                control = page.locator(option.selector())
+                if await control.count() != 1 or not await control.is_enabled():
+                    raise ValueError('The selected retailer option is unavailable.')
+                if not await is_selected(control, option):
+                    before = await page.evaluate(MERCHANT_STATE)
+                    if option.kind == 'select':
+                        await control.select_option(value=option.value)
+                    elif option.kind == 'button':
+                        await control.click()
+                    else:
+                        await control.check()
+                    await page.wait_for_function('(before) => (' + MERCHANT_STATE + ')() !== before', arg=before)
+            if not options:
+                # Allow client-side reads to settle. A polling storefront can already
+                # display complete evidence while its network remains busy.
+                try:
+                    await page.wait_for_load_state('networkidle', timeout=2500)
+                except BrowserTimeout:
+                    pass
+            for option in options:
+                if not await is_selected(page.locator(option.selector()), option):
+                    raise ValueError('The retailer changed an earlier selection.')
+            if page.url != url or cancelled():
                 raise ValueError('The retailer did not confirm the requested selection.')
             return (await page.evaluate(SNAPSHOT)).encode()
         finally:
             await browser.close()
 
 
-def select_listing(job, url, option, read):
+def select_listing(job, url, options, read):
     """Read a fresh listing and return only the confirmed browser state."""
-    option.selector()
+    for option in options:
+        option.selector()
     document = read(url, 'html')
     if document.status != 'ok' or document.final_url != url or not document.body:
         reason = document.errors[0].code if document.errors else 'unavailable'
@@ -114,7 +130,7 @@ def select_listing(job, url, option, read):
 
     async def capture():
         async with asyncio.timeout(18):
-            return await _select(url, option, document, read, lambda: job.cancelled)
+            return await _select(url, options, document, read, lambda: job.cancelled)
 
     try:
         body = asyncio.run(capture())

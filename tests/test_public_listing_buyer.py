@@ -84,7 +84,7 @@ class PublicListingBuyerTests(FlowCase):
         self.assertEqual(calls.call_count, 1, self.trace(run))
         payloads = [call.args[2] for call in calls.call_args_list]
         self.assertNotIn('actions', payloads[0])
-        self.assertEqual([(call.args[1], call.args[2].value) for call in clicks.call_args_list],
+        self.assertEqual([(call.args[1], call.args[2][0].value) for call in clicks.call_args_list],
                          [(URL, 'Black'), (URL, 'Black')])
         self.assertEqual(self.trace(run)['actions'][1]['status'], 'no_match')
         self.assertFalse(any(u.offer.variant.color.value == 'White' for snap in self.published for u in snap.uncertain))
@@ -128,7 +128,7 @@ class PublicListingBuyerTests(FlowCase):
         self.assertFalse(run.uncertain or run.recommendations)
         self.assertIn('could not confirm', run.stop_reason)
 
-    def test_agent_follows_the_published_option_url_before_offering_a_click(self):
+    def test_agent_can_choose_the_published_option_url_while_playwright_is_available(self):
         black_url = URL + '?variant=black'
         self.openrouter = BuyerDecisions(['Inspect', f'Inspect selected listing {black_url}', 'Present'])
         deps = development_tools(self.deps(), 'Q20i')
@@ -153,7 +153,7 @@ class PublicListingBuyerTests(FlowCase):
         choices = [json.loads(r['body']['messages'][1]['content']).get('available', [])
                    for r in self.openrouter.requests]
         menu = next(m for m in choices if any(black_url in action for action in m))
-        self.assertFalse(any(action.startswith('Select Black') for action in menu))
+        self.assertTrue(any(action.startswith('Select Black') for action in menu))
         self.assertNotIn('actions', calls.call_args_list[-1].args[2])
         self.assertEqual(run.status, 'partial', self.trace(run))
         item, = run.uncertain
