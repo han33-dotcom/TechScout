@@ -1,0 +1,57 @@
+{
+  "issue": 265,
+  "worker_revision": "341a09ccf250660f23e480a8c46181329147138a",
+  "baseline_results_revision": "3e97595efe29ffcac9675917e20ab3768ef88795",
+  "frozen_git_blobs": {
+    "buyer-reliability-freeze.json": "99b60f84b327c5c44d15c2c5f9c8ba42eac8fe86",
+    "buyer-reliability-cases.json": "15a3457793b395e5a1b013e2355e213bbf5b40b3",
+    "buyer-reliability-milestone.json": "f41dc3c9f4af129c1b864e167957ffe513977c4a"
+  },
+  "catalog_sha256": "03606bdedf2baa46fe8515ea84ffbb2c8e7cee4a1afc9da90fc2fe46f6624c6d",
+  "limits": {
+    "seconds": 300,
+    "research_usd": 20,
+    "total_usd": 25,
+    "calls": 40
+  },
+  "opus_inference": {
+    "route": {
+      "model": "anthropic/claude-opus-5.5",
+      "provider": "anthropic",
+      "supported_parameters": [
+        "reasoning",
+        "include_reasoning",
+        "max_tokens",
+        "stop",
+        "tool_choice",
+        "tools",
+        "structured_outputs",
+        "response_format",
+        "verbosity",
+        "reasoning_effort"
+      ],
+      "rates": {
+        "input": "8.000000",
+        "output": "40.00000",
+        "cached": "0.4000000",
+        "cache_write": "16.000000"
+      }
+    },
+    "pricing_checked_on": "2026-11-27",
+    "effort": "medium",
+    "provider": "openrouter",
+    "roles": {
+      "max_input_tokens": 200000,
+      "max_output_tokens": 2048,
+      "timeout_seconds": 30
+    },
+    "writer": {
+      "max_input_tokens": 32768,
+      "max_output_tokens": 4096,
+      "timeout_seconds": 30
+    }
+  },
+  "procedure": "Repeat the eight frozen prompts in their original order through the same normal API and worker. Start each run on a clean catalog clone. Set the Opus route and its prices in an isolated copy of the deployment configuration. Keep all buyer code, tools, token limits, per-call timeouts, shared ledger and retailer controls fixed. Compare the first completed or failed attempt per case with the original Sol medium first attempt. Runs occur at different times and use live search and shops.",
+  "grading_source": "buyer-reliability-freeze.json",
+  "references": "Keep the previous six answerable cases, one hardware blocker and the exact-tablet uncertainty visible. Recheck reference listings outside the buyer sessions. Mark any changed or unassessable facts, and score newly established purchases on their own receipts. Preserve complete written answers, rendered cards and verification errors."
+}
