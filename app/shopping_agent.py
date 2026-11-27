@@ -91,6 +91,8 @@ sellers of the same variant. Delivery fees are outside a listed-price comparison
 While a page is still transferring, inspect another promising seller or look for leads.
 Completed pages return automatically between decisions. When waiting for a page can settle
 the buyer's question and other work is exhausted, choose to wait for the pending read.
+If another independent seller could fill a missing place in the comparison, start that read
+while the earlier transfer runs. Use the remaining research time to prioritize unresolved facts.
 Use SerpApi for general search. Read the original wording as the buyer wrote it. An earlier
 model field can be a full sentence or an old guess. You decide which product the buyer means
 and what to search for. For every catalog, retailer or web search write your own query in
@@ -157,7 +159,7 @@ class ShoppingAgent(DomesticBuyerFlow):
 
     def __init__(self, context, deps):
         super().__init__(context, deps)
-        self.trace.update(controller='single_agent', actions=[], prompt_version='shopping-agent-10')
+        self.trace.update(controller='single_agent', actions=[], prompt_version='shopping-agent-11')
         self.trace['request'].pop('model', None)
         self.leads = []
         self.redirected_urls = set()
@@ -289,6 +291,7 @@ class ShoppingAgent(DomesticBuyerFlow):
             actions = self.menu(final)
             choice = self.generate(PROMPT, dict(
                 request=self.request.model_dump(mode='json'), feedback=list(self.context.answers),
+                pending_pages=[t.url for t in self.reads.pending.values()], seconds_for_tools=max(0, int(room())),
                 observations=self.observations[-12:], verified=self.verified_choices(), checked_listings=self.checked_listings(),
                 available=[a.label for a in actions]), Decision, by)
             if choice is None or choice.action_index >= len(actions):

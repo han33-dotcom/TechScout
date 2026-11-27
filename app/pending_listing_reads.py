@@ -16,7 +16,7 @@ class ListingTransfer:
 
 
 class PendingListingReads:
-    capacity = 2
+    capacity = 3
 
     def __init__(self, elapsed):
         self.elapsed = elapsed
@@ -29,7 +29,7 @@ class PendingListingReads:
 
     def start(self, index, url, job, inspect):
         if index in self.pending or len(self.pending) >= self.capacity:
-            raise ValueError('A listing transfer is already pending or both reader slots are busy')
+            raise ValueError('A listing transfer is already pending or all reader slots are busy')
 
         def fetch():
             with observe_provider_read(lambda stage, **details: self.record(url, stage, **details), job.stop):
