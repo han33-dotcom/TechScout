@@ -13,7 +13,6 @@ depends_on = None
 
 def upgrade():
     db = op.get_bind()
-    entries.create(db)
     migrate_rows(db)
 
 

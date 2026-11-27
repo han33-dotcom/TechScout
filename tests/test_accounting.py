@@ -63,10 +63,10 @@ class AccountingTests(unittest.TestCase):
 
     def test_live_search_never_loads_retired_history(self):
         old = self.ledger.open_job('old')
-        spent = old.reserve('model', Charge(D('.01')), 5)
+        spent = old.reserve('retrieval', Charge(D(0)), 5, source='store', limits=LIMIT)
         spent.dispatch()
-        spent.complete(D('.01'), 1)
-        self.now += timedelta(minutes=5)
+        spent.complete(D(0), 1)
+        self.now += timedelta(seconds=5)
         load = Records._load
         fetched = []
 

@@ -2,7 +2,7 @@
 from collections.abc import MutableMapping
 from copy import deepcopy
 
-from sqlalchemy import delete, func, insert, select, update
+from sqlalchemy import delete, func, insert, inspect, or_, select, update
 
 from app.storage import accounting_entries as entries, accounting_state
 
@@ -47,6 +47,14 @@ class Records(MutableMapping):
     def for_job(self, job_id, *, prefix=False):
         condition = entries.c.job_id.startswith(job_id, autoescape=True) if prefix else entries.c.job_id == job_id
         return self.matching(condition)
+
+    def source_counts(self, source, job_id, since):
+        recent = entries.c.created > since
+        in_job = entries.c.job_id == job_id
+        query = select(func.count().filter(recent), func.count().filter(in_job)).where(
+            entries.c.section == self.section, entries.c.source == source,
+            entries.c.status != 'released', or_(recent, in_job))
+        return self.db.execute(query).one()
 
     def boolean_field(self, key, name):
         query = select(entries.c.payload[name].as_boolean()).where(entries.c.section == self.section, entries.c.key == key)
@@ -138,11 +146,14 @@ def migrate_rows(db, *, expected_project=None):
     query = select(accounting_state.c.payload).where(accounting_state.c.id == 1).with_for_update()
     old = db.execute(query).scalar_one()
     if old.get('version') == 2:
+        if not inspect(db).has_table(entries.name):
+            raise ValueError('Existing ledger is missing its entries table; restore it')
         if expected_project is not None and old['fields']['project'] not in (None, expected_project):
             raise ValueError('Ledger belongs to another campaign')
         return
     if 'project' not in old or (expected_project is not None and old['project'] not in (None, expected_project)):
         raise ValueError('Invalid ledger or campaign mismatch')
+    entries.create(db, checkfirst=True)
     if db.execute(select(entries.c.key).limit(1)).first():
         raise ValueError('Found ledger entries alongside an unmigrated header')
     save_state(db, {'sections': []}, old)

@@ -7,7 +7,7 @@ from sqlalchemy import insert, inspect, select, text
 
 from app.accounting import BudgetDenied, Ledger, LIMITS, money
 from app.storage import accounting_state
-from app.ledger_storage import entries, migrate_rows
+from app.ledger_storage import migrate_rows
 
 
 def initialize(ledger):
@@ -21,10 +21,6 @@ def initialize(ledger):
             if existed:
                 raise BudgetDenied('Existing ledger has no state row; restore/reconcile it instead of resetting')
             db.execute(insert(accounting_state).values(id=1, payload={'project': None}))
-        header = db.scalar(select(accounting_state.c.payload).where(accounting_state.c.id == 1).with_for_update())
-        if header.get('version') == 2 and not inspect(db).has_table(entries.name):
-            raise BudgetDenied('Existing ledger is missing its entries table; restore it')
-        entries.create(db, checkfirst=True)
         try:
             migrate_rows(db, expected_project=ledger.project)
         except ValueError as exc:

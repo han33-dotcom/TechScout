@@ -12,10 +12,9 @@ from hashlib import sha256
 import os
 import uuid
 
-from sqlalchemy import select, update, func, or_
+from sqlalchemy import select, update, func
 
 from app.ledger_storage import entries, materialize, read_state, save_state
-
 from app.storage import Storage, accounting_state
 
 
@@ -196,11 +195,10 @@ class Ledger:
                 positive = (limits.requests_per_minute, limits.concurrency, limits.max_requests_per_run)
                 if any(type(v) is not int or v <= 0 for v in positive):
                     raise ValueError('Source workload bounds must be positive integers')
-                matching = attempts.matching((entries.c.source == source) & (entries.c.status != 'released')
-                                             & or_(entries.c.created > now - 60, entries.c.job_id == job_id))
+                recent_count, job_count = attempts.source_counts(source, job_id, now - 60)
                 if (sum(a['source'] == source for a in live) >= limits.concurrency
-                    or sum(a['created'] > now - 60 for a in matching) >= limits.requests_per_minute
-                    or sum(a['job'] == job_id for a in matching) >= limits.max_requests_per_run):
+                    or recent_count >= limits.requests_per_minute
+                    or job_count >= limits.max_requests_per_run):
                     raise BudgetDenied('Shared source workload limit')
             keys = self._scope_keys(job_id, job, international)
             for key, profile in keys:
