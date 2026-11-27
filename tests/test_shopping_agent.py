@@ -45,12 +45,42 @@ class Decisions(FakeOpenRouter):
         index = next(i for i, label in enumerate(data['available']) if label.startswith(prefix))
         intent = data['request']['intent']
         return dict(action_index=index, offer_ids=[v['offer_id'] for v in data['verified']],
+                    answer='Here is the checked listing evidence.' if prefix.startswith('Present') else None,
                     query=intent.get('model', 'headphones') if prefix.startswith(('Search', 'Look up')) else None,
                     question='Which configuration do you need?' if prefix == 'Ask' else None,
                     material_reason='Memory changes the available models.' if prefix == 'Ask' else None)
 
 
 class ShoppingAgentTests(FlowCase):
+    def test_experimental_buyer_gets_a_closing_turn_for_a_missing_answer(self):
+        class MissingAnswer(Decisions):
+            def answer(self, role, data):
+                decision = super().answer(role, data)
+                decision['answer'] = 'I could not verify a matching listing.' if len(data['available']) == 1 else None
+                return decision
+
+        self.openrouter = MissingAnswer(['Present', 'Present'])
+        deps = development_tools(self.deps(), 'TestBrand H14')
+        deps.inspect_listing = Mock()
+        _, run = self.browse(deps, implementation='single_agent', requirements=dict(category='audio'),
+                             intent=dict(kind='exact_model', model='TestBrand H14'))
+        self.assertEqual(run.explanation.source, 'model')
+        self.assertEqual(run.explanation.text, 'I could not verify a matching listing.')
+        self.assertEqual(self.trace(run)['actions'][-1]['status'], 'missing_answer')
+
+    def test_missing_buyer_answer_reports_the_interruption(self):
+        class NeverAnswers(Decisions):
+            def answer(self, role, data):
+                return {**super().answer(role, data), 'answer': None}
+
+        self.openrouter = NeverAnswers(['Present', 'Present'])
+        deps = development_tools(self.deps(), 'TestBrand H14')
+        deps.inspect_listing = Mock()
+        _, run = self.browse(deps, implementation='single_agent', requirements=dict(category='audio'),
+                             intent=dict(kind='exact_model', model='TestBrand H14'))
+        self.assertEqual(run.explanation.source, 'fallback')
+        self.assertEqual(run.explanation.text, 'The shopping agent could not finish writing its answer.')
+
     def test_connection_failure_retries_the_decision_without_repeating_a_tool(self):
         self.openrouter = Decisions(['Look up', 'Present'])
         attempts = iter([False, True, False])

@@ -133,14 +133,19 @@ def catalog_links(outcome, seed, corpus, gate, limit):
 def selected_fields(capture, selected):
     """Persist only facts bound to the requested variant in the post-click capture."""
     key = capture.key
-    if selected.sku != key.variant_id:
+    if key.variant_id and selected.sku != key.variant_id:
         raise ValueError('The catalog SKU differs from the selected retailer variant.')
     fields = [('price', selected.money.model_dump(mode='json'), selected.price_excerpt),
-              ('variant.color', selected.color, selected.color),
-              ('variant.product.model', selected.title, selected.title),
-              ('variant.product.manufacturer', selected.brand, selected.brand)]
+              ('variant.color', selected.color, selected.excerpt(selected.color)),
+              ('variant.product.model', selected.title, selected.excerpt(selected.title)),
+              ('variant.product.manufacturer', selected.brand, selected.excerpt(selected.brand))]
     if selected.availability in ('InStock', 'OutOfStock', 'SoldOut'):
         fields.append(('stock', selected.availability == 'InStock', selected.stock_excerpt))
+    if selected.condition:
+        fields.append(('condition', selected.condition.removesuffix('Condition').lower(), selected.condition_excerpt))
+    if selected.seller and selected.address_lines:
+        fields.extend([('seller.name', selected.seller, selected.excerpt(selected.seller)),
+                       ('seller.market', 'LB', selected.address_lines[0])])
     if storage := selected.storage():
         fields.append(('variant.specs.storage_gb', *storage))
     digest = sha256(capture.body).hexdigest()
@@ -153,8 +158,8 @@ def selected_fields(capture, selected):
         for quote in dict.fromkeys(excerpts):
             eid = sha256(json.dumps([key.model_dump(mode='json'), digest, path, quote,
                                      capture.observed_at.isoformat(), capture.processing.model_dump()]).encode()).hexdigest()
-            receipts.append(Evidence(evidence_id=eid, source_id=key.source_id, product_id=key.product_id,
-                variant_id=key.variant_id, field_path=path, scope='variant', origin_url=key.url,
+            receipts.append(Evidence(evidence_id=eid, source_id=key.source_id, product_id=key.product_id or sha256(str(key.url).encode()).hexdigest()[:24],
+                variant_id=selected.sku, field_path=path, scope='variant', origin_url=key.url,
                 final_url=capture.final_url, observed_at=capture.observed_at, response_sha256=digest,
                 adapter_version=capture.processing.extraction_version, origin='maintenance',
                 corpus_version=capture.processing.corpus_version, index_version=capture.processing.index_version,
@@ -205,16 +210,16 @@ def check_page(seed, manifest, corpus, gate, budget, rows_left, embedding=None, 
             linked = outcome.final_url != str(seed.url)
             if linked and not seed.sku:
                 raise ValueError('A linked listing cannot be bound to this catalog seed without a variant ID.')
-            if page.reading_used or seed.selection_color or seed.sku and (reader == 'playwright' or linked):
-                selected = page.selection
-                if selected is None:
-                    raise ValueError(page.reason or 'The requested catalog variant remains unverified.')
-                if selected.sku != seed.sku or seed.selection_color and selected.color.casefold() != seed.selection_color.casefold():
-                    raise ValueError('The observed variant differs from the catalog seed.')
-                if profile and normalized_alias(selected.seller) not in {
-                    normalized_alias(name) for name in (profile.seller_name, *profile.seller_aliases)
-                }:
-                    raise ValueError('The selected offer names a different merchant from the catalog seller.')
+            selected = page.selection
+            if selected is None:
+                raise ValueError(page.reason or 'The requested catalog variant remains unverified.')
+            if (seed.sku and selected.sku != seed.sku or seed.selection_color
+                    and selected.color.casefold() != seed.selection_color.casefold()):
+                raise ValueError('The observed variant differs from the catalog seed.')
+            if profile and normalized_alias(selected.seller) not in {
+                normalized_alias(name) for name in (profile.seller_name, *profile.seller_aliases)
+            }:
+                raise ValueError('The selected offer names a different merchant from the catalog seller.')
         except (ValueError, OSError, BudgetDenied, httpx2.HTTPError) as exc:
             with budget.ledger._transaction() as (_, now):
                 checked = datetime.fromtimestamp(now, timezone.utc)

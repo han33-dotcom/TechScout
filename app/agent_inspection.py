@@ -12,7 +12,8 @@ from app.contracts import Model
 from app.firecrawl import EmptyListing, Firecrawl, ManagedPage
 from app.model_provider import JobBudget
 from app.listing_browser import select_listing
-from app.selected_listing import ConflictingSelection, ListingDocument, PageReading, READ_TEXT, Selection, with_option
+from app.page_observation import PageNavigation, inspect_capture
+from app.selected_listing import Selection, with_option
 from app.onboarding import ActivationRegistry, PROBE_TTL, ProbeRegistry, canonical, source_id_for
 from app.sources import SourceGate
 
@@ -99,14 +100,13 @@ def inspect_public_listing(job, url: str, registry: ActivationRegistry, *, envir
 
 class InspectionChoice(Model):
     action_index: int = Field(ge=0, strict=True)
-    reading: PageReading | None = None
 
 
 @dataclass(frozen=True)
 class CatalogCapture(ManagedPage):
     selection: Selection | None = None
-    reading_used: bool = False
     reason: str = ''
+    findings: tuple = ()
 
 
 def recoverable_read_error(exc):
@@ -147,59 +147,54 @@ def read_catalog_listing(inspect, job, url, *, objective, roles, trace=None):
                     break
                 raise
             page = None
-        document = ListingDocument(page.outcome.body.decode('utf-8', errors='replace') if page else '')
-        selection = None
-        conflict = False
+        document = PageNavigation(page.outcome.body.decode('utf-8', errors='replace') if page else '', url)
+        reading = None
         if page:
-            try:
-                selection = document.selected(url, page.outcome.observed_at, rendered=browser is not None)
-            except ConflictingSelection:
-                conflict = True
-            except ValueError:
-                pass
-            last_capture = CatalogCapture(page.outcome, page.provider, page.request_id, selection=selection)
+            last_capture = CatalogCapture(page.outcome, page.provider, page.request_id)
         if roles is None:
             if trace is not None:
                 trace.append(dict(status='inference_unavailable'))
             break
+
+        def generate(instructions, data, schema):
+            reply = roles.generate(instructions, data, schema, budget=JobBudget(job, seconds=roles.settings.timeout_seconds),
+                                   cancelled=lambda: job.cancelled)
+            if reply.status != 'completed' and trace is not None:
+                trace.append(dict(status=reply.status, operation=schema.__name__, url=url))
+            return reply.value if reply.status == 'completed' else None
+
+        if page:
+            context_size = roles.settings.max_input_tokens if isinstance(getattr(roles.settings, 'max_input_tokens', None), int) else 32768
+            reading = inspect_capture(page, objective, generate, checked=browser or (), max_input_bytes=context_size, agent='catalog')
+            last_capture = replace(last_capture, selection=reading.selection, reason=reading.reason, findings=reading.findings)
         moves = [('Finish with current evidence', None)]
         paths = [('Render this listing with Playwright', (url, browser or ()))]
         for option in tuple(dict.fromkeys(document.options))[:32]:
             if option not in document.checked:
                 paths.append((f'Select {option.value} ({option.dimension}) with Playwright',
                               (url, with_option(browser or (), option))))
-        for link, label in document.inspection_links(url, [o.value for o in document.options]):
+        links = document.suggestions()
+        for link, label in (*(reading.links if reading else ()), *links):
             paths.append((f'Read {label} at {link} with Firecrawl', (link, None)))
         moves.extend((label, move) for label, move in dict.fromkeys(paths) if move not in attempted)
-        if len(moves) == 1 and (selection is not None or page is None or conflict):
+        if len(moves) == 1:
             break
-        reply = roles.generate(INSPECTION_POLICY + ' Choose one zero-based action_index. On every capture with no '
-            'selected facts, supply its reading even when choosing a follow-up, or explain the gap in reading.reason. ' + READ_TEXT,
+        choice = generate(INSPECTION_POLICY + ' Choose one zero-based action_index.',
             dict(objective=objective, url=url, reader=page.provider if page else 'Firecrawl returned no readable page',
-                 selected=selection.facts() if selection else None,
-                 evidence=document.evidence(url, page.outcome.observed_at) if page else None,
-                 available=[label for label, _ in moves]),
-            InspectionChoice, budget=JobBudget(job, seconds=roles.settings.timeout_seconds), cancelled=lambda: job.cancelled)
-        choice = reply.value if reply.status == 'completed' else None
+                 selected=reading.selection.facts() if reading and reading.selection else None,
+                 reason=reading.reason if reading else None, findings=reading.findings if reading else (),
+                 available=[label for label, _ in moves]), InspectionChoice)
         if not isinstance(choice, InspectionChoice) or choice.action_index >= len(moves):
             if trace is not None:
-                trace.append(dict(status=reply.status if choice is None else 'invalid_choice'))
+                trace.append(dict(status='inference_unavailable' if choice is None else 'invalid_choice'))
             break
         next_move = moves[choice.action_index][1]
         if trace is not None:
             trace.append(dict(reader=page.provider if page else 'firecrawl-v2', action=moves[choice.action_index][0],
                               sha256=page.outcome.response_sha256 if page else None))
-        if page and selection is None and choice.reading is not None and not conflict:
-            try:
-                selection = document.interpret(choice.reading, url, page.outcome.observed_at)
-                last_capture = replace(last_capture, selection=selection, reading_used=True)
-            except ValueError:
-                    color = objective.get('color') if isinstance(objective, dict) else None
-                    last_capture = replace(last_capture, reading_used=True,
-                        reason=document.selection_gap(url, [color] if color else ()))
-            if trace is not None:
-                trace[-1].update(offer_index=choice.reading.offer_index,
-                                 selected=selection.facts() if selection else None, reason=last_capture.reason)
+        if trace is not None and reading:
+            trace[-1].update(selected=reading.selection.facts() if reading.selection else None,
+                             reason=reading.reason, findings=reading.findings)
         if next_move is None:
             break
         url, browser = next_move

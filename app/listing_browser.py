@@ -28,15 +28,17 @@ SNAPSHOT = """() => {
     });
     return copy.outerHTML;
 }"""
-# A checked radio alone is insufficient. Wait for the shop's own offer, displayed
-# price, stock or selected-variant label to reflect the interaction.
-MERCHANT_STATE = r"""() => JSON.stringify([
-    ...Array.from(document.querySelectorAll('script[type="application/ld+json"],'
-      + '[data-variant-price],[data-variant-stock],[data-dimension-value]'), el => el.textContent),
-    ...Array.from(document.querySelectorAll('input[name="variant_id"]'), el => el.value),
-    ...document.body.innerText.split(/\n/).map(s => s.trim()).filter(
-        s => /(?:\b(?:USD|EUR|LBP)\b|\$)\s*[\d,.]+|\b(?:in|out of) stock\b/i.test(s))
-])"""
+# Give client-side changes time to arrive regardless of where the shop draws
+# its controls or writes its evidence. An unchanged page is also a tool result.
+WATCH_DOM = """() => {
+    const state = {changed: false};
+    const observer = new MutationObserver(() => {
+        state.changed = true;
+        observer.disconnect();
+    });
+    observer.observe(document.documentElement, {subtree: true, attributes: true, characterData: true, childList: true});
+    return state;
+}"""
 
 
 async def _select(url, options, document, read, cancelled):
@@ -91,24 +93,23 @@ async def _select(url, options, document, read, cancelled):
                 if await control.count() != 1 or not await control.is_enabled():
                     raise ValueError('The selected retailer option is unavailable.')
                 if not await is_selected(control, option):
-                    before = await page.evaluate(MERCHANT_STATE)
+                    changes = await page.evaluate_handle(WATCH_DOM)
                     if option.kind == 'select':
                         await control.select_option(value=option.value)
                     elif option.kind == 'button':
                         await control.click()
                     else:
                         await control.check()
-                    await page.wait_for_function('(before) => (' + MERCHANT_STATE + ')() !== before', arg=before)
-            if not options:
-                # Allow client-side reads to settle. A polling storefront can already
-                # display complete evidence while its network remains busy.
-                try:
-                    await page.wait_for_load_state('networkidle', timeout=2500)
-                except BrowserTimeout:
-                    pass
-            for option in options:
-                if not await is_selected(page.locator(option.selector()), option):
-                    raise ValueError('The retailer changed an earlier selection.')
+                    try:
+                        await page.wait_for_function('state => state.changed', arg=changes)
+                    except BrowserTimeout:
+                        pass
+                    finally:
+                        await changes.dispose()
+            try:
+                await page.wait_for_load_state('networkidle', timeout=2500)
+            except BrowserTimeout:
+                pass
             if page.url != url or cancelled():
                 raise ValueError('The retailer did not confirm the requested selection.')
             return (await page.evaluate(SNAPSHOT)).encode()
@@ -117,7 +118,7 @@ async def _select(url, options, document, read, cancelled):
 
 
 def select_listing(job, url, options, read):
-    """Read a fresh listing and return only the confirmed browser state."""
+    """Return the full browser DOM after attempting the requested interaction."""
     for option in options:
         option.selector()
     document = read(url, 'html')

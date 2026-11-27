@@ -640,6 +640,10 @@ class Selection:
     structured_address: bool = False
     options: tuple[tuple[str, str], ...] = ()
     published_link: str | None = None
+    source_excerpts: tuple[tuple[str, str], ...] = ()
+
+    def excerpt(self, value):
+        return dict(self.source_excerpts).get(value, value)
 
     def facts(self):
         return dict(title=self.title, sku=self.sku, brand=self.brand, color=self.color,
@@ -667,8 +671,6 @@ class Selection:
         index = 0 if self.structured_address else match.merchant_address_line
         if index is None or index >= len(self.address_lines):
             raise ValueError("The named merchant's Lebanese location could not be established.")
-        if request.allowed_colors and self.color.casefold() not in {c.casefold() for c in request.allowed_colors}:
-            raise ValueError('The selected color does not match the requested color.')
         storage = self.storage()
         exact = getattr(request.requirements, 'storage_gb', None)
         minimum = getattr(request.requirements, 'min_storage_gb', None)
@@ -700,15 +702,15 @@ class Selection:
             return dict(state='known', value=value, evidence_ids=[receipt(path, excerpt)])
 
         unknown = dict(state='unknown', reason='The selected listing did not establish this field.')
-        receipt('seller.name', self.seller)
+        receipt('seller.name', self.excerpt(self.seller))
         receipt('seller.market', self.address_lines[index])
-        receipt('variant.product.model', self.title)
+        receipt('variant.product.model', self.excerpt(self.title))
         if self.published_link and self.published_link != url:
-            receipt('listing_url', self.published_link)
+            receipt('listing_url', self.excerpt(self.published_link))
         price = known('price', self.money, self.price_excerpt)
         if self.currency_excerpt != self.price_excerpt:
             price['evidence_ids'].append(receipt('price', self.currency_excerpt))
-        color = known('variant.color', self.color, self.color) if self.color else None
+        color = known('variant.color', self.color, self.excerpt(self.color)) if self.color else None
         stock = {'InStock': True, 'OutOfStock': False, 'SoldOut': False}.get(self.availability)
         stock_fact = known('stock', stock, self.stock_excerpt) if stock is not None else unknown
         category = request.requirements.category

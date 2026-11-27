@@ -25,8 +25,8 @@ from app.eligibility import check_full_product
 from app.inference import ROOT, InferenceConfig, build_inference, load_env_file
 from app.onboarding import canonical, source_id_for
 from app.openrouter import InputTokenLimit
-from app.selected_listing import (ConflictingSelection, ListingDocument, MATCH_PROMPT, Match,
-                                  PageReading, READ_TEXT, with_option)
+from app.page_observation import PageNavigation, inspect_capture
+from app.selected_listing import with_option
 
 BUYER_SETTINGS = ROOT / 'config/two-agent-buyer.json'
 
@@ -68,6 +68,7 @@ class Decision(Model):
     offer_ids: list[str] = Field(default_factory=list, max_length=12)
     query: str | None = None
     language: Literal['en', 'ar'] = 'en'
+    answer: str | None = Field(default=None, max_length=3000)
 
 
 PROMPT = """You are the shopping agent for a buyer in Lebanon. Choose one available action by
@@ -102,7 +103,9 @@ Look for a different seller or applicable terms, or present the checked partial 
 If exact stock or a requested variant cannot be verified, present the evidence and its limits.
 Ask about genuinely unspecified or conflicting requirements when the answer can
 change the recommendation. Never ask for a precise address in free text. Use question and
-material_reason only for asking. When presenting, select verified offer_ids that meet the
+material_reason only for asking. When presenting, write the buyer-facing answer in answer. Address the original question directly.
+Use plain text and only current checked observations. For listed-price comparisons give seller names, item prices,
+product links and the lower price or tie. Name outstanding evidence where it matters. Select verified offer_ids that meet the
 original request AND feedback; for needs-based choices check the supplied specifications.
 Include comparable sellers. If none fit, leave offer_ids empty. Checked partial evidence and
 observed blockers are rendered separately. Never invent missing facts or monetary amounts.""" + ' ' + INSPECTION_POLICY
@@ -138,7 +141,7 @@ class ShoppingAgent(DomesticBuyerFlow):
 
     def __init__(self, context, deps):
         super().__init__(context, deps)
-        self.trace.update(controller='single_agent', actions=[], prompt_version='shopping-agent-8')
+        self.trace.update(controller='single_agent', actions=[], prompt_version='shopping-agent-9')
         self.trace['request'].pop('model', None)
         self.leads = []
         self.redirected_urls = set()
@@ -152,7 +155,6 @@ class ShoppingAgent(DomesticBuyerFlow):
         self.page_links = {}
         self.selected_controls = {}
         self.current_selections = {}
-        self.accepted_matches = {}
         self.discovery = deps.research.workers.domestic_tools if deps.research else None
         self.directory = getattr(deps.research.workers, 'directory', None) if deps.research else None
         self.browser: BrowserSession | None = None
@@ -243,17 +245,22 @@ class ShoppingAgent(DomesticBuyerFlow):
         # In the final phase only selected reads and presentation remain possible.
         final = False
         retrying_decision = False
+        closing_reason = 'The agent reached its search limit.'
         for turn in range(16):
             if self.stopped():
                 break
             if not final and (self.left(self.nonfinal_by) < 14 or turn >= 12):
                 self.job.enter_final_phase()
                 final = True
-            by = self.final_by - 1 if final else self.nonfinal_by
+            # Leave a model turn to answer the buyer with the checked evidence.
+            by = min(self.nonfinal_by if not final else self.final_by, self.final_by - 14)
+            if self.left(by) <= 1:
+                closing_reason = 'The remaining time was reserved for the buyer answer.'
+                break
             actions = self.menu(final)
             choice = self.generate(PROMPT, dict(
                 request=self.request.model_dump(mode='json'), feedback=list(self.context.answers),
-                observations=self.observations[-12:], verified=self.verified_choices(),
+                observations=self.observations[-12:], verified=self.verified_choices(), checked_listings=self.checked_listings(),
                 available=[a.label for a in actions]), Decision, by)
             if choice is None or choice.action_index >= len(actions):
                 self._note_denials()
@@ -269,12 +276,19 @@ class ShoppingAgent(DomesticBuyerFlow):
                     self.observations.append(dict(tool='decision', status=failure,
                         reason='No shopping action ran. Choose an available action by its zero-based index.'))
                     continue
+                if self.left(self.final_by) > 2 and self.checked_listings():
+                    closing_reason = 'The shopping agent could not complete its next decision.'
+                    break
                 return self.present([], 'The shopping agent could not complete its decision.')
             retrying_decision = False
             action = actions[choice.action_index]
             self.trace['actions'].append(dict(turn=turn + 1, tool=action.kind))
             if action.kind == 'present':
-                return self.present(choice.offer_ids)
+                if self.deps.inspect_listing and not (choice.answer or '').strip():
+                    self.trace['actions'][-1]['status'] = 'missing_answer'
+                    closing_reason = None
+                    break
+                return self.present(choice.offer_ids, answer=choice.answer)
             if action.kind == 'ask' and choice.question and choice.material_reason:
                 return self._finish('clarification', 'One detail could change your comparison.',
                     clarification=v2.Clarification(clarification_id=f'agent-{self.run_ref.run_revision}',
@@ -306,7 +320,14 @@ class ShoppingAgent(DomesticBuyerFlow):
             self.observations.append(dict(tool=action.kind, **observation))
             self.trace['actions'][-1].update({k: v for k, v in observation.items()
                 if k in ('status', 'count', 'channel', 'query_sha256', 'checks', 'lead', 'receipts', 'reader', 'error', 'item_fits', 'merchant_located', 'requested_url', 'final_url')})
-        return self.present([], 'The agent reached its search limit.')
+        if self.left(self.final_by) > 2 and not self.stopped():
+            closing = self.generate(PROMPT, dict(request=self.request.model_dump(mode='json'),
+                feedback=list(self.context.answers), verified=self.verified_choices(), checked_listings=self.checked_listings(),
+                observations=self.observations[-12:], available=['Present checked offers and the answer now']),
+                Decision, self.final_by)
+            if closing and closing.action_index == 0 and (closing.answer or '').strip():
+                return self.present(closing.offer_ids, closing_reason, answer=closing.answer)
+        return self.present([], closing_reason or 'The shopping agent could not finish writing its answer.')
 
     def perform(self, action, job, room, query, language):
         if action.kind == 'catalog':
@@ -441,57 +462,30 @@ class ShoppingAgent(DomesticBuyerFlow):
             self.used.add(('inspect', (landing_index,)))
             result['lead'] = landing_index
         self.sources[obs.source_id] = (urlsplit(url).hostname, 'checked', None)
-        document = ListingDocument(obs.body.decode('utf-8', errors='replace'))
+        document = PageNavigation(obs.body.decode('utf-8', errors='replace'), url)
         self.product_options[url] = tuple(option for option in dict.fromkeys(document.options)
                                           if option not in document.checked)[:32]
         self.selected_controls[url] = browser
-        colors = (*self.request.allowed_colors, *(o.value for o in document.options))
-        self.page_links[url] = document.inspection_links(url, colors)
-        evidence = None
-        reading = None
-        try:
-            try:
-                selected = document.selected(url, obs.observed_at, rendered=page.provider == 'playwright')
-            except ConflictingSelection:
-                raise
-            except ValueError:
-                evidence = document.evidence(url, obs.observed_at)
-                page_input = dict(objective=self.request.model_dump(mode='json'), url=url, **evidence)
-                if self.context.answers:
-                    page_input['feedback'] = list(self.context.answers)
-                reading = self.generate(READ_TEXT, page_input, PageReading, self.elapsed() + room())
-                selected = document.interpret(reading, url, obs.observed_at)
-        except (ValueError, RecursionError) as exc:
-            before = self.current_selections.get(url)
-            if before and (isinstance(exc, ConflictingSelection) or any(
-                    dict(before.options).get(o.dimension) != o.value for o in document.checked)):
-                self.withdraw_public(url)
-                self.publish_partials(prior)
-            reason = document.selection_gap(url, self.request.allowed_colors) if reading else (
-                'The current capture could not confirm the selected item and its price.')
-            self.blockers[url] = [reason]
-            return dict(status='selection_unconfirmed', reason=reason,
-                        evidence=evidence or document.evidence(url, obs.observed_at), **result)
+        self.page_links[url] = document.suggestions()
+        reading = inspect_capture(page, self.request.model_dump(mode='json'),
+            lambda instructions, payload, schema: self.generate(instructions, payload, schema,
+                self.elapsed() + room(), call_seconds=30),
+            feedback=self.context.answers, checked=browser or (), max_input_bytes=self.roles.settings.max_input_tokens if self.roles else 32768)
+        self.page_links[url] = tuple(dict.fromkeys((*reading.links, *self.page_links[url])))
+        result.update(findings=reading.findings, assessment=reading.reason)
+        selected = reading.selection
+        if selected is None:
+            self.withdraw_public(url)
+            self.publish_partials(prior)
+            self.blockers[url] = [reading.reason]
+            return dict(status='selection_unconfirmed', reason=reading.reason, **result)
         if selected != self.current_selections.get(url):
             self.withdraw_public(url)
             self.publish_partials(prior)
             prior = tuple(self.uncertain.values())[:MAX_UNCERTAIN]
         self.current_selections[url] = selected
         self.sources[obs.source_id] = (selected.seller or urlsplit(url).hostname, 'checked', None)
-        if browser and any(o not in document.checked for o in browser):
-            self.blockers[url] = ['The retailer did not confirm the requested selection.']
-            return dict(status='selection_unconfirmed', **result)
-        # The request and feedback are fixed for this worker. A fresh receipt of identical
-        # facts renews the same judgment, even if another model call would answer differently.
-        match = self.accepted_matches.get(url)
-        if match is None and reading and reading.match:
-            address = (document.lines[reading.address_line] if reading.address_line is not None
-                       and reading.address_line < len(document.lines) else None)
-            index = selected.address_lines.index(address) if address in selected.address_lines else None
-            match = reading.match.model_copy(update={'merchant_address_line': index})
-        if match is None:
-            match = self.generate(MATCH_PROMPT, dict(request=self.request.model_dump(mode='json'),
-                feedback=list(self.context.answers), selected=selected.facts()), Match, self.elapsed() + room())
+        match = reading.match
         if match is None:
             reason = 'The selected item could not be assessed against the request.'
             if selected.published_link:
@@ -512,7 +506,6 @@ class ShoppingAgent(DomesticBuyerFlow):
                 reason = selected.published_summary(url) + ' ' + reason
             self.blockers[url] = [reason]
             return dict(status='no_match', reason=reason, selected=selected.facts(), **result)
-        self.accepted_matches[url] = match
         self.uncertain[item.offer.offer_id] = item
         self.blockers.pop(url, None)
         self.publish_partials(prior)
@@ -527,7 +520,6 @@ class ShoppingAgent(DomesticBuyerFlow):
             if str(offer.listing_url) == url:
                 del self.assessed[key]
         self.current_selections.pop(url, None)
-        self.accepted_matches.pop(url, None)
 
     def observe(self, index, listing, read):
         # A later selection, failed re-read or changed price supersedes the previous result.
@@ -602,7 +594,17 @@ class ShoppingAgent(DomesticBuyerFlow):
                 total=assessment.cost.total.model_dump(mode='json')))
         return choices
 
-    def present(self, selected, reason=None):
+    def checked_listings(self):
+        rows = []
+        for item in self.uncertain.values():
+            offer = item.offer
+            rows.append(dict(offer_id=offer.offer_id, title=offer.variant.product.model, seller=offer.seller.name,
+                url=str(offer.listing_url), color=offer.variant.color.value if offer.variant.color else None,
+                condition=offer.condition.value, stock=offer.stock.value,
+                listed_price=offer.price.value.model_dump(mode='json') if offer.price.value else None, gaps=item.reasons))
+        return rows
+
+    def present(self, selected, reason=None, *, answer=None):
         interrupted = reason is not None
         chosen = set(selected).intersection(row['offer_id'] for row in self.verified_choices())
         rows = [(o, a) for o, a, _ in self.assessed.values() if o.offer_id in chosen]
@@ -623,6 +625,14 @@ class ShoppingAgent(DomesticBuyerFlow):
         if self.blockers:
             failures = dict.fromkeys(value for group in self.blockers.values() for value in group)
             reason += ' ' + ' '.join(list(failures)[:3])
-        explanation = self._write(groups, uncertain)
+        if answer and answer.strip():
+            receipts = dict.fromkeys(e.evidence_id for o in (
+                *(item.offer for item in uncertain), *(v.offer for g in groups for v in g.offers())) for e in o.evidence)
+            explanation = v2.RunExplanation(text=answer.strip(), source='model', evidence_ids=tuple(receipts))
+        elif self.deps.inspect_listing:
+            explanation = v2.RunExplanation(text='The shopping agent could not finish writing its answer.',
+                                            source='fallback')
+        else:
+            explanation = self._write(groups, uncertain)
         status = 'partial' if interrupted else 'complete' if groups else 'partial' if uncertain else 'abstained'
         return self._finish(status, reason, recommendations=groups, uncertain=uncertain, explanation=explanation)

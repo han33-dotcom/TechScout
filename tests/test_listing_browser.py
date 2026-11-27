@@ -1,4 +1,6 @@
 """Real Chromium, with all retailer and Firecrawl responses supplied offline."""
+from fixture_page_agent import fixture_read
+from app.page_observation import PageDecision
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from functools import partial
@@ -84,6 +86,8 @@ TABLET_CHANGE = """document.querySelector('select').addEventListener('change', (
 
 class TabletDecisions(Decisions):
     def answer(self, role, data):
+        if 'page' in data:
+            return fixture_read(data).model_dump(mode='json')
         if 'selected' in data:
             fits = data['selected']['selected_options'].get('storage') == '128 GB'
             return dict(selected_item_fits=fits, merchant_address_line=None, reason='Checked the selected storage.')
@@ -204,6 +208,8 @@ class CatalogBrowserTests(TestCase):
     def decisions(self, *prefixes):
         choices = iter(prefixes)
         def choose(prompt, data, schema, **kwargs):
+            if schema is PageDecision:
+                return SimpleNamespace(status='completed', value=fixture_read(data))
             prefix = next(choices)
             if isinstance(prefix, SearchDecision):
                 return SimpleNamespace(status='completed', value=prefix)
@@ -255,12 +261,14 @@ class CatalogBrowserTests(TestCase):
         f = self.f
         with retailer(f.fixture.storage, f.url, registry=self.registry, script='// inert') as (inspect, reads):
             default = self.schedule.ledger.open_job('read-default', 'maintenance')
-            self.decisions('Finish', 'Select Black')
+            self.decisions('Finish', 'Select Black', 'Finish')
             self.assertEqual(read_catalog_listing(inspect, default, f.url, objective='White', roles=self.schedule.roles).provider, 'firecrawl-v2')
             self.assertEqual(reads, [('firecrawl', f.url)])
             click = self.schedule.ledger.open_job('read-inert', 'maintenance')
-            prior = read_catalog_listing(inspect, click, f.url, objective='Black', roles=self.schedule.roles)
-            self.assertEqual(prior.provider, 'firecrawl-v2')
+            rendered = read_catalog_listing(inspect, click, f.url, objective='Black', roles=self.schedule.roles)
+            self.assertEqual(rendered.provider, 'playwright')
+            self.assertIsNone(rendered.selection)
+            self.assertIn(b'data-variant-price', rendered.outcome.body)
             self.assertEqual(reads[1:], [('firecrawl', f.url), ('GET', '/devices/selected'), ('GET', '/static/colors.js')])
 
     def test_refresh_agent_can_select_and_store_a_noncolor_variant(self):

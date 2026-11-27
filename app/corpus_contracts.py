@@ -72,9 +72,9 @@ for model in (PhoneSpecs, LaptopSpecs, TabletSpecs, MonitorSpecs, AudioSpecs):
         if field != 'category':
             _FACT_TYPES.setdefault('variant.specs.' + field, []).append(TypeAdapter(definition.annotation))
 _POLICY_TEXT = TypeAdapter(Fact[Text])
-for field in ('catalog.gtin', 'catalog.mpn', 'catalog.configuration_id', 'catalog.delivery_city'):
+for field in ('catalog.gtin', 'catalog.mpn', 'catalog.configuration_id', 'catalog.delivery_city', 'seller.name'):
     _FACT_TYPES[field] = [_POLICY_TEXT]
-for field in ('catalog.delivery_country', 'route.origin_country'):
+for field in ('catalog.delivery_country', 'route.origin_country', 'seller.market'):
     _FACT_TYPES[field] = [TypeAdapter(Fact[Country])]
 _FACT_TYPES['costs.order.tax'] = [TypeAdapter(Fact[Literal['included']])]
 _FACT_TYPES['route.item_eligible'] = [TypeAdapter(Fact[bool])]
