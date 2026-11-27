@@ -101,11 +101,16 @@ class _Reservation:
         self.attempt.release()
 
 
-def _schema(output):
+def _schema(output, *, provider=None):
     schema = copy.deepcopy(output.model_json_schema())
     def strict(node):
         if isinstance(node, dict):
             node.pop('default', None)
+            if provider == 'anthropic' and isinstance(node.get('anyOf'), list) and 'ge' in node:
+                # Pydantic emits this annotation on Decimal inputs accepting strings or integers.
+                # Anthropic accepts the bound in prose. The original model enforces it on return.
+                bound = node.pop('ge')
+                node['description'] = (node.get('description', '') + f' Must be at least {bound}.').strip()
             if node.get('type') == 'object':
                 node['additionalProperties'] = False
                 node['required'] = list(node.get('properties', {}))
