@@ -1,6 +1,8 @@
 """Single decision loop for the opt-in buyer experiment (architecture freeze v2)."""
 from contextlib import ExitStack
+from concurrent.futures import wait
 from dataclasses import dataclass, replace
+from functools import partial
 from hashlib import sha256
 import json
 import re
@@ -26,6 +28,7 @@ from app.inference import ROOT, InferenceConfig, build_inference, load_env_file
 from app.onboarding import canonical, source_id_for
 from app.openrouter import InputTokenLimit
 from app.page_observation import PageNavigation, inspect_capture
+from app.pending_listing_reads import PendingListingReads
 from app.selected_listing import Match, MissingSellerLocation, Selection, with_option
 from app.firecrawl import ManagedPage
 
@@ -85,6 +88,11 @@ before delivery, check the exact item, condition, seller, stock, listed price an
 Describe online availability as online stock. Only claim showroom stock when the page verifies stock at that branch.
 Finish a one-shop request when it is supported. For a comparison look for independent
 sellers of the same variant. Delivery fees are outside a listed-price comparison.
+While a page is still transferring, inspect another promising seller or look for leads.
+Completed pages return automatically between decisions. When waiting for a page can settle
+the buyer's question and other work is exhausted, choose to wait for the pending read.
+If another independent seller could fill a missing place in the comparison, start that read
+while the earlier transfer runs. Use the remaining research time to prioritize unresolved facts.
 Use SerpApi for general search. Read the original wording as the buyer wrote it. An earlier
 model field can be a full sentence or an old guess. You decide which product the buyer means
 and what to search for. For every catalog, retailer or web search write your own query in
@@ -151,7 +159,7 @@ class ShoppingAgent(DomesticBuyerFlow):
 
     def __init__(self, context, deps):
         super().__init__(context, deps)
-        self.trace.update(controller='single_agent', actions=[], prompt_version='shopping-agent-9')
+        self.trace.update(controller='single_agent', actions=[], prompt_version='shopping-agent-11')
         self.trace['request'].pop('model', None)
         self.leads = []
         self.redirected_urls = set()
@@ -165,6 +173,7 @@ class ShoppingAgent(DomesticBuyerFlow):
         self.page_links = {}
         self.selected_controls = {}
         self.current_selections = {}
+        self.latest_capture = {}
         self.priced_listings = {}
         self.merchant_locations = {}
         self.discovery = deps.research.workers.domestic_tools if deps.research else None
@@ -199,7 +208,11 @@ class ShoppingAgent(DomesticBuyerFlow):
             if self.deps.retailer_browser:
                 self.browser = stack.enter_context(self.deps.retailer_browser(self.request, self.run_ref))
             self.trace['capabilities'] = dict(search_channels=self.channels, retailer_browser=bool(self.browser))
-            return self.decide()
+            self.reads = PendingListingReads(self.elapsed, self.deps.research_parallelism)
+            try:
+                return self.decide()
+            finally:
+                self.trace['listing_transfers'] = self.reads.close()
 
     def add_lead(self, listing):
         if self.deps.inspect_listing and (listing.url in self.redirected_urls
@@ -223,7 +236,7 @@ class ShoppingAgent(DomesticBuyerFlow):
                 for host in list(hosts)[:8]:
                     actions.append(Action('seller_search', f'Search {host} for your product query', (host,)))
         for i, listing in enumerate(self.leads):
-            if listing.url in self.redirected_urls:
+            if listing.url in self.redirected_urls or i in self.reads.pending:
                 continue
             title = self.titles.get(listing.url, '')
             actions.append(Action('inspect', f'Inspect selected listing {listing.url[:200]} {title}'.rstrip(), (i,)))
@@ -249,6 +262,13 @@ class ShoppingAgent(DomesticBuyerFlow):
                         known_urls.add(link)
         if not final and len(self.context.answers) < 6:
             actions.append(Action('ask', 'Ask the buyer a material follow-up question'))
+        if self.reads.pending:
+            if len(self.reads.pending) >= self.reads.capacity:
+                actions = [a for a in actions if a.kind in ('catalog', 'directory', 'ask')]
+            can_inspect = any(a.kind in ('inspect', 'follow') and (a.kind, a.args) not in self.used for a in actions)
+            label = 'Wait up to 10 seconds for a pending page while other listings are available' if can_inspect else (
+                'Wait for the next pending listing transfer')
+            actions.append(Action('wait', label, (can_inspect,)))
         actions.append(Action('present', 'Present checked offers, partial evidence or a blocker'))
         return [a for a in actions if (a.kind, a.args) not in self.used]
 
@@ -269,13 +289,20 @@ class ShoppingAgent(DomesticBuyerFlow):
             if self.left(by) <= 1:
                 closing_reason = 'The remaining time was reserved for the buyer answer.'
                 break
+            room = partial(self.left, by)
+            self.consume_ready(room)
+            if room() <= 1:
+                continue
             actions = self.menu(final)
             choice = self.generate(PROMPT, dict(
                 request=self.request.model_dump(mode='json'), feedback=list(self.context.answers),
+                pending_pages=[t.url for t in self.reads.pending.values()], seconds_for_tools=max(0, int(room())),
                 observations=self.observations[-12:], verified=self.verified_choices(), checked_listings=self.checked_listings(),
                 available=[a.label for a in actions]), Decision, by)
             if choice is None or choice.action_index >= len(actions):
                 self._note_denials()
+                if self.consume_ready(room):
+                    continue
                 if not final and 'spend' in self.limits:
                     self.job.enter_final_phase()
                     final = True
@@ -294,6 +321,9 @@ class ShoppingAgent(DomesticBuyerFlow):
                 return self.present([], 'The shopping agent could not complete its decision.')
             retrying_decision = False
             action = actions[choice.action_index]
+            # A terminal answer composed while another page arrived used the old facts.
+            if action.kind in ('ask', 'present') and self.consume_ready(room):
+                continue
             self.trace['actions'].append(dict(turn=turn + 1, tool=action.kind))
             if action.kind == 'present':
                 if self.deps.inspect_listing and not (choice.answer or '').strip():
@@ -319,9 +349,8 @@ class ShoppingAgent(DomesticBuyerFlow):
                     continue
                 self.used_queries.add(key)
                 self.trace['actions'][-1]['query_sha256'] = sha256(query.encode()).hexdigest()
-            else:
+            elif action.kind != 'wait':
                 self.used.add((action.kind, action.args))
-            room = lambda: self.left(by)
             phase = PhaseJob(self.job, room)
             try:
                 observation = self.perform(action, phase, room, query, choice.language)
@@ -333,6 +362,7 @@ class ShoppingAgent(DomesticBuyerFlow):
             self.trace['actions'][-1].update({k: v for k, v in observation.items()
                 if k in ('status', 'count', 'channel', 'query_sha256', 'checks', 'lead', 'receipts', 'reader', 'error', 'item_fits', 'merchant_located', 'requested_url', 'final_url')})
         if self.left(self.final_by) > 2 and not self.stopped():
+            self.consume_ready(partial(self.left, self.final_by - 14))
             closing = self.generate(PROMPT, dict(request=self.request.model_dump(mode='json'),
                 feedback=list(self.context.answers), verified=self.verified_choices(), checked_listings=self.checked_listings(),
                 observations=self.observations[-12:], available=['Present checked offers and the answer now']),
@@ -342,6 +372,10 @@ class ShoppingAgent(DomesticBuyerFlow):
         return self.present([], closing_reason or 'The shopping agent could not finish writing its answer.')
 
     def perform(self, action, job, room, query, language):
+        if action.kind == 'wait':
+            wait_room = partial(self.left, self.elapsed() + min(10, room())) if action.args[0] else room
+            self.reads.wait_for_page(wait_room, self.stopped)
+            return dict(status='wait_ended')
         if action.kind == 'catalog':
             offers = self.deps.domestic_sources.lookup(self.request, limit=12, query=query)
             for offer in offers:
@@ -435,9 +469,34 @@ class ShoppingAgent(DomesticBuyerFlow):
         return dict(status='A follow-up needs a question and a material reason.')
 
     def inspect_public(self, index, url, browser, job, room):
+        if browser is not None:
+            return self.review_page(index, url, browser, room,
+                                    lambda: self.deps.inspect_listing(job, url, browser=browser))
+        transfer = self.reads.start(index, url, job, self.deps.inspect_listing)
+        if not wait([transfer.future], timeout=min(2, max(0, room()))).done:
+            return dict(status='transfer_pending', lead=index, url=url)
+        return self.consume_page(transfer, room)
+
+    def consume_page(self, transfer, room):
+        del self.reads.pending[transfer.index]
+        observation = self.review_page(transfer.index, transfer.url, None, room, transfer.future.result)
+        self.reads.record(transfer.url, 'review_finished', status=observation['status'],
+                          receipts=observation.get('receipts', []))
+        return observation
+
+    def consume_ready(self, room):
+        consumed = False
+        for transfer in tuple(self.reads.pending.values()):
+            if transfer.future.done() and room() > 1 and not self.stopped():
+                observation = self.consume_page(transfer, room)
+                self.observations.append(dict(tool='inspect', **observation))
+                consumed = True
+        return consumed
+
+    def review_page(self, index, url, browser, room, result_page):
         prior = tuple(self.uncertain.values())[:MAX_UNCERTAIN]
         try:
-            page = self.deps.inspect_listing(job, url, browser=browser)
+            page = result_page()
         except (BudgetDenied, OSError, ValueError, KeyError, httpx2.HTTPError) as exc:
             if browser is None and recoverable_read_error(exc):
                 self.product_options.setdefault(url, ())
@@ -458,6 +517,9 @@ class ShoppingAgent(DomesticBuyerFlow):
                 or sha256(obs.body).hexdigest() != obs.response_sha256):
             return dict(status='invalid_capture', lead=index)
         result = dict(lead=index, reader=page.provider, receipts=[obs.response_sha256])
+        if obs.final_url in self.latest_capture and obs.observed_at < self.latest_capture[obs.final_url]:
+            return dict(status='superseded_capture', **result)
+        self.latest_capture[obs.final_url] = obs.observed_at
         if obs.final_url != url:
             result.update(requested_url=url, final_url=obs.final_url)
             self.redirected_urls.add(url)
@@ -490,9 +552,25 @@ class ShoppingAgent(DomesticBuyerFlow):
             merchant=row.selection.seller, merchant_quote=row.selection.excerpt(row.selection.seller))
             for i, row in enumerate(listings)], locations=[dict(index=i, url=loc.source.final_url,
             merchant_quote=loc.merchant_quote, address_quote=loc.address_quote) for i, loc in enumerate(locations)])
-        reading = inspect_capture(page, self.request.model_dump(mode='json'),
-            lambda instructions, payload, schema: self.generate(instructions, payload, schema,
-                self.elapsed() + room(), call_seconds=30),
+        first_view = True
+        retried_view = False
+
+        def read_view(instructions, payload, schema):
+            nonlocal first_view, retried_view
+            if first_view:
+                self.reads.record(obs.origin_url, 'capture_delivered', sha256=obs.response_sha256)
+                first_view = False
+            by = self.elapsed() + room()
+            decision = self.generate(instructions, payload, schema, by, call_seconds=30)
+            if decision is None and not retried_view and room() > 12 and not self.stopped():
+                calls = self.calls.entries()
+                if calls and calls[-1]['status'] in {'timeout', 'transport_error', 'provider_error'}:
+                    retried_view = True
+                    self.reads.record(obs.origin_url, 'retry_page_view', reason=calls[-1]['status'])
+                    decision = self.generate(instructions, payload, schema, by, call_seconds=30)
+            return decision
+
+        reading = inspect_capture(page, self.request.model_dump(mode='json'), read_view,
             feedback=self.context.answers, checked=browser or (), seller_context=seller_context,
             max_input_bytes=self.roles.settings.max_input_tokens if self.roles else 32768)
         self.page_links[url] = tuple(dict.fromkeys((*reading.links, *self.page_links[url])))

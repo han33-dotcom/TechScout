@@ -1,9 +1,27 @@
 """Bounded direct provider transport; fixed endpoint, no implicit retries/tools."""
 import json
 import time
+from contextlib import contextmanager
+from contextvars import ContextVar
 import httpx2
 
 _RESERVED_HEADERS = {'authorization', 'accept-encoding'}
+_read_observer = ContextVar('provider_read_observer', default=None)
+
+
+@contextmanager
+def observe_provider_read(observer, stop):
+    token = _read_observer.set((observer, stop))
+    try:
+        yield
+    finally:
+        _read_observer.reset(token)
+
+
+def record_read_event(stage, **details):
+    observer = _read_observer.get()
+    if observer is not None:
+        observer[0](stage, **details)
 
 
 def post_json(endpoint, api_key, payload, *, transport=None, seconds=15, max_bytes=2_097_152,
@@ -50,13 +68,17 @@ def request_json(method, endpoint, *, headers, payload=None, params=None, transp
         transport = _QueryTransport(transport, params)
     with httpx2.Client(transport=transport, timeout=min(idle_seconds, seconds), follow_redirects=False) as client:
         with client.stream(method, endpoint, headers=sent, json=payload) as response:
+            record_read_event('response_headers', method=method, http=response.status_code)
             response.raise_for_status()
             if response.headers.get('content-encoding', 'identity') != 'identity':
                 raise ValueError('Unexpected provider response encoding')
             if 'application/json' not in response.headers.get('content-type','').lower():
                 raise ValueError('Provider response is not JSON')
             body = bytearray()
+            observer = _read_observer.get()
             for chunk in response.iter_bytes():
+                if observer is not None and observer[1].is_set():
+                    raise InterruptedError('The buyer closed the listing transfer')
                 if time.monotonic() >= deadline:
                     raise TimeoutError('Provider deadline exceeded')
                 body.extend(chunk)
@@ -64,6 +86,7 @@ def request_json(method, endpoint, *, headers, payload=None, params=None, transp
                     raise ValueError('Provider response exceeded its size bound')
             if time.monotonic() >= deadline:
                 raise TimeoutError('Provider deadline exceeded')
+            record_read_event('body_complete', method=method, bytes=len(body))
             data = json.loads(body, parse_float=parse_float,
                               parse_constant=lambda _: (_ for _ in ()).throw(ValueError('Nonfinite JSON')))
             return data, response.headers

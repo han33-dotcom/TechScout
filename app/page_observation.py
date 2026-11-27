@@ -367,8 +367,17 @@ def inspect_capture(page, objective, generate, *, feedback=(), checked=(), max_i
             continue
         links = tuple((link, href) for href in answer.follow_hrefs if (link := source.link(href)))
         try:
-            findings = tuple(dict(statement=f.statement, quote=source.quote(f.quote), url=source.url,
-                                  sha256=page.outcome.response_sha256) for f in answer.findings)
+            findings = []
+            for finding in answer.findings:
+                try:
+                    quote = source.quote(finding.quote)
+                except ValueError as exc:
+                    raise ValueError(f'The finding quote "{finding.quote[:100]}" did not match a contiguous '
+                                     'excerpt. Search for a short phrase and cite its exact source, including '
+                                     'intervening markup when needed. Reassess any conflicting evidence.') from exc
+                findings.append(dict(statement=finding.statement, quote=quote, url=source.url,
+                                     sha256=page.outcome.response_sha256))
+            findings = tuple(findings)
             selection = source.selection(answer.offer) if answer.offer else None
             location = None
             indices = ()
