@@ -914,5 +914,30 @@
     "seconds": 170.875,
     "status": 200
   },
+  "post_run_archive_reads": {
+    "method": "After the final independent run, the provider returned these exact scrape IDs from its activity log. Each separate stored-result download used the documented endpoint, checked the original requested URL and matching scrape ID, and made no new retailer request. These observations were unavailable to the finished buyer. Timings apply only to each separate retrieval.",
+    "captures": [
+      {
+        "host": "mobileleb.com",
+        "job": "01a21d82-e5ce-71f5-ac5d-e5caa083cc64",
+        "status": 200,
+        "seconds": 2.19,
+        "transfer_bytes": 1875596,
+        "html_bytes": 1804934,
+        "sha256": "4373e7afb3c6869a6f6819dbef10812843a0b538dfc7005fbdf76da65c79bb04",
+        "endpoint": "https://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm"
+      },
+      {
+        "host": "ayoubcomputers.com",
+        "job": "01a21d84-b6d1-77f9-acd4-23435ca37616",
+        "status": 200,
+        "seconds": 2.25,
+        "transfer_bytes": 2769122,
+        "html_bytes": 2584401,
+        "sha256": "6f177b70af397ea89fa7dc29db264fd90473664ca5213141f021b7b29b5e91a1",
+        "endpoint": "https://ayoubcomputers.com/logitech-h111-headset-microphone-h111/"
+      }
+    ]
+  },
   "application_revision": "3cee7f06481b00003ca9716a43945527ee769d59"
 }
