@@ -14,6 +14,18 @@ def form(text, category, kind='needs', **kwargs):
 
 
 class BuyerInterpretationTests(unittest.TestCase):
+    def test_agent_keeps_needs_and_link_instructions_with_explicit_controls(self):
+        text = 'A laptop for photo editing without a glossy screen.'
+        needs = form(text, 'laptop', implementation='single_agent')
+        self.assertEqual(needs.intent.description, text)
+        self.assertEqual(needs.unresolved_constraints, ())
+        link = DomesticShoppingRequest(request_id='link', implementation='single_agent',
+            intent={'kind': 'product_link', 'url': 'https://retailer.example/item'},
+            requirements={'category': 'laptop', 'min_ram_gb': 32},
+            buyer_text='Check this exact configuration, especially the display.').interpreted()
+        self.assertEqual(link.intent.wording, 'Check this exact configuration, especially the display.')
+        self.assertEqual(link.requirements.min_ram_gb, 32)
+
     def test_exact_paraphrases_keep_suffix_and_specific_finish(self):
         for text in ('Please compare prices for Studio X11 Pro in Space Black with delivery to Sidon.',
                      'What would a new space black Studio X11 Pro cost delivered to Sidon?'):

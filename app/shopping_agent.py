@@ -1,10 +1,10 @@
 """Single decision loop for the opt-in buyer experiment (architecture freeze v2)."""
 from contextlib import ExitStack
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from hashlib import sha256
 import json
 import re
-from typing import Protocol
+from typing import Literal, Protocol
 from urllib.parse import urlsplit
 
 import httpx2
@@ -18,7 +18,8 @@ from app.buyer_flow import MAX_UNCERTAIN
 from app.contracts import Model
 from app.domestic_buyer import DomesticBuyerFlow, Listing, PhaseJob, supporting_claims
 from app.domestic_buyer_sources import ReadResult
-from app.domestic_search_plan import retailer_query, search_options
+from app.domestic_discovery import SearchObjective
+from app.domestic_search_plan import PUBLIC_CITIES
 from app.directory import DirectoryQuery
 from app.eligibility import check_full_product
 from app.inference import ROOT, InferenceConfig, build_inference, load_env_file
@@ -65,7 +66,8 @@ class Decision(Model):
     question: str | None = Field(default=None, max_length=300)
     material_reason: str | None = Field(default=None, max_length=300)
     offer_ids: list[str] = Field(default_factory=list, max_length=12)
-    search_terms: list[str] = Field(default_factory=list, max_length=24)
+    query: str | None = None
+    language: Literal['en', 'ar'] = 'en'
 
 
 PROMPT = """You are the shopping agent for a buyer in Lebanon. Choose one available action by
@@ -80,10 +82,15 @@ stock or costs that the buyer asked to compare. When asked specifically for list
 before delivery, check the exact item, condition, seller, stock, listed price and link.
 Finish a one-shop request when it is supported. For a comparison look for independent
 sellers of the same variant. Delivery fees are outside a listed-price comparison.
-Use SerpApi for general search.
-For web searches use the
-offered query or reformulate by selecting and ordering words from public_search_terms in
-search_terms. Use an empty list for the offered query. Inspect relevant public listings including first-seen shops. For a buyer-supplied link open it first.
+Use SerpApi for general search. Read the original wording as the buyer wrote it. An earlier
+model field can be a full sentence or an old guess. You decide which product the buyer means
+and what to search for. For every catalog, retailer or web search write your own query in
+query. For a catalog or retailer lookup use a compact product name or SKU. For web searches
+choose public product terms, variants, seller or market terms and the language. Reformulate
+on the same channel when the results miss. Keep names of buyers, contact details, addresses,
+postal codes, private notes and chat text out of queries. Preserve hard requirements for
+assessing offers even when they are unnecessary as search terms. Inspect relevant public
+listings including first-seen shops. For a buyer-supplied link open it first.
 If available, interact with a
 listing to resolve the selected variant, pickup branch or delivery fee. Search results
 and held catalog entries are leads only. Preserve explicit model identifiers including suffixes.
@@ -108,17 +115,35 @@ class Action:
     args: tuple = ()
 
 
+SEARCH_ACTIONS = {'catalog', 'web_search', 'seller_search', 'retailer_search'}
+
+
+def search_argument_error(kind, query, destination):
+    if not query or len(query) > 400:
+        return 'Write a public product search query of 1 to 400 characters.'
+    if kind == 'catalog' and (len(query) > 300 or len(query.split()) > 20):
+        return 'The local catalog accepts up to 20 words and 300 characters.'
+    private = [destination.postal_code]
+    if destination.city and destination.city.strip().casefold() not in PUBLIC_CITIES:
+        private.append(destination.city)
+    if (any(value and re.search(r'(?<!\w)' + re.escape(value.strip()) + r'(?!\w)', query, re.I) for value in private)
+            or re.search(r'@|https?://|\+\d[\s().-]*(?:\d[\s().-]*){7,}', query)):
+        return 'Use public shopping terms. Remove private location or contact details and URLs.'
+    return None
+
+
 class ShoppingAgent(DomesticBuyerFlow):
     """Reuse the domestic field/cost verifier and publisher, without its search controller."""
     model_writer = False
 
     def __init__(self, context, deps):
         super().__init__(context, deps)
-        self.trace.update(controller='single_agent', actions=[], prompt_version='shopping-agent-7')
+        self.trace.update(controller='single_agent', actions=[], prompt_version='shopping-agent-8')
         self.trace['request'].pop('model', None)
         self.leads = []
         self.redirected_urls = set()
         self.used = set()
+        self.used_queries = set()
         self.observations = []
         self.blockers = {}
         self.titles = {}
@@ -147,7 +172,9 @@ class ShoppingAgent(DomesticBuyerFlow):
         self.trace['limits']['ledger_buyer_caps'].update(limits.model_dump(mode='json'))
         if self.request.intent.kind == 'product_link':
             self.add_lead(Listing(str(self.request.intent.url)))
-        notes = [self.request.refinement_note or '', *(entry['answer'] for entry in self.context.answers)]
+        intent = self.request.intent
+        wording = intent.description if intent.kind == 'needs' else intent.wording
+        notes = [wording or '', self.request.refinement_note or '', *(entry['answer'] for entry in self.context.answers)]
         for note in notes:
             for link in re.findall(r'https://[^\s<>"\x27]+', note):
                 url = link.rstrip('.,!?)')
@@ -175,16 +202,12 @@ class ShoppingAgent(DomesticBuyerFlow):
                 actions.append(Action('directory', 'Find reviewed Lebanese retailers of this category'))
             if hasattr(self.deps.domestic_sources, 'search_listings'):
                 actions.append(Action('retailer_search', 'Search reviewed retailer catalogs directly for the requested product'))
-            for i, query in enumerate(self.queries):
-                for channel in self.channels:
-                    actions.append(Action('web_search', f'Search {channel}: {query.query}', (channel, i)))
+            for channel in self.channels:
+                actions.append(Action('web_search', f'Search {channel} with your query', (channel,)))
             if self.request.intent.kind == 'exact_model' and 'serpapi' in self.channels:
-                model = retailer_query(self.request)
                 hosts = dict.fromkeys(urlsplit(row.url).hostname for row in self.leads if row.source_id)
-                if model:
-                    for host in list(hosts)[:8]:
-                        actions.append(Action('seller_search', f'Search {host} for exact model "{model}"',
-                                              (host, model)))
+                for host in list(hosts)[:8]:
+                    actions.append(Action('seller_search', f'Search {host} for your product query', (host,)))
         for i, listing in enumerate(self.leads):
             if listing.url in self.redirected_urls:
                 continue
@@ -216,12 +239,10 @@ class ShoppingAgent(DomesticBuyerFlow):
         return [a for a in actions if (a.kind, a.args) not in self.used]
 
     def decide(self):
-        self.queries = search_options(self.request, ())
-        terms = {word for query in self.queries for word in query.query.split()}
-        public_terms = {word.casefold(): word for word in sorted(terms)}
         # Research leaves time, calls and spending room for final verification.
         # In the final phase only selected reads and presentation remain possible.
         final = False
+        retrying_decision = False
         for turn in range(16):
             if self.stopped():
                 break
@@ -232,7 +253,7 @@ class ShoppingAgent(DomesticBuyerFlow):
             actions = self.menu(final)
             choice = self.generate(PROMPT, dict(
                 request=self.request.model_dump(mode='json'), feedback=list(self.context.answers),
-                observations=self.observations[-12:], verified=self.verified_choices(), public_search_terms=sorted(terms),
+                observations=self.observations[-12:], verified=self.verified_choices(),
                 available=[a.label for a in actions]), Decision, by)
             if choice is None or choice.action_index >= len(actions):
                 self._note_denials()
@@ -240,7 +261,16 @@ class ShoppingAgent(DomesticBuyerFlow):
                     self.job.enter_final_phase()
                     final = True
                     continue
+                calls = self.calls.entries()
+                failure = 'invalid_action' if choice else (calls[-1]['status'] if calls else 'unavailable')
+                if (not retrying_decision and self.left(by) > 1 and not self.stopped()
+                        and failure in {'invalid_action', 'transport_error', 'timeout', 'provider_error', 'cancelled'}):
+                    retrying_decision = True
+                    self.observations.append(dict(tool='decision', status=failure,
+                        reason='No shopping action ran. Choose an available action by its zero-based index.'))
+                    continue
                 return self.present([], 'The shopping agent could not complete its decision.')
+            retrying_decision = False
             action = actions[choice.action_index]
             self.trace['actions'].append(dict(turn=turn + 1, tool=action.kind))
             if action.kind == 'present':
@@ -249,29 +279,38 @@ class ShoppingAgent(DomesticBuyerFlow):
                 return self._finish('clarification', 'One detail could change your comparison.',
                     clarification=v2.Clarification(clarification_id=f'agent-{self.run_ref.run_revision}',
                         question=choice.question, material_reason=choice.material_reason))
-            self.used.add((action.kind, action.args))
+            query = None
+            if action.kind in SEARCH_ACTIONS:
+                query = ' '.join((choice.query or '').split())
+                error = search_argument_error(action.kind, query, self.request.fulfillment.destination)
+                language = choice.language if action.kind in ('web_search', 'seller_search') else None
+                key = (action.kind, action.args, query.casefold(), language)
+                if key in self.used_queries:
+                    error = 'This search was already attempted. Change the query or choose a different action.'
+                if error:
+                    self.observations.append(dict(tool=action.kind, status='invalid_query', reason=error))
+                    self.trace['actions'][-1]['status'] = 'invalid_query'
+                    continue
+                self.used_queries.add(key)
+                self.trace['actions'][-1]['query_sha256'] = sha256(query.encode()).hexdigest()
+            else:
+                self.used.add((action.kind, action.args))
             room = lambda: self.left(by)
             phase = PhaseJob(self.job, room)
             try:
-                query = None
-                if action.kind == 'web_search' and choice.search_terms:
-                    if all(word.casefold() in public_terms for word in choice.search_terms):
-                        query = ' '.join(public_terms[word.casefold()] for word in choice.search_terms)[:400]
-                    else:
-                        self.observations.append(dict(status='Use only the supplied public product search terms.'))
-                        self.trace['actions'][-1]['status'] = 'invalid_query'
-                        continue
-                observation = self.perform(action, phase, room, query)
+                observation = self.perform(action, phase, room, query, choice.language)
             except (BudgetDenied, TimeoutError) as exc:
                 observation = dict(status=type(exc).__name__)
+            if query:
+                observation.setdefault('query', query)
             self.observations.append(dict(tool=action.kind, **observation))
             self.trace['actions'][-1].update({k: v for k, v in observation.items()
-                if k in ('status', 'count', 'channel', 'query_index', 'query_sha256', 'checks', 'lead', 'receipts', 'reader', 'error', 'item_fits', 'merchant_located', 'requested_url', 'final_url')})
+                if k in ('status', 'count', 'channel', 'query_sha256', 'checks', 'lead', 'receipts', 'reader', 'error', 'item_fits', 'merchant_located', 'requested_url', 'final_url')})
         return self.present([], 'The agent reached its search limit.')
 
-    def perform(self, action, job, room, query):
+    def perform(self, action, job, room, query, language):
         if action.kind == 'catalog':
-            offers = self.deps.domestic_sources.lookup(self.request, limit=12)
+            offers = self.deps.domestic_sources.lookup(self.request, limit=12, query=query)
             for offer in offers:
                 self.add_lead(Listing(str(offer.listing_url), offer.source_id, offer))
             indexes = {row.url: i for i, row in enumerate(self.leads)}
@@ -296,7 +335,7 @@ class ShoppingAgent(DomesticBuyerFlow):
         if action.kind == 'retailer_search':
             count = 0
             outcomes = []
-            for row in self.deps.domestic_sources.search_listings(self.request, job, room=room):
+            for row in self.deps.domestic_sources.search_listings(self.request, job, room=room, query=query):
                 for url in row['links'][:6]:
                     self.add_lead(Listing(url, row['source_id']))
                     count += 1
@@ -304,14 +343,16 @@ class ShoppingAgent(DomesticBuyerFlow):
             return dict(status='leads', count=count, sources=outcomes)
         if action.kind in ('web_search', 'seller_search'):
             if action.kind == 'seller_search':
-                host, model = action.args
-                channel, index = 'serpapi', 0
-                query = f'site:{host} "{model}"'
+                host, = action.args
+                channel = 'serpapi'
+                query = f'site:{host} {query}'
             else:
-                channel, index = action.args
-            objective = self.queries[index]
-            result = self.discovery.search(replace(objective, channel=channel, query=query or objective.query),
-                                           job, alternatives=())
+                channel, = action.args
+            if len(query) > 400:
+                return dict(status='invalid_query', reason='Shorten the query to fit with the retailer hostname.')
+            objective = SearchObjective(query, 'Find relevant public retailer listings', channel=channel,
+                                        language=language, limit=8)
+            result = self.discovery.search(objective, job, alternatives=())
             if result.run_id != self.run_ref.run_id:
                 return dict(status='mismatched_run')
             unreviewed = []
@@ -327,11 +368,10 @@ class ShoppingAgent(DomesticBuyerFlow):
                     if lead.attribution:
                         unreviewed.append(dict(host=urlsplit(lead.url).hostname,
                                                title=lead.attribution[0].title[:120]))
-            actual_query = query or objective.query
-            return dict(status=result.attempts[-1].status if result.attempts else 'unavailable', query=actual_query,
-                        channel=channel, query_index=index, count=len(result.leads),
+            return dict(status=result.attempts[-1].status if result.attempts else 'unavailable', query=query,
+                        channel=channel, count=len(result.leads),
                         unreviewed_search_titles=unreviewed[:8],
-                        query_sha256=sha256(actual_query.encode()).hexdigest())
+                        query_sha256=sha256(query.encode()).hexdigest())
         if self.deps.inspect_listing and action.kind == 'follow':
             url, = action.args
             self.add_lead(Listing(url))
@@ -416,8 +456,10 @@ class ShoppingAgent(DomesticBuyerFlow):
                 raise
             except ValueError:
                 evidence = document.evidence(url, obs.observed_at)
-                reading = self.generate(READ_TEXT, dict(objective=self.request.model_dump(mode='json'),
-                    url=url, **evidence), PageReading, self.elapsed() + room())
+                page_input = dict(objective=self.request.model_dump(mode='json'), url=url, **evidence)
+                if self.context.answers:
+                    page_input['feedback'] = list(self.context.answers)
+                reading = self.generate(READ_TEXT, page_input, PageReading, self.elapsed() + room())
                 selected = document.interpret(reading, url, obs.observed_at)
         except (ValueError, RecursionError) as exc:
             before = self.current_selections.get(url)

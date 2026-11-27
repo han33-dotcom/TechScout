@@ -69,6 +69,12 @@ class DomesticShoppingRequest(ShoppingRequest):
 
     def interpreted(self):
         try:
+            if self.implementation == 'single_agent':
+                data = self.model_dump()
+                if self.buyer_text:
+                    field = 'description' if self.intent.kind == 'needs' else 'wording'
+                    data['intent'][field] = self.buyer_text
+                return ShoppingRequest.model_validate(data)
             return interpret(self, self.buyer_text)
         except ValueError as exc:
             raise RunError(422, str(exc)) from exc

@@ -59,6 +59,25 @@ class Decisions(BuyerDecisions):
 
 
 class BuyerEvidenceTests(flow.FlowCase):
+    def test_clarification_reaches_the_model_matching_a_page_with_multiple_products(self):
+        self.openrouter = Decisions(['Ask'])
+        deps = development_tools(self.deps(), 'Q20i')
+        _, run = self.browse(deps, implementation='single_agent', requirements=dict(category='audio'),
+            intent=dict(kind='exact_model', model='Soundcore Q20i', wording=WORDING))
+        answer = 'Only the black version please. Check ' + URL
+        reply = self.client.post(f'/api/runs/{run.run.run_id}/clarify', headers=self.headers,
+            json=dict(run=run.run.model_dump(), clarification_id=run.clarification.clarification_id,
+                      answer=answer))
+        self.assertEqual(reply.status_code, 202)
+        self.openrouter = Decisions(['Inspect', 'Present'])
+        deps = development_tools(self.deps(), 'Q20i')
+        with browser.retailer(self.storage, URL, html=records(['Navy', 'Black'])) as (deps.inspect_listing, _):
+            self.work(deps)
+        payloads = [json.loads(r['body']['messages'][1]['content']) for r in self.openrouter.requests]
+        reading = next(p for p in payloads if 'published_offers' in p)
+        self.assertEqual(reading['objective']['intent']['wording'], WORDING)
+        self.assertEqual(reading['feedback'][0]['answer'], answer)
+
     def inspect(self, html):
         self.openrouter = Decisions(['Inspect', 'Present'])
         deps = development_tools(self.deps(), 'Q20i')

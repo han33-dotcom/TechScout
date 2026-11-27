@@ -90,6 +90,7 @@ class ModelIntent(Model):
 class LinkIntent(Model):
     kind: Literal['product_link']
     url: HttpsUrl  # A lead; source authorization occurs at dispatch.
+    wording: Text | None = None
 
 
 class NeedsIntent(Model):

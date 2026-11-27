@@ -52,7 +52,7 @@ class BuyerDecisions(Decisions):
 
 class PublicListingBuyerTests(FlowCase):
     def redirected_journey(self, queried, landed, color):
-        self.openrouter = BuyerDecisions(['Inspect', 'Present'])
+        self.openrouter = BuyerDecisions(['Look up', 'Inspect', 'Present'])
         deps = development_tools(self.deps(), 'Q20i')
         deps.inspect_listing = partial(inspect_public_listing, registry=ActivationRegistry(self.storage),
             environ=dict(FIRECRAWL_API_KEY='fixture', FIRECRAWL_SCRAPE_USD_PER_CREDIT='.001'))
