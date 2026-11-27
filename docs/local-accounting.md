@@ -3,12 +3,14 @@
 The user selected local PostgreSQL on November 17, 2026 in
 [#125](https://github.com/han33-dotcom/TechScout/issues/125), superseding the earlier
 requirement to choose an online host before local development. One dedicated
-`techscout_accounting` database is the accounting authority on Hassan's PC for
+`techscout_accounting` database was the initial accounting authority on Hassan's PC for
 `techscout-december-2026`. Other machines must not create independent copies and
 spend the same allowance. Remote access, firewall changes and online hosting were
 not configured. This database is separate from the product corpus.
 
-## Verified deployment
+The current shared endpoint and cutover status are recorded in [#248](https://github.com/han33-dotcom/TechScout/issues/248).
+
+## Original local deployment
 
 PostgreSQL 18.1 runs on loopback port 5432. A separate `techscout_accounting` login
 has database CONNECT, schema USAGE, table SELECT/UPDATE and sequence SELECT for
