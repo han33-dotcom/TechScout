@@ -180,8 +180,9 @@ needed. Keep useful exact quotes in notes across reads. A missing field in one w
 about the rest of the page. Once ready, leave find empty and start null.
 
 Identify the actual selected offer. Bind the seller, brand, exact variant, current unconditional
-price/currency, stock and condition to the same offer. Check selected controls and the displayed
-price after interaction. A default sibling's facts do not apply to a changed option. When refreshing
+price/currency, stock and condition to the same offer. The interaction list describes requested
+actions. Inspect the resulting controls and offer to see what the shop actually selected or reverted.
+A checked control alone cannot tie an unchanged sibling price to that variant. When refreshing
 a catalog SKU or variant ID, copy that identifier if the page establishes it for this selection. For a group
 of named variants you can identify a separately purchasable offer with its own published link.
 A contradictory price or option must be resolved before reporting an offer. Report unavailable

@@ -261,12 +261,14 @@ class CatalogBrowserTests(TestCase):
         f = self.f
         with retailer(f.fixture.storage, f.url, registry=self.registry, script='// inert') as (inspect, reads):
             default = self.schedule.ledger.open_job('read-default', 'maintenance')
-            self.decisions('Finish', 'Select Black')
+            self.decisions('Finish', 'Select Black', 'Finish')
             self.assertEqual(read_catalog_listing(inspect, default, f.url, objective='White', roles=self.schedule.roles).provider, 'firecrawl-v2')
             self.assertEqual(reads, [('firecrawl', f.url)])
             click = self.schedule.ledger.open_job('read-inert', 'maintenance')
-            prior = read_catalog_listing(inspect, click, f.url, objective='Black', roles=self.schedule.roles)
-            self.assertEqual(prior.provider, 'firecrawl-v2')
+            rendered = read_catalog_listing(inspect, click, f.url, objective='Black', roles=self.schedule.roles)
+            self.assertEqual(rendered.provider, 'playwright')
+            self.assertIsNone(rendered.selection)
+            self.assertIn(b'data-variant-price', rendered.outcome.body)
             self.assertEqual(reads[1:], [('firecrawl', f.url), ('GET', '/devices/selected'), ('GET', '/static/colors.js')])
 
     def test_refresh_agent_can_select_and_store_a_noncolor_variant(self):
