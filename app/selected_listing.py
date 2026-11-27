@@ -671,8 +671,6 @@ class Selection:
         index = 0 if self.structured_address else match.merchant_address_line
         if index is None or index >= len(self.address_lines):
             raise ValueError("The named merchant's Lebanese location could not be established.")
-        if request.allowed_colors and self.color.casefold() not in {c.casefold() for c in request.allowed_colors}:
-            raise ValueError('The selected color does not match the requested color.')
         storage = self.storage()
         exact = getattr(request.requirements, 'storage_gb', None)
         minimum = getattr(request.requirements, 'min_storage_gb', None)

@@ -13,7 +13,9 @@ from urllib.parse import urljoin
 from pydantic import Field
 
 from app.contracts import Model, Money
+from app.model_provider import _schema
 from app.onboarding import canonical
+from app.openrouter import FRAMING_BYTES
 from app.selected_listing import Match, ProductOption, Selection
 
 
@@ -199,6 +201,10 @@ def normalized(text):
     return ' '.join(unescape(text).replace(r'\/', '/').split())
 
 
+def wire_size(data):
+    return len(json.dumps(json.dumps(data, ensure_ascii=False), ensure_ascii=False).encode())
+
+
 @dataclass
 class CaptureReading:
     selection: Selection | None = None
@@ -218,12 +224,9 @@ class PageSource:
     def view(self, start, terms, allowance):
         # Keep the prompt within the shared role's input allowance. Any character
         # can be requested, regardless of its tag, position or apparent meaning.
-        def size(data):
-            # The provider embeds the JSON input in a JSON string.
-            return len(json.dumps(json.dumps(data, ensure_ascii=False), ensure_ascii=False).encode())
         if start == 0 and not terms and len(self.html) <= allowance:
             full = dict(length=len(self.html), start=0, html=self.html)
-            if size(full) <= allowance:
+            if wire_size(full) <= allowance:
                 return full
         width = 10000
         start = min(start, len(self.html))
@@ -241,12 +244,12 @@ class PageSource:
                     if index == 5:
                         break
             view['matches'] = matches
-        if size(view) > allowance:
+        if wire_size(view) > allowance:
             view.pop('outline', None)
             view.pop('tail', None)
-            while len(view.get('matches', [])) > 1 and size(view) > allowance:
+            while len(view.get('matches', [])) > 1 and wire_size(view) > allowance:
                 view['matches'].pop()
-            while len(view['html']) > 1 and size(view) > allowance:
+            while len(view['html']) > 1 and wire_size(view) > allowance:
                 view['html'] = view['html'][:len(view['html']) // 2]
         return view
 
@@ -324,6 +327,8 @@ class PageSource:
 
 def inspect_capture(page, objective, generate, *, feedback=(), checked=(), max_input_bytes=32768, agent='buyer'):
     source = PageSource(page)
+    schema = BuyerPageDecision if agent == 'buyer' else PageDecision
+    envelope = FRAMING_BYTES + 1024 + len(json.dumps(_schema(schema)).encode()) + len(json.dumps(PAGE_PROMPT).encode())
     start, terms, notes, problem = 0, [], '', ''
     last_invalid = None
     while True:
@@ -331,9 +336,9 @@ def inspect_capture(page, objective, generate, *, feedback=(), checked=(), max_i
                        interaction=[dict(name=o.name, value=o.value) for o in checked],
                        notes=notes, citation_feedback=problem)
         # Leave space for the wire envelope, schema, instructions and original objective.
-        allowance = max(1000, max_input_bytes - 16000 - len(json.dumps(payload).encode()))
+        allowance = max(1, max_input_bytes - envelope - wire_size(payload))
         payload['page'] = source.view(start, terms, allowance)
-        answer = generate(PAGE_PROMPT, payload, BuyerPageDecision if agent == 'buyer' else PageDecision)
+        answer = generate(PAGE_PROMPT, payload, schema)
         if not isinstance(answer, PageDecision):
             return CaptureReading(reason=problem or 'The agent could not finish reading the capture.')
         if answer.start is not None or answer.find:

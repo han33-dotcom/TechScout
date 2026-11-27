@@ -159,6 +159,8 @@ def read_catalog_listing(inspect, job, url, *, objective, roles, trace=None):
         def generate(instructions, data, schema):
             reply = roles.generate(instructions, data, schema, budget=JobBudget(job, seconds=roles.settings.timeout_seconds),
                                    cancelled=lambda: job.cancelled)
+            if reply.status != 'completed' and trace is not None:
+                trace.append(dict(status=reply.status, operation=schema.__name__, url=url))
             return reply.value if reply.status == 'completed' else None
 
         if page:
