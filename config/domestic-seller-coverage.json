@@ -1,5 +1,5 @@
 {
-  "manifest_id": "domestic-seller-coverage-20261123-v2",
+  "manifest_id": "domestic-seller-coverage-two-agent-v3",
   "processing": {
     "corpus_version": "domestic-coverage-v1",
     "index_version": "domestic-coverage-v1",
@@ -12,7 +12,7 @@
     "max_records": 120,
     "max_response_bytes": 33554432,
     "max_paid_calls": 12,
-    "max_spend_usd": "0.002",
+    "max_spend_usd": "1.00",
     "max_concurrent_sources": 1,
     "max_requests_per_source_minute": 6,
     "max_concurrent_per_source": 1,

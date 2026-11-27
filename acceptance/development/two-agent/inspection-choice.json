@@ -1,0 +1,300 @@
+{
+  "listing": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+  "buyer_input": "Pasted URL, White, delivery to Batroun",
+  "catalog_input": "Manually triggered one-seed refresh into an isolated catalog, known merchant, URL and target SKU",
+  "buyer_runs": [
+    {
+      "run": "1786d243-a2c9-4a6a-9437-f82bfc0131a9",
+      "status": "partial",
+      "elapsed_ms": 47672,
+      "spend_usd": "0.0249200",
+      "actions": [
+        {
+          "item_fits": false,
+          "lead": 0,
+          "merchant_located": true,
+          "reader": "firecrawl-v2",
+          "receipts": [
+            "2559d4fd9375c14a475c5fef1137314753719556bfabdbed3aef68d0170d07ef"
+          ],
+          "status": "no_match",
+          "tool": "inspect",
+          "turn": 1
+        },
+        {
+          "item_fits": true,
+          "lead": 0,
+          "merchant_located": true,
+          "reader": "playwright",
+          "receipts": [
+            "f5acf3ef019f859990aad8aeedb0241075338646f566c108891d6c586455aeb4"
+          ],
+          "status": "priced_partial",
+          "tool": "select_option",
+          "turn": 2
+        },
+        {
+          "error": "ValueError",
+          "lead": 0,
+          "status": "read_failed",
+          "tool": "render",
+          "turn": 3
+        },
+        {
+          "tool": "present",
+          "turn": 4
+        }
+      ],
+      "sku": "3035",
+      "color": "White",
+      "price": {
+        "amount": "48",
+        "currency": "USD"
+      },
+      "stock": true,
+      "condition": "unknown",
+      "gaps": [
+        "Delivery to the requested destination and mandatory charges still need checking.",
+        "The retailer did not confirm the condition of this selected variant.",
+        "Select White on the retailer page for this price."
+      ],
+      "observed_at": "2026-11-27T08:11:09.242345Z"
+    },
+    {
+      "run": "ac60c0f5-a7ff-4d9f-ba53-01b8e5d9101b",
+      "status": "partial",
+      "elapsed_ms": 42828,
+      "spend_usd": "0.0177935",
+      "actions": [
+        {
+          "item_fits": false,
+          "lead": 0,
+          "merchant_located": true,
+          "reader": "firecrawl-v2",
+          "receipts": [
+            "ac6f928777f7d996b4c66b09a364a4e690477196156648088de53514951ed531"
+          ],
+          "status": "no_match",
+          "tool": "inspect",
+          "turn": 1
+        },
+        {
+          "item_fits": true,
+          "lead": 0,
+          "merchant_located": true,
+          "reader": "playwright",
+          "receipts": [
+            "70e4dc05a67297a9670d08afd3c4cf168c348f48fcb37b4fd8b0beff83d0e8a4"
+          ],
+          "status": "priced_partial",
+          "tool": "select_option",
+          "turn": 2
+        },
+        {
+          "tool": "present",
+          "turn": 3
+        }
+      ],
+      "sku": "3035",
+      "color": "White",
+      "price": {
+        "amount": "48",
+        "currency": "USD"
+      },
+      "stock": true,
+      "condition": "unknown",
+      "gaps": [
+        "Delivery to the requested destination and mandatory charges still need checking.",
+        "The retailer did not confirm the condition of this selected variant.",
+        "Select White on the retailer page for this price."
+      ],
+      "observed_at": "2026-11-27T08:18:44.998682Z"
+    }
+  ],
+  "catalog_runs": [
+    {
+      "job": "refresh:manual-offer-9991ef35d5d940c5a36d0bcbbb334dc7",
+      "status": "new",
+      "spend_usd": "0.002841",
+      "decisions": [
+        {
+          "reader": "firecrawl-v2",
+          "status": "completed",
+          "choice": "Select White (color) with Playwright"
+        },
+        {
+          "reader": "playwright",
+          "status": "budget_denied",
+          "choice": null
+        }
+      ],
+      "reads": [
+        {
+          "reader": "firecrawl-v2",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "sha256": "cd32edbc9043e393db9f0248343524c0a9a8bd2119e69d134952cb723cbae220",
+          "observed_at": "2026-11-27T08:10:00.552285+00:00"
+        },
+        {
+          "reader": "playwright",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "sha256": "603700633733c30518e26ec6dcfdf3fc8ff79a2b41147ba61f44d399a651e12e",
+          "observed_at": "2026-11-27T08:10:16.870590+00:00"
+        }
+      ],
+      "source_attempts": 3,
+      "variant_facts": [
+        {
+          "path": "price",
+          "value": {
+            "amount": "48",
+            "currency": "USD"
+          },
+          "sha256": "603700633733c30518e26ec6dcfdf3fc8ff79a2b41147ba61f44d399a651e12e",
+          "variant": "3035"
+        },
+        {
+          "path": "variant.color",
+          "value": "White",
+          "sha256": "603700633733c30518e26ec6dcfdf3fc8ff79a2b41147ba61f44d399a651e12e",
+          "variant": "3035"
+        },
+        {
+          "path": "stock",
+          "value": true,
+          "sha256": "603700633733c30518e26ec6dcfdf3fc8ff79a2b41147ba61f44d399a651e12e",
+          "variant": "3035"
+        }
+      ],
+      "budget": "USD 0.12 development batch",
+      "observed_error": null
+    },
+    {
+      "job": "refresh:manual-offer-6824cc77df0b43c286ddbb1029f3172a",
+      "status": "failed",
+      "spend_usd": "0.0002442",
+      "decisions": [
+        {
+          "reader": "firecrawl-v2",
+          "status": "completed",
+          "choice": "Select White (color) with Playwright"
+        }
+      ],
+      "reads": [
+        {
+          "reader": "firecrawl-v2",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "sha256": "9387e64ff440ba961f4b389beb6e8ea2f68271cd8a14deff3d82296583063e23",
+          "observed_at": "2026-11-27T08:14:09.584304+00:00"
+        }
+      ],
+      "source_attempts": 3,
+      "variant_facts": [],
+      "budget": "USD 1 batch and job",
+      "observed_error": "ValueError"
+    },
+    {
+      "job": "refresh:manual-offer-0d6dfec328de4504a84479817b0a5843",
+      "status": "new",
+      "spend_usd": "0.0030402",
+      "decisions": [
+        {
+          "reader": "firecrawl-v2",
+          "status": "completed",
+          "choice": "Select White (color) with Playwright"
+        },
+        {
+          "reader": "playwright",
+          "status": "completed",
+          "choice": "Finish with current evidence"
+        }
+      ],
+      "reads": [
+        {
+          "reader": "firecrawl-v2",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "sha256": "edaa2f55abe3e166558e5bec45b1e01933c1dd66b3edeb7dfaf563588a1c99ff",
+          "observed_at": "2026-11-27T08:15:22.768626+00:00"
+        },
+        {
+          "reader": "playwright",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "sha256": "8c3268ae6caef43a67caae7262f61b0bc0a292edd59819dce8a449d0e9f40eeb",
+          "observed_at": "2026-11-27T08:15:39.682464+00:00"
+        }
+      ],
+      "source_attempts": 3,
+      "variant_facts": [
+        {
+          "path": "price",
+          "value": {
+            "amount": "48",
+            "currency": "USD"
+          },
+          "sha256": "8c3268ae6caef43a67caae7262f61b0bc0a292edd59819dce8a449d0e9f40eeb",
+          "variant": "3035"
+        },
+        {
+          "path": "variant.color",
+          "value": "White",
+          "sha256": "8c3268ae6caef43a67caae7262f61b0bc0a292edd59819dce8a449d0e9f40eeb",
+          "variant": "3035"
+        },
+        {
+          "path": "stock",
+          "value": true,
+          "sha256": "8c3268ae6caef43a67caae7262f61b0bc0a292edd59819dce8a449d0e9f40eeb",
+          "variant": "3035"
+        }
+      ],
+      "budget": "USD 1 batch and job",
+      "observed_error": null
+    },
+    {
+      "job": "refresh:manual-offer-df3ffb1a14a84a9f9ceaa92ddf323bdb",
+      "status": "new",
+      "spend_usd": "0.003211",
+      "decisions": [
+        {
+          "reader": "firecrawl-v2",
+          "status": "completed",
+          "choice": "Finish with current evidence"
+        }
+      ],
+      "reads": [
+        {
+          "reader": "firecrawl-v2",
+          "url": "https://itpromax.store/en/p/soundcore-q20i-anc-headphones",
+          "sha256": "f8f8ce07da2c230918be0dc5e08aa889c7cc4f054175c021beb626d307d11f8c",
+          "observed_at": "2026-11-27T08:16:53.416792+00:00"
+        }
+      ],
+      "source_attempts": 1,
+      "variant_facts": [
+        {
+          "path": "price",
+          "value": {
+            "amount": "48.00",
+            "currency": "USD"
+          },
+          "sha256": "f8f8ce07da2c230918be0dc5e08aa889c7cc4f054175c021beb626d307d11f8c",
+          "variant": "Q20i-ANC-black"
+        },
+        {
+          "path": "variant.color",
+          "value": "Black",
+          "sha256": "f8f8ce07da2c230918be0dc5e08aa889c7cc4f054175c021beb626d307d11f8c",
+          "variant": "Q20i-ANC-black"
+        },
+        {
+          "path": "stock",
+          "value": true,
+          "sha256": "f8f8ce07da2c230918be0dc5e08aa889c7cc4f054175c021beb626d307d11f8c",
+          "variant": "Q20i-ANC-black"
+        }
+      ],
+      "budget": "USD 1 batch and job",
+      "observed_error": null
+    }
+  ]
+}

@@ -12,6 +12,7 @@ from pydantic import Field
 
 from app import contracts_v2 as v2
 from app.accounting import BudgetDenied
+from app.agent_inspection import INSPECTION_POLICY, recoverable_read_error
 from app.assessment import shortlist
 from app.buyer_flow import MAX_UNCERTAIN
 from app.contracts import Model
@@ -23,7 +24,7 @@ from app.eligibility import check_full_product
 from app.inference import ROOT, InferenceConfig, build_inference, load_env_file
 from app.onboarding import canonical, source_id_for
 from app.selected_listing import (ConflictingSelection, ListingDocument, MATCH_PROMPT, Match,
-                                  PageReading, READ_TEXT, ReadPageText)
+                                  PageReading, READ_TEXT, ReadPageText, with_option)
 
 
 def pinned_inference():
@@ -75,7 +76,7 @@ change the recommendation. Never ask for a precise address in free text. Use que
 material_reason only for asking. When presenting, select verified offer_ids that meet the
 original request AND feedback; for needs-based choices check the supplied specifications.
 Include comparable sellers. If none fit, leave offer_ids empty. Checked partial evidence and
-observed blockers are rendered separately. Never invent missing facts or monetary amounts."""
+observed blockers are rendered separately. Never invent missing facts or monetary amounts.""" + ' ' + INSPECTION_POLICY
 
 
 @dataclass(frozen=True)
@@ -91,7 +92,7 @@ class ShoppingAgent(DomesticBuyerFlow):
 
     def __init__(self, context, deps):
         super().__init__(context, deps)
-        self.trace.update(controller='single_agent', actions=[], prompt_version='shopping-agent-4')
+        self.trace.update(controller='single_agent', actions=[], prompt_version='shopping-agent-5')
         self.trace['request'].pop('model', None)
         self.leads = []
         self.used = set()
@@ -99,12 +100,11 @@ class ShoppingAgent(DomesticBuyerFlow):
         self.blockers = {}
         self.titles = {}
         self.buyer_links = set()
-        self.color_options = {}
+        self.product_options = {}
+        self.page_links = {}
         self.selected_controls = {}
         self.current_selections = {}
         self.accepted_matches = {}
-        self.option_links = {}
-        self.attempted_pages = set()
         self.discovery = deps.research.workers.domestic_tools if deps.research else None
         self.directory = getattr(deps.research.workers, 'directory', None) if deps.research else None
         self.browser: BrowserSession | None = None
@@ -158,16 +158,25 @@ class ShoppingAgent(DomesticBuyerFlow):
             title = self.titles.get(listing.url, '')
             actions.append(Action('inspect', f'Inspect selected listing {listing.url[:200]} {title}'.rstrip(), (i,)))
             if self.deps.inspect_listing:
-                for option in self.color_options.get(listing.url, ()):
-                    preferred = self.option_links.get((listing.url, option))
-                    if preferred and preferred not in self.attempted_pages:
-                        continue
-                    actions.append(Action('select_color', f'Select {option.value} on {listing.url[:200]}', (i, option)))
+                if listing.url in self.product_options and self.selected_controls.get(listing.url) is None:
+                    actions.append(Action('render', f'Render listing with Playwright {listing.url[:200]}', (i,)))
+                for option in self.product_options.get(listing.url, ()):
+                    path = with_option(self.selected_controls.get(listing.url) or (), option)
+                    actions.append(Action('select_option', f'Select {option.value} ({option.dimension}) with Playwright '
+                                          f'on {listing.url[:200]}', (i, path)))
                 if listing.url in self.current_selections:
                     actions.append(Action('recheck', f'Recheck the current selection at {listing.url[:200]}', (i,)))
             if self.browser and not self.deps.inspect_listing:
                 for key, label in self.browser.actions(listing).items():
                     actions.append(Action('browser', label, (i, key)))
+        if self.deps.inspect_listing and len(self.leads) < 36:
+            # A shop's navigation should not consume places reserved for discovered sellers.
+            known_urls = {listing.url for listing in self.leads}
+            for links in reversed(self.page_links.values()):
+                for link, label in links:
+                    if link not in known_urls:
+                        actions.append(Action('follow', f'Inspect selected listing {link[:200]} {label} with Firecrawl', (link,)))
+                        known_urls.add(link)
         if not final and len(self.context.answers) < 6:
             actions.append(Action('ask', 'Ask the buyer a material follow-up question'))
         actions.append(Action('present', 'Present checked offers, partial evidence or a blocker'))
@@ -284,11 +293,23 @@ class ShoppingAgent(DomesticBuyerFlow):
                         channel=channel, query_index=index, count=len(result.leads),
                         unreviewed_search_titles=unreviewed[:8],
                         query_sha256=sha256(actual_query.encode()).hexdigest())
-        if self.deps.inspect_listing and action.kind in ('inspect', 'recheck', 'select_color'):
+        if self.deps.inspect_listing and action.kind == 'follow':
+            url, = action.args
+            self.add_lead(Listing(url))
+            index = next(i for i, listing in enumerate(self.leads) if listing.url == url)
+            self.used.add(('inspect', (index,)))
+            return self.inspect_public(index, url, None, job, room)
+        if self.deps.inspect_listing and action.kind in ('inspect', 'recheck', 'select_option', 'render'):
             index = action.args[0]
             listing = self.leads[index]
-            control = action.args[1] if action.kind == 'select_color' else self.selected_controls.get(listing.url)
-            return self.inspect_public(index, listing.url, control, job, room)
+            browser = None
+            if action.kind == 'select_option':
+                browser = action.args[1]
+            elif action.kind == 'render':
+                browser = ()
+            elif action.kind == 'recheck':
+                browser = self.selected_controls.get(listing.url)
+            return self.inspect_public(index, listing.url, browser, job, room)
         if action.kind in ('inspect', 'browser'):
             index = action.args[0]
             listing = self.leads[index]
@@ -301,12 +322,13 @@ class ShoppingAgent(DomesticBuyerFlow):
             return self.observe(index, listing, read)
         return dict(status='A follow-up needs a question and a material reason.')
 
-    def inspect_public(self, index, url, control, job, room):
+    def inspect_public(self, index, url, browser, job, room):
         prior = tuple(self.uncertain.values())[:MAX_UNCERTAIN]
-        self.attempted_pages.add(url)
         try:
-            page = self.deps.inspect_listing(job, url, color=control)
+            page = self.deps.inspect_listing(job, url, browser=browser)
         except (BudgetDenied, OSError, ValueError, KeyError, httpx2.HTTPError) as exc:
+            if browser is None and recoverable_read_error(exc):
+                self.product_options.setdefault(url, ())
             # A provider error contains no observation about the product. Keep its last receipt.
             reason = 'A further listing read failed.' if url in self.current_selections else 'The listing could not be read.'
             self.blockers[url] = [reason]
@@ -323,44 +345,33 @@ class ShoppingAgent(DomesticBuyerFlow):
         result = dict(lead=index, reader=page.provider, receipts=[obs.response_sha256])
         self.sources[obs.source_id] = (urlsplit(url).hostname, 'checked', None)
         document = ListingDocument(obs.body.decode('utf-8', errors='replace'))
-        self.color_options[url] = tuple(option for option in dict.fromkeys(document.options)
-                                        if option not in document.checked)[:12]
+        self.product_options[url] = tuple(option for option in dict.fromkeys(document.options)
+                                          if option not in document.checked)[:32]
+        self.selected_controls[url] = browser
         colors = (*self.request.allowed_colors, *(o.value for o in document.options))
-        for link, label in document.variant_links(url, colors):
-            if len(self.leads) >= 36:
-                break
-            self.add_lead(Listing(link))
-            self.titles[link] = label
-        available_urls = {lead.url for lead in self.leads}
-        for option in self.color_options[url]:
-            link = document.color_link(url, option.value)
-            if link in available_urls:
-                self.option_links[url, option] = link
-            else:
-                self.option_links.pop((url, option), None)
+        self.page_links[url] = document.inspection_links(url, colors)
         try:
             try:
                 selected = document.selected(url, obs.observed_at, rendered=page.provider == 'playwright')
             except ReadPageText:
                 reading = self.generate(READ_TEXT, dict(lines=document.lines,
-                    checked_colors=[c.value for c in document.checked]), PageReading, self.elapsed() + room())
+                    checked_options=[(c.dimension, c.value) for c in document.checked]), PageReading, self.elapsed() + room())
                 selected = document.selected_text(reading)
         except (ValueError, RecursionError) as exc:
             before = self.current_selections.get(url)
             if before and (isinstance(exc, ConflictingSelection) or any(
-                    option.value.casefold() != before.color.casefold() for option in document.checked)):
+                    dict(before.options).get(o.dimension) != o.value for o in document.checked)):
                 self.withdraw_public(url)
                 self.publish_partials(prior)
             self.blockers[url] = ['The current capture could not confirm the selected item and its price.']
-            return dict(status='selection_unconfirmed', **result)
+            return dict(status='selection_unconfirmed', lines=document.lines[:35], **result)
         if selected != self.current_selections.get(url):
             self.withdraw_public(url)
             self.publish_partials(prior)
             prior = tuple(self.uncertain.values())[:MAX_UNCERTAIN]
         self.current_selections[url] = selected
-        self.selected_controls[url] = control if control in document.checked else None
         self.sources[obs.source_id] = (selected.seller, 'checked', None)
-        if control and control not in document.checked:
+        if browser and any(o not in document.checked for o in browser):
             self.blockers[url] = ['The retailer did not confirm the requested selection.']
             return dict(status='selection_unconfirmed', **result)
         # The request and feedback are fixed for this worker. A fresh receipt of identical
@@ -376,7 +387,7 @@ class ShoppingAgent(DomesticBuyerFlow):
         result['merchant_located'] = selected.structured_address or (
             match.merchant_address_line is not None and match.merchant_address_line < len(selected.address_lines))
         try:
-            item = selected.partial(page, self.run_ref, self.request, match, control)
+            item = selected.partial(page, self.run_ref, self.request, match, browser)
         except ValueError as exc:
             self.withdraw_public(url)
             self.publish_partials(prior)
