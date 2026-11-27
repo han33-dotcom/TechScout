@@ -96,6 +96,8 @@ while the earlier transfer runs. Use the remaining research time to prioritize u
 If you have a promising item one fact short of a usable offer, look at its checked page's
 assessment, gap and suggested follow-up actions. Prefer an exact product or merchant link
 that could settle that fact. Use the available action key for the link you intend to inspect.
+If a suitable link is missing from the menu, find a published link on the capture using a short word
+such as contact, store or a product identifier. This searches the shop's links without a new transfer.
 A sold-out item cannot be recommended to a buyer seeking online stock.
 Use SerpApi for general search. Read the original wording as the buyer wrote it. An earlier
 model field can be a full sentence or an old guess. You decide which product the buyer means
@@ -139,7 +141,7 @@ def action_key(kind, *target):
     return f'{kind}-{sha256(identity.encode()).hexdigest()[:16]}'
 
 
-SEARCH_ACTIONS = {'catalog', 'web_search', 'seller_search', 'retailer_search'}
+SEARCH_ACTIONS = {'catalog', 'web_search', 'seller_search', 'retailer_search', 'find_link'}
 
 
 @dataclass(frozen=True)
@@ -182,6 +184,7 @@ class ShoppingAgent(DomesticBuyerFlow):
         self.buyer_links = set()
         self.product_options = {}
         self.page_links = {}
+        self.link_indexes = {}
         self.selected_controls = {}
         self.current_selections = {}
         self.latest_capture = {}
@@ -254,6 +257,9 @@ class ShoppingAgent(DomesticBuyerFlow):
             title = self.titles.get(listing.url, '')
             actions.append(Action('inspect', f'Inspect selected listing {listing.url[:200]} {title}'.rstrip(), (i,)))
             if self.deps.inspect_listing:
+                if listing.url in self.link_indexes:
+                    actions.append(Action('find_link', f'Find a published link by its text or URL on {listing.url[:200]} '
+                                          '(enter a short term in query)', (listing.url,)))
                 if listing.url in self.product_options and self.selected_controls.get(listing.url) is None:
                     actions.append(Action('render', f'Render listing with Playwright {listing.url[:200]}', (i,)))
                 for option in self.product_options.get(listing.url, ()):
@@ -405,6 +411,15 @@ class ShoppingAgent(DomesticBuyerFlow):
             wait_room = partial(self.left, self.elapsed() + min(10, room())) if action.args[0] else room
             self.reads.wait_for_page(wait_room, self.stopped)
             return dict(status='wait_ended')
+        if action.kind == 'find_link':
+            url, = action.args
+            term = query.casefold()
+            matches = [(link, label) for link, label in self.link_indexes[url].items()
+                       if term in label.casefold() or term in link.casefold()][:16]
+            self.page_links[url] = tuple(dict.fromkeys((*matches, *self.page_links[url])))
+            return dict(status='published_links', count=len(matches), url=url,
+                        matches=[dict(label=label, url=link, action_id=action_key('inspect', link))
+                                 for link, label in matches])
         if action.kind == 'catalog':
             offers = self.deps.domestic_sources.lookup(self.request, limit=12, query=query)
             for offer in offers:
@@ -559,6 +574,7 @@ class ShoppingAgent(DomesticBuyerFlow):
             prior = tuple(self.uncertain.values())[:MAX_UNCERTAIN]
             self.checked_pages.pop(url, None)
             self.page_links.pop(url, None)
+            self.link_indexes.pop(url, None)
             self.blockers.pop(url, None)
             url = obs.final_url
             # Reuse an existing landing lead so all subsequent actions address one page.
@@ -577,6 +593,9 @@ class ShoppingAgent(DomesticBuyerFlow):
                                           if option not in document.checked)[:32]
         self.selected_controls[url] = browser
         self.page_links[url] = document.suggestions()
+        self.link_indexes.pop(url, None)
+        if len(document.links) > len(self.page_links[url]):
+            self.link_indexes[url] = document.links
         listings = [row for row in self.priced_listings.values() if row.page.outcome.source_id == obs.source_id]
         locations = [loc for loc in self.merchant_locations.values() if loc.source.source_id == obs.source_id]
         seller_context = dict(listings=[dict(index=i, url=row.page.outcome.final_url, title=row.selection.title,
@@ -653,6 +672,8 @@ class ShoppingAgent(DomesticBuyerFlow):
             match.merchant_address_line is not None and match.merchant_address_line < len(selected.address_lines))
         location = locations[reading.use_location_index] if reading.use_location_index is not None else None
         if match.selected_item_fits and not result['merchant_located']:
+            # Expose additional named links from a promising listing while the merchant is unresolved.
+            self.page_links[url] = tuple(dict.fromkeys((*reading.links, *list(document.links.items())[:32])))
             self.priced_listings[url] = PricedListing(replace(page, outcome=replace(obs, body=None)),
                                                        selected, match, tuple(browser or ()))
         if location:
