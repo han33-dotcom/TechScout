@@ -162,7 +162,8 @@ def read_catalog_listing(inspect, job, url, *, objective, roles, trace=None):
             return reply.value if reply.status == 'completed' else None
 
         if page:
-            reading = inspect_capture(page, objective, generate, checked=browser or ())
+            context_size = roles.settings.max_input_tokens if isinstance(getattr(roles.settings, 'max_input_tokens', None), int) else 32768
+            reading = inspect_capture(page, objective, generate, checked=browser or (), max_input_bytes=context_size, agent='catalog')
             last_capture = replace(last_capture, selection=reading.selection, reason=reading.reason, findings=reading.findings)
         moves = [('Finish with current evidence', None)]
         paths = [('Render this listing with Playwright', (url, browser or ()))]
@@ -190,7 +191,8 @@ def read_catalog_listing(inspect, job, url, *, objective, roles, trace=None):
             trace.append(dict(reader=page.provider if page else 'firecrawl-v2', action=moves[choice.action_index][0],
                               sha256=page.outcome.response_sha256 if page else None))
         if trace is not None and reading:
-            trace[-1].update(selected=reading.selection.facts() if reading.selection else None, reason=reading.reason)
+            trace[-1].update(selected=reading.selection.facts() if reading.selection else None,
+                             reason=reading.reason, findings=reading.findings)
         if next_move is None:
             break
         url, browser = next_move

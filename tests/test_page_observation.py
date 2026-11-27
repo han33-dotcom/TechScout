@@ -20,7 +20,7 @@ class PageAccessTests(TestCase):
         def generate(prompt, data, schema):
             if schema is InspectionChoice:
                 return InspectionChoice(action_index=0)
-            self.assertIs(schema, PageDecision)
+            self.assertTrue(issubclass(schema, PageDecision))
             view = data['page']
             self.assertEqual(view['length'], len(self.html))
             self.assertEqual(view['html'], self.html[view['start']:view['start'] + len(view['html'])])

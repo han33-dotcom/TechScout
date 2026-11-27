@@ -53,6 +53,11 @@ the existing contract. The [documentation index](docs/README.md) links source an
   honor explicit shop stops and workload limits, and assess the seller and item
   after inspection. Target experiment PRs at `test/two-agent`. Follow the
   [design and checkpoint plan](docs/two-agent-experiment.md).
+- Both experiment agents read the complete Firecrawl HTML or Playwright DOM capture.
+  Give them access to every offset and literal search across the capture. They decide
+  what the page establishes, which evidence to cite and what to inspect next. A new
+  retailer layout requires no admission, selector or extraction rule. The buyer agent
+  interprets the original request and writes the answer using its checked evidence.
 - The archived outreach drafts are superseded and must not be sent.
 - Tests use synthetic offers and offline fixtures. Do not invoke retailer endpoints,
   paid models or an operational service just to run the ordinary test suite.

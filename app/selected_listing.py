@@ -708,7 +708,7 @@ class Selection:
         receipt('seller.market', self.address_lines[index])
         receipt('variant.product.model', self.excerpt(self.title))
         if self.published_link and self.published_link != url:
-            receipt('listing_url', self.published_link)
+            receipt('listing_url', self.excerpt(self.published_link))
         price = known('price', self.money, self.price_excerpt)
         if self.currency_excerpt != self.price_excerpt:
             price['evidence_ids'].append(receipt('price', self.currency_excerpt))

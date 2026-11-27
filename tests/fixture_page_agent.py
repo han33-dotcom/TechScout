@@ -14,17 +14,17 @@ def fixture_read(data, text_reader=None):
     try:
         selected = doc.selected(data['url'], now, rendered=data['reader'] == 'playwright')
     except ConflictingSelection as exc:
-        return PageDecision(reason=str(exc))
+        return PageDecision(fits=False, reason=str(exc))
     except ValueError:
         if not text_reader:
-            return PageDecision(reason='No selected offer in the fixture capture.')
+            return PageDecision(fits=False, reason='No selected offer in the fixture capture.')
         reading = text_reader(doc.evidence(data['url'], now))
         if not isinstance(reading, PageReading):
             reading = PageReading.model_validate(reading)
         try:
             selected = doc.interpret(reading, data['url'], now)
         except ValueError:
-            return PageDecision(reason=reading.reason or 'No priced offer in the fixture capture.')
+            return PageDecision(fits=False, reason=reading.reason or 'No priced offer in the fixture capture.')
     raw = normalized(html)
     def quote(*values):
         return next((v for v in values if v and normalized(v) in raw), '')

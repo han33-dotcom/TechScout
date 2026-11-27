@@ -466,7 +466,7 @@ class ShoppingAgent(DomesticBuyerFlow):
         reading = inspect_capture(page, self.request.model_dump(mode='json'),
             lambda instructions, payload, schema: self.generate(instructions, payload, schema,
                 self.elapsed() + room(), call_seconds=30),
-            feedback=self.context.answers, checked=browser or ())
+            feedback=self.context.answers, checked=browser or (), max_input_bytes=self.roles.settings.max_input_tokens if self.roles else 32768)
         self.page_links[url] = tuple(dict.fromkeys((*reading.links, *self.page_links[url])))
         result.update(findings=reading.findings, assessment=reading.reason)
         selected = reading.selection

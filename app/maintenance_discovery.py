@@ -79,7 +79,8 @@ def discover(job, *, category, cursor, coverage, discovery, queue, roles, steps,
                     sha256=obs.response_sha256, sku=selected.sku, color=selected.color, seller=selected.seller or None,
                     options=dict(selected.options), offer_url=selected.published_link,
                     price=selected.money.model_dump(mode='json'), stock=selected.availability,
-                    condition=selected.condition or None, merchant_address=next(iter(selected.address_lines), None)))
+                    condition=selected.condition or None, merchant_address=next(iter(selected.address_lines), None),
+                    findings=page.findings))
                 reason = 'public listing inspected'
             except (ValueError, OSError, BudgetDenied, httpx2.HTTPError) as exc:
                 reason = 'listing inspection incomplete: ' + type(exc).__name__

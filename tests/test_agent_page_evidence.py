@@ -168,6 +168,7 @@ class CatalogEvidenceTests(TestCase):
         page = report['pages'][f.url]
         self.assertEqual(page['status'], 'new', page)
         self.assertIn('price', page['changed_fields'])
+        self.assertTrue({'condition', 'seller.market', 'seller.name'}.issubset(page['changed_fields']))
         self.assertEqual(page['decisions'][-1]['selected']['sku'], 'sku-black')
         self.assertEqual(reads, [('firecrawl', f.url)])
 
