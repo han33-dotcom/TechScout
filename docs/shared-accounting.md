@@ -26,11 +26,13 @@ administrative credentials; deleting/restoring accounting data can defeat any
 application ledger. SQLite and injected clocks are explicit offline-test options.
 Missing configuration, schema, database access or project identity stops work.
 
-**Local-first decision, November 17:** the user selected a dedicated local PostgreSQL
-ledger on Hassan's PC for now, with migration to hosted PostgreSQL later if needed.
-This is the active accounting authority for work on that PC. It does not coordinate
-separate machines automatically: teammates must not independently spend against
-another copy of the same campaign. See [local setup and migration](local-accounting.md).
+The first deployment used a dedicated database on Hassan's PC. The hosted
+development ledger uses the same project ID and separate restricted logins for
+Hasan and Ahmad. [Deployment record #248](https://github.com/han33-dotcom/TechScout/issues/248)
+tracks which endpoint is active and the verified switch. Load the current
+endpoint from your own user settings. Existing Windows shells can run
+`. ./scripts/Use-LocalAccounting.ps1`. See the [backup and migration guide](local-accounting.md).
+
 For a dedicated ledger, an administrator runs `python -m app.accounting_admin initialize`.
 This creates or migrates just the accounting tables. A full application database
 receives the same storage format through Alembic revision `exp_ledger_rows` on this
