@@ -10,7 +10,7 @@ import re
 from typing import Literal
 from urllib.parse import urljoin
 
-from pydantic import Field
+from pydantic import AliasChoices, Field
 
 from app.contracts import Model, Money
 from app.model_provider import _schema
@@ -171,7 +171,9 @@ class LocationReading(Model):
 
 
 class BuyerPageDecision(PageDecision):
-    fits: bool
+    fits: bool = Field(validation_alias=AliasChoices('item_meets_buyer_requirements', 'fits'),
+                       description='Does the product and its specific variant meet the item requirements? '
+                                   'Assess seller premises separately. A missing address does not disqualify the item.')
     seller_location: LocationReading | None = None
     use_location_index: int | None = Field(default=None, ge=0)
 
@@ -212,8 +214,9 @@ In listing_indices select every supplied listing whose actual seller you can ide
 Conversely, on a product page you can select an already observed location using use_location_index.
 Judge the identity using both pages. A shared website, marketplace operator, delivery area, service
 partner or unrelated business address alone is insufficient. Leave uncertain associations empty.
-For a buyer, set fits and explain your judgment (fits is ignored while paging or when there is no offer)
-against all the buyer's words and controls. State what you did find when something is missing."""
+For a buyer, judge the actual item and selected configuration against the requested product and use case.
+Set item_meets_buyer_requirements independently of seller identity, premises and delivery checks.
+The judgment is ignored while paging or when there is no offer. State what you did find when something is missing."""
 
 
 def normalized(text):

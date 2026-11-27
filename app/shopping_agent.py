@@ -27,9 +27,9 @@ from app.eligibility import check_full_product
 from app.inference import ROOT, InferenceConfig, build_inference, load_env_file
 from app.onboarding import canonical, source_id_for
 from app.openrouter import InputTokenLimit
-from app.page_observation import PageNavigation, inspect_capture
+from app.page_observation import PageNavigation, ReadPosition, inspect_capture
 from app.pending_listing_reads import PendingListingReads
-from app.selected_listing import Match, MissingSellerLocation, Selection, with_option
+from app.selected_listing import Match, MerchantLocation, MissingSellerLocation, Selection, with_option
 from app.firecrawl import ManagedPage
 
 BUYER_SETTINGS = ROOT / 'config/two-agent-buyer.json'
@@ -157,7 +157,15 @@ class PricedListing:
     page: ManagedPage
     selection: Selection
     match: Match
-    controls: tuple
+    controls: tuple | None
+
+
+@dataclass(frozen=True)
+class PausedListing:
+    page: ManagedPage
+    controls: tuple | None
+    position: ReadPosition
+    merchant: MerchantLocation | None = None
 
 
 def search_argument_error(kind, query, destination):
@@ -180,7 +188,7 @@ class ShoppingAgent(DomesticBuyerFlow):
 
     def __init__(self, context, deps):
         super().__init__(context, deps)
-        self.trace.update(controller='single_agent', actions=[], prompt_version='shopping-agent-14')
+        self.trace.update(controller='single_agent', actions=[], prompt_version='shopping-agent-15')
         self.trace['request'].pop('model', None)
         self.leads = []
         self.redirected_urls = set()
@@ -272,7 +280,7 @@ class ShoppingAgent(DomesticBuyerFlow):
             actions.append(Action('inspect', f'Inspect selected listing {listing.url[:200]} {title}'.rstrip(), (i,)))
             if self.deps.inspect_listing:
                 if listing.url in self.paused_pages:
-                    page, _, _ = self.paused_pages[listing.url]
+                    page = self.paused_pages[listing.url].page
                     actions.append(Action('resume', f'Resume the captured listing at its saved reading position: {listing.url}',
                                           (listing.url, page.outcome.response_sha256)))
                 if listing.url in self.link_indexes:
@@ -432,11 +440,12 @@ class ShoppingAgent(DomesticBuyerFlow):
             return dict(status='wait_ended')
         if action.kind == 'resume':
             url, digest = action.args
-            page, controls, position = self.paused_pages[url]
-            if page.outcome.response_sha256 != digest:
+            saved = self.paused_pages[url]
+            if saved.page.outcome.response_sha256 != digest:
                 return dict(status='superseded_capture')
             index = next(i for i, row in enumerate(self.leads) if row.url == url)
-            return self.review_page(index, url, controls, room, lambda: page, position=position)
+            return self.review_page(index, url, saved.controls, room, lambda: saved.page,
+                                    position=saved.position, merchant=saved.merchant)
         if action.kind == 'find_link':
             url, = action.args
             term = query.casefold()
@@ -563,7 +572,7 @@ class ShoppingAgent(DomesticBuyerFlow):
                 consumed = True
         return consumed
 
-    def review_page(self, index, url, browser, room, result_page, *, position=None):
+    def review_page(self, index, url, browser, room, result_page, *, position=None, merchant=None):
         prior = tuple(self.uncertain.values())[:MAX_UNCERTAIN]
         try:
             page = result_page()
@@ -657,9 +666,19 @@ class ShoppingAgent(DomesticBuyerFlow):
         result.update(findings=reading.findings, assessment=reading.reason)
         if reading.location:
             self.merchant_locations[url] = reading.location
-            saved = []
+            saved, needs_review = [], []
             for i in reading.listing_indices:
                 row = listings[i]
+                if not row.match.selected_item_fits:
+                    # Proof of merchant identity cannot change an item mismatch. The buyer can
+                    # reread the original variant with the new seller context if fit was unresolved.
+                    target = row.page.outcome.final_url
+                    question = 'Does this item meet the product requirements now that its merchant was identified?'
+                    position_to_review = ReadPosition(0, (), question, '', question, (), ())
+                    self.paused_pages[target] = PausedListing(row.page, row.controls, position_to_review, reading.location)
+                    key = action_key('resume', target, row.page.outcome.response_sha256)
+                    needs_review.append(dict(url=target, action_id=key))
+                    continue
                 try:
                     item = row.selection.partial(row.page, self.run_ref, self.request, row.match,
                                                  row.controls, reading.location)
@@ -669,7 +688,7 @@ class ShoppingAgent(DomesticBuyerFlow):
                 self.blockers.pop(row.page.outcome.final_url, None)
                 saved.append(str(item.offer.listing_url))
             result.update(merchant_quote=reading.location.merchant_quote, address_quote=reading.location.address_quote,
-                          linked_listings=saved)
+                          linked_listings=saved, items_to_reassess=needs_review)
         selected = reading.selection
         if selected or reading.findings or reading.links or reading.position:
             self.checked_pages[url] = dict(url=url, sha256=obs.response_sha256,
@@ -677,7 +696,7 @@ class ShoppingAgent(DomesticBuyerFlow):
                 selected=selected.facts() if selected else None, assessment=reading.reason,
                 follow_up=[dict(url=link, action_id=action_key('inspect', link)) for link, _ in reading.links])
         if reading.position:
-            self.paused_pages[url] = (page, browser, reading.position)
+            self.paused_pages[url] = PausedListing(page, browser, reading.position, merchant)
             self.checked_pages[url]['reading_position'] = dict(start=reading.position.start, find=reading.position.terms,
                                                                question=reading.position.question)
             self.checked_pages[url]['gap'] = reading.reason
@@ -706,12 +725,19 @@ class ShoppingAgent(DomesticBuyerFlow):
         result['item_fits'] = match.selected_item_fits
         result['merchant_located'] = selected.structured_address or (
             match.merchant_address_line is not None and match.merchant_address_line < len(selected.address_lines))
-        location = locations[reading.use_location_index] if reading.use_location_index is not None else None
-        if match.selected_item_fits and not result['merchant_located']:
-            # Expose additional named links from a promising listing while the merchant is unresolved.
-            self.page_links[url] = tuple(dict.fromkeys((*reading.links, *list(document.links.items())[:32])))
-            self.priced_listings[url] = PricedListing(replace(page, outcome=replace(obs, body=None)),
-                                                       selected, match, tuple(browser or ()))
+        # A prior explicit association belongs to this stored product capture. A changed
+        # or withdrawn contact receipt requires a fresh merchant judgment.
+        location = merchant if merchant and self.merchant_locations.get(merchant.source.final_url) == merchant else None
+        if reading.use_location_index is not None:
+            location = locations[reading.use_location_index]
+        if not result['merchant_located'] and location is None:
+            if match.selected_item_fits:
+                # The selected item needs only a merchant receipt. Keep the compact evidence for joining.
+                self.page_links[url] = tuple(dict.fromkeys((*reading.links, *list(document.links.items())[:32])))
+                pending_page = replace(page, outcome=replace(obs, body=None))
+            else:
+                pending_page = page
+            self.priced_listings[url] = PricedListing(pending_page, selected, match, browser)
         if location:
             result['merchant_located'] = True
         try:
