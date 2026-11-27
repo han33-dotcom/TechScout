@@ -1,0 +1,595 @@
+{
+  "experiment": "test/two-agent",
+  "buyer_code_revision": "903115c",
+  "config_sha256": "e4e2a5061a91f1228eeac81140a03d4893d19c05931df5a23ce0a1531b5ce01b",
+  "request": "I'm looking for new black Soundcore Q20i headphones. Which Lebanese shop has the lower total for one pair delivered to Batroun?",
+  "setup": "New buyer session and run for each pass through the API and worker. The same catalog snapshot contains one IT Promax seller. The buyer discovered additional leads itself. A process keep-awake request was active. Timing is relative to the start of each worker trace, in seconds.",
+  "previous_run": {
+    "run": "144172da-8c60-48b0-814c-c27235ddd069",
+    "elapsed_ms": 109312,
+    "status": "partial",
+    "stopped_by": [
+      "spend"
+    ],
+    "last_model_calls": [
+      {
+        "schema": "PageReading",
+        "status": "cancelled",
+        "wall_ms": 12843,
+        "dispatched": true
+      },
+      {
+        "schema": "Decision",
+        "status": "budget_denied",
+        "wall_ms": 469,
+        "dispatched": false
+      }
+    ],
+    "spend": {
+      "attempts": {
+        "model": 7,
+        "retrieval": 3,
+        "search": 1
+      },
+      "known_usd": "0.0283610",
+      "ledger": "read",
+      "note": "uncertain amounts are full reservations kept because the cost was not reported",
+      "still_held_usd": "0",
+      "uncertain_usd": "0.5204800"
+    },
+    "verified_recommendations": 0,
+    "buyer_limits_usd": {
+      "research": "0.75",
+      "total": "1"
+    }
+  },
+  "raised_allowance_runs": [
+    {
+      "method": "Ordinary buyer run with passive timing and page-read instrumentation.",
+      "run": "9b025f15-9a3f-49ad-b30a-3822f3befa7f",
+      "started_utc": "2026-11-27T11:25:41.946367+00:00",
+      "elapsed_ms": 117610,
+      "limits": {
+        "active_seconds": 299.702,
+        "concurrent_workers": 3,
+        "final_by_s": 118,
+        "ledger_buyer_caps": {
+          "calls": 40,
+          "research_spend_usd": "20",
+          "seconds": 120,
+          "spend_usd": "25"
+        },
+        "nonfinal_by_s": 85,
+        "recommendation_groups": 3
+      },
+      "calls": [
+        {
+          "role": "Decision",
+          "status": "completed",
+          "started_s": 0.447,
+          "finished_s": 11.582,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": "0.0034935",
+          "billing": "known"
+        },
+        {
+          "role": "Decision",
+          "status": "completed",
+          "started_s": 11.649,
+          "finished_s": 16.785,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": "0.003736",
+          "billing": "known"
+        },
+        {
+          "role": "Match",
+          "status": "completed",
+          "started_s": 23.246,
+          "finished_s": 29.867,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": "0.002168",
+          "billing": "known"
+        },
+        {
+          "role": "Decision",
+          "status": "completed",
+          "started_s": 29.877,
+          "finished_s": 35.932,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": "0.0056735",
+          "billing": "known"
+        },
+        {
+          "role": "Decision",
+          "status": "completed",
+          "started_s": 38.91,
+          "finished_s": 44.062,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": "0.007146",
+          "billing": "known"
+        },
+        {
+          "role": "Decision",
+          "status": "completed",
+          "started_s": 52.146,
+          "finished_s": 57.457,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": "0.0072085",
+          "billing": "known"
+        },
+        {
+          "role": "Decision",
+          "status": "completed",
+          "started_s": 74.446,
+          "finished_s": 79.222,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": "0.0066235",
+          "billing": "known"
+        },
+        {
+          "role": "PageReading",
+          "status": "completed",
+          "started_s": 94.835,
+          "finished_s": 101.896,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": "0.0292135",
+          "billing": "known"
+        },
+        {
+          "role": "Decision",
+          "status": "completed",
+          "started_s": 101.898,
+          "finished_s": 107.973,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": "0.0339735",
+          "billing": "known"
+        },
+        {
+          "role": "Decision",
+          "status": "completed",
+          "started_s": 108.228,
+          "finished_s": 115.2,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": "0.034201",
+          "billing": "known"
+        },
+        {
+          "role": "Decision",
+          "status": "cancelled",
+          "started_s": 115.526,
+          "finished_s": 117.397,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": null,
+          "billing": "unknown"
+        }
+      ],
+      "actions": [
+        {
+          "tool": "catalog",
+          "status": "leads",
+          "started_s": 11.582,
+          "finished_s": 11.649,
+          "new_leads": 1
+        },
+        {
+          "tool": "inspect",
+          "status": "priced_partial",
+          "started_s": 16.785,
+          "finished_s": 29.876,
+          "shop": "itpromax.store"
+        },
+        {
+          "tool": "web_search",
+          "status": "ok",
+          "started_s": 35.932,
+          "finished_s": 38.91,
+          "new_leads": 7
+        },
+        {
+          "tool": "inspect",
+          "status": "read_failed",
+          "started_s": 44.062,
+          "finished_s": 52.146,
+          "shop": "www.amazon.com",
+          "reason": "The listing could not be read."
+        },
+        {
+          "tool": "inspect",
+          "status": "read_failed",
+          "started_s": 57.457,
+          "finished_s": 74.153,
+          "shop": "outgeeked.net",
+          "reason": "The listing could not be read."
+        },
+        {
+          "tool": "inspect",
+          "status": "selection_unconfirmed",
+          "started_s": 79.222,
+          "finished_s": 101.896,
+          "shop": "www.dslr-zone.com",
+          "reason": "Black is unverified at www.dslr-zone.com. Published options include blue-de, white-de."
+        },
+        {
+          "tool": "inspect",
+          "status": "read_failed",
+          "started_s": 107.973,
+          "finished_s": 108.228,
+          "shop": "martixstores.com",
+          "reason": "The listing could not be read."
+        },
+        {
+          "tool": "render",
+          "status": "read_failed",
+          "started_s": 115.2,
+          "finished_s": 115.526,
+          "shop": "outgeeked.net",
+          "reason": "The listing could not be read."
+        }
+      ],
+      "reads": [
+        {
+          "host": "itpromax.store",
+          "reader": "firecrawl",
+          "outcome": "capture",
+          "http": 200,
+          "seconds_remaining_in_phase": 68.22
+        },
+        {
+          "host": "www.amazon.com",
+          "reader": "firecrawl",
+          "outcome": "ReadTimeout",
+          "reason": "The read operation timed out",
+          "seconds_remaining_in_phase": 40.94
+        },
+        {
+          "host": "outgeeked.net",
+          "reader": "firecrawl",
+          "outcome": "TimeoutError",
+          "reason": "Provider deadline exceeded",
+          "seconds_remaining_in_phase": 27.55
+        },
+        {
+          "host": "www.dslr-zone.com",
+          "reader": "firecrawl",
+          "outcome": "capture",
+          "http": 200,
+          "seconds_remaining_in_phase": 37.78
+        },
+        {
+          "host": "martixstores.com",
+          "reader": "firecrawl",
+          "outcome": "BudgetDenied",
+          "reason": "The research objective has reached its deadline",
+          "seconds_remaining_in_phase": 9.03
+        },
+        {
+          "host": "outgeeked.net",
+          "reader": "playwright",
+          "outcome": "ValueError",
+          "reason": "The browser could not load the retailer listing (BUDGET_EXHAUSTED).",
+          "seconds_remaining_in_phase": 1.8
+        }
+      ],
+      "stop_flags": [
+        "deadline"
+      ],
+      "status": "partial",
+      "partials": [
+        {
+          "seller": "IT Promax",
+          "item_price": {
+            "amount": "48.00",
+            "currency": "USD"
+          },
+          "online_stock": true,
+          "cost": {
+            "status": "incomplete",
+            "known_subtotal": null,
+            "missing": [
+              "Delivery to the requested destination and mandatory charges still need checking."
+            ]
+          }
+        }
+      ],
+      "verified_count": 0,
+      "spend": {
+        "attempts": {
+          "model": 11,
+          "retrieval": 4,
+          "search": 1
+        },
+        "known_usd": "0.1334370",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0.5204800"
+      }
+    },
+    {
+      "method": "Shortened the wait for the first dispatched item-reading model call to 250 milliseconds. The real provider request was started. Other model, retailer and web requests ran normally.",
+      "run": "0c77a2a7-16a0-4ccc-80b7-caf19e2a566e",
+      "started_utc": "2026-11-27T11:28:24.649988+00:00",
+      "elapsed_ms": 117671,
+      "limits": {
+        "active_seconds": 299.677,
+        "concurrent_workers": 3,
+        "final_by_s": 118,
+        "ledger_buyer_caps": {
+          "calls": 40,
+          "research_spend_usd": "20",
+          "seconds": 120,
+          "spend_usd": "25"
+        },
+        "nonfinal_by_s": 85,
+        "recommendation_groups": 3
+      },
+      "calls": [
+        {
+          "role": "Decision",
+          "status": "completed",
+          "started_s": 0.374,
+          "finished_s": 5.028,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": "0.0034935",
+          "billing": "known"
+        },
+        {
+          "role": "Decision",
+          "status": "completed",
+          "started_s": 8.068,
+          "finished_s": 13.391,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": "0.0049635",
+          "billing": "known"
+        },
+        {
+          "role": "PageReading",
+          "status": "timeout",
+          "started_s": 21.315,
+          "finished_s": 23.634,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": null,
+          "billing": "unknown"
+        },
+        {
+          "role": "Decision",
+          "status": "completed",
+          "started_s": 23.634,
+          "finished_s": 29.725,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": "0.039721",
+          "billing": "known"
+        },
+        {
+          "role": "PageReading",
+          "status": "completed",
+          "started_s": 45.611,
+          "finished_s": 53.235,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": "0.0291935",
+          "billing": "known"
+        },
+        {
+          "role": "Decision",
+          "status": "completed",
+          "started_s": 53.235,
+          "finished_s": 59.156,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": "0.067126",
+          "billing": "known"
+        },
+        {
+          "role": "Decision",
+          "status": "completed",
+          "started_s": 66.042,
+          "finished_s": 71.456,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": "0.0671935",
+          "billing": "known"
+        },
+        {
+          "role": "Decision",
+          "status": "completed",
+          "started_s": 72.215,
+          "finished_s": 79.723,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": "0.0668885",
+          "billing": "known"
+        },
+        {
+          "role": "Match",
+          "status": "completed",
+          "started_s": 90.919,
+          "finished_s": 97.385,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": "0.001898",
+          "billing": "known"
+        },
+        {
+          "role": "Decision",
+          "status": "completed",
+          "started_s": 97.385,
+          "finished_s": 104.938,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": "0.0683235",
+          "billing": "known"
+        },
+        {
+          "role": "Decision",
+          "status": "completed",
+          "started_s": 105.193,
+          "finished_s": 114.749,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": "0.0685835",
+          "billing": "known"
+        },
+        {
+          "role": "Decision",
+          "status": "cancelled",
+          "started_s": 115.129,
+          "finished_s": 117.651,
+          "dispatched": true,
+          "reserved_usd": "0.5204800",
+          "actual_usd": null,
+          "billing": "unknown"
+        }
+      ],
+      "actions": [
+        {
+          "tool": "web_search",
+          "status": "ok",
+          "started_s": 5.028,
+          "finished_s": 8.068,
+          "new_leads": 7
+        },
+        {
+          "tool": "inspect",
+          "status": "selection_unconfirmed",
+          "started_s": 13.391,
+          "finished_s": 23.634,
+          "shop": "outgeeked.net",
+          "reason": "The current capture could not confirm the selected item and its price."
+        },
+        {
+          "tool": "inspect",
+          "status": "selection_unconfirmed",
+          "started_s": 29.725,
+          "finished_s": 53.235,
+          "shop": "www.dslr-zone.com",
+          "reason": "Black is unverified at www.dslr-zone.com. Published options include blue-de, white-de."
+        },
+        {
+          "tool": "inspect",
+          "status": "read_failed",
+          "started_s": 59.156,
+          "finished_s": 66.041,
+          "shop": "martixstores.com",
+          "reason": "The listing could not be read."
+        },
+        {
+          "tool": "inspect",
+          "status": "read_failed",
+          "started_s": 71.456,
+          "finished_s": 71.948,
+          "shop": "www.classic-phones.com",
+          "reason": "The listing could not be read."
+        },
+        {
+          "tool": "render",
+          "status": "no_match",
+          "started_s": 79.723,
+          "finished_s": 97.385,
+          "shop": "martixstores.com",
+          "reason": "The named merchant's Lebanese location could not be established."
+        },
+        {
+          "tool": "follow",
+          "status": "read_failed",
+          "started_s": 104.938,
+          "finished_s": 105.193,
+          "shop": "martixstores.com",
+          "reason": "The listing could not be read."
+        },
+        {
+          "tool": "inspect",
+          "status": "read_failed",
+          "started_s": 114.749,
+          "finished_s": 115.129,
+          "shop": "www.spinneyslebanon.com",
+          "reason": "The listing could not be read."
+        }
+      ],
+      "reads": [
+        {
+          "host": "outgeeked.net",
+          "reader": "firecrawl",
+          "outcome": "capture",
+          "http": 200,
+          "seconds_remaining_in_phase": 71.61
+        },
+        {
+          "host": "www.dslr-zone.com",
+          "reader": "firecrawl",
+          "outcome": "capture",
+          "http": 200,
+          "seconds_remaining_in_phase": 55.27
+        },
+        {
+          "host": "martixstores.com",
+          "reader": "firecrawl",
+          "outcome": "ReadTimeout",
+          "reason": "The read operation timed out",
+          "seconds_remaining_in_phase": 25.84
+        },
+        {
+          "host": "www.classic-phones.com",
+          "reader": "firecrawl",
+          "outcome": "BudgetDenied",
+          "reason": "The research objective has reached its deadline",
+          "seconds_remaining_in_phase": 13.55
+        },
+        {
+          "host": "martixstores.com",
+          "reader": "playwright",
+          "outcome": "capture",
+          "seconds_remaining_in_phase": 37.28
+        },
+        {
+          "host": "martixstores.com",
+          "reader": "firecrawl",
+          "outcome": "BudgetDenied",
+          "reason": "The research objective has reached its deadline",
+          "seconds_remaining_in_phase": 12.06
+        },
+        {
+          "host": "www.spinneyslebanon.com",
+          "reader": "firecrawl",
+          "outcome": "BudgetDenied",
+          "reason": "The research objective has reached its deadline",
+          "seconds_remaining_in_phase": 2.25
+        }
+      ],
+      "stop_flags": [
+        "deadline"
+      ],
+      "status": "partial",
+      "partials": [],
+      "verified_count": 0,
+      "spend": {
+        "attempts": {
+          "model": 12,
+          "retrieval": 5,
+          "search": 1,
+          "work": 1
+        },
+        "known_usd": "0.4173845",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "1.0409600"
+      }
+    }
+  ]
+}

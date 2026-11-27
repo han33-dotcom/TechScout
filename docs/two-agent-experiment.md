@@ -104,3 +104,13 @@ Three fresh Q20i buyer runs each kept IT Promax at USD 48 before delivery. The f
 Both agents can inspect the page text, individual product and offer records, published option links and controls. They can read a linked variant with Firecrawl or use Playwright when the first read leaves a question open. An unfamiliar page layout can reach the agent even when the structured reader cannot identify a single product.
 
 In a replay of two captured listings, both agents identified OutGeeked's black Q20i at USD 40 as out of stock. Both left black unconfirmed at DSLR Zone, where the priced options were blue and white. Six fresh buyer sessions using the IT Promax catalog produced zero verified delivered totals. [Archived page replays and fresh buyer runs](../acceptance/development/two-agent/page-evidence.json)
+
+### Buyer continuation after a timeout
+
+The catalog allowance increase had left the buyer at USD 0.75 for research and USD 1 overall. In the earlier Batroun run, a dispatched page-reading call ended without a billing receipt. The ledger kept its USD 0.52048 reservation and refused the next decision before dispatch. New two-agent buyer runs now have USD 20 for research and USD 25 overall. At the current model rates, 30 full research reservations fit within USD 20 and 40 full reservations fit within USD 25.
+
+Two fresh Batroun sessions started from the same one-seller catalog. In the ordinary run the buyer found seven web leads, continued past timeouts at Amazon and OutGeeked, and read DSLR Zone's page. It retained the black IT Promax pair at USD 48 in online stock. Delivery and mandatory charges remained unknown. The run stopped on its deadline after 117.6 seconds.
+
+In the controlled run we shortened the wait for the first dispatched page-reading model call at OutGeeked to 250 milliseconds. The ledger retained USD 0.52048. The very next decision completed and the agent read DSLR Zone, where it could verify only the blue and white options. Six more shopping actions followed the timeout, including a browser read and a retailer link follow-up. The run stopped on its deadline after 117.7 seconds. Both runs produced zero verified delivered totals. [Before-and-after model dispatches, retailer reads and spending](../acceptance/development/two-agent/buyer-allowance.json)
+
+The remaining checkpoint is to verify delivery and mandatory fees for each viable seller and compare delivered totals for Batroun. The next diagnostic should trace when the buyer can investigate delivery on an already-priced offer and how much time remains when it tries. The original buyer thresholds remain unmeasured on this branch.
