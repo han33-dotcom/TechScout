@@ -344,7 +344,7 @@ class OpenRouterProvider:
                        messages=[dict(role='system', content=instructions),
                                  dict(role='user', content=json.dumps(data, ensure_ascii=False, allow_nan=False))],
                        response_format=dict(type='json_schema', json_schema=dict(
-                           name='result', strict=True, schema=_schema(output))),
+                           name='result', strict=True, schema=_schema(output, provider=route.provider))),
                        max_tokens=s.max_output_tokens, stream=False, provider=provider)
         if s.effort:
             payload['reasoning'] = dict(effort=s.effort)

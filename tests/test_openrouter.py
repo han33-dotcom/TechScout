@@ -246,6 +246,27 @@ class OpenRouterTests(unittest.TestCase):
         self.assertEqual(p['provider']['data_collection'], 'allow')
         self.assertEqual(p['reasoning'], {'effort': 'low'})
 
+    def test_anthropic_page_format_preserves_money_validation(self):
+        from app.model_provider import _schema
+        from app.page_observation import BuyerPageDecision
+
+        model = 'anthropic/claude-opus-5.5'
+        settings = config(routes=[route(model, 'anthropic')])
+        offer = dict(title='USB headset', brand='Example', seller='Test shop', price_quote='$12',
+                     currency_quote='USD', price=dict(amount='-12', currency='USD'))
+        decision = dict(item_meets_buyer_requirements=True, offer=offer)
+        provider = self.provider([reply(model, json.dumps(decision), provider='anthropic')], settings)
+        result = provider.generate('Read the listing.', {}, BuyerPageDecision, budget=self.budget)
+        self.assertEqual(result.status, 'invalid_output')
+        wire_schema = self.sent[0]['response_format']['json_schema']['schema']
+        expected = _schema(BuyerPageDecision)
+        amount = expected['$defs']['Money']['properties']['amount']
+        self.assertEqual(amount.pop('ge'), 0)
+        amount['description'] = 'Must be at least 0.'
+        self.assertEqual(wire_schema, expected)
+        offer['price']['amount'] = '12.50'
+        self.assertEqual(BuyerPageDecision.model_validate(decision).offer.price.amount, Decimal('12.50'))
+
     def test_unsupported_parameters_are_refused_before_sending_and_by_the_gateway(self):
         cases = {
             'no structured outputs': config(routes=[dict(route(), supported_parameters=['max_tokens', 'response_format'])]),
