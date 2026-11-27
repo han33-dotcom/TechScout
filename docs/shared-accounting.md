@@ -26,11 +26,13 @@ administrative credentials; deleting/restoring accounting data can defeat any
 application ledger. SQLite and injected clocks are explicit offline-test options.
 Missing configuration, schema, database access or project identity stops work.
 
-**Local-first decision, November 17:** the user selected a dedicated local PostgreSQL
-ledger on Hassan's PC for now, with migration to hosted PostgreSQL later if needed.
-This is the active accounting authority for work on that PC. It does not coordinate
-separate machines automatically: teammates must not independently spend against
-another copy of the same campaign. See [local setup and migration](local-accounting.md).
+The first deployment used a dedicated database on Hassan's PC. The hosted
+development ledger uses the same project ID and separate restricted logins for
+Hasan and Ahmad. [Deployment record #248](https://github.com/han33-dotcom/TechScout/issues/248)
+tracks which endpoint is active and the verified switch. Load the current
+endpoint from your own user settings. Existing Windows shells can run
+`. ./scripts/Use-LocalAccounting.ps1`. See the [backup and migration guide](local-accounting.md).
+
 For a dedicated ledger, an administrator runs `python -m app.accounting_admin initialize`.
 This creates or migrates just the accounting tables. A full application database
 receives the same storage format through Alembic revision 0012.
@@ -42,6 +44,26 @@ It checks limits and updates the affected records before releasing the lock and
 dispatching an external call. Read-only status and cancellation checks leave
 the records untouched. An explicit `Ledger.snapshot()` reconstructs the full
 historical snapshot for audit and export.
+
+## Developing from two laptops
+
+Run the ordinary test suite on local fixtures. A PostgreSQL suite uses its own
+disposable `TEST_DATABASE_URL` and resets its schema. Each developer's app database
+and test database are separate from the live accounting URL. Live jobs on both
+laptops use the same project, each with its own runtime login.
+
+PostgreSQL clients pipeline the header lock, database clock and targeted record
+reads. Each statement after the lock sees the preceding writer's committed changes
+under the default READ COMMITTED isolation. Writes finish before dispatch. An
+original shop and a second shop observed on landing each count towards that shop's
+workload allowance. Busy or exhausted live limits can defer or refuse an action.
+
+On Neon Free, monitor project compute and transfer for real runs in the Neon
+console. A continuously running maintenance `serve` process checks the ledger
+every minute and can keep it awake. Schedule `python -m app.maintenance tick`
+at the intended collection times for intermittent development. On a network or
+quota outage, keep outstanding reservations and resume live work against the
+shared ledger after it recovers. Offline fixture development can continue.
 
 ## Reservations and recovery
 
