@@ -1,0 +1,1835 @@
+{
+  "issue": 246,
+  "branch": "test/two-agent",
+  "scope": "Listed prices before delivery. The original threshold suite was not run.",
+  "baseline": {
+    "catalog_sha256": "03606bdedf2baa46fe8515ea84ffbb2c8e7cee4a1afc9da90fc2fe46f6624c6d",
+    "registry_sha256": "7ee6b54b4e0b3af6a1bc06a2965649a54eb80999b6ba988165c94c462d0c88b2",
+    "directory_entries": 24,
+    "corpus_resources": 2,
+    "corpus_source": "IT Promax",
+    "h111_seed_offers": 0
+  },
+  "method": "Ordinary request API and buyer worker. Each blind run uses a fresh session and a separate copy of the same catalog. Only the original request is supplied. The shopper controls all searches and reads. A separate diagnostic uses the operational ledger, one retailer scrape and provider-only lookups. Times are local monotonic observations relative to run start unless a UTC timestamp is given.",
+  "budgets": {
+    "seconds": 300,
+    "research_usd": "20",
+    "total_usd": "25",
+    "calls": 40,
+    "parallel_workers": 3
+  },
+  "controlled": {
+    "method": "Synthetic Firecrawl HTTP responses and model decisions. The first response body can finish only after the buyer sees the second saved card. The model fixture times out once on the resumed first page and then receives the same view again.",
+    "test": "tests/test_pending_listing_reads.py",
+    "elapsed_ms": 2532,
+    "answer": "Slow Audio USD 18.00 https://slow-shop.example/products/h111 is USD 3.00 lower than Fast Audio USD 21.00 https://fast-shop.example/products/h111.",
+    "sellers": [
+      {
+        "seller": "Fast Audio",
+        "model": "Logitech H111 wired 3.5 mm stereo headset",
+        "listing": "https://fast-shop.example/products/h111",
+        "sku": "H111",
+        "price": {
+          "amount": "21.00",
+          "currency": "USD"
+        },
+        "stock": true,
+        "condition": "new",
+        "receipts": [
+          {
+            "field_path": "seller.name",
+            "excerpt": "Fast Audio",
+            "origin_url": "https://fast-shop.example/products/h111",
+            "final_url": "https://fast-shop.example/products/h111",
+            "observed_at": "2026-11-27T15:47:42.221533Z",
+            "response_sha256": "f91b3ada65ac3970bf98b7b7ccc5a3b8fe3e9f9d29ba94c673195bde431c3340"
+          },
+          {
+            "field_path": "seller.market",
+            "excerpt": "\"addressCountry\": \"LB\"",
+            "origin_url": "https://fast-shop.example/products/h111",
+            "final_url": "https://fast-shop.example/products/h111",
+            "observed_at": "2026-11-27T15:47:42.221533Z",
+            "response_sha256": "f91b3ada65ac3970bf98b7b7ccc5a3b8fe3e9f9d29ba94c673195bde431c3340"
+          },
+          {
+            "field_path": "variant.product.model",
+            "excerpt": "Logitech H111 wired 3.5 mm stereo headset",
+            "origin_url": "https://fast-shop.example/products/h111",
+            "final_url": "https://fast-shop.example/products/h111",
+            "observed_at": "2026-11-27T15:47:42.221533Z",
+            "response_sha256": "f91b3ada65ac3970bf98b7b7ccc5a3b8fe3e9f9d29ba94c673195bde431c3340"
+          },
+          {
+            "field_path": "price",
+            "excerpt": "\"price\": \"21.00\"",
+            "origin_url": "https://fast-shop.example/products/h111",
+            "final_url": "https://fast-shop.example/products/h111",
+            "observed_at": "2026-11-27T15:47:42.221533Z",
+            "response_sha256": "f91b3ada65ac3970bf98b7b7ccc5a3b8fe3e9f9d29ba94c673195bde431c3340"
+          },
+          {
+            "field_path": "price",
+            "excerpt": "\"priceCurrency\": \"USD\"",
+            "origin_url": "https://fast-shop.example/products/h111",
+            "final_url": "https://fast-shop.example/products/h111",
+            "observed_at": "2026-11-27T15:47:42.221533Z",
+            "response_sha256": "f91b3ada65ac3970bf98b7b7ccc5a3b8fe3e9f9d29ba94c673195bde431c3340"
+          },
+          {
+            "field_path": "variant.color",
+            "excerpt": "Black",
+            "origin_url": "https://fast-shop.example/products/h111",
+            "final_url": "https://fast-shop.example/products/h111",
+            "observed_at": "2026-11-27T15:47:42.221533Z",
+            "response_sha256": "f91b3ada65ac3970bf98b7b7ccc5a3b8fe3e9f9d29ba94c673195bde431c3340"
+          },
+          {
+            "field_path": "stock",
+            "excerpt": "https://schema.org/InStock",
+            "origin_url": "https://fast-shop.example/products/h111",
+            "final_url": "https://fast-shop.example/products/h111",
+            "observed_at": "2026-11-27T15:47:42.221533Z",
+            "response_sha256": "f91b3ada65ac3970bf98b7b7ccc5a3b8fe3e9f9d29ba94c673195bde431c3340"
+          },
+          {
+            "field_path": "condition",
+            "excerpt": "https://schema.org/NewCondition",
+            "origin_url": "https://fast-shop.example/products/h111",
+            "final_url": "https://fast-shop.example/products/h111",
+            "observed_at": "2026-11-27T15:47:42.221533Z",
+            "response_sha256": "f91b3ada65ac3970bf98b7b7ccc5a3b8fe3e9f9d29ba94c673195bde431c3340"
+          }
+        ]
+      },
+      {
+        "seller": "Slow Audio",
+        "model": "Logitech H111 wired 3.5 mm stereo headset",
+        "listing": "https://slow-shop.example/products/h111",
+        "sku": "H111",
+        "price": {
+          "amount": "18.00",
+          "currency": "USD"
+        },
+        "stock": true,
+        "condition": "new",
+        "receipts": [
+          {
+            "field_path": "seller.name",
+            "excerpt": "Slow Audio",
+            "origin_url": "https://slow-shop.example/products/h111",
+            "final_url": "https://slow-shop.example/products/h111",
+            "observed_at": "2026-11-27T15:47:42.398124Z",
+            "response_sha256": "a8212010e6fd31c22c5fb694870fda9a57a88815f323d819c86c80ba540f9fd8"
+          },
+          {
+            "field_path": "seller.market",
+            "excerpt": "\"addressCountry\": \"LB\"",
+            "origin_url": "https://slow-shop.example/products/h111",
+            "final_url": "https://slow-shop.example/products/h111",
+            "observed_at": "2026-11-27T15:47:42.398124Z",
+            "response_sha256": "a8212010e6fd31c22c5fb694870fda9a57a88815f323d819c86c80ba540f9fd8"
+          },
+          {
+            "field_path": "variant.product.model",
+            "excerpt": "Logitech H111 wired 3.5 mm stereo headset",
+            "origin_url": "https://slow-shop.example/products/h111",
+            "final_url": "https://slow-shop.example/products/h111",
+            "observed_at": "2026-11-27T15:47:42.398124Z",
+            "response_sha256": "a8212010e6fd31c22c5fb694870fda9a57a88815f323d819c86c80ba540f9fd8"
+          },
+          {
+            "field_path": "price",
+            "excerpt": "\"price\": \"18.00\"",
+            "origin_url": "https://slow-shop.example/products/h111",
+            "final_url": "https://slow-shop.example/products/h111",
+            "observed_at": "2026-11-27T15:47:42.398124Z",
+            "response_sha256": "a8212010e6fd31c22c5fb694870fda9a57a88815f323d819c86c80ba540f9fd8"
+          },
+          {
+            "field_path": "price",
+            "excerpt": "\"priceCurrency\": \"USD\"",
+            "origin_url": "https://slow-shop.example/products/h111",
+            "final_url": "https://slow-shop.example/products/h111",
+            "observed_at": "2026-11-27T15:47:42.398124Z",
+            "response_sha256": "a8212010e6fd31c22c5fb694870fda9a57a88815f323d819c86c80ba540f9fd8"
+          },
+          {
+            "field_path": "variant.color",
+            "excerpt": "Black",
+            "origin_url": "https://slow-shop.example/products/h111",
+            "final_url": "https://slow-shop.example/products/h111",
+            "observed_at": "2026-11-27T15:47:42.398124Z",
+            "response_sha256": "a8212010e6fd31c22c5fb694870fda9a57a88815f323d819c86c80ba540f9fd8"
+          },
+          {
+            "field_path": "stock",
+            "excerpt": "https://schema.org/InStock",
+            "origin_url": "https://slow-shop.example/products/h111",
+            "final_url": "https://slow-shop.example/products/h111",
+            "observed_at": "2026-11-27T15:47:42.398124Z",
+            "response_sha256": "a8212010e6fd31c22c5fb694870fda9a57a88815f323d819c86c80ba540f9fd8"
+          },
+          {
+            "field_path": "condition",
+            "excerpt": "https://schema.org/NewCondition",
+            "origin_url": "https://slow-shop.example/products/h111",
+            "final_url": "https://slow-shop.example/products/h111",
+            "observed_at": "2026-11-27T15:47:42.398124Z",
+            "response_sha256": "a8212010e6fd31c22c5fb694870fda9a57a88815f323d819c86c80ba540f9fd8"
+          }
+        ]
+      }
+    ],
+    "events": [
+      {
+        "at_ms": 94,
+        "stage": "read_requested",
+        "url": "https://slow-shop.example/products/h111"
+      },
+      {
+        "at_ms": 141,
+        "stage": "scrape_dispatched",
+        "url": "https://slow-shop.example/products/h111"
+      },
+      {
+        "at_ms": 141,
+        "http": 200,
+        "method": "POST",
+        "stage": "response_headers",
+        "url": "https://slow-shop.example/products/h111"
+      },
+      {
+        "at_ms": 2188,
+        "stage": "read_requested",
+        "url": "https://fast-shop.example/products/h111"
+      },
+      {
+        "at_ms": 2219,
+        "stage": "scrape_dispatched",
+        "url": "https://fast-shop.example/products/h111"
+      },
+      {
+        "at_ms": 2219,
+        "http": 200,
+        "method": "POST",
+        "stage": "response_headers",
+        "url": "https://fast-shop.example/products/h111"
+      },
+      {
+        "at_ms": 2219,
+        "bytes": 1006,
+        "method": "POST",
+        "stage": "body_complete",
+        "url": "https://fast-shop.example/products/h111"
+      },
+      {
+        "at_ms": 2219,
+        "job_id": "Fast Audio",
+        "stage": "job_visible",
+        "url": "https://fast-shop.example/products/h111",
+        "via": "scrape_response"
+      },
+      {
+        "at_ms": 2235,
+        "sha256": "f91b3ada65ac3970bf98b7b7ccc5a3b8fe3e9f9d29ba94c673195bde431c3340",
+        "stage": "capture_delivered",
+        "url": "https://fast-shop.example/products/h111"
+      },
+      {
+        "at_ms": 2313,
+        "receipts": [
+          "f91b3ada65ac3970bf98b7b7ccc5a3b8fe3e9f9d29ba94c673195bde431c3340"
+        ],
+        "stage": "review_finished",
+        "status": "priced_partial",
+        "url": "https://fast-shop.example/products/h111"
+      },
+      {
+        "at_ms": 2344,
+        "bytes": 1006,
+        "method": "POST",
+        "stage": "body_complete",
+        "url": "https://slow-shop.example/products/h111"
+      },
+      {
+        "at_ms": 2344,
+        "job_id": "Slow Audio",
+        "stage": "job_visible",
+        "url": "https://slow-shop.example/products/h111",
+        "via": "scrape_response"
+      },
+      {
+        "at_ms": 2407,
+        "sha256": "a8212010e6fd31c22c5fb694870fda9a57a88815f323d819c86c80ba540f9fd8",
+        "stage": "capture_delivered",
+        "url": "https://slow-shop.example/products/h111"
+      },
+      {
+        "at_ms": 2453,
+        "reason": "timeout",
+        "stage": "retry_page_view",
+        "url": "https://slow-shop.example/products/h111"
+      },
+      {
+        "at_ms": 2485,
+        "receipts": [
+          "a8212010e6fd31c22c5fb694870fda9a57a88815f323d819c86c80ba540f9fd8"
+        ],
+        "stage": "review_finished",
+        "status": "priced_partial",
+        "url": "https://slow-shop.example/products/h111"
+      }
+    ],
+    "application_revision": "c9b4724"
+  },
+  "blind_runs": [
+    {
+      "run": "104ad252-8a98-4f01-ad03-924d57a3c13b",
+      "application_revision": "c960260",
+      "input": {
+        "request_id": "f297ff2260c84dc9a1bc9fda4f4f18d6",
+        "implementation": "single_agent",
+        "intent": {
+          "kind": "exact_model",
+          "model": "Which of two Lebanese shops has the lower listed price for a new Logitech H111 wired 3.5 mm stereo headset? Show both in-stock listings and their links. Compare item prices before delivery."
+        },
+        "buyer_text": "Which of two Lebanese shops has the lower listed price for a new Logitech H111 wired 3.5 mm stereo headset? Show both in-stock listings and their links. Compare item prices before delivery.",
+        "requirements": {
+          "category": "audio"
+        },
+        "fulfillment": {
+          "mode": "any"
+        }
+      },
+      "start_utc": "2026-11-27T15:30:37.202901+00:00",
+      "elapsed_ms": 286813,
+      "catalog_matches": 0,
+      "full_product_status": "partial",
+      "answer": "961Souq has the lower observed listed price, but I couldn’t fully verify two qualifying new-condition listings:\n\n• JAK Computer — Logitech H111 Stereo Headset (981-000612): US$25.00, new, in online stock.\nhttps://jakcomputer.com/products/logitech-h111-stereo-headset\n\n• 961Souq — Logitech H111: US$12.00 excluding VAT, shown in online stock. The page did not establish new condition or explicitly confirm the 3.5 mm connector, so this remains a partial match.\nhttps://961souq.com/products/logitech-h111-headset\n\n961Souq’s displayed item price is US$13 lower, before delivery. Its price excludes VAT; the tax treatment of JAK’s price was not established. I therefore can’t confirm a fully like-for-like comparison of two new units.",
+      "answer_source": "model",
+      "saved_cards": [
+        {
+          "seller": "JAK Computer",
+          "model": "Logitech H111 Stereo Headset 981-000612",
+          "listing": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+          "sku": "981-000612",
+          "price": {
+            "amount": "25.00",
+            "currency": "USD"
+          },
+          "stock": true,
+          "condition": "new",
+          "receipts": [
+            {
+              "field_path": "seller.name",
+              "excerpt": "JAK Computer",
+              "origin_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset?srsltid=AY6E960Sz8MClRf7QlYSHEhEwumUI6R6YljNFMlPOH5th8i7bO7l2Fuk",
+              "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+              "observed_at": "2026-11-27T15:32:10.814262Z",
+              "response_sha256": "26d2a5dbee8ba7ad0bac01815ccd4539aa15694d5b18e89c006fbb54d2029d32"
+            },
+            {
+              "field_path": "seller.market",
+              "excerpt": "Beirut Showroom: Mohammad Lababidi Street, Rose Garden Building, Block A, Ground Floor, Zarif, Beirut",
+              "origin_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset?srsltid=AY6E960Sz8MClRf7QlYSHEhEwumUI6R6YljNFMlPOH5th8i7bO7l2Fuk",
+              "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+              "observed_at": "2026-11-27T15:32:10.814262Z",
+              "response_sha256": "26d2a5dbee8ba7ad0bac01815ccd4539aa15694d5b18e89c006fbb54d2029d32"
+            },
+            {
+              "field_path": "variant.product.model",
+              "excerpt": "Logitech H111 Stereo Headset 981-000612",
+              "origin_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset?srsltid=AY6E960Sz8MClRf7QlYSHEhEwumUI6R6YljNFMlPOH5th8i7bO7l2Fuk",
+              "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+              "observed_at": "2026-11-27T15:32:10.814262Z",
+              "response_sha256": "26d2a5dbee8ba7ad0bac01815ccd4539aa15694d5b18e89c006fbb54d2029d32"
+            },
+            {
+              "field_path": "price",
+              "excerpt": "$25.00 USD",
+              "origin_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset?srsltid=AY6E960Sz8MClRf7QlYSHEhEwumUI6R6YljNFMlPOH5th8i7bO7l2Fuk",
+              "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+              "observed_at": "2026-11-27T15:32:10.814262Z",
+              "response_sha256": "26d2a5dbee8ba7ad0bac01815ccd4539aa15694d5b18e89c006fbb54d2029d32"
+            },
+            {
+              "field_path": "price",
+              "excerpt": "\"priceCurrency\": \"USD\"",
+              "origin_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset?srsltid=AY6E960Sz8MClRf7QlYSHEhEwumUI6R6YljNFMlPOH5th8i7bO7l2Fuk",
+              "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+              "observed_at": "2026-11-27T15:32:10.814262Z",
+              "response_sha256": "26d2a5dbee8ba7ad0bac01815ccd4539aa15694d5b18e89c006fbb54d2029d32"
+            },
+            {
+              "field_path": "stock",
+              "excerpt": "\"availability\": \"https://schema.org/InStock\"",
+              "origin_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset?srsltid=AY6E960Sz8MClRf7QlYSHEhEwumUI6R6YljNFMlPOH5th8i7bO7l2Fuk",
+              "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+              "observed_at": "2026-11-27T15:32:10.814262Z",
+              "response_sha256": "26d2a5dbee8ba7ad0bac01815ccd4539aa15694d5b18e89c006fbb54d2029d32"
+            },
+            {
+              "field_path": "condition",
+              "excerpt": "BRAND NEW",
+              "origin_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset?srsltid=AY6E960Sz8MClRf7QlYSHEhEwumUI6R6YljNFMlPOH5th8i7bO7l2Fuk",
+              "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+              "observed_at": "2026-11-27T15:32:10.814262Z",
+              "response_sha256": "26d2a5dbee8ba7ad0bac01815ccd4539aa15694d5b18e89c006fbb54d2029d32"
+            }
+          ],
+          "capture_check": {
+            "connector_excerpt": "3.5mm jack for universal compatibility",
+            "response_sha256": "26d2a5dbee8ba7ad0bac01815ccd4539aa15694d5b18e89c006fbb54d2029d32"
+          }
+        }
+      ],
+      "actions": [
+        {
+          "count": 0,
+          "status": "leads",
+          "tool": "catalog",
+          "turn": 1
+        },
+        {
+          "count": 8,
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 2
+        },
+        {
+          "lead": 2,
+          "status": "transfer_pending",
+          "tool": "inspect",
+          "turn": 3
+        },
+        {
+          "lead": 3,
+          "status": "transfer_pending",
+          "tool": "inspect",
+          "turn": 4
+        },
+        {
+          "status": "wait_ended",
+          "tool": "wait",
+          "turn": 5
+        },
+        {
+          "status": "A follow-up needs a question and a material reason.",
+          "tool": "ask",
+          "turn": 6
+        },
+        {
+          "status": "wait_ended",
+          "tool": "wait",
+          "turn": 7
+        },
+        {
+          "lead": 4,
+          "status": "transfer_pending",
+          "tool": "inspect",
+          "turn": 8
+        },
+        {
+          "lead": 0,
+          "status": "transfer_pending",
+          "tool": "inspect",
+          "turn": 9
+        },
+        {
+          "lead": 2,
+          "status": "read_failed",
+          "tool": "render",
+          "turn": 10
+        },
+        {
+          "lead": 5,
+          "status": "transfer_pending",
+          "tool": "inspect",
+          "turn": 11
+        },
+        {
+          "lead": 0,
+          "status": "read_failed",
+          "tool": "render",
+          "turn": 12
+        },
+        {
+          "lead": 1,
+          "status": "transfer_pending",
+          "tool": "inspect",
+          "turn": 13
+        },
+        {
+          "status": "wait_ended",
+          "tool": "wait",
+          "turn": 14
+        },
+        {
+          "lead": 4,
+          "status": "read_failed",
+          "tool": "render",
+          "turn": 15
+        }
+      ],
+      "reads": [
+        {
+          "url": "https://ayoubcomputers.com/logitech-h111-headset-microphone-h111/?srsltid=AY6E961H8VH3rqbPXArBFa-7wDTqK1k4eDTO36wQtRQrg68Mu6RgN64R",
+          "reader": "firecrawl",
+          "start_ms": 32966,
+          "end_ms": 146307,
+          "error": "TimeoutError",
+          "detail": "Provider deadline exceeded",
+          "events": [
+            {
+              "at_ms": 32953,
+              "stage": "read_requested"
+            },
+            {
+              "at_ms": 34938,
+              "stage": "scrape_dispatched"
+            },
+            {
+              "at_ms": 41906,
+              "http": 200,
+              "method": "POST",
+              "stage": "response_headers"
+            },
+            {
+              "at_ms": 138031,
+              "lookup": "activity",
+              "stage": "lookup_dispatched"
+            },
+            {
+              "at_ms": 139953,
+              "http": 200,
+              "method": "GET",
+              "stage": "response_headers"
+            },
+            {
+              "at_ms": 140594,
+              "bytes": 25334,
+              "method": "GET",
+              "stage": "body_complete"
+            },
+            {
+              "at_ms": 140859,
+              "job_id": "01a21da1-d2aa-776a-af82-25139d248354",
+              "stage": "job_visible",
+              "via": "activity"
+            },
+            {
+              "at_ms": 142516,
+              "lookup": "stored_scrape",
+              "stage": "lookup_dispatched"
+            },
+            {
+              "at_ms": 143297,
+              "http": 200,
+              "method": "GET",
+              "stage": "response_headers"
+            },
+            {
+              "at_ms": 146297,
+              "receipts": [],
+              "stage": "review_finished",
+              "status": "read_failed"
+            }
+          ]
+        },
+        {
+          "url": "https://jakcomputer.com/products/logitech-h111-stereo-headset?srsltid=AY6E960Sz8MClRf7QlYSHEhEwumUI6R6YljNFMlPOH5th8i7bO7l2Fuk",
+          "reader": "firecrawl",
+          "start_ms": 41421,
+          "end_ms": 93612,
+          "sha256": "26d2a5dbee8ba7ad0bac01815ccd4539aa15694d5b18e89c006fbb54d2029d32",
+          "job": "01a21da1-fe6a-70bd-9934-d74399c6dc29",
+          "events": [
+            {
+              "at_ms": 41406,
+              "stage": "read_requested"
+            },
+            {
+              "at_ms": 44391,
+              "stage": "scrape_dispatched"
+            },
+            {
+              "at_ms": 50813,
+              "http": 200,
+              "method": "POST",
+              "stage": "response_headers"
+            },
+            {
+              "at_ms": 93156,
+              "bytes": 623908,
+              "method": "POST",
+              "stage": "body_complete"
+            },
+            {
+              "at_ms": 93172,
+              "job_id": "01a21da1-fe6a-70bd-9934-d74399c6dc29",
+              "stage": "job_visible",
+              "via": "scrape_response"
+            },
+            {
+              "at_ms": 93656,
+              "sha256": "26d2a5dbee8ba7ad0bac01815ccd4539aa15694d5b18e89c006fbb54d2029d32",
+              "stage": "capture_delivered"
+            },
+            {
+              "at_ms": 108172,
+              "receipts": [
+                "26d2a5dbee8ba7ad0bac01815ccd4539aa15694d5b18e89c006fbb54d2029d32"
+              ],
+              "stage": "review_finished",
+              "status": "priced_partial"
+            }
+          ]
+        },
+        {
+          "url": "https://961souq.com/products/logitech-h111-headset?srsltid=AY6E960FoFjavkiYgo3EA_rlK8ISh3kx2AQdbXFZlM8zf9GFC6N9anDG",
+          "reader": "firecrawl",
+          "start_ms": 152118,
+          "end_ms": 162702,
+          "sha256": "ef462a60894fa2156ffd2086f7cc2551dff2334f0f3e50e0635a3d132927d0b6",
+          "job": "01a21da3-9f4a-742d-952d-dff31d11563d",
+          "events": [
+            {
+              "at_ms": 152109,
+              "stage": "read_requested"
+            },
+            {
+              "at_ms": 153500,
+              "stage": "scrape_dispatched"
+            },
+            {
+              "at_ms": 156578,
+              "http": 200,
+              "method": "POST",
+              "stage": "response_headers"
+            },
+            {
+              "at_ms": 162281,
+              "bytes": 98959,
+              "method": "POST",
+              "stage": "body_complete"
+            },
+            {
+              "at_ms": 162281,
+              "job_id": "01a21da3-9f4a-742d-952d-dff31d11563d",
+              "stage": "job_visible",
+              "via": "scrape_response"
+            },
+            {
+              "at_ms": 163281,
+              "sha256": "ef462a60894fa2156ffd2086f7cc2551dff2334f0f3e50e0635a3d132927d0b6",
+              "stage": "capture_delivered"
+            },
+            {
+              "at_ms": 177984,
+              "receipts": [
+                "ef462a60894fa2156ffd2086f7cc2551dff2334f0f3e50e0635a3d132927d0b6"
+              ],
+              "stage": "review_finished",
+              "status": "no_match"
+            }
+          ]
+        },
+        {
+          "url": "https://www.dslr-zone.com/product/logitech-h111/?srsltid=AY6E962HOVbCJ1KZD1tO_B-ivk4jcAPB1RrThhpqgvIiR1dnchWxzCll",
+          "reader": "firecrawl",
+          "start_ms": 161260,
+          "end_ms": 169185,
+          "sha256": "ed5786762a3c5089388b15e5059ebf52a785df6e2b41716239830d173814194c",
+          "job": "01a21da3-c1d7-77e0-99ff-1297892fb47d",
+          "events": [
+            {
+              "at_ms": 161250,
+              "stage": "read_requested"
+            },
+            {
+              "at_ms": 162984,
+              "stage": "scrape_dispatched"
+            },
+            {
+              "at_ms": 165422,
+              "http": 200,
+              "method": "POST",
+              "stage": "response_headers"
+            },
+            {
+              "at_ms": 168563,
+              "bytes": 584572,
+              "method": "POST",
+              "stage": "body_complete"
+            },
+            {
+              "at_ms": 168563,
+              "job_id": "01a21da3-c1d7-77e0-99ff-1297892fb47d",
+              "stage": "job_visible",
+              "via": "scrape_response"
+            },
+            {
+              "at_ms": 178156,
+              "sha256": "ed5786762a3c5089388b15e5059ebf52a785df6e2b41716239830d173814194c",
+              "stage": "capture_delivered"
+            },
+            {
+              "at_ms": 199703,
+              "receipts": [
+                "ed5786762a3c5089388b15e5059ebf52a785df6e2b41716239830d173814194c"
+              ],
+              "stage": "review_finished",
+              "status": "selection_unconfirmed"
+            }
+          ]
+        },
+        {
+          "url": "https://ayoubcomputers.com/logitech-h111-headset-microphone-h111/?srsltid=AY6E961H8VH3rqbPXArBFa-7wDTqK1k4eDTO36wQtRQrg68Mu6RgN64R",
+          "reader": "playwright",
+          "start_ms": 205992,
+          "end_ms": 209182,
+          "error": "ValueError",
+          "detail": "The browser could not load the retailer listing (HTTP_ERROR).",
+          "events": []
+        },
+        {
+          "url": "https://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm?srsltid=AY6E9631LmEhtWpZ-MVNSpZcfOwS6hfZ7dmXUHaKc3nDXyfG2-2blgD1",
+          "reader": "firecrawl",
+          "start_ms": 214647,
+          "end_ms": 259837,
+          "error": "TimeoutError",
+          "detail": "No time remains to recover the Firecrawl result",
+          "events": [
+            {
+              "at_ms": 214641,
+              "stage": "read_requested"
+            },
+            {
+              "at_ms": 216156,
+              "stage": "scrape_dispatched"
+            },
+            {
+              "at_ms": 219422,
+              "http": 200,
+              "method": "POST",
+              "stage": "response_headers"
+            },
+            {
+              "at_ms": 255000,
+              "lookup": "activity",
+              "stage": "lookup_dispatched"
+            },
+            {
+              "at_ms": 256703,
+              "http": 200,
+              "method": "GET",
+              "stage": "response_headers"
+            },
+            {
+              "at_ms": 259156,
+              "bytes": 25499,
+              "method": "GET",
+              "stage": "body_complete"
+            },
+            {
+              "at_ms": 259484,
+              "job_id": "01a21da4-9187-71d3-b151-84810c7f62da",
+              "stage": "job_visible",
+              "via": "activity"
+            },
+            {
+              "at_ms": 259828,
+              "receipts": [],
+              "stage": "review_finished",
+              "status": "read_failed"
+            }
+          ]
+        },
+        {
+          "url": "https://www.dslr-zone.com/product/logitech-h111/",
+          "reader": "playwright",
+          "start_ms": 223703,
+          "end_ms": 225914,
+          "error": "ValueError",
+          "detail": "The browser could not load the retailer listing (HTTP_ERROR).",
+          "events": []
+        },
+        {
+          "url": "https://www.carrefourlebanon.com/maflbn/en/gaming-headphone/logitech-h111-wired-headset-lgh111/p/524963?srsltid=AY6E963kn7LOvC21qZbg7GXxXW-ahLURn8SUZ9HGxgulTjI_CyZjdiv-",
+          "reader": "firecrawl",
+          "start_ms": 232712,
+          "end_ms": 276640,
+          "error": "TimeoutError",
+          "detail": "No time remains to recover the Firecrawl result",
+          "events": [
+            {
+              "at_ms": 232703,
+              "stage": "read_requested"
+            },
+            {
+              "at_ms": 234578,
+              "stage": "scrape_dispatched"
+            },
+            {
+              "at_ms": 238234,
+              "http": 200,
+              "method": "POST",
+              "stage": "response_headers"
+            },
+            {
+              "at_ms": 274156,
+              "lookup": "activity",
+              "stage": "lookup_dispatched"
+            },
+            {
+              "at_ms": 275141,
+              "http": 200,
+              "method": "GET",
+              "stage": "response_headers"
+            },
+            {
+              "at_ms": 275578,
+              "bytes": 25499,
+              "method": "GET",
+              "stage": "body_complete"
+            },
+            {
+              "at_ms": 276031,
+              "job_id": "01a21da4-daae-735c-9d15-fc00dc1e6a05",
+              "stage": "job_visible",
+              "via": "activity"
+            },
+            {
+              "at_ms": 277547,
+              "receipts": [],
+              "stage": "review_finished",
+              "status": "read_failed"
+            }
+          ]
+        },
+        {
+          "url": "https://961souq.com/products/logitech-h111-headset",
+          "reader": "playwright",
+          "start_ms": 265718,
+          "end_ms": 269394,
+          "error": "BudgetDenied",
+          "detail": "The research objective has reached its deadline",
+          "events": []
+        }
+      ],
+      "spend": {
+        "attempts": {
+          "model": 21,
+          "provider_read": 4,
+          "retrieval": 9,
+          "search": 1
+        },
+        "known_usd": "0.3040010",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0.5204800"
+      },
+      "request_elapsed_ms": 287164,
+      "qualifying_pair": false,
+      "result": "The buyer saved JAK Computer. The 961Souq page displayed USD 12 excluding VAT, with condition and connector unresolved. Ayoub sent HTTP 200 headers on the scrape and stored read, but neither body completed in time.",
+      "saved_card_check": "Rendered the saved API workspace in the frontend Comparison component and checked every saved seller, item price, product link and price/location receipt link. Each recorded field excerpt was also matched against its full HTML capture by SHA-256."
+    },
+    {
+      "run": "4f6b893d-c346-4889-8c73-c119e39d774e",
+      "application_revision": "2364fc8",
+      "input": {
+        "request_id": "cbc06b9288ee442eacd37ec6b919b5a1",
+        "implementation": "single_agent",
+        "intent": {
+          "kind": "exact_model",
+          "model": "Which of two Lebanese shops has the lower listed price for a new Logitech H111 wired 3.5 mm stereo headset? Show both in-stock listings and their links. Compare item prices before delivery."
+        },
+        "buyer_text": "Which of two Lebanese shops has the lower listed price for a new Logitech H111 wired 3.5 mm stereo headset? Show both in-stock listings and their links. Compare item prices before delivery.",
+        "requirements": {
+          "category": "audio"
+        },
+        "fulfillment": {
+          "mode": "any"
+        }
+      },
+      "start_utc": "2026-11-27T15:38:12.010372+00:00",
+      "elapsed_ms": 293484,
+      "catalog_matches": null,
+      "full_product_status": "partial",
+      "answer": "961Souq shows the lower sticker price, but I couldn’t verify two qualifying in-stock, new listings.\n\n• Dslr Zone — $13. Verified new Logitech H111 wired stereo headset with a 3.5 mm jack, listed in online stock.\nhttps://www.dslr-zone.com/product/logitech-h111/\n\n• 961Souq — $12, excluding VAT. Its H111 page has conflicting availability signals: stock data says in stock, but the visible page says “Check for availability.” New condition was not confirmed.\nhttps://961souq.com/products/logitech-h111-headset\n\n961Souq’s displayed price is $1 lower, but its VAT exclusion and unresolved stock/condition mean I can’t confirm it as the cheaper qualifying offer. Delivery is excluded from this comparison.",
+      "answer_source": "model",
+      "saved_cards": [
+        {
+          "seller": "Dslr Zone",
+          "model": "Logitech H111 Wired Headset",
+          "listing": "https://www.dslr-zone.com/product/logitech-h111/",
+          "sku": "096f203b8ff0c2fcf3217d0d",
+          "price": {
+            "amount": "13",
+            "currency": "USD"
+          },
+          "stock": true,
+          "condition": "new",
+          "receipts": [
+            {
+              "field_path": "seller.name",
+              "excerpt": "Dslr Zone",
+              "origin_url": "https://www.dslr-zone.com/product/logitech-h111/?srsltid=AY6E962HOVbCJ1KZD1tO_B-ivk4jcAPB1RrThhpqgvIiR1dnchWxzCll",
+              "final_url": "https://www.dslr-zone.com/product/logitech-h111/",
+              "observed_at": "2026-11-27T15:41:34.809451Z",
+              "response_sha256": "96fd6c337def603f48e81b63b5ef15d80ec4ca44e42aba19b237643464422396"
+            },
+            {
+              "field_path": "seller.market",
+              "excerpt": "Zalka, Amaret Chalhoub Highway",
+              "origin_url": "https://www.dslr-zone.com/product/logitech-h111/?srsltid=AY6E962HOVbCJ1KZD1tO_B-ivk4jcAPB1RrThhpqgvIiR1dnchWxzCll",
+              "final_url": "https://www.dslr-zone.com/product/logitech-h111/",
+              "observed_at": "2026-11-27T15:41:34.809451Z",
+              "response_sha256": "96fd6c337def603f48e81b63b5ef15d80ec4ca44e42aba19b237643464422396"
+            },
+            {
+              "field_path": "variant.product.model",
+              "excerpt": "Logitech H111 Wired Headset",
+              "origin_url": "https://www.dslr-zone.com/product/logitech-h111/?srsltid=AY6E962HOVbCJ1KZD1tO_B-ivk4jcAPB1RrThhpqgvIiR1dnchWxzCll",
+              "final_url": "https://www.dslr-zone.com/product/logitech-h111/",
+              "observed_at": "2026-11-27T15:41:34.809451Z",
+              "response_sha256": "96fd6c337def603f48e81b63b5ef15d80ec4ca44e42aba19b237643464422396"
+            },
+            {
+              "field_path": "price",
+              "excerpt": "\"price\":\"13\"",
+              "origin_url": "https://www.dslr-zone.com/product/logitech-h111/?srsltid=AY6E962HOVbCJ1KZD1tO_B-ivk4jcAPB1RrThhpqgvIiR1dnchWxzCll",
+              "final_url": "https://www.dslr-zone.com/product/logitech-h111/",
+              "observed_at": "2026-11-27T15:41:34.809451Z",
+              "response_sha256": "96fd6c337def603f48e81b63b5ef15d80ec4ca44e42aba19b237643464422396"
+            },
+            {
+              "field_path": "price",
+              "excerpt": "\"priceCurrency\":\"USD\"",
+              "origin_url": "https://www.dslr-zone.com/product/logitech-h111/?srsltid=AY6E962HOVbCJ1KZD1tO_B-ivk4jcAPB1RrThhpqgvIiR1dnchWxzCll",
+              "final_url": "https://www.dslr-zone.com/product/logitech-h111/",
+              "observed_at": "2026-11-27T15:41:34.809451Z",
+              "response_sha256": "96fd6c337def603f48e81b63b5ef15d80ec4ca44e42aba19b237643464422396"
+            },
+            {
+              "field_path": "stock",
+              "excerpt": "\"availability\":\"https://schema.org/InStock\"",
+              "origin_url": "https://www.dslr-zone.com/product/logitech-h111/?srsltid=AY6E962HOVbCJ1KZD1tO_B-ivk4jcAPB1RrThhpqgvIiR1dnchWxzCll",
+              "final_url": "https://www.dslr-zone.com/product/logitech-h111/",
+              "observed_at": "2026-11-27T15:41:34.809451Z",
+              "response_sha256": "96fd6c337def603f48e81b63b5ef15d80ec4ca44e42aba19b237643464422396"
+            },
+            {
+              "field_path": "condition",
+              "excerpt": "\"itemCondition\":\"NewCondition\"",
+              "origin_url": "https://www.dslr-zone.com/product/logitech-h111/?srsltid=AY6E962HOVbCJ1KZD1tO_B-ivk4jcAPB1RrThhpqgvIiR1dnchWxzCll",
+              "final_url": "https://www.dslr-zone.com/product/logitech-h111/",
+              "observed_at": "2026-11-27T15:41:34.809451Z",
+              "response_sha256": "96fd6c337def603f48e81b63b5ef15d80ec4ca44e42aba19b237643464422396"
+            }
+          ],
+          "capture_check": {
+            "connector_excerpt": "Stereo Headphones with Noise-Cancelling Microphone, 3.5 mm Audio Jack, PC/Mac/Laptop/Smartphone/Tablet",
+            "response_sha256": "96fd6c337def603f48e81b63b5ef15d80ec4ca44e42aba19b237643464422396"
+          }
+        }
+      ],
+      "actions": [
+        {
+          "count": 8,
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 1
+        },
+        {
+          "lead": 2,
+          "status": "transfer_pending",
+          "tool": "inspect",
+          "turn": 2
+        },
+        {
+          "lead": 3,
+          "status": "transfer_pending",
+          "tool": "inspect",
+          "turn": 3
+        },
+        {
+          "status": "wait_ended",
+          "tool": "wait",
+          "turn": 4
+        },
+        {
+          "lead": 3,
+          "status": "read_failed",
+          "tool": "render",
+          "turn": 5
+        },
+        {
+          "lead": 4,
+          "status": "transfer_pending",
+          "tool": "inspect",
+          "turn": 6
+        },
+        {
+          "lead": 0,
+          "status": "transfer_pending",
+          "tool": "inspect",
+          "turn": 7
+        },
+        {
+          "lead": 5,
+          "status": "transfer_pending",
+          "tool": "inspect",
+          "turn": 8
+        },
+        {
+          "lead": 4,
+          "status": "no_match",
+          "tool": "render",
+          "turn": 9
+        },
+        {
+          "lead": 2,
+          "status": "read_failed",
+          "tool": "render",
+          "turn": 10
+        },
+        {
+          "lead": 1,
+          "status": "read_failed",
+          "tool": "inspect",
+          "turn": 11
+        },
+        {
+          "lead": 5,
+          "status": "read_failed",
+          "tool": "render",
+          "turn": 14
+        },
+        {
+          "lead": 7,
+          "status": "read_failed",
+          "tool": "inspect",
+          "turn": 15
+        }
+      ],
+      "reads": [
+        {
+          "url": "https://ayoubcomputers.com/logitech-h111-headset-microphone-h111/?srsltid=AY6E961H8VH3rqbPXArBFa-7wDTqK1k4eDTO36wQtRQrg68Mu6RgN64R",
+          "reader": "firecrawl",
+          "start_ms": 18142,
+          "end_ms": 131032,
+          "error": "ReadTimeout",
+          "detail": "The read operation timed out",
+          "events": [
+            {
+              "at_ms": 18141,
+              "stage": "read_requested"
+            },
+            {
+              "at_ms": 19625,
+              "stage": "scrape_dispatched"
+            },
+            {
+              "at_ms": 25031,
+              "http": 200,
+              "method": "POST",
+              "stage": "response_headers"
+            },
+            {
+              "at_ms": 125266,
+              "lookup": "activity",
+              "stage": "lookup_dispatched"
+            },
+            {
+              "at_ms": 126219,
+              "http": 200,
+              "method": "GET",
+              "stage": "response_headers"
+            },
+            {
+              "at_ms": 132406,
+              "receipts": [],
+              "stage": "review_finished",
+              "status": "read_failed"
+            }
+          ]
+        },
+        {
+          "url": "https://jakcomputer.com/products/logitech-h111-stereo-headset?srsltid=AY6E960Sz8MClRf7QlYSHEhEwumUI6R6YljNFMlPOH5th8i7bO7l2Fuk",
+          "reader": "firecrawl",
+          "start_ms": 27335,
+          "end_ms": 85726,
+          "sha256": "4b1a7d2af4af02eded89781b7b2c255cfe138444dcbdb5a7e7ee779762ef0404",
+          "job": "01a21da8-a934-764d-966f-f8a0fbcff597",
+          "events": [
+            {
+              "at_ms": 27344,
+              "stage": "read_requested"
+            },
+            {
+              "at_ms": 28750,
+              "stage": "scrape_dispatched"
+            },
+            {
+              "at_ms": 33172,
+              "http": 200,
+              "method": "POST",
+              "stage": "response_headers"
+            },
+            {
+              "at_ms": 85453,
+              "bytes": 624472,
+              "method": "POST",
+              "stage": "body_complete"
+            },
+            {
+              "at_ms": 85453,
+              "job_id": "01a21da8-a934-764d-966f-f8a0fbcff597",
+              "stage": "job_visible",
+              "via": "scrape_response"
+            },
+            {
+              "at_ms": 85797,
+              "sha256": "4b1a7d2af4af02eded89781b7b2c255cfe138444dcbdb5a7e7ee779762ef0404",
+              "stage": "capture_delivered"
+            },
+            {
+              "at_ms": 121734,
+              "receipts": [
+                "4b1a7d2af4af02eded89781b7b2c255cfe138444dcbdb5a7e7ee779762ef0404"
+              ],
+              "stage": "review_finished",
+              "status": "selection_unconfirmed"
+            }
+          ]
+        },
+        {
+          "url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+          "reader": "playwright",
+          "start_ms": 129078,
+          "end_ms": 132401,
+          "error": "ValueError",
+          "detail": "The browser could not load the retailer listing (RATE_LIMIT).",
+          "events": []
+        },
+        {
+          "url": "https://961souq.com/products/logitech-h111-headset?srsltid=AY6E960FoFjavkiYgo3EA_rlK8ISh3kx2AQdbXFZlM8zf9GFC6N9anDG",
+          "reader": "firecrawl",
+          "start_ms": 141343,
+          "end_ms": 150446,
+          "sha256": "ef462a60894fa2156ffd2086f7cc2551dff2334f0f3e50e0635a3d132927d0b6",
+          "job": "01a21daa-636d-741f-9fe0-66a24fc09abd",
+          "events": [
+            {
+              "at_ms": 141344,
+              "stage": "read_requested"
+            },
+            {
+              "at_ms": 142766,
+              "stage": "scrape_dispatched"
+            },
+            {
+              "at_ms": 145766,
+              "http": 200,
+              "method": "POST",
+              "stage": "response_headers"
+            },
+            {
+              "at_ms": 150078,
+              "bytes": 98959,
+              "method": "POST",
+              "stage": "body_complete"
+            },
+            {
+              "at_ms": 150078,
+              "job_id": "01a21daa-636d-741f-9fe0-66a24fc09abd",
+              "stage": "job_visible",
+              "via": "scrape_response"
+            },
+            {
+              "at_ms": 152781,
+              "sha256": "ef462a60894fa2156ffd2086f7cc2551dff2334f0f3e50e0635a3d132927d0b6",
+              "stage": "capture_delivered"
+            },
+            {
+              "at_ms": 161219,
+              "receipts": [
+                "ef462a60894fa2156ffd2086f7cc2551dff2334f0f3e50e0635a3d132927d0b6"
+              ],
+              "stage": "review_finished",
+              "status": "selection_unconfirmed"
+            }
+          ]
+        },
+        {
+          "url": "https://www.dslr-zone.com/product/logitech-h111/?srsltid=AY6E962HOVbCJ1KZD1tO_B-ivk4jcAPB1RrThhpqgvIiR1dnchWxzCll",
+          "reader": "firecrawl",
+          "start_ms": 150742,
+          "end_ms": 202802,
+          "sha256": "96fd6c337def603f48e81b63b5ef15d80ec4ca44e42aba19b237643464422396",
+          "job": "01a21daa-9016-7235-ae0a-aef5abdda84b",
+          "events": [
+            {
+              "at_ms": 150750,
+              "stage": "read_requested"
+            },
+            {
+              "at_ms": 152187,
+              "stage": "scrape_dispatched"
+            },
+            {
+              "at_ms": 157594,
+              "http": 200,
+              "method": "POST",
+              "stage": "response_headers"
+            },
+            {
+              "at_ms": 202266,
+              "bytes": 584572,
+              "method": "POST",
+              "stage": "body_complete"
+            },
+            {
+              "at_ms": 202266,
+              "job_id": "01a21daa-9016-7235-ae0a-aef5abdda84b",
+              "stage": "job_visible",
+              "via": "scrape_response"
+            },
+            {
+              "at_ms": 212562,
+              "sha256": "96fd6c337def603f48e81b63b5ef15d80ec4ca44e42aba19b237643464422396",
+              "stage": "capture_delivered"
+            },
+            {
+              "at_ms": 245359,
+              "receipts": [
+                "96fd6c337def603f48e81b63b5ef15d80ec4ca44e42aba19b237643464422396"
+              ],
+              "stage": "review_finished",
+              "status": "priced_partial"
+            }
+          ]
+        },
+        {
+          "url": "https://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm?srsltid=AY6E9631LmEhtWpZ-MVNSpZcfOwS6hfZ7dmXUHaKc3nDXyfG2-2blgD1",
+          "reader": "firecrawl",
+          "start_ms": 166932,
+          "end_ms": 257851,
+          "error": "TimeoutError",
+          "detail": "No time remains to recover the Firecrawl result",
+          "events": [
+            {
+              "at_ms": 166937,
+              "stage": "read_requested"
+            },
+            {
+              "at_ms": 168172,
+              "stage": "scrape_dispatched"
+            },
+            {
+              "at_ms": 172203,
+              "http": 200,
+              "method": "POST",
+              "stage": "response_headers"
+            },
+            {
+              "at_ms": 253641,
+              "lookup": "activity",
+              "stage": "lookup_dispatched"
+            },
+            {
+              "at_ms": 256047,
+              "http": 200,
+              "method": "GET",
+              "stage": "response_headers"
+            },
+            {
+              "at_ms": 256719,
+              "bytes": 25694,
+              "method": "GET",
+              "stage": "body_complete"
+            },
+            {
+              "at_ms": 257250,
+              "job_id": "01a21daa-c7bc-76dd-a87b-e36b505a3a7d",
+              "stage": "job_visible",
+              "via": "activity"
+            },
+            {
+              "at_ms": 261312,
+              "receipts": [],
+              "stage": "review_finished",
+              "status": "read_failed"
+            }
+          ]
+        },
+        {
+          "url": "https://961souq.com/products/logitech-h111-headset",
+          "reader": "playwright",
+          "start_ms": 175950,
+          "end_ms": 185896,
+          "sha256": "78f7449c01721f8344ce228279de4cdd038b8faa7ff8a1ad59f732257088b439",
+          "job": null,
+          "events": [
+            {
+              "at_ms": 185922,
+              "sha256": "78f7449c01721f8344ce228279de4cdd038b8faa7ff8a1ad59f732257088b439",
+              "stage": "capture_delivered"
+            }
+          ]
+        },
+        {
+          "url": "https://ayoubcomputers.com/logitech-h111-headset-microphone-h111/?srsltid=AY6E961H8VH3rqbPXArBFa-7wDTqK1k4eDTO36wQtRQrg68Mu6RgN64R",
+          "reader": "playwright",
+          "start_ms": 209274,
+          "end_ms": 212337,
+          "error": "ValueError",
+          "detail": "The browser could not load the retailer listing (HTTP_ERROR).",
+          "events": []
+        },
+        {
+          "url": "https://www.carrefourlebanon.com/maflbn/en/gaming-headphone/logitech-h111-wired-headset-lgh111/p/524963?srsltid=AY6E963kn7LOvC21qZbg7GXxXW-ahLURn8SUZ9HGxgulTjI_CyZjdiv-",
+          "reader": "firecrawl",
+          "start_ms": 253928,
+          "end_ms": 254564,
+          "error": "BudgetDenied",
+          "detail": "buyer:4f6b893d-c346-4889-8c73-c119e39d774e exhausted: calls",
+          "events": [
+            {
+              "at_ms": 253937,
+              "stage": "read_requested"
+            },
+            {
+              "at_ms": 254562,
+              "receipts": [],
+              "stage": "review_finished",
+              "status": "read_failed"
+            }
+          ]
+        },
+        {
+          "url": "https://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm?srsltid=AY6E9631LmEhtWpZ-MVNSpZcfOwS6hfZ7dmXUHaKc3nDXyfG2-2blgD1",
+          "reader": "playwright",
+          "start_ms": 275424,
+          "end_ms": 275900,
+          "error": "ValueError",
+          "detail": "The browser could not load the retailer listing (BUDGET_EXHAUSTED).",
+          "events": []
+        },
+        {
+          "url": "https://spexme.com/products/logitech-h111-headphones",
+          "reader": "firecrawl",
+          "start_ms": 281264,
+          "end_ms": 281568,
+          "error": "TimeoutError",
+          "detail": "No time remains for the listing read",
+          "events": [
+            {
+              "at_ms": 281266,
+              "stage": "read_requested"
+            },
+            {
+              "at_ms": 281578,
+              "receipts": [],
+              "stage": "review_finished",
+              "status": "read_failed"
+            }
+          ]
+        }
+      ],
+      "spend": {
+        "attempts": {
+          "model": 25,
+          "provider_read": 2,
+          "retrieval": 8,
+          "search": 1,
+          "work": 1
+        },
+        "known_usd": "0.3176166",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "2.0819200"
+      },
+      "request_elapsed_ms": 293707,
+      "qualifying_pair": false,
+      "result": "The buyer saved DSLR Zone. The JAK capture contained the model, price, condition, online stock and Lebanese address. Two model replies supplied valid offer fields but quoted an additional availability caveat across inline HTML tags. The generic citation correction and a timed-out model reply left the JAK card unsaved.",
+      "saved_card_check": "Rendered the saved API workspace in the frontend Comparison component and checked every saved seller, item price, product link and price/location receipt link. Each recorded field excerpt was also matched against its full HTML capture by SHA-256."
+    },
+    {
+      "run": "f58462a6-85e7-45f1-8eb9-b307e4426f17",
+      "application_revision": "d7ac8b3",
+      "input": {
+        "request_id": "60c59e34a5d94939bd3368f56f2e11ed",
+        "implementation": "single_agent",
+        "intent": {
+          "kind": "exact_model",
+          "model": "Which of two Lebanese shops has the lower listed price for a new Logitech H111 wired 3.5 mm stereo headset? Show both in-stock listings and their links. Compare item prices before delivery."
+        },
+        "buyer_text": "Which of two Lebanese shops has the lower listed price for a new Logitech H111 wired 3.5 mm stereo headset? Show both in-stock listings and their links. Compare item prices before delivery.",
+        "requirements": {
+          "category": "audio"
+        },
+        "fulfillment": {
+          "mode": "any"
+        }
+      },
+      "start_utc": "2026-11-27T15:45:22.824800+00:00",
+      "elapsed_ms": 222938,
+      "catalog_matches": null,
+      "full_product_status": "partial",
+      "answer": "Dslr Zone has the lower listed price: US$13 versus US$25 at JAK Computer—a US$12 saving before delivery.\n\nBoth listings are for a new Logitech H111 wired 3.5 mm stereo headset:\n\n• Dslr Zone — US$13; listed in online stock.\nhttps://www.dslr-zone.com/product/logitech-h111/\n\n• JAK Computer — US$25; listed in online stock, but the shop also asks customers to confirm availability before ordering.\nhttps://jakcomputer.com/products/logitech-h111-stereo-headset?variant=44593484431407\n\nThese are item prices only; delivery is excluded. Branch/showroom stock is not verified.",
+      "answer_source": "model",
+      "saved_cards": [
+        {
+          "seller": "Dslr Zone",
+          "model": "Logitech H111 Wired Headset",
+          "listing": "https://www.dslr-zone.com/product/logitech-h111/",
+          "sku": "096f203b8ff0c2fcf3217d0d",
+          "price": {
+            "amount": "13",
+            "currency": "USD"
+          },
+          "stock": true,
+          "condition": "new",
+          "receipts": [
+            {
+              "field_path": "seller.name",
+              "excerpt": "Dslr Zone",
+              "origin_url": "https://www.dslr-zone.com/product/logitech-h111/?srsltid=AY6E963uF-y_uDBUR7rz6NhmOdnS2CaXYJkNXIfhmyYaVT5VmwfWI7Bn",
+              "final_url": "https://www.dslr-zone.com/product/logitech-h111/",
+              "observed_at": "2026-11-27T15:46:39.463131Z",
+              "response_sha256": "4b5c503e5469bae2839221a8b90c8af0cd9799e9920d66a88ca6f493ad34012e"
+            },
+            {
+              "field_path": "seller.market",
+              "excerpt": "Zalka, Amaret Chalhoub Highway",
+              "origin_url": "https://www.dslr-zone.com/product/logitech-h111/?srsltid=AY6E963uF-y_uDBUR7rz6NhmOdnS2CaXYJkNXIfhmyYaVT5VmwfWI7Bn",
+              "final_url": "https://www.dslr-zone.com/product/logitech-h111/",
+              "observed_at": "2026-11-27T15:46:39.463131Z",
+              "response_sha256": "4b5c503e5469bae2839221a8b90c8af0cd9799e9920d66a88ca6f493ad34012e"
+            },
+            {
+              "field_path": "variant.product.model",
+              "excerpt": "Logitech H111 Wired Headset",
+              "origin_url": "https://www.dslr-zone.com/product/logitech-h111/?srsltid=AY6E963uF-y_uDBUR7rz6NhmOdnS2CaXYJkNXIfhmyYaVT5VmwfWI7Bn",
+              "final_url": "https://www.dslr-zone.com/product/logitech-h111/",
+              "observed_at": "2026-11-27T15:46:39.463131Z",
+              "response_sha256": "4b5c503e5469bae2839221a8b90c8af0cd9799e9920d66a88ca6f493ad34012e"
+            },
+            {
+              "field_path": "price",
+              "excerpt": "\"price\":\"13\"",
+              "origin_url": "https://www.dslr-zone.com/product/logitech-h111/?srsltid=AY6E963uF-y_uDBUR7rz6NhmOdnS2CaXYJkNXIfhmyYaVT5VmwfWI7Bn",
+              "final_url": "https://www.dslr-zone.com/product/logitech-h111/",
+              "observed_at": "2026-11-27T15:46:39.463131Z",
+              "response_sha256": "4b5c503e5469bae2839221a8b90c8af0cd9799e9920d66a88ca6f493ad34012e"
+            },
+            {
+              "field_path": "price",
+              "excerpt": "\"priceCurrency\":\"USD\"",
+              "origin_url": "https://www.dslr-zone.com/product/logitech-h111/?srsltid=AY6E963uF-y_uDBUR7rz6NhmOdnS2CaXYJkNXIfhmyYaVT5VmwfWI7Bn",
+              "final_url": "https://www.dslr-zone.com/product/logitech-h111/",
+              "observed_at": "2026-11-27T15:46:39.463131Z",
+              "response_sha256": "4b5c503e5469bae2839221a8b90c8af0cd9799e9920d66a88ca6f493ad34012e"
+            },
+            {
+              "field_path": "stock",
+              "excerpt": "\"availability\":\"https://schema.org/InStock\"",
+              "origin_url": "https://www.dslr-zone.com/product/logitech-h111/?srsltid=AY6E963uF-y_uDBUR7rz6NhmOdnS2CaXYJkNXIfhmyYaVT5VmwfWI7Bn",
+              "final_url": "https://www.dslr-zone.com/product/logitech-h111/",
+              "observed_at": "2026-11-27T15:46:39.463131Z",
+              "response_sha256": "4b5c503e5469bae2839221a8b90c8af0cd9799e9920d66a88ca6f493ad34012e"
+            },
+            {
+              "field_path": "condition",
+              "excerpt": "\"itemCondition\":\"NewCondition\"",
+              "origin_url": "https://www.dslr-zone.com/product/logitech-h111/?srsltid=AY6E963uF-y_uDBUR7rz6NhmOdnS2CaXYJkNXIfhmyYaVT5VmwfWI7Bn",
+              "final_url": "https://www.dslr-zone.com/product/logitech-h111/",
+              "observed_at": "2026-11-27T15:46:39.463131Z",
+              "response_sha256": "4b5c503e5469bae2839221a8b90c8af0cd9799e9920d66a88ca6f493ad34012e"
+            }
+          ],
+          "capture_check": {
+            "connector_excerpt": "Stereo Headphones with Noise-Cancelling Microphone, 3.5 mm Audio Jack, PC/Mac/Laptop/Smartphone/Tablet",
+            "response_sha256": "4b5c503e5469bae2839221a8b90c8af0cd9799e9920d66a88ca6f493ad34012e"
+          }
+        },
+        {
+          "seller": "JAK Computer",
+          "model": "Logitech H111 Stereo Headset",
+          "listing": "https://jakcomputer.com/products/logitech-h111-stereo-headset?variant=44593484431407",
+          "sku": "44593484431407",
+          "price": {
+            "amount": "25.0",
+            "currency": "USD"
+          },
+          "stock": true,
+          "condition": "new",
+          "receipts": [
+            {
+              "field_path": "seller.name",
+              "excerpt": "JAK Computer",
+              "origin_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset?srsltid=AY6E960dVcg3eSaS4eLmbi0KWpjhkNqulJw92ksld7jLsSr-xvNb7Z6k",
+              "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+              "observed_at": "2026-11-27T15:46:52.609716Z",
+              "response_sha256": "a8e047e562967c322f1c507990985500b921b5f189e2ff9a322ba017254696f5"
+            },
+            {
+              "field_path": "seller.market",
+              "excerpt": "\"streetAddress\": \"Mohammad Lababidi Street, Rose Garden Building, Block A, Ground Floor, Zarif\",\n      \"addressLocality\": \"Beirut\",\n      \"addressRegion\": \"Beirut Governorate\",\n      \"addressCountry\": \"LB\"",
+              "origin_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset?srsltid=AY6E960dVcg3eSaS4eLmbi0KWpjhkNqulJw92ksld7jLsSr-xvNb7Z6k",
+              "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+              "observed_at": "2026-11-27T15:46:52.609716Z",
+              "response_sha256": "a8e047e562967c322f1c507990985500b921b5f189e2ff9a322ba017254696f5"
+            },
+            {
+              "field_path": "variant.product.model",
+              "excerpt": "Logitech H111 Stereo Headset",
+              "origin_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset?srsltid=AY6E960dVcg3eSaS4eLmbi0KWpjhkNqulJw92ksld7jLsSr-xvNb7Z6k",
+              "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+              "observed_at": "2026-11-27T15:46:52.609716Z",
+              "response_sha256": "a8e047e562967c322f1c507990985500b921b5f189e2ff9a322ba017254696f5"
+            },
+            {
+              "field_path": "listing_url",
+              "excerpt": "https://jakcomputer.com/products/logitech-h111-stereo-headset?variant=44593484431407",
+              "origin_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset?srsltid=AY6E960dVcg3eSaS4eLmbi0KWpjhkNqulJw92ksld7jLsSr-xvNb7Z6k",
+              "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+              "observed_at": "2026-11-27T15:46:52.609716Z",
+              "response_sha256": "a8e047e562967c322f1c507990985500b921b5f189e2ff9a322ba017254696f5"
+            },
+            {
+              "field_path": "price",
+              "excerpt": "\"price\": \"25.0\"",
+              "origin_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset?srsltid=AY6E960dVcg3eSaS4eLmbi0KWpjhkNqulJw92ksld7jLsSr-xvNb7Z6k",
+              "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+              "observed_at": "2026-11-27T15:46:52.609716Z",
+              "response_sha256": "a8e047e562967c322f1c507990985500b921b5f189e2ff9a322ba017254696f5"
+            },
+            {
+              "field_path": "price",
+              "excerpt": "\"priceCurrency\": \"USD\"",
+              "origin_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset?srsltid=AY6E960dVcg3eSaS4eLmbi0KWpjhkNqulJw92ksld7jLsSr-xvNb7Z6k",
+              "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+              "observed_at": "2026-11-27T15:46:52.609716Z",
+              "response_sha256": "a8e047e562967c322f1c507990985500b921b5f189e2ff9a322ba017254696f5"
+            },
+            {
+              "field_path": "stock",
+              "excerpt": "\"availability\": \"https://schema.org/InStock\"",
+              "origin_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset?srsltid=AY6E960dVcg3eSaS4eLmbi0KWpjhkNqulJw92ksld7jLsSr-xvNb7Z6k",
+              "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+              "observed_at": "2026-11-27T15:46:52.609716Z",
+              "response_sha256": "a8e047e562967c322f1c507990985500b921b5f189e2ff9a322ba017254696f5"
+            },
+            {
+              "field_path": "condition",
+              "excerpt": "\"itemCondition\": \"https:\\/\\/schema.org\\/NewCondition\"",
+              "origin_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset?srsltid=AY6E960dVcg3eSaS4eLmbi0KWpjhkNqulJw92ksld7jLsSr-xvNb7Z6k",
+              "final_url": "https://jakcomputer.com/products/logitech-h111-stereo-headset",
+              "observed_at": "2026-11-27T15:46:52.609716Z",
+              "response_sha256": "a8e047e562967c322f1c507990985500b921b5f189e2ff9a322ba017254696f5"
+            }
+          ],
+          "capture_check": {
+            "connector_excerpt": "3.5mm jack for universal compatibility",
+            "response_sha256": "a8e047e562967c322f1c507990985500b921b5f189e2ff9a322ba017254696f5"
+          }
+        }
+      ],
+      "actions": [
+        {
+          "count": 8,
+          "status": "ok",
+          "tool": "web_search",
+          "turn": 1
+        },
+        {
+          "lead": 2,
+          "status": "transfer_pending",
+          "tool": "inspect",
+          "turn": 2
+        },
+        {
+          "lead": 0,
+          "status": "transfer_pending",
+          "tool": "inspect",
+          "turn": 3
+        },
+        {
+          "lead": 3,
+          "status": "transfer_pending",
+          "tool": "inspect",
+          "turn": 4
+        },
+        {
+          "status": "wait_ended",
+          "tool": "wait",
+          "turn": 5
+        },
+        {
+          "tool": "present",
+          "turn": 7
+        }
+      ],
+      "reads": [
+        {
+          "url": "https://ayoubcomputers.com/logitech-h111-headset-microphone-h111/?srsltid=AY6E9636G8qOqvnCM1ZrQqaTMlMK4vzLAYGJfbzxhMEfGOkPnWY0DVb7",
+          "reader": "firecrawl",
+          "start_ms": 21429,
+          "end_ms": 135176,
+          "error": "TimeoutError",
+          "detail": "Provider deadline exceeded",
+          "events": [
+            {
+              "at_ms": 21438,
+              "stage": "read_requested"
+            },
+            {
+              "at_ms": 22860,
+              "stage": "scrape_dispatched"
+            },
+            {
+              "at_ms": 29922,
+              "http": 200,
+              "method": "POST",
+              "stage": "response_headers"
+            },
+            {
+              "at_ms": 128125,
+              "lookup": "activity",
+              "stage": "lookup_dispatched"
+            },
+            {
+              "at_ms": 131360,
+              "http": 200,
+              "method": "GET",
+              "stage": "response_headers"
+            },
+            {
+              "at_ms": 210079,
+              "receipts": [],
+              "stage": "review_finished",
+              "status": "read_failed"
+            }
+          ]
+        },
+        {
+          "url": "https://www.dslr-zone.com/product/logitech-h111/?srsltid=AY6E963uF-y_uDBUR7rz6NhmOdnS2CaXYJkNXIfhmyYaVT5VmwfWI7Bn",
+          "reader": "firecrawl",
+          "start_ms": 29859,
+          "end_ms": 76639,
+          "sha256": "4b5c503e5469bae2839221a8b90c8af0cd9799e9920d66a88ca6f493ad34012e",
+          "job": "01a21daf-4457-72b8-83ed-a7e994df318c",
+          "events": [
+            {
+              "at_ms": 29860,
+              "stage": "read_requested"
+            },
+            {
+              "at_ms": 31188,
+              "stage": "scrape_dispatched"
+            },
+            {
+              "at_ms": 33829,
+              "http": 200,
+              "method": "POST",
+              "stage": "response_headers"
+            },
+            {
+              "at_ms": 76235,
+              "bytes": 584572,
+              "method": "POST",
+              "stage": "body_complete"
+            },
+            {
+              "at_ms": 76250,
+              "job_id": "01a21daf-4457-72b8-83ed-a7e994df318c",
+              "stage": "job_visible",
+              "via": "scrape_response"
+            },
+            {
+              "at_ms": 76907,
+              "sha256": "4b5c503e5469bae2839221a8b90c8af0cd9799e9920d66a88ca6f493ad34012e",
+              "stage": "capture_delivered"
+            },
+            {
+              "at_ms": 105344,
+              "receipts": [
+                "4b5c503e5469bae2839221a8b90c8af0cd9799e9920d66a88ca6f493ad34012e"
+              ],
+              "stage": "review_finished",
+              "status": "priced_partial"
+            }
+          ]
+        },
+        {
+          "url": "https://jakcomputer.com/products/logitech-h111-stereo-headset?srsltid=AY6E960dVcg3eSaS4eLmbi0KWpjhkNqulJw92ksld7jLsSr-xvNb7Z6k",
+          "reader": "firecrawl",
+          "start_ms": 39470,
+          "end_ms": 89786,
+          "sha256": "a8e047e562967c322f1c507990985500b921b5f189e2ff9a322ba017254696f5",
+          "job": "01a21daf-7935-705b-bd80-08bc047e84b7",
+          "events": [
+            {
+              "at_ms": 39469,
+              "stage": "read_requested"
+            },
+            {
+              "at_ms": 41782,
+              "stage": "scrape_dispatched"
+            },
+            {
+              "at_ms": 48657,
+              "http": 200,
+              "method": "POST",
+              "stage": "response_headers"
+            },
+            {
+              "at_ms": 89329,
+              "bytes": 625589,
+              "method": "POST",
+              "stage": "body_complete"
+            },
+            {
+              "at_ms": 89344,
+              "job_id": "01a21daf-7935-705b-bd80-08bc047e84b7",
+              "stage": "job_visible",
+              "via": "scrape_response"
+            },
+            {
+              "at_ms": 105422,
+              "sha256": "a8e047e562967c322f1c507990985500b921b5f189e2ff9a322ba017254696f5",
+              "stage": "capture_delivered"
+            },
+            {
+              "at_ms": 198610,
+              "receipts": [
+                "a8e047e562967c322f1c507990985500b921b5f189e2ff9a322ba017254696f5"
+              ],
+              "stage": "review_finished",
+              "status": "priced_partial"
+            }
+          ]
+        }
+      ],
+      "spend": {
+        "attempts": {
+          "model": 18,
+          "provider_read": 1,
+          "retrieval": 3,
+          "search": 1
+        },
+        "known_usd": "0.2238779",
+        "ledger": "read",
+        "note": "uncertain amounts are full reservations kept because the cost was not reported",
+        "still_held_usd": "0",
+        "uncertain_usd": "0.5204800"
+      },
+      "request_elapsed_ms": 223171,
+      "qualifying_pair": true,
+      "result": "Both qualifying cards and the model answer passed. DSLR Zone USD 13 and JAK Computer USD 25. The model reported USD 12 savings before delivery and retained the JAK availability caveat. Ayoub never provided a usable body.",
+      "saved_card_check": "Rendered the saved API workspace in the frontend Comparison component and checked every saved seller, item price, product link and price/location receipt link. Each recorded field excerpt was also matched against its full HTML capture by SHA-256.",
+      "listed_price_difference_usd": "12",
+      "qualification_note": "Both captures identify the wired stereo H111, the 3.5 mm connector, new condition, online stock and Lebanese premises. The connector excerpts are independent checks on those captured listings. JAK also asks customers to confirm availability. Delivery and branch-specific stock remain outside this comparison."
+    }
+  ],
+  "provider_diagnostic": {
+    "run": "ab47bd43-8bc4-4a9a-8379-e4e9c7cc0e84",
+    "url": "https://mobileleb.com/products/logitech-h111-wired-headset-stereo-headphones-with-noise-cancelling-microphone-3-5-mm",
+    "start_utc": "2026-11-27T15:35:57.749296+00:00",
+    "events": [
+      {
+        "stage": "scrape_dispatched",
+        "at_ms": 1312
+      },
+      {
+        "stage": "activity_sample",
+        "at_ms": 4672,
+        "job_ids": []
+      },
+      {
+        "stage": "response_headers",
+        "at_ms": 4937,
+        "method": "POST",
+        "http": 200
+      },
+      {
+        "stage": "activity_failed",
+        "at_ms": 13141,
+        "error": "ReadTimeout"
+      },
+      {
+        "stage": "activity_sample",
+        "at_ms": 54248,
+        "job_ids": [
+          "01a21da6-314a-76ee-86db-bdb15ce9416d"
+        ]
+      },
+      {
+        "stage": "lookup_dispatched",
+        "lookup": "stored_scrape",
+        "at_ms": 72503,
+        "probe": "independent_stored_read"
+      },
+      {
+        "stage": "response_headers",
+        "method": "GET",
+        "http": 200,
+        "at_ms": 74857,
+        "probe": "independent_stored_read"
+      },
+      {
+        "stage": "stored_read_failed",
+        "error": "TimeoutError",
+        "at_ms": 96911,
+        "probe": "independent_stored_read"
+      },
+      {
+        "stage": "lookup_dispatched",
+        "at_ms": 103109,
+        "lookup": "activity"
+      },
+      {
+        "stage": "response_headers",
+        "at_ms": 104078,
+        "method": "GET",
+        "http": 200
+      },
+      {
+        "stage": "body_complete",
+        "at_ms": 105531,
+        "method": "GET",
+        "bytes": 25493
+      },
+      {
+        "stage": "job_visible",
+        "at_ms": 105844,
+        "job_id": "01a21da6-314a-76ee-86db-bdb15ce9416d",
+        "via": "activity"
+      },
+      {
+        "stage": "lookup_dispatched",
+        "at_ms": 107391,
+        "lookup": "stored_scrape"
+      },
+      {
+        "stage": "response_headers",
+        "at_ms": 108406,
+        "method": "GET",
+        "http": 200
+      },
+      {
+        "stage": "read_failed",
+        "at_ms": 110562,
+        "error": "TimeoutError",
+        "reason": "Provider deadline exceeded"
+      }
+    ],
+    "interpretation": "After dispatch, the first activity sample at 3.36 seconds contained no matching ID. A subsequent sample timed out. The ID was observed by 52.94 seconds. A stored read received HTTP 200 headers but did not complete. Visibility marks the first positive observation and does not identify when a complete body first became available."
+  }
+}
