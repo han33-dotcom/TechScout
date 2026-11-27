@@ -2,6 +2,7 @@
 from collections.abc import Mapping
 from decimal import Context, Inexact, MAX_EMAX, MIN_EMIN, ROUND_CEILING
 from typing import Annotated, Literal
+from urllib.parse import urlsplit
 
 from pydantic import Field, StrictBool, StringConstraints, model_validator
 
@@ -414,9 +415,15 @@ class Offer(Contract):
 
     def domestic_merchant_receipts(self):
         """Item-scoped identity and domicile on the landing page that supplied the offer."""
+        linked = {(e.final_url, e.response_sha256, e.observed_at) for e in self.evidence
+                  if e.field_path == 'listing_url' and e.scope == 'variant' and not e.conflicts
+                  and e.excerpt == str(self.listing_url) and urlsplit(str(e.final_url)).netloc == urlsplit(str(self.listing_url)).netloc
+                  and e.product_id == self.source_product_id
+                  and e.variant_id == self.source_variant_id}
         records = tuple(e for e in self.evidence if e.field_path in ('seller.market', 'seller.name')
                         and e.scope == 'variant' and e.product_id == self.source_product_id
-                        and e.variant_id == self.source_variant_id and e.final_url == self.listing_url)
+                        and e.variant_id == self.source_variant_id and (e.final_url == self.listing_url
+                            or (e.final_url, e.response_sha256, e.observed_at) in linked))
         if (self.seller.market == 'LB' and not any(e.conflicts for e in records)
                 and {e.field_path for e in records} == {'seller.market', 'seller.name'}):
             return records

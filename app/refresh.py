@@ -19,7 +19,6 @@ from app.embeddings import EmbeddingAllowanceExceeded, EmbeddingUnavailable
 from app.corpus import Corpus
 from app.corpus_contracts import DocumentCapture, Extraction, FieldObservation
 from app.contracts_v2 import Evidence
-from app.selected_listing import ListingDocument
 from app.directory import Directory, normalized_alias
 from app.onboarding import ActivationRegistry
 from app.source_registry import get_active_source
@@ -194,10 +193,9 @@ def check_page(seed, manifest, corpus, gate, budget, rows_left, embedding=None, 
                 landing = dict(reader=reader, requested_url=str(seed.url), final_url=outcome.final_url,
                                source_id=outcome.source_id, sha256=outcome.response_sha256,
                                observed_at=outcome.observed_at.isoformat())
-                try:
-                    landing['selected'] = ListingDocument(outcome.body.decode('utf-8', errors='replace')).selected(
-                        outcome.final_url, outcome.observed_at, rendered=reader == 'playwright').facts()
-                except ValueError:
+                if page.selection:
+                    landing['selected'] = page.selection.facts()
+                else:
                     landing['selection_status'] = 'unconfirmed'
                 corpus.record_failed_check(key, outcome.observed_at)
                 return dict(status='failed', reason='The landing page belongs to a different shop.',
@@ -207,9 +205,10 @@ def check_page(seed, manifest, corpus, gate, budget, rows_left, embedding=None, 
             linked = outcome.final_url != str(seed.url)
             if linked and not seed.sku:
                 raise ValueError('A linked listing cannot be bound to this catalog seed without a variant ID.')
-            if seed.selection_color or seed.sku and (reader == 'playwright' or linked):
-                selected = ListingDocument(outcome.body.decode('utf-8')).selected(
-                    outcome.final_url, outcome.observed_at, rendered=reader == 'playwright')
+            if page.reading_used or seed.selection_color or seed.sku and (reader == 'playwright' or linked):
+                selected = page.selection
+                if selected is None:
+                    raise ValueError(page.reason or 'The requested catalog variant remains unverified.')
                 if selected.sku != seed.sku or seed.selection_color and selected.color.casefold() != seed.selection_color.casefold():
                     raise ValueError('The observed variant differs from the catalog seed.')
                 if profile and normalized_alias(selected.seller) not in {
