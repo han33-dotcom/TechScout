@@ -1,0 +1,914 @@
+{
+ "run_id": "scout-b42-20261128T053203",
+ "request": {
+  "id": "B42",
+  "text": "I need a new Android tablet with at least 8 GB of RAM and a screen of 11 inches or larger. Can I collect one at a specific shop in Tripoli? What will it cost?",
+  "mode": "pickup",
+  "destination": "Tripoli",
+  "category": "tablet",
+  "run_id": "scout-b42-20261128T053203"
+ },
+ "status": "offers",
+ "message": "A confirmed specification match is Mobileleb’s Samsung Galaxy Tab A11+ Wi-Fi, silver, 8GB RAM/256GB storage, at $290.00. It is listed as Brand New and available online, with an 11-inch screen and Android 16.\nHowever, I could not verify a specific Tripoli shop address or stock for collection there. Online availability does not confirm branch stock, so this is not a confirmed Tripoli pickup offer.\nMy suggestion: confirm a Tripoli collection location and availability with the retailer before paying or travelling.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "best",
+   "shop": "Mobileleb",
+   "shop_id": "mobileleb",
+   "title": "Samsung Galaxy Tab A11+ 11\" 8GB/256GB, Wi-Fi, X230",
+   "variant": "Silver / Brand New / 1 Year",
+   "url": "https://mobileleb.com/products/samsung-galaxy-tab-a11-11-8gb-256gb-wi-fi-x230?variant=51503296610436",
+   "price": "290.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "Meets the requested Android, RAM and screen specifications; Tripoli collection remains unverified.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "not confirmed: Collection at a specific shop in Tripoli",
+    "pickup branch stock is not confirmed (online stock only)",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "Android tablet",
+     "status": "met",
+     "quote": "Android 16, One UI 8",
+     "obs": "P12",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "At least 8GB RAM",
+     "status": "met",
+     "quote": "RAM: 8GB RAM",
+     "obs": "P12",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Screen at least 11 inches",
+     "status": "met",
+     "quote": "11.0″ TFT LCD, 1200×1920 pixels Display, 90Hz",
+     "obs": "P12",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "Brand New",
+     "obs": "P12",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Collection at a specific shop in Tripoli",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P12",
+     "url": "https://mobileleb.com/products/samsung-galaxy-tab-a11-11-8gb-256gb-wi-fi-x230",
+     "read": "https://mobileleb.com/products/samsung-galaxy-tab-a11-11-8gb-256gb-wi-fi-x230.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:33:02+00:00",
+     "sha256": "b965e326fc8223f5d24cc070c3047a411ef1dc9892b832ecba6273fa36b22198"
+    }
+   ],
+   "seller_basis": "Mobileleb: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P12",
+   "variant_id": "51503296610436",
+   "identity": "exact",
+   "identity_reason": "Meets the requested Android, RAM and screen specifications; Tripoli collection remains unverified.",
+   "condition": "new",
+   "condition_quote": "Brand New",
+   "condition_obs": "P12",
+   "requirements": [
+    {
+     "requirement": "Android tablet",
+     "status": "met",
+     "evidence_obs": "P12",
+     "quote": "Android 16, One UI 8"
+    },
+    {
+     "requirement": "At least 8GB RAM",
+     "status": "met",
+     "evidence_obs": "P12",
+     "quote": "RAM: 8GB RAM"
+    },
+    {
+     "requirement": "Screen at least 11 inches",
+     "status": "met",
+     "evidence_obs": "P12",
+     "quote": "11.0″ TFT LCD, 1200×1920 pixels Display, 90Hz"
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "P12",
+     "quote": "Brand New"
+    },
+    {
+     "requirement": "Collection at a specific shop in Tripoli",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": null,
+   "delivery_quote": null,
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Find qualifying Android tablets and then verify Tripoli pickup locations.",
+   "at_s": 9.5,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "Samsung Galaxy Tab A9+ 8GB"
+    },
+    {
+     "tool": "search",
+     "query": "Xiaomi Pad 6 8GB"
+    },
+    {
+     "tool": "search",
+     "query": "Redmi Pad Pro 8GB"
+    },
+    {
+     "tool": "search",
+     "query": "Samsung Galaxy Tab S9 FE 8GB"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Verify likely Tripoli branch at Abed Tahan and compare Mobileleb; read condition and specs.",
+   "at_s": 58.1,
+   "calls": [
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "abed_tahan"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "mobileleb"
+     ]
+    },
+    {
+     "tool": "open",
+     "url": "https://abedtahan.com/products/samsung-galaxy-tab-a11-11-8gb-256gb-storage-grey"
+    },
+    {
+     "tool": "open",
+     "url": "https://mobileleb.com/products/samsung-galaxy-tab-a11-11-8gb-256gb-wi-fi-x230"
+    },
+    {
+     "tool": "read",
+     "url": "https://abedtahan.com/products/mi-xiaomi-pad-2-8gb-256gb-storage-gray",
+     "terms": [
+      "RAM",
+      "Android",
+      "new",
+      "11"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Pickup in Tripoli could not be verified; provide the confirmed new option without implying local availability.",
+   "at_s": 76.0,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 27359,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 28484,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 33281,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 34484,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 593,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 625,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 2390,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 5360,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 5500,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7578,
+   "usage": {
+    "actual_usd": "0.004498",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3239,
+     "output_tokens": 143,
+     "total_tokens": 3382
+    },
+    "latency_ms": 3953,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 13938,
+   "usage": {
+    "actual_usd": "0.0206805",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 9368,
+     "output_tokens": 229,
+     "total_tokens": 9597
+    },
+    "latency_ms": 5610,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 12000,
+   "usage": {
+    "actual_usd": "0.030173",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 12417,
+     "output_tokens": 416,
+     "total_tokens": 12833
+    },
+    "latency_ms": 8828,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": true
+  }
+ ],
+ "retailer_requests": 108,
+ "seconds": 76.0,
+ "spend": {
+  "settled_usd": "0.0553515",
+  "uncertain_usd": "0",
+  "model_calls": 3,
+  "ledger_job": "scout-b42-20261128T053203"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/samsung-galaxy-tab-a11-8-7-8gb-128gb-storage-gray-1",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:32:39+00:00",
+   "sha256": "ae2a81a69e1f73f75e7a59f4558b08039d920a1cdb340380813d99c18af70075",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "SAMSUNG Galaxy Tab A11- 8.7\"- 8GB- 128GB Storage- Gray",
+    "url": "https://abedtahan.com/products/samsung-galaxy-tab-a11-8-7-8gb-128gb-storage-gray-1",
+    "vendor": "SAMSUNG",
+    "product_type": "Tablets",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:32:39+00:00",
+    "variants": [
+     {
+      "variant_id": "45040824451251",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "199.00",
+      "compare_at": "237.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SM-X133NZAEMEA",
+      "url": "https://abedtahan.com/products/samsung-galaxy-tab-a11-8-7-8gb-128gb-storage-gray-1?variant=45040824451251"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/samsung-galaxy-tab-s10-fe-10-9-8gb-128gb-storage-gray",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:32:39+00:00",
+   "sha256": "0637e91a2c6fac73d1626077be7a3a4882731fcee1e9e36c1a092d541ff42fea",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "SAMSUNG Galaxy Tab S10 FE- 10.9\"- 8GB- 128GB Storage - Gray",
+    "url": "https://abedtahan.com/products/samsung-galaxy-tab-s10-fe-10-9-8gb-128gb-storage-gray",
+    "vendor": "SAMSUNG",
+    "product_type": "Tablets",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:32:39+00:00",
+    "variants": [
+     {
+      "variant_id": "46087131758771",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "432.00",
+      "compare_at": "432.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SM-X520 128GB GRAY#",
+      "url": "https://abedtahan.com/products/samsung-galaxy-tab-s10-fe-10-9-8gb-128gb-storage-gray?variant=46087131758771"
+     }
+    ],
+    "description": "The Samsung Galaxy Tab S10 FE 10.9\" with 8GB RAM and 128GB storage in Gray is a slim, versatile Android tablet for study, work and entertainment. It is a smart choice for students and families in Lebanon.\nWhy you'll love the Galaxy Tab S10 FE\nThe 10.9-inch LCD display runs at up to 90Hz for smooth scrolling, and dual speakers make videos and calls clear. Android 15 gives you access to all your favourite apps.\nAn 8,000 mAh battery keeps you going through the day, with support for 45W fast charging (adapter sold separately). With Wi-Fi 6, Bluetooth 5.3 and a slim 6 mm aluminium body at 497 g, it is easy to carry around in Lebanon.\nKey features\n10.9-inch displayUp to 90Hz for smooth scrolling.\n8GB RAM, 128GB storageSmooth multitasking and room for apps.\n8,000 mAh batteryAll-day use.\n45W fast charging supportAdapter sold separately.\nWi-Fi 6 and Bluetooth 5.3Fast, reliable wireless.\nDual speakersClear sound for video and calls.\nSlim aluminium design6 mm thin, 497 g.\nSpecifications\nBrand\nSamsung\nModel\nGalaxy Tab S10 FE (SM-X520)\nDisplay\n10.9-inch LCD, up to 90Hz\nRAM\n8GB\nStorage\n128GB\nOperating system\nAndroid 15\nBattery\n8,000 mAh, 45W fast charging supported (adapter sold separately)\nConnectivity\nWi-Fi 6, Wi-Fi Direct, Bluetooth 5.3, USB-C\nAudio\nDual speakers\nDimensions\n254.3 x 165.8 x 6.0 mm\nWeight\n497 g\nColor\nGray\nFAQ\nWhat size is the Galaxy Tab S10 FE?\nIt has a 10.9-inch display.\nIs this Galaxy Tab S10 FE Wi-Fi or 5G?\nThis is the Wi-Fi model (SM-X520).\nDoes the Galaxy Tab S10 FE "
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://istoreplus.me/products/samsung-galaxy-tab-s9-fe-gray-8-256gb",
+   "shop_id": "istore_plus",
+   "observed_at": "2026-11-28T05:32:39+00:00",
+   "sha256": "8422a6b89fcc134e37d2baa0fb2637e7061e796b97bac5e97697b6d23b692709",
+   "product": {
+    "shop": "iStore Plus",
+    "shop_id": "istore_plus",
+    "title": "Samsung Galaxy Tab S9 FE Gray 8/256GB",
+    "url": "https://istoreplus.me/products/samsung-galaxy-tab-s9-fe-gray-8-256gb",
+    "vendor": "Samsung",
+    "product_type": "Smart Tablet",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:32:39+00:00",
+    "variants": [
+     {
+      "variant_id": "46273257046231",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "325.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://istoreplus.me/products/samsung-galaxy-tab-s9-fe-gray-8-256gb?variant=46273257046231"
+     }
+    ],
+    "description": "Samsung Galaxy Tab S9 FE Gray 8/256GB\nThe Samsung Galaxy Tab S9 FE Gray 8/256GB is a high-performance tablet designed for those who need a reliable, versatile device for work, creativity, and entertainment. With a sleek, minimalist design and powerful features, this tablet is perfect for both personal and professional use.\nElegant Gray Design with Durable Build\nThe Galaxy Tab S9 FE in Gray showcases a premium, modern look with a durable build that’s perfect for daily use. Its lightweight and slim profile make it easy to carry, whether you’re commuting, traveling, or working from home.\nStunning 12.4-Inch Display with Vibrant Colors\nEnjoy a vivid viewing experience on the 12.4-inch display that offers vibrant colors and sharp details, ideal for streaming, reading, and browsing. The expansive screen with minimal bezels provides an immersive experience, making it perfect for watching movies, sketching, and multitasking.\nPowerful Performance with Exynos Chipset\nEquipped with an Exynos chipset, the Galaxy Tab S9 FE delivers fast and smooth performance, allowing seamless multitasking and quick app switching. Whether you’re running productivity apps, graphic design software, or games, this tablet handles it all effortlessly.\nEnhanced Audio with Dual AKG Speakers and Dolby Atmos\nThe dual AKG speakers with Dolby Atmos provide rich, immersive sound quality, enhancing your audio experience. Enjoy clear, surround sound whether you’re watching videos, listening to music, or on a video call"
+   }
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/mi-xiaomi-pad-2-8gb-256gb-storage-gray",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:32:43+00:00",
+   "sha256": "964b097f2a0db854e0e79535da10bbe89da338864b79477d3619096da9ca65ea",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "MI Xiaomi Pad 2- 11\"- 8GB- 256GB Storage- Gray",
+    "url": "https://abedtahan.com/products/mi-xiaomi-pad-2-8gb-256gb-storage-gray",
+    "vendor": "MI",
+    "product_type": "Tablets",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:32:43+00:00",
+    "variants": [
+     {
+      "variant_id": "45302448193715",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "245.00",
+      "compare_at": "275.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "TAB-MI-PAD 2 256GB GRAY",
+      "url": "https://abedtahan.com/products/mi-xiaomi-pad-2-8gb-256gb-storage-gray?variant=45302448193715"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/mi-xiaomi-pad-2-8gb-256gb-storage-lavender-purple",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:32:46+00:00",
+   "sha256": "4a772155ff3a09b3386fe96b1f5567225e2721996d2dcddf38c43ea34dc385d0",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "MI Xiaomi Pad 2- 11\"- 8GB- 256GB Storage- Lavender Purple",
+    "url": "https://abedtahan.com/products/mi-xiaomi-pad-2-8gb-256gb-storage-lavender-purple",
+    "vendor": "MI",
+    "product_type": "Tablets",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:32:46+00:00",
+    "variants": [
+     {
+      "variant_id": "45059226337459",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "245.00",
+      "compare_at": "275.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "TAB-MI-PAD 2 256GB PURP",
+      "url": "https://abedtahan.com/products/mi-xiaomi-pad-2-8gb-256gb-storage-lavender-purple?variant=45059226337459"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/samsung-galaxy-tab-a11-8-7-8gb-128gb-wi-fi-x133",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:32:47+00:00",
+   "sha256": "08d27efcc3d0f51829794f025e9e084529dab17323607c9eee4ea501412ff7cd",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Samsung Galaxy Tab A11 8.7\" 8GB/128GB, Wi-Fi, X133",
+    "url": "https://mobileleb.com/products/samsung-galaxy-tab-a11-8-7-8gb-128gb-wi-fi-x133",
+    "vendor": "Samsung",
+    "product_type": "Computers",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:32:47+00:00",
+    "variants": [
+     {
+      "variant_id": "51355709571204",
+      "title": "Silver / Brand New / 1 Year",
+      "options": {
+       "Color": "Silver",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "198.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "x133464s",
+      "url": "https://mobileleb.com/products/samsung-galaxy-tab-a11-8-7-8gb-128gb-wi-fi-x133?variant=51355709571204",
+      "condition": "Brand New"
+     },
+     {
+      "variant_id": "51355709603972",
+      "title": "Gray / Brand New / 1 Year",
+      "options": {
+       "Color": "Gray",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "198.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "x133464g",
+      "url": "https://mobileleb.com/products/samsung-galaxy-tab-a11-8-7-8gb-128gb-wi-fi-x133?variant=51355709603972",
+      "condition": "Brand New"
+     }
+    ],
+    "description": "Dimensions: 211 x 124.7 x 8 mm (8.31 x 4.91 x 0.31 in)\nWeight: 335 g or 337 g (11.82 oz)\nDisplay Type: TFT LCD, 90Hz\nSize: 8.7 inches, 214.9 cm2 (~81.7% screen-to-body ratio)\nResolution: 800 x 1340 pixels, 5:3 ratio (~179 ppi density)\nOS: Android 15, One UI 7\nChipset: Mediatek Helio G99 (6 nm)\nCPU: Octa-core (2x2.2 GHz Cortex-A76 & 6x2.0 GHz Cortex-A55)\nGPU: Mali-G57 MC2\nMemory Card slot: microSDXC (dedicated slot)\nInternal: 128GB 8GB RAM\nMain Camera: Single 8 MP, AF\nVideo: 1080p@30fps\nSelfie camera: Single 5 MP\nVideo: Yes\nLoudspeaker: Yes, with stereo speakers (with Dolby Atmos)\n3.5mm jack: Yes\nWLAN: Wi-Fi 802.11 a/b/g/n/ac, dual-band, Wi-Fi Direct\nBluetooth: 5.3, A2DP, LE\nPositioning: GPS, GLONASS, BDS, GALILEO, QZSS - cellular model only\nNFC: No\nRadio: No\nUSB: USB Type-C 2.0\nSensors: Accelerometer, proximity, compass\nBattery Type: 5100 mAh\nCharging: 15W wired"
+   }
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/samsung-galaxy-tab-a11-8-7-8gb-128gb-storage-gray",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:32:47+00:00",
+   "sha256": "3de5f65e798751bcf66feb1f20e36f181e42a04cb97cbbee48d893a758f223be",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "SAMSUNG Galaxy Tab A11- 8.7\"- 8GB- 128GB Storage- Gray",
+    "url": "https://abedtahan.com/products/samsung-galaxy-tab-a11-8-7-8gb-128gb-storage-gray",
+    "vendor": "SAMSUNG",
+    "product_type": "Tablets",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:32:47+00:00",
+    "variants": [
+     {
+      "variant_id": "45009425989811",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "189.00",
+      "compare_at": "256.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SM-X135 128GB GRAY",
+      "url": "https://abedtahan.com/products/samsung-galaxy-tab-a11-8-7-8gb-128gb-storage-gray?variant=45009425989811"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P8",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/mi-xiaomi-pad-2-8gb-256gb-storage-mint-green",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:32:50+00:00",
+   "sha256": "1092aa43defe86570063adf944866e84807bf2f9f7b0f9fa0e03657e5e120d03",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "MI Xiaomi Pad 2- 8GB- 256GB STORAGE- Mint Green",
+    "url": "https://abedtahan.com/products/mi-xiaomi-pad-2-8gb-256gb-storage-mint-green",
+    "vendor": "MI",
+    "product_type": "Tablets",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:32:50+00:00",
+    "variants": [
+     {
+      "variant_id": "45059226435763",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "245.00",
+      "compare_at": "275.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "TAB-MI-PAD 2 256GB GRN",
+      "url": "https://abedtahan.com/products/mi-xiaomi-pad-2-8gb-256gb-storage-mint-green?variant=45059226435763"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P9",
+   "kind": "product",
+   "url": "https://karizmamegastore.com/products/redmi-pad-2-pro-256gb-8gb-ram",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:32:52+00:00",
+   "sha256": "4e010ed6948e3b7e26e219d9a15914e4ffefa4e7e9bb7c3fbba556d0af015eb7",
+   "product": {
+    "shop": "Karizma Megastore",
+    "shop_id": "karizma",
+    "title": "Redmi Pad 2 Pro – 256GB / 8GB RAM",
+    "url": "https://karizmamegastore.com/products/redmi-pad-2-pro-256gb-8gb-ram",
+    "vendor": "Redmi",
+    "product_type": "Tablets",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:32:52+00:00",
+    "variants": [
+     {
+      "variant_id": "48449952481469",
+      "title": "256GB / 8GB RAM",
+      "options": {
+       "Configuration": "256GB / 8GB RAM"
+      },
+      "price": "400.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/redmi-pad-2-pro-256gb-8gb-ram?variant=48449952481469"
+     }
+    ],
+    "description": "Redmi Pad 2 Pro tablet with 256GB storage and 8GB RAM."
+   }
+  },
+  {
+   "obs": "P10",
+   "kind": "product",
+   "url": "https://karizmamegastore.com/products/redmi-pad-2-4g-256gb-8gb-ram",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:32:52+00:00",
+   "sha256": "5e2fc078a02c9089ac7b837dc1f0ac00253a4ffee294bee7c057dfcc36404402",
+   "product": {
+    "shop": "Karizma Megastore",
+    "shop_id": "karizma",
+    "title": "Redmi Pad 2 4G – 256GB / 8GB RAM",
+    "url": "https://karizmamegastore.com/products/redmi-pad-2-4g-256gb-8gb-ram",
+    "vendor": "Redmi",
+    "product_type": "Tablets",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:32:52+00:00",
+    "variants": [
+     {
+      "variant_id": "48449952121021",
+      "title": "256GB / 8GB RAM",
+      "options": {
+       "Configuration": "256GB / 8GB RAM"
+      },
+      "price": "320.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/redmi-pad-2-4g-256gb-8gb-ram?variant=48449952121021"
+     }
+    ],
+    "description": "Redmi Pad 2 4G tablet with 256GB storage and 8GB RAM."
+   }
+  },
+  {
+   "obs": "P11",
+   "kind": "product",
+   "url": "https://karizmamegastore.com/products/redmi-note-14-pro-256gb-8gb-ram",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:32:52+00:00",
+   "sha256": "6a2222f91edb2757bfa43b8a150542af4dfa9d5d84f77c362b9486089a3834a7",
+   "product": {
+    "shop": "Karizma Megastore",
+    "shop_id": "karizma",
+    "title": "Redmi Note 14 Pro 256Gb 8Gb Ram",
+    "url": "https://karizmamegastore.com/products/redmi-note-14-pro-256gb-8gb-ram",
+    "vendor": "Xiaomi",
+    "product_type": "Mobile & Smart Phones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:32:52+00:00",
+    "variants": [
+     {
+      "variant_id": "44878038204605",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "285.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/redmi-note-14-pro-256gb-8gb-ram?variant=44878038204605"
+     }
+    ],
+    "description": "Network\nTechnology\nGSM / HSPA / LTE\nLaunch\nAnnounced\n2025, January 10\nStatus\nAvailable. Released 2025, January 16\nBody\nDimensions\n162.2 x 74.9 x 8.2 mm (6.39 x 2.95 x 0.32 in)\nWeight\n180 g (6.35 oz)\nBuild\nGlass front (Gorilla Glass Victus 2), plastic back, aluminum frame\nSIM\nNano-SIM + Nano-SIM\nIP64 dust tight and water resistant (water splashes)\nDisplay\nType\nAMOLED, 1B colors, 120Hz, 1200 nits (HBM), 1800 nits (peak)\nSize\n6.67 inches, 107.4 cm2 (~88.4% screen-to-body ratio)\nResolution\n1080 x 2400 pixels, 20:9 ratio (~395 ppi density)\nProtection\nCorning Gorilla Glass Victus 2\nPlatform\nOS\nAndroid 14, HyperOS\nChipset\nMediatek Helio G100 Ultra (6 nm)\nCPU\nOcta-core (2x2.2 GHz Cortex-A76 & 6x2.0 GHz Cortex-A55)\nGPU\nMali-G57 MC2\nMemory\nCard slot\nmicroSDXC (uses shared SIM slot)\nInternal\n128GB 8GB RAM, 256GB 8GB RAM, 256GB 12GB RAM, 512GB 12GB RAM\nUFS 2.2\nMain Camera\nTriple\n200 MP, f/1.7, 23mm (wide), 1/1.4\", 0.56µm, multi-directional PDAF, OIS\n8 MP, f/2.2, 15mm, 120˚ (ultrawide), 1/4.4\", 1.0µm\n2 MP, f/2.4, (macro)\nFeatures\nLED flash, HDR, panorama\nVideo\n1080p@30/60fps, gyro-EIS\nSelfie camera\nSingle\n32 MP, f/2.2, (wide)\nVideo\n1080p@30fps\nSound\nLoudspeaker\nYes, with stereo speakers (with Dolby Atmos)\n3.5mm jack\nYes\nComms\nWLAN\nWi-Fi 802.11 a/b/g/n/ac, dual-band\nBluetooth\n5.3, A2DP, LE\nPositioning\nGPS, GALILEO, GLONASS, QZSS, BDS\nNFC\nYes (market/region dependent)\nInfrared port\nYes\nRadio\nFM radio\nUSB\nUSB Type-C 2.0, OTG\nFeatures\nSensors\nFingerprint (under display, optical), acceleromete"
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://abedtahan.com/pages/contact",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:32:52+00:00",
+   "sha256": "db4809c4590bec1f4ee514fc367bec7af0203fa34a69b2660e380074f4cc9f22",
+   "excerpt": "Contact\n– Abed Tahan\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & Crepe Makers\nIce Cube, Ice Cream & Yoghurt Makers\nSaj Machines\nL",
+   "quoted": []
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://www.karizmamegastore.com/policies/privacy-policy",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:32:53+00:00",
+   "sha256": "4db49dcb7bd0244e63e285dac53844090260fbe8b15aa615ebfd2210bc2bfe83",
+   "excerpt": "Privacy policy – Karizma Megastore\nSkip to content\nReturns extended to 60 days\nFree shipping on your first order\nHome\nCategories\nCategories\nSmart Phones\nSmart Phones\nApple\nXiaomi\nSamsung\nHonor\nTecno\nInfinix\nGadgets\nGadgets\nWearables\nAudio Devices\nPower & Charging\nGaming Consoles\nGaming Consoles\nConsoles\nGames\nGaming Wheels & Peripherals\nLaptops\nLaptops\nGaming Laptops\nOffice Laptops\nComputer Accessories\nComputer Accessories\nGaming Accessories\nMouse & Keyboards\nConnectivity & Hubs\nStorage & Memory\nMonitors\nHeadphones & Earphones\nWiFi and Networking\nContent Creation\nsoundcore\nPitaka\nAnker\nCases\nContact\nHome\nCategories\nCases\nContact\nLogin\n0\nHome\nCategories\nSmart Phones\nApple\nXiaomi\nSamsung\nHonor\nTecno\nInfinix\nGadgets\nWearables\nAudio Devices\nPower & Charging\nGaming Consoles\nConsoles\nGames\nGaming Wheels & Peripherals\nLaptops\nGaming Laptops\nOffice Laptops\nComputer Accessories\nGaming Accessories\nMouse & Keyboards\nConnectivity & Hubs\nStorage & Memory\nMonitors\nHeadphones & Earphones\nWiFi and Networking\nContent Creation\nsoundcore\nPitaka\nAnker\nCases\nContact\nPrivacy policy\nLast updated: September 2, 2024\nThis Privacy Policy describes how Karizma Megastore (the \"Site\", \"we\", \"us\", or \"our\") collects, uses, and discloses your personal information when you visit, use our services, or make a purchase from www.karizmamegastore.com (the \"Site\") or otherwise communicate with us regarding the Site (collectively, the \"Services\"). For purposes of this Privacy Policy, \"you\" and \"your\" means you as t",
+   "quoted": []
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://abedtahan.com/meta.json",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:33:01+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"Abed Tahan\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"abedtahan.com\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://mobileleb.com/meta.json",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:33:01+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"Mobileleb\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"mobileleb.com\"}",
+   "quoted": []
+  },
+  {
+   "obs": "P12",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/samsung-galaxy-tab-a11-11-8gb-256gb-wi-fi-x230",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:33:02+00:00",
+   "sha256": "b965e326fc8223f5d24cc070c3047a411ef1dc9892b832ecba6273fa36b22198",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Samsung Galaxy Tab A11+ 11\" 8GB/256GB, Wi-Fi, X230",
+    "url": "https://mobileleb.com/products/samsung-galaxy-tab-a11-11-8gb-256gb-wi-fi-x230",
+    "vendor": "Samsung",
+    "product_type": "Computers",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:33:02+00:00",
+    "variants": [
+     {
+      "variant_id": "51503296610436",
+      "title": "Silver / Brand New / 1 Year",
+      "options": {
+       "Color": "Silver",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "290.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "X2306128s",
+      "url": "https://mobileleb.com/products/samsung-galaxy-tab-a11-11-8gb-256gb-wi-fi-x230?variant=51503296610436",
+      "condition": "Brand New"
+     },
+     {
+      "variant_id": "51503296643204",
+      "title": "Grey / Brand New / 1 Year",
+      "options": {
+       "Color": "Grey",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "290.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "X2306128g",
+      "url": "https://mobileleb.com/products/samsung-galaxy-tab-a11-11-8gb-256gb-wi-fi-x230?variant=51503296643204",
+      "condition": "Brand New"
+     }
+    ],
+    "description": "11.0″ TFT LCD, 1200×1920 pixels Display, 90Hz\nAndroid 16, One UI 8\nDimensity 7300\nRAM: 8GB RAM\nStorage: 256GB Storage\n8MP 1080p Rear Camera\n5MP Selfie Camera\n7040mAh Battery\n25W Wired Charging\nQuad Dolby Atmos Speakers\n3.5mm Jack"
+   }
+  },
+  {
+   "obs": "P13",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/samsung-galaxy-tab-a11-11-8gb-256gb-storage-grey",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:33:02+00:00",
+   "sha256": "196aca3648f003d1a5bbe0f48df810f703da661caea55b131e39f19ea9e4d776",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "SAMSUNG Galaxy Tab A11+ - 11\"- 8GB- 256GB Storage - Grey",
+    "url": "https://abedtahan.com/products/samsung-galaxy-tab-a11-11-8gb-256gb-storage-grey",
+    "vendor": "SAMSUNG",
+    "product_type": "Tablets",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:33:02+00:00",
+    "variants": [
+     {
+      "variant_id": "45278826692787",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "295.00",
+      "compare_at": "351.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SM-X230 8G-256G GREY",
+      "url": "https://abedtahan.com/products/samsung-galaxy-tab-a11-11-8gb-256gb-storage-grey?variant=45278826692787"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://abedtahan.com/products/mi-xiaomi-pad-2-8gb-256gb-storage-gray",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:33:03+00:00",
+   "sha256": "08b3517166eec9d33f563813b55e5529d367947cbd5b9f84e3e8819e6cf69aad",
+   "excerpt": "MI Xiaomi Pad 2- 11\"- 8GB- 256GB Storage- Gray – Abed Tahan\nRead the Privacy Policy\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & C",
+   "quoted": []
+  },
+  {
+   "obs": "T6",
+   "kind": "page",
+   "url": "https://mobileleb.com/",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:33:04+00:00",
+   "sha256": "a06ef9613102a99a55658da0e6157a3c5898b524e96396fca97addf123d8902f",
+   "excerpt": "Mobileleb.com | Mobile Price in Lebanon, Laptop, PS5\nCell Phones & Tablets\nCell Phones\nSamsung\nHonor\nXiaomi\nTecno\nApple\nFeature Phones\nInfinix\nApple Open Box\nGoogle\nSamsung Open Box\nOppo\nVivo\nMotorola\nBlackview\nitel\nRealme\nZTE nubia\nOnePlus\nFreeYond\nNokia\nHuawei\nAlcatel\nHiSense\nDoogee\nTCL\nBlackBerry\nCAT\nUmidigi\nI-Plus\nTablets, iPads & eReaders\nApple iPads\nAndroid Tablets\nWindows Tablets\neReaders\nDrawing Tablets & Accessories\nSamsung\nBlackview\nRed Magic Gaming Tablets\nLenovo\nAmazon\nAlcatel\nMicrosoft\ni-Plus\nHuawei\nG-TiDE\nWearables, Smart Watches & Trackers\nCell Phone Accessories\nMobile Phone Cases\nScreen Protectors\nCharging & Data Cables\nChargers & Power Adapters\nMobile Gaming Controllers\nMobiles & Tablets Cables & Connectors\nMounts & Stands\nCar Accessories\nMobile Phone Accessories\nMobile Phone Camera Accessories\nLED Ring Lights\nGimbals & Camera Stabilizers\nSelfie Sticks, Tripods & Monopods\niPad & Tablet Accessories\nKeyboards\nStylus Pens\nCovers & Screen Protectors\nTablet Computer Docks & Stands\nTablet Computer Parts\nComputers & Parts\nApple Accessories\nKeyboards & Mice\nTime Capsule\nAirPods & Audio\nAll Laptops\nHP Laptops\nLenovo Laptops\nNEC Laptops\nAcer Laptops\nMacBooks, iMacs & Mac mini\nMac Studio\nDell Laptops\nAsus Laptops\nMSI Laptops\nGigabyte Laptops\nRazer Laptops\nGateway Laptops\nToshiba Laptops\nMicrosoft Surface\nLaptops Open Box\nDesktop Computers\nMini PCs\nDesktops\nAll-in-One Computers\nP.O.S Systems\nCore Components\nGraphics Cards\nCPU / Computer Processors\nRAM\nMotherboards\nAudio ",
+   "quoted": []
+  },
+  {
+   "obs": "T7",
+   "kind": "page",
+   "url": "https://abedtahan.com/",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:33:04+00:00",
+   "sha256": "bfaf12151f3b04e04821187f66dbd7fc3d266a5411e633039ad0f66a97c1b91e",
+   "excerpt": "Lebanon's Leading Electronics & Appliances Retailer | Abed Tahan\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & Crepe Makers\nIce Cub",
+   "quoted": []
+  }
+ ]
+}

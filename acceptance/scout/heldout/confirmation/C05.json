@@ -1,0 +1,614 @@
+{
+ "run_id": "scout-c05-20261128T051047",
+ "request": {
+  "id": "C05",
+  "text": "Compare Lebanese sellers for new black Sony ULT Wear WH-ULT900N headphones. What would I pay for delivery to Jounieh?",
+  "mode": "delivery",
+  "destination": "Jounieh",
+  "category": "audio",
+  "run_id": "scout-c05-20261128T051047"
+ },
+ "status": "offers",
+ "message": "I found one checked listing, but cannot yet confirm a new black unit or its delivered total to Jounieh.\n• iStore Plus: Sony WH-ULT900 ULT WEAR — $225.00, listed in stock. The listing does not specify color or explicitly confirm new condition.\n• Its Jounieh delivery fee and VAT treatment are unverified, so $225.00 is the item price only—not a delivered total.\nClassic Phones also appeared in search results, but its listing was not verified sufficiently for a price comparison.\nSuggestion: confirm black color, brand-new condition and the Jounieh shipping charge before paying.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "alternative",
+   "shop": "iStore Plus",
+   "shop_id": "istore_plus",
+   "title": "Sony WH-ULT900 ULT WEAR",
+   "variant": "Default Title",
+   "url": "https://istoreplus.me/products/sony-wh-ult900-ult-wear?variant=46273350828247",
+   "price": "225.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "near",
+   "identity_reason": "Listed as Sony WH-ULT900 ULT WEAR, the requested model family, but the listing does not establish black color or the full WH-ULT900N model code.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "not confirmed: Sony ULT Wear WH-ULT900N headphones",
+    "not confirmed: Black color",
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "Sony ULT Wear WH-ULT900N headphones",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Black color",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Jounieh",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P3",
+     "url": "https://istoreplus.me/products/sony-wh-ult900-ult-wear",
+     "read": "https://istoreplus.me/products/sony-wh-ult900-ult-wear.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:11:39+00:00",
+     "sha256": "c833f8c0d355b0ba19b04f852f3ff814a342307690da970f74d1b2984e6e145f"
+    }
+   ],
+   "seller_basis": "iStore Plus: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P3",
+   "variant_id": "46273350828247",
+   "identity": "near",
+   "identity_reason": "Listed as Sony WH-ULT900 ULT WEAR, the requested model family, but the listing does not establish black color or the full WH-ULT900N model code.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "Sony ULT Wear WH-ULT900N headphones",
+     "status": "unknown",
+     "evidence_obs": "P3",
+     "quote": "Sony WH-ULT900 ULT WEAR"
+    },
+    {
+     "requirement": "Black color",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Delivery to Jounieh",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": null,
+   "delivery_quote": null,
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Search model spelling variants across sellers.",
+   "at_s": 13.6,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "Sony WH-ULT900N"
+    },
+    {
+     "tool": "search",
+     "query": "Sony ULT Wear"
+    },
+    {
+     "tool": "search",
+     "query": "Sony ULT900N black"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Only iStore Plus has an opened observation for the requested model family. Other search hits are unverified leads; black color, new condition and delivery charges remain unconfirmed.",
+   "at_s": 86.5,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 38094,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 41406,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 42360,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 9687,
+   "usage": {
+    "actual_usd": "0.004048",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3227,
+     "output_tokens": 101,
+     "total_tokens": 3328
+    },
+    "latency_ms": 3172,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 22625,
+   "usage": {
+    "actual_usd": "0.0185005",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 7608,
+     "output_tokens": 451,
+     "total_tokens": 8059
+    },
+    "latency_ms": 11484,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": true
+  }
+ ],
+ "retailer_requests": 75,
+ "seconds": 86.5,
+ "spend": {
+  "settled_usd": "0.0225485",
+  "uncertain_usd": "0",
+  "model_calls": 2,
+  "ledger_job": "scout-c05-20261128T051047"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://corexlb.net/products/sony-wh-ch720n-wireless-headphones-bluetooth",
+   "shop_id": "corex",
+   "observed_at": "2026-11-28T05:11:32+00:00",
+   "sha256": "9ab85c66b54cca6af0dfbfb3848436c59668024804c403bb519d0dfcd62ffa85",
+   "product": {
+    "shop": "COREX",
+    "shop_id": "corex",
+    "title": "Sony WH-CH720N Wireless Headphones | Bluetooth",
+    "url": "https://corexlb.net/products/sony-wh-ch720n-wireless-headphones-bluetooth",
+    "vendor": "corex",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:11:32+00:00",
+    "variants": [
+     {
+      "variant_id": "55530910220607",
+      "title": "blue",
+      "options": {
+       "Color": "blue"
+      },
+      "price": "12.50",
+      "compare_at": "18.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://corexlb.net/products/sony-wh-ch720n-wireless-headphones-bluetooth?variant=55530910220607"
+     },
+     {
+      "variant_id": "55530910253375",
+      "title": "Black",
+      "options": {
+       "Color": "Black"
+      },
+      "price": "12.50",
+      "compare_at": "18.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://corexlb.net/products/sony-wh-ch720n-wireless-headphones-bluetooth?variant=55530910253375"
+     },
+     {
+      "variant_id": "55530910286143",
+      "title": "Beige",
+      "options": {
+       "Color": "Beige"
+      },
+      "price": "12.50",
+      "compare_at": "18.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://corexlb.net/products/sony-wh-ch720n-wireless-headphones-bluetooth?variant=55530910286143"
+     }
+    ],
+    "description": "Sony WH-CH720N wireless headphones — Active Noise Cancellation, Bluetooth 5.0, lightweight foldable design with soft ear cushions and adjustable headband, long battery with quick charging, deep bass and crisp vocals. Cash on delivery in Lebanon at COREX.\nFeatures\nActive Noise Cancellation\nWireless Bluetooth 5.0 — stable pairing.\nLightweight foldable design — soft cushions, adjustable headband.\nQuick charging — hours of playback with minutes of charge.\nDeep bass and clear sound quality\nSpecifications\nBrand\nSony (WH-CH720N)\nBluetooth\n5.0\nANC\nYes\nWhat's in the Box\n1× Sony WH-CH720N Wireless Headphones"
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/sony-wireless-headphones-bluetooth-black",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:11:39+00:00",
+   "sha256": "8cf6cee7a10dd306002509af4b0545b205b6e36687f0f0c321df525f760f26cd",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "Sony WH-CH520 Wireless On-Ear Headphones – Black",
+    "url": "https://abedtahan.com/products/sony-wireless-headphones-bluetooth-black",
+    "vendor": "SONY",
+    "product_type": "Headsets & Microphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:11:39+00:00",
+    "variants": [
+     {
+      "variant_id": "44220684828851",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "39.00",
+      "compare_at": "49.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "WH-CH520 BZ#",
+      "url": "https://abedtahan.com/products/sony-wireless-headphones-bluetooth-black?variant=44220684828851"
+     }
+    ],
+    "description": "Sony Wireless Headphones Bluetooth - Black"
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://istoreplus.me/products/sony-wh-ult900-ult-wear",
+   "shop_id": "istore_plus",
+   "observed_at": "2026-11-28T05:11:39+00:00",
+   "sha256": "c833f8c0d355b0ba19b04f852f3ff814a342307690da970f74d1b2984e6e145f",
+   "product": {
+    "shop": "iStore Plus",
+    "shop_id": "istore_plus",
+    "title": "Sony WH-ULT900 ULT WEAR",
+    "url": "https://istoreplus.me/products/sony-wh-ult900-ult-wear",
+    "vendor": "Sony",
+    "product_type": "Headphone",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:11:39+00:00",
+    "variants": [
+     {
+      "variant_id": "46273350828247",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "225.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://istoreplus.me/products/sony-wh-ult900-ult-wear?variant=46273350828247"
+     }
+    ],
+    "description": "Sony WH-ULT900 ULT WEAR Noise Cancelling Headphones\nULT Power Sound | 50-Hour Battery | Multi-Point ANC\nFeel the Bass. Own the Silence.\n✨ Key Features\n🔊 ULT Power Sound Technology\n40mm ULT Drivers - Deep, punchy bass with crystal-clear highs\nDSEE Ultimate - AI-powered audio upscaling for richer details\n🔇 Advanced Noise Cancellation\nDual Noise Sensors - AI-optimized ANC adapts to your environment\nAmbient Sound Mode - Hear announcements without removing headphones\n⚡ Marathon Battery Life\n50 hours with ANC on (60 hours with ANC off)\nQuick Charge - 3 minutes = 3 hours playback (USB-C)\n💡 Smart Connectivity\nBluetooth 5.3 - Ultra-stable connection with LE Audio support\nMulti-Point Pairing - Connect to 3 devices simultaneously\nSony Headphones Connect App - Customize EQ & ANC settings\n🎧 Premium Comfort\nUltra-Lightweight - Only 250g with plush memory foam earpads\nRotating Earcups - For compact storage and travel\n📊 Technical Specifications\nFeature\nSpecification\nDriver Size\n40mm ULT Drivers\nANC Performance\nAI-Adaptive with Wind Noise Reduction\nBattery Life\n50h (ANC on) / 60h (ANC off)\nBluetooth\n5.3 with Multipoint (3 devices)\nWeight\n250g (0.55 lbs)\nColors\nBlack.\n🎯 Perfect For\n✔ Bass lovers wanting powerful, clear sound\n✔ Frequent travelers needing long battery life\n✔ Gamers seeking immersive audio with low latency\n✔ Commuters who value ANC and comfort\n📦 What's Included\nWH-ULT900 Headphones\nPremium carrying case\nUSB-C charging cable\n3.5mm audio cable\nQuick start guide\n💡 Why Choose ULT WEA"
+   }
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/sony-ult-field-1",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:11:39+00:00",
+   "sha256": "5fd01152ff2cefc283b19a06f0b5b2de377ea9b3d37bef4cba8968be218bc98c",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "Sony ULT Field 1",
+    "url": "https://outgeeked.net/products/sony-ult-field-1",
+    "vendor": "Sony",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:11:39+00:00",
+    "variants": [
+     {
+      "variant_id": "47452742615298",
+      "title": "Black",
+      "options": {
+       "Color": "Black"
+      },
+      "price": "115.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "OG-STK-5509",
+      "url": "https://outgeeked.net/products/sony-ult-field-1?variant=47452742615298"
+     },
+     {
+      "variant_id": "47452742648066",
+      "title": "White",
+      "options": {
+       "Color": "White"
+      },
+      "price": "115.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "OG-STK-5510",
+      "url": "https://outgeeked.net/products/sony-ult-field-1?variant=47452742648066"
+     },
+     {
+      "variant_id": "47452742680834",
+      "title": "Green",
+      "options": {
+       "Color": "Green"
+      },
+      "price": "115.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "OG-STK-5511",
+      "url": "https://outgeeked.net/products/sony-ult-field-1?variant=47452742680834"
+     },
+     {
+      "variant_id": "47452742713602",
+      "title": "Orange",
+      "options": {
+       "Color": "Orange"
+      },
+      "price": "115.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "OG-STK-5512",
+      "url": "https://outgeeked.net/products/sony-ult-field-1?variant=47452742713602"
+     }
+    ],
+    "description": "Introducing the Sony ULT Field 1, the ultimate portable speaker built for bold sound and rugged adventures. Whether you're relaxing outdoors or heading off the grid, this speaker is ready to bring the bass and keep the vibes going strong.\nCompact yet powerful, the ULT Field 1 features:\nULT Bass technology for deep, punchy low-end sound\nA compact and easy-to-carry design\nUp to 12 hours of battery life to keep your music playing all day\nEngineered for the outdoors, it’s rated IP67 for complete waterproof, dustproof, rustproof, and shockproof protection — so you can take it virtually anywhere without worry.\nAdditional highlights include:\nBuilt-in microphone with echo cancelling for crystal-clear calls\nSound Diffusion Processor for a wider soundstage\nUSB Type-C for fast, convenient charging\nStereo Pair enabled for connecting two speakers and creating a true stereo experience\nWherever life takes you, the Sony ULT Field 1 is your go-to speaker for unstoppable sound and ultimate durability.\nShop the Sony ULT Field 1 in Lebanon at OutGeeked. Get premium tech at competitive prices with fast nationwide delivery, cash on delivery, and 10-day returns. The best price for Sony ULT Field 1 is at OutGeeked.net — your trusted tech store in Beirut, Lebanon.\nCompare models and current prices in our Bluetooth Speakers collection."
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/sony-noise-cancelling-headphones-black",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:11:41+00:00",
+   "sha256": "f16c44bae9f354f8a7d922dde452910b519176a480e23d681bc9e082a775dfab",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "SONY Noise Cancelling Headphones - Black",
+    "url": "https://abedtahan.com/products/sony-noise-cancelling-headphones-black",
+    "vendor": "SONY",
+    "product_type": "Noise Cancellation Headphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:11:41+00:00",
+    "variants": [
+     {
+      "variant_id": "44725610348723",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "79.00",
+      "compare_at": "99.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "WF-C710N BZ",
+      "url": "https://abedtahan.com/products/sony-noise-cancelling-headphones-black?variant=44725610348723"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/sony-wireless-headphones-bluetooth-black",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:11:42+00:00",
+   "sha256": "8cf6cee7a10dd306002509af4b0545b205b6e36687f0f0c321df525f760f26cd",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "Sony WH-CH520 Wireless On-Ear Headphones – Black",
+    "url": "https://abedtahan.com/products/sony-wireless-headphones-bluetooth-black",
+    "vendor": "SONY",
+    "product_type": "Headsets & Microphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:11:42+00:00",
+    "variants": [
+     {
+      "variant_id": "44220684828851",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "39.00",
+      "compare_at": "49.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "WH-CH520 BZ#",
+      "url": "https://abedtahan.com/products/sony-wireless-headphones-bluetooth-black?variant=44220684828851"
+     }
+    ],
+    "description": "Sony Wireless Headphones Bluetooth - Black"
+   }
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/sony-wireless-noise-cancelling-headphones-6",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:11:43+00:00",
+   "sha256": "a85993715c79dbcd261e2f62f996cbea6a82e990c92c94fc722b22b902484628",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "Sony Noise Canceling Wireless Headphones Bluetooth - Black",
+    "url": "https://abedtahan.com/products/sony-wireless-noise-cancelling-headphones-6",
+    "vendor": "SONY",
+    "product_type": "Noise Cancellation Headphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:11:43+00:00",
+    "variants": [
+     {
+      "variant_id": "44234065969331",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "89.00",
+      "compare_at": "109.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "WH-CH720N BCE#",
+      "url": "https://abedtahan.com/products/sony-wireless-noise-cancelling-headphones-6?variant=44234065969331"
+     }
+    ],
+    "description": "Sony Wireless Noise Cancelling - Headphones"
+   }
+  },
+  {
+   "obs": "P8",
+   "kind": "product",
+   "url": "https://istoreplus.me/products/sony-ult-field-1",
+   "shop_id": "istore_plus",
+   "observed_at": "2026-11-28T05:11:49+00:00",
+   "sha256": "f5cc37c452ed9b50f6b10aa811c81500ceaeafbae9a7645d8e47dfce84088d31",
+   "product": {
+    "shop": "iStore Plus",
+    "shop_id": "istore_plus",
+    "title": "Sony SRS-ULT10 ULT FIELD 1",
+    "url": "https://istoreplus.me/products/sony-ult-field-1",
+    "vendor": "Sony",
+    "product_type": "Speaker",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:11:49+00:00",
+    "variants": [
+     {
+      "variant_id": "46273353908439",
+      "title": "black",
+      "options": {
+       "Color": "black"
+      },
+      "price": "125.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://istoreplus.me/products/sony-ult-field-1?variant=46273353908439"
+     },
+     {
+      "variant_id": "46273353941207",
+      "title": "orange",
+      "options": {
+       "Color": "orange"
+      },
+      "price": "125.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://istoreplus.me/products/sony-ult-field-1?variant=46273353941207"
+     },
+     {
+      "variant_id": "46273353973975",
+      "title": "gray",
+      "options": {
+       "Color": "gray"
+      },
+      "price": "125.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://istoreplus.me/products/sony-ult-field-1?variant=46273353973975"
+     }
+    ],
+    "description": "Sony SRS-ULT10 ULT FIELD 1 Wireless Speaker\nPowerful Bass | 30-Hour Playtime | IP67 Waterproof\nFeel the Beat. Anywhere.\nThe Sony SRS-ULT10 ULT FIELD 1 is a portable powerhouse designed for deep, punchy bass and crisp highs, delivering room-filling sound in a rugged, adventure-ready package. With 30-hour battery life, IP67 dust/water resistance, and Party Connect for multi-speaker pairing, it’s the ultimate speaker for outdoor gatherings, travel, or home use.\n✨ Key Features\n🔊 Immersive Sound Experience\nULT Power Sound – Enhanced bass and clear vocals for dynamic audio\nDual Passive Radiators – Deep, distortion-free low-end\nX-Balanced Speaker Unit – Wider soundstage with rich mids/highs\n⚡ All-Day Playtime\n30-Hour Battery – Enjoy non-stop music (USB-C charging)\nQuick Charge – 10 Minutes = 3 Hours of playback\n🌧️ Adventure-Ready Durability\nIP67 Rating – Fully waterproof and dustproof (submersible up to 1m)\nShockproof Design – Rubberized casing for drops and bumps\n🎉 Party-Ready Features\nParty Connect – Link 100+ compatible Sony speakers for synchronized sound\nBluetooth 5.2 – Stable wireless streaming up to 30m\nBuilt-in Mic – Hands-free calls and voice assistant support\n💡 Smart & Convenient\nUSB-C Port – Charge devices on the go (power bank function)\nFlicker LED Lights – Adds vibe to your music (customizable via app)\n📊 Technical Specifications\nFeature\nSpecification\nDriver\nX-Balanced Speaker + Dual Passive Radiators\nBattery Life\nUp to 30 hours (varies by volume)\nWaterproof\nIP67 (1m for"
+   }
+  }
+ ]
+}

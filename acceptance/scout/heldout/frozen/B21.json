@@ -1,0 +1,1124 @@
+{
+ "run_id": "scout-b21-20261128T051811",
+ "request": {
+  "id": "B21",
+  "text": "Compare the new black JBL Tune 520BT headphones delivered to Beirut. Which seller is cheaper overall?",
+  "mode": "delivery",
+  "destination": "Beirut",
+  "category": "audio",
+  "run_id": "scout-b21-20261128T051811"
+ },
+ "status": "offers",
+ "message": "No confirmed cheapest overall yet: delivery fees are missing for the two lowest-priced black listings, and none explicitly confirms new condition.\n• iStore Plus: $34.00; delivery fee shown at checkout or communicated before confirmation.\n• iSolved IT Solutions: $37.00, VAT included; shipping calculated at checkout.\n• Phonefinity: $39.00 + $3 Beirut delivery = $42.00 delivered; prices are final, with no VAT charged.\nAll three black variants are listed in stock. Phonefinity has the only verified delivered total—not necessarily the cheapest.\nSuggestion: check iStore Plus’s delivery charge and confirm brand-new condition before deciding.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "best",
+   "shop": "Phonefinity",
+   "shop_id": "phonefinity",
+   "title": "JBL Tune 520BT",
+   "variant": "Color: Black",
+   "url": "https://phonefinity.net/products/jbl-tune-520bt/?attribute_pa_color=black",
+   "price": "39.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "exact",
+   "identity_reason": "Same requested JBL Tune 520BT with Black selected.",
+   "delivery_fee": "3.00",
+   "total": "42.00",
+   "total_basis": "listed price + delivery fee published by phonefinity (\"Inside Beirut: 3$, within 1 business day\", T3)",
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "JBL Tune 520BT",
+     "status": "met",
+     "quote": "JBL Tune 520BT",
+     "obs": "P7",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Black",
+     "status": "met",
+     "quote": "Color: Black",
+     "obs": "P7",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "met",
+     "quote": "Inside Beirut: 3$, within 1 business day",
+     "obs": "T3",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P7",
+     "url": "https://phonefinity.net/products/jbl-tune-520bt/",
+     "read": "https://phonefinity.net/wp-json/wc/store/v1/products?slug=jbl-tune-520bt",
+     "source": "woo_store_api",
+     "observed_at": "2026-11-28T05:18:58+00:00",
+     "sha256": "086e8eb9f4b2724010e0ab5a6e26212a6c8c112fca9e3cd2908b991f3ee1f7b2"
+    },
+    {
+     "obs": "T3",
+     "url": "https://phonefinity.net/",
+     "source": "shop delivery terms",
+     "observed_at": "2026-11-28T05:18:51+00:00",
+     "sha256": "9f333ea5bdbe14320ef9fadc95618c125fe8ce3089d3fba528894a660c0dc7ea"
+    }
+   ],
+   "seller_basis": "Phonefinity: Lebanese shop in the reviewed directory",
+   "downgrades": []
+  },
+  {
+   "tier": "best",
+   "shop": "iStore Plus",
+   "shop_id": "istore_plus",
+   "title": "JBL Tune 520BT",
+   "variant": "black-23",
+   "url": "https://istoreplus.me/products/jbl-tune-520bt?variant=46273252425943",
+   "price": "34.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "exact",
+   "identity_reason": "Requested JBL Tune 520BT in the black-23 variant.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "JBL Tune 520BT",
+     "status": "met",
+     "quote": "JBL Tune 520BT",
+     "obs": "P1",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Black",
+     "status": "met",
+     "quote": "black-23",
+     "obs": "P1",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "met",
+     "quote": "Beirut and surrounding areas: 1–2 business days",
+     "obs": "T8",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P1",
+     "url": "https://istoreplus.me/products/jbl-tune-520bt",
+     "read": "https://istoreplus.me/products/jbl-tune-520bt.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:18:43+00:00",
+     "sha256": "496d059901ff59e5d972af9169aca0b6c7e3e682c786ceb2b50f9227b2f46858"
+    }
+   ],
+   "seller_basis": "iStore Plus: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  },
+  {
+   "tier": "best",
+   "shop": "iSolved IT Solutions",
+   "shop_id": "isolvedit",
+   "title": "JBL Tune 520BT Wireless On-Ear Headphones – Black",
+   "variant": "Default Title",
+   "url": "https://isolvedit.me/products/jbl-tune-520bt-wireless-on-ear-headphones-black?variant=42984210268271",
+   "price": "37.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "exact",
+   "identity_reason": "Same requested model, explicitly black.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "delivery fee to your area is not published or not confirmed"
+   ],
+   "requirements": [
+    {
+     "requirement": "JBL Tune 520BT, black",
+     "status": "met",
+     "quote": "JBL Tune 520BT Wireless On-Ear Headphones – Black",
+     "obs": "P5",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "met",
+     "quote": "🚚 Delivery all over Lebanon",
+     "obs": "T1",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P5",
+     "url": "https://isolvedit.me/products/jbl-tune-520bt-wireless-on-ear-headphones-black",
+     "read": "https://isolvedit.me/products/jbl-tune-520bt-wireless-on-ear-headphones-black.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:18:57+00:00",
+     "sha256": "67276c83527a601e4c525ff1d17df6e38db867d0a43d9567cbe2e3bbea4cca22"
+    }
+   ],
+   "seller_basis": "iSolved IT Solutions: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P1",
+   "variant_id": "46273252425943",
+   "identity": "exact",
+   "identity_reason": "Requested JBL Tune 520BT in the black-23 variant.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "JBL Tune 520BT",
+     "status": "met",
+     "evidence_obs": "P1",
+     "quote": "JBL Tune 520BT"
+    },
+    {
+     "requirement": "Black",
+     "status": "met",
+     "evidence_obs": "P1",
+     "quote": "black-23"
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "met",
+     "evidence_obs": "T8",
+     "quote": "Beirut and surrounding areas: 1–2 business days"
+    }
+   ],
+   "delivery_obs": "T8",
+   "delivery_quote": "Shipping fees, if applicable, will be displayed during checkout or communicated to the customer before the order is confirmed.",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P5",
+   "variant_id": "42984210268271",
+   "identity": "exact",
+   "identity_reason": "Same requested model, explicitly black.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "JBL Tune 520BT, black",
+     "status": "met",
+     "evidence_obs": "P5",
+     "quote": "JBL Tune 520BT Wireless On-Ear Headphones – Black"
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "met",
+     "evidence_obs": "T1",
+     "quote": "🚚 Delivery all over Lebanon"
+    }
+   ],
+   "delivery_obs": "T7",
+   "delivery_quote": "Shipping calculated at checkout.",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": "All prices include VAT — nothing extra to pay",
+   "price_quote": null
+  },
+  {
+   "obs": "P7",
+   "variant_id": "51537",
+   "identity": "exact",
+   "identity_reason": "Same requested JBL Tune 520BT with Black selected.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "JBL Tune 520BT",
+     "status": "met",
+     "evidence_obs": "P7",
+     "quote": "JBL Tune 520BT"
+    },
+    {
+     "requirement": "Black",
+     "status": "met",
+     "evidence_obs": "P7",
+     "quote": "Color: Black"
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "met",
+     "evidence_obs": "T3",
+     "quote": "Inside Beirut: 3$, within 1 business day"
+    }
+   ],
+   "delivery_obs": "T3",
+   "delivery_quote": "Inside Beirut: 3$, within 1 business day",
+   "delivery_fee_usd": "3",
+   "free_delivery_over_usd": null,
+   "vat_quote": "Prices are final. We don't charge VAT",
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Search exact model and common spellings across shops.",
+   "at_s": 9.3,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "JBL Tune 520BT"
+    },
+    {
+     "tool": "search",
+     "query": "JBL 520 BT black"
+    },
+    {
+     "tool": "search",
+     "query": "JBL T520BT"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Check lowest-priced candidates and shipping/condition evidence.",
+   "at_s": 46.0,
+   "calls": [
+    {
+     "tool": "open",
+     "url": "https://classic-phones.com/products/jbl-tune-520bt-black"
+    },
+    {
+     "tool": "open",
+     "url": "https://isolvedit.me/products/jbl-tune-520bt-wireless-on-ear-headphones-black"
+    },
+    {
+     "tool": "open",
+     "url": "https://phonefinity.net/products/jbl-tune-520bt/"
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "istore_plus"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Check delivery charges and explicit new-condition evidence for the leading black offers.",
+   "at_s": 58.3,
+   "calls": [
+    {
+     "tool": "read",
+     "url": "https://istoreplus.me/policies/shipping-policy"
+    },
+    {
+     "tool": "read",
+     "url": "https://istoreplus.me/products/jbl-tune-520bt",
+     "terms": [
+      "new",
+      "condition",
+      "black"
+     ]
+    },
+    {
+     "tool": "read",
+     "url": "https://isolvedit.me/products/jbl-tune-520bt-wireless-on-ear-headphones-black",
+     "terms": [
+      "new",
+      "condition",
+      "delivery",
+      "shipping"
+     ]
+    },
+    {
+     "tool": "read",
+     "url": "https://phonefinity.net/products/jbl-tune-520bt/",
+     "terms": [
+      "new",
+      "condition"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "isolvedit"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 4,
+   "notes": "Known delivery total available only for Phonefinity; do not assert an overall winner or new condition.",
+   "at_s": 80.5,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 16344,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 27109,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 29078,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 312,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 2000,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 2187,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 3047,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 891,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 1016,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 1219,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 1406,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 4219,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 6844,
+   "usage": {
+    "actual_usd": "0.0040655",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3218,
+     "output_tokens": 105,
+     "total_tokens": 3323
+    },
+    "latency_ms": 4235,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7625,
+   "usage": {
+    "actual_usd": "0.0154455",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 7538,
+     "output_tokens": 163,
+     "total_tokens": 7701
+    },
+    "latency_ms": 4563,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 9187,
+   "usage": {
+    "actual_usd": "0.022723",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 10253,
+     "output_tokens": 212,
+     "total_tokens": 10465
+    },
+    "latency_ms": 5891,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 4,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 17609,
+   "usage": {
+    "actual_usd": "0.0404655",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 15022,
+     "output_tokens": 794,
+     "total_tokens": 15816
+    },
+    "latency_ms": 14593,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": true
+  }
+ ],
+ "retailer_requests": 91,
+ "seconds": 80.5,
+ "spend": {
+  "settled_usd": "0.0826995",
+  "uncertain_usd": "0",
+  "model_calls": 4,
+  "ledger_job": "scout-b21-20261128T051811"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://istoreplus.me/products/jbl-tune-520bt",
+   "shop_id": "istore_plus",
+   "observed_at": "2026-11-28T05:18:43+00:00",
+   "sha256": "496d059901ff59e5d972af9169aca0b6c7e3e682c786ceb2b50f9227b2f46858",
+   "product": {
+    "shop": "iStore Plus",
+    "shop_id": "istore_plus",
+    "title": "JBL Tune 520BT",
+    "url": "https://istoreplus.me/products/jbl-tune-520bt",
+    "vendor": "JBL",
+    "product_type": "Headphone",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:18:43+00:00",
+    "variants": [
+     {
+      "variant_id": "46273252425943",
+      "title": "black-23",
+      "options": {
+       "Color": "black-23"
+      },
+      "price": "34.00",
+      "compare_at": "49.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://istoreplus.me/products/jbl-tune-520bt?variant=46273252425943"
+     },
+     {
+      "variant_id": "46273252458711",
+      "title": "purple",
+      "options": {
+       "Color": "purple"
+      },
+      "price": "34.00",
+      "compare_at": "49.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://istoreplus.me/products/jbl-tune-520bt?variant=46273252458711"
+     },
+     {
+      "variant_id": "46273252491479",
+      "title": "navy",
+      "options": {
+       "Color": "navy"
+      },
+      "price": "34.00",
+      "compare_at": "49.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://istoreplus.me/products/jbl-tune-520bt?variant=46273252491479"
+     }
+    ],
+    "description": "JBL Tune 520BT - Wireless On-Ear Headphones with PureBass Sound\nThe JBL Tune 520BT headphones offer a perfect blend of powerful audio performance, wireless convenience, and long-lasting comfort. Featuring JBL’s renowned PureBass Sound, seamless Bluetooth connectivity, and an impressive battery life, these headphones are ideal for music enthusiasts and multitaskers on the go.\nPowerful JBL PureBass Sound\nExperience your favorite tracks like never before with JBL PureBass Sound, delivering deep, rich bass that enhances every beat. Whether you're listening to music, podcasts, or watching videos, the JBL Tune 520BT ensures immersive audio quality for a premium listening experience.\nWireless Freedom with Bluetooth 5.3\nThe Bluetooth 5.3 technology ensures a stable and seamless wireless connection, providing exceptional audio clarity with reduced latency. Pair effortlessly with your smartphone, tablet, or laptop, and enjoy tangle-free convenience wherever you go.\nLong Battery Life for All-Day Listening\nWith up to 57 hours of battery life, the JBL Tune 520BT keeps the music going through long commutes, workdays, or travel. A quick 5-minute charge gives you an additional 3 hours of playback, ensuring you're never without your tunes.\nLightweight, Comfortable Design\nDesigned for extended wear, the JBL Tune 520BT features a lightweight, ergonomic on-ear design with cushioned ear pads for superior comfort. The foldable design makes it easy to store and carry, perfect for your busy lifestyl"
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://isolvedit.me/products/jbl-tune-520bt-wireless-on-ear-headphones-black",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T05:18:47+00:00",
+   "sha256": "67276c83527a601e4c525ff1d17df6e38db867d0a43d9567cbe2e3bbea4cca22",
+   "product": {
+    "shop": "iSolved IT Solutions",
+    "shop_id": "isolvedit",
+    "title": "JBL Tune 520BT Wireless On-Ear Headphones – Black",
+    "url": "https://isolvedit.me/products/jbl-tune-520bt-wireless-on-ear-headphones-black",
+    "vendor": "JBL",
+    "product_type": "JBL Headphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:18:47+00:00",
+    "variants": [
+     {
+      "variant_id": "42984210268271",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "37.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "JBL Tune 520BT Black",
+      "url": "https://isolvedit.me/products/jbl-tune-520bt-wireless-on-ear-headphones-black?variant=42984210268271"
+     }
+    ],
+    "description": "JBL Pure Bass sound with battery life that lasts all week. The Tune 520BT gives you up to 57 hours of music, and 5 minutes of charging adds 3 more hours.\nKey features\nJBL Pure Bass sound\nUp to 57 hours of playtime\n5-minute charge = 3 hours of listening\nBluetooth 5.3 with multipoint\nLightweight, foldable on-ear design\nHands-free calls with built-in mic\nSpecifications\nModel\nTune 520BT\nBattery\nUp to 57 h\nColor\nBlack\nBuy from iSolved IT Solutions – order online or visit our store in Bourj Hammoud, Beirut, Lebanon."
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://www.macrotronics.net/products/jbl-tune-520bt-bp1315051",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:18:47+00:00",
+   "sha256": "8a942c185c9e7b924c88ed086902c2dcbd30f9f5b3061f98aa4db3ce787569d5",
+   "product": {
+    "shop": "Macrotronics",
+    "shop_id": "macrotronics",
+    "title": "JBL Tune 520BT JBLT520BTBLKEU Wireless Headset",
+    "url": "https://www.macrotronics.net/products/jbl-tune-520bt-bp1315051",
+    "vendor": "JBL",
+    "product_type": "Earphones and Headphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:18:47+00:00",
+    "variants": [
+     {
+      "variant_id": "51341052018977",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "35.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "1006781",
+      "url": "https://www.macrotronics.net/products/jbl-tune-520bt-bp1315051?variant=51341052018977"
+     }
+    ],
+    "description": "Sound: JBL Pure Bass | 33mm drivers | 20Hz–20kHz frequency\nBattery: Up to 57 hrs playtime | USB-C fast charging\nBluetooth: Version 5.3 | Multipoint support | Voice assistant enabled\nCalls: Built-in mic with Voice Aware\nDesign: Lightweight & foldable | On-ear fit\nApp Support: Custom EQ & updates via JBL Headphones App"
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://isolvedit.me/policies/shipping-policy",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T05:18:49+00:00",
+   "sha256": "23b96357f7b8efc21535a26fd427e90234b7d30d3b08c7400cee02f498b75b2c",
+   "excerpt": "Shipping policy | iSolved IT\nSkip to content\nYour cart is empty\nContinue shopping\nHave an account?\nLog in to check out faster.\nYour cart\nLoading...\nEstimated total\n$0.00 USD\n✅ All prices include VAT – nothing extra to pay. Discounts and shipping calculated at checkout.\nCheck out\n🎄 Christmas deals are live — order on WhatsApp\n✅ All prices include VAT — nothing extra to pay\n💵 Cash on delivery\n🛡️ 6-month warranty on used laptops\nShop\nApple\nApple\nApple Accessories\nApple Macbook\nApple iPad\nGaming\nGaming\nGaming Laptops\nGaming Monitors\nGaming Consoles\nGaming Accessories\nLaptops\nLaptops\nApple Laptops\nAsus Laptops\nAcer Laptops\nDell Laptops\nHp laptops\nLenovo Laptops\nMsi Laptops\nSecond Hand Laptops\nSony Laptops\nLaptop Parts\nDesktops\nDesktops\nAll Desktops & All-in-Ones\nDesktop PCs\nAll-in-One PCs\nComputer Parts\nComputer Parts\nMotherboards\nCPU's\nGPU's\nStorages\nRAM's\nCases and Chassis\nPower Supply\nAccessories\nAccessories\nAdapters & Converters\nBackpacks & Bags\nCables\nExternal Hard Drives\nFlash Drives & SD Cards\nMobile Accessories\nPower Banks\nChargers\nPhone Holders & Car Mounts\nDocking Stations & USB-C Hubs\nLaptop Stands & Coolers\nWebcams\nWireless Presenters\nInks & Toners\nMouse\nMouse Pads & Wrist Pads\nKeyboards\nAudio\nAudio\nEarbuds\nSpeakers\nHeadsets\nMicrophones\nElectronics\nElectronics\nTablets\nGadgets\nMonitors\nPrinters & Scanners\nPaper Shredders\nPOS & Barcode Scanners\nNetworking Products\nNetworking Products\nFiber Optic\nNetworking Accessories\nSwitches\nNetwork & Server Cabinets\nRouters & Modems\nC",
+   "quoted": [
+    {
+     "quote": "🚚 Delivery all over Lebanon",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://www.macrotronics.net/policies/shipping-policy",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:18:49+00:00",
+   "sha256": "39d6694db4df88067bf5e6580eff1720584b56fdac4fd03b048fe1756ff6833d",
+   "excerpt": "Shipping policy – Macrotronics\nSkip to content\nFacebook\nTwitter\nInstagram\nHelpline +961 71 854 621 | +961 9 853 008\nTechnical Support +961 71 94 84 94\nPause slideshow\nPlay slideshow\nComputers\nComputers\nLaptops\nOn-Demand Laptops\nLaptop Power Adapters\nLaptop Accessories\nApple Computers\nApple Accessories\niPads and Tablets\nTablets Accessories\nComputer & Smart Monitors\nMonitor Accessories\nServers, Workstations and NAS\nDesktops and Mini PCs\nPOS and POS Equipment\nOriginal Softwares and Antivirus\nComputer Parts\nComputer Parts\nProcessors\nGraphic Cards\nMotherboards\nRAMs\nSSD\nHDD\nCPU Coolers\nThermal Paste and Pads\nPower Supplies\nComputer Cases\nComputer Case Accessories\nMore PC Components\nLegacy Computer Parts\nUsed Computer Parts\nComputer Peripherals\nComputer Peripherals\nMice & Keyboards\nEarphones & Headphones\nComputer & Bluetooth Speakers\nWebcams & Microphones\nLaptop Bags & Cases\nComputer & Video Cables\nFlash Drives & Memory Cards\nPrinters, Scanners & Faxes\nPaper & Media Supplies\nGenuine Inks & Ribbons\nGenuine Toners & Drums\nCompatible Toners & Drums\nOffice Furniture\nElectronics & More\nElectronics & More\nUPS\nBatteries\nSmart Appliances\nAdapters and Converters\nEducational Electronics\nConsumer Electronics\nSurveillance and Security\nProjectors, Screens and More\nRouters, Repeaters and APs\nNetwork Switches\nNetwork Adapters\nNetworking and Tools\nGaming\nGaming\nGaming PCs\nGaming Monitors\nGaming Headsets\nGaming Pads\nGaming Mice\nGaming Keyboards\nGaming Chairs\nGaming Desks\nGaming Console and VR\nGaming",
+   "quoted": []
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://phonefinity.net/products/jbl-tune-520bt/",
+   "shop_id": "phonefinity",
+   "observed_at": "2026-11-28T05:18:45+00:00",
+   "sha256": "086e8eb9f4b2724010e0ab5a6e26212a6c8c112fca9e3cd2908b991f3ee1f7b2",
+   "product": {
+    "shop": "Phonefinity",
+    "shop_id": "phonefinity",
+    "title": "JBL Tune 520BT",
+    "url": "https://phonefinity.net/products/jbl-tune-520bt/",
+    "vendor": null,
+    "product_type": null,
+    "condition": null,
+    "source": "woo_store_api",
+    "observed_at": "2026-11-28T05:18:45+00:00",
+    "variants": [
+     {
+      "variant_id": "54711",
+      "title": "Color: Purple",
+      "options": {
+       "Color": "purple"
+      },
+      "price": "39.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/jbl-tune-520bt/?attribute_pa_color=purple"
+     },
+     {
+      "variant_id": "51537",
+      "title": "Color: Black",
+      "options": {
+       "Color": "black"
+      },
+      "price": "39.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/jbl-tune-520bt/?attribute_pa_color=black"
+     },
+     {
+      "variant_id": "51538",
+      "title": "Color: Blue",
+      "options": {
+       "Color": "blue"
+      },
+      "price": "39.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/jbl-tune-520bt/?attribute_pa_color=blue"
+     },
+     {
+      "variant_id": "53413",
+      "title": "Color: White",
+      "options": {
+       "Color": "white"
+      },
+      "price": "39.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/jbl-tune-520bt/?attribute_pa_color=white"
+     }
+    ],
+    "description": "Up to 57H battery life and speed charge (5mins = 3H)\nMulti-point connections\nHands-free calls with Voice Aware\nLightweight, comfortable and foldable design\nJBL Pure Bass Sound\nThe JBL Tune 520BT utilizes the renowned JBL Pure Bass sound, the same technology that powers the most famous venues all around the world.\nWireless Bluetooth 5.3 technology\nWirelessly stream high-quality sound from your smartphone without messy cords with the help of the latest Bluetooth technology.\nCustomize your listening experience\nDownload the free JBL Headphones App to tailor the sound to your taste with the EQ. Voice prompts in your desired language guide you through the Tune 520BT features.\nFeatures\nUp to 57H battery life and speed charge (5mins = 3H)\nFor long-lasting fun, listen wirelessly for up to 57 hours and recharge the battery in as little as 2 hours with the convenient Type-C USB cable. A quick 5-minute recharge gives you 3 additional hours of music.\nHands-free calls with Voice Aware\nEasily control your sound and manage your calls from your headphones with the convenient buttons on the ear-cup. Hear your voice while talking, with the help of Voice Aware.\nMulti-point connections\nAllows you to effortlessly switch from one Bluetooth® device to another. You can simply switch from a video on your tablet to a call on your mobile phone, so that you’ll never miss a call.\nLightweight, comfortable and foldable design\nThe lightweight materials and soft ear cushions with a padded headband make the he",
+    "extra": {
+     "attributes": {
+      "Color": [
+       "Black",
+       "Blue",
+       "Purple",
+       "White"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://phonefinity.net/",
+   "shop_id": "phonefinity",
+   "observed_at": "2026-11-28T05:18:51+00:00",
+   "sha256": "9f333ea5bdbe14320ef9fadc95618c125fe8ce3089d3fba528894a660c0dc7ea",
+   "excerpt": "Phonefinity.net: Genuine Products. Quality Service.\nSkip to content\n[email protected]\nOnline Only | Cash on Delivery\nOnline Only | Cash on Delivery\nSearch for:\nLogin / Register\nCart\n0\nNo products in the cart.\nReturn to shop\nSearch for:\n0\nCart\nNo products in the cart.\nReturn to shop\nPhones\nTablets\nApple iPads\nAndroid Tablets\nAmazon Kindles\nMacbooks\nSmart\nSmart Watches & Bands\nSmart Scales\nSmart Display\nAudio\nEarphones\nHeadphones\nSpeakers\nMicrophones\nMedia Streaming\nGaming\nPlayStation\nNintendo Switch\nNetworking\nCameras\nAccessories\nCables\nChargers & Power Banks\nMobile & Tablet Covers\nMobile Accessories\nComputer Accessories\nSleeves, Carrying Cases & Backpacks\nUSB Hubs\nPRELOVED\nFilter\nNew\nPower\nAnker Prime Charger (160W, 3 Ports, Smart Display)\n$132\nNew\nPower\nAnker Prime Power Bank (26K, 300W)\n$176\nNew\nPower\nAnker Prime Wireless Charging Base (100W, 3 Ports)\n$65\nEarphones\nApple AirPods 5\n$140 – $165Price range: $140 through $165\nNew\nApple iPads\nApple iPad mini (2026)\n$820 – $920Price range: $820 through $920\nPhones\nApple iPhone 18 Pro\n$1,550 – $1,825Price range: $1,550 through $1,825\nPhones\nApple iPhone 18 Pro Max\n$1,700 – $2,000Price range: $1,700 through $2,000\nSmart Watches & Bands\nApple Watch Series 12\n$440 – $490Price range: $440 through $490\nSmart Watches & Bands\nApple Watch Ultra 4\n$850 – $1,000Price range: $850 through $1,000\nEarphones\nCMF by Nothing Buds Neo\n$50\nEarphones\nCMF Clip Pro\n$110\nNetworking\nDeco XE75 Pro\n$154 – $374Price range: $154 through $374\nCameras\nDJI OSMO",
+   "quoted": [
+    {
+     "quote": "Inside Beirut: 3$, within 1 business day",
+     "found": true
+    },
+    {
+     "quote": "Inside Beirut: 3$, within 1 business day",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://isolvedit.me/products/jbl-tune-520bt-wireless-on-ear-headphones-black",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T05:18:57+00:00",
+   "sha256": "67276c83527a601e4c525ff1d17df6e38db867d0a43d9567cbe2e3bbea4cca22",
+   "product": {
+    "shop": "iSolved IT Solutions",
+    "shop_id": "isolvedit",
+    "title": "JBL Tune 520BT Wireless On-Ear Headphones – Black",
+    "url": "https://isolvedit.me/products/jbl-tune-520bt-wireless-on-ear-headphones-black",
+    "vendor": "JBL",
+    "product_type": "JBL Headphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:18:57+00:00",
+    "variants": [
+     {
+      "variant_id": "42984210268271",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "37.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "JBL Tune 520BT Black",
+      "url": "https://isolvedit.me/products/jbl-tune-520bt-wireless-on-ear-headphones-black?variant=42984210268271"
+     }
+    ],
+    "description": "JBL Pure Bass sound with battery life that lasts all week. The Tune 520BT gives you up to 57 hours of music, and 5 minutes of charging adds 3 more hours.\nKey features\nJBL Pure Bass sound\nUp to 57 hours of playtime\n5-minute charge = 3 hours of listening\nBluetooth 5.3 with multipoint\nLightweight, foldable on-ear design\nHands-free calls with built-in mic\nSpecifications\nModel\nTune 520BT\nBattery\nUp to 57 h\nColor\nBlack\nBuy from iSolved IT Solutions – order online or visit our store in Bourj Hammoud, Beirut, Lebanon."
+   }
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://istoreplus.me/meta.json",
+   "shop_id": "istore_plus",
+   "observed_at": "2026-11-28T05:18:57+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"Istore Plus\", \"city\": \"Beirut\", \"province\": null, \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"istoreplus.me\"}",
+   "quoted": []
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/jbl-tune-520bt-black",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:18:58+00:00",
+   "sha256": "23d6bfc43c6e5673e523d855d4028ef4a4ca6af49b28286fedda68a726a30ffb",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Jbl Tune 520BT",
+    "url": "https://classic-phones.com/products/jbl-tune-520bt-black",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:18:58+00:00",
+    "variants": [
+     {
+      "variant_id": "44761222775019",
+      "title": "White",
+      "options": {
+       "Color": "White"
+      },
+      "price": "27.00",
+      "compare_at": "35.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/jbl-tune-520bt-black?variant=44761222775019"
+     }
+    ],
+    "description": "JBL Tune 520BT Wireless On Ear Headphones - White | TUNE 520BT\nJBL Tune 520BT Wireless On Ear Headphones - White | TUNE 520BT\nThe JBL Tune 520BT headphones stream powerful JBL Pure Bass sound thanks to the latest 5.3 BT technology. Easy to use, these headphones provide up to 57 hours of pure pleasure and an extra 3 hours of battery with just 5 minutes of charge. Download the free JBL Headphones App and customize your sound through the EQ, while Voice Prompts guide you through the headphones features. Manage calls, sound and volume from the earcup, thanks to the convenient button control. If a call comes in while you are watching a video on another device, the JBL Tune 520BT seamlessly switches to your mobile device, so you never miss a call. Lightweight and comfortable even after hours of listening, the JBL Tune 520BT headphones fold flat in your backpack to follow you everywhere."
+   }
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://istoreplus.me/",
+   "shop_id": "istore_plus",
+   "observed_at": "2026-11-28T05:18:59+00:00",
+   "sha256": "f771749b78e0fdb5e69e36d850f0961b9cbfe058010ed4dda6ad35e08eccb9a1",
+   "excerpt": "iStore Plus – Top Electronics & Gadgets Store in Lebanon\nCustom Event Setup\n×\nClick on the elements you want to track as custom events. Selected elements will appear in the list below.\nTrack New Element\nSelected Elements (0)\nFinish Setup\niStore Plus – Top Electronics & Gadgets Store in Lebanon\nSkip to content\n+961 70 92 4848\ninfo@istoreplus.me\nDISCOUNT UP TO 30%\nDELIVERY ALL OVER LEBANON\nFacebook\nHome\nShop by Brand\nAmazon Brand\nApple Brand\nBeats Brand\nBose Brand\nDJI Brand\nDyson Brand\nGoogle Brand\nGoPro Brand\nGreen Lion Brand\nImalent Brand\nJBL Brand\nKica Brand\nKospet Brand\nMarshall Brand\nSamsung Brand\nSKG Brand\nSkullcandy Brand\nSony Brand\nXiaomi Brand\nYesido Brand\nPhones & Tablets\nAccessories\nSmartphones\nChargers\nPhone & Tablet Cases\nPhone Stands And Holders\nTablets\nPhotography\nCamera Accessories\nAction Cameras\nDrones\nInstant Cameras\nStabilizer\nTripod & Selfie Sticks\nDigital Cameras\nAudio\nDigital Recorders\nEarphones\nHeadphones\nMicrophones\nSpeakers\nHome Appliances\nElectronic Cleaner\nHair Styling\nHair Clippers\nKitchen Appliances\nMassage Devices\nSecurity Cameras\nSmart Devices\nTools\nWearables\nBags\nSmart Glasses\nSmart Rings\nSmart Watch\nCar Accessories\nSALE\n0\n$0.00\nMenuCategories\nWishlist\nSearch\nNeed help ? Email: info@istoreplus.mePhone: (212) 555-1234\nPhones & Tablets\nPhotography\nAudio\nHome Appliances\nWearables\nCar Accessories\nSHOP NOW\niStore Plus — quality products, fast delivery, and reliable service.\nFEATURED CATEGORIES\nSMARTPHONES\nACTION CAMERAS\nHOME APPLIANCES\nGAMING\nSPEAKERS",
+   "quoted": []
+  },
+  {
+   "obs": "T6",
+   "kind": "page",
+   "url": "https://www.classic-phones.com/policies/shipping-policy",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:18:59+00:00",
+   "sha256": "211a0b762301f17f6ea174d11e94924e51d82f6de9f73185221f851f8723421c",
+   "excerpt": "Shipping policy\nSkip to content\nDelivery Available All Over Lebanon\nFacebook\nInstagram\nShop All\nCameras\nCameras\nGo to Cameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nLaptops\nLaptops\nGo to Laptops\nMacbook\nNew\nUsed\nTablets\nTablets\nGo to Tablets\nApple\nSamsung\nXiaomi\nBlackview\nModio\nSmart Watch\nSmart Watch\nGo to Smart Watch\nApple\nSamsung\nFitbit\nHuawei\nAmazfit\nXiaomi\nGreen Lion\nProdo\nKieslect\nAccessories\nAccessories\nGo to Accessories\nAdapters & Cables\nStorage\nKids\nScooters\nGaming\nGaming\nGo to Gaming\nNintendo\nPS\nXBOX\nOthers\nPersonal Care\nPersonal Care\nGo to Personal Care\nHome Accessories\nPerfume\nMassage\nOthers\nTech Gadgets\nTech Gadgets\nGo to Tech Gadgets\nKits (Cleaning, Repair...)\nPower Devices\nSmart Devices\nRouters\nBags\nKindle\nStands\nCalculator\nHandy Phones\nAudio\nAudio\nGo to Audio\nEarphones\nSpeakers\nHeadphones\nEarbuds\nMicrophones\nCases\nCases\nGo to Cases\nApple\nSamsung\nOthers\nWatch Accessories\nKeyboards & Mouses\nOthers\nBlogs\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nLebanon\nFast Delivery\nFacebook\nInstagram\nLog in\nSearch\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nSearch\nLog in\n0\n00 items\nSubtotal\n$0\nShop All\nCameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nGo to Cameras\nLaptops\nMacbook\nNew\nUsed\nGo to Laptops\nTablets\nApple\nSamsung\nXiaomi\nBlack",
+   "quoted": []
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://phonefinity.net/products/jbl-tune-520bt/",
+   "shop_id": "phonefinity",
+   "observed_at": "2026-11-28T05:18:58+00:00",
+   "sha256": "086e8eb9f4b2724010e0ab5a6e26212a6c8c112fca9e3cd2908b991f3ee1f7b2",
+   "product": {
+    "shop": "Phonefinity",
+    "shop_id": "phonefinity",
+    "title": "JBL Tune 520BT",
+    "url": "https://phonefinity.net/products/jbl-tune-520bt/",
+    "vendor": null,
+    "product_type": null,
+    "condition": null,
+    "source": "woo_store_api",
+    "observed_at": "2026-11-28T05:18:58+00:00",
+    "variants": [
+     {
+      "variant_id": "54711",
+      "title": "Color: Purple",
+      "options": {
+       "Color": "purple"
+      },
+      "price": "39.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/jbl-tune-520bt/?attribute_pa_color=purple"
+     },
+     {
+      "variant_id": "51537",
+      "title": "Color: Black",
+      "options": {
+       "Color": "black"
+      },
+      "price": "39.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/jbl-tune-520bt/?attribute_pa_color=black"
+     },
+     {
+      "variant_id": "51538",
+      "title": "Color: Blue",
+      "options": {
+       "Color": "blue"
+      },
+      "price": "39.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/jbl-tune-520bt/?attribute_pa_color=blue"
+     },
+     {
+      "variant_id": "53413",
+      "title": "Color: White",
+      "options": {
+       "Color": "white"
+      },
+      "price": "39.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/jbl-tune-520bt/?attribute_pa_color=white"
+     }
+    ],
+    "description": "Up to 57H battery life and speed charge (5mins = 3H)\nMulti-point connections\nHands-free calls with Voice Aware\nLightweight, comfortable and foldable design\nJBL Pure Bass Sound\nThe JBL Tune 520BT utilizes the renowned JBL Pure Bass sound, the same technology that powers the most famous venues all around the world.\nWireless Bluetooth 5.3 technology\nWirelessly stream high-quality sound from your smartphone without messy cords with the help of the latest Bluetooth technology.\nCustomize your listening experience\nDownload the free JBL Headphones App to tailor the sound to your taste with the EQ. Voice prompts in your desired language guide you through the Tune 520BT features.\nFeatures\nUp to 57H battery life and speed charge (5mins = 3H)\nFor long-lasting fun, listen wirelessly for up to 57 hours and recharge the battery in as little as 2 hours with the convenient Type-C USB cable. A quick 5-minute recharge gives you 3 additional hours of music.\nHands-free calls with Voice Aware\nEasily control your sound and manage your calls from your headphones with the convenient buttons on the ear-cup. Hear your voice while talking, with the help of Voice Aware.\nMulti-point connections\nAllows you to effortlessly switch from one Bluetooth® device to another. You can simply switch from a video on your tablet to a call on your mobile phone, so that you’ll never miss a call.\nLightweight, comfortable and foldable design\nThe lightweight materials and soft ear cushions with a padded headband make the he",
+    "extra": {
+     "attributes": {
+      "Color": [
+       "Black",
+       "Blue",
+       "Purple",
+       "White"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "obs": "T7",
+   "kind": "page",
+   "url": "https://isolvedit.me/products/jbl-tune-520bt-wireless-on-ear-headphones-black",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T05:19:10+00:00",
+   "sha256": "8c04938c15ae4a08b86477d3b6ca38f59d41963aefe25415057b59fdb77d7060",
+   "excerpt": "JBL Tune 520BT Wireless On-Ear Headphones – Black Price in Lebanon\nSkip to content\nYour cart is empty\nContinue shopping\nHave an account?\nLog in to check out faster.\nYour cart\nLoading...\nEstimated total\n$0.00 USD\n✅ All prices include VAT – nothing extra to pay. Discounts and shipping calculated at checkout.\nCheck out\n🎄 Christmas deals are live — order on WhatsApp\n✅ All prices include VAT — nothing extra to pay\n💵 Cash on delivery\n🛡️ 6-month warranty on used laptops\nShop\nApple\nApple\nApple Accessories\nApple Macbook\nApple iPad\nGaming\nGaming\nGaming Laptops\nGaming Monitors\nGaming Consoles\nGaming Accessories\nLaptops\nLaptops\nApple Laptops\nAsus Laptops\nAcer Laptops\nDell Laptops\nHp laptops\nLenovo Laptops\nMsi Laptops\nSecond Hand Laptops\nSony Laptops\nLaptop Parts\nDesktops\nDesktops\nAll Desktops & All-in-Ones\nDesktop PCs\nAll-in-One PCs\nComputer Parts\nComputer Parts\nMotherboards\nCPU's\nGPU's\nStorages\nRAM's\nCases and Chassis\nPower Supply\nAccessories\nAccessories\nAdapters & Converters\nBackpacks & Bags\nCables\nExternal Hard Drives\nFlash Drives & SD Cards\nMobile Accessories\nPower Banks\nChargers\nPhone Holders & Car Mounts\nDocking Stations & USB-C Hubs\nLaptop Stands & Coolers\nWebcams\nWireless Presenters\nInks & Toners\nMouse\nMouse Pads & Wrist Pads\nKeyboards\nAudio\nAudio\nEarbuds\nSpeakers\nHeadsets\nMicrophones\nElectronics\nElectronics\nTablets\nGadgets\nMonitors\nPrinters & Scanners\nPaper Shredders\nPOS & Barcode Scanners\nNetworking Products\nNetworking Products\nFiber Optic\nNetworking Accessories\nSwitches\nNetwor",
+   "quoted": [
+    {
+     "quote": "Shipping calculated at checkout.",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T8",
+   "kind": "page",
+   "url": "https://istoreplus.me/policies/shipping-policy",
+   "shop_id": "istore_plus",
+   "observed_at": "2026-11-28T05:19:10+00:00",
+   "sha256": "2396e6797b2fbeb857aefbb223369542640a82234a64620e17c233c1d8c53ba5",
+   "excerpt": "Shipping policy\nCustom Event Setup\n×\nClick on the elements you want to track as custom events. Selected elements will appear in the list below.\nTrack New Element\nSelected Elements (0)\nFinish Setup\nShipping policy\nSkip to content\n+961 70 92 4848\ninfo@istoreplus.me\nDISCOUNT UP TO 30%\nDELIVERY ALL OVER LEBANON\nFacebook\nHome\nShop by Brand\nAmazon Brand\nApple Brand\nBeats Brand\nBose Brand\nDJI Brand\nDyson Brand\nGoogle Brand\nGoPro Brand\nGreen Lion Brand\nImalent Brand\nJBL Brand\nKica Brand\nKospet Brand\nMarshall Brand\nSamsung Brand\nSKG Brand\nSkullcandy Brand\nSony Brand\nXiaomi Brand\nYesido Brand\nPhones & Tablets\nAccessories\nSmartphones\nChargers\nPhone & Tablet Cases\nPhone Stands And Holders\nTablets\nPhotography\nCamera Accessories\nAction Cameras\nDrones\nInstant Cameras\nStabilizer\nTripod & Selfie Sticks\nDigital Cameras\nAudio\nDigital Recorders\nEarphones\nHeadphones\nMicrophones\nSpeakers\nHome Appliances\nElectronic Cleaner\nHair Styling\nHair Clippers\nKitchen Appliances\nMassage Devices\nSecurity Cameras\nSmart Devices\nTools\nWearables\nBags\nSmart Glasses\nSmart Rings\nSmart Watch\nCar Accessories\nSALE\n0\n$0.00\nMenuCategories\nWishlist\nSearch\nNeed help ? Email: info@istoreplus.mePhone: (212) 555-1234\nPhones & Tablets\nPhotography\nAudio\nHome Appliances\nWearables\nCar Accessories\nShipping policy\nShipping Policy\nLast Updated: August 15, 2026\nAt iStore Plus, we aim to make your shopping experience simple, convenient, and reliable. This Shipping Policy explains how we process, deliver, and handle orders placed throug",
+   "quoted": [
+    {
+     "quote": "Shipping fees, if applicable, will be displayed during checkout or communicated to the customer before the order is confirmed.",
+     "found": true
+    },
+    {
+     "quote": "Beirut and surrounding areas: 1–2 business days",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T9",
+   "kind": "page",
+   "url": "https://istoreplus.me/products/jbl-tune-520bt",
+   "shop_id": "istore_plus",
+   "observed_at": "2026-11-28T05:19:10+00:00",
+   "sha256": "91168c703e45c11c30e7db9772d68dafd89a91f6c5b1a447baabcbf5a6f68df5",
+   "excerpt": "JBL Tune 520BT | Buy in Lebanon – Istore Plus\nCustom Event Setup\n×\nClick on the elements you want to track as custom events. Selected elements will appear in the list below.\nTrack New Element\nSelected Elements (0)\nFinish Setup\nSkip to content\n+961 70 92 4848\ninfo@istoreplus.me\nDISCOUNT UP TO 30%\nDELIVERY ALL OVER LEBANON\nFacebook\nHome\nShop by Brand\nAmazon Brand\nApple Brand\nBeats Brand\nBose Brand\nDJI Brand\nDyson Brand\nGoogle Brand\nGoPro Brand\nGreen Lion Brand\nImalent Brand\nJBL Brand\nKica Brand\nKospet Brand\nMarshall Brand\nSamsung Brand\nSKG Brand\nSkullcandy Brand\nSony Brand\nXiaomi Brand\nYesido Brand\nPhones & Tablets\nAccessories\nSmartphones\nChargers\nPhone & Tablet Cases\nPhone Stands And Holders\nTablets\nPhotography\nCamera Accessories\nAction Cameras\nDrones\nInstant Cameras\nStabilizer\nTripod & Selfie Sticks\nDigital Cameras\nAudio\nDigital Recorders\nEarphones\nHeadphones\nMicrophones\nSpeakers\nHome Appliances\nElectronic Cleaner\nHair Styling\nHair Clippers\nKitchen Appliances\nMassage Devices\nSecurity Cameras\nSmart Devices\nTools\nWearables\nBags\nSmart Glasses\nSmart Rings\nSmart Watch\nCar Accessories\nSALE\n0\n$0.00\nMenuCategories\nWishlist\nSearch\nNeed help ? Email: info@istoreplus.mePhone: (212) 555-1234\nPhones & Tablets\nPhotography\nAudio\nHome Appliances\nWearables\nCar Accessories\nOpen Sidebar\nSidebar\n-31%\n1\n/\nof\n14\nJBL Tune 520BT\nRegular price\n$49.00\nSale price\n$34.00\nUnit price\n/\nper\nColor: black-23\nVariant sold outblack-23\nVariant sold outpurple\nVariant sold outnavy\nDecrease quantity for JBL Tune 5",
+   "quoted": []
+  },
+  {
+   "obs": "T10",
+   "kind": "page",
+   "url": "https://isolvedit.me/meta.json",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T05:19:11+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"iSolved IT Solutions\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"isolvedit.me\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T11",
+   "kind": "page",
+   "url": "https://phonefinity.net/products/jbl-tune-520bt/",
+   "shop_id": "phonefinity",
+   "observed_at": "2026-11-28T05:19:11+00:00",
+   "sha256": "f1bd93ead5c4e9f4dc2432b362be02c2cb2c3586921ceba816849e7be62c0b18",
+   "excerpt": "JBL Tune 520BT Price in Lebanon - Phonefinity\nSkip to content\n[email protected]\nOnline Only | Cash on Delivery\nOnline Only | Cash on Delivery\nSearch for:\nLogin / Register\nCart\n0\nNo products in the cart.\nReturn to shop\nSearch for:\n0\nCart\nNo products in the cart.\nReturn to shop\nPhones\nTablets\nApple iPads\nAndroid Tablets\nAmazon Kindles\nMacbooks\nSmart\nSmart Watches & Bands\nSmart Scales\nSmart Display\nAudio\nEarphones\nHeadphones\nSpeakers\nMicrophones\nMedia Streaming\nGaming\nPlayStation\nNintendo Switch\nNetworking\nCameras\nAccessories\nCables\nChargers & Power Banks\nMobile & Tablet Covers\nMobile Accessories\nComputer Accessories\nSleeves, Carrying Cases & Backpacks\nUSB Hubs\nPRELOVED\nHome / Headphones\nJBL Tune 520BT\n$39\nUp to 57H battery life and speed charge (5mins = 3H)\nMulti-point connections\nHands-free calls with Voice Aware\nLightweight, comfortable and foldable design\nColor\nChoose an option\nBlack\nBlue\nPurple\nWhite\nClear\nJBL Tune 520BT quantity\nAdd to cart\nBuy now\nSKU: N/A\nCategory: Headphones\nBrand: JBL\nDescription\nJBL Pure Bass Sound\nThe JBL Tune 520BT utilizes the renowned JBL Pure Bass sound, the same technology that powers the most famous venues all around the world.\nWireless Bluetooth 5.3 technology\nWirelessly stream high-quality sound from your smartphone without messy cords with the help of the latest Bluetooth technology.\nCustomize your listening experience\nDownload the free JBL Headphones App to tailor the sound to your taste with the EQ. Voice prompts in your desired language g",
+   "quoted": []
+  },
+  {
+   "obs": "T12",
+   "kind": "page",
+   "url": "https://isolvedit.me/",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T05:19:12+00:00",
+   "sha256": "e7d8f623fede35d0215b87b71ea496570630d0e0029d9ade5bb7ea683ca786d8",
+   "excerpt": "iSolvedIT — Laptops, Computers, Monitors & UPS in Lebanon\nSkip to content\nYour cart is empty\nContinue shopping\nHave an account?\nLog in to check out faster.\nYour cart\nLoading...\nEstimated total\n$0.00 USD\n✅ All prices include VAT – nothing extra to pay. Discounts and shipping calculated at checkout.\nCheck out\n🎄 Christmas deals are live — order on WhatsApp\n✅ All prices include VAT — nothing extra to pay\n💵 Cash on delivery\n🛡️ 6-month warranty on used laptops\nShop\nApple\nApple\nApple Accessories\nApple Macbook\nApple iPad\nGaming\nGaming\nGaming Laptops\nGaming Monitors\nGaming Consoles\nGaming Accessories\nLaptops\nLaptops\nApple Laptops\nAsus Laptops\nAcer Laptops\nDell Laptops\nHp laptops\nLenovo Laptops\nMsi Laptops\nSecond Hand Laptops\nSony Laptops\nLaptop Parts\nDesktops\nDesktops\nAll Desktops & All-in-Ones\nDesktop PCs\nAll-in-One PCs\nComputer Parts\nComputer Parts\nMotherboards\nCPU's\nGPU's\nStorages\nRAM's\nCases and Chassis\nPower Supply\nAccessories\nAccessories\nAdapters & Converters\nBackpacks & Bags\nCables\nExternal Hard Drives\nFlash Drives & SD Cards\nMobile Accessories\nPower Banks\nChargers\nPhone Holders & Car Mounts\nDocking Stations & USB-C Hubs\nLaptop Stands & Coolers\nWebcams\nWireless Presenters\nInks & Toners\nMouse\nMouse Pads & Wrist Pads\nKeyboards\nAudio\nAudio\nEarbuds\nSpeakers\nHeadsets\nMicrophones\nElectronics\nElectronics\nTablets\nGadgets\nMonitors\nPrinters & Scanners\nPaper Shredders\nPOS & Barcode Scanners\nNetworking Products\nNetworking Products\nFiber Optic\nNetworking Accessories\nSwitches\nNetwork & Serve",
+   "quoted": []
+  }
+ ]
+}

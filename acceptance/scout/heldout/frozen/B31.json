@@ -1,0 +1,1074 @@
+{
+ "run_id": "scout-b31-20261128T052218",
+ "request": {
+  "id": "B31",
+  "text": "I want a new notebook for running virtual machines, with at least 32 GB of RAM and a 1 TB SSD. What is the price delivered to Saida?",
+  "mode": "delivery",
+  "destination": "Saida",
+  "category": "laptop",
+  "run_id": "scout-b31-20261128T052218"
+ },
+ "status": "offers",
+ "message": "Checked offers:\n- Electroslab: Brand New HP 14-em0085cl Ryzen 7 7730U 32GB RAM 1TB SSD Brand New Upgraded Laptop | 14\" HD AMD Radeon WiFi 6 Windows 11 Silver Lebanon (Default Title) - USD 740.00 delivered. Open questions: not confirmed: Virtual-machine compatibility; VAT not stated by the shop\n- Electroslab: Brand New Lenovo IdeaPad 5 2-in-1 16IAL10 Core Ultra 7 255U 32GB DDR5 1TB SSD 16\" WUXGA Touch Win11 Cosmic Blue (Default Title) - USD 1050.00 delivered. Open questions: not confirmed: Virtual-machine compatibility; VAT not stated by the shop\n- iSolved IT Solutions: Lenovo ThinkPad T14s Gen 7 Laptop – Ultra 7 365, 32GB LPDDR5x RAM, 1TB SSD, 14\" Touch | 21YU0028US (Cosmic Blue) - USD 2065.00 listed. Open questions: not confirmed: Virtual-machine compatibility; delivery fee to your area is not published or not confirmed",
+ "question": null,
+ "offers": [
+  {
+   "tier": "best",
+   "shop": "Electroslab",
+   "shop_id": "electroslab",
+   "title": "Brand New HP 14-em0085cl Ryzen 7 7730U 32GB RAM 1TB SSD Brand New Upgraded Laptop | 14\" HD AMD Radeon WiFi 6 Windows 11 Silver Lebanon",
+   "variant": "Default Title",
+   "url": "https://electroslab.com/products/brand-new-laptop-upgraded-hp-14-cpu-amd-ryzen-7-7730u-ram-32gb-ddr4-nvme-1tb?variant=51424575193255",
+   "price": "740.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "Meets the requested new notebook, at least 32GB RAM and 1TB SSD configuration.",
+   "delivery_fee": "0.00",
+   "total": "740.00",
+   "total_basis": "listed price + delivery fee published by electroslab (\"WEBSITE ORDERS ONLY⚡ | NOVEMBER DISCOUNTS + ⚡FREE DELIVERY ON ORDERS OF $20 OR MORE⚡ | THROUGH NOV 30\", T1)",
+   "complete": false,
+   "gaps": [
+    "not confirmed: Virtual-machine compatibility",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "New notebook",
+     "status": "met",
+     "quote": "Product: Brand New Upgraded Laptop",
+     "obs": "P12",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "At least 32GB RAM",
+     "status": "met",
+     "quote": "Memory: 32GB DDR4 RAM – Upgraded",
+     "obs": "P12",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "At least 1TB SSD",
+     "status": "met",
+     "quote": "Storage: 1TB SSD – Upgraded",
+     "obs": "P12",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Virtual-machine compatibility",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P12",
+     "url": "https://electroslab.com/products/brand-new-laptop-upgraded-hp-14-cpu-amd-ryzen-7-7730u-ram-32gb-ddr4-nvme-1tb",
+     "read": "https://electroslab.com/products/brand-new-laptop-upgraded-hp-14-cpu-amd-ryzen-7-7730u-ram-32gb-ddr4-nvme-1tb.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:23:25+00:00",
+     "sha256": "ab541516e295ec0387f22d1275ff5e9b17723dc5548ec9ec4dd81265c0b3b735"
+    },
+    {
+     "obs": "T1",
+     "url": "https://electroslab.com/policies/shipping-policy",
+     "source": "shop delivery terms",
+     "observed_at": "2026-11-28T05:23:16+00:00",
+     "sha256": "5409a64256647d4f7a2b19efb10d4964fea89327c273360aeea80aaaa02cd0a1"
+    }
+   ],
+   "seller_basis": "Electroslab: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  },
+  {
+   "tier": "best",
+   "shop": "Electroslab",
+   "shop_id": "electroslab",
+   "title": "Brand New Lenovo IdeaPad 5 2-in-1 16IAL10 Core Ultra 7 255U 32GB DDR5 1TB SSD 16\" WUXGA Touch Win11 Cosmic Blue",
+   "variant": "Default Title",
+   "url": "https://electroslab.com/products/brand-new-laptop-lenovo-ideapad-5-2in116ial10-cpu-intel-core-ultra-7?variant=50656607830183",
+   "price": "1050.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "Meets the requested new notebook, at least 32GB RAM and 1TB SSD configuration.",
+   "delivery_fee": "0.00",
+   "total": "1050.00",
+   "total_basis": "listed price + delivery fee published by electroslab (\"WEBSITE ORDERS ONLY⚡ | NOVEMBER DISCOUNTS + ⚡FREE DELIVERY ON ORDERS OF $20 OR MORE⚡ | THROUGH NOV 30\", T1)",
+   "complete": false,
+   "gaps": [
+    "not confirmed: Virtual-machine compatibility",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "New notebook",
+     "status": "met",
+     "quote": "Condition: Brand New",
+     "obs": "P13",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "At least 32GB RAM",
+     "status": "met",
+     "quote": "RAM: 32GB DDR5",
+     "obs": "P13",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "At least 1TB SSD",
+     "status": "met",
+     "quote": "Storage: 1TB NVMe SSD",
+     "obs": "P13",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Virtual-machine compatibility",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P13",
+     "url": "https://electroslab.com/products/brand-new-laptop-lenovo-ideapad-5-2in116ial10-cpu-intel-core-ultra-7",
+     "read": "https://electroslab.com/products/brand-new-laptop-lenovo-ideapad-5-2in116ial10-cpu-intel-core-ultra-7.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:23:26+00:00",
+     "sha256": "2e2f4531b4a4e75d15f61712154c79466a80c2ef157004efa6a35af7cd1a343f"
+    },
+    {
+     "obs": "T1",
+     "url": "https://electroslab.com/policies/shipping-policy",
+     "source": "shop delivery terms",
+     "observed_at": "2026-11-28T05:23:16+00:00",
+     "sha256": "5409a64256647d4f7a2b19efb10d4964fea89327c273360aeea80aaaa02cd0a1"
+    }
+   ],
+   "seller_basis": "Electroslab: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  },
+  {
+   "tier": "best",
+   "shop": "iSolved IT Solutions",
+   "shop_id": "isolvedit",
+   "title": "Lenovo ThinkPad T14s Gen 7 Laptop – Ultra 7 365, 32GB LPDDR5x RAM, 1TB SSD, 14\" Touch | 21YU0028US",
+   "variant": "Cosmic Blue",
+   "url": "https://isolvedit.me/products/lenovo-thinkpad-t14s-gen-7-21yu0028us-ultra-7-365-32gb-lpddr5x?variant=68527256174703",
+   "price": "2065.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "New business notebook with the requested 32GB memory and 1TB SSD.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "not confirmed: Virtual-machine compatibility",
+    "delivery fee to your area is not published or not confirmed"
+   ],
+   "requirements": [
+    {
+     "requirement": "New notebook",
+     "status": "met",
+     "quote": "brand-new business laptop",
+     "obs": "P9",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "At least 32GB RAM",
+     "status": "met",
+     "quote": "32GB LPDDR5x memory",
+     "obs": "P9",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "At least 1TB SSD",
+     "status": "met",
+     "quote": "1TB NVMe SSD",
+     "obs": "P9",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Virtual-machine compatibility",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P9",
+     "url": "https://isolvedit.me/products/lenovo-thinkpad-t14s-gen-7-21yu0028us-ultra-7-365-32gb-lpddr5x",
+     "read": "https://isolvedit.me/products/lenovo-thinkpad-t14s-gen-7-21yu0028us-ultra-7-365-32gb-lpddr5x.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:23:07+00:00",
+     "sha256": "ad0f763722f7fa432e88a99d078f10fdec30b2d71910f04c6f9ffa0e82d47fd5"
+    }
+   ],
+   "seller_basis": "iSolved IT Solutions: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P12",
+   "variant_id": "51424575193255",
+   "identity": "exact",
+   "identity_reason": "Meets the requested new notebook, at least 32GB RAM and 1TB SSD configuration.",
+   "condition": "new",
+   "condition_quote": "Product: Brand New Upgraded Laptop",
+   "condition_obs": "P12",
+   "requirements": [
+    {
+     "requirement": "New notebook",
+     "status": "met",
+     "evidence_obs": "P12",
+     "quote": "Product: Brand New Upgraded Laptop"
+    },
+    {
+     "requirement": "At least 32GB RAM",
+     "status": "met",
+     "evidence_obs": "P12",
+     "quote": "Memory: 32GB DDR4 RAM – Upgraded"
+    },
+    {
+     "requirement": "At least 1TB SSD",
+     "status": "met",
+     "evidence_obs": "P12",
+     "quote": "Storage: 1TB SSD – Upgraded"
+    },
+    {
+     "requirement": "Virtual-machine compatibility",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": "T1",
+   "delivery_quote": "WEBSITE ORDERS ONLY⚡ | NOVEMBER DISCOUNTS + ⚡FREE DELIVERY ON ORDERS OF $20 OR MORE⚡ | THROUGH NOV 30",
+   "delivery_fee_usd": "0",
+   "free_delivery_over_usd": "20",
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P13",
+   "variant_id": "50656607830183",
+   "identity": "exact",
+   "identity_reason": "Meets the requested new notebook, at least 32GB RAM and 1TB SSD configuration.",
+   "condition": "new",
+   "condition_quote": "Condition: Brand New",
+   "condition_obs": "P13",
+   "requirements": [
+    {
+     "requirement": "New notebook",
+     "status": "met",
+     "evidence_obs": "P13",
+     "quote": "Condition: Brand New"
+    },
+    {
+     "requirement": "At least 32GB RAM",
+     "status": "met",
+     "evidence_obs": "P13",
+     "quote": "RAM: 32GB DDR5"
+    },
+    {
+     "requirement": "At least 1TB SSD",
+     "status": "met",
+     "evidence_obs": "P13",
+     "quote": "Storage: 1TB NVMe SSD"
+    },
+    {
+     "requirement": "Virtual-machine compatibility",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": "T1",
+   "delivery_quote": "WEBSITE ORDERS ONLY⚡ | NOVEMBER DISCOUNTS + ⚡FREE DELIVERY ON ORDERS OF $20 OR MORE⚡ | THROUGH NOV 30",
+   "delivery_fee_usd": "0",
+   "free_delivery_over_usd": "20",
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P9",
+   "variant_id": "68527256174703",
+   "identity": "exact",
+   "identity_reason": "New business notebook with the requested 32GB memory and 1TB SSD.",
+   "condition": "new",
+   "condition_quote": "brand-new business laptop",
+   "condition_obs": "P9",
+   "requirements": [
+    {
+     "requirement": "New notebook",
+     "status": "met",
+     "evidence_obs": "P9",
+     "quote": "brand-new business laptop"
+    },
+    {
+     "requirement": "At least 32GB RAM",
+     "status": "met",
+     "evidence_obs": "P9",
+     "quote": "32GB LPDDR5x memory"
+    },
+    {
+     "requirement": "At least 1TB SSD",
+     "status": "met",
+     "evidence_obs": "P9",
+     "quote": "1TB NVMe SSD"
+    },
+    {
+     "requirement": "Virtual-machine compatibility",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": "T6",
+   "delivery_quote": "✅ All prices include VAT – nothing extra to pay. Discounts and shipping calculated at checkout.",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": "✅ All prices include VAT — nothing extra to pay",
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Search x86 notebooks suitable for multiple VMs with 32GB and 1TB installed.",
+   "at_s": 10.7,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "Lenovo ThinkPad 32GB 1TB"
+    },
+    {
+     "tool": "search",
+     "query": "HP ProBook 32GB 1TB"
+    },
+    {
+     "tool": "search",
+     "query": "Lenovo LOQ 32GB 1TB"
+    },
+    {
+     "tool": "search",
+     "query": "ASUS TUF 32GB 1TB"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Check affordable confirmed-new options and higher-performance VM laptop, plus shop delivery and condition policies.",
+   "at_s": 64.8,
+   "calls": [
+    {
+     "tool": "open",
+     "url": "https://electroslab.com/products/brand-new-laptop-upgraded-hp-14-cpu-amd-ryzen-7-7730u-ram-32gb-ddr4-nvme-1tb"
+    },
+    {
+     "tool": "open",
+     "url": "https://electroslab.com/products/brand-new-laptop-lenovo-ideapad-5-2in116ial10-cpu-intel-core-ultra-7"
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "outgeeked"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "isolvedit"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Finish with two confirmed-new value options and a confirmed-new business option; distinguish promotional delivered totals from checkout-dependent shipping.",
+   "at_s": 91.3,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 33578,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 35906,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 37703,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 39110,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 375,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 671,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 3343,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 4531,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7640,
+   "usage": {
+    "actual_usd": "0.004613",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3233,
+     "output_tokens": 156,
+     "total_tokens": 3389
+    },
+    "latency_ms": 4500,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 14922,
+   "usage": {
+    "actual_usd": "0.0275055",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 12182,
+     "output_tokens": 208,
+     "total_tokens": 12390
+    },
+    "latency_ms": 7484,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 21157,
+   "usage": {
+    "actual_usd": "0.042798",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 14939,
+     "output_tokens": 1048,
+     "total_tokens": 15987
+    },
+    "latency_ms": 17782,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": true
+  }
+ ],
+ "retailer_requests": 104,
+ "seconds": 91.4,
+ "spend": {
+  "settled_usd": "0.0749165",
+  "uncertain_usd": "0",
+  "model_calls": 3,
+  "ledger_job": "scout-b31-20261128T052218"
+ },
+ "fallback": false,
+ "warnings": [
+  "The model summary mentioned amounts that were not verified: $4"
+ ],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/lenovo-ip5-core-ultra-7-255u-32gb-1tb-ssd-16-touch-1",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:23:01+00:00",
+   "sha256": "36c2bf1ed7b7f6b5cd0d22b73e2f06335609c27e187e5e1fb5da74acc47b71d2",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "Lenovo IP5- Core Ultra 7-255U- 32GB- 1TB SSD- 16\" Touch",
+    "url": "https://abedtahan.com/products/lenovo-ip5-core-ultra-7-255u-32gb-1tb-ssd-16-touch-1",
+    "vendor": "LENOVO",
+    "product_type": "Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:23:01+00:00",
+    "variants": [
+     {
+      "variant_id": "45495272997043",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "1490.00",
+      "compare_at": "1540.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "NTB-LENO-83KS001BUS",
+      "url": "https://abedtahan.com/products/lenovo-ip5-core-ultra-7-255u-32gb-1tb-ssd-16-touch-1?variant=45495272997043"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://electroslab.com/products/brand-new-laptop-lenovo-ideapad-5-2in116ial10-cpu-intel-core-ultra-7",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:23:03+00:00",
+   "sha256": "2e2f4531b4a4e75d15f61712154c79466a80c2ef157004efa6a35af7cd1a343f",
+   "product": {
+    "shop": "Electroslab",
+    "shop_id": "electroslab",
+    "title": "Brand New Lenovo IdeaPad 5 2-in-1 16IAL10 Core Ultra 7 255U 32GB DDR5 1TB SSD 16\" WUXGA Touch Win11 Cosmic Blue",
+    "url": "https://electroslab.com/products/brand-new-laptop-lenovo-ideapad-5-2in116ial10-cpu-intel-core-ultra-7",
+    "vendor": "Lenovo",
+    "product_type": "Brand New Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:23:03+00:00",
+    "variants": [
+     {
+      "variant_id": "50656607830183",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "1050.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "01-1-1-5319.001",
+      "url": "https://electroslab.com/products/brand-new-laptop-lenovo-ideapad-5-2in116ial10-cpu-intel-core-ultra-7?variant=50656607830183"
+     }
+    ],
+    "description": "Description:\nExperience premium flexibility and powerful performance with the Brand New Lenovo IdeaPad 5 2-in-1 16IAL10, powered by the Intel Core Ultra 7 255U processor. Designed for productivity, creativity, and multitasking, this convertible laptop delivers smooth and efficient performance for professional and everyday use.\nWith 32GB DDR5 RAM, it handles demanding applications and heavy multitasking effortlessly, while the 1TB NVMe SSD provides ultra-fast boot times and large storage capacity for files, software, and media. The 16-inch WUXGA touchscreen display offers sharp visuals, vibrant colors, and an interactive viewing experience for work, streaming, and creative tasks.\nFeaturing a versatile 2-in-1 convertible design, integrated graphics, Windows 11, and a stylish Cosmic Blue finish, this laptop combines portability, premium aesthetics, and modern performance in one powerful device.\nKey Features:\nProcessor: Intel Core Ultra 7 255U\nRAM: 32GB DDR5\nStorage: 1TB NVMe SSD\nDisplay: 16 inch WUXGA Touchscreen\nGraphics: Integrated Graphics\nDesign: 2-in-1 Convertible\nOperating System: Windows 11\nColor: Cosmic Blue\nCondition: Brand New"
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/hp-omnibook-5-core-ultra-7-255u-32gb-1tb-ssd-16-touch",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:23:04+00:00",
+   "sha256": "1f18ca5c14101a06dbd5d8e88e1d4b52dc37ace9bf78fa06dbd7c4b8eaabbb15",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "HP OmniBook 5 Core Ultra 7 255U-32GB-1TB SSD 16\" Touch",
+    "url": "https://abedtahan.com/products/hp-omnibook-5-core-ultra-7-255u-32gb-1tb-ssd-16-touch",
+    "vendor": "HP",
+    "product_type": "Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:23:04+00:00",
+    "variants": [
+     {
+      "variant_id": "45268188954803",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "1399.00",
+      "compare_at": "1552.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "NTB-HP  -16-AF1173CL",
+      "url": "https://abedtahan.com/products/hp-omnibook-5-core-ultra-7-255u-32gb-1tb-ssd-16-touch?variant=45268188954803"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/asus-tuf-fx608jmr-f16-i75060",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:23:04+00:00",
+   "sha256": "3c305647b306c22c563bd6058692a51b1aa4af7bff81cf1b7025978948192b5e",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "Asus TUF F16 FX608JMR-F16.I75060 (Core I7-14650HX, 1TB NVME/32GB DDR5, 16\" WUXGA 165HZ, RTX 5060 8GB, WIN 11/JASPER GRAY)",
+    "url": "https://outgeeked.net/products/asus-tuf-fx608jmr-f16-i75060",
+    "vendor": "Asus",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:23:04+00:00",
+    "variants": [
+     {
+      "variant_id": "47351093592322",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "1650.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "OG-LPT-234",
+      "url": "https://outgeeked.net/products/asus-tuf-fx608jmr-f16-i75060?variant=47351093592322"
+     }
+    ],
+    "description": "From launch to render, the ASUS TUF FX608JMR-F16.I75060 keeps pace with gaming, creative apps, and demanding multitasking and stays responsive.\nKey Features:\nCore i7-14650HX\nWIN 11\nJASPER GRAY\n16\" WUXGA 165HZ\nRTX 5060 8GB\n165Hz\nA tidy balance of power, thermals, and portability for daily use.\nShop the Asus TUF F16 FX608JMR-F16.I75060 (Core I7-14650HX, 1TB NVME/32GB DDR5, 16\" WUXGA 165HZ, RTX 5060 8GB, WIN 11/JASPER GRAY) in Lebanon at OutGeeked. Power through work and play with fast nationwide delivery, cash on delivery, and 10-day returns. The best price for Asus TUF F16 FX608JMR-F16.I75060 (Core I7-14650HX, 1TB NVME/32GB DDR5, 16\" WUXGA 165HZ, RTX 5060 8GB, WIN 11/JASPER GRAY) is at OutGeeked.net — your trusted tech store in Beirut, Lebanon."
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/asus-tuf-f16-core-i7-14650hx-32gb-1tb-nvme-rtx-5060-16",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:23:05+00:00",
+   "sha256": "1a3c781f282608720a04380b07a8247cb706ce0b6486434920fef363aa853f1c",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "ASUS TUF F16- Core i7-14650HX- 32GB 1TB NVME- RTX-5060 16\"",
+    "url": "https://abedtahan.com/products/asus-tuf-f16-core-i7-14650hx-32gb-1tb-nvme-rtx-5060-16",
+    "vendor": "ASUS",
+    "product_type": "Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:23:05+00:00",
+    "variants": [
+     {
+      "variant_id": "44872241676467",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "1859.00",
+      "compare_at": "2063.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "NTB-FX608JMR-F16",
+      "url": "https://abedtahan.com/products/asus-tuf-f16-core-i7-14650hx-32gb-1tb-nvme-rtx-5060-16?variant=44872241676467"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/lenovo-legion-go-2-handheld-gaming-pc-ryzen-z2-extreme-32gb-ram-1tb-ssd-8-8-inch-oled-144hz-touchscreen-windows-11",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:23:05+00:00",
+   "sha256": "4598aebd6153a6e212eae5f16d263123661b4a02356767134c33b80e40db6a20",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "Lenovo Legion Go 2 Handheld Gaming PC, Ryzen Z2 Extreme, 32GB RAM, 1TB SSD, 8.8-inch OLED 144Hz Touchscreen, Windows 11",
+    "url": "https://abedtahan.com/products/lenovo-legion-go-2-handheld-gaming-pc-ryzen-z2-extreme-32gb-ram-1tb-ssd-8-8-inch-oled-144hz-touchscreen-windows-11",
+    "vendor": "LENOVO",
+    "product_type": "Consoles",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:23:05+00:00",
+    "variants": [
+     {
+      "variant_id": "46539940659379",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "1575.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "83N0000SAX-OE",
+      "url": "https://abedtahan.com/products/lenovo-legion-go-2-handheld-gaming-pc-ryzen-z2-extreme-32gb-ram-1tb-ssd-8-8-inch-oled-144hz-touchscreen-windows-11?variant=46539940659379"
+     }
+    ],
+    "description": "Lenovo Legion Go 2 gives you portable gaming power, smooth speed, and a sharp OLED touchscreen. Also, it works well for games, media, browsing, travel, and daily use.\nLenovo Legion Go 2 Features\nThis handheld gaming PC uses an AMD Ryzen Z2 Extreme processor. Therefore, it gives fast performance for portable gaming and daily tasks.\nIn addition, the processor has 8 cores and 16 threads. It can reach up to 5.0GHz for strong handheld performance.\nThe integrated AMD Radeon graphics help deliver smooth visuals for games, videos, and daily screen use.\n8.8-inch OLED Touchscreen\nLenovo Legion Go 2 has an 8.8-inch OLED touchscreen. Therefore, games, videos, menus, and apps look clear and rich.\nIn addition, the 144Hz refresh rate helps motion feel smoother. This is useful for action games, racing games, and fast gameplay.\nThe touchscreen makes control easier. Also, it helps you move through apps, settings, and games with more comfort.\nHandheld Gaming PC for Daily Use\nLenovo Legion Go 2 is made for users who want gaming power in a portable size. You can use it at home, at work, while traveling, or on the go.\nThe 32GB RAM helps games and apps run smoothly. Also, it gives better comfort when switching between tasks.\nThe 1TB SSD gives fast storage for games, apps, files, and media. As a result, the device feels quick during daily use.\nPortable Gaming with Windows 11\nWindows 11 gives this handheld a familiar PC experience. Therefore, you can use many supported games, apps, and tools.\nIn addi"
+   }
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/thinkpad-x9-14-gen-1-aura-edition-21qa0036us",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:23:06+00:00",
+   "sha256": "423e6a88581581e1b91ed04c529e0cc70b0f7742821a2e01cf1ae24ef655b75e",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "LENOVO THINKPAD X9-14 GEN 1 AURA EDITION 21QA0036US (CORE ULTRA 7 268V VPRO, 1TB NVME/32GB DDR5 ON BOARD, 14\" 2.8K (2880x1800) OLED TOUCHSCREEN, INTEL ARC 140V, WIN 11 PRO / GREY)",
+    "url": "https://outgeeked.net/products/thinkpad-x9-14-gen-1-aura-edition-21qa0036us",
+    "vendor": "Lenovo",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:23:06+00:00",
+    "variants": [
+     {
+      "variant_id": "48234685235458",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "2109.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/thinkpad-x9-14-gen-1-aura-edition-21qa0036us?variant=48234685235458"
+     }
+    ],
+    "description": "Overview\nThe Lenovo ThinkPad X9-14 Gen 1 Aura Edition (21QA0036US) is a flagship business ultrabook engineered for the modern professional. Anchored by Intel's cutting-edge Core Ultra 7 268V vPro processor and paired with a breathtaking 14-inch 2.8K (2880×1800) OLED touchscreen, this machine delivers enterprise-grade power in a refined, grey aluminium chassis. Whether you're crunching data in Beirut, presenting to clients across Lebanon, or managing workflows remotely, the X9-14 Aura Edition is built to keep pace with the most demanding business environments.\nKey Features\nIntel Core Ultra 7 268V vPro: Next-generation Intel architecture with built-in AI acceleration and enterprise-class vPro security and manageability for corporate IT environments.\n14\" 2.8K OLED Touchscreen (2880×1800): An ultra-sharp, high-contrast OLED panel with true-to-life colours and touch support, ideal for content review, presentations, and creative tasks.\nIntel Arc 140V GPU: Integrated Intel Arc graphics deliver accelerated performance for video playback, light creative workloads, and AI-powered visual tasks beyond standard integrated graphics.\n32GB DDR5 Onboard RAM: Soldered high-speed DDR5 memory ensures seamless multitasking across dozens of browser tabs, virtual machines, and enterprise applications simultaneously.\n1TB NVMe SSD Storage: Fast PCIe NVMe solid-state storage means rapid boot times, near-instant application launches, and ample room for large project files and datasets.\nWindows 11 Pro P"
+   }
+  },
+  {
+   "obs": "P8",
+   "kind": "product",
+   "url": "https://isolvedit.me/products/lenovo-thinkpad-x9-14-gen-1-aura-edition-21qa0036us-ultra-7-268v-32gb-lpddr5x",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T05:23:07+00:00",
+   "sha256": "832bafdb5fa215f11f54ba18b0740d0b367e37122fc99d459c532ee4ce28a270",
+   "product": {
+    "shop": "iSolved IT Solutions",
+    "shop_id": "isolvedit",
+    "title": "Lenovo ThinkPad X9-14 Gen 1 Aura Edition Laptop – Ultra 7 268V, 32GB LPDDR5x RAM, 1TB SSD, 14\" Touch | 21QA0036US",
+    "url": "https://isolvedit.me/products/lenovo-thinkpad-x9-14-gen-1-aura-edition-21qa0036us-ultra-7-268v-32gb-lpddr5x",
+    "vendor": "Lenovo",
+    "product_type": "Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:23:07+00:00",
+    "variants": [
+     {
+      "variant_id": "68527256469615",
+      "title": "Grey",
+      "options": {
+       "Colour": "Grey"
+      },
+      "price": "1990.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "21QA0036US",
+      "url": "https://isolvedit.me/products/lenovo-thinkpad-x9-14-gen-1-aura-edition-21qa0036us-ultra-7-268v-32gb-lpddr5x?variant=68527256469615"
+     }
+    ],
+    "description": "✅ Available – delivery within 24 hours anywhere in Lebanon\nThe Lenovo ThinkPad X9-14 Gen 1 Aura Edition (21QA0036US) is a brand-new business laptop built for reliability, security and all-day work, with Intel Core Ultra 7 268V vPro, 32GB LPDDR5x memory and a 1TB NVMe SSD on a 14\" 2.8K (2880x1800) OLED Touchscreen display. Ideal for offices, engineers, accountants and anyone who needs a dependable work machine.\nLenovo ThinkPad X9-14 Gen 1 Aura Edition (21QA0036US) – Specifications\nModel\nLenovo ThinkPad X9-14 Gen 1 Aura Edition — 21QA0036US\nProcessor\nIntel Core Ultra 7 268V vPro\nGraphics\nIntel Arc 140V\nMemory (RAM)\n32GB LPDDR5x\nStorage\n1TB NVMe SSD\nDisplay\n14\" 2.8K (2880x1800) OLED Touchscreen\nKeyboard\nEnglish, backlit\nOperating system\nWindows 11 Pro\nColour\nGrey\nWarranty\n1 year\nWhy buy from iSolved IT\nBrand-new, original sealed unit\n1 year warranty\nDelivery within 24 hours anywhere in Lebanon, or pick up from our shop in Bourj Hammoud, Beirut\nQuestions? WhatsApp us on +961 70 611 637\nFAQ\nWhat is the price of the Lenovo ThinkPad X9-14 Gen 1 Aura Edition 21QA0036US in Lebanon?\n$1,990 at iSolved IT.\nIs it in stock?\nYes – it is available and delivered within 24 hours anywhere in Lebanon.\nDoes it come with warranty?\nYes, 1 year warranty."
+   }
+  },
+  {
+   "obs": "P9",
+   "kind": "product",
+   "url": "https://isolvedit.me/products/lenovo-thinkpad-t14s-gen-7-21yu0028us-ultra-7-365-32gb-lpddr5x",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T05:23:07+00:00",
+   "sha256": "ad0f763722f7fa432e88a99d078f10fdec30b2d71910f04c6f9ffa0e82d47fd5",
+   "product": {
+    "shop": "iSolved IT Solutions",
+    "shop_id": "isolvedit",
+    "title": "Lenovo ThinkPad T14s Gen 7 Laptop – Ultra 7 365, 32GB LPDDR5x RAM, 1TB SSD, 14\" Touch | 21YU0028US",
+    "url": "https://isolvedit.me/products/lenovo-thinkpad-t14s-gen-7-21yu0028us-ultra-7-365-32gb-lpddr5x",
+    "vendor": "Lenovo",
+    "product_type": "Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:23:07+00:00",
+    "variants": [
+     {
+      "variant_id": "68527256174703",
+      "title": "Cosmic Blue",
+      "options": {
+       "Colour": "Cosmic Blue"
+      },
+      "price": "2065.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "21YU0028US",
+      "url": "https://isolvedit.me/products/lenovo-thinkpad-t14s-gen-7-21yu0028us-ultra-7-365-32gb-lpddr5x?variant=68527256174703"
+     }
+    ],
+    "description": "✅ Available – delivery within 24 hours anywhere in Lebanon\nThe Lenovo ThinkPad T14s Gen 7 (21YU0028US) is a brand-new business laptop built for reliability, security and all-day work, with Intel Core Ultra 7 365 vPro, 32GB LPDDR5x memory and a 1TB NVMe SSD on a 14\" WUXGA (1920x1200) Touchscreen display. Ideal for offices, engineers, accountants and anyone who needs a dependable work machine.\nLenovo ThinkPad T14s Gen 7 (21YU0028US) – Specifications\nModel\nLenovo ThinkPad T14s Gen 7 — 21YU0028US\nProcessor\nIntel Core Ultra 7 365 vPro\nGraphics\nIntel Graphics\nMemory (RAM)\n32GB LPDDR5x\nStorage\n1TB NVMe SSD\nDisplay\n14\" WUXGA (1920x1200) Touchscreen\nKeyboard\nEnglish, backlit\nOperating system\nWindows 11 Pro\nColour\nCosmic Blue\nWarranty\n1 year\nWhy buy from iSolved IT\nBrand-new, original sealed unit\n1 year warranty\nDelivery within 24 hours anywhere in Lebanon, or pick up from our shop in Bourj Hammoud, Beirut\nQuestions? WhatsApp us on +961 70 611 637\nFAQ\nWhat is the price of the Lenovo ThinkPad T14s Gen 7 21YU0028US in Lebanon?\n$2,065 at iSolved IT.\nIs it in stock?\nYes – it is available and delivered within 24 hours anywhere in Lebanon.\nDoes it come with warranty?\nYes, 1 year warranty."
+   }
+  },
+  {
+   "obs": "P10",
+   "kind": "product",
+   "url": "https://isolvedit.me/products/asus-tuf-gaming-f16-fx608jmr-core-i7-14650hx-rtx-5060",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T05:23:09+00:00",
+   "sha256": "7d51a49f711f74a3816963276936f03c5bdfee81b085dc137a513c53c40247ad",
+   "product": {
+    "shop": "iSolved IT Solutions",
+    "shop_id": "isolvedit",
+    "title": "ASUS TUF Gaming F16 Gaming Laptop – Core i7-14650HX, RTX 5060 8GB, 32GB DDR5 RAM, 1TB SSD, 16\" FHD+ (1920x1200) 165Hz | FX608JMR",
+    "url": "https://isolvedit.me/products/asus-tuf-gaming-f16-fx608jmr-core-i7-14650hx-rtx-5060",
+    "vendor": "ASUS",
+    "product_type": "Gaming Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:23:09+00:00",
+    "variants": [
+     {
+      "variant_id": "68466719522927",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "1725.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "FX608JMR",
+      "url": "https://isolvedit.me/products/asus-tuf-gaming-f16-fx608jmr-core-i7-14650hx-rtx-5060?variant=68466719522927"
+     }
+    ],
+    "description": "✅ Available – delivery within 24 hours anywhere in Lebanon\nThe ASUS TUF Gaming F16 is a tough, MIL-STD-810H tested 16-inch gaming laptop that delivers strong RTX performance at a sensible price — great for students and everyday gamers. This configuration comes with an Intel Core i7-14650HX, NVIDIA GeForce RTX 5060 8GB, 32GB DDR5 memory and a 1TB NVMe SSD, on a 16\" FHD+ (1920x1200) 165Hz display. Ready for the latest AAA games, esports titles like Valorant, CS2 and Fortnite, streaming, video editing and engineering software.\nASUS TUF Gaming F16 (FX608JMR) – Specifications\nModel\nASUS TUF Gaming F16 — FX608JMR\nProcessor\nIntel Core i7-14650HX\nGraphics\nNVIDIA GeForce RTX 5060 8GB\nMemory (RAM)\n32GB DDR5\nStorage\n1TB NVMe SSD\nDisplay\n16\" FHD+ (1920x1200) 165Hz\nKeyboard\nEnglish\nOperating system\nWindows 11\nColour\nGray\nWarranty\n1 year\nWhy buy from iSolved IT\nBrand-new, original sealed unit\n1 year warranty\nDelivery within 24 hours anywhere in Lebanon, or pick up from our shop in Bourj Hammoud, Beirut\nQuestions? WhatsApp us on +961 70 611 637\nFAQ\nWhat is the price of the ASUS TUF Gaming F16 FX608JMR in Lebanon?\n$1,725 at iSolved IT.\nIs it in stock?\nYes – it is available and delivered within 24 hours anywhere in Lebanon.\nDoes it come with warranty?\nYes, 1 year warranty."
+   }
+  },
+  {
+   "obs": "P11",
+   "kind": "product",
+   "url": "https://electroslab.com/products/brand-new-laptop-upgraded-hp-14-cpu-amd-ryzen-7-7730u-ram-32gb-ddr4-nvme-1tb",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:23:11+00:00",
+   "sha256": "ab541516e295ec0387f22d1275ff5e9b17723dc5548ec9ec4dd81265c0b3b735",
+   "product": {
+    "shop": "Electroslab",
+    "shop_id": "electroslab",
+    "title": "Brand New HP 14-em0085cl Ryzen 7 7730U 32GB RAM 1TB SSD Brand New Upgraded Laptop | 14\" HD AMD Radeon WiFi 6 Windows 11 Silver Lebanon",
+    "url": "https://electroslab.com/products/brand-new-laptop-upgraded-hp-14-cpu-amd-ryzen-7-7730u-ram-32gb-ddr4-nvme-1tb",
+    "vendor": "HP",
+    "product_type": "Brand New Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:23:11+00:00",
+    "variants": [
+     {
+      "variant_id": "51424575193255",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "740.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "01-1-1-6275.001",
+      "url": "https://electroslab.com/products/brand-new-laptop-upgraded-hp-14-cpu-amd-ryzen-7-7730u-ram-32gb-ddr4-nvme-1tb?variant=51424575193255"
+     }
+    ],
+    "description": "The HP 14-em0085cl is a brand-new upgraded laptop powered by the AMD Ryzen 7 7730U processor, with 32GB DDR4 RAM and a 1TB SSD for fast and responsive everyday performance. Its compact 14-inch HD display and Natural Silver finish make it suitable for work, university, business, and home use. This configuration is a practical choice for customers in Lebanon looking for a portable HP Ryzen 7 laptop with upgraded memory and storage.\nThe AMD Ryzen 7 7730U features 8 cores and 16 threads, with boost speeds up to 4.5GHz, providing capable performance for multitasking, office applications, browsing, studying, and productivity workloads. Shared AMD Radeon Graphics handle everyday visual tasks, while Wi-Fi 6 provides modern wireless connectivity. Windows 11 Home comes with the laptop for a ready-to-use computing experience.\nKey Features\nModel: HP 14-em0085cl\nProduct: Brand New Upgraded Laptop\nProcessor: AMD Ryzen 7 7730U\nCPU: 8 Cores / 16 Threads, up to 4.5GHz\nMemory: 32GB DDR4 RAM – Upgraded\nStorage: 1TB SSD – Upgraded\nGraphics: Integrated AMD Radeon Graphics – Shared Memory\nDisplay: 14-inch HD LED Display\nOperating System: Windows 11 Home\nWireless: Wi-Fi 6\nColor: Natural Silver\nCapabilities: Multitasking, office applications, online learning, browsing, productivity, and everyday computing\nUse Cases: Business, university, office work, studying, remote work, and home use\nLebanon Relevance: Suitable for students, professionals, businesses, and home users looking for a high-specificatio"
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://electroslab.com/policies/shipping-policy",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:23:16+00:00",
+   "sha256": "5409a64256647d4f7a2b19efb10d4964fea89327c273360aeea80aaaa02cd0a1",
+   "excerpt": "Shipping policy\nWEBSITE ORDERS ONLY⚡\nNOVEMBER DISCOUNTS + ⚡FREE DELIVERY ON ORDERS OF $20 OR MORE⚡\nTHROUGH NOV 30\n0\nView All\nNo result found for your search.\nHome\nShipping policy\nShipping policy\na {\ntext-decoration: none;\ncolor: #464feb;\n}\ntr th, tr td {\nborder: 1px solid #e6e6e6;\n}\ntr th {\nbackground-color: #f5f5f5;\n}\nShipping Policy\nDelivery Coverage & Rates\nWe deliver across all of Lebanon for a flat rate of $4.\nFree delivery may apply during promotions or on selected items.\nDelivery Time\nThe estimated delivery time begins once your order is placed and confirmed.\nBeirut: Delivery within 1–3 business days.\nOutside Beirut: Delivery within 3–5 business days.\nCustom, special-order, or high-demand items may require additional time.\nOnce your order has been shipped, you will receive order confirmation and tracking details.\nInternational Shipping\nWe currently ship only within Lebanon.\nInternational shipping may become available in the future.\nLost or Stolen Packages\nElectroSlab is not responsible for lost or stolen packages after delivery confirmation.\nIf your order is marked as delivered but has not been received, please:\nCheck with your local courier or post office.\nCheck with neighbors, building reception, or security personnel.\nContact us at info@electroslab.com, and we will assist where possible.\nBusiness Days\nBusiness days are Monday through Saturday, excluding public holidays.\nContact\nFor shipping questions or delivery issues, please contact us at info@electroslab.com.\nThi",
+   "quoted": [
+    {
+     "quote": "WEBSITE ORDERS ONLY⚡ | NOVEMBER DISCOUNTS + ⚡FREE DELIVERY ON ORDERS OF $20 OR MORE⚡ | THROUGH NOV 30",
+     "found": true
+    },
+    {
+     "quote": "WEBSITE ORDERS ONLY⚡ | NOVEMBER DISCOUNTS + ⚡FREE DELIVERY ON ORDERS OF $20 OR MORE⚡ | THROUGH NOV 30",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://isolvedit.me/policies/shipping-policy",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T05:23:18+00:00",
+   "sha256": "eed1323d4f634b02fe971522e0ac17b91f7ca01025f8cf6ebc560c9bf6d64d43",
+   "excerpt": "Shipping policy | iSolved IT\nSkip to content\nYour cart is empty\nContinue shopping\nHave an account?\nLog in to check out faster.\nYour cart\nLoading...\nEstimated total\n$0.00 USD\n✅ All prices include VAT – nothing extra to pay. Discounts and shipping calculated at checkout.\nCheck out\n🎄 Christmas deals are live — order on WhatsApp\n✅ All prices include VAT — nothing extra to pay\n💵 Cash on delivery\n🛡️ 6-month warranty on used laptops\nShop\nApple\nApple\nApple Accessories\nApple Macbook\nApple iPad\nGaming\nGaming\nGaming Laptops\nGaming Monitors\nGaming Consoles\nGaming Accessories\nLaptops\nLaptops\nApple Laptops\nAsus Laptops\nAcer Laptops\nDell Laptops\nHp laptops\nLenovo Laptops\nMsi Laptops\nSecond Hand Laptops\nSony Laptops\nLaptop Parts\nDesktops\nDesktops\nAll Desktops & All-in-Ones\nDesktop PCs\nAll-in-One PCs\nComputer Parts\nComputer Parts\nMotherboards\nCPU's\nGPU's\nStorages\nRAM's\nCases and Chassis\nPower Supply\nAccessories\nAccessories\nAdapters & Converters\nBackpacks & Bags\nCables\nExternal Hard Drives\nFlash Drives & SD Cards\nMobile Accessories\nPower Banks\nChargers\nPhone Holders & Car Mounts\nDocking Stations & USB-C Hubs\nLaptop Stands & Coolers\nWebcams\nWireless Presenters\nInks & Toners\nMouse\nMouse Pads & Wrist Pads\nKeyboards\nAudio\nAudio\nEarbuds\nSpeakers\nHeadsets\nMicrophones\nElectronics\nElectronics\nTablets\nGadgets\nMonitors\nPrinters & Scanners\nPaper Shredders\nPOS & Barcode Scanners\nNetworking Products\nNetworking Products\nFiber Optic\nNetworking Accessories\nSwitches\nNetwork & Server Cabinets\nRouters & Modems\nC",
+   "quoted": []
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://isolvedit.me/meta.json",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T05:23:25+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"iSolved IT Solutions\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"isolvedit.me\"}",
+   "quoted": []
+  },
+  {
+   "obs": "P12",
+   "kind": "product",
+   "url": "https://electroslab.com/products/brand-new-laptop-upgraded-hp-14-cpu-amd-ryzen-7-7730u-ram-32gb-ddr4-nvme-1tb",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:23:25+00:00",
+   "sha256": "ab541516e295ec0387f22d1275ff5e9b17723dc5548ec9ec4dd81265c0b3b735",
+   "product": {
+    "shop": "Electroslab",
+    "shop_id": "electroslab",
+    "title": "Brand New HP 14-em0085cl Ryzen 7 7730U 32GB RAM 1TB SSD Brand New Upgraded Laptop | 14\" HD AMD Radeon WiFi 6 Windows 11 Silver Lebanon",
+    "url": "https://electroslab.com/products/brand-new-laptop-upgraded-hp-14-cpu-amd-ryzen-7-7730u-ram-32gb-ddr4-nvme-1tb",
+    "vendor": "HP",
+    "product_type": "Brand New Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:23:25+00:00",
+    "variants": [
+     {
+      "variant_id": "51424575193255",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "740.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "01-1-1-6275.001",
+      "url": "https://electroslab.com/products/brand-new-laptop-upgraded-hp-14-cpu-amd-ryzen-7-7730u-ram-32gb-ddr4-nvme-1tb?variant=51424575193255"
+     }
+    ],
+    "description": "The HP 14-em0085cl is a brand-new upgraded laptop powered by the AMD Ryzen 7 7730U processor, with 32GB DDR4 RAM and a 1TB SSD for fast and responsive everyday performance. Its compact 14-inch HD display and Natural Silver finish make it suitable for work, university, business, and home use. This configuration is a practical choice for customers in Lebanon looking for a portable HP Ryzen 7 laptop with upgraded memory and storage.\nThe AMD Ryzen 7 7730U features 8 cores and 16 threads, with boost speeds up to 4.5GHz, providing capable performance for multitasking, office applications, browsing, studying, and productivity workloads. Shared AMD Radeon Graphics handle everyday visual tasks, while Wi-Fi 6 provides modern wireless connectivity. Windows 11 Home comes with the laptop for a ready-to-use computing experience.\nKey Features\nModel: HP 14-em0085cl\nProduct: Brand New Upgraded Laptop\nProcessor: AMD Ryzen 7 7730U\nCPU: 8 Cores / 16 Threads, up to 4.5GHz\nMemory: 32GB DDR4 RAM – Upgraded\nStorage: 1TB SSD – Upgraded\nGraphics: Integrated AMD Radeon Graphics – Shared Memory\nDisplay: 14-inch HD LED Display\nOperating System: Windows 11 Home\nWireless: Wi-Fi 6\nColor: Natural Silver\nCapabilities: Multitasking, office applications, online learning, browsing, productivity, and everyday computing\nUse Cases: Business, university, office work, studying, remote work, and home use\nLebanon Relevance: Suitable for students, professionals, businesses, and home users looking for a high-specificatio"
+   }
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://outgeeked.net/meta.json",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:23:25+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"OutGeeked\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"outgeeked.net\"}",
+   "quoted": []
+  },
+  {
+   "obs": "P13",
+   "kind": "product",
+   "url": "https://electroslab.com/products/brand-new-laptop-lenovo-ideapad-5-2in116ial10-cpu-intel-core-ultra-7",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:23:26+00:00",
+   "sha256": "2e2f4531b4a4e75d15f61712154c79466a80c2ef157004efa6a35af7cd1a343f",
+   "product": {
+    "shop": "Electroslab",
+    "shop_id": "electroslab",
+    "title": "Brand New Lenovo IdeaPad 5 2-in-1 16IAL10 Core Ultra 7 255U 32GB DDR5 1TB SSD 16\" WUXGA Touch Win11 Cosmic Blue",
+    "url": "https://electroslab.com/products/brand-new-laptop-lenovo-ideapad-5-2in116ial10-cpu-intel-core-ultra-7",
+    "vendor": "Lenovo",
+    "product_type": "Brand New Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:23:26+00:00",
+    "variants": [
+     {
+      "variant_id": "50656607830183",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "1050.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "01-1-1-5319.001",
+      "url": "https://electroslab.com/products/brand-new-laptop-lenovo-ideapad-5-2in116ial10-cpu-intel-core-ultra-7?variant=50656607830183"
+     }
+    ],
+    "description": "Description:\nExperience premium flexibility and powerful performance with the Brand New Lenovo IdeaPad 5 2-in-1 16IAL10, powered by the Intel Core Ultra 7 255U processor. Designed for productivity, creativity, and multitasking, this convertible laptop delivers smooth and efficient performance for professional and everyday use.\nWith 32GB DDR5 RAM, it handles demanding applications and heavy multitasking effortlessly, while the 1TB NVMe SSD provides ultra-fast boot times and large storage capacity for files, software, and media. The 16-inch WUXGA touchscreen display offers sharp visuals, vibrant colors, and an interactive viewing experience for work, streaming, and creative tasks.\nFeaturing a versatile 2-in-1 convertible design, integrated graphics, Windows 11, and a stylish Cosmic Blue finish, this laptop combines portability, premium aesthetics, and modern performance in one powerful device.\nKey Features:\nProcessor: Intel Core Ultra 7 255U\nRAM: 32GB DDR5\nStorage: 1TB NVMe SSD\nDisplay: 16 inch WUXGA Touchscreen\nGraphics: Integrated Graphics\nDesign: 2-in-1 Convertible\nOperating System: Windows 11\nColor: Cosmic Blue\nCondition: Brand New"
+   }
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://outgeeked.net/",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:23:27+00:00",
+   "sha256": "031d425c3f608737ef7e574700e1c283b8cbd00c57d544ef16bfef38a6a8f376",
+   "excerpt": "Buy Smartphones & Laptops in Lebanon | OutGeeked.net\nSkip to content\nCash on delivery\nall over Lebanon\nFacebook\nX (Twitter)\nInstagram\nTikTok\nSearch\nClear\nMost searched products\nSamsung Galaxy S26 12GB/256GB\nRegular price\n$848.00 USD\nSale price\n$848.00 USD\nRegular price\nUnit price\n/per\n4 colours\nView details\nChoose your option\n-9%\nApple iPhone 17 Pro Max (eSIM)\nRegular price\nFrom $1,470.00 USD\nSale price\nFrom $1,470.00 USD\nRegular price\n$1,630.00 USD\nUnit price\n/per\n256GB–2TB · 3 colours\nView details\nChoose your option\n-9%\nApple MacBook Pro M5 (14-inch, 2025)\nRegular price\nFrom $1,600.00 USD\nSale price\nFrom $1,600.00 USD\nRegular price\n$1,799.00 USD\nUnit price\n/per\n16GB/512GB–32GB/1TB · 2 colours\nView details\nChoose your option\n-24%\nSoundcore R50i NC\nRegular price\n$25.00 USD\nSale price\n$25.00 USD\nRegular price\n$33.00 USD\nUnit price\n/per\nIn stock\nView details\nChoose your option\nCart\n0\nBuild Your PC\nSmartphones\nShop All\niPhone\nAll iPhones\niPhone 18 Series\nAndroid Phones\nSamsung Galaxy\nHonor\nXiaomi\nRedmi\nPoco\nOppo\nTecno\nInfinix\nRealme\nRedMagic\nMore Phone Brands\nGoogle Pixel\nOnePlus\nNothing\nMotorola\nHuawei\nVivo\nCMF\nHMD\nBudget\nUnder $200$200–500$500–1,000$1,000+\nTop brands\nAppleSamsungXiaomiRedmiGoogleHonor\nAll brands →\nBest sellers\nSamsung\nSamsung Galaxy S26 12GB/256GB\n$848.00\nApple\nApple iPhone 17 Pro Max (eSIM)\nFrom $1,470.00$1,630.00\nTablets\nShop All\neReaders\nAndroid Tablets\nSamsung Galaxy Tab\nXiaomi\nRedmi\nHonor\nTecno\nHuawei\niPad\niPad\niPad Air\niPad Pro\niPad mini\nBudget\nUnder $30",
+   "quoted": []
+  },
+  {
+   "obs": "T6",
+   "kind": "page",
+   "url": "https://isolvedit.me/",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T05:23:27+00:00",
+   "sha256": "2e7411e41034436bdc1e3d1c10f669ff3b4c96434c3fe243e41dbad06675a85c",
+   "excerpt": "iSolvedIT — Laptops, Computers, Monitors & UPS in Lebanon\nSkip to content\nYour cart is empty\nContinue shopping\nHave an account?\nLog in to check out faster.\nYour cart\nLoading...\nEstimated total\n$0.00 USD\n✅ All prices include VAT – nothing extra to pay. Discounts and shipping calculated at checkout.\nCheck out\n🎄 Christmas deals are live — order on WhatsApp\n✅ All prices include VAT — nothing extra to pay\n💵 Cash on delivery\n🛡️ 6-month warranty on used laptops\nShop\nApple\nApple\nApple Accessories\nApple Macbook\nApple iPad\nGaming\nGaming\nGaming Laptops\nGaming Monitors\nGaming Consoles\nGaming Accessories\nLaptops\nLaptops\nApple Laptops\nAsus Laptops\nAcer Laptops\nDell Laptops\nHp laptops\nLenovo Laptops\nMsi Laptops\nSecond Hand Laptops\nSony Laptops\nLaptop Parts\nDesktops\nDesktops\nAll Desktops & All-in-Ones\nDesktop PCs\nAll-in-One PCs\nComputer Parts\nComputer Parts\nMotherboards\nCPU's\nGPU's\nStorages\nRAM's\nCases and Chassis\nPower Supply\nAccessories\nAccessories\nAdapters & Converters\nBackpacks & Bags\nCables\nExternal Hard Drives\nFlash Drives & SD Cards\nMobile Accessories\nPower Banks\nChargers\nPhone Holders & Car Mounts\nDocking Stations & USB-C Hubs\nLaptop Stands & Coolers\nWebcams\nWireless Presenters\nInks & Toners\nMouse\nMouse Pads & Wrist Pads\nKeyboards\nAudio\nAudio\nEarbuds\nSpeakers\nHeadsets\nMicrophones\nElectronics\nElectronics\nTablets\nGadgets\nMonitors\nPrinters & Scanners\nPaper Shredders\nPOS & Barcode Scanners\nNetworking Products\nNetworking Products\nFiber Optic\nNetworking Accessories\nSwitches\nNetwork & Serve",
+   "quoted": [
+    {
+     "quote": "✅ All prices include VAT – nothing extra to pay. Discounts and shipping calculated at checkout.",
+     "found": true
+    }
+   ]
+  }
+ ]
+}

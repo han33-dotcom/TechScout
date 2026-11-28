@@ -1,0 +1,1529 @@
+{
+ "run_id": "scout-b36-20261128T052511",
+ "request": {
+  "id": "B36",
+  "text": "I'm buying new wireless over-ear headphones for commuting. I want active noise cancellation and USB-C charging. Can you compare the same pair delivered to Jounieh?",
+  "mode": "delivery",
+  "destination": "Jounieh",
+  "category": "audio",
+  "run_id": "scout-b36-20261128T052511"
+ },
+ "status": "offers",
+ "message": "I’d compare the Sony WH-CH720N in black: wireless over-ear headphones with ANC and USB-C charging, suitable for commuting.\n• Najem Star Call: $85.00, in stock and explicitly “Brand New”. Delivery to Jounieh and its fee remain unconfirmed.\n• Phonefinity: $90.00, in stock; delivery outside Beirut is $5 in 2–4 business days. New condition is not explicitly confirmed. The shop says it does not charge VAT.\n• WinCell: $115.00, in stock, with delivery across Lebanon; the delivery fee and new condition are unconfirmed.\nMy suggestion: prioritize Najem for its confirmed new condition, but confirm Jounieh delivery and the final fee before ordering. None of these currently has both new condition and a delivery fee fully verified.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "best",
+   "shop": "Phonefinity",
+   "shop_id": "phonefinity",
+   "title": "Sony WH-CH720N Wireless Noise Cancelling Headphones",
+   "variant": "Color: Black",
+   "url": "https://phonefinity.net/products/sony-wh-ch720n-wireless-noise-cancelling-headphones/?attribute_pa_color=black",
+   "price": "90.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "exact",
+   "identity_reason": "Same Sony WH-CH720N in black selected for comparison.",
+   "delivery_fee": "5.00",
+   "total": "95.00",
+   "total_basis": "listed price + delivery fee published by phonefinity (\"Outside Beirut: 5$, in 2-4 business days\", T4)",
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "not confirmed: Over-ear design",
+    "not confirmed: Active noise cancellation"
+   ],
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Wireless",
+     "status": "met",
+     "quote": "Wireless Noise Canceling Headphones",
+     "obs": "P11",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Over-ear design",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Active noise cancellation",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "USB-C charging",
+     "status": "met",
+     "quote": "USB Type-C quick charging gives up to 60 mins of play back from 3 minutes of charge.",
+     "obs": "P11",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Delivery to Jounieh",
+     "status": "met",
+     "quote": "Outside Beirut: 5$, in 2-4 business days",
+     "obs": "T4",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P11",
+     "url": "https://phonefinity.net/products/sony-wh-ch720n-wireless-noise-cancelling-headphones/",
+     "read": "https://phonefinity.net/wp-json/wc/store/v1/products?slug=sony-wh-ch720n-wireless-noise-cancelling-headphones",
+     "source": "woo_store_api",
+     "observed_at": "2026-11-28T05:25:59+00:00",
+     "sha256": "d5f038760ed0cbfee389177c6380be4082768636eafb087874fd4402acd40c54"
+    },
+    {
+     "obs": "T4",
+     "url": "https://phonefinity.net/",
+     "source": "shop delivery terms",
+     "observed_at": "2026-11-28T05:25:50+00:00",
+     "sha256": "f8d3d0d308d65dc3339125618542e1b360c929f358880845bb182ff519497c6f"
+    }
+   ],
+   "seller_basis": "Phonefinity: Lebanese shop in the reviewed directory",
+   "downgrades": []
+  },
+  {
+   "tier": "best",
+   "shop": "Najem Star Call",
+   "shop_id": "najem_star",
+   "title": "Sony WH-CH720N Noise Canceling Wireless Headphones",
+   "variant": "Color: Black",
+   "url": "https://najemstarcall.com/product/sony-wh-ch720n-noise-canceling-wireless-headphones/?attribute_pa_color=black",
+   "price": "85.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "Same Sony WH-CH720N in black selected for comparison.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "not confirmed: Over-ear design",
+    "not confirmed: Active noise cancellation",
+    "not confirmed: USB-C charging",
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "Brand New",
+     "obs": "P12",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Wireless",
+     "status": "met",
+     "quote": "Sony’s lightest Wireless Noise-canceling headband ever.",
+     "obs": "P12",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Over-ear design",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Active noise cancellation",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "USB-C charging",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Delivery to Jounieh",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P12",
+     "url": "https://najemstarcall.com/product/sony-wh-ch720n-noise-canceling-wireless-headphones/",
+     "read": "https://najemstarcall.com/wp-json/wc/store/v1/products?slug=sony-wh-ch720n-noise-canceling-wireless-headphones",
+     "source": "woo_store_api",
+     "observed_at": "2026-11-28T05:25:59+00:00",
+     "sha256": "bafcb5a49a909681e831182f693efb7d9a16fb29c66bf4a31fd28b98e3292d2e"
+    }
+   ],
+   "seller_basis": "Najem Star Call: Lebanese shop in the reviewed directory",
+   "downgrades": []
+  },
+  {
+   "tier": "best",
+   "shop": "WinCell",
+   "shop_id": "wincell",
+   "title": "Sony WH-CH720N Wireless Noise Cancelling Over-Ear Headphones – Black",
+   "variant": "Default Title",
+   "url": "https://wincell.store/products/sony-wh-ch720n-wireless-noise-cancelling-over-ear-headphones-black?variant=53481556214058",
+   "price": "115.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "exact",
+   "identity_reason": "Same Sony WH-CH720N in black selected for comparison.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "not confirmed: USB-C charging",
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Wireless",
+     "status": "met",
+     "quote": "Sony WH-CH720N Wireless Noise Cancelling Over-Ear Headphones – Black",
+     "obs": "P10",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Over-ear design",
+     "status": "met",
+     "quote": "comfortable over-ear design",
+     "obs": "P10",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Active noise cancellation",
+     "status": "met",
+     "quote": "Active Noise Cancelling (ANC)",
+     "obs": "P10",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "USB-C charging",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Delivery to Jounieh",
+     "status": "met",
+     "quote": "Delivery across Lebanon",
+     "obs": "T9",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P10",
+     "url": "https://wincell.store/products/sony-wh-ch720n-wireless-noise-cancelling-over-ear-headphones-black",
+     "read": "https://wincell.store/products/sony-wh-ch720n-wireless-noise-cancelling-over-ear-headphones-black.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:25:59+00:00",
+     "sha256": "0bd3145140471d0d19a707f16dc59a6d7f5f8e84c8e766594ab97fcd99a37383"
+    }
+   ],
+   "seller_basis": "WinCell: Lebanese shop in the reviewed directory (shop metadata: Zouk, LB)",
+   "downgrades": []
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P12",
+   "variant_id": "42914",
+   "identity": "exact",
+   "identity_reason": "Same Sony WH-CH720N in black selected for comparison.",
+   "condition": "new",
+   "condition_quote": "Brand New",
+   "condition_obs": "P12",
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "P12",
+     "quote": "Brand New"
+    },
+    {
+     "requirement": "Wireless",
+     "status": "met",
+     "evidence_obs": "P12",
+     "quote": "Sony’s lightest Wireless Noise-canceling headband ever."
+    },
+    {
+     "requirement": "Over-ear design",
+     "status": "met",
+     "evidence_obs": "P10",
+     "quote": "comfortable over-ear design"
+    },
+    {
+     "requirement": "Active noise cancellation",
+     "status": "met",
+     "evidence_obs": "P10",
+     "quote": "Active Noise Cancelling (ANC)"
+    },
+    {
+     "requirement": "USB-C charging",
+     "status": "met",
+     "evidence_obs": "P11",
+     "quote": "USB Type-C quick charging gives up to 60 mins of play back from 3 minutes of charge."
+    },
+    {
+     "requirement": "Delivery to Jounieh",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": null,
+   "delivery_quote": null,
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P11",
+   "variant_id": "85364",
+   "identity": "exact",
+   "identity_reason": "Same Sony WH-CH720N in black selected for comparison.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Wireless",
+     "status": "met",
+     "evidence_obs": "P11",
+     "quote": "Wireless Noise Canceling Headphones"
+    },
+    {
+     "requirement": "Over-ear design",
+     "status": "met",
+     "evidence_obs": "P10",
+     "quote": "comfortable over-ear design"
+    },
+    {
+     "requirement": "Active noise cancellation",
+     "status": "met",
+     "evidence_obs": "P10",
+     "quote": "Active Noise Cancelling (ANC)"
+    },
+    {
+     "requirement": "USB-C charging",
+     "status": "met",
+     "evidence_obs": "P11",
+     "quote": "USB Type-C quick charging gives up to 60 mins of play back from 3 minutes of charge."
+    },
+    {
+     "requirement": "Delivery to Jounieh",
+     "status": "met",
+     "evidence_obs": "T4",
+     "quote": "Outside Beirut: 5$, in 2-4 business days"
+    }
+   ],
+   "delivery_obs": "T4",
+   "delivery_quote": "Outside Beirut: 5$, in 2-4 business days",
+   "delivery_fee_usd": "5",
+   "free_delivery_over_usd": null,
+   "vat_quote": "Prices are final. We don't charge VAT",
+   "price_quote": null
+  },
+  {
+   "obs": "P10",
+   "variant_id": "53481556214058",
+   "identity": "exact",
+   "identity_reason": "Same Sony WH-CH720N in black selected for comparison.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Wireless",
+     "status": "met",
+     "evidence_obs": "P10",
+     "quote": "Sony WH-CH720N Wireless Noise Cancelling Over-Ear Headphones – Black"
+    },
+    {
+     "requirement": "Over-ear design",
+     "status": "met",
+     "evidence_obs": "P10",
+     "quote": "comfortable over-ear design"
+    },
+    {
+     "requirement": "Active noise cancellation",
+     "status": "met",
+     "evidence_obs": "P10",
+     "quote": "Active Noise Cancelling (ANC)"
+    },
+    {
+     "requirement": "USB-C charging",
+     "status": "met",
+     "evidence_obs": "P11",
+     "quote": "USB Type-C quick charging gives up to 60 mins of play back from 3 minutes of charge."
+    },
+    {
+     "requirement": "Delivery to Jounieh",
+     "status": "met",
+     "evidence_obs": "T9",
+     "quote": "Delivery across Lebanon"
+    }
+   ],
+   "delivery_obs": "T9",
+   "delivery_quote": "Delivery across Lebanon",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Compare shared models across shops, prioritizing documented new condition and delivery.",
+   "at_s": 9.6,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "Sony WH-CH720N"
+    },
+    {
+     "tool": "search",
+     "query": "JBL Tune 770NC"
+    },
+    {
+     "tool": "search",
+     "query": "Soundcore Q30"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Check same Sony model across three shops for specifications, condition and delivery.",
+   "at_s": 46.5,
+   "calls": [
+    {
+     "tool": "open",
+     "url": "https://phonefinity.net/products/sony-wh-ch720n-wireless-noise-cancelling-headphones/"
+    },
+    {
+     "tool": "open",
+     "url": "https://najemstarcall.com/product/sony-wh-ch720n-noise-canceling-wireless-headphones/"
+    },
+    {
+     "tool": "open",
+     "url": "https://wincell.store/products/sony-wh-ch720n-wireless-noise-cancelling-over-ear-headphones-black"
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Check delivery and new-condition policies for the three same-model candidates; read full Najem product specifications.",
+   "at_s": 59.0,
+   "calls": [
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "najem_star"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "phonefinity"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "wincell"
+     ]
+    },
+    {
+     "tool": "read",
+     "url": "https://najemstarcall.com/product/sony-wh-ch720n-noise-canceling-wireless-headphones/",
+     "terms": [
+      "USB",
+      "over-ear",
+      "Brand New"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 4,
+   "notes": "Same-model comparison; only Najem explicitly confirms new condition. Delivery fee verified only for Phonefinity.",
+   "at_s": 85.5,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 26390,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 27172,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 28547,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 937,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 2141,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 4016,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 469,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 1344,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 1610,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 3797,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7469,
+   "usage": {
+    "actual_usd": "0.004128",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3231,
+     "output_tokens": 108,
+     "total_tokens": 3339
+    },
+    "latency_ms": 3609,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 8375,
+   "usage": {
+    "actual_usd": "0.017808",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 8483,
+     "output_tokens": 163,
+     "total_tokens": 8646
+    },
+    "latency_ms": 4703,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 8484,
+   "usage": {
+    "actual_usd": "0.0243105",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 11084,
+     "output_tokens": 163,
+     "total_tokens": 11247
+    },
+    "latency_ms": 4563,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 4,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 22109,
+   "usage": {
+    "actual_usd": "0.0376505",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 12920,
+     "output_tokens": 1038,
+     "total_tokens": 13958
+    },
+    "latency_ms": 18375,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": true
+  }
+ ],
+ "retailer_requests": 103,
+ "seconds": 85.5,
+ "spend": {
+  "settled_usd": "0.0838970",
+  "uncertain_usd": "0",
+  "model_calls": 4,
+  "ledger_job": "scout-b36-20261128T052511"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://electroslab.com/products/jbl-headset-tune-770nc-wireless-bluetooth-copy-white",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:25:43+00:00",
+   "sha256": "9950c33011bc739c628f96805c0d78a6191efea67407494dede3a2f6ed13fe28",
+   "product": {
+    "shop": "Electroslab",
+    "shop_id": "electroslab",
+    "title": "Jbl Headset Tune 770NC Wireless Bluetooth Copy White",
+    "url": "https://electroslab.com/products/jbl-headset-tune-770nc-wireless-bluetooth-copy-white",
+    "vendor": "Electroslab",
+    "product_type": "Computers and laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:25:43+00:00",
+    "variants": [
+     {
+      "variant_id": "51986949931175",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "25.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "01-1-1-6806.001",
+      "url": "https://electroslab.com/products/jbl-headset-tune-770nc-wireless-bluetooth-copy-white?variant=51986949931175"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/anker-soundcore-space-q30",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:25:44+00:00",
+   "sha256": "11a990ab329b00e5d676cd4672bd4246001f73106a3783d6427c7743ffedaea9",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "Soundcore Space Q30",
+    "url": "https://outgeeked.net/products/anker-soundcore-space-q30",
+    "vendor": "Anker",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:25:44+00:00",
+    "variants": [
+     {
+      "variant_id": "47351073898754",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "56.00",
+      "compare_at": "75.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "OG-STK-4559",
+      "url": "https://outgeeked.net/products/anker-soundcore-space-q30?variant=47351073898754"
+     }
+    ],
+    "description": "The Soundcore by Anker Space Q30 by Anker is built for those who demand top performance. Experience premium sound quality without compromise.\nKey Specifications\nDual Noise-Detection Microphones\nHybrid ANC\nHi-Res Audio\n40 Hours on a single charge\nPressure-Free Comfort\nTCO Certified\nBuy the Soundcore by Anker Space Q30 online in Lebanon at OutGeeked. We offer the best price on Anker wireless audio products in Lebanon, with fast delivery across Beirut and nationwide. Enjoy cash on delivery, authentic warranty, and hassle-free 10-day returns. OutGeeked is Lebanon's trusted electronics store.\nCompare models and current prices in our Soundcore Wireless Headsets collection."
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://electroslab.com/products/jbl-headset-tune-770nc-wireless-bluetooth-copy-purple",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:25:44+00:00",
+   "sha256": "2ea394eeeda7b2c79a15a2aa160bb0ddd3b65443c14373417f8f4a151806498d",
+   "product": {
+    "shop": "Electroslab",
+    "shop_id": "electroslab",
+    "title": "Jbl Headset Tune 770NC Wireless Bluetooth Copy Purple",
+    "url": "https://electroslab.com/products/jbl-headset-tune-770nc-wireless-bluetooth-copy-purple",
+    "vendor": "Electroslab",
+    "product_type": "Computers and laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:25:44+00:00",
+    "variants": [
+     {
+      "variant_id": "51986949963943",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "25.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "01-1-1-6807.001",
+      "url": "https://electroslab.com/products/jbl-headset-tune-770nc-wireless-bluetooth-copy-purple?variant=51986949963943"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://corexlb.net/products/sony-wh-ch720n-wireless-headphones-bluetooth",
+   "shop_id": "corex",
+   "observed_at": "2026-11-28T05:25:45+00:00",
+   "sha256": "9ab85c66b54cca6af0dfbfb3848436c59668024804c403bb519d0dfcd62ffa85",
+   "product": {
+    "shop": "COREX",
+    "shop_id": "corex",
+    "title": "Sony WH-CH720N Wireless Headphones | Bluetooth",
+    "url": "https://corexlb.net/products/sony-wh-ch720n-wireless-headphones-bluetooth",
+    "vendor": "corex",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:25:45+00:00",
+    "variants": [
+     {
+      "variant_id": "55530910220607",
+      "title": "blue",
+      "options": {
+       "Color": "blue"
+      },
+      "price": "12.50",
+      "compare_at": "18.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://corexlb.net/products/sony-wh-ch720n-wireless-headphones-bluetooth?variant=55530910220607"
+     },
+     {
+      "variant_id": "55530910253375",
+      "title": "Black",
+      "options": {
+       "Color": "Black"
+      },
+      "price": "12.50",
+      "compare_at": "18.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://corexlb.net/products/sony-wh-ch720n-wireless-headphones-bluetooth?variant=55530910253375"
+     },
+     {
+      "variant_id": "55530910286143",
+      "title": "Beige",
+      "options": {
+       "Color": "Beige"
+      },
+      "price": "12.50",
+      "compare_at": "18.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://corexlb.net/products/sony-wh-ch720n-wireless-headphones-bluetooth?variant=55530910286143"
+     }
+    ],
+    "description": "Sony WH-CH720N wireless headphones — Active Noise Cancellation, Bluetooth 5.0, lightweight foldable design with soft ear cushions and adjustable headband, long battery with quick charging, deep bass and crisp vocals. Cash on delivery in Lebanon at COREX.\nFeatures\nActive Noise Cancellation\nWireless Bluetooth 5.0 — stable pairing.\nLightweight foldable design — soft cushions, adjustable headband.\nQuick charging — hours of playback with minutes of charge.\nDeep bass and clear sound quality\nSpecifications\nBrand\nSony (WH-CH720N)\nBluetooth\n5.0\nANC\nYes\nWhat's in the Box\n1× Sony WH-CH720N Wireless Headphones"
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/soundcore-life-q30-by-anker-hybrid-active-noise-cancelling-headphones",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:25:45+00:00",
+   "sha256": "4c26f0d4a1b45809d8656beae2273edec6f8ee238e17cdce6245046726a389f5",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Soundcore Life Q30 by Anker, Hybrid Active Noise Cancelling Headphones with Multiple Modes, Hi-Res Sound, Custom EQ via App, 50H Playtime, Comfortable Fit, Bluetooth, Multipoint Connection",
+    "url": "https://mobileleb.com/products/soundcore-life-q30-by-anker-hybrid-active-noise-cancelling-headphones",
+    "vendor": "Anker",
+    "product_type": "Audio",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:25:45+00:00",
+    "variants": [
+     {
+      "variant_id": "44617919627396",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "54.00",
+      "compare_at": "77.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SouxQsFaY6FTw",
+      "url": "https://mobileleb.com/products/soundcore-life-q30-by-anker-hybrid-active-noise-cancelling-headphones?variant=44617919627396"
+     }
+    ],
+    "description": "Advanced Noise Cancellation Technology: Maintain your focus with Life Q30’s hybrid active noise cancellation. Dual noise-detecting microphones pick up and filter out up to 95% of low-frequency ambient sound to ensure nothing distracts you from your music.\nUltimate Noise Cancellation Experience: Customize Life Q30’s noise cancellation with 3 modes—Transport minimizes airplane engine noise, Outdoor reduces traffic and wind, and Indoor dampens the sound of busy offices with people talking in the background. Note: ANC is not compatible with an AUX Cable connection.\nHi-Res Music: Hear every detail of your favorite songs thanks to Life Q30’s 40mm drivers. The highly-flexible silk diaphragms reproduce thumping bass and crisp treble that extends up to 40kHz for improved clarity.\n50-Hour Playtime: Life Q30 active noise cancelling headphones play up to 50 hours of music in noise cancelling mode. Standard mode extends the playtime to 70 hours, while a short 5-minute charge gives you 4 hours of listening.\nPressure-Free Comfort: Life Q30 active noise cancelling headphones have ultra-soft protein leather earcups with memory foam padding to fit snugly over your ears. The lightweight build also ensures they’re comfortable for long listening sessions."
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://electroslab.com/policies/shipping-policy",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:25:48+00:00",
+   "sha256": "9f2da92f5b5520efc214d2bac784334a99f65d38b4a963c5516d08c57cba1560",
+   "excerpt": "Shipping policy\nWEBSITE ORDERS ONLY⚡\nNOVEMBER DISCOUNTS + ⚡FREE DELIVERY ON ORDERS OF $20 OR MORE⚡\nTHROUGH NOV 30\n0\nView All\nNo result found for your search.\nHome\nShipping policy\nShipping policy\na {\ntext-decoration: none;\ncolor: #464feb;\n}\ntr th, tr td {\nborder: 1px solid #e6e6e6;\n}\ntr th {\nbackground-color: #f5f5f5;\n}\nShipping Policy\nDelivery Coverage & Rates\nWe deliver across all of Lebanon for a flat rate of $4.\nFree delivery may apply during promotions or on selected items.\nDelivery Time\nThe estimated delivery time begins once your order is placed and confirmed.\nBeirut: Delivery within 1–3 business days.\nOutside Beirut: Delivery within 3–5 business days.\nCustom, special-order, or high-demand items may require additional time.\nOnce your order has been shipped, you will receive order confirmation and tracking details.\nInternational Shipping\nWe currently ship only within Lebanon.\nInternational shipping may become available in the future.\nLost or Stolen Packages\nElectroSlab is not responsible for lost or stolen packages after delivery confirmation.\nIf your order is marked as delivered but has not been received, please:\nCheck with your local courier or post office.\nCheck with neighbors, building reception, or security personnel.\nContact us at info@electroslab.com, and we will assist where possible.\nBusiness Days\nBusiness days are Monday through Saturday, excluding public holidays.\nContact\nFor shipping questions or delivery issues, please contact us at info@electroslab.com.\nThi",
+   "quoted": []
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/anker-soundcore-life-q30",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:25:48+00:00",
+   "sha256": "1a4d51e7e7bc6ed39e841696378f222360fa799f285ac7c8f90a14e07ce808c8",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "ANKER SOUNDCORE LIFE Q30",
+    "url": "https://classic-phones.com/products/anker-soundcore-life-q30",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:25:48+00:00",
+    "variants": [
+     {
+      "variant_id": "46198282617067",
+      "title": "blue",
+      "options": {
+       "color": "blue"
+      },
+      "price": "53.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/anker-soundcore-life-q30?variant=46198282617067"
+     },
+     {
+      "variant_id": "46198282649835",
+      "title": "black",
+      "options": {
+       "color": "black"
+      },
+      "price": "53.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/anker-soundcore-life-q30?variant=46198282649835"
+     },
+     {
+      "variant_id": "48256919994603",
+      "title": "White",
+      "options": {
+       "color": "White"
+      },
+      "price": "53.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/anker-soundcore-life-q30?variant=48256919994603"
+     }
+    ],
+    "description": "ANKER SOUNDCORE LIFE Q30\nAdvanced Noise Cancellation Technology: Maintain your focus with Life Q30’s hybrid active noise cancellation. Dual noise-detecting microphones pick up and filter out up to 95% of low-frequency ambient sound to ensure nothing distracts you from your music.\nUltimate Noise Cancellation Experience: Customize Life Q30’s noise cancellation with 3 modes—Transport minimizes airplane engine noise, Outdoor reduces traffic and wind, and Indoor dampens the sound of busy offices with people talking in the background.\nHi-Res Music: Hear every detail of your favorite songs thanks to Life Q30’s 40mm drivers. The highly-flexible silk diaphragms reproduce thumping bass and crisp treble that extends up to 40kHz for improved clarity.\n40-Hour Playtime: Life Q30 active noise cancelling headphones play up to 40 hours of music in noise cancelling mode. Standard mode extends the playtime to 60 hours, while a short 5-minute charge gives you 4 hours of listening.\nPressure-Free Comfort: Life Q30 active noise cancelling headphones have ultra-soft protein leather earcups with memory foam padding to fit snugly over your ears. The lightweight build also ensures they’re comfortable for long listening sessions."
+   }
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/jbl-tune-770nc-black",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:25:48+00:00",
+   "sha256": "8f6ec4db2f21a4ba382c8dc737e329605bf2b9fb2972317e72aadd03b32f6c8b",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Jbl tune 770nc",
+    "url": "https://classic-phones.com/products/jbl-tune-770nc-black",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:25:48+00:00",
+    "variants": [
+     {
+      "variant_id": "44765822189803",
+      "title": "black",
+      "options": {
+       "Color": "black"
+      },
+      "price": "55.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/jbl-tune-770nc-black?variant=44765822189803"
+     },
+     {
+      "variant_id": "44765822222571",
+      "title": "Blue",
+      "options": {
+       "Color": "Blue"
+      },
+      "price": "55.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/jbl-tune-770nc-black?variant=44765822222571"
+     },
+     {
+      "variant_id": "45883572191467",
+      "title": "white",
+      "options": {
+       "Color": "white"
+      },
+      "price": "56.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/jbl-tune-770nc-black?variant=45883572191467"
+     },
+     {
+      "variant_id": "47189080801515",
+      "title": "Purple",
+      "options": {
+       "Color": "Purple"
+      },
+      "price": "55.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/jbl-tune-770nc-black?variant=47189080801515"
+     }
+    ],
+    "description": "JBL Tune 770NC Wireless Over Ear ANC Headphones - Black | TUNE770\nJBL Tune 770NC Wireless Over Ear ANC Headphones - Black | TUNE770\nWhen your music is on, nothing else matters. The JBL Tune 770NC Adaptive Noise Cancelling wireless headphones deliver on that promise all day—and longer, while sparing you the unwanted noises. With up to 70 hours of battery life, you’ll easily get through a busy week of using them and still have enough JBL Pure Bass Sound to get you through the weekend. And if you do need a quick recharge, 5 minutes gets you an extra 3 hours of music. Lightweight, and flat-folding, the JBL Tune 770NC can also connect with two Bluetooth® devices simultaneously, so you’ll never miss a call while watching a movie on your tablet. With the free JBL Headphones app, you can tailor the sound to suit your taste. And voice prompts in your language will guide you through the features. Manage your calls and your voice assistant hassle-free right from your phone and use VoiceAware to hear yourself when you’re speaking. Just choose the color that best suits your vibe, and start having fun."
+   }
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://www.classic-phones.com/policies/shipping-policy",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:25:49+00:00",
+   "sha256": "87862eb9cdc7fb9509581d5bdb372f4a8b1d35a09ebeaea170c1e7acd1819f95",
+   "excerpt": "Shipping policy\nSkip to content\nDelivery Available All Over Lebanon\nFacebook\nInstagram\nShop All\nCameras\nCameras\nGo to Cameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nLaptops\nLaptops\nGo to Laptops\nMacbook\nNew\nUsed\nTablets\nTablets\nGo to Tablets\nApple\nSamsung\nXiaomi\nBlackview\nModio\nSmart Watch\nSmart Watch\nGo to Smart Watch\nApple\nSamsung\nFitbit\nHuawei\nAmazfit\nXiaomi\nGreen Lion\nProdo\nKieslect\nAccessories\nAccessories\nGo to Accessories\nAdapters & Cables\nStorage\nKids\nScooters\nGaming\nGaming\nGo to Gaming\nNintendo\nPS\nXBOX\nOthers\nPersonal Care\nPersonal Care\nGo to Personal Care\nHome Accessories\nPerfume\nMassage\nOthers\nTech Gadgets\nTech Gadgets\nGo to Tech Gadgets\nKits (Cleaning, Repair...)\nPower Devices\nSmart Devices\nRouters\nBags\nKindle\nStands\nCalculator\nHandy Phones\nAudio\nAudio\nGo to Audio\nEarphones\nSpeakers\nHeadphones\nEarbuds\nMicrophones\nCases\nCases\nGo to Cases\nApple\nSamsung\nOthers\nWatch Accessories\nKeyboards & Mouses\nOthers\nBlogs\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nLebanon\nFast Delivery\nFacebook\nInstagram\nLog in\nSearch\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nSearch\nLog in\n0\n00 items\nSubtotal\n$0\nShop All\nCameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nGo to Cameras\nLaptops\nMacbook\nNew\nUsed\nGo to Laptops\nTablets\nApple\nSamsung\nXiaomi\nBlack",
+   "quoted": []
+  },
+  {
+   "obs": "P8",
+   "kind": "product",
+   "url": "https://phonefinity.net/products/sony-wh-ch720n-wireless-noise-cancelling-headphones/",
+   "shop_id": "phonefinity",
+   "observed_at": "2026-11-28T05:25:43+00:00",
+   "sha256": "d5f038760ed0cbfee389177c6380be4082768636eafb087874fd4402acd40c54",
+   "product": {
+    "shop": "Phonefinity",
+    "shop_id": "phonefinity",
+    "title": "Sony WH-CH720N Wireless Noise Cancelling Headphones",
+    "url": "https://phonefinity.net/products/sony-wh-ch720n-wireless-noise-cancelling-headphones/",
+    "vendor": null,
+    "product_type": null,
+    "condition": null,
+    "source": "woo_store_api",
+    "observed_at": "2026-11-28T05:25:43+00:00",
+    "variants": [
+     {
+      "variant_id": "85364",
+      "title": "Color: Black",
+      "options": {
+       "Color": "black"
+      },
+      "price": "90.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/sony-wh-ch720n-wireless-noise-cancelling-headphones/?attribute_pa_color=black"
+     },
+     {
+      "variant_id": "85365",
+      "title": "Color: Blue",
+      "options": {
+       "Color": "blue"
+      },
+      "price": "90.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/sony-wh-ch720n-wireless-noise-cancelling-headphones/?attribute_pa_color=blue"
+     },
+     {
+      "variant_id": "85366",
+      "title": "Color: Pink",
+      "options": {
+       "Color": "pink"
+      },
+      "price": "90.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/sony-wh-ch720n-wireless-noise-cancelling-headphones/?attribute_pa_color=pink"
+     },
+     {
+      "variant_id": "85367",
+      "title": "Color: White",
+      "options": {
+       "Color": "white"
+      },
+      "price": "90.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/sony-wh-ch720n-wireless-noise-cancelling-headphones/?attribute_pa_color=white"
+     }
+    ],
+    "description": "Up to 35-hour battery life\nSuper comfortable and lightweight design.\nAdjustable Ambient Sound mode and Adaptive\nCrystal clear hands free calling\nWH-CH720N\nEnjoy all-day comfort without the noise\nWireless Noise Canceling Headphones\nNoise canceling to the next level\nDual Noise Sensor Technology and an Integrated Processor V1 takes noise canceling to the next level. Now you can fully immerse yourself in the music.\nComfortable, lightweight design\nThe WH-CH720 is Sony’s lightest wireless noise-canceling headphones yet. Featuring a slimmer, more lightweight headband, these headphones have been re-structured to create more space and comfort for the ears. Making them the ideal headphones to work from home or watch your favorite movie.\nListen longer\nKeep your music playing all day with a battery life that delivers up to 35 hours of power. USB Type-C quick charging gives up to 60 mins of play back from 3 minutes of charge.\nAdjustable Ambient Sound mode\nAdjustable Ambient Sound mode offers 20 level settings. Listen to your music with incredible sound quality while still hearing sounds like traffic noise, café conversations, and transport announcements. The “Focus on Voice” chat allows you to chat freely without removing your headphones.\nMultipoint connection\nFor total convenience, these Bluetooth headphones can be paired with two Bluetooth devices at the same time. You’ll be able to quickly switch your headphones to either of the two devices at the touch of a button, making the CH720N t",
+    "extra": {
+     "attributes": {
+      "Color": [
+       "Black",
+       "Blue",
+       "Pink",
+       "White"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://corexlb.net/",
+   "shop_id": "corex",
+   "observed_at": "2026-11-28T05:25:49+00:00",
+   "sha256": "7fe64b83c18928b2919d496d8e29413ab835246796c404184462a9673c0d3a61",
+   "excerpt": "COREX\nSkip to content\nHOCO · Anker · Green Lion · Acefast · Porodo\nSame-day dispatch on orders before 3pm\nCOREX\nShop all\nCharging\nCases & Protection\nSound & Audio\nWatches & Accessories\nCar & Moto\nCreator kit\nComputer\nLifestyle & More\nHome & Office\nBy device\niPhone 17 series\niPhone 16 Pro Max\niPhone 15 Pro Max\nGalaxy S26 Ultra\nGalaxy S25 Ultra\nGalaxy Z Fold 7\nAll devices\nCharging\nAudio\nTop sellers\nContact\nSearch\nShop all\nShow Shop all submenu\nCharging\nCases & Protection\nSound & Audio\nWatches & Accessories\nCar & Moto\nCreator kit\nComputer\nLifestyle & More\nHome & Office\nBy device\nShow By device submenu\niPhone 17 series\niPhone 16 Pro Max\niPhone 15 Pro Max\nGalaxy S26 Ultra\nGalaxy S25 Ultra\nGalaxy Z Fold 7\nAll devices\nCharging\nAudio\nTop sellers\nContact\nMore\nSearch\nAccount\nCart\n0\nPhone & tech accessories\nGear\nthat\nkeeps\nup\nCases, charging, audio and creator kit from HOCO, Anker, Green Lion, Acefast and Porodo. Delivered anywhere in Lebanon.\nShop allFind your phone\n24hDispatch\n7 daysReturns\nCODPay on delivery\nFast delivery\nAll over Lebanon\nCash on delivery\nPay when it arrives\nGenuine brands\nHOCO, Anker, Green Lion\nWhatsApp support\nWe reply fast\nFind your fit\nShop by device\niPhone\nSamsung\n‹\n›\nGalaxy A371\nGalaxy A571\nGalaxy S23 Ultra2\nGalaxy S24 Ultra3\nGalaxy S252\nGalaxy S25 Ultra14\nGalaxy S25+5\nGalaxy S262\nGalaxy S26 Ultra25\nGalaxy Z Flip 73\nGalaxy Z Fold 78\nGalaxy Z Fold 88\nGalaxy Z Fold 8 Ultra8\niPhone 1111\niPhone 11 Pro11\niPhone 11 Pro Max11\niPhone 1218\niPhone 12 mini9\niPhone 12 Pro",
+   "quoted": []
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://phonefinity.net/",
+   "shop_id": "phonefinity",
+   "observed_at": "2026-11-28T05:25:50+00:00",
+   "sha256": "f8d3d0d308d65dc3339125618542e1b360c929f358880845bb182ff519497c6f",
+   "excerpt": "Phonefinity.net: Genuine Products. Quality Service.\nSkip to content\n[email protected]\nOnline Only | Cash on Delivery\nOnline Only | Cash on Delivery\nSearch for:\nLogin / Register\nCart\n0\nNo products in the cart.\nReturn to shop\nSearch for:\n0\nCart\nNo products in the cart.\nReturn to shop\nPhones\nTablets\nApple iPads\nAndroid Tablets\nAmazon Kindles\nMacbooks\nSmart\nSmart Watches & Bands\nSmart Scales\nSmart Display\nAudio\nEarphones\nHeadphones\nSpeakers\nMicrophones\nMedia Streaming\nGaming\nPlayStation\nNintendo Switch\nNetworking\nCameras\nAccessories\nCables\nChargers & Power Banks\nMobile & Tablet Covers\nMobile Accessories\nComputer Accessories\nSleeves, Carrying Cases & Backpacks\nUSB Hubs\nPRELOVED\nFilter\nNew\nPower\nAnker Prime Charger (160W, 3 Ports, Smart Display)\n$132\nNew\nPower\nAnker Prime Power Bank (26K, 300W)\n$176\nNew\nPower\nAnker Prime Wireless Charging Base (100W, 3 Ports)\n$65\nEarphones\nApple AirPods 5\n$140 – $165Price range: $140 through $165\nNew\nApple iPads\nApple iPad mini (2026)\n$820 – $920Price range: $820 through $920\nPhones\nApple iPhone 18 Pro\n$1,550 – $1,825Price range: $1,550 through $1,825\nPhones\nApple iPhone 18 Pro Max\n$1,700 – $2,000Price range: $1,700 through $2,000\nSmart Watches & Bands\nApple Watch Series 12\n$440 – $490Price range: $440 through $490\nSmart Watches & Bands\nApple Watch Ultra 4\n$850 – $1,000Price range: $850 through $1,000\nEarphones\nCMF by Nothing Buds Neo\n$50\nEarphones\nCMF Clip Pro\n$110\nNetworking\nDeco XE75 Pro\n$154 – $374Price range: $154 through $374\nCameras\nDJI OSMO",
+   "quoted": [
+    {
+     "quote": "Outside Beirut: 5$, in 2-4 business days",
+     "found": true
+    },
+    {
+     "quote": "Outside Beirut: 5$, in 2-4 business days",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "P9",
+   "kind": "product",
+   "url": "https://najemstarcall.com/product/sony-wh-ch720n-noise-canceling-wireless-headphones/",
+   "shop_id": "najem_star",
+   "observed_at": "2026-11-28T05:25:46+00:00",
+   "sha256": "bafcb5a49a909681e831182f693efb7d9a16fb29c66bf4a31fd28b98e3292d2e",
+   "product": {
+    "shop": "Najem Star Call",
+    "shop_id": "najem_star",
+    "title": "Sony WH-CH720N Noise Canceling Wireless Headphones",
+    "url": "https://najemstarcall.com/product/sony-wh-ch720n-noise-canceling-wireless-headphones/",
+    "vendor": null,
+    "product_type": null,
+    "condition": null,
+    "source": "woo_store_api",
+    "observed_at": "2026-11-28T05:25:46+00:00",
+    "variants": [
+     {
+      "variant_id": "111182",
+      "title": "Color: Pink",
+      "options": {
+       "Color": "pink"
+      },
+      "price": "85.00",
+      "compare_at": "90.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": "In stock",
+      "sku": null,
+      "url": "https://najemstarcall.com/product/sony-wh-ch720n-noise-canceling-wireless-headphones/?attribute_pa_color=pink"
+     },
+     {
+      "variant_id": "42914",
+      "title": "Color: Black",
+      "options": {
+       "Color": "black"
+      },
+      "price": "85.00",
+      "compare_at": "90.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": "In stock",
+      "sku": "sony-ch720n-blk-34523945",
+      "url": "https://najemstarcall.com/product/sony-wh-ch720n-noise-canceling-wireless-headphones/?attribute_pa_color=black"
+     },
+     {
+      "variant_id": "42915",
+      "title": "Color: Blue",
+      "options": {
+       "Color": "blue"
+      },
+      "price": "85.00",
+      "compare_at": "90.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": "In stock",
+      "sku": "sony-ch720n-blue-34523945",
+      "url": "https://najemstarcall.com/product/sony-wh-ch720n-noise-canceling-wireless-headphones/?attribute_pa_color=blue"
+     },
+     {
+      "variant_id": "42916",
+      "title": "Color: White",
+      "options": {
+       "Color": "white"
+      },
+      "price": "85.00",
+      "compare_at": "90.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": "In stock",
+      "sku": "sony-ch720n-white-34523945",
+      "url": "https://najemstarcall.com/product/sony-wh-ch720n-noise-canceling-wireless-headphones/?attribute_pa_color=white"
+     }
+    ],
+    "description": "Sony’s lightest Wireless Noise-canceling headband ever.\nTake noise canceling to the next level with Sony’s Integrated Processor V1, so you can fully immerse yourself in the music.\nSuper comfortable and lightweight design.\nAdjustable Ambient Sound mode and Adaptive Sound control features.\nUp to 35-hour battery life with quick charging (3 min charge for up to 1 hour of playback).\nHigh sound quality and well-balanced sound tuning.\nCrystal clear hands-free calling and voice assistant with Precise Voice Pickup technology.\nMultipoint connection allows you to quickly switch between two devices at once.\nBoost the quality of compressed music files and enjoy streaming music with high quality sound through DSEE.\nAlexa enabled for voice access to music, information, and more. Activate with a simple touch.\nSony WH-CH720N Noise Canceling Wireless Headphones – Integrated Processor V1 | 35-Hour Battery | Multipoint | Fast Delivery Lebanon\nImmerse yourself in music with the Sony WH-CH720N Noise Canceling Wireless Headphones. Sony’s lightest wireless noise-canceling headband ever features an Integrated Processor V1 that takes noise canceling to the next level, so you can focus entirely on your audio. The super comfortable, lightweight design is perfect for working from home or watching your favorite movie. With up to 35-hour battery life and quick charging (3 minutes for up to 1 hour of playback), these headphones keep up with your day. Crystal clear hands-free calling, multipoint connection, ",
+    "extra": {
+     "attributes": {
+      "Color": [
+       "Black",
+       "Blue",
+       "Pink",
+       "White"
+      ],
+      "Brand": [
+       "Sony"
+      ],
+      "Condition": [
+       "Brand New"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "obs": "P10",
+   "kind": "product",
+   "url": "https://wincell.store/products/sony-wh-ch720n-wireless-noise-cancelling-over-ear-headphones-black",
+   "shop_id": "wincell",
+   "observed_at": "2026-11-28T05:25:59+00:00",
+   "sha256": "0bd3145140471d0d19a707f16dc59a6d7f5f8e84c8e766594ab97fcd99a37383",
+   "product": {
+    "shop": "WinCell",
+    "shop_id": "wincell",
+    "title": "Sony WH-CH720N Wireless Noise Cancelling Over-Ear Headphones – Black",
+    "url": "https://wincell.store/products/sony-wh-ch720n-wireless-noise-cancelling-over-ear-headphones-black",
+    "vendor": "Sony",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:25:59+00:00",
+    "variants": [
+     {
+      "variant_id": "53481556214058",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "115.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://wincell.store/products/sony-wh-ch720n-wireless-noise-cancelling-over-ear-headphones-black?variant=53481556214058"
+     }
+    ],
+    "description": "Sony WH-CH720N Wireless Noise Cancelling Over-Ear Headphones – Black\nExperience exceptional sound, comfort, and advanced noise cancellation with the Sony WH-CH720N wireless headphones. Featuring Sony's Integrated Processor V1 and Dual Noise Sensor technology, these headphones deliver effective noise cancelling, allowing you to enjoy your music without distractions. Equipped with 30mm drivers and DSEE technology, they provide rich, detailed sound with enhanced audio quality. Enjoy up to 35 hours of battery life with noise cancelling enabled and up to 50 hours with ANC turned off. With Bluetooth 5.2 connectivity, multipoint connection, and Ambient Sound Mode, you can easily switch between devices and stay aware of your surroundings. Weighing only 192g, their lightweight and comfortable over-ear design makes them perfect for travel, work, studying, and everyday entertainment.\nKey Features:\nActive Noise Cancelling (ANC)\nSony Integrated Processor V1\nDual Noise Sensor technology\n30mm dynamic drivers\nDSEE sound enhancement technology\nUp to 50 hours of battery life"
+   }
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://wincell.store/products/belkin-boostcharge-compact-charger-20w-usb-c-power-delivery-fast-charger-power",
+   "shop_id": "wincell",
+   "observed_at": "2026-11-28T05:25:59+00:00",
+   "sha256": "43e1f1ccb06a73cbda94597ecc7acebf2be44e09f598f47969d3073c57e4ac43",
+   "excerpt": "Belkin BoostCharge Compact Charger (20W) USB-C Power Delivery Fast Cha – WinCell\nSkip to content\nHappy Independence Day, Lebanon\n/\n83 years of independence\nOrder by 22 December for delivery before Christmas/\nMerry Christmas from all of us at Win Cell\nBlack Friday ends in\nBlack Friday is over. Thank you, Lebanon.\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nHome\nOur story\nShop\nShop by category\n00\nAll products\n464\nAll products\n01\nPhones\n18\nPhones\n02\nAudio\n107\nAudio\n03\nwatches & gadgets\n166\nwatches & gadgets\n04\nchargers & power\n88\nchargers & powe",
+   "quoted": []
+  },
+  {
+   "obs": "P11",
+   "kind": "product",
+   "url": "https://phonefinity.net/products/sony-wh-ch720n-wireless-noise-cancelling-headphones/",
+   "shop_id": "phonefinity",
+   "observed_at": "2026-11-28T05:25:59+00:00",
+   "sha256": "d5f038760ed0cbfee389177c6380be4082768636eafb087874fd4402acd40c54",
+   "product": {
+    "shop": "Phonefinity",
+    "shop_id": "phonefinity",
+    "title": "Sony WH-CH720N Wireless Noise Cancelling Headphones",
+    "url": "https://phonefinity.net/products/sony-wh-ch720n-wireless-noise-cancelling-headphones/",
+    "vendor": null,
+    "product_type": null,
+    "condition": null,
+    "source": "woo_store_api",
+    "observed_at": "2026-11-28T05:25:59+00:00",
+    "variants": [
+     {
+      "variant_id": "85364",
+      "title": "Color: Black",
+      "options": {
+       "Color": "black"
+      },
+      "price": "90.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/sony-wh-ch720n-wireless-noise-cancelling-headphones/?attribute_pa_color=black"
+     },
+     {
+      "variant_id": "85365",
+      "title": "Color: Blue",
+      "options": {
+       "Color": "blue"
+      },
+      "price": "90.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/sony-wh-ch720n-wireless-noise-cancelling-headphones/?attribute_pa_color=blue"
+     },
+     {
+      "variant_id": "85366",
+      "title": "Color: Pink",
+      "options": {
+       "Color": "pink"
+      },
+      "price": "90.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/sony-wh-ch720n-wireless-noise-cancelling-headphones/?attribute_pa_color=pink"
+     },
+     {
+      "variant_id": "85367",
+      "title": "Color: White",
+      "options": {
+       "Color": "white"
+      },
+      "price": "90.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/sony-wh-ch720n-wireless-noise-cancelling-headphones/?attribute_pa_color=white"
+     }
+    ],
+    "description": "Up to 35-hour battery life\nSuper comfortable and lightweight design.\nAdjustable Ambient Sound mode and Adaptive\nCrystal clear hands free calling\nWH-CH720N\nEnjoy all-day comfort without the noise\nWireless Noise Canceling Headphones\nNoise canceling to the next level\nDual Noise Sensor Technology and an Integrated Processor V1 takes noise canceling to the next level. Now you can fully immerse yourself in the music.\nComfortable, lightweight design\nThe WH-CH720 is Sony’s lightest wireless noise-canceling headphones yet. Featuring a slimmer, more lightweight headband, these headphones have been re-structured to create more space and comfort for the ears. Making them the ideal headphones to work from home or watch your favorite movie.\nListen longer\nKeep your music playing all day with a battery life that delivers up to 35 hours of power. USB Type-C quick charging gives up to 60 mins of play back from 3 minutes of charge.\nAdjustable Ambient Sound mode\nAdjustable Ambient Sound mode offers 20 level settings. Listen to your music with incredible sound quality while still hearing sounds like traffic noise, café conversations, and transport announcements. The “Focus on Voice” chat allows you to chat freely without removing your headphones.\nMultipoint connection\nFor total convenience, these Bluetooth headphones can be paired with two Bluetooth devices at the same time. You’ll be able to quickly switch your headphones to either of the two devices at the touch of a button, making the CH720N t",
+    "extra": {
+     "attributes": {
+      "Color": [
+       "Black",
+       "Blue",
+       "Pink",
+       "White"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "obs": "P12",
+   "kind": "product",
+   "url": "https://najemstarcall.com/product/sony-wh-ch720n-noise-canceling-wireless-headphones/",
+   "shop_id": "najem_star",
+   "observed_at": "2026-11-28T05:25:59+00:00",
+   "sha256": "bafcb5a49a909681e831182f693efb7d9a16fb29c66bf4a31fd28b98e3292d2e",
+   "product": {
+    "shop": "Najem Star Call",
+    "shop_id": "najem_star",
+    "title": "Sony WH-CH720N Noise Canceling Wireless Headphones",
+    "url": "https://najemstarcall.com/product/sony-wh-ch720n-noise-canceling-wireless-headphones/",
+    "vendor": null,
+    "product_type": null,
+    "condition": null,
+    "source": "woo_store_api",
+    "observed_at": "2026-11-28T05:25:59+00:00",
+    "variants": [
+     {
+      "variant_id": "111182",
+      "title": "Color: Pink",
+      "options": {
+       "Color": "pink"
+      },
+      "price": "85.00",
+      "compare_at": "90.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": "In stock",
+      "sku": null,
+      "url": "https://najemstarcall.com/product/sony-wh-ch720n-noise-canceling-wireless-headphones/?attribute_pa_color=pink"
+     },
+     {
+      "variant_id": "42914",
+      "title": "Color: Black",
+      "options": {
+       "Color": "black"
+      },
+      "price": "85.00",
+      "compare_at": "90.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": "In stock",
+      "sku": "sony-ch720n-blk-34523945",
+      "url": "https://najemstarcall.com/product/sony-wh-ch720n-noise-canceling-wireless-headphones/?attribute_pa_color=black"
+     },
+     {
+      "variant_id": "42915",
+      "title": "Color: Blue",
+      "options": {
+       "Color": "blue"
+      },
+      "price": "85.00",
+      "compare_at": "90.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": "In stock",
+      "sku": "sony-ch720n-blue-34523945",
+      "url": "https://najemstarcall.com/product/sony-wh-ch720n-noise-canceling-wireless-headphones/?attribute_pa_color=blue"
+     },
+     {
+      "variant_id": "42916",
+      "title": "Color: White",
+      "options": {
+       "Color": "white"
+      },
+      "price": "85.00",
+      "compare_at": "90.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": "In stock",
+      "sku": "sony-ch720n-white-34523945",
+      "url": "https://najemstarcall.com/product/sony-wh-ch720n-noise-canceling-wireless-headphones/?attribute_pa_color=white"
+     }
+    ],
+    "description": "Sony’s lightest Wireless Noise-canceling headband ever.\nTake noise canceling to the next level with Sony’s Integrated Processor V1, so you can fully immerse yourself in the music.\nSuper comfortable and lightweight design.\nAdjustable Ambient Sound mode and Adaptive Sound control features.\nUp to 35-hour battery life with quick charging (3 min charge for up to 1 hour of playback).\nHigh sound quality and well-balanced sound tuning.\nCrystal clear hands-free calling and voice assistant with Precise Voice Pickup technology.\nMultipoint connection allows you to quickly switch between two devices at once.\nBoost the quality of compressed music files and enjoy streaming music with high quality sound through DSEE.\nAlexa enabled for voice access to music, information, and more. Activate with a simple touch.\nSony WH-CH720N Noise Canceling Wireless Headphones – Integrated Processor V1 | 35-Hour Battery | Multipoint | Fast Delivery Lebanon\nImmerse yourself in music with the Sony WH-CH720N Noise Canceling Wireless Headphones. Sony’s lightest wireless noise-canceling headband ever features an Integrated Processor V1 that takes noise canceling to the next level, so you can focus entirely on your audio. The super comfortable, lightweight design is perfect for working from home or watching your favorite movie. With up to 35-hour battery life and quick charging (3 minutes for up to 1 hour of playback), these headphones keep up with your day. Crystal clear hands-free calling, multipoint connection, ",
+    "extra": {
+     "attributes": {
+      "Color": [
+       "Black",
+       "Blue",
+       "Pink",
+       "White"
+      ],
+      "Brand": [
+       "Sony"
+      ],
+      "Condition": [
+       "Brand New"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "obs": "T6",
+   "kind": "page",
+   "url": "https://phonefinity.net/",
+   "shop_id": "phonefinity",
+   "observed_at": "2026-11-28T05:26:11+00:00",
+   "sha256": "8eae4d81dc76ca5a3d6191ab23ad9634294d83ed96561fbb2bab7a01327b1b6b",
+   "excerpt": "Phonefinity.net: Genuine Products. Quality Service.\nSkip to content\n[email protected]\nOnline Only | Cash on Delivery\nOnline Only | Cash on Delivery\nSearch for:\nLogin / Register\nCart\n0\nNo products in the cart.\nReturn to shop\nSearch for:\n0\nCart\nNo products in the cart.\nReturn to shop\nPhones\nTablets\nApple iPads\nAndroid Tablets\nAmazon Kindles\nMacbooks\nSmart\nSmart Watches & Bands\nSmart Scales\nSmart Display\nAudio\nEarphones\nHeadphones\nSpeakers\nMicrophones\nMedia Streaming\nGaming\nPlayStation\nNintendo Switch\nNetworking\nCameras\nAccessories\nCables\nChargers & Power Banks\nMobile & Tablet Covers\nMobile Accessories\nComputer Accessories\nSleeves, Carrying Cases & Backpacks\nUSB Hubs\nPRELOVED\nFilter\nNew\nPower\nAnker Prime Charger (160W, 3 Ports, Smart Display)\n$132\nNew\nPower\nAnker Prime Power Bank (26K, 300W)\n$176\nNew\nPower\nAnker Prime Wireless Charging Base (100W, 3 Ports)\n$65\nEarphones\nApple AirPods 5\n$140 – $165Price range: $140 through $165\nNew\nApple iPads\nApple iPad mini (2026)\n$820 – $920Price range: $820 through $920\nPhones\nApple iPhone 18 Pro\n$1,550 – $1,825Price range: $1,550 through $1,825\nPhones\nApple iPhone 18 Pro Max\n$1,700 – $2,000Price range: $1,700 through $2,000\nSmart Watches & Bands\nApple Watch Series 12\n$440 – $490Price range: $440 through $490\nSmart Watches & Bands\nApple Watch Ultra 4\n$850 – $1,000Price range: $850 through $1,000\nEarphones\nCMF by Nothing Buds Neo\n$50\nEarphones\nCMF Clip Pro\n$110\nNetworking\nDeco XE75 Pro\n$154 – $374Price range: $154 through $374\nCameras\nDJI OSMO",
+   "quoted": []
+  },
+  {
+   "obs": "T7",
+   "kind": "page",
+   "url": "https://wincell.store/meta.json",
+   "shop_id": "wincell",
+   "observed_at": "2026-11-28T05:26:12+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"WinCell\", \"city\": \"zouk \", \"province\": null, \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"wincell.store\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T8",
+   "kind": "page",
+   "url": "https://najemstarcall.com/",
+   "shop_id": "najem_star",
+   "observed_at": "2026-11-28T05:26:12+00:00",
+   "sha256": "6c817010537c1ba6faf81c5b55b6beb2e9cf169854754d13a5d30ffb29f761e5",
+   "excerpt": "Best Phone Store in Lebanon | Najem Starcall\n★ BLACK WEEKEND IS LIVE – special prices on selected itemsShop Black Weekend\nSkip to content\nAll\nAirPods Case\nBOYA\nCameras & imaging\nCar Accessories\nCoffee Lovers\nComputer & Accessories\nFitness & Mobility\nGaming\nGolden Numbers\nHeadphones and Earbuds\nHealth and Beauty\nHome & Living\nHome Appliances\nHome Audio and Video\nHome Networking\nkids Toys\nLaptops\nMobile Accessories\nMobile Phones\nOther Products\nPet Supplies\nPrinter\nSecurity Camera\nSmart Projector\nSmart Speakers\nSmartwatch\nSmartwatch Charger\nSmartwatch Screen Protector\nTablet & iPad Accessories\nTablets\nUsed\nVoice Recorder\nWalkie-Talkie\nWatch Band\nWatch Case\nSearch for:\nCart\nNo products in the cart.\nReturn to shop\nHome\nMobile Phones\nApple\nSamsung\nXiaomi\nRedmi\nRealme\nHonor\nTecno\nInfinix\nZTE\nBlackview\nOscal Phones\nOppo\nGoogle\nNothing\nMotorola\nIIIF150\nHuawei\nPhilips\nMobile Accessories\nAdapters & Cables\nWireless Chargers\nPower Bank\nStands\nMobile Cases\nSmartwatch\nApple\nSamsung\nHuawei\nAmazfit\nXiaomi\nBlack Shark Smartwatch\nGreen Lion Smartwatch\nKieslect\nHaylou\nPromate\nMibro\nSwiss Military\nBlackview\nInfinix Smartwatch\nTecno\nHonor\nPorodo\nHifuture\nwhoop\nSmartwatch Screen Protector\nWatch Band\nWatch Case\nHeadphones and Earbuds\nApple\nSamsung\nSony\nBeats\nBose\nJBL\nSoundcore\nHuawei\nGreen Lion\nXundd\nBelkin\nHaylou\nDenon\nGoogle\nBlackview Earbuds\nBlack Shark Earbuds\nAcefast\nAudio Accessories\nAirPods Case\nTablets\nApple iPad\nSamsung Tab\nXiaomi\nHonor\nBlackview\nOscal\nGreen Lion\nAmazon\nBlack Shark Tablets\n",
+   "quoted": []
+  },
+  {
+   "obs": "T9",
+   "kind": "page",
+   "url": "https://wincell.store/",
+   "shop_id": "wincell",
+   "observed_at": "2026-11-28T05:26:12+00:00",
+   "sha256": "2196201a6325edd6f6d39fcb0035d87226900154b65912056430f5542eea5049",
+   "excerpt": "Win Cell | Phones, Accessories & more in Kaslik\nSkip to content\nHappy Independence Day, Lebanon\n/\n83 years of independence\nOrder by 22 December for delivery before Christmas/\nMerry Christmas from all of us at Win Cell\nBlack Friday ends in\nBlack Friday is over. Thank you, Lebanon.\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nHome\nOur story\nShop\nShop by category\n00\nAll products\n464\nAll products\n01\nPhones\n18\nPhones\n02\nAudio\n107\nAudio\n03\nwatches & gadgets\n166\nwatches & gadgets\n04\nchargers & power\n88\nchargers & power\n05\ncases\n40\ncases\n06\nGaming\n27\n",
+   "quoted": [
+    {
+     "quote": "Delivery across Lebanon",
+     "found": true
+    },
+    {
+     "quote": "Delivery across Lebanon",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T10",
+   "kind": "page",
+   "url": "https://najemstarcall.com/product/sony-wh-ch720n-noise-canceling-wireless-headphones/",
+   "shop_id": "najem_star",
+   "observed_at": "2026-11-28T05:26:14+00:00",
+   "sha256": "009beee0a9b7d794f3dbcd92b146d5eda8e5b3a39a79124d56ede4fec0b1e868",
+   "excerpt": "Sony WH-CH720N Headphones Lebanon | Noise Canceling\n★ BLACK WEEKEND IS LIVE – special prices on selected itemsShop Black Weekend\nSkip to content\nAll\nAirPods Case\nBOYA\nCameras & imaging\nCar Accessories\nCoffee Lovers\nComputer & Accessories\nFitness & Mobility\nGaming\nGolden Numbers\nHeadphones and Earbuds\nHealth and Beauty\nHome & Living\nHome Appliances\nHome Audio and Video\nHome Networking\nkids Toys\nLaptops\nMobile Accessories\nMobile Phones\nOther Products\nPet Supplies\nPrinter\nSecurity Camera\nSmart Projector\nSmart Speakers\nSmartwatch\nSmartwatch Charger\nSmartwatch Screen Protector\nTablet & iPad Accessories\nTablets\nUsed\nVoice Recorder\nWalkie-Talkie\nWatch Band\nWatch Case\nSearch for:\nCart\nNo products in the cart.\nReturn to shop\nHome\nMobile Phones\nApple\nSamsung\nXiaomi\nRedmi\nRealme\nHonor\nTecno\nInfinix\nZTE\nBlackview\nOscal Phones\nOppo\nGoogle\nNothing\nMotorola\nIIIF150\nHuawei\nPhilips\nMobile Accessories\nAdapters & Cables\nWireless Chargers\nPower Bank\nStands\nMobile Cases\nSmartwatch\nApple\nSamsung\nHuawei\nAmazfit\nXiaomi\nBlack Shark Smartwatch\nGreen Lion Smartwatch\nKieslect\nHaylou\nPromate\nMibro\nSwiss Military\nBlackview\nInfinix Smartwatch\nTecno\nHonor\nPorodo\nHifuture\nwhoop\nSmartwatch Screen Protector\nWatch Band\nWatch Case\nHeadphones and Earbuds\nApple\nSamsung\nSony\nBeats\nBose\nJBL\nSoundcore\nHuawei\nGreen Lion\nXundd\nBelkin\nHaylou\nDenon\nGoogle\nBlackview Earbuds\nBlack Shark Earbuds\nAcefast\nAudio Accessories\nAirPods Case\nTablets\nApple iPad\nSamsung Tab\nXiaomi\nHonor\nBlackview\nOscal\nGreen Lion\nAmazon\nBlack Shark T",
+   "quoted": []
+  }
+ ]
+}

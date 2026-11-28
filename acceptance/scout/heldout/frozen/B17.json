@@ -1,0 +1,555 @@
+{
+ "run_id": "scout-b17-20261128T051653",
+ "request": {
+  "id": "B17",
+  "text": "Find me a new Samsung Odyssey G5 G55C 27-inch curved 165 Hz monitor for delivery to Tripoli.",
+  "mode": "delivery",
+  "destination": "Tripoli",
+  "category": "monitor",
+  "run_id": "scout-b17-20261128T051653"
+ },
+ "status": "offers",
+ "message": "Abed Tahan lists the matching 27-inch curved 165 Hz monitor (SKU LS27CG552EM) at $239.00, available online.\nHowever, the listing does not explicitly confirm new condition, and I could not verify delivery to Tripoli or its fee.\nTreat this as a candidate rather than a fully confirmed match: confirm it is brand new and check Tripoli delivery terms on the shop’s site before ordering.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "best",
+   "shop": "Abed Tahan",
+   "shop_id": "abed_tahan",
+   "title": "SAMSUNG QHD 27\" 165HZ CURVED GAMING - MONITOR",
+   "variant": "Default Title",
+   "url": "https://abedtahan.com/products/samsung-qhd-27-165hz-curved-gaming-monitor?variant=44234065805491",
+   "price": "239.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "exact",
+   "identity_reason": "The LS27CG552EM SKU identifies the 27-inch Odyssey G5 G55C; the title confirms 27-inch, curved and 165 Hz.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "Samsung Odyssey G5 G55C",
+     "status": "met",
+     "quote": "MTR-SMSG-LS27CG552EM",
+     "obs": "P6",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "27-inch curved 165 Hz monitor",
+     "status": "met",
+     "quote": "SAMSUNG QHD 27\" 165HZ CURVED GAMING - MONITOR",
+     "obs": "P6",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Tripoli",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P6",
+     "url": "https://abedtahan.com/products/samsung-qhd-27-165hz-curved-gaming-monitor",
+     "read": "https://abedtahan.com/products/samsung-qhd-27-165hz-curved-gaming-monitor.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:17:41+00:00",
+     "sha256": "5a1b6eccc2eb6a5f61788874257897e780fdbf0a5b234b4136edbcbab200c380"
+    }
+   ],
+   "seller_basis": "Abed Tahan: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P6",
+   "variant_id": "44234065805491",
+   "identity": "exact",
+   "identity_reason": "The LS27CG552EM SKU identifies the 27-inch Odyssey G5 G55C; the title confirms 27-inch, curved and 165 Hz.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "Samsung Odyssey G5 G55C",
+     "status": "met",
+     "evidence_obs": "P6",
+     "quote": "MTR-SMSG-LS27CG552EM"
+    },
+    {
+     "requirement": "27-inch curved 165 Hz monitor",
+     "status": "met",
+     "evidence_obs": "P6",
+     "quote": "SAMSUNG QHD 27\" 165HZ CURVED GAMING - MONITOR"
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Delivery to Tripoli",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": null,
+   "delivery_quote": null,
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "",
+   "at_s": 8.7,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "Samsung G55C 27"
+    },
+    {
+     "tool": "search",
+     "query": "Samsung Odyssey G5 165"
+    },
+    {
+     "tool": "search",
+     "query": "LS27CG55"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Check likely exact Abed Tahan listing and broaden model code searches.",
+   "at_s": 47.5,
+   "calls": [
+    {
+     "tool": "open",
+     "url": "https://abedtahan.com/products/samsung-qhd-27-165hz-curved-gaming-monitor"
+    },
+    {
+     "tool": "search",
+     "query": "G55C"
+    },
+    {
+     "tool": "search",
+     "query": "27CG55"
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "",
+   "at_s": 75.0,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 17500,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 27234,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 29531,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 469,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 14844,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 14985,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 6797,
+   "usage": {
+    "actual_usd": "0.003968",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3223,
+     "output_tokens": 94,
+     "total_tokens": 3317
+    },
+    "latency_ms": 3094,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 9015,
+   "usage": {
+    "actual_usd": "0.012358",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 6479,
+     "output_tokens": 119,
+     "total_tokens": 6598
+    },
+    "latency_ms": 4656,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 12016,
+   "usage": {
+    "actual_usd": "0.020358",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 8731,
+     "output_tokens": 356,
+     "total_tokens": 9087
+    },
+    "latency_ms": 8656,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": true
+  }
+ ],
+ "retailer_requests": 121,
+ "seconds": 75.1,
+ "spend": {
+  "settled_usd": "0.036684",
+  "uncertain_usd": "0",
+  "model_calls": 3,
+  "ledger_job": "scout-b17-20261128T051653"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/samsung-qhd-27-165hz-curved-gaming-monitor",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:17:26+00:00",
+   "sha256": "5a1b6eccc2eb6a5f61788874257897e780fdbf0a5b234b4136edbcbab200c380",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "SAMSUNG QHD 27\" 165HZ CURVED GAMING - MONITOR",
+    "url": "https://abedtahan.com/products/samsung-qhd-27-165hz-curved-gaming-monitor",
+    "vendor": "SAMSUNG",
+    "product_type": "Monitors",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:17:26+00:00",
+    "variants": [
+     {
+      "variant_id": "44234065805491",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "239.00",
+      "compare_at": "239.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "MTR-SMSG-LS27CG552EM",
+      "url": "https://abedtahan.com/products/samsung-qhd-27-165hz-curved-gaming-monitor?variant=44234065805491"
+     }
+    ],
+    "description": "Samsung Qhd 27\" 165Hz Curved Gaming - Monitor"
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/samsung-led-27-144hz-gaming-monitor-black",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:17:26+00:00",
+   "sha256": "95a594c880f9747e12ee6eb4fb85a962710112bc84c5486d919fa05f132b6a2a",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "SAMSUNG LED 27\" 144Hz - Gaming Monitor - Black",
+    "url": "https://abedtahan.com/products/samsung-led-27-144hz-gaming-monitor-black",
+    "vendor": "SAMSUNG",
+    "product_type": "Monitors",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:17:26+00:00",
+    "variants": [
+     {
+      "variant_id": "46552523112627",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "159.00",
+      "compare_at": "159.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "MTR-LS27HG314EMXUE",
+      "url": "https://abedtahan.com/products/samsung-led-27-144hz-gaming-monitor-black?variant=46552523112627"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://www.macrotronics.net/products/samsung-odyssey-g5-27-inch-qhd-180hz-gaming-monitor-ls27dg502emxue",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:17:26+00:00",
+   "sha256": "7f2e2b6514d69414d812ce67f8b26e07fc567ceb1c9769d175b069932b4548d7",
+   "product": {
+    "shop": "Macrotronics",
+    "shop_id": "macrotronics",
+    "title": "Samsung Odyssey G5 27-inch QHD 180Hz Gaming Monitor LS27DG502EMXUE",
+    "url": "https://www.macrotronics.net/products/samsung-odyssey-g5-27-inch-qhd-180hz-gaming-monitor-ls27dg502emxue",
+    "vendor": "Samsung",
+    "product_type": "Computer Monitors",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:17:26+00:00",
+    "variants": [
+     {
+      "variant_id": "54245219664161",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "244.20",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "1008002",
+      "url": "https://www.macrotronics.net/products/samsung-odyssey-g5-27-inch-qhd-180hz-gaming-monitor-ls27dg502emxue?variant=54245219664161"
+     }
+    ],
+    "description": "Screen Size: 27-inch\nResolution: QHD 2560 × 1440\nPanel Type: IPS\nRefresh Rate: 180Hz\nResponse Time: 1ms (GTG)\nBrightness: 350 cd/m²\nContrast Ratio: 1000:1\nHDR: VESA DisplayHDR 400\nColor Gamut: 99% sRGB\nViewing Angle: 178° / 178°\nAMD FreeSync Support\nGaming Features: Black Equalizer, Virtual AIM Point\nConnectivity: 1× HDMI 2.0, 1× DisplayPort 1.2, 1× Headphone Out\nVESA Mount: 100 × 100mm\nAdjustable Stand: Height, Tilt, Swivel & Pivot\nPower Consumption: 48W (Max)"
+   }
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/samsung-led-27-120hz-monitor",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:17:27+00:00",
+   "sha256": "583bd0b63ada000855aaf10c0e1909634221b167e06b0d41ae59b3b404ff6841",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "SAMSUNG LED 27\" 120HZ - MONITOR",
+    "url": "https://abedtahan.com/products/samsung-led-27-120hz-monitor",
+    "vendor": "SAMSUNG",
+    "product_type": "Monitors",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:17:27+00:00",
+    "variants": [
+     {
+      "variant_id": "45232694689971",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "140.00",
+      "compare_at": "140.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "MTR-LS27F320GAMXUE",
+      "url": "https://abedtahan.com/products/samsung-led-27-120hz-monitor?variant=45232694689971"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/samsung-32cg55-32-2k-qhd-165hz-odyssey-g5-curved",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:17:31+00:00",
+   "sha256": "1908f6f4fcf5b9cd4c249468d7166d4c79c2117f4af52b2989df16a1d6ca543c",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "Samsung 32CG55 32\" 2K QHD 165Hz Odyssey G5 Curved",
+    "url": "https://outgeeked.net/products/samsung-32cg55-32-2k-qhd-165hz-odyssey-g5-curved",
+    "vendor": "Samsung",
+    "product_type": "Gaming Monitor",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:17:31+00:00",
+    "variants": [
+     {
+      "variant_id": "50968321786114",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "287.49",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "OG-PC-0785",
+      "url": "https://outgeeked.net/products/samsung-32cg55-32-2k-qhd-165hz-odyssey-g5-curved?variant=50968321786114"
+     }
+    ],
+    "description": "The Samsung 32CG55 32\" 2K QHD 165Hz Odyssey G5 Curved is a 32\" gaming monitor with a 1000R curved VA panel at 2,560 x 1,440. It runs up to 165Hz with a 1 ms (MPRT) response time, supports FreeSync and HDR10, and has a 2,500:1 static contrast ratio.\nIt suits gamers who want a large, sharp screen that fills their view, especially for shooters, racing and open-world games where the high refresh rate and tight curve help. Browse more gaming monitors to compare, and pay cash on delivery across Lebanon.\nHighlights\n32\" curved VA panel with 1000R curvature\n2,560 x 1,440 QHD resolution, 16:9 aspect ratio\nUp to 165Hz refresh rate with 1 ms (MPRT) response time\nFreeSync and HDR10 support\n2,500:1 static contrast and 300 cd/㎡ typical brightness\n1 DisplayPort 1.2, 1 HDMI (version 2) and a headphone output\nBest for\nFast competitive games such as FPS titles, using the 165Hz refresh rate and Low Input Lag Mode\nImmersive racing, RPG and open-world games on a 32\" 1000R curve\nGaming PCs with a graphics card that can push high frame rates at QHD\nLong sessions, with Flicker Free and Eye Saver Mode\nSpecifications\nScreen Curvature\n1000R\nAspect Ratio\n16:9\nBrightness (Typical)\n300 cd/㎡\nContrast Ratio Static\n2,500:1(Typ.)\nResolution\n2,560 x 1,440\nResponse Time\n1 (MPRT)\nViewing Angle (H/V)\n178°(H)/178°(V)\nRefresh Rate\nMax 165Hz\nScreen Size (Class)\n32\"\nFlat / Curved\nCurved\nActive Display Size (HxV) (mm)\n697.344(H)x392.256(V)\nPanel Type\nVA\nBrightness (Min)\n200 cd/㎡\nContrast Ratio (Dynamic)\nMega ∞ DCR\nHDR("
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://www.macrotronics.net/policies/shipping-policy",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:17:33+00:00",
+   "sha256": "e870a838d909ef9d48dbf9dd09e97ded9802ce263bd4b50e521c8fee70519a8d",
+   "excerpt": "Shipping policy – Macrotronics\nSkip to content\nFacebook\nTwitter\nInstagram\nHelpline +961 71 854 621 | +961 9 853 008\nTechnical Support +961 71 94 84 94\nPause slideshow\nPlay slideshow\nComputers\nComputers\nLaptops\nOn-Demand Laptops\nLaptop Power Adapters\nLaptop Accessories\nApple Computers\nApple Accessories\niPads and Tablets\nTablets Accessories\nComputer & Smart Monitors\nMonitor Accessories\nServers, Workstations and NAS\nDesktops and Mini PCs\nPOS and POS Equipment\nOriginal Softwares and Antivirus\nComputer Parts\nComputer Parts\nProcessors\nGraphic Cards\nMotherboards\nRAMs\nSSD\nHDD\nCPU Coolers\nThermal Paste and Pads\nPower Supplies\nComputer Cases\nComputer Case Accessories\nMore PC Components\nLegacy Computer Parts\nUsed Computer Parts\nComputer Peripherals\nComputer Peripherals\nMice & Keyboards\nEarphones & Headphones\nComputer & Bluetooth Speakers\nWebcams & Microphones\nLaptop Bags & Cases\nComputer & Video Cables\nFlash Drives & Memory Cards\nPrinters, Scanners & Faxes\nPaper & Media Supplies\nGenuine Inks & Ribbons\nGenuine Toners & Drums\nCompatible Toners & Drums\nOffice Furniture\nElectronics & More\nElectronics & More\nUPS\nBatteries\nSmart Appliances\nAdapters and Converters\nEducational Electronics\nConsumer Electronics\nSurveillance and Security\nProjectors, Screens and More\nRouters, Repeaters and APs\nNetwork Switches\nNetwork Adapters\nNetworking and Tools\nGaming\nGaming\nGaming PCs\nGaming Monitors\nGaming Headsets\nGaming Pads\nGaming Mice\nGaming Keyboards\nGaming Chairs\nGaming Desks\nGaming Console and VR\nGaming",
+   "quoted": []
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://abedtahan.com/pages/contact",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:17:33+00:00",
+   "sha256": "8e1c32b91cb66cc49825f9af9839b0d540553c574361f5666449bda9d8ee85e6",
+   "excerpt": "Contact\n– Abed Tahan\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & Crepe Makers\nIce Cube, Ice Cream & Yoghurt Makers\nSaj Machines\nL",
+   "quoted": []
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/samsung-qhd-27-165hz-curved-gaming-monitor",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:17:41+00:00",
+   "sha256": "5a1b6eccc2eb6a5f61788874257897e780fdbf0a5b234b4136edbcbab200c380",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "SAMSUNG QHD 27\" 165HZ CURVED GAMING - MONITOR",
+    "url": "https://abedtahan.com/products/samsung-qhd-27-165hz-curved-gaming-monitor",
+    "vendor": "SAMSUNG",
+    "product_type": "Monitors",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:17:41+00:00",
+    "variants": [
+     {
+      "variant_id": "44234065805491",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "239.00",
+      "compare_at": "239.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "MTR-SMSG-LS27CG552EM",
+      "url": "https://abedtahan.com/products/samsung-qhd-27-165hz-curved-gaming-monitor?variant=44234065805491"
+     }
+    ],
+    "description": "Samsung Qhd 27\" 165Hz Curved Gaming - Monitor"
+   }
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/samsung-55crystal-uhd-u8000h-4k-vision-ai-smart-tv",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:17:55+00:00",
+   "sha256": "5e426c1ec08cae96f9f2205358dc8c9242e8d20e63eb956e326a10084d9dbbea",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "SAMSUNG 55\"Crystal UHD U8000H 4K Vision AI Smart TV",
+    "url": "https://abedtahan.com/products/samsung-55crystal-uhd-u8000h-4k-vision-ai-smart-tv",
+    "vendor": "SAMSUNG",
+    "product_type": "Televisions",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:17:55+00:00",
+    "variants": [
+     {
+      "variant_id": "45711420850355",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "439.00",
+      "compare_at": "499.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "UA55U8000HUXTW",
+      "url": "https://abedtahan.com/products/samsung-55crystal-uhd-u8000h-4k-vision-ai-smart-tv?variant=45711420850355"
+     }
+    ],
+    "description": ""
+   }
+  }
+ ]
+}

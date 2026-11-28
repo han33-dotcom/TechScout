@@ -73,4 +73,75 @@ Eight robustness requests ([inputs](requests/robustness.json), [reports](robustn
 
 ## Held-out results
 
-Pending: the six reserved confirmation requests and the frozen 20 are run once on the pinned candidate below, then graded against the references with the frozen protocol.
+**Candidate and procedure.**
+- The candidate was locked at `cdf26b7` before any held-out run ([run lock](run-lock.json)). The lock records the model route, prompts, limits, shop directory hash, index and shop-terms dates, and input hashes.
+- On 28 Nov 2026 it ran each of the six reserved confirmation requests and the frozen 20 once, in listed order, from the inputs-only files.
+- Runs used the CLI runner, not the normal buyer UI, API and worker, which the protocol asks for. Treat this as a deviation.
+- Reference answers were read only after every run had finished.
+- Grading was independent of the builder:
+  - grader agents applied the [frozen protocol](../../docs/buyer-correctness-acceptance.md) to the run reports and references, four cases each;
+  - a separate skeptic agent per batch tried to refute every credit and find misleading claims;
+  - the skeptic's corrected values are final.
+
+[Scorecard with per-case reasons](heldout/scorecard.json) · [Run reports](heldout/)
+
+### Frozen 20
+
+| What the buyer needed | Scout (held-out) | Single agent, 26 Nov | Required |
+| --- | ---: | ---: | ---: |
+| Complete answer with a verified payable total | 0/10 | 0/10 | 8/10 |
+| A correct, current, linked, in-stock offer with the open facts named (realistic bar) | 8/10 | 2/20 showed a price and link | — |
+| An evidenced delivered total on a correct offer | 4/10 | 0 | — |
+| Useful partial (strict) | 4/5 | 0/5 | 4/5 |
+| Useful partial (realistic) | 5/5 | 0/5 | — |
+| Explained blocker | 5/5 | 4/5 | 5/5 |
+| Two sellers with verified totals | 0/5 | 0/5 | 4/5 |
+| Two sellers with current listed prices | 2/5 | 0/5 | — |
+| Cases with an overclaiming misleading claim | 3 (B05, B07, B11) | 0 | 0 |
+| Final answer, median (range) | 76.0 s (65.8–91.4) | 78.0 s (8.7–102.2) | 120 s target |
+| Model calls, settled USD | 65, 1.269 | not comparable, 0.681 (+0.123 uncertain) | — |
+
+**The gate still fails.**
+- **No verified payable total.** No case reached one, mainly for three reasons:
+  - new condition is often unstated;
+  - several shops state their fee only at checkout (Mobileleb, iSolved, OutGeeked, Classic Phones);
+  - VAT is rarely stated.
+- **Misleading claims.** The graders found overclaims in three cases:
+  - **B05:** an alternative iPhone 15 Pro was shown "in stock" while its page marked it pre-order.
+  - **B07:** "new" condition was bound to a spec block written for a different SKU.
+  - **B11:** "Exact match" badges stood while Wi-Fi-only was still unconfirmed.
+
+**Where the scout improves on the baseline.**
+- It reached a correct, priced, linked offer in 8 of 10 full cases, against none before.
+- It showed evidenced delivered totals: for example, iSTYLE's iPad A16 at USD 609.39 + USD 4, and Electroslab's 32 GB / 1 TB HP laptop at USD 740 under its published November free-delivery promotion (orders of USD 20 or more, through 30 Nov).
+- It earned every blocked explanation.
+
+**The two full cases without useful credit:**
+- B07: a correct MacBook Air was wrongly downgraded by a storage-parsing bug ("8/256gb").
+- B39: the flip-to-mute requirement was never established.
+
+### Six reserved confirmation requests
+
+Strict credit 4/6, realistic credit 5/6:
+
+- **C01:** correctly disclosed that the Pixel 9a Obsidian is out of stock.
+- **C02:** an Acer Swift Go 14 (16 GB, 1 TB) at Technodel, USD 720, with free delivery above USD 500; VAT is named as open.
+- **C03:** the exact Redmi Pad 2 Wi-Fi 8/256 at Electroslab, USD 275, under its published free-delivery promotion.
+- **C07:** explained why no branch answer could be given.
+- **C05:** gave an honest single lead, but its "no comparable pair" rests on thin coverage. It also wrongly said the listing did not state the colour.
+- **C06:** fell back: the final model call timed out after 26.6 s.
+- **Timing and cost:** median 81.1 s, USD 0.24 settled. A further USD 0.29 stays uncertain for C06's timed-out call, as the ledger requires.
+
+### Found by the held-out run and fixed afterwards
+
+The scores above belong to the locked candidate. These fixes came later, each with a regression test (`tests/test_scout_review.py`), and are not part of the held-out score:
+
+| Finding | Fix |
+| --- | --- |
+| Searches took 23–48 s: each run reloaded the large sitemap indexes and scored every title, and four parallel searches starved each other (C06's timeout). | Indexes prepared once per process with a word lookup (about 60 ms per 961Souq query); search wait cut to 9 s (`7f7c9fd`). |
+| B11 exact badge with an unconfirmed Wi-Fi requirement | An unconfirmed identity requirement keeps a card out of "Exact match". |
+| B05 pre-order shown as stock | "Pre-order" on the product or beside its title on its page means stock is unconfirmed. |
+| B07 condition from another SKU's spec block; "8/256gb" not parsed; "Tax included. Shipping calculated at checkout." read as VAT excluded | Description-only condition naming another model code is rejected; RAM/storage pairs parsed; VAT judged per sentence. |
+| C06 fallback said nothing related was found | The fallback lists its unchecked search leads. |
+
+Commit `74271e6` contains the fixes in the last four rows.

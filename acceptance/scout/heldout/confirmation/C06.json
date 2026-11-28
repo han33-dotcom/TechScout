@@ -1,0 +1,119 @@
+{
+ "run_id": "scout-c06-20261128T051217",
+ "request": {
+  "id": "C06",
+  "text": "For calls at my desk I need a new wired USB-A headset with a microphone and a physical mute control. Can you find one for at most $60 including delivery to Byblos?",
+  "mode": "delivery",
+  "destination": "Byblos",
+  "category": "audio",
+  "run_id": "scout-c06-20261128T051217"
+ },
+ "status": "no_match",
+ "message": "The assistant could not finish its review in time and found no related listing.",
+ "question": null,
+ "offers": [],
+ "proposed": [],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Search common wired office USB headsets with inline mute.",
+   "at_s": 20.6,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "Logitech H390"
+    },
+    {
+     "tool": "search",
+     "query": "Logitech H340"
+    },
+    {
+     "tool": "search",
+     "query": "Jabra Evolve 20"
+    },
+    {
+     "tool": "search",
+     "query": "HP 320 USB headset"
+    }
+   ]
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 23531,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 38625,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 47953,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 47938,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 16922,
+   "usage": {
+    "actual_usd": "0.004343",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3237,
+     "output_tokens": 128,
+     "total_tokens": 3365
+    },
+    "latency_ms": 7765,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "timeout",
+   "ms": 26625,
+   "usage": {
+    "actual_usd": null,
+    "reserved_usd": "0.2900000",
+    "billing": "unknown",
+    "tokens": null,
+    "latency_ms": 6828,
+    "actual_model": null,
+    "serving_provider": null
+   },
+   "must_finish": true
+  }
+ ],
+ "retailer_requests": 83,
+ "seconds": 103.4,
+ "spend": {
+  "settled_usd": "0.004343",
+  "uncertain_usd": "0.2900000",
+  "model_calls": 2,
+  "ledger_job": "scout-c06-20261128T051217"
+ },
+ "fallback": true,
+ "warnings": [
+  "The model did not finish; the answer lists related listings read in this run."
+ ],
+ "prompt_version": "scout-1",
+ "observations": []
+}

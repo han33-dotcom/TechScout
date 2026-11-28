@@ -1,0 +1,1040 @@
+{
+ "run_id": "scout-b07-20261128T051408",
+ "request": {
+  "id": "B07",
+  "text": "Find a new 13-inch MacBook Air M2 in Midnight, 8 GB RAM and 256 GB SSD, delivered to Tripoli.",
+  "mode": "delivery",
+  "destination": "Tripoli",
+  "category": "laptop",
+  "run_id": "scout-b07-20261128T051408"
+ },
+ "status": "offers",
+ "message": "Best match: Classic Phones — $770.00, listed in stock for Midnight, M2, 8GB RAM and 256GB SSD. This is the 13-inch-class model with a 13.6-inch display; the product description states “CONDITION:New”.\nDelivery is advertised across Lebanon, covering Tripoli, but the fee is not published; taxes and shipping are calculated at checkout.\nComparison: Macrotronics lists the same configuration at $799.00, but it is out of stock and new condition is not explicitly confirmed.\nSuggestion: choose the Midnight 13.6” 8/256GB variant at Classic Phones and review the final delivery charge before paying.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "alternative",
+   "shop": "Classic Phones",
+   "shop_id": "classic_phones",
+   "title": "Apple MacBooks air m2",
+   "variant": "13.6” 8/256gb / M2 / Midnight",
+   "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44495407055083",
+   "price": "770.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "near",
+   "identity_reason": "Midnight M2 MacBook Air with 13.6-inch display, 8GB RAM and 256GB SSD—the requested 13-inch-class configuration.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "13-inch MacBook Air M2, Midnight, 8GB RAM, 256GB SSD",
+     "status": "met",
+     "quote": "13.6” 8/256gb / M2 / Midnight",
+     "obs": "P8",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "CONDITION:New",
+     "obs": "P8",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Tripoli",
+     "status": "met",
+     "quote": "Delivery Available All Over Lebanon",
+     "obs": "T8",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P8",
+     "url": "https://classic-phones.com/products/apple-macbooks-air",
+     "read": "https://classic-phones.com/products/apple-macbooks-air.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:15:10+00:00",
+     "sha256": "2efac417095fcaa16e1577a91b88d880272d9fd59123275cc207b3ebe8fc600d"
+    }
+   ],
+   "seller_basis": "Classic Phones: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": [
+    "requested 8 GB not in the listed variant"
+   ]
+  },
+  {
+   "tier": "unavailable",
+   "shop": "Macrotronics",
+   "shop_id": "macrotronics",
+   "title": "Apple MacBook Air M2 Chip A2681 13-inch Liquid Retina Display 256GB Midnight MLY33PA",
+   "variant": "Default Title",
+   "url": "https://www.macrotronics.net/products/apple-macbook-air-m2-chip-professional?variant=50284860440865",
+   "price": "799.00",
+   "currency": "USD",
+   "in_stock": false,
+   "condition": "unknown",
+   "identity": "near",
+   "identity_reason": "Title identifies the Midnight 13-inch M2 256GB model; product-page specifications confirm 8GB RAM. Out of stock.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "delivery fee to your area is not published or not confirmed",
+    "VAT is added on top of the listed price (the total excludes it)"
+   ],
+   "requirements": [
+    {
+     "requirement": "13-inch MacBook Air M2 in Midnight with 256GB SSD",
+     "status": "met",
+     "quote": "Apple MacBook Air M2 Chip A2681 13-inch Liquid Retina Display 256GB Midnight MLY33PA",
+     "obs": "P3",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "8GB RAM",
+     "status": "met",
+     "quote": "RAM: 8GB unified memory.",
+     "obs": "T4",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Tripoli",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P3",
+     "url": "https://www.macrotronics.net/products/apple-macbook-air-m2-chip-professional",
+     "read": "https://www.macrotronics.net/products/apple-macbook-air-m2-chip-professional.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:14:53+00:00",
+     "sha256": "7f159ab7ebd6496c0203d749e943b85a4220812db166b77a1f96a0f1d2ccacae"
+    }
+   ],
+   "seller_basis": "Macrotronics: Lebanese shop in the reviewed directory (shop metadata: Ghazir, LB)",
+   "downgrades": [
+    "requested 8 GB not in the listed variant"
+   ]
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P8",
+   "variant_id": "44495407055083",
+   "identity": "exact",
+   "identity_reason": "Midnight M2 MacBook Air with 13.6-inch display, 8GB RAM and 256GB SSD—the requested 13-inch-class configuration.",
+   "condition": "new",
+   "condition_quote": "CONDITION:New",
+   "condition_obs": "P8",
+   "requirements": [
+    {
+     "requirement": "13-inch MacBook Air M2, Midnight, 8GB RAM, 256GB SSD",
+     "status": "met",
+     "evidence_obs": "P8",
+     "quote": "13.6” 8/256gb / M2 / Midnight"
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "P8",
+     "quote": "CONDITION:New"
+    },
+    {
+     "requirement": "Delivery to Tripoli",
+     "status": "met",
+     "evidence_obs": "T8",
+     "quote": "Delivery Available All Over Lebanon"
+    }
+   ],
+   "delivery_obs": "T8",
+   "delivery_quote": "Delivery Available All Over Lebanon",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P3",
+   "variant_id": "50284860440865",
+   "identity": "exact",
+   "identity_reason": "Title identifies the Midnight 13-inch M2 256GB model; product-page specifications confirm 8GB RAM. Out of stock.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "13-inch MacBook Air M2 in Midnight with 256GB SSD",
+     "status": "met",
+     "evidence_obs": "P3",
+     "quote": "Apple MacBook Air M2 Chip A2681 13-inch Liquid Retina Display 256GB Midnight MLY33PA"
+    },
+    {
+     "requirement": "8GB RAM",
+     "status": "met",
+     "evidence_obs": "T4",
+     "quote": "RAM: 8GB unified memory."
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Delivery to Tripoli",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": "T9",
+   "delivery_quote": "Tax included. Shipping calculated at checkout.",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": "Tax included. Shipping calculated at checkout.",
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Search exact configuration and model code across shops.",
+   "at_s": 17.2,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "MacBook Air M2 8GB 256 Midnight"
+    },
+    {
+     "tool": "search",
+     "query": "MLY33"
+    },
+    {
+     "tool": "search",
+     "query": "MacBook Air M2 13 Midnight"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Check promising M2 listing and delivery policies; verify missing specifications and condition on exact listing.",
+   "at_s": 60.5,
+   "calls": [
+    {
+     "tool": "open",
+     "url": "https://classic-phones.com/products/apple-macbooks-air"
+    },
+    {
+     "tool": "read",
+     "url": "https://www.macrotronics.net/products/apple-macbook-air-m2-chip-professional",
+     "terms": [
+      "8GB",
+      "new",
+      "condition"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "macrotronics"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "classic_phones"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Exact in-stock configuration found at Classic Phones; include Macrotronics as an out-of-stock comparison. Delivery fee not verified.",
+   "at_s": 78.5,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 26110,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 30579,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 31797,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 687,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 2000,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 2422,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 2734,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 13609,
+   "usage": {
+    "actual_usd": "0.0041305",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3228,
+     "output_tokens": 109,
+     "total_tokens": 3337
+    },
+    "latency_ms": 4907,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 11203,
+   "usage": {
+    "actual_usd": "0.0184035",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 6710,
+     "output_tokens": 163,
+     "total_tokens": 6873
+    },
+    "latency_ms": 5140,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 14640,
+   "usage": {
+    "actual_usd": "0.0297005",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 11224,
+     "output_tokens": 667,
+     "total_tokens": 11891
+    },
+    "latency_ms": 11875,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": true
+  }
+ ],
+ "retailer_requests": 82,
+ "seconds": 78.6,
+ "spend": {
+  "settled_usd": "0.0522345",
+  "uncertain_usd": "0",
+  "model_calls": 3,
+  "ledger_job": "scout-b07-20261128T051408"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://electroslab.com/products/used-laptop-apple-macbook-air-a2681-2022",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:14:51+00:00",
+   "sha256": "e436d9033889417a16540ed347ca15d407c352732bf073269aa10479cf791924",
+   "product": {
+    "shop": "Electroslab",
+    "shop_id": "electroslab",
+    "title": "Used Apple MacBook Air A2681 2022 | Apple M2 | 8GB Unified Memory | 256GB SSD | 8-Core GPU | 13.6\" Liquid Retina Display",
+    "url": "https://electroslab.com/products/used-laptop-apple-macbook-air-a2681-2022",
+    "vendor": "Apple",
+    "product_type": "Used Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:14:51+00:00",
+    "variants": [
+     {
+      "variant_id": "51157025915047",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "720.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "01-1-1-5831.001",
+      "url": "https://electroslab.com/products/used-laptop-apple-macbook-air-a2681-2022?variant=51157025915047"
+     }
+    ],
+    "description": "The Used Apple MacBook Air A2681 (2022) combines powerful Apple silicon performance with an exceptionally thin and lightweight design. Powered by the Apple M2 chip, 8GB unified memory, and 256GB SSD storage, it delivers fast and efficient performance for productivity, study, creative work, web browsing, and everyday computing.\nThe M2 chip features an 8-core GPU, while the stunning 13.6-inch Liquid Retina display delivers sharp details, vibrant colors, and excellent image quality. With its fanless design and excellent portability, the 2022 MacBook Air is an ideal choice for students, professionals, creators, and Apple users looking for premium performance in a compact laptop.\nKey Features\nBrand: Apple\nSeries: MacBook Air\nModel: A2681\nYear: 2022\nCondition: Used\nProcessor: Apple M2 Chip\nMemory: 8GB Unified Memory\nStorage: 256GB SSD\nGraphics: Apple 8-Core GPU\nDisplay: 13.6-inch Liquid Retina Display\nThin and lightweight aluminum design\nFanless architecture for quiet operation\nFast SSD storage\nWi-Fi and Bluetooth connectivity\nIdeal for business, study, programming, creative work, multimedia, and everyday use\nWhy Choose This Product?\nPowerful and energy-efficient Apple M2 chip\nLightweight and highly portable MacBook Air design\nSharp 13.6-inch Liquid Retina display\n8-core GPU for graphics and creative applications\nSilent fanless operation\nPremium Apple build quality\nExcellent value as a used M2 MacBook Air"
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://www.macrotronics.net/products/apple-macbook-air-m2-chip-professional",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:14:52+00:00",
+   "sha256": "7f159ab7ebd6496c0203d749e943b85a4220812db166b77a1f96a0f1d2ccacae",
+   "product": {
+    "shop": "Macrotronics",
+    "shop_id": "macrotronics",
+    "title": "Apple MacBook Air M2 Chip A2681 13-inch Liquid Retina Display 256GB Midnight MLY33PA",
+    "url": "https://www.macrotronics.net/products/apple-macbook-air-m2-chip-professional",
+    "vendor": "Apple",
+    "product_type": "Apple Computers",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:14:52+00:00",
+    "variants": [
+     {
+      "variant_id": "50284860440865",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "799.00",
+      "compare_at": "950.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "1006067",
+      "url": "https://www.macrotronics.net/products/apple-macbook-air-m2-chip-professional?variant=50284860440865"
+     }
+    ],
+    "description": "Features:\nM2 Chip: Next-generation Apple silicon, delivering improved performance and efficiency.\n13-inch Liquid Retina Display: Ultra-sharp resolution, 500 nits brightness, and P3 wide color gamut for stunning visuals.\nLong Battery Life: Up to 18 hours of battery life for all-day productivity.\nMagSafe Charging: Convenient and fast charging solution.\nMidnight Finish: Sleek and modern color option, lightweight and ultra-thin design.\nFaceTime HD Camera: 1080p for clear video calls.\nTouch ID: Secure login and fast authentication with a fingerprint.\nSpecifications:\nProcessor: Apple M2 Chip 8-Core CPU.\nRAM: 8GB unified memory.\nStorage: 256GB SSD.\nDisplay: 13.6-inch (diagonal) LED-backlit display with IPS technology, 2560-by-1664 native resolution at 224 pixels per inch, 500 nits brightness.\nGraphics: Apple M2 Chip 8-Core GPU.\nOperating System: macOS.\nPorts:\nMagSafe 3 charging port\n3.5 mm headphone jack\nTwo Thunderbolt / USB 4 ports with support for:\nCharging\nDisplayPort\nThunderbolt 3 (up to 40Gb/s)\nUSB 4 (up to 40Gb/s)\nConnectivity: Wi-Fi 6 and Bluetooth 5.3.\nCamera: 1080p FaceTime HD camera."
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://www.macrotronics.net/products/apple-macbook-air-m2-chip-professional",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:14:53+00:00",
+   "sha256": "7f159ab7ebd6496c0203d749e943b85a4220812db166b77a1f96a0f1d2ccacae",
+   "product": {
+    "shop": "Macrotronics",
+    "shop_id": "macrotronics",
+    "title": "Apple MacBook Air M2 Chip A2681 13-inch Liquid Retina Display 256GB Midnight MLY33PA",
+    "url": "https://www.macrotronics.net/products/apple-macbook-air-m2-chip-professional",
+    "vendor": "Apple",
+    "product_type": "Apple Computers",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:14:53+00:00",
+    "variants": [
+     {
+      "variant_id": "50284860440865",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "799.00",
+      "compare_at": "950.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "1006067",
+      "url": "https://www.macrotronics.net/products/apple-macbook-air-m2-chip-professional?variant=50284860440865"
+     }
+    ],
+    "description": "Features:\nM2 Chip: Next-generation Apple silicon, delivering improved performance and efficiency.\n13-inch Liquid Retina Display: Ultra-sharp resolution, 500 nits brightness, and P3 wide color gamut for stunning visuals.\nLong Battery Life: Up to 18 hours of battery life for all-day productivity.\nMagSafe Charging: Convenient and fast charging solution.\nMidnight Finish: Sleek and modern color option, lightweight and ultra-thin design.\nFaceTime HD Camera: 1080p for clear video calls.\nTouch ID: Secure login and fast authentication with a fingerprint.\nSpecifications:\nProcessor: Apple M2 Chip 8-Core CPU.\nRAM: 8GB unified memory.\nStorage: 256GB SSD.\nDisplay: 13.6-inch (diagonal) LED-backlit display with IPS technology, 2560-by-1664 native resolution at 224 pixels per inch, 500 nits brightness.\nGraphics: Apple M2 Chip 8-Core GPU.\nOperating System: macOS.\nPorts:\nMagSafe 3 charging port\n3.5 mm headphone jack\nTwo Thunderbolt / USB 4 ports with support for:\nCharging\nDisplayPort\nThunderbolt 3 (up to 40Gb/s)\nUSB 4 (up to 40Gb/s)\nConnectivity: Wi-Fi 6 and Bluetooth 5.3.\nCamera: 1080p FaceTime HD camera."
+   }
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://www.macrotronics.net/products/apple-macbook-air-m2-chip-professional",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:14:53+00:00",
+   "sha256": "7f159ab7ebd6496c0203d749e943b85a4220812db166b77a1f96a0f1d2ccacae",
+   "product": {
+    "shop": "Macrotronics",
+    "shop_id": "macrotronics",
+    "title": "Apple MacBook Air M2 Chip A2681 13-inch Liquid Retina Display 256GB Midnight MLY33PA",
+    "url": "https://www.macrotronics.net/products/apple-macbook-air-m2-chip-professional",
+    "vendor": "Apple",
+    "product_type": "Apple Computers",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:14:53+00:00",
+    "variants": [
+     {
+      "variant_id": "50284860440865",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "799.00",
+      "compare_at": "950.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "1006067",
+      "url": "https://www.macrotronics.net/products/apple-macbook-air-m2-chip-professional?variant=50284860440865"
+     }
+    ],
+    "description": "Features:\nM2 Chip: Next-generation Apple silicon, delivering improved performance and efficiency.\n13-inch Liquid Retina Display: Ultra-sharp resolution, 500 nits brightness, and P3 wide color gamut for stunning visuals.\nLong Battery Life: Up to 18 hours of battery life for all-day productivity.\nMagSafe Charging: Convenient and fast charging solution.\nMidnight Finish: Sleek and modern color option, lightweight and ultra-thin design.\nFaceTime HD Camera: 1080p for clear video calls.\nTouch ID: Secure login and fast authentication with a fingerprint.\nSpecifications:\nProcessor: Apple M2 Chip 8-Core CPU.\nRAM: 8GB unified memory.\nStorage: 256GB SSD.\nDisplay: 13.6-inch (diagonal) LED-backlit display with IPS technology, 2560-by-1664 native resolution at 224 pixels per inch, 500 nits brightness.\nGraphics: Apple M2 Chip 8-Core GPU.\nOperating System: macOS.\nPorts:\nMagSafe 3 charging port\n3.5 mm headphone jack\nTwo Thunderbolt / USB 4 ports with support for:\nCharging\nDisplayPort\nThunderbolt 3 (up to 40Gb/s)\nUSB 4 (up to 40Gb/s)\nConnectivity: Wi-Fi 6 and Bluetooth 5.3.\nCamera: 1080p FaceTime HD camera."
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/macbook-air-13-m5-16gb-512gb-ssd-midnight",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:14:56+00:00",
+   "sha256": "f098529dd2c11e35cbfb8ad3fa1d6f8ac4fbc1e5e81fed6696d361eea93fa461",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "MacBook Air- 13\" M5- 16GB- 512GB SSD- Midnight",
+    "url": "https://abedtahan.com/products/macbook-air-13-m5-16gb-512gb-ssd-midnight",
+    "vendor": "APPLE",
+    "product_type": "Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:14:56+00:00",
+    "variants": [
+     {
+      "variant_id": "45391124332723",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "1229.00",
+      "compare_at": "1463.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "NTB-APPL-MDHE4",
+      "url": "https://abedtahan.com/products/macbook-air-13-m5-16gb-512gb-ssd-midnight?variant=45391124332723"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/macbook-air-13-m5-16gb-1tb-midnight",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:14:56+00:00",
+   "sha256": "63d72a7314dd825a8addbc565d452ae481c5b64f181fe1b533fd4dc2e182bbcd",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "MacBook Air- 13\" M5- 16GB- 1TB- Midnight",
+    "url": "https://abedtahan.com/products/macbook-air-13-m5-16gb-1tb-midnight",
+    "vendor": "APPLE",
+    "product_type": "Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:14:56+00:00",
+    "variants": [
+     {
+      "variant_id": "45414411370675",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "1529.00",
+      "compare_at": "1820.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "NTB-APPL-MDHF4",
+      "url": "https://abedtahan.com/products/macbook-air-13-m5-16gb-1tb-midnight?variant=45414411370675"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/apple-macbook-air-13-6-laptop-m2-chip-8gb-256gb-ssd-mly13x-a",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:14:56+00:00",
+   "sha256": "6cb1b820d43070e2deb623a12d595c04d8770e8de2baf2080863eb195f523138",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Apple MacBook Air 13.6\" Laptop, M2 Chip 8GB/256GB SSD, MLY13X/A",
+    "url": "https://mobileleb.com/products/apple-macbook-air-13-6-laptop-m2-chip-8gb-256gb-ssd-mly13x-a",
+    "vendor": "Apple",
+    "product_type": "Computers",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:14:56+00:00",
+    "variants": [
+     {
+      "variant_id": "41289185591428",
+      "title": "Starlight / Brand New / 1 Year",
+      "options": {
+       "Color": "Starlight",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": null,
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "MLY13X/A",
+      "url": "https://mobileleb.com/products/apple-macbook-air-13-6-laptop-m2-chip-8gb-256gb-ssd-mly13x-a?variant=41289185591428",
+      "condition": "Brand New"
+     }
+    ],
+    "description": "Processor: Apple M2 Chip 8-Core\nMemory: 8GB On-Board\nStorage: 256GB Apple NVMe\nDisplay: 13.6\" IPS-Type LCD 2560x1664\nI/O Ports: 2 x Thunderbolt 3; 1 x 1/8\" 3.5mm Headphone\nWireless Connectivity: Wi-Fi 6, Bluetooth 5.2\nCamera: 1080p HD Webcam\nBattery: 18 Hours"
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://electroslab.com/policies/shipping-policy",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:15:00+00:00",
+   "sha256": "cc529e44ad5c8b4dc547a9f30fa887fda373b6c6ce2da4c1258b4e05edc2ff86",
+   "excerpt": "Shipping policy\nWEBSITE ORDERS ONLY⚡\nNOVEMBER DISCOUNTS + ⚡FREE DELIVERY ON ORDERS OF $20 OR MORE⚡\nTHROUGH NOV 30\n0\nView All\nNo result found for your search.\nHome\nShipping policy\nShipping policy\na {\ntext-decoration: none;\ncolor: #464feb;\n}\ntr th, tr td {\nborder: 1px solid #e6e6e6;\n}\ntr th {\nbackground-color: #f5f5f5;\n}\nShipping Policy\nDelivery Coverage & Rates\nWe deliver across all of Lebanon for a flat rate of $4.\nFree delivery may apply during promotions or on selected items.\nDelivery Time\nThe estimated delivery time begins once your order is placed and confirmed.\nBeirut: Delivery within 1–3 business days.\nOutside Beirut: Delivery within 3–5 business days.\nCustom, special-order, or high-demand items may require additional time.\nOnce your order has been shipped, you will receive order confirmation and tracking details.\nInternational Shipping\nWe currently ship only within Lebanon.\nInternational shipping may become available in the future.\nLost or Stolen Packages\nElectroSlab is not responsible for lost or stolen packages after delivery confirmation.\nIf your order is marked as delivered but has not been received, please:\nCheck with your local courier or post office.\nCheck with neighbors, building reception, or security personnel.\nContact us at info@electroslab.com, and we will assist where possible.\nBusiness Days\nBusiness days are Monday through Saturday, excluding public holidays.\nContact\nFor shipping questions or delivery issues, please contact us at info@electroslab.com.\nThi",
+   "quoted": []
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://www.macrotronics.net/policies/shipping-policy",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:15:00+00:00",
+   "sha256": "071a3348b06cddce54ebb145aa4b2bfc0f2e0ca7d437edce2374e98ec0ea68ba",
+   "excerpt": "Shipping policy – Macrotronics\nSkip to content\nFacebook\nTwitter\nInstagram\nHelpline +961 71 854 621 | +961 9 853 008\nTechnical Support +961 71 94 84 94\nPause slideshow\nPlay slideshow\nComputers\nComputers\nLaptops\nOn-Demand Laptops\nLaptop Power Adapters\nLaptop Accessories\nApple Computers\nApple Accessories\niPads and Tablets\nTablets Accessories\nComputer & Smart Monitors\nMonitor Accessories\nServers, Workstations and NAS\nDesktops and Mini PCs\nPOS and POS Equipment\nOriginal Softwares and Antivirus\nComputer Parts\nComputer Parts\nProcessors\nGraphic Cards\nMotherboards\nRAMs\nSSD\nHDD\nCPU Coolers\nThermal Paste and Pads\nPower Supplies\nComputer Cases\nComputer Case Accessories\nMore PC Components\nLegacy Computer Parts\nUsed Computer Parts\nComputer Peripherals\nComputer Peripherals\nMice & Keyboards\nEarphones & Headphones\nComputer & Bluetooth Speakers\nWebcams & Microphones\nLaptop Bags & Cases\nComputer & Video Cables\nFlash Drives & Memory Cards\nPrinters, Scanners & Faxes\nPaper & Media Supplies\nGenuine Inks & Ribbons\nGenuine Toners & Drums\nCompatible Toners & Drums\nOffice Furniture\nElectronics & More\nElectronics & More\nUPS\nBatteries\nSmart Appliances\nAdapters and Converters\nEducational Electronics\nConsumer Electronics\nSurveillance and Security\nProjectors, Screens and More\nRouters, Repeaters and APs\nNetwork Switches\nNetwork Adapters\nNetworking and Tools\nGaming\nGaming\nGaming PCs\nGaming Monitors\nGaming Headsets\nGaming Pads\nGaming Mice\nGaming Keyboards\nGaming Chairs\nGaming Desks\nGaming Console and VR\nGaming",
+   "quoted": []
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://abedtahan.com/pages/contact",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:15:00+00:00",
+   "sha256": "8d0cd6546c2ba71a65a9129dba5d82f6e86a316c67b7cfa373132b4d35510d09",
+   "excerpt": "Contact\n– Abed Tahan\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & Crepe Makers\nIce Cube, Ice Cream & Yoghurt Makers\nSaj Machines\nL",
+   "quoted": []
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://www.macrotronics.net/products/apple-macbook-air-m2-chip-professional",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:15:09+00:00",
+   "sha256": "7fcd2a65ead2f0340acc4ebc34f0678f4711df423797be6dac0c7770b3222292",
+   "excerpt": "Apple Macbook Air M2 Chip Professional – Macrotronics\nSkip to content\nFacebook\nTwitter\nInstagram\nHelpline +961 71 854 621 | +961 9 853 008\nTechnical Support +961 71 94 84 94\nPause slideshow\nPlay slideshow\nComputers\nComputers\nLaptops\nOn-Demand Laptops\nLaptop Power Adapters\nLaptop Accessories\nApple Computers\nApple Accessories\niPads and Tablets\nTablets Accessories\nComputer & Smart Monitors\nMonitor Accessories\nServers, Workstations and NAS\nDesktops and Mini PCs\nPOS and POS Equipment\nOriginal Softwares and Antivirus\nComputer Parts\nComputer Parts\nProcessors\nGraphic Cards\nMotherboards\nRAMs\nSSD\nHDD\nCPU Coolers\nThermal Paste and Pads\nPower Supplies\nComputer Cases\nComputer Case Accessories\nMore PC Components\nLegacy Computer Parts\nUsed Computer Parts\nComputer Peripherals\nComputer Peripherals\nMice & Keyboards\nEarphones & Headphones\nComputer & Bluetooth Speakers\nWebcams & Microphones\nLaptop Bags & Cases\nComputer & Video Cables\nFlash Drives & Memory Cards\nPrinters, Scanners & Faxes\nPaper & Media Supplies\nGenuine Inks & Ribbons\nGenuine Toners & Drums\nCompatible Toners & Drums\nOffice Furniture\nElectronics & More\nElectronics & More\nUPS\nBatteries\nSmart Appliances\nAdapters and Converters\nEducational Electronics\nConsumer Electronics\nSurveillance and Security\nProjectors, Screens and More\nRouters, Repeaters and APs\nNetwork Switches\nNetwork Adapters\nNetworking and Tools\nGaming\nGaming\nGaming PCs\nGaming Monitors\nGaming Headsets\nGaming Pads\nGaming Mice\nGaming Keyboards\nGaming Chairs\nGaming Desks\nGamin",
+   "quoted": [
+    {
+     "quote": "RAM: 8GB unified memory.",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://classic-phones.com/meta.json",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:15:10+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"Classic Phones\", \"city\": \"Beirut \", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"www.classic-phones.com\"}",
+   "quoted": []
+  },
+  {
+   "obs": "P8",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/apple-macbooks-air",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:15:10+00:00",
+   "sha256": "2efac417095fcaa16e1577a91b88d880272d9fd59123275cc207b3ebe8fc600d",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Apple MacBooks air m2",
+    "url": "https://classic-phones.com/products/apple-macbooks-air",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:15:10+00:00",
+    "variants": [
+     {
+      "variant_id": "44467372163307",
+      "title": "13.6” 8/256gb / M2 / Starlight",
+      "options": {
+       "Size": "13.6” 8/256gb",
+       "Type": "M2",
+       "Colors": "Starlight"
+      },
+      "price": "770.00",
+      "compare_at": "980.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44467372163307"
+     },
+     {
+      "variant_id": "44495407055083",
+      "title": "13.6” 8/256gb / M2 / Midnight",
+      "options": {
+       "Size": "13.6” 8/256gb",
+       "Type": "M2",
+       "Colors": "Midnight"
+      },
+      "price": "770.00",
+      "compare_at": "985.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44495407055083"
+     },
+     {
+      "variant_id": "44467372228843",
+      "title": "13.6” 512gb / M2 / Starlight",
+      "options": {
+       "Size": "13.6” 512gb",
+       "Type": "M2",
+       "Colors": "Starlight"
+      },
+      "price": "980.00",
+      "compare_at": "1300.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44467372228843"
+     },
+     {
+      "variant_id": "44495546253547",
+      "title": "13.6” 512gb / M2 / Midnight",
+      "options": {
+       "Size": "13.6” 512gb",
+       "Type": "M2",
+       "Colors": "Midnight"
+      },
+      "price": "980.00",
+      "compare_at": "1300.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44495546253547"
+     },
+     {
+      "variant_id": "44467372359915",
+      "title": "15” 256gb / M2 / Starlight",
+      "options": {
+       "Size": "15” 256gb",
+       "Type": "M2",
+       "Colors": "Starlight"
+      },
+      "price": "1010.00",
+      "compare_at": "1090.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44467372359915"
+     },
+     {
+      "variant_id": "44541840621803",
+      "title": "15” 256gb / M2 / Midnight",
+      "options": {
+       "Size": "15” 256gb",
+       "Type": "M2",
+       "Colors": "Midnight"
+      },
+      "price": "1010.00",
+      "compare_at": "1090.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44541840621803"
+     },
+     {
+      "variant_id": "44541840654571",
+      "title": "15” 256gb / M2 / Space Grey",
+      "options": {
+       "Size": "15” 256gb",
+       "Type": "M2",
+       "Colors": "Space Grey"
+      },
+      "price": "1010.00",
+      "compare_at": "1090.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44541840654571"
+     },
+     {
+      "variant_id": "44467372425451",
+      "title": "15” 512gb / M2 / Starlight",
+      "options": {
+       "Size": "15” 512gb",
+       "Type": "M2",
+       "Colors": "Starlight"
+      },
+      "price": "990.00",
+      "compare_at": "1290.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44467372425451"
+     },
+     {
+      "variant_id": "44495461875947",
+      "title": "15” 512gb / M2 / Midnight",
+      "options": {
+       "Size": "15” 512gb",
+       "Type": "M2",
+       "Colors": "Midnight"
+      },
+      "price": "1230.00",
+      "compare_at": "1290.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44495461875947"
+     },
+     {
+      "variant_id": "44541716496619",
+      "title": "15” 512gb / M2 / Grey",
+      "options": {
+       "Size": "15” 512gb",
+       "Type": "M2",
+       "Colors": "Grey"
+      },
+      "price": "1230.00",
+      "compare_at": "1290.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44541716496619"
+     },
+     {
+      "variant_id": "44495463252203",
+      "title": "15” 512gb / M2 / Silver",
+      "options": {
+       "Size": "15” 512gb",
+       "Type": "M2",
+       "Colors": "Silver"
+      },
+      "price": "1230.00",
+      "compare_at": "1300.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44495463252203"
+     },
+     {
+      "variant_id": "44643992797419",
+      "title": "15” 8/256gb / m2 / silver",
+      "options": {
+       "Size": "15” 8/256gb",
+       "Type": "m2",
+       "Colors": "silver"
+      },
+      "price": "1010.00",
+      "compare_at": "1095.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44643992797419"
+     },
+     {
+      "variant_id": "45207927816427",
+      "title": "13.6” 8/256gb / m2 / silver",
+      "options": {
+       "Size": "13.6” 8/256gb",
+       "Type": "m2",
+       "Colors": "silver"
+      },
+      "price": "770.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=45207927816427"
+     },
+     {
+      "variant_id": "45207935746283",
+      "title": "13.6” 8/256gb / m2 / gray",
+      "options": {
+       "Size": "13.6” 8/256gb",
+       "Type": "m2",
+       "Colors": "gray"
+      },
+      "price": "770.00",
+      "compare_at": "965.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=45207935746283"
+     },
+     {
+      "variant_id": "45207945380075",
+      "title": "13.6” 8/512gb / M2 / Space gray",
+      "options": {
+       "Size": "13.6” 8/512gb",
+       "Type": "M2",
+       "Colors": "Space gray"
+      },
+      "price": "980.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=45207945380075"
+     },
+     {
+      "variant_id": "45207948427499",
+      "title": "13.6” 8/512gb / M2 / silver",
+      "options": {
+       "Size": "13.6” 8/512gb",
+       "Type": "M2",
+       "Colors": "silver"
+      },
+      "price": "980.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=45207948427499"
+     }
+    ],
+    "description": "Apple MacBook Air 13.6\" Laptop - Apple M2 Chip\nSKU:55982504\nMPN:MLXY3\nCONDITION:New\nApple MacBook Air 13.6\" Laptop - Apple M2 Chip - RAM 8GB - SSD 256GB - Silver | MLXY3\nProcessor: Apple M2 Chip 8-Core\nMemory: 8GB On-Board\nStorage: 256GB Apple NVMe\nDisplay: 13.6\" IPS-Type LCD 2560x1664\nI/O Ports: 2 x Thunderbolt 3; 1 x 1/8\" 3.5mm Headphone\nWireless Connectivity: Wi-Fi 6, Bluetooth 5.2\nCamera: 1080p HD Webcam\nBattery: 18 Hours\nCPU:\nApple M2\nRAM:\n8GB\nSSD:\n256GB\nSIZE:\n13.6\"\nCLASS:\nApple Laptop\nSERIES:\nMacBook Air\nCONDITION:\nNew\nGPU:\nApple (8-core)\nWARRANTY:\n1 Year\nApple's New MacBook Air 15 launched 15.3-inch display, M2 chip, Six-speaker\nApple has launched its new MacBook Air 15-inch model based on the M2 chip in India at its WWDC 2023event. It has a large 15.3-inch Liquid Retina display with 500 nits of brightness, and has the same fanless design, as the 13-inch model, but this has an all-new six-speaker sound system with Spatial Audio and up to 18 hours of battery life.\nThe thickness of the MacBook Air is just 11.5 mm and weighs just 1.4 kg. There is a 1080p Facetime HD camera inside a notch and has an all-aluminum unibody enclosure and integrates its components so efficiently. It also has MagSafe charging port, two Thunderbolt ports for connecting accessories, up to a 6K external display, and a 3.5mm headphone jack.\nApple MacBook Air 15 (M2) Specifications -\nDisplay\n15.3-inch (2880×1864 pixels) 224 PPI Liquid Retina display with True Tone, Wide color (P3), 500 nits brightnes"
+   }
+  },
+  {
+   "obs": "T6",
+   "kind": "page",
+   "url": "https://www.macrotronics.net/meta.json",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:15:11+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"Macrotronics\", \"city\": \"Ghazir\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"www.macrotronics.net\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T7",
+   "kind": "page",
+   "url": "https://www.classic-phones.com/",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:15:11+00:00",
+   "sha256": "63db76d8b0b2b3e57aca965c120d0739049c321cd9a087b0e9e6ae35267c1d4c",
+   "excerpt": "Classic Phones - Mobile Devices & Accessories in Lebanon\nSkip to content\nDelivery Available All Over Lebanon\nFacebook\nInstagram\nShop All\nCameras\nCameras\nGo to Cameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nLaptops\nLaptops\nGo to Laptops\nMacbook\nNew\nUsed\nTablets\nTablets\nGo to Tablets\nApple\nSamsung\nXiaomi\nBlackview\nModio\nSmart Watch\nSmart Watch\nGo to Smart Watch\nApple\nSamsung\nFitbit\nHuawei\nAmazfit\nXiaomi\nGreen Lion\nProdo\nKieslect\nAccessories\nAccessories\nGo to Accessories\nAdapters & Cables\nStorage\nKids\nScooters\nGaming\nGaming\nGo to Gaming\nNintendo\nPS\nXBOX\nOthers\nPersonal Care\nPersonal Care\nGo to Personal Care\nHome Accessories\nPerfume\nMassage\nOthers\nTech Gadgets\nTech Gadgets\nGo to Tech Gadgets\nKits (Cleaning, Repair...)\nPower Devices\nSmart Devices\nRouters\nBags\nKindle\nStands\nCalculator\nHandy Phones\nAudio\nAudio\nGo to Audio\nEarphones\nSpeakers\nHeadphones\nEarbuds\nMicrophones\nCases\nCases\nGo to Cases\nApple\nSamsung\nOthers\nWatch Accessories\nKeyboards & Mouses\nOthers\nBlogs\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nLebanon\nFast Delivery\nFacebook\nInstagram\nLog in\nSearch\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nSearch\nLog in\n0\n00 items\nSubtotal\n$0\nShop All\nCameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nGo to Cameras\nLaptops\nMacbook\nNew\nUsed\nGo to L",
+   "quoted": []
+  },
+  {
+   "obs": "T8",
+   "kind": "page",
+   "url": "https://www.classic-phones.com/policies/shipping-policy",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:15:11+00:00",
+   "sha256": "f3a9ea019be16351d093cce3bfe3ba3c7cd8e6339d09c31fb3189c653b407548",
+   "excerpt": "Shipping policy\nSkip to content\nDelivery Available All Over Lebanon\nFacebook\nInstagram\nShop All\nCameras\nCameras\nGo to Cameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nLaptops\nLaptops\nGo to Laptops\nMacbook\nNew\nUsed\nTablets\nTablets\nGo to Tablets\nApple\nSamsung\nXiaomi\nBlackview\nModio\nSmart Watch\nSmart Watch\nGo to Smart Watch\nApple\nSamsung\nFitbit\nHuawei\nAmazfit\nXiaomi\nGreen Lion\nProdo\nKieslect\nAccessories\nAccessories\nGo to Accessories\nAdapters & Cables\nStorage\nKids\nScooters\nGaming\nGaming\nGo to Gaming\nNintendo\nPS\nXBOX\nOthers\nPersonal Care\nPersonal Care\nGo to Personal Care\nHome Accessories\nPerfume\nMassage\nOthers\nTech Gadgets\nTech Gadgets\nGo to Tech Gadgets\nKits (Cleaning, Repair...)\nPower Devices\nSmart Devices\nRouters\nBags\nKindle\nStands\nCalculator\nHandy Phones\nAudio\nAudio\nGo to Audio\nEarphones\nSpeakers\nHeadphones\nEarbuds\nMicrophones\nCases\nCases\nGo to Cases\nApple\nSamsung\nOthers\nWatch Accessories\nKeyboards & Mouses\nOthers\nBlogs\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nLebanon\nFast Delivery\nFacebook\nInstagram\nLog in\nSearch\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nSearch\nLog in\n0\n00 items\nSubtotal\n$0\nShop All\nCameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nGo to Cameras\nLaptops\nMacbook\nNew\nUsed\nGo to Laptops\nTablets\nApple\nSamsung\nXiaomi\nBlack",
+   "quoted": [
+    {
+     "quote": "Delivery Available All Over Lebanon",
+     "found": true
+    },
+    {
+     "quote": "Delivery Available All Over Lebanon",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T9",
+   "kind": "page",
+   "url": "https://www.macrotronics.net/",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:15:11+00:00",
+   "sha256": "615cd54daffc48287842bc4f1e206e0ae8d5933f6c76928240bb8e61212a59a8",
+   "excerpt": "Macrotronics | PCs, Laptops, Gaming PCs & IT Equipment Lebanon\nSkip to content\nFacebook\nTwitter\nInstagram\nHelpline +961 71 854 621 | +961 9 853 008\nTechnical Support +961 71 94 84 94\nPause slideshow\nPlay slideshow\nComputers\nComputers\nLaptops\nOn-Demand Laptops\nLaptop Power Adapters\nLaptop Accessories\nApple Computers\nApple Accessories\niPads and Tablets\nTablets Accessories\nComputer & Smart Monitors\nMonitor Accessories\nServers, Workstations and NAS\nDesktops and Mini PCs\nPOS and POS Equipment\nOriginal Softwares and Antivirus\nComputer Parts\nComputer Parts\nProcessors\nGraphic Cards\nMotherboards\nRAMs\nSSD\nHDD\nCPU Coolers\nThermal Paste and Pads\nPower Supplies\nComputer Cases\nComputer Case Accessories\nMore PC Components\nLegacy Computer Parts\nUsed Computer Parts\nComputer Peripherals\nComputer Peripherals\nMice & Keyboards\nEarphones & Headphones\nComputer & Bluetooth Speakers\nWebcams & Microphones\nLaptop Bags & Cases\nComputer & Video Cables\nFlash Drives & Memory Cards\nPrinters, Scanners & Faxes\nPaper & Media Supplies\nGenuine Inks & Ribbons\nGenuine Toners & Drums\nCompatible Toners & Drums\nOffice Furniture\nElectronics & More\nElectronics & More\nUPS\nBatteries\nSmart Appliances\nAdapters and Converters\nEducational Electronics\nConsumer Electronics\nSurveillance and Security\nProjectors, Screens and More\nRouters, Repeaters and APs\nNetwork Switches\nNetwork Adapters\nNetworking and Tools\nGaming\nGaming\nGaming PCs\nGaming Monitors\nGaming Headsets\nGaming Pads\nGaming Mice\nGaming Keyboards\nGaming Chairs\nGaming De",
+   "quoted": [
+    {
+     "quote": "Tax included. Shipping calculated at checkout.",
+     "found": true
+    }
+   ]
+  }
+ ]
+}

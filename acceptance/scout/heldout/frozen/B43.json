@@ -1,0 +1,1246 @@
+{
+ "run_id": "scout-b43-20261128T053322",
+ "request": {
+  "id": "B43",
+  "text": "Can I pick up a new black 128 GB iPhone 15 at a specific Beirut branch? Tell me the price and whether that branch has it.",
+  "mode": "pickup",
+  "destination": "Beirut",
+  "category": "phone",
+  "run_id": "scout-b43-20261128T053322"
+ },
+ "status": "offers",
+ "message": "Best lead: IT Promax lists a new black 128GB iPhone 15 for $690.00, with online stock marked “In stock, ready to ship.”\nIts published location is Mar Elias, Beirut, Lebanon, but stock at that store and pickup availability are unconfirmed. I cannot confirm you can collect it there now.\niSTYLE lists the same configuration at $979.02, but it is out of stock online; new condition and branch stock were not confirmed.\nSuggestion: confirm the exact black 128GB unit and pickup availability with IT Promax before travelling.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "best",
+   "shop": "IT Promax",
+   "shop_id": "itpromax",
+   "title": "iPhone 15 New Price Lebanon – Apple | IT Promax",
+   "variant": "Apple iPhone 15 NEW – Tech+ Warranty",
+   "url": "https://itpromax.store/en/p/apple-iphone-15-new-tech-warranty",
+   "price": "690.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "Product page identifies iPhone 15 with Black selected and size 128GB.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "pickup branch stock is not confirmed (online stock only)",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "iPhone 15",
+     "status": "met",
+     "quote": "Apple iPhone 15 NEW – Tech+ Warranty",
+     "obs": "P12",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Black, 128GB",
+     "status": "met",
+     "quote": "Color: Black | Black | Blue | size: 128GB",
+     "obs": "T7",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "NewCondition",
+     "obs": "P12",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Confirmed availability for pickup at a specific Beirut branch",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P12",
+     "url": "https://itpromax.store/en/p/apple-iphone-15-new-tech-warranty",
+     "read": "https://itpromax.store/en/p/apple-iphone-15-new-tech-warranty",
+     "source": "schema_org_jsonld",
+     "observed_at": "2026-11-28T05:34:04+00:00",
+     "sha256": "d43575c17856d81980534c71dc1057520f2c7a6dde9f0916c6fc7f90d423b7b7"
+    }
+   ],
+   "seller_basis": "IT Promax: Lebanese shop in the reviewed directory",
+   "downgrades": []
+  },
+  {
+   "tier": "unavailable",
+   "shop": "iSTYLE Lebanon",
+   "shop_id": "istyle_lebanon",
+   "title": "iPhone 15 128GB Black",
+   "variant": "Default Title",
+   "url": "https://istyle.com.lb/products/iphone-15-mtp03aa-a?variant=41969538203746",
+   "price": "979.02",
+   "currency": "USD",
+   "in_stock": false,
+   "condition": "unknown",
+   "identity": "exact",
+   "identity_reason": "Exact iPhone 15 128GB Black listing, but unavailable online.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "pickup branch stock is not confirmed (online stock only)",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "iPhone 15, black, 128GB",
+     "status": "met",
+     "quote": "iPhone 15 128GB Black",
+     "obs": "P8",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Confirmed availability for pickup at a specific Beirut branch",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P8",
+     "url": "https://istyle.com.lb/products/iphone-15-mtp03aa-a",
+     "read": "https://istyle.com.lb/products/iphone-15-mtp03aa-a.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:33:47+00:00",
+     "sha256": "94a0a4352701658491ab8265e59e51bff2509daa78f4d44958d9f4e00e24a348"
+    }
+   ],
+   "seller_basis": "iSTYLE Lebanon: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P12",
+   "variant_id": "apple-iphone-15-new-tech-plus-warranty",
+   "identity": "exact",
+   "identity_reason": "Product page identifies iPhone 15 with Black selected and size 128GB.",
+   "condition": "new",
+   "condition_quote": "NewCondition",
+   "condition_obs": "P12",
+   "requirements": [
+    {
+     "requirement": "iPhone 15",
+     "status": "met",
+     "evidence_obs": "P12",
+     "quote": "Apple iPhone 15 NEW – Tech+ Warranty"
+    },
+    {
+     "requirement": "Black, 128GB",
+     "status": "met",
+     "evidence_obs": "T7",
+     "quote": "Color: Black | Black | Blue | size: 128GB"
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "P12",
+     "quote": "NewCondition"
+    },
+    {
+     "requirement": "Confirmed availability for pickup at a specific Beirut branch",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": null,
+   "delivery_quote": null,
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P8",
+   "variant_id": "41969538203746",
+   "identity": "exact",
+   "identity_reason": "Exact iPhone 15 128GB Black listing, but unavailable online.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "iPhone 15, black, 128GB",
+     "status": "met",
+     "evidence_obs": "P8",
+     "quote": "iPhone 15 128GB Black"
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Confirmed availability for pickup at a specific Beirut branch",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": null,
+   "delivery_quote": null,
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Find exact model and Beirut pickup evidence.",
+   "at_s": 9.8,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "iPhone 15 128 black"
+    },
+    {
+     "tool": "search",
+     "query": "iPhone 15 128GB",
+     "shop_ids": [
+      "istyle_lebanon",
+      "abed_tahan",
+      "istore_plus"
+     ]
+    },
+    {
+     "tool": "search",
+     "query": "Apple iPhone 15 black",
+     "shop_ids": [
+      "mobileleb",
+      "outgeeked",
+      "classic_phones"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Need Beirut branch address and condition evidence for exact iSTYLE listing; check shorter query for other new offers.",
+   "at_s": 33.1,
+   "calls": [
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "istyle_lebanon"
+     ]
+    },
+    {
+     "tool": "read",
+     "url": "https://istyle.com.lb/products/iphone-15-mtp03aa-a",
+     "terms": [
+      "new",
+      "pickup",
+      "stock",
+      "Beirut"
+     ]
+    },
+    {
+     "tool": "search",
+     "query": "iPhone 15"
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Check new IT Promax configuration and iSTYLE branch addresses.",
+   "at_s": 50.2,
+   "calls": [
+    {
+     "tool": "read",
+     "url": "https://itpromax.store/en/p/apple-iphone-15-new-tech-warranty",
+     "terms": [
+      "128",
+      "Black",
+      "stock",
+      "pickup",
+      "Mar Elias"
+     ]
+    },
+    {
+     "tool": "read",
+     "url": "https://istyle.com.lb/pages/store-locator",
+     "terms": [
+      "Beirut",
+      "ABC",
+      "Address"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 4,
+   "notes": "Have a confirmed new exact configuration and published Beirut location, but no branch-level inventory; finish without equating shipping stock to pickup stock.",
+   "at_s": 65.8,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 13625,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 13860,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 15125,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 2109,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 7813,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 9906,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 1000,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 1172,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7969,
+   "usage": {
+    "actual_usd": "0.004353",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3229,
+     "output_tokens": 131,
+     "total_tokens": 3360
+    },
+    "latency_ms": 3687,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 8078,
+   "usage": {
+    "actual_usd": "0.019628",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 9327,
+     "output_tokens": 134,
+     "total_tokens": 9461
+    },
+    "latency_ms": 4250,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7187,
+   "usage": {
+    "actual_usd": "0.0275255",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 12570,
+     "output_tokens": 113,
+     "total_tokens": 12683
+    },
+    "latency_ms": 3844,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 4,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 14437,
+   "usage": {
+    "actual_usd": "0.036103",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 14157,
+     "output_tokens": 574,
+     "total_tokens": 14731
+    },
+    "latency_ms": 10703,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  }
+ ],
+ "retailer_requests": 68,
+ "seconds": 65.8,
+ "spend": {
+  "settled_usd": "0.0876095",
+  "uncertain_usd": "0",
+  "model_calls": 4,
+  "ledger_job": "scout-b43-20261128T053322"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://istyle.com.lb/products/iphone-16-mxvx3zd-a",
+   "shop_id": "istyle_lebanon",
+   "observed_at": "2026-11-28T05:33:37+00:00",
+   "sha256": "6d8a0db416f7cd004e71e38fbd25d6f712eb71d739f381cb092152c61e406c6a",
+   "product": {
+    "shop": "iSTYLE Lebanon",
+    "shop_id": "istyle_lebanon",
+    "title": "iPhone 16 Plus 128GB Ultramarine",
+    "url": "https://istyle.com.lb/products/iphone-16-mxvx3zd-a",
+    "vendor": "Apple",
+    "product_type": "iPhone",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:33:37+00:00",
+    "variants": [
+     {
+      "variant_id": "41969552064610",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "1138.86",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "MXVX3ZD/A",
+      "url": "https://istyle.com.lb/products/iphone-16-mxvx3zd-a?variant=41969552064610"
+     }
+    ],
+    "description": "Phone 16 Plus. Introducing Camera Control. 48MP Fusion camera. Five vibrant colors. And the A18 chip."
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://istoreplus.me/products/apple-iphone-15-pro",
+   "shop_id": "istore_plus",
+   "observed_at": "2026-11-28T05:33:38+00:00",
+   "sha256": "1398d76b843b67331dc46997cd69c5ad758521c89b83cb904ada7490a1b192ef",
+   "product": {
+    "shop": "iStore Plus",
+    "shop_id": "istore_plus",
+    "title": "Apple iPhone 15 Pro",
+    "url": "https://istoreplus.me/products/apple-iphone-15-pro",
+    "vendor": "Apple",
+    "product_type": "Smart Phone",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:33:38+00:00",
+    "variants": [
+     {
+      "variant_id": "46273357447383",
+      "title": "128GB",
+      "options": {
+       "Storage": "128GB"
+      },
+      "price": "1080.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://istoreplus.me/products/apple-iphone-15-pro?variant=46273357447383"
+     },
+     {
+      "variant_id": "46273357480151",
+      "title": "256GB",
+      "options": {
+       "Storage": "256GB"
+      },
+      "price": "1190.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://istoreplus.me/products/apple-iphone-15-pro?variant=46273357480151"
+     },
+     {
+      "variant_id": "46273357512919",
+      "title": "512GB",
+      "options": {
+       "Storage": "512GB"
+      },
+      "price": "1590.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://istoreplus.me/products/apple-iphone-15-pro?variant=46273357512919"
+     },
+     {
+      "variant_id": "46273357545687",
+      "title": "1TB",
+      "options": {
+       "Storage": "1TB"
+      },
+      "price": "1700.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://istoreplus.me/products/apple-iphone-15-pro?variant=46273357545687"
+     }
+    ],
+    "description": "Apple iPhone 15 Pro\nTitanium Design | A17 Pro Chip | Advanced Camera System\n*Next-Level Performance. Unmatched Elegance.*\nThe iPhone 15 Pro redefines smartphone excellence with its aerospace-grade titanium design, groundbreaking A17 Pro chip, and most advanced Pro camera system yet. Engineered for power users and creative professionals, it delivers unrivaled performance, stunning photography capabilities, and Apple's most immersive display—all in our lightest Pro model ever.\n✨ Key Features\n🛠️ Premium Titanium Design\nAerospace-Grade Titanium – Strongest iPhone frame yet, 19% lighter than stainless steel\nTextured Matte Glass Back – Elegant, fingerprint-resistant finish\nNarrower Bezels – More screen in nearly the same footprint\n⚡ A17 Pro Chip – Next-Gen Performance\n3nm Technology – 10% faster CPU, 20% faster GPU\nHardware-Accelerated Ray Tracing – Console-quality gaming\nProRes 4K60 Log Encoding – Professional video workflows\n📸 Pro Camera System\n48MP Main Sensor – 2x Telephoto option from main camera\nNew 12MP Telephoto – 3x optical zoom (120mm equivalent)\nNext-Gen Portrait Mode – Automatic depth capture\nNight Mode on All Cameras – Stellar low-light performance\n🔄 USB-C Connectivity\nUSB 3.2 Gen 2 – 20x faster transfers than Lightning\n4K HDR Video Output – Direct to external displays\n🎮 Gaming & Display\nProMotion 120Hz OLED – Always-On Display option\nConsole-Quality Games – Resident Evil Village, Death Stranding\n📊 Technical Specifications\nFeature\nSpecification\nDisplay\n6.1\" Super Retin"
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://istyle.com.lb/products/iphone-16-mye73zd-a",
+   "shop_id": "istyle_lebanon",
+   "observed_at": "2026-11-28T05:33:41+00:00",
+   "sha256": "0be94382192bc09f69f0987d4da0b1f67e33c2502721776bec92ed29e958986c",
+   "product": {
+    "shop": "iSTYLE Lebanon",
+    "shop_id": "istyle_lebanon",
+    "title": "iPhone 16 128GB Black",
+    "url": "https://istyle.com.lb/products/iphone-16-mye73zd-a",
+    "vendor": "Apple",
+    "product_type": "iPhone",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:33:41+00:00",
+    "variants": [
+     {
+      "variant_id": "41969484824674",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "1168.83",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "MYE73ZD/A",
+      "url": "https://istyle.com.lb/products/iphone-16-mye73zd-a?variant=41969484824674"
+     }
+    ],
+    "description": "iPhone 16. Introducing Camera Control. 48MP Fusion camera. Five vibrant colors. And the A18 chip."
+   }
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/apple-iphone-15-256gb",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:33:46+00:00",
+   "sha256": "de0601b413074a806b1a4785fcabae5e0981afcb36e7d56f11b6cf9b5f47b0b6",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Apple iPhone 15 256GB - Open Box",
+    "url": "https://mobileleb.com/products/apple-iphone-15-256gb",
+    "vendor": "Apple",
+    "product_type": "Communications",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:33:46+00:00",
+    "variants": [
+     {
+      "variant_id": "68137025077380",
+      "title": "Black / Open Box",
+      "options": {
+       "Color": "Black",
+       "Product Condition": "Open Box"
+      },
+      "price": "605.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppciRbXL",
+      "url": "https://mobileleb.com/products/apple-iphone-15-256gb?variant=68137025077380",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68137025110148",
+      "title": "Blue / Open Box",
+      "options": {
+       "Color": "Blue",
+       "Product Condition": "Open Box"
+      },
+      "price": "605.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "Appntg8xf",
+      "url": "https://mobileleb.com/products/apple-iphone-15-256gb?variant=68137025110148",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68137025142916",
+      "title": "Green / Open Box",
+      "options": {
+       "Color": "Green",
+       "Product Condition": "Open Box"
+      },
+      "price": "605.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppALEqq4",
+      "url": "https://mobileleb.com/products/apple-iphone-15-256gb?variant=68137025142916",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68137025175684",
+      "title": "Pink / Open Box",
+      "options": {
+       "Color": "Pink",
+       "Product Condition": "Open Box"
+      },
+      "price": "605.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppeXskXt",
+      "url": "https://mobileleb.com/products/apple-iphone-15-256gb?variant=68137025175684",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68137025208452",
+      "title": "Yellow / Open Box",
+      "options": {
+       "Color": "Yellow",
+       "Product Condition": "Open Box"
+      },
+      "price": "605.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "Apprh7FAf",
+      "url": "https://mobileleb.com/products/apple-iphone-15-256gb?variant=68137025208452",
+      "condition": "Open Box"
+     }
+    ],
+    "description": "Dimensions: 147.6 x 71.6 x 7.8 mm (5.81 x 2.82 x 0.31 in)\nWeight: 171 g (6.03 oz)\nBuild: Glass front (Corning-made glass), glass back (Corning-made glass), aluminum frame\nSIM: Nano-SIM and eSIM - International\nIP68 dust/water resistant (up to 6m for 30 min)\nApple Pay (Visa, MasterCard, AMEX certified)\nDISPLAY Type: Super Retina XDR OLED, HDR10, Dolby Vision, 1000 nits (HBM), 2000 nits (peak)\nSize: 6.1 inches, 91.3 cm2 (~86.4% screen-to-body ratio)\nResolution: 1179 x 2556 pixels, 19.5:9 ratio (~461 ppi density)\nProtection: Ceramic Shield glass\nPLATFORM OS: iOS 17\nChipset: Apple A16 Bionic (4 nm)\nCPU: Hexa-core (2x3.46 GHz Everest + 4x2.02 GHz Sawtooth)\nGPU: Apple GPU (5-core graphics)\nMEMORY Card slot: No\nInternal 256GB 6GB RAM, NVMe\nMAIN CAMERA: Dual 48 MP, f/1.6, 26mm (wide), 1.0µm, dual pixel PDAF, sensor-shift OIS, 12 MP, f/2.4, 13mm, 120˚ (ultrawide)\nFeatures: Dual-LED dual-tone flash, HDR (photo/panorama)\nVideo: 4K@24/25/30/60fps, 1080p@25/30/60/120/240fps, HDR, Dolby Vision HDR (up to 60fps), Cinematic mode (4K@30fps), stereo sound rec.\nSELFIE CAMERA: Single 12 MP, f/1.9, 23mm (wide), 1/3.6\", PDAF\nSL 3D, (depth/biometrics sensor)\nFeatures: HDR, Cinematic mode (4K@30fps)\nVideo: 4K@24/25/30/60fps, 1080p@25/30/60/120fps, gyro-EIS\nLoudspeaker: Yes, with stereo speakers\n3.5mm jack: No\nWLAN: Wi-Fi 802.11 a/b/g/n/ac/6, dual-band, hotspot\nBluetooth: 5.3, A2DP, LE\nPositioning: GPS, GLONASS, GALILEO, BDS, QZSS\nNFC: Yes\nRadio: No\nUSB: USB Type-C 2.0, DisplayPort\nSensors: Face ID, "
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/apple-iphone-15-pro-256gb",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:33:46+00:00",
+   "sha256": "4fc97e6b30ecb89b99dd79c40b78f52455540b892b9fe628888fe679daab2f99",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Apple iPhone 15 Pro 256GB - Open Box",
+    "url": "https://mobileleb.com/products/apple-iphone-15-pro-256gb",
+    "vendor": "Apple",
+    "product_type": "Communications",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:33:46+00:00",
+    "variants": [
+     {
+      "variant_id": "68137153331332",
+      "title": "Black Titanium / Open Box",
+      "options": {
+       "Color": "Black Titanium",
+       "Product Condition": "Open Box"
+      },
+      "price": "730.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppRdUcgd",
+      "url": "https://mobileleb.com/products/apple-iphone-15-pro-256gb?variant=68137153331332",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68137153364100",
+      "title": "Blue Titanium / Open Box",
+      "options": {
+       "Color": "Blue Titanium",
+       "Product Condition": "Open Box"
+      },
+      "price": "730.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppgJCt2y",
+      "url": "https://mobileleb.com/products/apple-iphone-15-pro-256gb?variant=68137153364100",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68137153396868",
+      "title": "Natural Titanium / Open Box",
+      "options": {
+       "Color": "Natural Titanium",
+       "Product Condition": "Open Box"
+      },
+      "price": "730.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "App6NSNND",
+      "url": "https://mobileleb.com/products/apple-iphone-15-pro-256gb?variant=68137153396868",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68137153429636",
+      "title": "White Titanium / Open Box",
+      "options": {
+       "Color": "White Titanium",
+       "Product Condition": "Open Box"
+      },
+      "price": "730.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppEPJznl",
+      "url": "https://mobileleb.com/products/apple-iphone-15-pro-256gb?variant=68137153429636",
+      "condition": "Open Box"
+     }
+    ],
+    "description": "Dimensions: 146.6 x 70.6 x 8.3 mm (5.77 x 2.78 x 0.33 in)\nWeight: 187 g (6.60 oz)\nBuild: Glass front (Corning-made glass), glass back (Corning-made glass), titanium frame (grade 5)\nSIM Nano-SIM and eSIM - International\nIP68 dust/water resistant (up to 6m for 30 min)\nApple Pay (Visa, MasterCard, AMEX certified)\nDISPLAY Type: LTPO Super Retina XDR OLED, 120Hz, HDR10, Dolby Vision, 1000 nits (typ), 2000 nits (HBM)\nSize: 6.1 inches, 91.3 cm2 (~88.2% screen-to-body ratio)\nResolution: 1179 x 2556 pixels, 19.5:9 ratio (~461 ppi density)\nProtection: Ceramic Shield glass\nAlways-On display\nOS: iOS 17\nChipset: Apple A17 Pro (3 nm)\nCPU: Hexa-core (2x3.78 GHz + 4)\nGPU: Apple GPU (6-core graphics)\nMEMORY Card slot: No\nInternal 256GB 8GB RAM, NVMe\nMAIN CAMERA: Triple 48 MP, f/1.8, 24mm (wide), 1/1.28\", 1.22µm, dual pixel PDAF, sensor-shift OIS, 12 MP, f/2.8, 77mm (telephoto), 1.0µm, PDAF, OIS, 3x optical zoom, 12 MP, f/2.2, 13mm, 120˚ (ultrawide), 1/2.55\", 1.4µm, dual pixel PDAF, TOF 3D LiDAR scanner (depth)\nFeatures: Dual-LED dual-tone flash, HDR (photo/panorama)\nVideo: 4K@24/25/30/60fps, 1080p@25/30/60/120/240fps, 10-bit HDR, Dolby Vision HDR (up to 60fps), ProRes, Cinematic mode (4K@24/30fps), 3D (spatial) video, stereo sound rec.\nSELFIE CAMERA: Single 12 MP, f/1.9, 23mm (wide), 1/3.6\", PDAF, OIS, SL 3D, (depth/biometrics sensor)\nFeatures: HDR, Cinematic mode (4K@24/30fps)\nVideo: 4K@24/25/30/60fps, 1080p@25/30/60/120fps, gyro-EIS\nLoudspeaker: Yes, with stereo speakers\n3.5mm jack: No\nWLAN"
+   }
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/apple-iphone-15-128gb",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:33:46+00:00",
+   "sha256": "49067a25cd73d0cdc0b63a9b6f4a48ebe6bbf1eaf530e7727c38114cefa2ce28",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Apple iPhone 15 128GB - Open Box",
+    "url": "https://mobileleb.com/products/apple-iphone-15-128gb",
+    "vendor": "Apple",
+    "product_type": "Communications",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:33:46+00:00",
+    "variants": [
+     {
+      "variant_id": "68136921301124",
+      "title": "Black / Open Box",
+      "options": {
+       "Color": "Black",
+       "Product Condition": "Open Box"
+      },
+      "price": "560.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "App3r3pVa",
+      "url": "https://mobileleb.com/products/apple-iphone-15-128gb?variant=68136921301124",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68136921333892",
+      "title": "Blue / Open Box",
+      "options": {
+       "Color": "Blue",
+       "Product Condition": "Open Box"
+      },
+      "price": "560.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppGG0Fab",
+      "url": "https://mobileleb.com/products/apple-iphone-15-128gb?variant=68136921333892",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68136921366660",
+      "title": "Green / Open Box",
+      "options": {
+       "Color": "Green",
+       "Product Condition": "Open Box"
+      },
+      "price": "560.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppAUjhoB",
+      "url": "https://mobileleb.com/products/apple-iphone-15-128gb?variant=68136921366660",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68136921399428",
+      "title": "Pink / Open Box",
+      "options": {
+       "Color": "Pink",
+       "Product Condition": "Open Box"
+      },
+      "price": "560.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppzDgxZD",
+      "url": "https://mobileleb.com/products/apple-iphone-15-128gb?variant=68136921399428",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68136921432196",
+      "title": "Yellow / Open Box",
+      "options": {
+       "Color": "Yellow",
+       "Product Condition": "Open Box"
+      },
+      "price": "560.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "App0Tv0i3",
+      "url": "https://mobileleb.com/products/apple-iphone-15-128gb?variant=68136921432196",
+      "condition": "Open Box"
+     }
+    ],
+    "description": "Dimensions: 147.6 x 71.6 x 7.8 mm (5.81 x 2.82 x 0.31 in)\nWeight: 171 g (6.03 oz)\nBuild: Glass front (Corning-made glass), glass back (Corning-made glass), aluminum frame\nSIM: Nano-SIM and eSIM - International\nIP68 dust/water resistant (up to 6m for 30 min)\nApple Pay (Visa, MasterCard, AMEX certified)\nDISPLAY Type: Super Retina XDR OLED, HDR10, Dolby Vision, 1000 nits (HBM), 2000 nits (peak)\nSize: 6.1 inches, 91.3 cm2 (~86.4% screen-to-body ratio)\nResolution: 1179 x 2556 pixels, 19.5:9 ratio (~461 ppi density)\nProtection: Ceramic Shield glass\nPLATFORM OS: iOS 17\nChipset: Apple A16 Bionic (4 nm)\nCPU: Hexa-core (2x3.46 GHz Everest + 4x2.02 GHz Sawtooth)\nGPU: Apple GPU (5-core graphics)\nMEMORY Card slot: No\nInternal 128GB 6GB RAM, NVMe\nMAIN CAMERA: Dual 48 MP, f/1.6, 26mm (wide), 1.0µm, dual pixel PDAF, sensor-shift OIS, 12 MP, f/2.4, 13mm, 120˚ (ultrawide)\nFeatures: Dual-LED dual-tone flash, HDR (photo/panorama)\nVideo: 4K@24/25/30/60fps, 1080p@25/30/60/120/240fps, HDR, Dolby Vision HDR (up to 60fps), Cinematic mode (4K@30fps), stereo sound rec.\nSELFIE CAMERA: Single 12 MP, f/1.9, 23mm (wide), 1/3.6\", PDAF\nSL 3D, (depth/biometrics sensor)\nFeatures: HDR, Cinematic mode (4K@30fps)\nVideo: 4K@24/25/30/60fps, 1080p@25/30/60/120fps, gyro-EIS\nLoudspeaker: Yes, with stereo speakers\n3.5mm jack: No\nWLAN: Wi-Fi 802.11 a/b/g/n/ac/6, dual-band, hotspot\nBluetooth: 5.3, A2DP, LE\nPositioning: GPS, GLONASS, GALILEO, BDS, QZSS\nNFC: Yes\nRadio: No\nUSB: USB Type-C 2.0, DisplayPort\nSensors: Face ID, "
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://istyle.com.lb/pages/delivery-payment-info#gbaid5672908",
+   "shop_id": "istyle_lebanon",
+   "observed_at": "2026-11-28T05:33:46+00:00",
+   "sha256": "603c1d3020e3e90593ae3f7cde4c53f8ecb0eb97b7128fe58c53ea15944ff452",
+   "excerpt": "Delivery & Payment Options – Fast, Flexible & Secure\n– iSTYLE Lebanon\nSkip to content\nShop online & collect in-store.\nLoading store\nAddress:\nTelephone:\nEmail:\nHours:\nView store map\nSelect another store\nLoading store\nAddress:\nTelephone:\nEmail:\nHours:\nView store map\nSelect another store\nLog in\nCart\nCountries\nSelect your country\nMiddle East & Africa\nUnited Arab Emirates\nOman\nLebanon\nMarocco\nIraq\nEurope\nHungary\nCzech Republic\nCroatia\nBulgaria\nMacedonia\nRomania\nSerbia\nSlovakia\nSlovenia\nSpain (K-Tuin)\nAndorra (K-tuin)\nCanary Islands (Banana Computer)\nMac\niPad\niPhone\nWatch\nAirPods\nTV\nAccessories\nDeals\nBusiness\nServices\nStores\nBlogs\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\nDelivery & Payment Options – Fast, Flexible & Secure\nOnline delivery and payment options\nOnline delivery and payment options | Return policy\nShipping information\nFree delivery across Lebanon for order value above USD 900.\nUSD 4 delivery fee across Lebanon for order value below USD 900.\nStore Pickup\nOrder online and pick up the products at your nearest iSTYLE. Choose the Store Pickup option at the check out.Please wait for our pick up confirmation email before you go to the desired iSTYLE store. Please note your order will be canc",
+   "quoted": []
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://istyle.com.lb/products/iphone-15-mtpc3aa-a",
+   "shop_id": "istyle_lebanon",
+   "observed_at": "2026-11-28T05:33:46+00:00",
+   "sha256": "2e8ce6a998843a28cbade98844917c4bb32106ff31946d46cc3f23ce719f7712",
+   "product": {
+    "shop": "iSTYLE Lebanon",
+    "shop_id": "istyle_lebanon",
+    "title": "iPhone 15 512GB Black",
+    "url": "https://istyle.com.lb/products/iphone-15-mtpc3aa-a",
+    "vendor": "Apple",
+    "product_type": "iPhone",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:33:46+00:00",
+    "variants": [
+     {
+      "variant_id": "41969483284578",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "683.32",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "MTPC3AA/A",
+      "url": "https://istyle.com.lb/products/iphone-15-mtpc3aa-a?variant=41969483284578"
+     }
+    ],
+    "description": "iPhone 15 brings you Dynamic Island, a 48MP Main camera, and USB-C‚ all in a durable color-infused glass and aluminum design."
+   }
+  },
+  {
+   "obs": "P8",
+   "kind": "product",
+   "url": "https://istyle.com.lb/products/iphone-15-mtp03aa-a",
+   "shop_id": "istyle_lebanon",
+   "observed_at": "2026-11-28T05:33:47+00:00",
+   "sha256": "94a0a4352701658491ab8265e59e51bff2509daa78f4d44958d9f4e00e24a348",
+   "product": {
+    "shop": "iSTYLE Lebanon",
+    "shop_id": "istyle_lebanon",
+    "title": "iPhone 15 128GB Black",
+    "url": "https://istyle.com.lb/products/iphone-15-mtp03aa-a",
+    "vendor": "Apple",
+    "product_type": "iPhone",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:33:47+00:00",
+    "variants": [
+     {
+      "variant_id": "41969538203746",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "979.02",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "MTP03AA/A",
+      "url": "https://istyle.com.lb/products/iphone-15-mtp03aa-a?variant=41969538203746"
+     }
+    ],
+    "description": "iPhone 15 brings you Dynamic Island, a 48MP Main camera, and USB-C‚ all in a durable color-infused glass and aluminum design."
+   }
+  },
+  {
+   "obs": "P9",
+   "kind": "product",
+   "url": "https://istyle.com.lb/products/iphone-15-mtp63aa-a",
+   "shop_id": "istyle_lebanon",
+   "observed_at": "2026-11-28T05:33:47+00:00",
+   "sha256": "03a860d857d2430c3cabb29bc65ed4d2d148f4285681c894a6b08bccc92c29f3",
+   "product": {
+    "shop": "iSTYLE Lebanon",
+    "shop_id": "istyle_lebanon",
+    "title": "iPhone 15 256GB Black",
+    "url": "https://istyle.com.lb/products/iphone-15-mtp63aa-a",
+    "vendor": "Apple",
+    "product_type": "iPhone",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:33:47+00:00",
+    "variants": [
+     {
+      "variant_id": "41969546428514",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "1038.96",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "MTP63AA/A",
+      "url": "https://istyle.com.lb/products/iphone-15-mtp63aa-a?variant=41969546428514"
+     }
+    ],
+    "description": "iPhone 15 brings you Dynamic Island, a 48MP Main camera, and USB-C‚ all in a durable color-infused glass and aluminum design."
+   }
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://istyle.com.lb/meta.json",
+   "shop_id": "istyle_lebanon",
+   "observed_at": "2026-11-28T05:33:56+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"iSTYLE Lebanon\", \"city\": \"Beirut\", \"province\": null, \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"istyle.com.lb\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://istyle.com.lb/",
+   "shop_id": "istyle_lebanon",
+   "observed_at": "2026-11-28T05:33:57+00:00",
+   "sha256": "1d64db7efc27cfa15effa9eefd798563a87a1904bf1259437954d259b1cebf67",
+   "excerpt": "iSTYLE Apple Premium Reseller, Lebanon\n– iSTYLE Lebanon\nSkip to content\nShop online & collect in-store.\nLoading store\nAddress:\nTelephone:\nEmail:\nHours:\nView store map\nSelect another store\nLoading store\nAddress:\nTelephone:\nEmail:\nHours:\nView store map\nSelect another store\nLog in\nCart\nCountries\nSelect your country\nMiddle East & Africa\nUnited Arab Emirates\nOman\nLebanon\nMarocco\nIraq\nEurope\nHungary\nCzech Republic\nCroatia\nBulgaria\nMacedonia\nRomania\nSerbia\nSlovakia\nSlovenia\nSpain (K-Tuin)\nAndorra (K-tuin)\nCanary Islands (Banana Computer)\nMac\niPad\niPhone\nWatch\nAirPods\nTV\nAccessories\nDeals\nBusiness\nServices\nStores\nBlogs\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\niSTYLE Apple Premium Reseller, Lebanon\nView all Apple products.\nMac\nFrom USD 1,253\niPhone\nFrom USD 842\niPad\nFrom USD 443\nWATCH\nFrom USD 305\nAirPods\nFrom USD 194\nTV\nFrom USD 99\nAccessories\nFrom USD 17\nAirtag\nFrom USD 50\nSee what’s new.\nDiscover services and more.\nBUY NOW PAY LATER WITH NEO\niPhone 18 Pro starting\n156$/month.\nFINANCING WITH MYMONTY\niPhone 18 Pro starting\n163$/month.\nFINANCING\nGet special financing.\nwith Byblos Bank Customers.\nEDUCATIONAL DISCOUNT\nStudents & Teachers,\nget special discounts on Mac.\nAUTHORISED SERVICE CENTER\nOne s",
+   "quoted": []
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://istyle.com.lb/products/iphone-15-mtp03aa-a",
+   "shop_id": "istyle_lebanon",
+   "observed_at": "2026-11-28T05:34:03+00:00",
+   "sha256": "7296d3ca599d9b5143be0896aa9db31c7748d3bf73a2db05ed659bb526223d43",
+   "excerpt": "Buy iPhone 15 128GB Black Online in Beirut, Lebanon\n– iSTYLE Lebanon\nSkip to content\nShop online & collect in-store.\nLoading store\nAddress:\nTelephone:\nEmail:\nHours:\nView store map\nSelect another store\nLoading store\nAddress:\nTelephone:\nEmail:\nHours:\nView store map\nSelect another store\nLog in\nCart\nCountries\nSelect your country\nMiddle East & Africa\nUnited Arab Emirates\nOman\nLebanon\nMarocco\nIraq\nEurope\nHungary\nCzech Republic\nCroatia\nBulgaria\nMacedonia\nRomania\nSerbia\nSlovakia\nSlovenia\nSpain (K-Tuin)\nAndorra (K-tuin)\nCanary Islands (Banana Computer)\nMac\niPad\niPhone\nWatch\nAirPods\nTV\nAccessories\nDeals\nBusiness\nServices\nStores\nBlogs\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\niPhone Duo\nFrom\nUSD 2,829\nNEW\niPhone 18 Pro\nFrom\nUSD 1,699\niPhone 17 Pro\nFrom\nUSD 1,399\niPhone Air\nFrom\nUSD 1,099\niPhone 17e\nFrom\nUSD 1,029\niPhone 17\nFrom\nUSD 1,269\niPhone 15\nFrom\nUSD 979\niPhone Accessories\nFrom\nUSD 17\nView All iPhone\niPhone 15\nSKU: MTP03AA/A\nBarcode:\n195949035906\nSkip to product information\nOpen media 1 in modal\nOpen media 2 in modal\nOpen media 3 in modal\nOpen media 4 in modal\nOpen media 5 in modal\nOpen media 6 in modal\nOpen media 7 in modal\nOpen media 8 in modal\nOpen media 9 in modal\nOpen media 10 in modal\n1\n/\no",
+   "quoted": []
+  },
+  {
+   "obs": "P10",
+   "kind": "product",
+   "url": "https://najemstarcall.com/product/used-apple-iphone-15-pro-3/",
+   "shop_id": "najem_star",
+   "observed_at": "2026-11-28T05:34:04+00:00",
+   "sha256": "9c2fe2a752ee2c1af9a72c346383a43e19151d014ce50960ba85dec7cb8551d5",
+   "product": {
+    "shop": "Najem Star Call",
+    "shop_id": "najem_star",
+    "title": "Used Apple iPhone 15 Pro",
+    "url": "https://najemstarcall.com/product/used-apple-iphone-15-pro-3/",
+    "vendor": null,
+    "product_type": null,
+    "condition": null,
+    "source": "woo_store_api",
+    "observed_at": "2026-11-28T05:34:04+00:00",
+    "variants": [
+     {
+      "variant_id": "150093",
+      "title": "Used Apple iPhone 15 Pro",
+      "options": {},
+      "price": "670.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://najemstarcall.com/product/used-apple-iphone-15-pro-3/"
+     }
+    ],
+    "description": "256GB, Battery Health: 80%, Cycle Count: 1269"
+   }
+  },
+  {
+   "obs": "P11",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/used-iphone-15-phones",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:34:04+00:00",
+   "sha256": "ddd1ae60f55e783691ebdde61a8fc97184ef5ae2b548bf22975c359da700ce98",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "used iphone 15 series phones",
+    "url": "https://classic-phones.com/products/used-iphone-15-phones",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:34:04+00:00",
+    "variants": [
+     {
+      "variant_id": "49408298287339",
+      "title": "Used iphone 15 pro 256gb *battery changed*0 cycle count",
+      "options": {
+       "Type": "Used iphone 15 pro 256gb *battery changed*0 cycle count"
+      },
+      "price": "800.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/used-iphone-15-phones?variant=49408298287339"
+     },
+     {
+      "variant_id": "50503164854507",
+      "title": "Used iphone 15 pro 128gb 314 cycle",
+      "options": {
+       "Type": "Used iphone 15 pro 128gb 314 cycle"
+      },
+      "price": "750.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/used-iphone-15-phones?variant=50503164854507"
+     },
+     {
+      "variant_id": "50529542111467",
+      "title": "Used iphone 15 plus 128gb*battery changed",
+      "options": {
+       "Type": "Used iphone 15 plus 128gb*battery changed"
+      },
+      "price": "550.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/used-iphone-15-phones?variant=50529542111467"
+     },
+     {
+      "variant_id": "68350952898795",
+      "title": "Used iPhone 15 128gb black",
+      "options": {
+       "Type": "Used iPhone 15 128gb black"
+      },
+      "price": "550.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/used-iphone-15-phones?variant=68350952898795"
+     },
+     {
+      "variant_id": "68350955946219",
+      "title": "Used iphone 15 pro max 256gb 488 cycle",
+      "options": {
+       "Type": "Used iphone 15 pro max 256gb 488 cycle"
+      },
+      "price": "800.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/used-iphone-15-phones?variant=68350955946219"
+     }
+    ],
+    "description": "📱 Used iPhone 15 Series\nDiscover the Apple iPhone 15 Series, offering premium performance, excellent cameras, and a modern design at a more affordable price. The lineup includes the iPhone 15, iPhone 15 Plus, iPhone 15 Pro, and iPhone 15 Pro Max. All models feature USB-C connectivity and Dynamic Island, while the Pro models add advanced performance and camera capabilities.\nEach device is pre-owned and tested to ensure reliable everyday performance. Availability may vary by model, storage capacity, color, battery health, and cosmetic condition.\nAvailable Models:\niPhone 15\niPhone 15 Plus\niPhone 15 Pro\niPhone 15 Pro Max\nKey Features:\n📱 Super Retina XDR OLED display\n⚡ Powerful Apple processors\n📸 Advanced camera systems\n🔌 USB-C connectivity\n🔐 Face ID security\n📶 5G connectivity\n💾 Multiple storage options\n🔋 Battery health varies by device\n♻️ Pre-owned and tested\nCondition: Used / Pre-owned\nStorage: Available in multiple capacities\nWarranty: Depending on availability and store policy\nA great choice for customers looking for a premium iPhone experience at a lower price than buying new."
+   }
+  },
+  {
+   "obs": "P12",
+   "kind": "product",
+   "url": "https://itpromax.store/en/p/apple-iphone-15-new-tech-warranty",
+   "shop_id": "itpromax",
+   "observed_at": "2026-11-28T05:34:04+00:00",
+   "sha256": "d43575c17856d81980534c71dc1057520f2c7a6dde9f0916c6fc7f90d423b7b7",
+   "product": {
+    "shop": "IT Promax",
+    "shop_id": "itpromax",
+    "title": "iPhone 15 New Price Lebanon – Apple | IT Promax",
+    "url": "https://itpromax.store/en/p/apple-iphone-15-new-tech-warranty",
+    "vendor": "Apple",
+    "product_type": null,
+    "condition": "NewCondition",
+    "source": "schema_org_jsonld",
+    "observed_at": "2026-11-28T05:34:04+00:00",
+    "variants": [
+     {
+      "variant_id": "apple-iphone-15-new-tech-plus-warranty",
+      "title": "Apple iPhone 15 NEW – Tech+ Warranty",
+      "options": {},
+      "price": "690.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": "InStock",
+      "sku": "apple-iphone-15-new-tech-plus-warranty",
+      "url": "https://itpromax.store/en/p/apple-iphone-15-new-tech-warranty",
+      "condition": "NewCondition"
+     }
+    ],
+    "description": "Buy the new Apple iPhone 15 in Lebanon with Tech+ warranty. Delivery to every town in 1–3 days, cash on delivery, prices in US dollars."
+   }
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://itpromax.store/en/pages/shipping",
+   "shop_id": "itpromax",
+   "observed_at": "2026-11-28T05:34:05+00:00",
+   "sha256": "df510c1b5165594a10610fc2d0cccf2d0ef0cb576316e8f5164344e72c90e447",
+   "excerpt": "Shipping and Delivery | IT Promax\nSkip to content\nDelivery across Lebanon within 3 days\n+961 70 012 451\nEnglish\nEN\nENEnglish\nعالعربية\nFRFrançais\nSearch products\nSearch with a photo\nLog in\n0\nCart\n0\nitems in cart\nSearch products\nSearch with a photo\nAll categories\nComputers & Office Tech\nComputer Accessories\nLaptops & Computers\nKeyboards, Mice & Webcams\nNetworking & Wi-Fi\nStorage & Memory\nMonitors\nPrinters & Ink\nAll of Computers & Office Tech\nTV, Audio & Cameras\nCameras & Drones\nHeadphones & Earbuds\nSpeakers & Home Audio\nSmart Home & Security\nTVs & Streaming\nAll of TV, Audio & Cameras\nGaming\nConsoles & Games\nControllers & Gaming Accessories\nGaming Chairs & Desks\nAll of Gaming\nPhones & Tablets\nChargers, Cables & Power Banks\nPhone Accessories\nTablets & iPads\nSmart Watches & Wearables\nCases & Screen Protectors\nSmartphones\nphone cooler\nAll of Phones & Tablets\nHome Appliances\nLarge Appliances\nKitchen Appliances\nVacuums & Irons\nHeating & Cooling\nAll of Home Appliances\nStationery & Books\nStationery & Office Supplies\nArt & Crafts\nBooks\nAll of Stationery & Books\nTools, DIY & Power\nHand Tools & Hardware\nPower Tools\nElectrical & Lighting Supplies\nSolar, Batteries & Inverters\nAll of Tools, DIY & Power\nAll categories\nComputers & Office Tech\nComputer Accessories\nLaptops & Computers\nKeyboards, Mice & Webcams\nNetworking & Wi-Fi\nStorage & Memory\nMonitors\nPrinters & Ink\nAll of Computers & Office Tech\nTV, Audio & Cameras\nCameras & Drones\nHeadphones & Earbuds\nSpeakers & Home Audio\nSmart Home & Secu",
+   "quoted": []
+  },
+  {
+   "obs": "T6",
+   "kind": "page",
+   "url": "https://www.classic-phones.com/policies/shipping-policy",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:34:05+00:00",
+   "sha256": "918a4f8ea1d681dad4c0e9fd4763effbedc01401a7885701c7a947c61b469eb1",
+   "excerpt": "Shipping policy\nSkip to content\nDelivery Available All Over Lebanon\nFacebook\nInstagram\nShop All\nCameras\nCameras\nGo to Cameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nLaptops\nLaptops\nGo to Laptops\nMacbook\nNew\nUsed\nTablets\nTablets\nGo to Tablets\nApple\nSamsung\nXiaomi\nBlackview\nModio\nSmart Watch\nSmart Watch\nGo to Smart Watch\nApple\nSamsung\nFitbit\nHuawei\nAmazfit\nXiaomi\nGreen Lion\nProdo\nKieslect\nAccessories\nAccessories\nGo to Accessories\nAdapters & Cables\nStorage\nKids\nScooters\nGaming\nGaming\nGo to Gaming\nNintendo\nPS\nXBOX\nOthers\nPersonal Care\nPersonal Care\nGo to Personal Care\nHome Accessories\nPerfume\nMassage\nOthers\nTech Gadgets\nTech Gadgets\nGo to Tech Gadgets\nKits (Cleaning, Repair...)\nPower Devices\nSmart Devices\nRouters\nBags\nKindle\nStands\nCalculator\nHandy Phones\nAudio\nAudio\nGo to Audio\nEarphones\nSpeakers\nHeadphones\nEarbuds\nMicrophones\nCases\nCases\nGo to Cases\nApple\nSamsung\nOthers\nWatch Accessories\nKeyboards & Mouses\nOthers\nBlogs\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nLebanon\nFast Delivery\nFacebook\nInstagram\nLog in\nSearch\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nSearch\nLog in\n0\n00 items\nSubtotal\n$0\nShop All\nCameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nGo to Cameras\nLaptops\nMacbook\nNew\nUsed\nGo to Laptops\nTablets\nApple\nSamsung\nXiaomi\nBlack",
+   "quoted": []
+  },
+  {
+   "obs": "T7",
+   "kind": "page",
+   "url": "https://itpromax.store/en/p/apple-iphone-15-new-tech-warranty",
+   "shop_id": "itpromax",
+   "observed_at": "2026-11-28T05:34:13+00:00",
+   "sha256": "31fea1f805bf3b0c3631f2fe1e40cd03e9aa5a64ff4fd7bd0949c0913da6e214",
+   "excerpt": "iPhone 15 New Price Lebanon – Apple | IT Promax\nSkip to content\nDelivery across Lebanon within 3 days\n+961 70 012 451\nEnglish\nEN\nENEnglish\nعالعربية\nFRFrançais\nSearch products\nSearch with a photo\nLog in\n0\nCart\n0\nitems in cart\nSearch products\nSearch with a photo\nAll categories\nComputers & Office Tech\nComputer Accessories\nLaptops & Computers\nKeyboards, Mice & Webcams\nNetworking & Wi-Fi\nStorage & Memory\nMonitors\nPrinters & Ink\nAll of Computers & Office Tech\nTV, Audio & Cameras\nCameras & Drones\nHeadphones & Earbuds\nSpeakers & Home Audio\nSmart Home & Security\nTVs & Streaming\nAll of TV, Audio & Cameras\nGaming\nConsoles & Games\nControllers & Gaming Accessories\nGaming Chairs & Desks\nAll of Gaming\nPhones & Tablets\nChargers, Cables & Power Banks\nPhone Accessories\nTablets & iPads\nSmart Watches & Wearables\nCases & Screen Protectors\nSmartphones\nphone cooler\nAll of Phones & Tablets\nHome Appliances\nLarge Appliances\nKitchen Appliances\nVacuums & Irons\nHeating & Cooling\nAll of Home Appliances\nStationery & Books\nStationery & Office Supplies\nArt & Crafts\nBooks\nAll of Stationery & Books\nTools, DIY & Power\nHand Tools & Hardware\nPower Tools\nElectrical & Lighting Supplies\nSolar, Batteries & Inverters\nAll of Tools, DIY & Power\nAll categories\nComputers & Office Tech\nComputer Accessories\nLaptops & Computers\nKeyboards, Mice & Webcams\nNetworking & Wi-Fi\nStorage & Memory\nMonitors\nPrinters & Ink\nAll of Computers & Office Tech\nTV, Audio & Cameras\nCameras & Drones\nHeadphones & Earbuds\nSpeakers & Home Audio\nSma",
+   "quoted": [
+    {
+     "quote": "Color: Black | Black | Blue | size: 128GB",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T8",
+   "kind": "page",
+   "url": "https://istyle.com.lb/pages/store-locator",
+   "shop_id": "istyle_lebanon",
+   "observed_at": "2026-11-28T05:34:13+00:00",
+   "sha256": "250bf32c8cda3345c92d1c6e37003c8d6af9c74e9d655c20a11ba052c05cffb0",
+   "excerpt": "iSTYLE Apple Stores - Premium Apple Authorized Reseller in Lebanon\n– iSTYLE Lebanon\nSkip to content\nShop online & collect in-store.\nLoading store\nAddress:\nTelephone:\nEmail:\nHours:\nView store map\nSelect another store\nLoading store\nAddress:\nTelephone:\nEmail:\nHours:\nView store map\nSelect another store\nLog in\nCart\nCountries\nSelect your country\nMiddle East & Africa\nUnited Arab Emirates\nOman\nLebanon\nMarocco\nIraq\nEurope\nHungary\nCzech Republic\nCroatia\nBulgaria\nMacedonia\nRomania\nSerbia\nSlovakia\nSlovenia\nSpain (K-Tuin)\nAndorra (K-tuin)\nCanary Islands (Banana Computer)\nMac\niPad\niPhone\nWatch\nAirPods\nTV\nAccessories\nDeals\nBusiness\nServices\nStores\nBlogs\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\niSTYLE Apple Stores - Premium Apple Authorized Reseller in Lebanon\nStores\nPlease fill this out\nUse my current location\nFilter stores by distance\nAll stores\n5\nkm\n10\nkm\n30\nkm\n50\nkm\n100\nkm\nSelect\nShop\nMac\niPad\niPhone\nWatch\nAirPods\nTV\nAccessories\nServices\nFinancing\nEducation Programs\nTrade-in\nApple Authorized Service Center\nWorkshops\niSTYLE for Business\nAbout\nAbout iSTYLE\nContact us\nCareers\nFind a Store\nBlogs\nPolicies\nReturn policy\nPrivacy policy\nTerms and Conditions\nMy account\nApple Premium Reseller\nShop\nMac\niPad\niPhon",
+   "quoted": []
+  }
+ ]
+}

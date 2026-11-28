@@ -1,0 +1,1248 @@
+{
+ "run_id": "scout-b24-20261128T052914",
+ "request": {
+  "id": "B24",
+  "text": "Where can I pick up new black JBL Tune 770NC headphones in Hamra, Beirut?",
+  "mode": "pickup",
+  "destination": "Hamra, Beirut",
+  "category": "audio",
+  "run_id": "scout-b24-20261128T052914"
+ },
+ "status": "offers",
+ "message": "I couldn’t verify a shop in Hamra offering pickup of new black JBL Tune 770NC headphones.\n• Najem Star Call — $60.00: black is in stock online and explicitly listed as Brand New, but its pickup address and Hamra availability are unconfirmed.\n• Classic Phones — $55.00: black is in stock online. Published address: Mar ellies, Beirut 961, Lebanon—not Hamra. New condition and branch stock are unconfirmed.\n• Phonefinity is excluded for pickup: it says it is online-only with no showroom.\nBest next step: confirm Najem Star Call’s pickup location and physical stock before travelling; I can’t recommend a confirmed Hamra pickup yet.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "best",
+   "shop": "Najem Star Call",
+   "shop_id": "najem_star",
+   "title": "JBL Tune 770NC Adaptive Noise Cancelling Wireless Headphones",
+   "variant": "Color: Black",
+   "url": "https://najemstarcall.com/product/jbl-tune-770nc/?attribute_pa_color=black",
+   "price": "60.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "Requested JBL Tune 770NC in black.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "pickup branch stock is not confirmed (online stock only)",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "JBL Tune 770NC",
+     "status": "met",
+     "quote": "JBL Tune 770NC Adaptive Noise Cancelling Wireless Headphones",
+     "obs": "P11",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Black",
+     "status": "met",
+     "quote": "Color: Black",
+     "obs": "P11",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "Brand New",
+     "obs": "P11",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Pickup in Hamra, Beirut",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P11",
+     "url": "https://najemstarcall.com/product/jbl-tune-770nc/",
+     "read": "https://najemstarcall.com/wp-json/wc/store/v1/products?slug=jbl-tune-770nc",
+     "source": "woo_store_api",
+     "observed_at": "2026-11-28T05:30:03+00:00",
+     "sha256": "432eb3cb8104ad4494598f154750299b05d8741601c30330ac52b87f3579f453"
+    }
+   ],
+   "seller_basis": "Najem Star Call: Lebanese shop in the reviewed directory",
+   "downgrades": []
+  },
+  {
+   "tier": "best",
+   "shop": "Classic Phones",
+   "shop_id": "classic_phones",
+   "title": "Jbl tune 770nc",
+   "variant": "black",
+   "url": "https://classic-phones.com/products/jbl-tune-770nc-black?variant=44765822189803",
+   "price": "55.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "exact",
+   "identity_reason": "Requested model and black variant; new condition is unconfirmed.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "pickup branch stock is not confirmed (online stock only)",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "JBL Tune 770NC",
+     "status": "met",
+     "quote": "JBL Tune 770NC Wireless Over Ear ANC Headphones - Black",
+     "obs": "P8",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Black",
+     "status": "met",
+     "quote": "black",
+     "obs": "P8",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Pickup in Hamra, Beirut",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P8",
+     "url": "https://classic-phones.com/products/jbl-tune-770nc-black",
+     "read": "https://classic-phones.com/products/jbl-tune-770nc-black.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:29:52+00:00",
+     "sha256": "8f6ec4db2f21a4ba382c8dc737e329605bf2b9fb2972317e72aadd03b32f6c8b"
+    }
+   ],
+   "seller_basis": "Classic Phones: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  },
+  {
+   "tier": "rejected",
+   "shop": "Phonefinity",
+   "shop_id": "phonefinity",
+   "title": "JBL Tune 770NC",
+   "variant": "Color: Black",
+   "url": "https://phonefinity.net/products/jbl-tune-770nc/?attribute_pa_color=black",
+   "price": "65.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "exact",
+   "identity_reason": "Exact model and black color, excluded because the shop has no showroom for pickup.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "pickup branch stock is not confirmed (online stock only)"
+   ],
+   "requirements": [
+    {
+     "requirement": "JBL Tune 770NC",
+     "status": "met",
+     "quote": "JBL Tune 770NC",
+     "obs": "P10",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Black",
+     "status": "met",
+     "quote": "Color: Black",
+     "obs": "P10",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Pickup in Hamra, Beirut",
+     "status": "unmet",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P10",
+     "url": "https://phonefinity.net/products/jbl-tune-770nc/",
+     "read": "https://phonefinity.net/wp-json/wc/store/v1/products?slug=jbl-tune-770nc",
+     "source": "woo_store_api",
+     "observed_at": "2026-11-28T05:30:04+00:00",
+     "sha256": "778d56f7b4a48e58e489180980d7a32bb2ab4ff5e4b2c9268c16ba16f8138ec5"
+    }
+   ],
+   "seller_basis": "Phonefinity: Lebanese shop in the reviewed directory",
+   "downgrades": [
+    "does not meet: Pickup in Hamra, Beirut"
+   ]
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P11",
+   "variant_id": "51538",
+   "identity": "exact",
+   "identity_reason": "Requested JBL Tune 770NC in black.",
+   "condition": "new",
+   "condition_quote": "Brand New",
+   "condition_obs": "P11",
+   "requirements": [
+    {
+     "requirement": "JBL Tune 770NC",
+     "status": "met",
+     "evidence_obs": "P11",
+     "quote": "JBL Tune 770NC Adaptive Noise Cancelling Wireless Headphones"
+    },
+    {
+     "requirement": "Black",
+     "status": "met",
+     "evidence_obs": "P11",
+     "quote": "Color: Black"
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "P11",
+     "quote": "Brand New"
+    },
+    {
+     "requirement": "Pickup in Hamra, Beirut",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": null,
+   "delivery_quote": null,
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P8",
+   "variant_id": "44765822189803",
+   "identity": "exact",
+   "identity_reason": "Requested model and black variant; new condition is unconfirmed.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "JBL Tune 770NC",
+     "status": "met",
+     "evidence_obs": "P8",
+     "quote": "JBL Tune 770NC Wireless Over Ear ANC Headphones - Black"
+    },
+    {
+     "requirement": "Black",
+     "status": "met",
+     "evidence_obs": "P8",
+     "quote": "black"
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Pickup in Hamra, Beirut",
+     "status": "unknown",
+     "evidence_obs": "T4",
+     "quote": "Mar ellies, Beirut 961, Lebanon"
+    }
+   ],
+   "delivery_obs": null,
+   "delivery_quote": null,
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P10",
+   "variant_id": "54143",
+   "identity": "exact",
+   "identity_reason": "Exact model and black color, excluded because the shop has no showroom for pickup.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "JBL Tune 770NC",
+     "status": "met",
+     "evidence_obs": "P10",
+     "quote": "JBL Tune 770NC"
+    },
+    {
+     "requirement": "Black",
+     "status": "met",
+     "evidence_obs": "P10",
+     "quote": "Color: Black"
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Pickup in Hamra, Beirut",
+     "status": "unmet",
+     "evidence_obs": "T9",
+     "quote": "- We are an online store, we don't have a showroom. We only accept cash on delivery. No credit cards"
+    }
+   ],
+   "delivery_obs": null,
+   "delivery_quote": null,
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": "Prices are final. We don't charge VAT",
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Search exact model and spelling variants across shops.",
+   "at_s": 10.3,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "JBL Tune 770NC"
+    },
+    {
+     "tool": "search",
+     "query": "JBL 770 NC black"
+    },
+    {
+     "tool": "search",
+     "query": "JBL T770NC"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Check remaining exact-model shops and pickup locations/condition, especially Hamra.",
+   "at_s": 47.4,
+   "calls": [
+    {
+     "tool": "open",
+     "url": "https://phonefinity.net/products/jbl-tune-770nc/"
+    },
+    {
+     "tool": "open",
+     "url": "https://najemstarcall.com/product/jbl-tune-770nc/"
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "jak_computer"
+     ]
+    },
+    {
+     "tool": "read",
+     "url": "https://classic-phones.com/products/jbl-tune-770nc-black",
+     "terms": [
+      "new",
+      "condition",
+      "Hamra",
+      "pickup"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Locate pickup branches for in-stock black offers, particularly Hamra, and check Phonefinity condition.",
+   "at_s": 61.5,
+   "calls": [
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "phonefinity"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "najem_star"
+     ]
+    },
+    {
+     "tool": "read",
+     "url": "https://phonefinity.net/products/jbl-tune-770nc/",
+     "terms": [
+      "condition",
+      "new",
+      "Hamra",
+      "pickup"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 4,
+   "notes": "No verified Hamra pickup match; show checked leads with explicit limitations.",
+   "at_s": 82.3,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 27719,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 27906,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 28391,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 1234,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 2234,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 5359,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 6281,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 953,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 1468,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 2328,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7734,
+   "usage": {
+    "actual_usd": "0.004058",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3219,
+     "output_tokens": 104,
+     "total_tokens": 3323
+    },
+    "latency_ms": 3844,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 8656,
+   "usage": {
+    "actual_usd": "0.0199005",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 9288,
+     "output_tokens": 171,
+     "total_tokens": 9459
+    },
+    "latency_ms": 4750,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7797,
+   "usage": {
+    "actual_usd": "0.0273305",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 12432,
+     "output_tokens": 128,
+     "total_tokens": 12560
+    },
+    "latency_ms": 4328,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 4,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 17984,
+   "usage": {
+    "actual_usd": "0.038673",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 14281,
+     "output_tokens": 800,
+     "total_tokens": 15081
+    },
+    "latency_ms": 14656,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": true
+  }
+ ],
+ "retailer_requests": 96,
+ "seconds": 82.4,
+ "spend": {
+  "settled_usd": "0.0899620",
+  "uncertain_usd": "0",
+  "model_calls": 4,
+  "ledger_job": "scout-b24-20261128T052914"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://wincell.store/products/jbl-live-770-nc-wireless-over-ear-headphones-with-noise-cancelling",
+   "shop_id": "wincell",
+   "observed_at": "2026-11-28T05:29:49+00:00",
+   "sha256": "d252f02f5f15a92d3b807497a8d8185e7c5204acd9360f3e5ecf29c7f22a43d5",
+   "product": {
+    "shop": "WinCell",
+    "shop_id": "wincell",
+    "title": "JBL Live 770 NC Wireless Over-Ear Headphones with Noise-Cancelling",
+    "url": "https://wincell.store/products/jbl-live-770-nc-wireless-over-ear-headphones-with-noise-cancelling",
+    "vendor": "JBL",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:29:49+00:00",
+    "variants": [
+     {
+      "variant_id": "53481356984618",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "155.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://wincell.store/products/jbl-live-770-nc-wireless-over-ear-headphones-with-noise-cancelling?variant=53481356984618"
+     }
+    ],
+    "description": "JBL Live 770NC Wireless Over-Ear Headphones with Noise Cancelling\nExperience exceptional sound with the JBL Live 770NC wireless over-ear headphones. Featuring JBL Signature Sound, True Adaptive Noise Cancelling, and JBL Spatial Sound, these headphones deliver an immersive listening experience wherever you go. Enjoy up to 65 hours of battery life, Bluetooth 5.3 connectivity, and seamless multipoint connection to two devices. With comfortable ear cushions, customizable sound through the JBL Headphones app, and convenient hands-free calling, the JBL Live 770NC is perfect for music, movies, work, and everyday use."
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://electroslab.com/products/jbl-headset-tune-770nc-wireless-bluetooth-copy-white",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:29:49+00:00",
+   "sha256": "9950c33011bc739c628f96805c0d78a6191efea67407494dede3a2f6ed13fe28",
+   "product": {
+    "shop": "Electroslab",
+    "shop_id": "electroslab",
+    "title": "Jbl Headset Tune 770NC Wireless Bluetooth Copy White",
+    "url": "https://electroslab.com/products/jbl-headset-tune-770nc-wireless-bluetooth-copy-white",
+    "vendor": "Electroslab",
+    "product_type": "Computers and laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:29:49+00:00",
+    "variants": [
+     {
+      "variant_id": "51986949931175",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "25.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "01-1-1-6806.001",
+      "url": "https://electroslab.com/products/jbl-headset-tune-770nc-wireless-bluetooth-copy-white?variant=51986949931175"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://electroslab.com/products/jbl-headset-tune-770nc-wireless-bluetooth-copy-purple",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:29:49+00:00",
+   "sha256": "2ea394eeeda7b2c79a15a2aa160bb0ddd3b65443c14373417f8f4a151806498d",
+   "product": {
+    "shop": "Electroslab",
+    "shop_id": "electroslab",
+    "title": "Jbl Headset Tune 770NC Wireless Bluetooth Copy Purple",
+    "url": "https://electroslab.com/products/jbl-headset-tune-770nc-wireless-bluetooth-copy-purple",
+    "vendor": "Electroslab",
+    "product_type": "Computers and laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:29:49+00:00",
+    "variants": [
+     {
+      "variant_id": "51986949963943",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "25.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "01-1-1-6807.001",
+      "url": "https://electroslab.com/products/jbl-headset-tune-770nc-wireless-bluetooth-copy-purple?variant=51986949963943"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://jakcomputer.com/products/jbl-headphones",
+   "shop_id": "jak_computer",
+   "observed_at": "2026-11-28T05:29:50+00:00",
+   "sha256": "58683fba1e8e0a13713e9ab033628c549bce29796b9dd2d01a22403fd98154b2",
+   "product": {
+    "shop": "JAK Computer",
+    "shop_id": "jak_computer",
+    "title": "JBL T770NCBLU Over-Ear Noise-Canceling Headphones – Blue",
+    "url": "https://jakcomputer.com/products/jbl-headphones",
+    "vendor": "JBL",
+    "product_type": "Headphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:29:50+00:00",
+    "variants": [
+     {
+      "variant_id": "44593454514223",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "65.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "TL1519-FO0158986",
+      "url": "https://jakcomputer.com/products/jbl-headphones?variant=44593454514223"
+     }
+    ],
+    "description": "JBL T770NCBLU Over-Ear Noise-Canceling Headphones – Blue\nExperience immersive sound with JBL Pure Bass and adaptive noise cancellation. These wireless over-ear headphones offer up to 70 hours of battery life, quick charge support, and Bluetooth 5.3 for seamless connectivity. Lightweight, foldable, and designed for comfort, they feature Ambient Aware and TalkThru modes, multipoint connection, and VoiceAware technology for clear calls. Perfect for travel, work, or leisure.\nIncluded: USB-C charging cable, 3.5mm audio cable, quick start guide,"
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://jakcomputer.com/products/jbl-headset",
+   "shop_id": "jak_computer",
+   "observed_at": "2026-11-28T05:29:51+00:00",
+   "sha256": "f14f1b764e55626691a43e659b632f2c36c40853a61eae337f38efbcdf2eb758",
+   "product": {
+    "shop": "JAK Computer",
+    "shop_id": "jak_computer",
+    "title": "JBL T770NCBLK Over Ear NC Headphones - Black TL1517-GO0709505",
+    "url": "https://jakcomputer.com/products/jbl-headset",
+    "vendor": "JBL",
+    "product_type": "Speakers",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:29:51+00:00",
+    "variants": [
+     {
+      "variant_id": "44593450156079",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "115.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "TL1517-GO0709505",
+      "url": "https://jakcomputer.com/products/jbl-headset?variant=44593450156079"
+     }
+    ],
+    "description": "f\nJBL Tune 770NC Wireless Over-Ear Headphones\nThe JBL Tune 770NC Wireless Over-Ear Headphones are designed for listeners who want a powerful, uninterrupted audio experience. These headphones feature Adaptive Noise Cancelling, which filters out daily distractions so you can focus on your music or work. With the iconic JBL Pure Bass Sound, they deliver deep and punchy low-end performance found in famous venues around the world. At JAK Computer, we recommend these for anyone in Lebanon looking for a high-quality, long-lasting pair of headphones for travel, office use, or daily commutes.\nAdaptive Audio and Customization with JBL Tune 770NC\nPerformance meets personalization in the JBL Tune 770NC. You can customize your listening experience via the free JBL Headphones App, which allows you to adjust EQ settings to match your taste. The Adaptive Noise Cancelling technology uses internal mics to adjust to your environment in real-time. If you need to hear your surroundings, the Ambient Aware and TalkThru features let you stay connected to the world without removing your headphones. This JBL noise-cancelling headset is perfect for staying productive at jakcomputer.com while maintaining total audio clarity.\nBattery life is a major highlight for this model. The JBL Tune 770NC offers up to 70 hours of battery life with noise cancelling turned off and up to 44 hours with it active. If you are in a rush, a quick 5-minute charge provides an additional 3 hours of playback. The multi-point co"
+   }
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://jakcomputer.com/products/jbl-headset",
+   "shop_id": "jak_computer",
+   "observed_at": "2026-11-28T05:29:51+00:00",
+   "sha256": "f14f1b764e55626691a43e659b632f2c36c40853a61eae337f38efbcdf2eb758",
+   "product": {
+    "shop": "JAK Computer",
+    "shop_id": "jak_computer",
+    "title": "JBL T770NCBLK Over Ear NC Headphones - Black TL1517-GO0709505",
+    "url": "https://jakcomputer.com/products/jbl-headset",
+    "vendor": "JBL",
+    "product_type": "Speakers",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:29:51+00:00",
+    "variants": [
+     {
+      "variant_id": "44593450156079",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "115.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "TL1517-GO0709505",
+      "url": "https://jakcomputer.com/products/jbl-headset?variant=44593450156079"
+     }
+    ],
+    "description": "f\nJBL Tune 770NC Wireless Over-Ear Headphones\nThe JBL Tune 770NC Wireless Over-Ear Headphones are designed for listeners who want a powerful, uninterrupted audio experience. These headphones feature Adaptive Noise Cancelling, which filters out daily distractions so you can focus on your music or work. With the iconic JBL Pure Bass Sound, they deliver deep and punchy low-end performance found in famous venues around the world. At JAK Computer, we recommend these for anyone in Lebanon looking for a high-quality, long-lasting pair of headphones for travel, office use, or daily commutes.\nAdaptive Audio and Customization with JBL Tune 770NC\nPerformance meets personalization in the JBL Tune 770NC. You can customize your listening experience via the free JBL Headphones App, which allows you to adjust EQ settings to match your taste. The Adaptive Noise Cancelling technology uses internal mics to adjust to your environment in real-time. If you need to hear your surroundings, the Ambient Aware and TalkThru features let you stay connected to the world without removing your headphones. This JBL noise-cancelling headset is perfect for staying productive at jakcomputer.com while maintaining total audio clarity.\nBattery life is a major highlight for this model. The JBL Tune 770NC offers up to 70 hours of battery life with noise cancelling turned off and up to 44 hours with it active. If you are in a rush, a quick 5-minute charge provides an additional 3 hours of playback. The multi-point co"
+   }
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://jakcomputer.com/products/jbl-t770ncwht-over-ear-nc-headphones-white-tl1518-ko0203161",
+   "shop_id": "jak_computer",
+   "observed_at": "2026-11-28T05:29:51+00:00",
+   "sha256": "5194f8a9af5fd0222938439462d0a70b54d5718feb6295d8f2076574e2120df8",
+   "product": {
+    "shop": "JAK Computer",
+    "shop_id": "jak_computer",
+    "title": "JBL T770NCWHT Over Ear NC Headphones White TL1518-KO0203161",
+    "url": "https://jakcomputer.com/products/jbl-t770ncwht-over-ear-nc-headphones-white-tl1518-ko0203161",
+    "vendor": "JBL",
+    "product_type": "Headphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:29:51+00:00",
+    "variants": [
+     {
+      "variant_id": "44593455595567",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "119.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "TL1518-KO0203161",
+      "url": "https://jakcomputer.com/products/jbl-t770ncwht-over-ear-nc-headphones-white-tl1518-ko0203161?variant=44593455595567"
+     }
+    ],
+    "description": "JBL T770NCWHT Over Ear NC Headphones White TL1518-KO0203161"
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://electroslab.com/policies/shipping-policy",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:29:51+00:00",
+   "sha256": "37d65518f5e2e28a810c85593fdc0af1e8fe5b66ec6c429c0191d079a84358b1",
+   "excerpt": "Shipping policy\nWEBSITE ORDERS ONLY⚡\nNOVEMBER DISCOUNTS + ⚡FREE DELIVERY ON ORDERS OF $20 OR MORE⚡\nTHROUGH NOV 30\n0\nView All\nNo result found for your search.\nHome\nShipping policy\nShipping policy\na {\ntext-decoration: none;\ncolor: #464feb;\n}\ntr th, tr td {\nborder: 1px solid #e6e6e6;\n}\ntr th {\nbackground-color: #f5f5f5;\n}\nShipping Policy\nDelivery Coverage & Rates\nWe deliver across all of Lebanon for a flat rate of $4.\nFree delivery may apply during promotions or on selected items.\nDelivery Time\nThe estimated delivery time begins once your order is placed and confirmed.\nBeirut: Delivery within 1–3 business days.\nOutside Beirut: Delivery within 3–5 business days.\nCustom, special-order, or high-demand items may require additional time.\nOnce your order has been shipped, you will receive order confirmation and tracking details.\nInternational Shipping\nWe currently ship only within Lebanon.\nInternational shipping may become available in the future.\nLost or Stolen Packages\nElectroSlab is not responsible for lost or stolen packages after delivery confirmation.\nIf your order is marked as delivered but has not been received, please:\nCheck with your local courier or post office.\nCheck with neighbors, building reception, or security personnel.\nContact us at info@electroslab.com, and we will assist where possible.\nBusiness Days\nBusiness days are Monday through Saturday, excluding public holidays.\nContact\nFor shipping questions or delivery issues, please contact us at info@electroslab.com.\nThi",
+   "quoted": []
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://wincell.store/products/belkin-boostcharge-compact-charger-20w-usb-c-power-delivery-fast-charger-power",
+   "shop_id": "wincell",
+   "observed_at": "2026-11-28T05:29:52+00:00",
+   "sha256": "0ed0363af2844f0d99ae89697d4fd8cc1f42c8b5ca44614db59b01e1b293cae3",
+   "excerpt": "Belkin BoostCharge Compact Charger (20W) USB-C Power Delivery Fast Cha – WinCell\nSkip to content\nHappy Independence Day, Lebanon\n/\n83 years of independence\nOrder by 22 December for delivery before Christmas/\nMerry Christmas from all of us at Win Cell\nBlack Friday ends in\nBlack Friday is over. Thank you, Lebanon.\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nHome\nOur story\nShop\nShop by category\n00\nAll products\n464\nAll products\n01\nPhones\n18\nPhones\n02\nAudio\n107\nAudio\n03\nwatches & gadgets\n166\nwatches & gadgets\n04\nchargers & power\n88\nchargers & powe",
+   "quoted": []
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://jakcomputer.com/pages/faq-delivery-information",
+   "shop_id": "jak_computer",
+   "observed_at": "2026-11-28T05:29:52+00:00",
+   "sha256": "d7b65fbd232e3bb481e0c44af099734aa2bf8c1612e52f7698709cb0fc07dd1f",
+   "excerpt": "FAQ & Delivery Info | JAK Computer Lebanon\nSkip to content\nYour cart is empty\nContinue shopping\nHave an account?\nLog in to checkout faster.\nShopping cart (0)\nLoading...\nYou might like\nRECCI Armor Series RPB-W20 High Power Fast Charging Power Bank 5000mAh\nRegular price\n$40.00 USD\nSale price\n$40.00 USD\nRegular price\nUnit price\n/\nper\nSale\nSold out\nRAZER BARRACUDA X WHITE HEADSET RZ04-04430200-R3M1\nRegular price\n$110.00 USD\nSale price\n$110.00 USD\nRegular price\nUnit price\n/\nper\nSale\nSold out\nFor Store Pickups: Please enter your phone number here before checking out.\nFor Store Pickups: Please enter your phone number here before checking out.\nSubtotal (0)\n$0.00 USD\nVAT calculated at checkout.\nView Cart\nCheckout\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. I",
+   "quoted": []
+  },
+  {
+   "obs": "P8",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/jbl-tune-770nc-black",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:29:52+00:00",
+   "sha256": "8f6ec4db2f21a4ba382c8dc737e329605bf2b9fb2972317e72aadd03b32f6c8b",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Jbl tune 770nc",
+    "url": "https://classic-phones.com/products/jbl-tune-770nc-black",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:29:52+00:00",
+    "variants": [
+     {
+      "variant_id": "44765822189803",
+      "title": "black",
+      "options": {
+       "Color": "black"
+      },
+      "price": "55.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/jbl-tune-770nc-black?variant=44765822189803"
+     },
+     {
+      "variant_id": "44765822222571",
+      "title": "Blue",
+      "options": {
+       "Color": "Blue"
+      },
+      "price": "55.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/jbl-tune-770nc-black?variant=44765822222571"
+     },
+     {
+      "variant_id": "45883572191467",
+      "title": "white",
+      "options": {
+       "Color": "white"
+      },
+      "price": "56.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/jbl-tune-770nc-black?variant=45883572191467"
+     },
+     {
+      "variant_id": "47189080801515",
+      "title": "Purple",
+      "options": {
+       "Color": "Purple"
+      },
+      "price": "55.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/jbl-tune-770nc-black?variant=47189080801515"
+     }
+    ],
+    "description": "JBL Tune 770NC Wireless Over Ear ANC Headphones - Black | TUNE770\nJBL Tune 770NC Wireless Over Ear ANC Headphones - Black | TUNE770\nWhen your music is on, nothing else matters. The JBL Tune 770NC Adaptive Noise Cancelling wireless headphones deliver on that promise all day—and longer, while sparing you the unwanted noises. With up to 70 hours of battery life, you’ll easily get through a busy week of using them and still have enough JBL Pure Bass Sound to get you through the weekend. And if you do need a quick recharge, 5 minutes gets you an extra 3 hours of music. Lightweight, and flat-folding, the JBL Tune 770NC can also connect with two Bluetooth® devices simultaneously, so you’ll never miss a call while watching a movie on your tablet. With the free JBL Headphones app, you can tailor the sound to suit your taste. And voice prompts in your language will guide you through the features. Manage your calls and your voice assistant hassle-free right from your phone and use VoiceAware to hear yourself when you’re speaking. Just choose the color that best suits your vibe, and start having fun."
+   }
+  },
+  {
+   "obs": "P9",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/jbl-live-770-nc",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:29:52+00:00",
+   "sha256": "31142802c1eeda6d5793f630053a9234cf3ddcbbd06cbcbea27e98a20227e5af",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Jbl Live 770 Nc",
+    "url": "https://classic-phones.com/products/jbl-live-770-nc",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:29:52+00:00",
+    "variants": [
+     {
+      "variant_id": "47020316950763",
+      "title": "Sand",
+      "options": {
+       "Color": "Sand"
+      },
+      "price": "100.00",
+      "compare_at": "135.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/jbl-live-770-nc?variant=47020316950763"
+     }
+    ],
+    "description": "JBL Live 770NC\nWireless Over-Ear Headphones, JBL Signature Sound\nAdaptive Noise Cancelling and Smart Ambient\nUp to 65 hours (50 hours with BT+ANC on)\nBluetooth 5.3 with LE audio supported\nMulti-Point Connection\nJBL Live 770NC\nWatch video\nWireless Over-Ear Headphones with True Adaptive Noise Cancelling and Smart Ambient, delivering JBL Signature Sound\nJBL Live 770NC headphones deliver powerful JBL Signature Sound in a comfortable over-ear headband style. When you’re deep in your flow, True Adaptive Noise Cancelling with Smart Ambient technology keeps you free from distractions. Or, if you want to keep an ear open to the world around you, you can even have a conversation without taking the headphones off. Easily access your preferred voice assistant with either a hotword or a tap on the earcup to play your favorite playlist, text your friend, check the weather, and much more. You’ll enjoy 65 hours (50 hours with BT+ANC on) of music streaming. Need even more? A 5-minute speed charge gets you another four hours. The JBL Live 770NC can connect with two Bluetooth® devices simultaneously, so you’ll never have to miss a call even if you’re watching a movie on your tablet.\nJBL Signature Sound and surround sound\nAlong with powerful JBL Signature Sound, the 40mm drivers offer immersive JBL Spatial Sound that turns any stereo content from any device into virtual surround sound.\nBluetooth 5.3 with LE audio supported\nWirelessly stream high-quality sound even at lower bit rates with the hel"
+   }
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://www.classic-phones.com/policies/shipping-policy",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:29:52+00:00",
+   "sha256": "29e7a29092462117c8b4c5782aa5fe135a35c2b3187a83a97e215d1157e7a5be",
+   "excerpt": "Shipping policy\nSkip to content\nDelivery Available All Over Lebanon\nFacebook\nInstagram\nShop All\nCameras\nCameras\nGo to Cameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nLaptops\nLaptops\nGo to Laptops\nMacbook\nNew\nUsed\nTablets\nTablets\nGo to Tablets\nApple\nSamsung\nXiaomi\nBlackview\nModio\nSmart Watch\nSmart Watch\nGo to Smart Watch\nApple\nSamsung\nFitbit\nHuawei\nAmazfit\nXiaomi\nGreen Lion\nProdo\nKieslect\nAccessories\nAccessories\nGo to Accessories\nAdapters & Cables\nStorage\nKids\nScooters\nGaming\nGaming\nGo to Gaming\nNintendo\nPS\nXBOX\nOthers\nPersonal Care\nPersonal Care\nGo to Personal Care\nHome Accessories\nPerfume\nMassage\nOthers\nTech Gadgets\nTech Gadgets\nGo to Tech Gadgets\nKits (Cleaning, Repair...)\nPower Devices\nSmart Devices\nRouters\nBags\nKindle\nStands\nCalculator\nHandy Phones\nAudio\nAudio\nGo to Audio\nEarphones\nSpeakers\nHeadphones\nEarbuds\nMicrophones\nCases\nCases\nGo to Cases\nApple\nSamsung\nOthers\nWatch Accessories\nKeyboards & Mouses\nOthers\nBlogs\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nLebanon\nFast Delivery\nFacebook\nInstagram\nLog in\nSearch\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nSearch\nLog in\n0\n00 items\nSubtotal\n$0\nShop All\nCameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nGo to Cameras\nLaptops\nMacbook\nNew\nUsed\nGo to Laptops\nTablets\nApple\nSamsung\nXiaomi\nBlack",
+   "quoted": [
+    {
+     "quote": "Mar ellies, Beirut 961, Lebanon",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://jakcomputer.com/meta.json",
+   "shop_id": "jak_computer",
+   "observed_at": "2026-11-28T05:30:02+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"JAK Computer\", \"city\": \"Beirut\", \"province\": null, \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"jakcomputer.com\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T6",
+   "kind": "page",
+   "url": "https://www.classic-phones.com/products/jbl-tune-770nc-black",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:30:02+00:00",
+   "sha256": "b128694af03cbf78e3625e9baf9db47ae741f6e6d2e91d1055c181db0079bc69",
+   "excerpt": "Jbl tune 770nc\nSkip to content\nDelivery Available All Over Lebanon\nFacebook\nInstagram\nShop All\nCameras\nCameras\nGo to Cameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nLaptops\nLaptops\nGo to Laptops\nMacbook\nNew\nUsed\nTablets\nTablets\nGo to Tablets\nApple\nSamsung\nXiaomi\nBlackview\nModio\nSmart Watch\nSmart Watch\nGo to Smart Watch\nApple\nSamsung\nFitbit\nHuawei\nAmazfit\nXiaomi\nGreen Lion\nProdo\nKieslect\nAccessories\nAccessories\nGo to Accessories\nAdapters & Cables\nStorage\nKids\nScooters\nGaming\nGaming\nGo to Gaming\nNintendo\nPS\nXBOX\nOthers\nPersonal Care\nPersonal Care\nGo to Personal Care\nHome Accessories\nPerfume\nMassage\nOthers\nTech Gadgets\nTech Gadgets\nGo to Tech Gadgets\nKits (Cleaning, Repair...)\nPower Devices\nSmart Devices\nRouters\nBags\nKindle\nStands\nCalculator\nHandy Phones\nAudio\nAudio\nGo to Audio\nEarphones\nSpeakers\nHeadphones\nEarbuds\nMicrophones\nCases\nCases\nGo to Cases\nApple\nSamsung\nOthers\nWatch Accessories\nKeyboards & Mouses\nOthers\nBlogs\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nLebanon\nFast Delivery\nFacebook\nInstagram\nLog in\nSearch\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nSearch\nLog in\n0\n00 items\nSubtotal\n$0\nShop All\nCameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nGo to Cameras\nLaptops\nMacbook\nNew\nUsed\nGo to Laptops\nTablets\nApple\nSamsung\nXiaomi\nBlackv",
+   "quoted": []
+  },
+  {
+   "obs": "T7",
+   "kind": "page",
+   "url": "https://jakcomputer.com/",
+   "shop_id": "jak_computer",
+   "observed_at": "2026-11-28T05:30:03+00:00",
+   "sha256": "c80ff3d0e25a903d7604933d38003f2a87d0e1484860e3fab6180b74939e946b",
+   "excerpt": "Laptops in Lebanon | Gaming, Business & MacBooks | JAK Computer\nSkip to content\nYour cart is empty\nContinue shopping\nHave an account?\nLog in to checkout faster.\nShopping cart (0)\nLoading...\nYou might like\nRECCI Armor Series RPB-W20 High Power Fast Charging Power Bank 5000mAh\nRegular price\n$40.00 USD\nSale price\n$40.00 USD\nRegular price\nUnit price\n/\nper\nSale\nSold out\nRAZER BARRACUDA X WHITE HEADSET RZ04-04430200-R3M1\nRegular price\n$110.00 USD\nSale price\n$110.00 USD\nRegular price\nUnit price\n/\nper\nSale\nSold out\nFor Store Pickups: Please enter your phone number here before checking out.\nFor Store Pickups: Please enter your phone number here before checking out.\nSubtotal (0)\n$0.00 USD\nVAT calculated at checkout.\nView Cart\nCheckout\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronize",
+   "quoted": []
+  },
+  {
+   "obs": "P10",
+   "kind": "product",
+   "url": "https://phonefinity.net/products/jbl-tune-770nc/",
+   "shop_id": "phonefinity",
+   "observed_at": "2026-11-28T05:30:04+00:00",
+   "sha256": "778d56f7b4a48e58e489180980d7a32bb2ab4ff5e4b2c9268c16ba16f8138ec5",
+   "product": {
+    "shop": "Phonefinity",
+    "shop_id": "phonefinity",
+    "title": "JBL Tune 770NC",
+    "url": "https://phonefinity.net/products/jbl-tune-770nc/",
+    "vendor": null,
+    "product_type": null,
+    "condition": null,
+    "source": "woo_store_api",
+    "observed_at": "2026-11-28T05:30:04+00:00",
+    "variants": [
+     {
+      "variant_id": "54143",
+      "title": "Color: Black",
+      "options": {
+       "Color": "black"
+      },
+      "price": "65.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/jbl-tune-770nc/?attribute_pa_color=black"
+     },
+     {
+      "variant_id": "54144",
+      "title": "Color: Blue",
+      "options": {
+       "Color": "blue"
+      },
+      "price": "65.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/jbl-tune-770nc/?attribute_pa_color=blue"
+     },
+     {
+      "variant_id": "59129",
+      "title": "Color: Purple",
+      "options": {
+       "Color": "purple"
+      },
+      "price": "65.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/jbl-tune-770nc/?attribute_pa_color=purple"
+     },
+     {
+      "variant_id": "59130",
+      "title": "Color: White",
+      "options": {
+       "Color": "white"
+      },
+      "price": "65.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/jbl-tune-770nc/?attribute_pa_color=white"
+     }
+    ],
+    "description": "Bluetooth 5.3 with LE Audio\nHands-free calls with VoiceAware\nUp to 70H* battery life with speed charge\nMulti-Point connection\nLightweight, comfortable and foldable design\nAdaptive Noise Cancelling with Smart Ambient\nAdaptive Noise Cancelling means zero distractions when it’s time to focus on your studies—or get your groove on. And if you want to hear the world around you without removing your headphones, Ambient Aware and TalkThru sharpen the sounds of your surroundings or voices. Easily activate these Ambient Sound Control modes through the JBL Headphones app.\nBluetooth 5.3 with LE Audio\nWirelessly stream high-quality JBL Pure Bass Sound from your smartphone with the help of the latest Bluetooth technology. Optimize the Bluetooth performance with the Smart Audio & Video feature in the JBL Headphones app by selecting the Audio (for the best sound quality) or the Video (for an optimal gaming and video output) modes. * Available via OTA update at a later stage.\nJBL Pure Bass Sound\nJBL Tune 770NC headphones feature renowned JBL Pure Bass sound—the same that powers the most famous music venues all around the world.\nCustomize your listening experience\nDownload the free JBL Headphones App to tailor the sound to your taste by choosing one of the pre-set EQ modes or adjusting the EQ curve according to your content, your style, your taste. Voice Prompts in your language guide you through the Tune 770NC’s other features.\nHands-free calls with VoiceAware\nEasily control your sound and ma",
+    "extra": {
+     "attributes": {
+      "Color": [
+       "Black",
+       "Blue",
+       "Purple",
+       "White"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "obs": "T8",
+   "kind": "page",
+   "url": "https://phonefinity.net/",
+   "shop_id": "phonefinity",
+   "observed_at": "2026-11-28T05:30:06+00:00",
+   "sha256": "613ba39ccdbe0e338ea8212a1bb358e2d9a72f8095fd02eb0f86f7455c4ce7dd",
+   "excerpt": "Phonefinity.net: Genuine Products. Quality Service.\nSkip to content\n[email protected]\nOnline Only | Cash on Delivery\nOnline Only | Cash on Delivery\nSearch for:\nLogin / Register\nCart\n0\nNo products in the cart.\nReturn to shop\nSearch for:\n0\nCart\nNo products in the cart.\nReturn to shop\nPhones\nTablets\nApple iPads\nAndroid Tablets\nAmazon Kindles\nMacbooks\nSmart\nSmart Watches & Bands\nSmart Scales\nSmart Display\nAudio\nEarphones\nHeadphones\nSpeakers\nMicrophones\nMedia Streaming\nGaming\nPlayStation\nNintendo Switch\nNetworking\nCameras\nAccessories\nCables\nChargers & Power Banks\nMobile & Tablet Covers\nMobile Accessories\nComputer Accessories\nSleeves, Carrying Cases & Backpacks\nUSB Hubs\nPRELOVED\nFilter\nNew\nPower\nAnker Prime Charger (160W, 3 Ports, Smart Display)\n$132\nNew\nPower\nAnker Prime Power Bank (26K, 300W)\n$176\nNew\nPower\nAnker Prime Wireless Charging Base (100W, 3 Ports)\n$65\nEarphones\nApple AirPods 5\n$140 – $165Price range: $140 through $165\nNew\nApple iPads\nApple iPad mini (2026)\n$820 – $920Price range: $820 through $920\nPhones\nApple iPhone 18 Pro\n$1,550 – $1,825Price range: $1,550 through $1,825\nPhones\nApple iPhone 18 Pro Max\n$1,700 – $2,000Price range: $1,700 through $2,000\nSmart Watches & Bands\nApple Watch Series 12\n$440 – $490Price range: $440 through $490\nSmart Watches & Bands\nApple Watch Ultra 4\n$850 – $1,000Price range: $850 through $1,000\nEarphones\nCMF by Nothing Buds Neo\n$50\nEarphones\nCMF Clip Pro\n$110\nNetworking\nDeco XE75 Pro\n$154 – $374Price range: $154 through $374\nCameras\nDJI OSMO",
+   "quoted": []
+  },
+  {
+   "obs": "P11",
+   "kind": "product",
+   "url": "https://najemstarcall.com/product/jbl-tune-770nc/",
+   "shop_id": "najem_star",
+   "observed_at": "2026-11-28T05:30:03+00:00",
+   "sha256": "432eb3cb8104ad4494598f154750299b05d8741601c30330ac52b87f3579f453",
+   "product": {
+    "shop": "Najem Star Call",
+    "shop_id": "najem_star",
+    "title": "JBL Tune 770NC Adaptive Noise Cancelling Wireless Headphones",
+    "url": "https://najemstarcall.com/product/jbl-tune-770nc/",
+    "vendor": null,
+    "product_type": null,
+    "condition": null,
+    "source": "woo_store_api",
+    "observed_at": "2026-11-28T05:30:03+00:00",
+    "variants": [
+     {
+      "variant_id": "104864",
+      "title": "Color: Purple",
+      "options": {
+       "Color": "purple"
+      },
+      "price": "60.00",
+      "compare_at": "65.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": "Out of stock",
+      "sku": null,
+      "url": "https://najemstarcall.com/product/jbl-tune-770nc/?attribute_pa_color=purple"
+     },
+     {
+      "variant_id": "51538",
+      "title": "Color: Black",
+      "options": {
+       "Color": "black"
+      },
+      "price": "60.00",
+      "compare_at": "65.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": "In stock",
+      "sku": "jbl-tune-770nc-blk-",
+      "url": "https://najemstarcall.com/product/jbl-tune-770nc/?attribute_pa_color=black"
+     },
+     {
+      "variant_id": "51539",
+      "title": "Color: Blue",
+      "options": {
+       "Color": "blue"
+      },
+      "price": "60.00",
+      "compare_at": "65.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": "In stock",
+      "sku": "jbl-tune-770nc-blue-",
+      "url": "https://najemstarcall.com/product/jbl-tune-770nc/?attribute_pa_color=blue"
+     },
+     {
+      "variant_id": "51540",
+      "title": "Color: White",
+      "options": {
+       "Color": "white"
+      },
+      "price": "60.00",
+      "compare_at": "65.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": "Out of stock",
+      "sku": "jbl-tune-770nc-white-",
+      "url": "https://najemstarcall.com/product/jbl-tune-770nc/?attribute_pa_color=white"
+     }
+    ],
+    "description": "Adaptive Noise Cancelling with Smart Ambient\nBluetooth 5.3 with LE Audio\nJBL Pure Bass Sound\nCustomize your Listening Experience\nHands-Free Calls with VoiceAware\nJBL Tune 770NC Adaptive Noise Cancelling Wireless Headphones\nAdaptive Noise Cancelling with Smart Ambient: Adaptive Noise Cancelling means zero distractions when it’s time to focus on your studies—or get your groove on. And if you want to hear the world around you without removing your headphones, Ambient Aware and TalkThru sharpen the sounds of your surroundings or voices. Easily activate these Ambient Sound Control modes through the JBL Headphones app.\nBluetooth 5.3 with LE Audio: Wirelessly stream high-quality JBL Pure Bass Sound from your smartphone with the help of the latest Bluetooth technology. Optimize the Bluetooth performance with the Smart Audio & Video feature in the JBL Headphones app by selecting the Audio (for the best sound quality) or the Video (for an optimal gaming and video output) modes.\nJBL Pure Bass Sound: JBL Tune 770NC headphones feature renowned JBL Pure Bass sound—the same that powers the most famous music venues all around the world.\nCustomize your Listening Experience: Download the free JBL Headphones App to tailor the sound to your taste by choosing one of the pre-set EQ modes or adjusting the EQ curve according to your content, your style, your taste. Voice Prompts in your language guide you through the Tune 770NC’s other features.\nHands-Free Calls with VoiceAware: Easily control your ",
+    "extra": {
+     "attributes": {
+      "Color": [
+       "Black",
+       "Blue",
+       "Purple",
+       "White"
+      ],
+      "Brand": [
+       "JBL"
+      ],
+      "Condition": [
+       "Brand New"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "obs": "T9",
+   "kind": "page",
+   "url": "https://phonefinity.net/",
+   "shop_id": "phonefinity",
+   "observed_at": "2026-11-28T05:30:16+00:00",
+   "sha256": "26c1c3f39e279b2262ea77c4d1617c542e976adf7137571063d3555d1f0ef44c",
+   "excerpt": "Phonefinity.net: Genuine Products. Quality Service.\nSkip to content\n[email protected]\nOnline Only | Cash on Delivery\nOnline Only | Cash on Delivery\nSearch for:\nLogin / Register\nCart\n0\nNo products in the cart.\nReturn to shop\nSearch for:\n0\nCart\nNo products in the cart.\nReturn to shop\nPhones\nTablets\nApple iPads\nAndroid Tablets\nAmazon Kindles\nMacbooks\nSmart\nSmart Watches & Bands\nSmart Scales\nSmart Display\nAudio\nEarphones\nHeadphones\nSpeakers\nMicrophones\nMedia Streaming\nGaming\nPlayStation\nNintendo Switch\nNetworking\nCameras\nAccessories\nCables\nChargers & Power Banks\nMobile & Tablet Covers\nMobile Accessories\nComputer Accessories\nSleeves, Carrying Cases & Backpacks\nUSB Hubs\nPRELOVED\nFilter\nNew\nPower\nAnker Prime Charger (160W, 3 Ports, Smart Display)\n$132\nNew\nPower\nAnker Prime Power Bank (26K, 300W)\n$176\nNew\nPower\nAnker Prime Wireless Charging Base (100W, 3 Ports)\n$65\nEarphones\nApple AirPods 5\n$140 – $165Price range: $140 through $165\nNew\nApple iPads\nApple iPad mini (2026)\n$820 – $920Price range: $820 through $920\nPhones\nApple iPhone 18 Pro\n$1,550 – $1,825Price range: $1,550 through $1,825\nPhones\nApple iPhone 18 Pro Max\n$1,700 – $2,000Price range: $1,700 through $2,000\nSmart Watches & Bands\nApple Watch Series 12\n$440 – $490Price range: $440 through $490\nSmart Watches & Bands\nApple Watch Ultra 4\n$850 – $1,000Price range: $850 through $1,000\nEarphones\nCMF by Nothing Buds Neo\n$50\nEarphones\nCMF Clip Pro\n$110\nNetworking\nDeco XE75 Pro\n$154 – $374Price range: $154 through $374\nCameras\nDJI OSMO",
+   "quoted": [
+    {
+     "quote": "- We are an online store, we don't have a showroom. We only accept cash on delivery. No credit cards",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T10",
+   "kind": "page",
+   "url": "https://najemstarcall.com/",
+   "shop_id": "najem_star",
+   "observed_at": "2026-11-28T05:30:16+00:00",
+   "sha256": "6c817010537c1ba6faf81c5b55b6beb2e9cf169854754d13a5d30ffb29f761e5",
+   "excerpt": "Best Phone Store in Lebanon | Najem Starcall\n★ BLACK WEEKEND IS LIVE – special prices on selected itemsShop Black Weekend\nSkip to content\nAll\nAirPods Case\nBOYA\nCameras & imaging\nCar Accessories\nCoffee Lovers\nComputer & Accessories\nFitness & Mobility\nGaming\nGolden Numbers\nHeadphones and Earbuds\nHealth and Beauty\nHome & Living\nHome Appliances\nHome Audio and Video\nHome Networking\nkids Toys\nLaptops\nMobile Accessories\nMobile Phones\nOther Products\nPet Supplies\nPrinter\nSecurity Camera\nSmart Projector\nSmart Speakers\nSmartwatch\nSmartwatch Charger\nSmartwatch Screen Protector\nTablet & iPad Accessories\nTablets\nUsed\nVoice Recorder\nWalkie-Talkie\nWatch Band\nWatch Case\nSearch for:\nCart\nNo products in the cart.\nReturn to shop\nHome\nMobile Phones\nApple\nSamsung\nXiaomi\nRedmi\nRealme\nHonor\nTecno\nInfinix\nZTE\nBlackview\nOscal Phones\nOppo\nGoogle\nNothing\nMotorola\nIIIF150\nHuawei\nPhilips\nMobile Accessories\nAdapters & Cables\nWireless Chargers\nPower Bank\nStands\nMobile Cases\nSmartwatch\nApple\nSamsung\nHuawei\nAmazfit\nXiaomi\nBlack Shark Smartwatch\nGreen Lion Smartwatch\nKieslect\nHaylou\nPromate\nMibro\nSwiss Military\nBlackview\nInfinix Smartwatch\nTecno\nHonor\nPorodo\nHifuture\nwhoop\nSmartwatch Screen Protector\nWatch Band\nWatch Case\nHeadphones and Earbuds\nApple\nSamsung\nSony\nBeats\nBose\nJBL\nSoundcore\nHuawei\nGreen Lion\nXundd\nBelkin\nHaylou\nDenon\nGoogle\nBlackview Earbuds\nBlack Shark Earbuds\nAcefast\nAudio Accessories\nAirPods Case\nTablets\nApple iPad\nSamsung Tab\nXiaomi\nHonor\nBlackview\nOscal\nGreen Lion\nAmazon\nBlack Shark Tablets\n",
+   "quoted": []
+  },
+  {
+   "obs": "T11",
+   "kind": "page",
+   "url": "https://phonefinity.net/products/jbl-tune-770nc/",
+   "shop_id": "phonefinity",
+   "observed_at": "2026-11-28T05:30:18+00:00",
+   "sha256": "16f0eb3385812578bb2156a65c3911a3e496094470fb63e8d541732fe5b2e369",
+   "excerpt": "JBL Tune 770NC Price in Lebanon - Phonefinity\nSkip to content\n[email protected]\nOnline Only | Cash on Delivery\nOnline Only | Cash on Delivery\nSearch for:\nLogin / Register\nCart\n0\nNo products in the cart.\nReturn to shop\nSearch for:\n0\nCart\nNo products in the cart.\nReturn to shop\nPhones\nTablets\nApple iPads\nAndroid Tablets\nAmazon Kindles\nMacbooks\nSmart\nSmart Watches & Bands\nSmart Scales\nSmart Display\nAudio\nEarphones\nHeadphones\nSpeakers\nMicrophones\nMedia Streaming\nGaming\nPlayStation\nNintendo Switch\nNetworking\nCameras\nAccessories\nCables\nChargers & Power Banks\nMobile & Tablet Covers\nMobile Accessories\nComputer Accessories\nSleeves, Carrying Cases & Backpacks\nUSB Hubs\nPRELOVED\nHome / Headphones\nJBL Tune 770NC\n$65\nBluetooth 5.3 with LE Audio\nHands-free calls with VoiceAware\nUp to 70H* battery life with speed charge\nMulti-Point connection\nLightweight, comfortable and foldable design\nColor\nChoose an option\nBlack\nBlue\nPurple\nWhite\nClear\nJBL Tune 770NC quantity\nAdd to cart\nBuy now\nSKU: N/A\nCategory: Headphones\nBrand: JBL\nDescription\nAdaptive Noise Cancelling with Smart Ambient\nAdaptive Noise Cancelling means zero distractions when it’s time to focus on your studies—or get your groove on. And if you want to hear the world around you without removing your headphones, Ambient Aware and TalkThru sharpen the sounds of your surroundings or voices. Easily activate these Ambient Sound Control modes through the JBL Headphones app.\nBluetooth 5.3 with LE Audio\nWirelessly stream high-quality JBL Pure B",
+   "quoted": []
+  }
+ ]
+}

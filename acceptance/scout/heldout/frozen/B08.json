@@ -1,0 +1,850 @@
+{
+ "run_id": "scout-b08-20261128T052800",
+ "request": {
+  "id": "B08",
+  "text": "I need a new Windows laptop for spreadsheets with a built-in numeric keypad, at least 16 GB RAM and a 512 GB SSD. Deliver to Byblos.",
+  "mode": "delivery",
+  "destination": "Byblos",
+  "category": "laptop",
+  "run_id": "scout-b08-20261128T052800"
+ },
+ "status": "offers",
+ "message": "Best provisional option: Abed Tahan’s Lenovo V15, Core i5-13420H, 16GB RAM and 512GB SSD — $695.00, listed in stock with Windows 11 Pro.\nThe specifications suit spreadsheet work, but the shop page does not explicitly confirm new condition or the built-in numeric keypad.\nAbed Tahan advertises delivery across Lebanon, covering Byblos in principle; the delivery fee is not published in the checked information.\nMy suggestion: shortlist this Lenovo, but confirm that it is brand-new, has the numeric keypad, and the delivery charge before ordering. I could not fully verify a match to every requirement.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "best",
+   "shop": "Abed Tahan",
+   "shop_id": "abed_tahan",
+   "title": "Lenovo V15- Core I5-13G- 16GB- 512GB SSD- 15.6\"- WIN 11 Pro",
+   "variant": "Default Title",
+   "url": "https://abedtahan.com/products/lenovo-v15-core-i5-13g-16gb-512gb-ssd-15-6-win-11-pro?variant=45974838050995",
+   "price": "695.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "exact",
+   "identity_reason": "Needs-based candidate with the requested Windows, RAM and SSD specifications; new condition and numeric keypad remain unverified.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "not confirmed: Built-in numeric keypad",
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Windows included",
+     "status": "met",
+     "quote": "OPERATING SYSTEM : Windows 11 Pro",
+     "obs": "T6",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Built-in numeric keypad",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "At least 16 GB RAM",
+     "status": "met",
+     "quote": "RAM SIZE : 16GB DDR5-5200",
+     "obs": "T6",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "At least 512 GB SSD",
+     "status": "met",
+     "quote": "HDD STORAGE : 512GB SSD M.2 PCIe Gen4 NVMe",
+     "obs": "T6",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Delivery to Byblos",
+     "status": "met",
+     "quote": "Fast delivery across Lebanon",
+     "obs": "T8",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P4",
+     "url": "https://abedtahan.com/products/lenovo-v15-core-i5-13g-16gb-512gb-ssd-15-6-win-11-pro",
+     "read": "https://abedtahan.com/products/lenovo-v15-core-i5-13g-16gb-512gb-ssd-15-6-win-11-pro.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:28:40+00:00",
+     "sha256": "1e901dde42d2cef85cf3deacf124873ed6fd120ae056eeda3b9d045a89269608"
+    }
+   ],
+   "seller_basis": "Abed Tahan: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P4",
+   "variant_id": "45974838050995",
+   "identity": "exact",
+   "identity_reason": "Needs-based candidate with the requested Windows, RAM and SSD specifications; new condition and numeric keypad remain unverified.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Windows included",
+     "status": "met",
+     "evidence_obs": "T6",
+     "quote": "OPERATING SYSTEM : Windows 11 Pro"
+    },
+    {
+     "requirement": "Built-in numeric keypad",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "At least 16 GB RAM",
+     "status": "met",
+     "evidence_obs": "T6",
+     "quote": "RAM SIZE : 16GB DDR5-5200"
+    },
+    {
+     "requirement": "At least 512 GB SSD",
+     "status": "met",
+     "evidence_obs": "T6",
+     "quote": "HDD STORAGE : 512GB SSD M.2 PCIe Gen4 NVMe"
+    },
+    {
+     "requirement": "Delivery to Byblos",
+     "status": "met",
+     "evidence_obs": "T8",
+     "quote": "Fast delivery across Lebanon"
+    }
+   ],
+   "delivery_obs": "T8",
+   "delivery_quote": "Fast delivery across Lebanon",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Search practical 15.6-inch office models with numeric keypads; verify Windows, memory, condition and delivery in listings.",
+   "at_s": 9.5,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "Lenovo V15 16GB 512"
+    },
+    {
+     "tool": "search",
+     "query": "HP 250 G10 16GB 512"
+    },
+    {
+     "tool": "search",
+     "query": "ASUS Vivobook 15 16GB 512"
+    },
+    {
+     "tool": "search",
+     "query": "Dell Inspiron 3530 16GB"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Verify full specifications and new condition on likely Windows options across shops, and obtain delivery policy.",
+   "at_s": 53.9,
+   "calls": [
+    {
+     "tool": "read",
+     "url": "https://abedtahan.com/products/lenovo-v15-core-i5-13g-16gb-512gb-ssd-15-6-win-11-pro",
+     "terms": [
+      "numeric",
+      "keypad",
+      "new",
+      "Windows",
+      "RAM"
+     ]
+    },
+    {
+     "tool": "open",
+     "url": "https://electroslab.com/products/cto-laptop-asus-vivobook-f1605va-ws74-cpu-intel-core-i7-1335u"
+    },
+    {
+     "tool": "open",
+     "url": "https://outgeeked.net/products/dell-plus-ld15260-7140blk-pus"
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "abed_tahan"
+     ]
+    },
+    {
+     "tool": "open",
+     "url": "https://www.macrotronics.net/products/asus-vivobook-r1504va-nj166-core-i5-120u-15-6-inch-laptop-cool-silver"
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Time limit reached; present the strongest Windows lead transparently as provisional rather than claim unverified new condition or keypad.",
+   "at_s": 70.8,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 28844,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 30672,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 32922,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 34141,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 422,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 562,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 1547,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 1828,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 3203,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7562,
+   "usage": {
+    "actual_usd": "0.0046755",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3234,
+     "output_tokens": 162,
+     "total_tokens": 3396
+    },
+    "latency_ms": 4390,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 10281,
+   "usage": {
+    "actual_usd": "0.025933",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 11269,
+     "output_tokens": 279,
+     "total_tokens": 11548
+    },
+    "latency_ms": 6703,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 13203,
+   "usage": {
+    "actual_usd": "0.036663",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 14781,
+     "output_tokens": 474,
+     "total_tokens": 15255
+    },
+    "latency_ms": 9640,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": true
+  }
+ ],
+ "retailer_requests": 104,
+ "seconds": 70.9,
+ "spend": {
+  "settled_usd": "0.0672715",
+  "uncertain_usd": "0",
+  "model_calls": 3,
+  "ledger_job": "scout-b08-20261128T052800"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://wincell.store/products/the-asus-vivobook-15",
+   "shop_id": "wincell",
+   "observed_at": "2026-11-28T05:28:33+00:00",
+   "sha256": "83a5a239cbeb1805ed5e2ecfefa00c37438ebadc5696fd1f4d6677d16a32e472",
+   "product": {
+    "shop": "WinCell",
+    "shop_id": "wincell",
+    "title": "The ASUS VivoBook 15",
+    "url": "https://wincell.store/products/the-asus-vivobook-15",
+    "vendor": "ASUS",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:28:33+00:00",
+    "variants": [
+     {
+      "variant_id": "53505287946538",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "450.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://wincell.store/products/the-asus-vivobook-15?variant=53505287946538"
+     }
+    ],
+    "description": "The ASUS VivoBook 15 is a stylish and versatile laptop designed for students, professionals, and everyday users. It offers a balance of performance, portability, and productivity, making it suitable for office applications, online learning, web browsing, entertainment, and multitasking.\nTechnical Specifications\nSpecification\nDetails\nBrand\nASUS\nSeries\nVivoBook 15\nDisplay Size\n15.6 inches\nResolution\nFull HD (1920 × 1080)\nDisplay Type\nLED / IPS-level (model dependent)\nRefresh Rate\n60Hz\nProcessor\nIntel Core i3 / i5 / i7 or AMD Ryzen (model dependent)\nRAM\n4GB / 8GB / 16GB\nStorage\n256GB / 512GB / 1TB SSD\nGraphics\nIntel UHD / Iris Xe / AMD Radeon\nOperating System\nWindows 11 (model dependent)\nWebcam\nBuilt-in HD 720p\nWireless\nWi-Fi 5 / Wi-Fi 6\nBluetooth\nBluetooth 5.0 / 5.3\nAudio\nBuilt-in speakers and microphone\nBattery\n42Wh (some configurations)\nKeyboard\nErgonomic Chiclet keyboard\nConnectivity\nUSB-A, USB-C, HDMI, 3.5mm audio jack\nWeight\nApproximately 1.7 kg\nColor\nSilver / Blue (model dependent)\nMain Features\nFast Performance: Handles everyday tasks and multitasking smoothly.\nFull HD Display: Enjoy clear and detailed visuals.\nSSD Storage: Fast boot times and quick file access.\nErgoSense Keyboard: Comfortable typing experience.\n180° Lay-Flat Hinge: Flexible screen positioning on supported models.\nWebcam Privacy Shield: Added privacy during video calls.\nAI Noise Cancellation: Helps reduce background noise during online meetings.\nLightweight Design: Easy to carry for work, school, and tra"
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://www.macrotronics.net/products/dell-inspiron-7441-ins0187239-r0028530-pc-snapdragon-x-plus-16gb-14-inch-touchscreen-laptop",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:28:36+00:00",
+   "sha256": "df4c20629878bb63bdfc554815d5ca84a82a001eae6c626bcbdea5e7d3b17bb6",
+   "product": {
+    "shop": "Macrotronics",
+    "shop_id": "macrotronics",
+    "title": "Dell Inspiron 7441 INS0187239-R0028530-PC Snapdragon X Plus 16GB 14-inch Touch Laptop",
+    "url": "https://www.macrotronics.net/products/dell-inspiron-7441-ins0187239-r0028530-pc-snapdragon-x-plus-16gb-14-inch-touchscreen-laptop",
+    "vendor": "Dell",
+    "product_type": "OD Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:28:36+00:00",
+    "variants": [
+     {
+      "variant_id": "52847122743585",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "715.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://www.macrotronics.net/products/dell-inspiron-7441-ins0187239-r0028530-pc-snapdragon-x-plus-16gb-14-inch-touchscreen-laptop?variant=52847122743585"
+     }
+    ],
+    "description": "Processor: Snapdragon X Plus X1P-64-100\nMemory: 16GB RAM\nStorage: 256GB SSD\nDisplay: 14-inch Touchscreen\nResolution: 2560 × 1600 (QHD+)\nGraphics: Qualcomm Adreno Graphics\nOperating System: Windows 11 Pro\nSecurity: Fingerprint Reader (FP)\nKeyboard: Backlit Keyboard\nColor: Ice Blue"
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/hp-250-g10-15-6-hd-i5-1334u-8gb-512gb",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:28:40+00:00",
+   "sha256": "46d4f19a1e4488e99c6a37024b595b0c0f2ad3222092822d95ef2c0ec3096cea",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "HP 250 G10 15.6 HD, i5-1334U Processor, 8GB RAM, 512GB NVMe",
+    "url": "https://mobileleb.com/products/hp-250-g10-15-6-hd-i5-1334u-8gb-512gb",
+    "vendor": "HP",
+    "product_type": "Computers",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:28:40+00:00",
+    "variants": [
+     {
+      "variant_id": "51904835190916",
+      "title": "Silver / Brand New / 1 Year",
+      "options": {
+       "Color": "Silver",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "510.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "HP 250 G10",
+      "url": "https://mobileleb.com/products/hp-250-g10-15-6-hd-i5-1334u-8gb-512gb?variant=51904835190916",
+      "condition": "Brand New"
+     }
+    ],
+    "description": "Brand: HP\nModel: 250 G10\nProcessor: Intel Core i5-1334U (13th Gen)\nDisplay: 15.6” HD (1366 x 768)\nRAM: 8GB DDR4 (Expandable – 1 Extra Slot)\nStorage: 512GB NVMe SSD\nGraphics: Intel Iris Xe Graphics\nOperating System: DOS\nKeyboard: English/Arabic (US)\nConnectivity: Wi-Fi, Bluetooth\nColor: Silver"
+   }
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/lenovo-v15-core-i5-13g-16gb-512gb-ssd-15-6-win-11-pro",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:28:40+00:00",
+   "sha256": "1e901dde42d2cef85cf3deacf124873ed6fd120ae056eeda3b9d045a89269608",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "Lenovo V15- Core I5-13G- 16GB- 512GB SSD- 15.6\"- WIN 11 Pro",
+    "url": "https://abedtahan.com/products/lenovo-v15-core-i5-13g-16gb-512gb-ssd-15-6-win-11-pro",
+    "vendor": "LENOVO",
+    "product_type": "Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:28:40+00:00",
+    "variants": [
+     {
+      "variant_id": "45974838050995",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "695.00",
+      "compare_at": "695.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "NTB-LENO-83GW0066PB",
+      "url": "https://abedtahan.com/products/lenovo-v15-core-i5-13g-16gb-512gb-ssd-15-6-win-11-pro?variant=45974838050995"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://wincell.store/products/asus-vivobook-go-15-oled",
+   "shop_id": "wincell",
+   "observed_at": "2026-11-28T05:28:41+00:00",
+   "sha256": "42dce2d55f991a14d80ede474faa942e4ca347f1b5589cca915d1b3dc5b92e7e",
+   "product": {
+    "shop": "WinCell",
+    "shop_id": "wincell",
+    "title": "ASUS Vivobook Go 15 OLED",
+    "url": "https://wincell.store/products/asus-vivobook-go-15-oled",
+    "vendor": "ASUS",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:28:41+00:00",
+    "variants": [
+     {
+      "variant_id": "53505318715690",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "580.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://wincell.store/products/asus-vivobook-go-15-oled?variant=53505318715690"
+     }
+    ],
+    "description": "The ASUS Vivobook Go 15 OLED combines powerful visuals, everyday performance, and a lightweight design. Its OLED display delivers vibrant colors, deep blacks, and excellent contrast, making it ideal for studying, office work, entertainment, and daily multitasking.\nTechnical Specifications\nSpecification\nDetails\nBrand\nASUS\nSeries\nVivobook Go 15 OLED\nModel\nE1504FA\nDisplay Size\n15.6 inches\nDisplay Technology\nOLED\nResolution\nFull HD (1920 × 1080)\nRefresh Rate\n60Hz\nResponse Time\n0.2ms\nBrightness\n400 nits\nHDR Peak Brightness\n600 nits\nColor Gamut\n100% DCI-P3\nProcessor\nAMD Ryzen 5 7520U (configuration dependent)\nProcessor Cores\n4 Cores / 8 Threads\nGraphics\nAMD Radeon 610M\nRAM\n8GB / 16GB LPDDR5\nStorage\n256GB / 512GB / 1TB NVMe SSD\nOperating System\nWindows 11 (configuration dependent)\nAdditional Features & Connectivity\nFeature\nDetails\nKeyboard\nChiclet keyboard, optional backlit\nTouchpad\nPrecision touchpad\nWebcam\n720p HD with privacy shutter\nMicrophone\nBuilt-in array microphone\nAudio\nBuilt-in speakers with SonicMaster\nWi-Fi\nWi-Fi 5 / Wi-Fi 6E (variant dependent)\nBluetooth\nBluetooth 5.0 / 5.3\nUSB-C\nUSB 3.2 Gen 1\nUSB-A\nUSB 3.2 Gen 1 and USB 2.0\nHDMI\nHDMI 1.4\nAudio Jack\n3.5mm combo jack\nBattery\n42Wh or 50Wh, configuration dependent\nWeight\nApproximately 1.63 kg\nHinge\n180° lay-flat hinge\nDurability\nMIL-STD-810H military-grade testing\nMain Highlights\nOLEDDisplay Stunning colors, deep blacks, and excellent contrast.\nAMD Ryzen 5 Processor: Smooth everyday performance and multitasking.\nFast SSD S"
+   }
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/lenovo-v15-g5-irl-83hf00kaig",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:28:41+00:00",
+   "sha256": "87a41519ba887e412b1a025a070fbacfb5be4ab29e886612ac58c2b5b2cdeb53",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "LENOVO V15 G5 IRL 83HF00KAIG (Core™ I7-13620H, 512GB NVME/16GB DDR5, 15.6\" FHD, INTEL, DOS / LUNA GREY)",
+    "url": "https://outgeeked.net/products/lenovo-v15-g5-irl-83hf00kaig",
+    "vendor": "Lenovo",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:28:41+00:00",
+    "variants": [
+     {
+      "variant_id": "50686033985794",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "700.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/lenovo-v15-g5-irl-83hf00kaig?variant=50686033985794"
+     }
+    ],
+    "description": "Overview\nThe Lenovo V15 G5 IRL (83HF00KAIG) is a no-compromise business and productivity laptop built for professionals, students, and everyday power users across Lebanon. Priced at $700 USD, it delivers a compelling combination of Intel's 13th-generation performance, fast DDR5 memory, and speedy NVMe storage — all wrapped in Lenovo's proven V-Series reliability. Whether you're crunching spreadsheets in Beirut, attending back-to-back video calls, or multitasking across dozens of browser tabs, the V15 G5 IRL keeps pace without breaking the bank.\nKey Features\nIntel Core i7-13620H Processor: A 13th-gen hybrid architecture CPU with high-performance and efficiency cores, delivering smooth multitasking and snappy application launches for demanding workloads.\n16GB DDR5 RAM: Next-generation DDR5 memory ensures low latency and high bandwidth, giving you a fluid experience whether you're editing documents, streaming content, or running multiple applications simultaneously.\n512GB NVMe SSD: Ultra-fast solid-state storage means near-instant boot times and rapid file transfers — say goodbye to waiting and hello to productivity from the first power-on.\n15.6\" Full HD Display: A crisp 1920×1080 FHD screen provides comfortable viewing real estate for spreadsheets, presentations, and multimedia, making long work sessions easier on the eyes.\nEnglish/Arabic Keyboard: The bilingual EN/AR keyboard layout is perfectly tailored for users in Lebanon and across the Arab world, enabling seamless switchi"
+   }
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/lenovo-v15-g5-irl-83hf00emig",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:28:41+00:00",
+   "sha256": "751fa8d61d655390973a11ba37c8ae9ce97299977932ab3f43fec5a3d3625794",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "LENOVO V15 G5 IRL 83HF00EMIG (Core™ I7-13620H, 16GB DDR5 , 512GB NVME, 15.6\" FHD, INTEL, 1 YEAR, DOS / LAN / LUNA GREY)",
+    "url": "https://outgeeked.net/products/lenovo-v15-g5-irl-83hf00emig",
+    "vendor": "Lenovo",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:28:41+00:00",
+    "variants": [
+     {
+      "variant_id": "48002504392962",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "700.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/lenovo-v15-g5-irl-83hf00emig?variant=48002504392962"
+     }
+    ],
+    "description": "Overview\nThe Lenovo V15 G5 IRL (83HF00EMIG) is a dependable, performance-oriented 15.6-inch business and everyday laptop built around Intel's latest 13th Generation Core i7 platform. Finished in a clean Luna Grey chassis, this model strikes a compelling balance between raw processing power, modern memory technology, and fast NVMe storage — all at an accessible price point of $700 USD. Whether you're managing spreadsheets in Beirut, developing software in Tripoli, or running productivity suites anywhere across Lebanon, the V15 G5 IRL is engineered to keep pace with demanding daily tasks.\nKey Features\nIntel Core i7-13620H Processor: A 13th-Generation hybrid-architecture CPU delivering strong multi-core performance for multitasking, data processing, and demanding business applications.\n16GB DDR5 RAM: Next-generation DDR5 memory ensures faster data throughput compared to DDR4, enabling smooth multitasking, responsive app switching, and future-ready performance.\n512GB NVMe SSD: Blazing-fast solid-state storage means rapid boot times, near-instant application launches, and quick file transfers — dramatically outperforming traditional hard drives.\n15.6\" Full HD Display: A spacious FHD (1920×1080) screen provides sharp, clear visuals ideal for documents, presentations, video calls, and media consumption.\nIntel Integrated Graphics: Handles everyday visual workloads, video playback, and light creative tasks efficiently without the added cost or power draw of a discrete GPU.\nDOS Operati"
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://wincell.store/products/belkin-boostcharge-compact-charger-20w-usb-c-power-delivery-fast-charger-power",
+   "shop_id": "wincell",
+   "observed_at": "2026-11-28T05:28:42+00:00",
+   "sha256": "2decf2dec078102967042744929bdb7390add1466e96ada91e98e153a7f95403",
+   "excerpt": "Belkin BoostCharge Compact Charger (20W) USB-C Power Delivery Fast Cha – WinCell\nSkip to content\nHappy Independence Day, Lebanon\n/\n83 years of independence\nOrder by 22 December for delivery before Christmas/\nMerry Christmas from all of us at Win Cell\nBlack Friday ends in\nBlack Friday is over. Thank you, Lebanon.\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nHome\nOur story\nShop\nShop by category\n00\nAll products\n464\nAll products\n01\nPhones\n18\nPhones\n02\nAudio\n107\nAudio\n03\nwatches & gadgets\n166\nwatches & gadgets\n04\nchargers & power\n88\nchargers & powe",
+   "quoted": []
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://www.macrotronics.net/policies/shipping-policy",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:28:43+00:00",
+   "sha256": "337f32c14cff3767586b864cfd31a4dbe96f23688b405cc152f1ae23eec50b35",
+   "excerpt": "Shipping policy – Macrotronics\nSkip to content\nFacebook\nTwitter\nInstagram\nHelpline +961 71 854 621 | +961 9 853 008\nTechnical Support +961 71 94 84 94\nPause slideshow\nPlay slideshow\nComputers\nComputers\nLaptops\nOn-Demand Laptops\nLaptop Power Adapters\nLaptop Accessories\nApple Computers\nApple Accessories\niPads and Tablets\nTablets Accessories\nComputer & Smart Monitors\nMonitor Accessories\nServers, Workstations and NAS\nDesktops and Mini PCs\nPOS and POS Equipment\nOriginal Softwares and Antivirus\nComputer Parts\nComputer Parts\nProcessors\nGraphic Cards\nMotherboards\nRAMs\nSSD\nHDD\nCPU Coolers\nThermal Paste and Pads\nPower Supplies\nComputer Cases\nComputer Case Accessories\nMore PC Components\nLegacy Computer Parts\nUsed Computer Parts\nComputer Peripherals\nComputer Peripherals\nMice & Keyboards\nEarphones & Headphones\nComputer & Bluetooth Speakers\nWebcams & Microphones\nLaptop Bags & Cases\nComputer & Video Cables\nFlash Drives & Memory Cards\nPrinters, Scanners & Faxes\nPaper & Media Supplies\nGenuine Inks & Ribbons\nGenuine Toners & Drums\nCompatible Toners & Drums\nOffice Furniture\nElectronics & More\nElectronics & More\nUPS\nBatteries\nSmart Appliances\nAdapters and Converters\nEducational Electronics\nConsumer Electronics\nSurveillance and Security\nProjectors, Screens and More\nRouters, Repeaters and APs\nNetwork Switches\nNetwork Adapters\nNetworking and Tools\nGaming\nGaming\nGaming PCs\nGaming Monitors\nGaming Headsets\nGaming Pads\nGaming Mice\nGaming Keyboards\nGaming Chairs\nGaming Desks\nGaming Console and VR\nGaming",
+   "quoted": []
+  },
+  {
+   "obs": "P8",
+   "kind": "product",
+   "url": "https://karizmamegastore.com/products/asus-vivobook-go-15-intel-core-i3-n305-8gb-ram-256gb-ssd",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:28:43+00:00",
+   "sha256": "c816d7a0a72f3f524d4cfafe1c67584c3b42d7d8f8ace78d0b4e2898458da73b",
+   "product": {
+    "shop": "Karizma Megastore",
+    "shop_id": "karizma",
+    "title": "ASUS Vivobook Go 15 – Intel Core i3-N305, 8GB RAM, 256GB SSD",
+    "url": "https://karizmamegastore.com/products/asus-vivobook-go-15-intel-core-i3-n305-8gb-ram-256gb-ssd",
+    "vendor": "ASUS",
+    "product_type": "Laptop",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:28:43+00:00",
+    "variants": [
+     {
+      "variant_id": "48449658388669",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "499.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/asus-vivobook-go-15-intel-core-i3-n305-8gb-ram-256gb-ssd?variant=48449658388669"
+     }
+    ],
+    "description": "Back to School Offer\nIntel Core i3-N305 processor\n8GB onboard RAM\n256GB NVMe SSD\n15.6-inch FHD display\nFree laptop bag\nFree wireless mouse"
+   }
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://abedtahan.com/pages/contact",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:28:43+00:00",
+   "sha256": "e505a359131a1896ae9f40a0d8c7e9181d3e25351a22ab5afa5b05eb99295bbd",
+   "excerpt": "Contact\n– Abed Tahan\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & Crepe Makers\nIce Cube, Ice Cream & Yoghurt Makers\nSaj Machines\nL",
+   "quoted": []
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://www.karizmamegastore.com/policies/privacy-policy",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:28:43+00:00",
+   "sha256": "edfd11bb0c4128fa458ca38c2421c577a3c668f213febe8001148b41b07a8463",
+   "excerpt": "Privacy policy – Karizma Megastore\nSkip to content\nReturns extended to 60 days\nFree shipping on your first order\nHome\nCategories\nCategories\nSmart Phones\nSmart Phones\nApple\nXiaomi\nSamsung\nHonor\nTecno\nInfinix\nGadgets\nGadgets\nWearables\nAudio Devices\nPower & Charging\nGaming Consoles\nGaming Consoles\nConsoles\nGames\nGaming Wheels & Peripherals\nLaptops\nLaptops\nGaming Laptops\nOffice Laptops\nComputer Accessories\nComputer Accessories\nGaming Accessories\nMouse & Keyboards\nConnectivity & Hubs\nStorage & Memory\nMonitors\nHeadphones & Earphones\nWiFi and Networking\nContent Creation\nsoundcore\nPitaka\nAnker\nCases\nContact\nHome\nCategories\nCases\nContact\nLogin\n0\nHome\nCategories\nSmart Phones\nApple\nXiaomi\nSamsung\nHonor\nTecno\nInfinix\nGadgets\nWearables\nAudio Devices\nPower & Charging\nGaming Consoles\nConsoles\nGames\nGaming Wheels & Peripherals\nLaptops\nGaming Laptops\nOffice Laptops\nComputer Accessories\nGaming Accessories\nMouse & Keyboards\nConnectivity & Hubs\nStorage & Memory\nMonitors\nHeadphones & Earphones\nWiFi and Networking\nContent Creation\nsoundcore\nPitaka\nAnker\nCases\nContact\nPrivacy policy\nLast updated: September 2, 2024\nThis Privacy Policy describes how Karizma Megastore (the \"Site\", \"we\", \"us\", or \"our\") collects, uses, and discloses your personal information when you visit, use our services, or make a purchase from www.karizmamegastore.com (the \"Site\") or otherwise communicate with us regarding the Site (collectively, the \"Services\"). For purposes of this Privacy Policy, \"you\" and \"your\" means you as t",
+   "quoted": []
+  },
+  {
+   "obs": "P9",
+   "kind": "product",
+   "url": "https://www.macrotronics.net/products/asus-vivobook-r1504va-nj166-core-i5-120u-15-6-inch-laptop-cool-silver",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:28:54+00:00",
+   "sha256": "b4c6649d930b2266863a1d12bc675072b9511ff154f98e7515d2c6051b1a1dc8",
+   "product": {
+    "shop": "Macrotronics",
+    "shop_id": "macrotronics",
+    "title": "Asus VivoBook R1504VA-NJ166 Intel i5-120U 15.6-inch Full HD Laptop",
+    "url": "https://www.macrotronics.net/products/asus-vivobook-r1504va-nj166-core-i5-120u-15-6-inch-laptop-cool-silver",
+    "vendor": "Asus",
+    "product_type": "Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:28:54+00:00",
+    "variants": [
+     {
+      "variant_id": "52224044400929",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "555.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "1007349",
+      "url": "https://www.macrotronics.net/products/asus-vivobook-r1504va-nj166-core-i5-120u-15-6-inch-laptop-cool-silver?variant=52224044400929"
+     }
+    ],
+    "description": "Processor: Intel Core 5 120U 10 cores, 12 threads, up to 5.0 GHz\nDisplay: 15.6-inch, Full HD 1920 x 1080, anti-glare, 60Hz refresh rate, 250 nits brightness, 45% NTSC color gamut\nMemory: 8GB DDR4 RAM\nStorage: 512GB M.2 NVMe PCIe 4.0 SSD\nGraphics: Integrated Intel UHD Graphics\nConnectivity: Wi-Fi 6 (802.11ax), Bluetooth 5.2\nPorts: 1x USB 2.0 Type-A, 2x USB 3.2 Gen 1 Type-A, 1x USB 3.2 Gen 1 Type-C (supports data transfer, some models may support power delivery/display), 1x HDMI 1.4, 1x 3.5mm combo audio jack\nCamera: 720p HD camera, some models feature ASUS AiSense for face login\nBattery: 42 Wh, 3-cell Li-ion, supports fast charging (up to 60% in 49 minutes)\nDesign: Lightweight (around 3.75 lb or 1.7 kg), slim profile, with a full-size chiclet keyboard including a numeric keypad"
+   }
+  },
+  {
+   "obs": "P10",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/dell-plus-ld15260-7140blk-pus",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:28:54+00:00",
+   "sha256": "b9fb9bd2329798c922f47677d336a7a7035f4e10b6d92cec73815a834d16d6a9",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "DELL PLUS LD15260-7140BLK-PUS (CORE ULTRA 7 255U, 16GB DDR5 ON BOARD, 1TB NVME, 15.6\"FHD TOUCHSCREEN , INTEL, 1 YEAR, WIN 11/BLACK)",
+    "url": "https://outgeeked.net/products/dell-plus-ld15260-7140blk-pus",
+    "vendor": "Dell",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:28:54+00:00",
+    "variants": [
+     {
+      "variant_id": "48002529984770",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "875.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/dell-plus-ld15260-7140blk-pus?variant=48002529984770"
+     }
+    ],
+    "description": "Overview\nThe Dell Plus LD15260 (LD15260-7140BLK-PUS) is a sleek, high-performance 15.6-inch laptop built for professionals, students, and power users who demand speed, responsiveness, and modern connectivity. Finished in an elegant Black chassis, it pairs Intel's latest Core Ultra 7 architecture with fast DDR5 memory and spacious NVMe storage — making it one of the most capable consumer-grade laptops available in Lebanon at its price point of $875.\nKey Features\nIntel Core Ultra 7 255U Processor: Part of Intel's next-generation Core Ultra (Meteor Lake) lineup, delivering exceptional multi-threaded performance and energy efficiency for demanding workloads.\n16GB DDR5 Onboard RAM: Soldered DDR5 memory ensures blazing-fast data throughput, smooth multitasking, and future-ready performance for years to come.\n1TB NVMe SSD Storage: A massive, ultra-fast NVMe solid-state drive provides near-instant boot times, rapid application launches, and ample space for files, projects, and media.\n15.6\" FHD Touchscreen Display: The Full HD (1920×1080) touchscreen brings your content to life with crisp visuals and intuitive touch interaction, ideal for presentations, creative work, and everyday browsing.\nIntel Integrated Graphics: The onboard Intel GPU handles everyday graphics tasks, media playback, light photo/video editing, and casual use with efficiency.\nWindows 11 Pre-installed: Ships ready to use with the latest Windows 11 operating system, offering a modern UI, enhanced security features, an"
+   }
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://abedtahan.com/meta.json",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:28:54+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"Abed Tahan\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"abedtahan.com\"}",
+   "quoted": []
+  },
+  {
+   "obs": "P11",
+   "kind": "product",
+   "url": "https://electroslab.com/products/cto-laptop-asus-vivobook-f1605va-ws74-cpu-intel-core-i7-1335u",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:28:55+00:00",
+   "sha256": "b49c96b75422c1f86634fcfa8176262403e46888cb7f4502e356ea7f4800d0b1",
+   "product": {
+    "shop": "Electroslab",
+    "shop_id": "electroslab",
+    "title": "CTO ASUS Vivobook 16 F1605VA-WS74 Laptop | Intel Core i7-1335U 13th Gen | 16GB DDR4 | 512GB NVMe SSD | Intel Iris Xe | 16\" FHD | Black",
+    "url": "https://electroslab.com/products/cto-laptop-asus-vivobook-f1605va-ws74-cpu-intel-core-i7-1335u",
+    "vendor": "Asus",
+    "product_type": "CTO Laptop",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:28:55+00:00",
+    "variants": [
+     {
+      "variant_id": "51242959601831",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "700.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "01-1-1-5887.001",
+      "url": "https://electroslab.com/products/cto-laptop-asus-vivobook-f1605va-ws74-cpu-intel-core-i7-1335u?variant=51242959601831"
+     }
+    ],
+    "description": "The CTO ASUS Vivobook 16 F1605VA-WS74 Laptop combines strong everyday performance with a spacious display for productivity, business, study, and entertainment. Powered by the Intel Core i7-1335U 13th Gen processor, 16GB DDR4 RAM, and a fast 512GB NVMe SSD, it delivers responsive performance and smooth multitasking for demanding daily workloads.\nFeaturing Intel Iris Xe integrated graphics and a large 16-inch Full HD display, the Vivobook 16 provides a comfortable workspace for office applications, web browsing, online meetings, multimedia, and general productivity. Finished in Black, it offers a clean and professional design suitable for both work and everyday use.\nKey Features\nBrand: ASUS\nSeries: Vivobook 16\nModel: F1605VA-WS74\nCondition: CTO\nProcessor: Intel Core i7-1335U\nProcessor Generation: 13th Gen\nMemory: 16GB DDR4 RAM\nStorage: 512GB NVMe SSD\nGraphics: Intel Iris Xe Integrated Graphics\nDisplay: 16-inch Full HD (FHD)\nColor: Black\nFast NVMe storage for quick startup and application loading\nLarge display for comfortable multitasking\nSuitable for business, study, office work, and multimedia\nIdeal for productivity and everyday computing\nWhy Choose This Product?\nPowerful Intel Core i7-1335U 13th Gen processor\n16GB DDR4 RAM for smooth multitasking\nFast 512GB NVMe SSD\nIntel Iris Xe integrated graphics\nSpacious 16-inch display\nProfessional Black finish\nVersatile ASUS Vivobook design for work and everyday use"
+   }
+  },
+  {
+   "obs": "T6",
+   "kind": "page",
+   "url": "https://abedtahan.com/products/lenovo-v15-core-i5-13g-16gb-512gb-ssd-15-6-win-11-pro",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:28:55+00:00",
+   "sha256": "e4d6747654420a059d7ce0e5ec84131b57e088ac27b2746145df509bbf8ea8a5",
+   "excerpt": "Lenovo V15- Core I5-13G- 16GB- 512GB SSD- 15.6\"- WIN 11 Pro – Abed Tahan\nRead the Privacy Policy\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountain",
+   "quoted": [
+    {
+     "quote": "OPERATING SYSTEM : Windows 11 Pro",
+     "found": true
+    },
+    {
+     "quote": "RAM SIZE : 16GB DDR5-5200",
+     "found": true
+    },
+    {
+     "quote": "HDD STORAGE : 512GB SSD M.2 PCIe Gen4 NVMe",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T7",
+   "kind": "page",
+   "url": "https://electroslab.com/policies/shipping-policy",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:28:55+00:00",
+   "sha256": "54c6679390ee45bf95498f72e22ef9f22741fce507c522d163d0aca6b8e5ecf1",
+   "excerpt": "Shipping policy\nWEBSITE ORDERS ONLY⚡\nNOVEMBER DISCOUNTS + ⚡FREE DELIVERY ON ORDERS OF $20 OR MORE⚡\nTHROUGH NOV 30\n0\nView All\nNo result found for your search.\nHome\nShipping policy\nShipping policy\na {\ntext-decoration: none;\ncolor: #464feb;\n}\ntr th, tr td {\nborder: 1px solid #e6e6e6;\n}\ntr th {\nbackground-color: #f5f5f5;\n}\nShipping Policy\nDelivery Coverage & Rates\nWe deliver across all of Lebanon for a flat rate of $4.\nFree delivery may apply during promotions or on selected items.\nDelivery Time\nThe estimated delivery time begins once your order is placed and confirmed.\nBeirut: Delivery within 1–3 business days.\nOutside Beirut: Delivery within 3–5 business days.\nCustom, special-order, or high-demand items may require additional time.\nOnce your order has been shipped, you will receive order confirmation and tracking details.\nInternational Shipping\nWe currently ship only within Lebanon.\nInternational shipping may become available in the future.\nLost or Stolen Packages\nElectroSlab is not responsible for lost or stolen packages after delivery confirmation.\nIf your order is marked as delivered but has not been received, please:\nCheck with your local courier or post office.\nCheck with neighbors, building reception, or security personnel.\nContact us at info@electroslab.com, and we will assist where possible.\nBusiness Days\nBusiness days are Monday through Saturday, excluding public holidays.\nContact\nFor shipping questions or delivery issues, please contact us at info@electroslab.com.\nThi",
+   "quoted": []
+  },
+  {
+   "obs": "T8",
+   "kind": "page",
+   "url": "https://abedtahan.com/",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:28:56+00:00",
+   "sha256": "10765617eed8b83c4e099764f902fe97ed512ca908a43c4baf927f84f86ae7fc",
+   "excerpt": "Lebanon's Leading Electronics & Appliances Retailer | Abed Tahan\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & Crepe Makers\nIce Cub",
+   "quoted": [
+    {
+     "quote": "Fast delivery across Lebanon",
+     "found": true
+    },
+    {
+     "quote": "Fast delivery across Lebanon",
+     "found": true
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,1125 @@
+{
+ "run_id": "scout-c02-20261128T050654",
+ "request": {
+  "id": "C02",
+  "text": "I carry my laptop to class. Can you find me a new 14-inch laptop with at least 16 GB RAM and a 1 TB SSD, around $1,000 delivered to Beirut?",
+  "mode": "delivery",
+  "destination": "Beirut",
+  "category": "laptop",
+  "run_id": "scout-c02-20261128T050654"
+ },
+ "status": "offers",
+ "message": "Best value: Technodel’s Acer Swift Go 14 — $720.00, with free delivery to Beirut under its over-$500 policy. Listed in stock and confirmed new, with 16GB RAM and a 1TB SSD.\nFor touchscreen notes: Technodel’s Lenovo IdeaPad 5 14AKP10 — $975.00 with free delivery; confirmed new and in stock, with 16GB RAM, 1TB SSD and a 14-inch convertible touchscreen.\nSecond-shop comparison: Karizma’s IdeaPad 5 2-in-1 14 — $999.00 with free delivery over $150. Listed in stock, but new condition is not explicitly confirmed.\nI’d start with the Acer for value. Since you carry it to class, check the exact model’s weight and battery specification before ordering; those details weren’t confirmed in the listings.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "best",
+   "shop": "Technodel",
+   "shop_id": "technodel",
+   "title": "Acer Swift Go 14, Core Ultra 7, 16GB RAM, 1TB SSD, 14\" Touch",
+   "variant": "Acer Swift Go 14, Core Ultra 7, 16GB RAM, 1TB SSD, 14\" Touch",
+   "url": "https://technodel.net/product/acer-swift-go-14-core-ultra-7-16gb-ram-1tb-ssd-14-touch",
+   "price": "720.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "Meets the requested 14-inch, at least 16GB RAM and 1TB SSD configuration; no specific model requested.",
+   "delivery_fee": "0.00",
+   "total": "720.00",
+   "total_basis": "listed price + delivery fee published by technodel (\"Flat $4 anywhere in Lebanon; free on orders of $500 or more\", T6)",
+   "complete": false,
+   "gaps": [
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "14-inch display",
+     "status": "met",
+     "quote": "14-inch",
+     "obs": "P11",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "At least 16GB RAM",
+     "status": "met",
+     "quote": "16GB RAM",
+     "obs": "P11",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "1TB SSD",
+     "status": "met",
+     "quote": "1TB SSD",
+     "obs": "P11",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "NewCondition",
+     "obs": "P11",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "met",
+     "quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more",
+     "obs": "T6",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P11",
+     "url": "https://technodel.net/product/acer-swift-go-14-core-ultra-7-16gb-ram-1tb-ssd-14-touch",
+     "read": "https://technodel.net/product/acer-swift-go-14-core-ultra-7-16gb-ram-1tb-ssd-14-touch",
+     "source": "schema_org_jsonld",
+     "observed_at": "2026-11-28T05:07:21+00:00",
+     "sha256": "d3ddb3d4666a09d031b8fb35ff1dc737789226963fb71979a026e6d163f01a7c"
+    },
+    {
+     "obs": "T6",
+     "url": "https://technodel.net/api/llm-context",
+     "source": "shop delivery terms",
+     "observed_at": "2026-11-28T05:07:22+00:00",
+     "sha256": "b55d9346dff533ed1909b1f8a99169bed1f5e262d2fdf59ad12d96d780aa7c84"
+    }
+   ],
+   "seller_basis": "Technodel: Lebanese shop in the reviewed directory",
+   "downgrades": []
+  },
+  {
+   "tier": "best",
+   "shop": "Technodel",
+   "shop_id": "technodel",
+   "title": "Lenovo IdeaPad 5 14AKP10 — Ryzen AI 7 350, 16GB RAM, 1TB NVMe, 14\" FHD+ Touch",
+   "variant": "Lenovo IdeaPad 5 14AKP10 — Ryzen AI 7 350, 16GB RAM, 1TB NVMe, 14\" FHD+ Touch",
+   "url": "https://technodel.net/product/lenovo-ideapad-5-14akp10-ryzen-ai-7-350-16gb-ram-1tb-nvme-14-fhd-touch",
+   "price": "975.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "Meets the requested screen size, RAM and SSD capacity; convertible touchscreen option near the target budget.",
+   "delivery_fee": "0.00",
+   "total": "975.00",
+   "total_basis": "listed price + delivery fee published by technodel (\"Flat $4 anywhere in Lebanon; free on orders of $500 or more\", T6)",
+   "complete": false,
+   "gaps": [
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "14-inch display",
+     "status": "met",
+     "quote": "14-inch FHD+ x360 touchscreen",
+     "obs": "P13",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "At least 16GB RAM",
+     "status": "met",
+     "quote": "16GB RAM",
+     "obs": "P13",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "1TB SSD",
+     "status": "met",
+     "quote": "1TB NVMe",
+     "obs": "P13",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "NewCondition",
+     "obs": "P13",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "met",
+     "quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more",
+     "obs": "T6",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P13",
+     "url": "https://technodel.net/product/lenovo-ideapad-5-14akp10-ryzen-ai-7-350-16gb-ram-1tb-nvme-14-fhd-touch",
+     "read": "https://technodel.net/product/lenovo-ideapad-5-14akp10-ryzen-ai-7-350-16gb-ram-1tb-nvme-14-fhd-touch",
+     "source": "schema_org_jsonld",
+     "observed_at": "2026-11-28T05:07:32+00:00",
+     "sha256": "0137ba70a320707f6206239bd28df92cd33d8b9995f2d2e2ef9c720ba02f2931"
+    },
+    {
+     "obs": "T6",
+     "url": "https://technodel.net/api/llm-context",
+     "source": "shop delivery terms",
+     "observed_at": "2026-11-28T05:07:22+00:00",
+     "sha256": "b55d9346dff533ed1909b1f8a99169bed1f5e262d2fdf59ad12d96d780aa7c84"
+    }
+   ],
+   "seller_basis": "Technodel: Lebanese shop in the reviewed directory",
+   "downgrades": []
+  },
+  {
+   "tier": "best",
+   "shop": "Karizma Megastore",
+   "shop_id": "karizma",
+   "title": "Lenovo IdeaPad 5 2-in-1 14 – AMD Ryzen AI 7 350, 16GB RAM, 1TB SSD",
+   "variant": "Default",
+   "url": "https://karizmamegastore.com/products/lenovo-ideapad-5-2-in-1-14-amd-ryzen-ai-7-350-16gb-ram-1tb-ssd?variant=67741685121213",
+   "price": "999.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "exact",
+   "identity_reason": "Matches requested hardware configuration, but new condition remains unverified.",
+   "delivery_fee": "0.00",
+   "total": "999.00",
+   "total_basis": "listed price + delivery fee published by karizma (\"Free shipping on all orders over $150\", T7)",
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "14-inch display",
+     "status": "met",
+     "quote": "Display: 14-inch WUXGA touchscreen",
+     "obs": "P9",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "At least 16GB RAM",
+     "status": "met",
+     "quote": "Memory: 16GB RAM",
+     "obs": "P9",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "1TB SSD",
+     "status": "met",
+     "quote": "Storage: 1TB NVMe SSD",
+     "obs": "P9",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "met",
+     "quote": "3 business days delivery in Lebanon",
+     "obs": "T7",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P9",
+     "url": "https://karizmamegastore.com/products/lenovo-ideapad-5-2-in-1-14-amd-ryzen-ai-7-350-16gb-ram-1tb-ssd",
+     "read": "https://karizmamegastore.com/products/lenovo-ideapad-5-2-in-1-14-amd-ryzen-ai-7-350-16gb-ram-1tb-ssd.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:07:20+00:00",
+     "sha256": "161b062fd907a196d289e18eff4519930a829156534eb44c6b588da138c13201"
+    },
+    {
+     "obs": "T7",
+     "url": "https://www.karizmamegastore.com/products/lenovo-ideapad-5-2-in-1-14-amd-ryzen-ai-7-350-16gb-ram-1tb-ssd",
+     "source": "shop delivery terms",
+     "observed_at": "2026-11-28T05:07:33+00:00",
+     "sha256": "ca57798e458683585a77866607471536b3504884a324465b445c0246b3538107"
+    }
+   ],
+   "seller_basis": "Karizma Megastore: Lebanese shop in the reviewed directory (shop metadata: Ghaziyeh, LB)",
+   "downgrades": []
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P11",
+   "variant_id": "TD-40TD280",
+   "identity": "exact",
+   "identity_reason": "Meets the requested 14-inch, at least 16GB RAM and 1TB SSD configuration; no specific model requested.",
+   "condition": "new",
+   "condition_quote": "NewCondition",
+   "condition_obs": "P11",
+   "requirements": [
+    {
+     "requirement": "14-inch display",
+     "status": "met",
+     "evidence_obs": "P11",
+     "quote": "14-inch"
+    },
+    {
+     "requirement": "At least 16GB RAM",
+     "status": "met",
+     "evidence_obs": "P11",
+     "quote": "16GB RAM"
+    },
+    {
+     "requirement": "1TB SSD",
+     "status": "met",
+     "evidence_obs": "P11",
+     "quote": "1TB SSD"
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "P11",
+     "quote": "NewCondition"
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "met",
+     "evidence_obs": "T6",
+     "quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more"
+    }
+   ],
+   "delivery_obs": "T6",
+   "delivery_quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more",
+   "delivery_fee_usd": "0",
+   "free_delivery_over_usd": "500",
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P13",
+   "variant_id": "AM-JM3KDTGS",
+   "identity": "exact",
+   "identity_reason": "Meets the requested screen size, RAM and SSD capacity; convertible touchscreen option near the target budget.",
+   "condition": "new",
+   "condition_quote": "NewCondition",
+   "condition_obs": "P13",
+   "requirements": [
+    {
+     "requirement": "14-inch display",
+     "status": "met",
+     "evidence_obs": "P13",
+     "quote": "14-inch FHD+ x360 touchscreen"
+    },
+    {
+     "requirement": "At least 16GB RAM",
+     "status": "met",
+     "evidence_obs": "P13",
+     "quote": "16GB RAM"
+    },
+    {
+     "requirement": "1TB SSD",
+     "status": "met",
+     "evidence_obs": "P13",
+     "quote": "1TB NVMe"
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "P13",
+     "quote": "NewCondition"
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "met",
+     "evidence_obs": "T6",
+     "quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more"
+    }
+   ],
+   "delivery_obs": "T6",
+   "delivery_quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more",
+   "delivery_fee_usd": "0",
+   "free_delivery_over_usd": "500",
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P9",
+   "variant_id": "67741685121213",
+   "identity": "exact",
+   "identity_reason": "Matches requested hardware configuration, but new condition remains unverified.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "14-inch display",
+     "status": "met",
+     "evidence_obs": "P9",
+     "quote": "Display: 14-inch WUXGA touchscreen"
+    },
+    {
+     "requirement": "At least 16GB RAM",
+     "status": "met",
+     "evidence_obs": "P9",
+     "quote": "Memory: 16GB RAM"
+    },
+    {
+     "requirement": "1TB SSD",
+     "status": "met",
+     "evidence_obs": "P9",
+     "quote": "Storage: 1TB NVMe SSD"
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "met",
+     "evidence_obs": "T7",
+     "quote": "3 business days delivery in Lebanon"
+    }
+   ],
+   "delivery_obs": "T7",
+   "delivery_quote": "Free shipping on all orders over $150",
+   "delivery_fee_usd": "0",
+   "free_delivery_over_usd": "150",
+   "vat_quote": null,
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Look for portable 14-inch models with 16GB RAM and 1TB storage near the target, treating $1,000 as approximate rather than a hard cap.",
+   "at_s": 11.4,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "Zenbook 14 16GB 1TB"
+    },
+    {
+     "tool": "search",
+     "query": "IdeaPad Slim 5 14 16GB 1TB"
+    },
+    {
+     "tool": "search",
+     "query": "Swift Go 14 16GB 1TB"
+    },
+    {
+     "tool": "search",
+     "query": "Pavilion Plus 14 16GB 1TB"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Check competing 14-inch options and obtain condition confirmation for the IdeaPad; Acer already has confirmed new condition and delivery terms.",
+   "at_s": 37.9,
+   "calls": [
+    {
+     "tool": "open",
+     "url": "https://technodel.net/product/lenovo-ideapad-5-14akp10-ryzen-ai-7-350-16gb-ram-1tb-nvme-14-fhd-touch"
+    },
+    {
+     "tool": "open",
+     "url": "https://outgeeked.net/products/lenovo-v14-g5-irl-83hda06jus"
+    },
+    {
+     "tool": "read",
+     "url": "https://karizmamegastore.com/products/lenovo-ideapad-5-2-in-1-14-amd-ryzen-ai-7-350-16gb-ram-1tb-ssd",
+     "terms": [
+      "new",
+      "condition",
+      "weight",
+      "shipping"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Two confirmed-new options at Technodel meet the hardware requirements; Karizma provides a second-shop comparison but does not explicitly confirm new condition. Budget is approximate, not a hard maximum.",
+   "at_s": 61.9,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 13953,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 15516,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 15625,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 16922,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 250,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 532,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 1016,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 8187,
+   "usage": {
+    "actual_usd": "0.004828",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3239,
+     "output_tokens": 176,
+     "total_tokens": 3415
+    },
+    "latency_ms": 4875,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 9562,
+   "usage": {
+    "actual_usd": "0.031608",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 13767,
+     "output_tokens": 222,
+     "total_tokens": 13989
+    },
+    "latency_ms": 5969,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 23000,
+   "usage": {
+    "actual_usd": "0.0448155",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 15818,
+     "output_tokens": 1030,
+     "total_tokens": 16848
+    },
+    "latency_ms": 19563,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  }
+ ],
+ "retailer_requests": 107,
+ "seconds": 62.0,
+ "spend": {
+  "settled_usd": "0.0812515",
+  "uncertain_usd": "0",
+  "model_calls": 3,
+  "ledger_job": "scout-c02-20261128T050654"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/macbook-pro-14-m6-16gb-1tb-ssd-silver",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:07:17+00:00",
+   "sha256": "07a269e925eafacb491bedf44459b2f1df6574adfcefbe992c8002b3400454f0",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "Macbook Pro - 14\" M6- 16GB- 1TB SSD- Silver",
+    "url": "https://abedtahan.com/products/macbook-pro-14-m6-16gb-1tb-ssd-silver",
+    "vendor": "APPLE",
+    "product_type": "Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:07:17+00:00",
+    "variants": [
+     {
+      "variant_id": "46564047880371",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "2065.00",
+      "compare_at": "2453.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "NTB-APPL-MHWW4LL/A",
+      "url": "https://abedtahan.com/products/macbook-pro-14-m6-16gb-1tb-ssd-silver?variant=46564047880371"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://www.macrotronics.net/products/asus-zenbook-ux3405ca-u7512-ultra-7-lpddr5x-14-3-inch-laptop",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:07:17+00:00",
+   "sha256": "87e6fa33b292a0e44877b61f26b02df5481232dc7375bb08839aa062cf2406e8",
+   "product": {
+    "shop": "Macrotronics",
+    "shop_id": "macrotronics",
+    "title": "ASUS Zenbook UX3405CA-U7512 Ultra 7 16GB 14-inch Laptop",
+    "url": "https://www.macrotronics.net/products/asus-zenbook-ux3405ca-u7512-ultra-7-lpddr5x-14-3-inch-laptop",
+    "vendor": "Asus",
+    "product_type": "OD Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:07:17+00:00",
+    "variants": [
+     {
+      "variant_id": "52769348223265",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "1599.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://www.macrotronics.net/products/asus-zenbook-ux3405ca-u7512-ultra-7-lpddr5x-14-3-inch-laptop?variant=52769348223265"
+     }
+    ],
+    "description": "Processor: Intel Core Ultra 7 Processor\nMemory: 16GB LPDDR5X RAM\nStorage: 512GB PCIe NVMe SSD\nDisplay: 14\" 3K OLED (2880×1800), 120Hz\nGraphics: Intel Arc Graphics\nConnectivity: Wi-Fi 6E, Bluetooth\nKeyboard: Backlit Keyboard\nOperating System: Windows 11"
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/macbook-pro-14-m6-16gb-1tb-ssd-silver",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:07:18+00:00",
+   "sha256": "07a269e925eafacb491bedf44459b2f1df6574adfcefbe992c8002b3400454f0",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "Macbook Pro - 14\" M6- 16GB- 1TB SSD- Silver",
+    "url": "https://abedtahan.com/products/macbook-pro-14-m6-16gb-1tb-ssd-silver",
+    "vendor": "APPLE",
+    "product_type": "Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:07:18+00:00",
+    "variants": [
+     {
+      "variant_id": "46564047880371",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "2065.00",
+      "compare_at": "2453.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "NTB-APPL-MHWW4LL/A",
+      "url": "https://abedtahan.com/products/macbook-pro-14-m6-16gb-1tb-ssd-silver?variant=46564047880371"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://shop.itworkslb.net/products/hp-pavilion-plus-16-ab0025cl-intel-core-i7-13700h-16gb-ram-1tb-ssd-16-inch-120hz-rtx-3050-774887",
+   "shop_id": "itworks",
+   "observed_at": "2026-11-28T05:07:18+00:00",
+   "sha256": "0faae6af833f9650f11f56d7bb8203e2ebafb0cc55b632f2109b5af2453b8244",
+   "excerpt": "HP Pavilion Plus 16-AB0025CL - Intel Core i7-13700H - 16GB RAM - 1TB SSD 16-inch 120Hz - RTX 3050 | ITWorks LebanonSkip to content\nCART\n×\nLoading cart ...\nSEARCH\n×\nSearch\nStart typing to search…\nMENU\n×\nHomeAccountVisit\nShop by category\nDesktop PCs & SystemsGaming PCs, Business PCs, Mini PCs & more\nLaptopsGaming Laptops, Business Laptops, Ultrabooks & more\nPC ComponentsGraphics Cards, Processors, Motherboards & more\nMonitors & DisplaysGaming Monitors, Office Monitors, 4K Monitors & more\nPeripheralsKeyboards, Mice, Headsets & more\nPrinters, Office & POSLaser Printers, Inkjet Printers, Multifunction Printers & more\nNetworkingRouters, Mesh Wi-Fi, Switches & more\nStorageSSDs & NVMe, Hard Drives, External SSDs & more\nGaming & ConsolesConsoles, Video Games, Console Accessories & more\nMobile Devices & WearablesSmartphones, iPads, Android Tablets & more\nCCTV, Security & Smart DevicesIP Cameras, CCTV Cameras, DVR & NVR & more\nCameras & Creator GearDSLR Cameras, Mirrorless Cameras, Action Cameras & more\nAccessories & CablesLaptop Chargers, Laptop Bags & Sleeves, Docking Stations & more\nPower & BackupUPS, Surge Protectors, Power Banks & more\nSoftwareWindows, Microsoft Office, Antivirus & Security\nHome & Personal CareAir Purifiers & Humidifiers, Fans & Dehumidifiers, Desk Lamps & Lighting & more\nITWorksAll CategoriesPC BuilderIT Services\nAsk AI\nSearch/Sign in\nHome\n/\nLaptops\n/\nHP Pavilion Plus 16-AB0025CL - Intel Core i7-13700H - 16GB RAM - 1TB SSD 16-inch 120Hz - RTX 3050\nHP\nHP Pavilion P",
+   "quoted": []
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/macbook-pro-14-m6-16gb-1tb-ssd-space-black",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:07:18+00:00",
+   "sha256": "31bcce1a33ea3d07f1f20bb2da8e266048e779669ff35964b6ffe0f5396bc3f0",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "Macbook Pro - 14\" M6- 16GB- 1TB SSD- Space Black",
+    "url": "https://abedtahan.com/products/macbook-pro-14-m6-16gb-1tb-ssd-space-black",
+    "vendor": "APPLE",
+    "product_type": "Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:07:18+00:00",
+    "variants": [
+     {
+      "variant_id": "46564047257779",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "2065.00",
+      "compare_at": "2453.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "NTB-APPL-MHWT4LL/A",
+      "url": "https://abedtahan.com/products/macbook-pro-14-m6-16gb-1tb-ssd-space-black?variant=46564047257779"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://itpromax.store/en/p/lenovo-ideapad-slim-3-16irh10r-ultra-5-210h-16gb-1tb-153-touch",
+   "shop_id": "itpromax",
+   "observed_at": "2026-11-28T05:07:19+00:00",
+   "sha256": "fe7a058e2589885f1691d8e32b02ef5ec8a58ea06987051d07e6882f0c3a51a3",
+   "product": {
+    "shop": "IT Promax",
+    "shop_id": "itpromax",
+    "title": "Lenovo IdeaPad Slim 3 Laptop 16GB 1TB | IT Promax",
+    "url": "https://itpromax.store/en/p/lenovo-ideapad-slim-3-16irh10r-ultra-5-210h-16gb-1tb-153-touch",
+    "vendor": "Lenovo",
+    "product_type": null,
+    "condition": "NewCondition",
+    "source": "schema_org_jsonld",
+    "observed_at": "2026-11-28T05:07:19+00:00",
+    "variants": [
+     {
+      "variant_id": "5-210H",
+      "title": "Lenovo IdeaPad Slim 3 16IRH10R Ultra 5-210H, 16GB, 1TB, 15.3″ Touch",
+      "options": {},
+      "price": "850.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": "InStock",
+      "sku": "5-210H",
+      "url": "https://itpromax.store/en/p/lenovo-ideapad-slim-3-16irh10r-ultra-5-210h-16gb-1tb-153-touch",
+      "condition": "NewCondition"
+     }
+    ],
+    "description": "Lenovo IdeaPad Slim 3 16IRH10R laptop with Ultra 5-210H, 16GB RAM, 1TB, 15.3-inch touch. Delivered in Lebanon in 1–3 days, cash on delivery."
+   }
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://www.macrotronics.net/policies/shipping-policy",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:07:19+00:00",
+   "sha256": "801cb039333a0439e43a635a6db1b39683d8fe286d1fb4d8ac24c45a925cc83b",
+   "excerpt": "Shipping policy – Macrotronics\nSkip to content\nFacebook\nTwitter\nInstagram\nHelpline +961 71 854 621 | +961 9 853 008\nTechnical Support +961 71 94 84 94\nPause slideshow\nPlay slideshow\nComputers\nComputers\nLaptops\nOn-Demand Laptops\nLaptop Power Adapters\nLaptop Accessories\nApple Computers\nApple Accessories\niPads and Tablets\nTablets Accessories\nComputer & Smart Monitors\nMonitor Accessories\nServers, Workstations and NAS\nDesktops and Mini PCs\nPOS and POS Equipment\nOriginal Softwares and Antivirus\nComputer Parts\nComputer Parts\nProcessors\nGraphic Cards\nMotherboards\nRAMs\nSSD\nHDD\nCPU Coolers\nThermal Paste and Pads\nPower Supplies\nComputer Cases\nComputer Case Accessories\nMore PC Components\nLegacy Computer Parts\nUsed Computer Parts\nComputer Peripherals\nComputer Peripherals\nMice & Keyboards\nEarphones & Headphones\nComputer & Bluetooth Speakers\nWebcams & Microphones\nLaptop Bags & Cases\nComputer & Video Cables\nFlash Drives & Memory Cards\nPrinters, Scanners & Faxes\nPaper & Media Supplies\nGenuine Inks & Ribbons\nGenuine Toners & Drums\nCompatible Toners & Drums\nOffice Furniture\nElectronics & More\nElectronics & More\nUPS\nBatteries\nSmart Appliances\nAdapters and Converters\nEducational Electronics\nConsumer Electronics\nSurveillance and Security\nProjectors, Screens and More\nRouters, Repeaters and APs\nNetwork Switches\nNetwork Adapters\nNetworking and Tools\nGaming\nGaming\nGaming PCs\nGaming Monitors\nGaming Headsets\nGaming Pads\nGaming Mice\nGaming Keyboards\nGaming Chairs\nGaming Desks\nGaming Console and VR\nGaming",
+   "quoted": []
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://martixstores.com/products/dell-pro-14-plus-pb14250-ultra7-255u-1x16gb-ddr5-1tb-nvme-ssd-14-0-fhd-1920x1200-wi-fi-7-windows-11-pro-b30b57",
+   "shop_id": "martix",
+   "observed_at": "2026-11-28T05:07:19+00:00",
+   "sha256": "91499b10fe0d978c9336256ecc813c24f0cae4e06a725823dc84275468ca1844",
+   "product": {
+    "shop": "Martix Stores",
+    "shop_id": "martix",
+    "title": "Dell Pro 14 Plus PB14250 Ultra7 255U 1x16GB DDR5 1TB NVme SSD 14.0\" FHD+ 1920x1200 Wi-Fi 7 Windows 11 Pro — Martix Stores Lebanon",
+    "url": "https://martixstores.com/products/dell-pro-14-plus-pb14250-ultra7-255u-1x16gb-ddr5-1tb-nvme-ssd-14-0-fhd-1920x1200-wi-fi-7-windows-11-pro-b30b57",
+    "vendor": "Agt Computers",
+    "product_type": null,
+    "condition": "NewCondition",
+    "source": "schema_org_jsonld",
+    "observed_at": "2026-11-28T05:07:19+00:00",
+    "variants": [
+     {
+      "variant_id": "0864575965575",
+      "title": "Dell Pro 14 Plus PB14250 Ultra7 255U 1x16GB DDR5 1TB NVme SSD 14.0\" FHD+ 1920x1200 Wi-Fi 7 Windows 11 Pro",
+      "options": {},
+      "price": "1299.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": "InStock",
+      "sku": "0864575965575",
+      "url": "https://martixstores.com/products/dell-pro-14-plus-pb14250-ultra7-255u-1x16gb-ddr5-1tb-nvme-ssd-14-0-fhd-1920x1200-wi-fi-7-windows-11-pro-b30b57",
+      "condition": "NewCondition"
+     }
+    ],
+    "description": "$1,299.00 · Agt Computers — Brand: Dell Display Size & Resolution: 14\" 2560x1600 Processor: Intel Core Ultra 9 288V RAM: 32GB Storage: 1TB Graphics Card: Intel Arc Operating System: Windows 11…"
+   }
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/macbook-pro-14-m6-16gb-1tb-ssd-space-black",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:07:19+00:00",
+   "sha256": "31bcce1a33ea3d07f1f20bb2da8e266048e779669ff35964b6ffe0f5396bc3f0",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "Macbook Pro - 14\" M6- 16GB- 1TB SSD- Space Black",
+    "url": "https://abedtahan.com/products/macbook-pro-14-m6-16gb-1tb-ssd-space-black",
+    "vendor": "APPLE",
+    "product_type": "Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:07:19+00:00",
+    "variants": [
+     {
+      "variant_id": "46564047257779",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "2065.00",
+      "compare_at": "2453.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "NTB-APPL-MHWT4LL/A",
+      "url": "https://abedtahan.com/products/macbook-pro-14-m6-16gb-1tb-ssd-space-black?variant=46564047257779"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P8",
+   "kind": "product",
+   "url": "https://karizmamegastore.com/products/lenovo-ideapad-slim-5-16-intel-core-7-150u-16gb-ram-1tb-ssd-touch",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:07:19+00:00",
+   "sha256": "35740df0c26f6c6ed460eb38b30bfa2ad77d252616b5e3e9d432400332a0bf71",
+   "product": {
+    "shop": "Karizma Megastore",
+    "shop_id": "karizma",
+    "title": "Lenovo IdeaPad Slim 5 16 – Intel Core 7 150U, 16GB RAM, 1TB SSD, Touch",
+    "url": "https://karizmamegastore.com/products/lenovo-ideapad-slim-5-16-intel-core-7-150u-16gb-ram-1tb-ssd-touch",
+    "vendor": "Lenovo",
+    "product_type": "Laptop",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:07:19+00:00",
+    "variants": [
+     {
+      "variant_id": "67741685711037",
+      "title": "Default",
+      "options": {
+       "Title": "Default"
+      },
+      "price": "999.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/lenovo-ideapad-slim-5-16-intel-core-7-150u-16gb-ram-1tb-ssd-touch?variant=67741685711037"
+     }
+    ],
+    "description": "Processor: Intel Core 7 150U\nGraphics: Integrated graphics\nMemory: 16GB RAM\nStorage: 1TB NVMe SSD\nDisplay: 16-inch WUXGA touchscreen"
+   }
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://itpromax.store/en/pages/shipping",
+   "shop_id": "itpromax",
+   "observed_at": "2026-11-28T05:07:20+00:00",
+   "sha256": "f4dafc7b92c4d311668cc8b129e5159280194d2f38fb3d583da545b81b9285c9",
+   "excerpt": "Shipping and Delivery | IT Promax\nSkip to content\nDelivery across Lebanon within 3 days\n+961 70 012 451\nEnglish\nEN\nENEnglish\nعالعربية\nFRFrançais\nSearch products\nSearch with a photo\nLog in\n0\nCart\n0\nitems in cart\nSearch products\nSearch with a photo\nAll categories\nComputers & Office Tech\nComputer Accessories\nLaptops & Computers\nKeyboards, Mice & Webcams\nNetworking & Wi-Fi\nStorage & Memory\nMonitors\nPrinters & Ink\nAll of Computers & Office Tech\nTV, Audio & Cameras\nCameras & Drones\nHeadphones & Earbuds\nSpeakers & Home Audio\nSmart Home & Security\nTVs & Streaming\nAll of TV, Audio & Cameras\nGaming\nConsoles & Games\nControllers & Gaming Accessories\nGaming Chairs & Desks\nAll of Gaming\nPhones & Tablets\nChargers, Cables & Power Banks\nPhone Accessories\nTablets & iPads\nSmart Watches & Wearables\nCases & Screen Protectors\nSmartphones\nphone cooler\nAll of Phones & Tablets\nHome Appliances\nLarge Appliances\nKitchen Appliances\nVacuums & Irons\nHeating & Cooling\nAll of Home Appliances\nStationery & Books\nStationery & Office Supplies\nArt & Crafts\nBooks\nAll of Stationery & Books\nTools, DIY & Power\nHand Tools & Hardware\nPower Tools\nElectrical & Lighting Supplies\nSolar, Batteries & Inverters\nAll of Tools, DIY & Power\nAll categories\nComputers & Office Tech\nComputer Accessories\nLaptops & Computers\nKeyboards, Mice & Webcams\nNetworking & Wi-Fi\nStorage & Memory\nMonitors\nPrinters & Ink\nAll of Computers & Office Tech\nTV, Audio & Cameras\nCameras & Drones\nHeadphones & Earbuds\nSpeakers & Home Audio\nSmart Home & Secu",
+   "quoted": []
+  },
+  {
+   "obs": "P9",
+   "kind": "product",
+   "url": "https://karizmamegastore.com/products/lenovo-ideapad-5-2-in-1-14-amd-ryzen-ai-7-350-16gb-ram-1tb-ssd",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:07:20+00:00",
+   "sha256": "161b062fd907a196d289e18eff4519930a829156534eb44c6b588da138c13201",
+   "product": {
+    "shop": "Karizma Megastore",
+    "shop_id": "karizma",
+    "title": "Lenovo IdeaPad 5 2-in-1 14 – AMD Ryzen AI 7 350, 16GB RAM, 1TB SSD",
+    "url": "https://karizmamegastore.com/products/lenovo-ideapad-5-2-in-1-14-amd-ryzen-ai-7-350-16gb-ram-1tb-ssd",
+    "vendor": "Lenovo",
+    "product_type": "Laptop",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:07:20+00:00",
+    "variants": [
+     {
+      "variant_id": "67741685121213",
+      "title": "Default",
+      "options": {
+       "Title": "Default"
+      },
+      "price": "999.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/lenovo-ideapad-5-2-in-1-14-amd-ryzen-ai-7-350-16gb-ram-1tb-ssd?variant=67741685121213"
+     }
+    ],
+    "description": "Processor: AMD Ryzen AI 7 350\nGraphics: Integrated graphics\nMemory: 16GB RAM\nStorage: 1TB NVMe SSD\nDisplay: 14-inch WUXGA touchscreen"
+   }
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://www.karizmamegastore.com/policies/privacy-policy",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:07:21+00:00",
+   "sha256": "0dfb413212ca530bff932ef9902ea52928465eb063bd8eaa4f50010ed9ceeb76",
+   "excerpt": "Privacy policy – Karizma Megastore\nSkip to content\nReturns extended to 60 days\nFree shipping on your first order\nHome\nCategories\nCategories\nSmart Phones\nSmart Phones\nApple\nXiaomi\nSamsung\nHonor\nTecno\nInfinix\nGadgets\nGadgets\nWearables\nAudio Devices\nPower & Charging\nGaming Consoles\nGaming Consoles\nConsoles\nGames\nGaming Wheels & Peripherals\nLaptops\nLaptops\nGaming Laptops\nOffice Laptops\nComputer Accessories\nComputer Accessories\nGaming Accessories\nMouse & Keyboards\nConnectivity & Hubs\nStorage & Memory\nMonitors\nHeadphones & Earphones\nWiFi and Networking\nContent Creation\nsoundcore\nPitaka\nAnker\nCases\nContact\nHome\nCategories\nCases\nContact\nLogin\n0\nHome\nCategories\nSmart Phones\nApple\nXiaomi\nSamsung\nHonor\nTecno\nInfinix\nGadgets\nWearables\nAudio Devices\nPower & Charging\nGaming Consoles\nConsoles\nGames\nGaming Wheels & Peripherals\nLaptops\nGaming Laptops\nOffice Laptops\nComputer Accessories\nGaming Accessories\nMouse & Keyboards\nConnectivity & Hubs\nStorage & Memory\nMonitors\nHeadphones & Earphones\nWiFi and Networking\nContent Creation\nsoundcore\nPitaka\nAnker\nCases\nContact\nPrivacy policy\nLast updated: September 2, 2024\nThis Privacy Policy describes how Karizma Megastore (the \"Site\", \"we\", \"us\", or \"our\") collects, uses, and discloses your personal information when you visit, use our services, or make a purchase from www.karizmamegastore.com (the \"Site\") or otherwise communicate with us regarding the Site (collectively, the \"Services\"). For purposes of this Privacy Policy, \"you\" and \"your\" means you as t",
+   "quoted": []
+  },
+  {
+   "obs": "P10",
+   "kind": "product",
+   "url": "https://martixstores.com/products/hp-pavilion-plus-14-ew100-core-ultra-5-125h-16gbob-512gb-14-wqxga-lbl-backlit-win11-silver-459f61",
+   "shop_id": "martix",
+   "observed_at": "2026-11-28T05:07:21+00:00",
+   "sha256": "dfac352ce379789253654bc3b04f7909c0fcf7066072b0993ebe943892e4a9d9",
+   "product": {
+    "shop": "Martix Stores",
+    "shop_id": "martix",
+    "title": "HP PAVILION PLUS 14-EW100 CORE ULTRA 5 125H 16GBOB 512GB 14\" WQXGA LBL BACKLIT WIN11 SILVER — Martix Stores Lebanon",
+    "url": "https://martixstores.com/products/hp-pavilion-plus-14-ew100-core-ultra-5-125h-16gbob-512gb-14-wqxga-lbl-backlit-win11-silver-459f61",
+    "vendor": "Agt Computers",
+    "product_type": null,
+    "condition": "NewCondition",
+    "source": "schema_org_jsonld",
+    "observed_at": "2026-11-28T05:07:21+00:00",
+    "variants": [
+     {
+      "variant_id": "offer-0",
+      "title": "HP PAVILION PLUS 14-EW100 CORE ULTRA 5 125H 16GBOB 512GB 14\" WQXGA LBL BACKLIT WIN11 SILVER",
+      "options": {},
+      "price": "690.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": "InStock",
+      "sku": null,
+      "url": "https://martixstores.com/products/hp-pavilion-plus-14-ew100-core-ultra-5-125h-16gbob-512gb-14-wqxga-lbl-backlit-win11-silver-459f61",
+      "condition": "NewCondition"
+     }
+    ],
+    "description": "$690.00 · Agt Computers — The HP Pavilion Plus 14-EW100 is a powerful and stylish laptop designed for productivity, creativity, and everyday performance. Powered by the Intel Core Ultra 5-125H…"
+   }
+  },
+  {
+   "obs": "P11",
+   "kind": "product",
+   "url": "https://technodel.net/product/acer-swift-go-14-core-ultra-7-16gb-ram-1tb-ssd-14-touch",
+   "shop_id": "technodel",
+   "observed_at": "2026-11-28T05:07:21+00:00",
+   "sha256": "d3ddb3d4666a09d031b8fb35ff1dc737789226963fb71979a026e6d163f01a7c",
+   "product": {
+    "shop": "Technodel",
+    "shop_id": "technodel",
+    "title": "Acer Swift Go 14, Core Ultra 7, 16GB RAM, 1TB SSD, 14\" Touch",
+    "url": "https://technodel.net/product/acer-swift-go-14-core-ultra-7-16gb-ram-1tb-ssd-14-touch",
+    "vendor": "Acer",
+    "product_type": null,
+    "condition": "NewCondition",
+    "source": "schema_org_jsonld",
+    "observed_at": "2026-11-28T05:07:21+00:00",
+    "variants": [
+     {
+      "variant_id": "TD-40TD280",
+      "title": "Acer Swift Go 14, Core Ultra 7, 16GB RAM, 1TB SSD, 14\" Touch",
+      "options": {},
+      "price": "720.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": "InStock",
+      "sku": "TD-40TD280",
+      "url": "https://technodel.net/product/acer-swift-go-14-core-ultra-7-16gb-ram-1tb-ssd-14-touch",
+      "condition": "NewCondition"
+     }
+    ],
+    "description": "Acer Swift Go 14 in Lebanon: Core Ultra 7, 16GB RAM, 1TB SSD, 14-inch. Delivery across Lebanon."
+   }
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://abedtahan.com/pages/contact",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:07:22+00:00",
+   "sha256": "a8448f707638b639abb5e29f656ad353b69430cdae6d5df564f71883436e0e83",
+   "excerpt": "Contact\n– Abed Tahan\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & Crepe Makers\nIce Cube, Ice Cream & Yoghurt Makers\nSaj Machines\nL",
+   "quoted": []
+  },
+  {
+   "obs": "T6",
+   "kind": "page",
+   "url": "https://technodel.net/api/llm-context",
+   "shop_id": "technodel",
+   "observed_at": "2026-11-28T05:07:22+00:00",
+   "sha256": "b55d9346dff533ed1909b1f8a99169bed1f5e262d2fdf59ad12d96d780aa7c84",
+   "excerpt": "{\"_metadata\":{\"site\":\"Technodel Lebanon\",\"description\":\"Lebanon's premier online tech store - laptops, desktops, PC components, gaming gear, networking and accessories, with nationwide delivery.\",\"company\":\"Technodel\",\"founded\":2010,\"slogan\":\"We deliver Technology.\",\"url\":\"https://technodel.net\",\"currency\":\"USD\",\"languages\":[\"English\",\"Arabic\"],\"contact\":{\"phone\":\"+961 3 659 872\",\"whatsapp\":\"+961 3 659 872\",\"whatsappUrl\":\"https://wa.me/9613659872\",\"supportEmail\":\"support@technodel.net\",\"ordersEmail\":\"orders@technodel.net\"},\"stores\":[{\"area\":\"Beirut area\",\"address\":\"Badaro, Beirut\"},{\"area\":\"South Lebanon\",\"address\":\"Abbassiyeh (serving Tyre / Sour and the South)\"}],\"delivery\":{\"coverage\":\"Nationwide delivery across all of Lebanon\",\"sameDayAreas\":\"Beirut, Sour, Tripoli and surroundings\",\"otherRegions\":\"1-2 days\",\"sameDay\":\"Same-day delivery to Beirut, Sour, Tripoli and surroundings\",\"costUsd\":4,\"costNote\":\"Flat $4 anywhere in Lebanon; free on orders of $500 or more\",\"freeDeliveryAboveUsd\":500},\"payments\":[\"Cash on Delivery (USD)\",\"Wish Money\",\"Cryptocurrency (USDT, BTC, ETH)\"],\"warranty\":{\"summary\":\"Manufacturer warranty on everything, handled through Technodel.\",\"laptopsAndPcs\":\"1-2 years\",\"accessories\":\"minimum 6 months\"},\"returns\":{\"returnDays\":30,\"policy\":\"30-day returns: any eligible product can be returned within 30 days of delivery for a full refund, free of charge at the Badaro (Beirut) or Abbassiyeh (Tyre) branch. Digital codes once revealed, opened consumables and op",
+   "quoted": [
+    {
+     "quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more",
+     "found": true
+    },
+    {
+     "quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more",
+     "found": true
+    },
+    {
+     "quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more",
+     "found": true
+    },
+    {
+     "quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "P12",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/lenovo-v14-g5-irl-83hda06jus",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:07:32+00:00",
+   "sha256": "e792153066d65a4ad7277e2b3a60783ae0ba5a84f7861cba048f81ad82c67382",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "LENOVO V14 G5 IRL 83HDA06JUS (Core™ 7-240H, 16GB DDR5 , 1TB NVME, 14\" FHD, INTEL, 1 YEAR, WIN11 )",
+    "url": "https://outgeeked.net/products/lenovo-v14-g5-irl-83hda06jus",
+    "vendor": "Lenovo",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:07:32+00:00",
+    "variants": [
+     {
+      "variant_id": "48002504032514",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "825.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/lenovo-v14-g5-irl-83hda06jus?variant=48002504032514"
+     }
+    ],
+    "description": "Overview\nThe Lenovo V14 G5 IRL (83HDA06JUS) is a powerhouse consumer and business laptop engineered for users who demand speed, reliability, and efficiency without compromise. Anchored by the Intel Core 7-240H processor — one of Intel's latest high-performance mobile CPUs — this machine handles multitasking, data-heavy workflows, content creation, and everyday computing with ease. Paired with 16GB of DDR5 RAM and a blazing-fast 1TB NVMe SSD, the V14 G5 IRL is built to keep up with your busiest days. Available now in Lebanon at OutGeeked for just $825 USD, it represents exceptional value in its class.\nKey Features\nIntel Core 7-240H Processor: A cutting-edge Intel mobile CPU delivering high clock speeds and efficient multi-core performance ideal for demanding workloads.\n16GB DDR5 RAM: Next-generation DDR5 memory ensures faster data throughput and smooth multitasking across multiple applications simultaneously.\n1TB NVMe SSD: Ultra-fast solid-state storage provides near-instant boot times, rapid file transfers, and ample space for all your files, projects, and media.\n14\" Full HD Display: A crisp 1920×1080 FHD panel delivers clear, vibrant visuals — perfect for document editing, video calls, presentations, and media consumption.\nIntel Integrated Graphics: Handles everyday visual tasks, light photo editing, and HD video playback efficiently without draining battery life.\nWindows 11 Pre-installed: Ships ready to use with Microsoft's latest OS, offering a modern interface, enhanced s"
+   }
+  },
+  {
+   "obs": "P13",
+   "kind": "product",
+   "url": "https://technodel.net/product/lenovo-ideapad-5-14akp10-ryzen-ai-7-350-16gb-ram-1tb-nvme-14-fhd-touch",
+   "shop_id": "technodel",
+   "observed_at": "2026-11-28T05:07:32+00:00",
+   "sha256": "0137ba70a320707f6206239bd28df92cd33d8b9995f2d2e2ef9c720ba02f2931",
+   "product": {
+    "shop": "Technodel",
+    "shop_id": "technodel",
+    "title": "Lenovo IdeaPad 5 14AKP10 — Ryzen AI 7 350, 16GB RAM, 1TB NVMe, 14\" FHD+ Touch",
+    "url": "https://technodel.net/product/lenovo-ideapad-5-14akp10-ryzen-ai-7-350-16gb-ram-1tb-nvme-14-fhd-touch",
+    "vendor": "Lenovo",
+    "product_type": null,
+    "condition": "NewCondition",
+    "source": "schema_org_jsonld",
+    "observed_at": "2026-11-28T05:07:32+00:00",
+    "variants": [
+     {
+      "variant_id": "AM-JM3KDTGS",
+      "title": "Lenovo IdeaPad 5 14AKP10 — Ryzen AI 7 350, 16GB RAM, 1TB NVMe, 14\" FHD+ Touch",
+      "options": {},
+      "price": "975.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": "InStock",
+      "sku": "AM-JM3KDTGS",
+      "url": "https://technodel.net/product/lenovo-ideapad-5-14akp10-ryzen-ai-7-350-16gb-ram-1tb-nvme-14-fhd-touch",
+      "condition": "NewCondition"
+     }
+    ],
+    "description": "Lenovo IdeaPad 5 14AKP10 with Ryzen AI 7 350, 16GB RAM and 1TB NVMe on a 14-inch FHD+ x360 touchscreen. Convertible flexibility for work and notes."
+   }
+  },
+  {
+   "obs": "T7",
+   "kind": "page",
+   "url": "https://www.karizmamegastore.com/products/lenovo-ideapad-5-2-in-1-14-amd-ryzen-ai-7-350-16gb-ram-1tb-ssd",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:07:33+00:00",
+   "sha256": "ca57798e458683585a77866607471536b3504884a324465b445c0246b3538107",
+   "excerpt": "Lenovo IdeaPad 5 2-in-1 14 – AMD Ryzen AI 7 350, 16GB RAM, 1TB SSD – Karizma Megastore\nSkip to content\nReturns extended to 60 days\nFree shipping on your first order\nHome\nCategories\nCategories\nSmart Phones\nSmart Phones\nApple\nXiaomi\nSamsung\nHonor\nTecno\nInfinix\nGadgets\nGadgets\nWearables\nAudio Devices\nPower & Charging\nGaming Consoles\nGaming Consoles\nConsoles\nGames\nGaming Wheels & Peripherals\nLaptops\nLaptops\nGaming Laptops\nOffice Laptops\nComputer Accessories\nComputer Accessories\nGaming Accessories\nMouse & Keyboards\nConnectivity & Hubs\nStorage & Memory\nMonitors\nHeadphones & Earphones\nWiFi and Networking\nContent Creation\nsoundcore\nPitaka\nAnker\nCases\nContact\nHome\nCategories\nCases\nContact\nLogin\n0\nHome\nCategories\nSmart Phones\nApple\nXiaomi\nSamsung\nHonor\nTecno\nInfinix\nGadgets\nWearables\nAudio Devices\nPower & Charging\nGaming Consoles\nConsoles\nGames\nGaming Wheels & Peripherals\nLaptops\nGaming Laptops\nOffice Laptops\nComputer Accessories\nGaming Accessories\nMouse & Keyboards\nConnectivity & Hubs\nStorage & Memory\nMonitors\nHeadphones & Earphones\nWiFi and Networking\nContent Creation\nsoundcore\nPitaka\nAnker\nCases\nContact\nHome\n/\nLenovo IdeaPad 5 2-in-1 14 – AMD Ryzen AI 7 350, 16GB RAM, 1TB SSD\nLenovo IdeaPad Slim 5 laptop\nLenovo\nLenovo IdeaPad 5 2-in-1 14 – AMD Ryzen AI 7 350, 16GB RAM, 1TB SSD\n$999.00 USD\n/\nQuantity\nAdd to cart\nPickup available at Karizma Megastore\nUsually ready in 4 hours\nView store information\nProcessor: AMD Ryzen AI 7 350\nGraphics: Integrated graphics\nMemory: 16GB RAM\nStorage: 1T",
+   "quoted": [
+    {
+     "quote": "Free shipping on all orders over $150",
+     "found": true
+    },
+    {
+     "quote": "3 business days delivery in Lebanon",
+     "found": true
+    }
+   ]
+  }
+ ]
+}

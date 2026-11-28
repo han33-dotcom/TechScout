@@ -1,0 +1,2209 @@
+{
+ "run_id": "scout-b10-20261128T053542",
+ "request": {
+  "id": "B10",
+  "text": "Can you find the new 13-inch MacBook Air with the M1 chip and 32 GB of built-in memory for delivery to Beirut?",
+  "mode": "delivery",
+  "destination": "Beirut",
+  "category": "laptop",
+  "run_id": "scout-b10-20261128T053542"
+ },
+ "status": "impossible",
+ "message": "Apple never made a 13-inch M1 MacBook Air with 32GB memory: it supports only 8GB or 16GB, and the memory cannot be upgraded.\nClosest checked alternatives, both listed in stock:\n• Classic Phones: 13-inch M1 Air, 8GB/256GB, Space Grey — $650.00; explicitly listed as new.\n• Classic Phones: 13.6-inch M4 Air, 24GB/512GB — $1275.00; not 32GB, and new condition is unconfirmed. Its description also mixes M4 and M2 details, so verify the specification before buying.\nThe shop advertises delivery throughout Lebanon, including Beirut; shipping is calculated at checkout, with no confirmed fee.\nIf 32GB is essential, choose a newer Air configuration rather than an M1; I did not find a verified 32GB offer in the checked listings.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "alternative",
+   "shop": "Classic Phones",
+   "shop_id": "classic_phones",
+   "title": "Apple MacBook Air m1",
+   "variant": "13” 8/256gb English / Space Grey",
+   "url": "https://classic-phones.com/products/macbook-air-m1?variant=44723739230443",
+   "price": "650.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "near",
+   "identity_reason": "Same M1 Air model and 13-inch size class, but 8GB memory instead of the requested 32GB.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "13-inch MacBook Air with M1 chip",
+     "status": "met",
+     "quote": "Apple MacBook Air 13.3\" Laptop - Apple M1 Chip",
+     "obs": "P10",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "32GB built-in memory",
+     "status": "unmet",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "met",
+     "quote": "Delivery Available All Over Lebanon",
+     "obs": "T6",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P10",
+     "url": "https://classic-phones.com/products/macbook-air-m1",
+     "read": "https://classic-phones.com/products/macbook-air-m1.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:36:31+00:00",
+     "sha256": "2dce3869ee455521369eef9f2ca127e3814d95c7cc4e54457264c333295aff1e"
+    }
+   ],
+   "seller_basis": "Classic Phones: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": [
+    "does not meet: 32GB built-in memory"
+   ]
+  },
+  {
+   "tier": "alternative",
+   "shop": "Classic Phones",
+   "shop_id": "classic_phones",
+   "title": "Apple Macbook Air M4",
+   "variant": "512gb/24R / 13.6\"",
+   "url": "https://classic-phones.com/products/apple-macbook-air-m4?variant=46925330055403",
+   "price": "1275.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "near",
+   "identity_reason": "13.6-inch Air with M4 and 24GB memory rather than M1 and 32GB; description contains conflicting chip details.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "13-inch MacBook Air",
+     "status": "met",
+     "quote": "MacBook Air 13.6\" M4 (10C CPU/10C GPU), 24 GB, 512 GB, Silver",
+     "obs": "P11",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "M1 chip",
+     "status": "unmet",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "32GB built-in memory",
+     "status": "unmet",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "met",
+     "quote": "Delivery Available All Over Lebanon",
+     "obs": "T6",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P11",
+     "url": "https://classic-phones.com/products/apple-macbook-air-m4",
+     "read": "https://classic-phones.com/products/apple-macbook-air-m4.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:36:32+00:00",
+     "sha256": "c6fda98bb004a8ee137e54107f44280bbfb86c3d4a3cd63d76cdd8e87ede8161"
+    }
+   ],
+   "seller_basis": "Classic Phones: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": [
+    "does not meet: M1 chip; 32GB built-in memory"
+   ]
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P10",
+   "variant_id": "44723739230443",
+   "identity": "near",
+   "identity_reason": "Same M1 Air model and 13-inch size class, but 8GB memory instead of the requested 32GB.",
+   "condition": "new",
+   "condition_quote": "CONDITION:\nNew",
+   "condition_obs": "P10",
+   "requirements": [
+    {
+     "requirement": "13-inch MacBook Air with M1 chip",
+     "status": "met",
+     "evidence_obs": "P10",
+     "quote": "Apple MacBook Air 13.3\" Laptop - Apple M1 Chip"
+    },
+    {
+     "requirement": "32GB built-in memory",
+     "status": "unmet",
+     "evidence_obs": "P10",
+     "quote": "Memory: 8GB Unified RAM"
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "P10",
+     "quote": "CONDITION:\nNew"
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "met",
+     "evidence_obs": "T6",
+     "quote": "Delivery Available All Over Lebanon"
+    }
+   ],
+   "delivery_obs": "T6",
+   "delivery_quote": "Delivery Available All Over Lebanon",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P11",
+   "variant_id": "46925330055403",
+   "identity": "near",
+   "identity_reason": "13.6-inch Air with M4 and 24GB memory rather than M1 and 32GB; description contains conflicting chip details.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "13-inch MacBook Air",
+     "status": "met",
+     "evidence_obs": "P11",
+     "quote": "MacBook Air 13.6\" M4 (10C CPU/10C GPU), 24 GB, 512 GB, Silver"
+    },
+    {
+     "requirement": "M1 chip",
+     "status": "unmet",
+     "evidence_obs": "P11",
+     "quote": "MacBook Air 13.6\" M4 (10C CPU/10C GPU), 24 GB, 512 GB, Silver"
+    },
+    {
+     "requirement": "32GB built-in memory",
+     "status": "unmet",
+     "evidence_obs": "P11",
+     "quote": "512gb/24R / 13.6\""
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "met",
+     "evidence_obs": "T6",
+     "quote": "Delivery Available All Over Lebanon"
+    }
+   ],
+   "delivery_obs": "T6",
+   "delivery_quote": "Delivery Available All Over Lebanon",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "M1 MacBook Air supports at most 16GB unified memory; seek M1 16GB and newer 13-inch 32GB alternatives.",
+   "at_s": 9.9,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "MacBook Air M1 16GB"
+    },
+    {
+     "tool": "search",
+     "query": "MacBook Air M4 32GB"
+    },
+    {
+     "tool": "search",
+     "query": "MacBook Air M3 32GB"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Check M1 listing and newer 32GB alternatives; M1 Air maxes out at 16GB.",
+   "at_s": 47.5,
+   "calls": [
+    {
+     "tool": "open",
+     "url": "https://classic-phones.com/products/macbook-air-m1"
+    },
+    {
+     "tool": "search",
+     "query": "MacBook Air 32GB"
+    },
+    {
+     "tool": "open",
+     "url": "https://classic-phones.com/products/apple-macbook-air-m4"
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "classic_phones"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Requested M1/32GB configuration does not exist. Closest verified new M1 option has 8GB; newer higher-memory alternative is not confirmed new.",
+   "at_s": 74.2,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 26250,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 27062,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 28031,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 1422,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 1672,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 8484,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 8985,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 8032,
+   "usage": {
+    "actual_usd": "0.0043605",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3228,
+     "output_tokens": 132,
+     "total_tokens": 3360
+    },
+    "latency_ms": 4312,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 9375,
+   "usage": {
+    "actual_usd": "0.018823",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 8913,
+     "output_tokens": 157,
+     "total_tokens": 9070
+    },
+    "latency_ms": 5047,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 17313,
+   "usage": {
+    "actual_usd": "0.040703",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 15141,
+     "output_tokens": 788,
+     "total_tokens": 15929
+    },
+    "latency_ms": 14078,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": true
+  }
+ ],
+ "retailer_requests": 113,
+ "seconds": 74.2,
+ "spend": {
+  "settled_usd": "0.0638865",
+  "uncertain_usd": "0",
+  "model_calls": 3,
+  "ledger_job": "scout-b10-20261128T053542"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/macbook-air-13-m5-16gb-512gb-ssd-midnight",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:36:13+00:00",
+   "sha256": "f098529dd2c11e35cbfb8ad3fa1d6f8ac4fbc1e5e81fed6696d361eea93fa461",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "MacBook Air- 13\" M5- 16GB- 512GB SSD- Midnight",
+    "url": "https://abedtahan.com/products/macbook-air-13-m5-16gb-512gb-ssd-midnight",
+    "vendor": "APPLE",
+    "product_type": "Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:36:13+00:00",
+    "variants": [
+     {
+      "variant_id": "45391124332723",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "1229.00",
+      "compare_at": "1463.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "NTB-APPL-MDHE4",
+      "url": "https://abedtahan.com/products/macbook-air-13-m5-16gb-512gb-ssd-midnight?variant=45391124332723"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/macbook-air-13-m5-16gb-512gb-ssd-starlight",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:36:15+00:00",
+   "sha256": "0d2bde495b7ae93e35caca516100589829fc8a61c2325303c48d8a82f68d1d6b",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "MacBook Air- 13\" M5- 16GB- 512GB SSD- Starlight",
+    "url": "https://abedtahan.com/products/macbook-air-13-m5-16gb-512gb-ssd-starlight",
+    "vendor": "APPLE",
+    "product_type": "Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:36:15+00:00",
+    "variants": [
+     {
+      "variant_id": "45386965713075",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "1229.00",
+      "compare_at": "1463.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "NTB-APPL-MDHA4",
+      "url": "https://abedtahan.com/products/macbook-air-13-m5-16gb-512gb-ssd-starlight?variant=45386965713075"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://jakcomputer.com/products/apple-macbook-air-mxcr3ll-a",
+   "shop_id": "jak_computer",
+   "observed_at": "2026-11-28T05:36:15+00:00",
+   "sha256": "f74ed3aa428cd14ec3abe5b56d4f3a26765c8929df84d1cf95bea6b46af1aa40",
+   "product": {
+    "shop": "JAK Computer",
+    "shop_id": "jak_computer",
+    "title": "Apple MacBook Air MXCR3LL/A - M3 8-Core - 10-CORE GPU - 16GB RAM",
+    "url": "https://jakcomputer.com/products/apple-macbook-air-mxcr3ll-a",
+    "vendor": "Apple",
+    "product_type": "simple",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:36:15+00:00",
+    "variants": [
+     {
+      "variant_id": "44593415258159",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "839.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "MXCR3LL/A -56",
+      "url": "https://jakcomputer.com/products/apple-macbook-air-mxcr3ll-a?variant=44593415258159"
+     }
+    ],
+    "description": "Apple MacBook Air MXCR3LL/A: 13.6-inch M3 Power in Space Gray\nThe Apple MacBook Air MXCR3LL/A is a testament to Apple's engineering prowess, delivering robust performance in an incredibly thin and light form factor. Launched in early 2024, this 13.6-inch model, presented in a sophisticated Space Gray finish, is designed for users who prioritize portability without compromising on speed or capability.\nAt the heart of the MXCR3LL/A is the groundbreaking Apple M3 chip. This advanced System on a Chip (SoC) integrates an 8-core CPU, featuring 4 high-performance cores and 4 high-efficiency cores. This architecture ensures exceptional speed and responsiveness for a wide array of tasks, from everyday productivity and web Browse to more demanding applications like photo and video editing, and even some light gaming.\nThe integrated 10-core GPU is the higher-tier graphics option available for the 13-inch M3 MacBook Air. It delivers significant advancements in graphics performance, supporting hardware-accelerated ray tracing and mesh shading, which translates to stunning visuals and faster rendering for creative projects and immersive experiences. Furthermore, the 16-core Neural Engine provides substantial power for on-device machine learning operations, accelerating AI features within macOS and supporting AI-driven applications with remarkable efficiency.\nThe visual experience on the Apple MacBook Air MXCR3LL/A is truly captivating, thanks to its brilliant 13.6-inch Liquid Retina displa"
+   }
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/apple-macbook-air-m4-13-inch",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:36:17+00:00",
+   "sha256": "00e47a5083bfb86e9768864b7ee719660389575f9b42ac4b2375d0b4665804d4",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "Apple MacBook Air M4 (13-inch, 2025)",
+    "url": "https://outgeeked.net/products/apple-macbook-air-m4-13-inch",
+    "vendor": "Apple",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:36:17+00:00",
+    "variants": [
+     {
+      "variant_id": "47452773318914",
+      "title": "Sky Blue / 16GB/256GB",
+      "options": {
+       "Color": "Sky Blue",
+       "Storage": "16GB/256GB"
+      },
+      "price": "999.00",
+      "compare_at": "1180.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "OG-STK-4939",
+      "url": "https://outgeeked.net/products/apple-macbook-air-m4-13-inch?variant=47452773318914"
+     },
+     {
+      "variant_id": "47452773351682",
+      "title": "Sky Blue / 16GB/512GB",
+      "options": {
+       "Color": "Sky Blue",
+       "Storage": "16GB/512GB"
+      },
+      "price": "1150.00",
+      "compare_at": "1300.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "OG-STK-4940",
+      "url": "https://outgeeked.net/products/apple-macbook-air-m4-13-inch?variant=47452773351682"
+     },
+     {
+      "variant_id": "47452773384450",
+      "title": "Sky Blue / 24GB/512GB",
+      "options": {
+       "Color": "Sky Blue",
+       "Storage": "24GB/512GB"
+      },
+      "price": "1350.00",
+      "compare_at": "1500.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "OG-STK-4941",
+      "url": "https://outgeeked.net/products/apple-macbook-air-m4-13-inch?variant=47452773384450"
+     },
+     {
+      "variant_id": "47452773417218",
+      "title": "Midnight / 16GB/256GB",
+      "options": {
+       "Color": "Midnight",
+       "Storage": "16GB/256GB"
+      },
+      "price": "999.00",
+      "compare_at": "1100.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "OG-STK-4942",
+      "url": "https://outgeeked.net/products/apple-macbook-air-m4-13-inch?variant=47452773417218"
+     },
+     {
+      "variant_id": "47452773449986",
+      "title": "Midnight / 16GB/512GB",
+      "options": {
+       "Color": "Midnight",
+       "Storage": "16GB/512GB"
+      },
+      "price": "1150.00",
+      "compare_at": "1300.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "OG-STK-4943",
+      "url": "https://outgeeked.net/products/apple-macbook-air-m4-13-inch?variant=47452773449986"
+     },
+     {
+      "variant_id": "47452773482754",
+      "title": "Midnight / 24GB/512GB",
+      "options": {
+       "Color": "Midnight",
+       "Storage": "24GB/512GB"
+      },
+      "price": "1350.00",
+      "compare_at": "1500.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "OG-STK-4944",
+      "url": "https://outgeeked.net/products/apple-macbook-air-m4-13-inch?variant=47452773482754"
+     },
+     {
+      "variant_id": "47452773515522",
+      "title": "Silver / 16GB/256GB",
+      "options": {
+       "Color": "Silver",
+       "Storage": "16GB/256GB"
+      },
+      "price": "999.00",
+      "compare_at": "1100.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "OG-STK-4945",
+      "url": "https://outgeeked.net/products/apple-macbook-air-m4-13-inch?variant=47452773515522"
+     },
+     {
+      "variant_id": "47452773548290",
+      "title": "Silver / 16GB/512GB",
+      "options": {
+       "Color": "Silver",
+       "Storage": "16GB/512GB"
+      },
+      "price": "1150.00",
+      "compare_at": "1300.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "OG-STK-4946",
+      "url": "https://outgeeked.net/products/apple-macbook-air-m4-13-inch?variant=47452773548290"
+     },
+     {
+      "variant_id": "47452773581058",
+      "title": "Silver / 24GB/512GB",
+      "options": {
+       "Color": "Silver",
+       "Storage": "24GB/512GB"
+      },
+      "price": "1350.00",
+      "compare_at": "1500.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "OG-STK-4947",
+      "url": "https://outgeeked.net/products/apple-macbook-air-m4-13-inch?variant=47452773581058"
+     },
+     {
+      "variant_id": "47452773613826",
+      "title": "Starlight / 16GB/256GB",
+      "options": {
+       "Color": "Starlight",
+       "Storage": "16GB/256GB"
+      },
+      "price": "999.00",
+      "compare_at": "1100.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "OG-STK-4948",
+      "url": "https://outgeeked.net/products/apple-macbook-air-m4-13-inch?variant=47452773613826"
+     },
+     {
+      "variant_id": "47452773646594",
+      "title": "Starlight / 16GB/512GB",
+      "options": {
+       "Color": "Starlight",
+       "Storage": "16GB/512GB"
+      },
+      "price": "1150.00",
+      "compare_at": "1300.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "OG-STK-4949",
+      "url": "https://outgeeked.net/products/apple-macbook-air-m4-13-inch?variant=47452773646594"
+     },
+     {
+      "variant_id": "47452773679362",
+      "title": "Starlight / 24GB/512GB",
+      "options": {
+       "Color": "Starlight",
+       "Storage": "24GB/512GB"
+      },
+      "price": "1350.00",
+      "compare_at": "1500.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "OG-STK-4950",
+      "url": "https://outgeeked.net/products/apple-macbook-air-m4-13-inch?variant=47452773679362"
+     }
+    ],
+    "description": "The Apple 13-inch MacBook Air with M4 (2025) comes in Sky Blue, Midnight, Silver and Starlight, in 16GB/256GB, 16GB/512GB or 24GB/512GB. If it shows as sold out, tap Notify me to hear when it's back, or see the newer 13-inch MacBook Air with M5. Pay cash on delivery anywhere in Lebanon.\nWhy the 13-inch MacBook Air with M4\nM4 chip: 10-core CPU, up to 2x faster than the M1 model.\nBattery: up to 18 hours of video streaming, in a silent fanless design.\nDisplay: 13.6-inch Liquid Retina, 2560 x 1664 at 224 ppi, 500 nits, P3 wide colour and True Tone.\nCamera: 12MP Center Stage with Desk View.\nConnectivity: two Thunderbolt 4 ports, MagSafe 3, up to two external displays, Wi-Fi 6E.\nGood to know\nIn the box: 13-inch MacBook Air, 30W USB-C Power Adapter (8-core GPU model) or 35W Dual USB-C Port Compact Power Adapter (10-core GPU models), USB-C to MagSafe 3 Cable (2 m).\nProtect it: MacBook cases and keyboard covers.\nMore Macs: compare every Apple MacBook at OutGeeked."
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://karizmamegastore.com/products/apple-macbook-air-m4",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:36:19+00:00",
+   "sha256": "9b5b217c105831772d9bcff2badb20e168e397b15f6034fb83e9ceca1dcec3b6",
+   "product": {
+    "shop": "Karizma Megastore",
+    "shop_id": "karizma",
+    "title": "Apple Macbook Air M4",
+    "url": "https://karizmamegastore.com/products/apple-macbook-air-m4",
+    "vendor": "Apple",
+    "product_type": "Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:36:19+00:00",
+    "variants": [
+     {
+      "variant_id": "45874503745725",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "920.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/apple-macbook-air-m4?variant=45874503745725"
+     }
+    ],
+    "description": "Apple Macbook Air M4\nProcessor: M4 Apple CPU\nRam: 16Gb Ram\nStorage: 256GB SSD\nScreen: 13\" Retina Display\nBrand New"
+   }
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/macbook-air-m1",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:36:19+00:00",
+   "sha256": "2dce3869ee455521369eef9f2ca127e3814d95c7cc4e54457264c333295aff1e",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Apple MacBook Air m1",
+    "url": "https://classic-phones.com/products/macbook-air-m1",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:36:19+00:00",
+    "variants": [
+     {
+      "variant_id": "44723736019179",
+      "title": "13.3” 256gb / Starlight",
+      "options": {
+       "Style": "13.3” 256gb",
+       "Color": "Starlight"
+      },
+      "price": "670.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-m1?variant=44723736019179"
+     },
+     {
+      "variant_id": "44723738312939",
+      "title": "13.6” 512gb / Grey",
+      "options": {
+       "Style": "13.6” 512gb",
+       "Color": "Grey"
+      },
+      "price": "1300.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-m1?variant=44723738312939"
+     },
+     {
+      "variant_id": "44723738706155",
+      "title": "13” 256gb English / Silver",
+      "options": {
+       "Style": "13” 256gb English",
+       "Color": "Silver"
+      },
+      "price": "760.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-m1?variant=44723738706155"
+     },
+     {
+      "variant_id": "44723739230443",
+      "title": "13” 8/256gb English / Space Grey",
+      "options": {
+       "Style": "13” 8/256gb English",
+       "Color": "Space Grey"
+      },
+      "price": "650.00",
+      "compare_at": "725.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-m1?variant=44723739230443"
+     },
+     {
+      "variant_id": "44723739263211",
+      "title": "13” 256gb English / Gold",
+      "options": {
+       "Style": "13” 256gb English",
+       "Color": "Gold"
+      },
+      "price": "650.00",
+      "compare_at": "770.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-m1?variant=44723739263211"
+     }
+    ],
+    "description": "Apple MacBook Air 13.3\" Laptop - Apple M1 Chip\nApple MacBook Air 13.3\" Laptop - Apple M1 Chip - 8GB RAM - 256GB SSD - Silver | MGN93\nProcessor: Apple M1 8-Core CPU\nMemory: 8GB Unified RAM\nStorage: 256GB SSD\nGraphic Card: Apple 7-Core GPU\nDisplay: 13.3\" 2560 x 1600 Retina IPS Display\nOperating System: macOS\nI/O Ports: 2 x Thunderbolt 3 / USB4 | 1 x 1/8\" / 3.5 mm Headphone Output\nWireless Connectivity: Wi-Fi 6 (802.11ax) | Bluetooth 5.0\nCamera: User-Facing: 720p\nBattery: Lithium-Ion Polymer (LiPo) | 18 hours estimated battery life.\nCPU:\nApple M1\nRAM:\n8GB\nSSD:\n256GB\nGPU:\nApple (7-Core)\nSIZE:\n13.3\"\nCLASS:\nApple Laptop\nSERIES:\nMacBook Air\nCONDITION:\nNew\nWARRANTY:\n1 Year"
+   }
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://karizmamegastore.com/products/macbook-air-m3-15-inch",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:36:19+00:00",
+   "sha256": "270c1d39d953298bf712f3a02676dfe7c5ac389af15a2d9ec562b01e59df4467",
+   "product": {
+    "shop": "Karizma Megastore",
+    "shop_id": "karizma",
+    "title": "MacBook Air M3 15-inch",
+    "url": "https://karizmamegastore.com/products/macbook-air-m3-15-inch",
+    "vendor": "Apple",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:36:19+00:00",
+    "variants": [
+     {
+      "variant_id": "46613810249917",
+      "title": "Space Gray / 512GB/16RAM",
+      "options": {
+       "Color": "Space Gray",
+       "Storage": "512GB/16RAM"
+      },
+      "price": null,
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/macbook-air-m3-15-inch?variant=46613810249917"
+     }
+    ],
+    "description": "A reliable and powerful laptop with the M3 chip, offering smooth performance and a large display. Great for students, professionals, and anyone who needs performance with portability. Contact us for price and availability."
+   }
+  },
+  {
+   "obs": "P8",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/apple-macbook-air-m4",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:36:21+00:00",
+   "sha256": "c6fda98bb004a8ee137e54107f44280bbfb86c3d4a3cd63d76cdd8e87ede8161",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Apple Macbook Air M4",
+    "url": "https://classic-phones.com/products/apple-macbook-air-m4",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:36:21+00:00",
+    "variants": [
+     {
+      "variant_id": "46925329924331",
+      "title": "256gb/16R / 13.6\"",
+      "options": {
+       "Size": "256gb/16R",
+       "Type": "13.6\""
+      },
+      "price": "875.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbook-air-m4?variant=46925329924331"
+     },
+     {
+      "variant_id": "46925329957099",
+      "title": "256gb/16R / 15\"",
+      "options": {
+       "Size": "256gb/16R",
+       "Type": "15\""
+      },
+      "price": "1075.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbook-air-m4?variant=46925329957099"
+     },
+     {
+      "variant_id": "46925329989867",
+      "title": "512gb/16R / 13.6\"",
+      "options": {
+       "Size": "512gb/16R",
+       "Type": "13.6\""
+      },
+      "price": "1075.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbook-air-m4?variant=46925329989867"
+     },
+     {
+      "variant_id": "46925330022635",
+      "title": "512gb/16R / 15\"",
+      "options": {
+       "Size": "512gb/16R",
+       "Type": "15\""
+      },
+      "price": "1275.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbook-air-m4?variant=46925330022635"
+     },
+     {
+      "variant_id": "46925330055403",
+      "title": "512gb/24R / 13.6\"",
+      "options": {
+       "Size": "512gb/24R",
+       "Type": "13.6\""
+      },
+      "price": "1275.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbook-air-m4?variant=46925330055403"
+     },
+     {
+      "variant_id": "46925330088171",
+      "title": "512gb/24R / 15\"",
+      "options": {
+       "Size": "512gb/24R",
+       "Type": "15\""
+      },
+      "price": "1475.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbook-air-m4?variant=46925330088171"
+     }
+    ],
+    "description": "MacBook Air 13.6\" M4 (10C CPU/10C GPU), 24 GB, 512 GB, Silver\nOverview\nProduct description\nSupercharged by the M2 chip, the 13-inch MacBook Air combines amazing performance and up to 18 hours of battery life into its strikingly thin aluminum enclosure.\nFeatures\nM2 chip for amazing performance\n8-core CPU and up to 10-core GPU to power through complex tasks\n16-core Neural Engine for advanced machine learning tasks\nUp to 24GB of unified memory makes everything you do fast and fluid\nUp to 20 percent faster for applying image filters and effects\nUp to 40 percent faster for editing complex video timelines\nGo all day with up to 18 hours of battery life\nFanless design for silent operation\n13.6-inch Liquid Retina display with 500 nits of brightness and P3 wide color for vibrant images and incredible detail\n1080p FaceTime HD camera\nThree-microphone array focuses on your voice instead of what’s going on around you\nFour-speaker sound system with Spatial Audio for an immersive listening experience\nMagSafe 3 port, two Thunderbolt ports, and headphone jack\nBacklit Magic Keyboard and Touch ID for secure unlock and payments\nFast Wi-Fi 6 wireless connectivity\nSuperfast SSD storage launches apps and opens files in an instant\nmacOS Sonoma gives you powerful ways to get more done, share, and collaborate—and works great with iPhone and iPad\nAvailable in Midnight, Starlight, Space Gray, and Silver\nApple 15-inch MacBook Air (M4)\nMW1L3, MW1G3, MC7A4, MW1J3, MW1M3, MW1H3, MC7C4, MW1K3, MC6L4, MC6J4, M"
+   }
+  },
+  {
+   "obs": "P9",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/macbook-air-13-m3",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:36:21+00:00",
+   "sha256": "6f63fdfe4f6b92e65f4e63a16d77c9e9374cc308d027a6153b456a48bb42bce4",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Apple MacBook Air m3",
+    "url": "https://classic-phones.com/products/macbook-air-13-m3",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:36:21+00:00",
+    "variants": [
+     {
+      "variant_id": "44812438307051",
+      "title": "midnight / (13”) 8/256gb",
+      "options": {
+       "Color": "midnight",
+       "Size": "(13”) 8/256gb"
+      },
+      "price": "980.00",
+      "compare_at": "1040.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=44812438307051"
+     },
+     {
+      "variant_id": "45715675676907",
+      "title": "midnight / (13\") 16/512gb",
+      "options": {
+       "Color": "midnight",
+       "Size": "(13\") 16/512gb"
+      },
+      "price": "1350.00",
+      "compare_at": "1040.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=45715675676907"
+     },
+     {
+      "variant_id": "45994845077739",
+      "title": "midnight / ( 13.6\") 8/256gb",
+      "options": {
+       "Color": "midnight",
+       "Size": "( 13.6\") 8/256gb"
+      },
+      "price": "930.00",
+      "compare_at": "1040.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=45994845077739"
+     },
+     {
+      "variant_id": "45994845110507",
+      "title": "midnight / ( 13.6\") 8/512gb",
+      "options": {
+       "Color": "midnight",
+       "Size": "( 13.6\") 8/512gb"
+      },
+      "price": "1110.00",
+      "compare_at": "1040.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=45994845110507"
+     },
+     {
+      "variant_id": "46057575350507",
+      "title": "midnight / ( 13.6\") 16/512gb",
+      "options": {
+       "Color": "midnight",
+       "Size": "( 13.6\") 16/512gb"
+      },
+      "price": "1160.00",
+      "compare_at": "1040.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=46057575350507"
+     },
+     {
+      "variant_id": "44812440142059",
+      "title": "Space grey / (13”) 8/256gb",
+      "options": {
+       "Color": "Space grey",
+       "Size": "(13”) 8/256gb"
+      },
+      "price": "1025.00",
+      "compare_at": "1040.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=44812440142059"
+     },
+     {
+      "variant_id": "45994845143275",
+      "title": "Space grey / ( 13.6\") 8/256gb",
+      "options": {
+       "Color": "Space grey",
+       "Size": "( 13.6\") 8/256gb"
+      },
+      "price": "930.00",
+      "compare_at": "1040.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=45994845143275"
+     },
+     {
+      "variant_id": "45994845176043",
+      "title": "Space grey / ( 13.6\") 8/512gb",
+      "options": {
+       "Color": "Space grey",
+       "Size": "( 13.6\") 8/512gb"
+      },
+      "price": "1110.00",
+      "compare_at": "1040.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=45994845176043"
+     },
+     {
+      "variant_id": "46057575416043",
+      "title": "Space grey / ( 13.6\") 16/512gb",
+      "options": {
+       "Color": "Space grey",
+       "Size": "( 13.6\") 16/512gb"
+      },
+      "price": "1160.00",
+      "compare_at": "1040.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=46057575416043"
+     },
+     {
+      "variant_id": "45715661324523",
+      "title": "starlight / (13”) 8/256gb",
+      "options": {
+       "Color": "starlight",
+       "Size": "(13”) 8/256gb"
+      },
+      "price": "1025.00",
+      "compare_at": "1040.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=45715661324523"
+     },
+     {
+      "variant_id": "45994845208811",
+      "title": "starlight / ( 13.6\") 8/256gb",
+      "options": {
+       "Color": "starlight",
+       "Size": "( 13.6\") 8/256gb"
+      },
+      "price": "930.00",
+      "compare_at": "1040.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=45994845208811"
+     },
+     {
+      "variant_id": "45994845241579",
+      "title": "starlight / ( 13.6\") 8/512gb",
+      "options": {
+       "Color": "starlight",
+       "Size": "( 13.6\") 8/512gb"
+      },
+      "price": "1110.00",
+      "compare_at": "1040.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=45994845241579"
+     },
+     {
+      "variant_id": "46057575448811",
+      "title": "starlight / ( 13.6\") 16/512gb",
+      "options": {
+       "Color": "starlight",
+       "Size": "( 13.6\") 16/512gb"
+      },
+      "price": "1160.00",
+      "compare_at": "1040.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=46057575448811"
+     },
+     {
+      "variant_id": "45309770432747",
+      "title": "space gray / (13”) 8/512gb",
+      "options": {
+       "Color": "space gray",
+       "Size": "(13”) 8/512gb"
+      },
+      "price": "1100.00",
+      "compare_at": "1255.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=45309770432747"
+     },
+     {
+      "variant_id": "45309805068523",
+      "title": "space gray / (15”) 8/256gb",
+      "options": {
+       "Color": "space gray",
+       "Size": "(15”) 8/256gb"
+      },
+      "price": "1065.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=45309805068523"
+     },
+     {
+      "variant_id": "45309850157291",
+      "title": "space gray / (15”) 8/512gb",
+      "options": {
+       "Color": "space gray",
+       "Size": "(15”) 8/512gb"
+      },
+      "price": "1270.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=45309850157291"
+     },
+     {
+      "variant_id": "45994845274347",
+      "title": "space gray / ( 13.6\") 8/256gb",
+      "options": {
+       "Color": "space gray",
+       "Size": "( 13.6\") 8/256gb"
+      },
+      "price": "930.00",
+      "compare_at": "1040.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=45994845274347"
+     },
+     {
+      "variant_id": "45994845307115",
+      "title": "space gray / ( 13.6\") 8/512gb",
+      "options": {
+       "Color": "space gray",
+       "Size": "( 13.6\") 8/512gb"
+      },
+      "price": "1110.00",
+      "compare_at": "1040.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=45994845307115"
+     },
+     {
+      "variant_id": "46057575481579",
+      "title": "space gray / ( 13.6\") 16/512gb",
+      "options": {
+       "Color": "space gray",
+       "Size": "( 13.6\") 16/512gb"
+      },
+      "price": "1160.00",
+      "compare_at": "1040.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=46057575481579"
+     },
+     {
+      "variant_id": "45309776167147",
+      "title": "Midnight / (13”) 8/512gb",
+      "options": {
+       "Color": "Midnight",
+       "Size": "(13”) 8/512gb"
+      },
+      "price": "1155.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=45309776167147"
+     },
+     {
+      "variant_id": "45309844619499",
+      "title": "Midnight / (15”) 8/256gb",
+      "options": {
+       "Color": "Midnight",
+       "Size": "(15”) 8/256gb"
+      },
+      "price": "1100.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=45309844619499"
+     },
+     {
+      "variant_id": "45309855498475",
+      "title": "Midnight / (15”) 8/512gb",
+      "options": {
+       "Color": "Midnight",
+       "Size": "(15”) 8/512gb"
+      },
+      "price": "1270.00",
+      "compare_at": "1475.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=45309855498475"
+     },
+     {
+      "variant_id": "45994845339883",
+      "title": "Midnight / ( 13.6\") 8/256gb",
+      "options": {
+       "Color": "Midnight",
+       "Size": "( 13.6\") 8/256gb"
+      },
+      "price": "930.00",
+      "compare_at": "1040.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=45994845339883"
+     },
+     {
+      "variant_id": "45994845372651",
+      "title": "Midnight / ( 13.6\") 8/512gb",
+      "options": {
+       "Color": "Midnight",
+       "Size": "( 13.6\") 8/512gb"
+      },
+      "price": "1110.00",
+      "compare_at": "1040.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=45994845372651"
+     },
+     {
+      "variant_id": "46057575547115",
+      "title": "Midnight / ( 13.6\") 16/512gb",
+      "options": {
+       "Color": "Midnight",
+       "Size": "( 13.6\") 16/512gb"
+      },
+      "price": "1160.00",
+      "compare_at": "1040.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-13-m3?variant=46057575547115"
+     }
+    ],
+    "description": "Apple MacBook Air 15 2023 with M2 chip, 8-Core GPU, 10C, Space Gray (16GB) Z18N000CD\nManufacturer: Apple\nModel: MacBook Air 15\nProduct type: Laptop\nProcessor model: Apple M2 chip 8-core CPU with 4 performance cores and 4 efficiency cores 10-core GPU 16-core Neural Engine 100GB/s memory bandwidth\nInternal memory capacity: 16GB\nStorage capacity: 512GB\nStorage type: SSD\nScreen size: 15.3\nResolution: 2880by1864\nGraphics card model: 8-core GPU\nOperating system: macOS\nWarranty period: 1 year\nWarranty type: Official importer laboratories\nService provider: Apple\nProcessor Type ModelApple M2RAM Capacity16GBStorage capacity512GBScreen size15.3\"Resolution2880by1864Operating SystemmacOS\nmacOSBattery Capacity66.5-watt?hour lithium?polymer batterySpecificationsProduct type: Laptop.\nManufacturer: Apple.\nSeries: MacBook Air.\nModel: MacBook Air 15.\nModel: 2023.\nProcessor model: Apple M2 chip with 8-core CPU consisting of 4 performance cores and 4 efficiency cores, 10-core GPU, 16-core Neural Engine, and 100GB/s memory bandwidth.\nHearts: 8.\nInternal memory capacity: 16GB.\nFree memory slots: 0\nMaximum memory capacity: 16GB\nMemory speed: unified memory.\nStorage capacity: 512GB.\nStorage Type: SSD.\nOptical drive: None.\nWireless network card model: Wi-Fi 6 (802.11ax) + Bluetooth 5.3.\nPanel type: Liquid Retina display 15.3-inch (diagonal) LED-backlit display with IPS technology; 1 2880-by-1864 native resolution at 224 pixels per inch with support for 1 billion colors, 500 nits brightness, Wide color"
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://abedtahan.com/pages/contact",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:36:22+00:00",
+   "sha256": "ced3cd597e34b3b2446b8fa46d4ff9830715655281aeb7b4c8e53c47e5854696",
+   "excerpt": "Contact\n– Abed Tahan\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & Crepe Makers\nIce Cube, Ice Cream & Yoghurt Makers\nSaj Machines\nL",
+   "quoted": []
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://www.classic-phones.com/policies/shipping-policy",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:36:23+00:00",
+   "sha256": "48dca7e3c9bd6cf566f15dff4a42ff5903ccb0b1bfe358be05b1b5e7b0368e92",
+   "excerpt": "Shipping policy\nSkip to content\nDelivery Available All Over Lebanon\nFacebook\nInstagram\nShop All\nCameras\nCameras\nGo to Cameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nLaptops\nLaptops\nGo to Laptops\nMacbook\nNew\nUsed\nTablets\nTablets\nGo to Tablets\nApple\nSamsung\nXiaomi\nBlackview\nModio\nSmart Watch\nSmart Watch\nGo to Smart Watch\nApple\nSamsung\nFitbit\nHuawei\nAmazfit\nXiaomi\nGreen Lion\nProdo\nKieslect\nAccessories\nAccessories\nGo to Accessories\nAdapters & Cables\nStorage\nKids\nScooters\nGaming\nGaming\nGo to Gaming\nNintendo\nPS\nXBOX\nOthers\nPersonal Care\nPersonal Care\nGo to Personal Care\nHome Accessories\nPerfume\nMassage\nOthers\nTech Gadgets\nTech Gadgets\nGo to Tech Gadgets\nKits (Cleaning, Repair...)\nPower Devices\nSmart Devices\nRouters\nBags\nKindle\nStands\nCalculator\nHandy Phones\nAudio\nAudio\nGo to Audio\nEarphones\nSpeakers\nHeadphones\nEarbuds\nMicrophones\nCases\nCases\nGo to Cases\nApple\nSamsung\nOthers\nWatch Accessories\nKeyboards & Mouses\nOthers\nBlogs\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nLebanon\nFast Delivery\nFacebook\nInstagram\nLog in\nSearch\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nSearch\nLog in\n0\n00 items\nSubtotal\n$0\nShop All\nCameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nGo to Cameras\nLaptops\nMacbook\nNew\nUsed\nGo to Laptops\nTablets\nApple\nSamsung\nXiaomi\nBlack",
+   "quoted": []
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://jakcomputer.com/pages/faq-delivery-information",
+   "shop_id": "jak_computer",
+   "observed_at": "2026-11-28T05:36:23+00:00",
+   "sha256": "c90bbc1e2f8519a987528c837242fc0b6bb7aacba099e47e30ee13b14d012b90",
+   "excerpt": "FAQ & Delivery Info | JAK Computer Lebanon\nSkip to content\nYour cart is empty\nContinue shopping\nHave an account?\nLog in to checkout faster.\nShopping cart (0)\nLoading...\nYou might like\nRECCI Armor Series RPB-W20 High Power Fast Charging Power Bank 5000mAh\nRegular price\n$40.00 USD\nSale price\n$40.00 USD\nRegular price\nUnit price\n/\nper\nSale\nSold out\nRAZER BARRACUDA X WHITE HEADSET RZ04-04430200-R3M1\nRegular price\n$110.00 USD\nSale price\n$110.00 USD\nRegular price\nUnit price\n/\nper\nSale\nSold out\nFor Store Pickups: Please enter your phone number here before checking out.\nFor Store Pickups: Please enter your phone number here before checking out.\nSubtotal (0)\n$0.00 USD\nVAT calculated at checkout.\nView Cart\nCheckout\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. I",
+   "quoted": []
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://www.karizmamegastore.com/policies/privacy-policy",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:36:23+00:00",
+   "sha256": "20295f199b76425e9ca18599bc57967fa1d62c60a24d8b4f87dc2c67c40ab6e7",
+   "excerpt": "Privacy policy – Karizma Megastore\nSkip to content\nReturns extended to 60 days\nFree shipping on your first order\nHome\nCategories\nCategories\nSmart Phones\nSmart Phones\nApple\nXiaomi\nSamsung\nHonor\nTecno\nInfinix\nGadgets\nGadgets\nWearables\nAudio Devices\nPower & Charging\nGaming Consoles\nGaming Consoles\nConsoles\nGames\nGaming Wheels & Peripherals\nLaptops\nLaptops\nGaming Laptops\nOffice Laptops\nComputer Accessories\nComputer Accessories\nGaming Accessories\nMouse & Keyboards\nConnectivity & Hubs\nStorage & Memory\nMonitors\nHeadphones & Earphones\nWiFi and Networking\nContent Creation\nsoundcore\nPitaka\nAnker\nCases\nContact\nHome\nCategories\nCases\nContact\nLogin\n0\nHome\nCategories\nSmart Phones\nApple\nXiaomi\nSamsung\nHonor\nTecno\nInfinix\nGadgets\nWearables\nAudio Devices\nPower & Charging\nGaming Consoles\nConsoles\nGames\nGaming Wheels & Peripherals\nLaptops\nGaming Laptops\nOffice Laptops\nComputer Accessories\nGaming Accessories\nMouse & Keyboards\nConnectivity & Hubs\nStorage & Memory\nMonitors\nHeadphones & Earphones\nWiFi and Networking\nContent Creation\nsoundcore\nPitaka\nAnker\nCases\nContact\nPrivacy policy\nLast updated: September 2, 2024\nThis Privacy Policy describes how Karizma Megastore (the \"Site\", \"we\", \"us\", or \"our\") collects, uses, and discloses your personal information when you visit, use our services, or make a purchase from www.karizmamegastore.com (the \"Site\") or otherwise communicate with us regarding the Site (collectively, the \"Services\"). For purposes of this Privacy Policy, \"you\" and \"your\" means you as t",
+   "quoted": []
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://classic-phones.com/meta.json",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:36:31+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"Classic Phones\", \"city\": \"Beirut \", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"www.classic-phones.com\"}",
+   "quoted": []
+  },
+  {
+   "obs": "P10",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/macbook-air-m1",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:36:31+00:00",
+   "sha256": "2dce3869ee455521369eef9f2ca127e3814d95c7cc4e54457264c333295aff1e",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Apple MacBook Air m1",
+    "url": "https://classic-phones.com/products/macbook-air-m1",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:36:31+00:00",
+    "variants": [
+     {
+      "variant_id": "44723736019179",
+      "title": "13.3” 256gb / Starlight",
+      "options": {
+       "Style": "13.3” 256gb",
+       "Color": "Starlight"
+      },
+      "price": "670.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-m1?variant=44723736019179"
+     },
+     {
+      "variant_id": "44723738312939",
+      "title": "13.6” 512gb / Grey",
+      "options": {
+       "Style": "13.6” 512gb",
+       "Color": "Grey"
+      },
+      "price": "1300.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-m1?variant=44723738312939"
+     },
+     {
+      "variant_id": "44723738706155",
+      "title": "13” 256gb English / Silver",
+      "options": {
+       "Style": "13” 256gb English",
+       "Color": "Silver"
+      },
+      "price": "760.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-m1?variant=44723738706155"
+     },
+     {
+      "variant_id": "44723739230443",
+      "title": "13” 8/256gb English / Space Grey",
+      "options": {
+       "Style": "13” 8/256gb English",
+       "Color": "Space Grey"
+      },
+      "price": "650.00",
+      "compare_at": "725.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-m1?variant=44723739230443"
+     },
+     {
+      "variant_id": "44723739263211",
+      "title": "13” 256gb English / Gold",
+      "options": {
+       "Style": "13” 256gb English",
+       "Color": "Gold"
+      },
+      "price": "650.00",
+      "compare_at": "770.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/macbook-air-m1?variant=44723739263211"
+     }
+    ],
+    "description": "Apple MacBook Air 13.3\" Laptop - Apple M1 Chip\nApple MacBook Air 13.3\" Laptop - Apple M1 Chip - 8GB RAM - 256GB SSD - Silver | MGN93\nProcessor: Apple M1 8-Core CPU\nMemory: 8GB Unified RAM\nStorage: 256GB SSD\nGraphic Card: Apple 7-Core GPU\nDisplay: 13.3\" 2560 x 1600 Retina IPS Display\nOperating System: macOS\nI/O Ports: 2 x Thunderbolt 3 / USB4 | 1 x 1/8\" / 3.5 mm Headphone Output\nWireless Connectivity: Wi-Fi 6 (802.11ax) | Bluetooth 5.0\nCamera: User-Facing: 720p\nBattery: Lithium-Ion Polymer (LiPo) | 18 hours estimated battery life.\nCPU:\nApple M1\nRAM:\n8GB\nSSD:\n256GB\nGPU:\nApple (7-Core)\nSIZE:\n13.3\"\nCLASS:\nApple Laptop\nSERIES:\nMacBook Air\nCONDITION:\nNew\nWARRANTY:\n1 Year"
+   }
+  },
+  {
+   "obs": "P11",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/apple-macbook-air-m4",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:36:32+00:00",
+   "sha256": "c6fda98bb004a8ee137e54107f44280bbfb86c3d4a3cd63d76cdd8e87ede8161",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Apple Macbook Air M4",
+    "url": "https://classic-phones.com/products/apple-macbook-air-m4",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:36:32+00:00",
+    "variants": [
+     {
+      "variant_id": "46925329924331",
+      "title": "256gb/16R / 13.6\"",
+      "options": {
+       "Size": "256gb/16R",
+       "Type": "13.6\""
+      },
+      "price": "875.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbook-air-m4?variant=46925329924331"
+     },
+     {
+      "variant_id": "46925329957099",
+      "title": "256gb/16R / 15\"",
+      "options": {
+       "Size": "256gb/16R",
+       "Type": "15\""
+      },
+      "price": "1075.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbook-air-m4?variant=46925329957099"
+     },
+     {
+      "variant_id": "46925329989867",
+      "title": "512gb/16R / 13.6\"",
+      "options": {
+       "Size": "512gb/16R",
+       "Type": "13.6\""
+      },
+      "price": "1075.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbook-air-m4?variant=46925329989867"
+     },
+     {
+      "variant_id": "46925330022635",
+      "title": "512gb/16R / 15\"",
+      "options": {
+       "Size": "512gb/16R",
+       "Type": "15\""
+      },
+      "price": "1275.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbook-air-m4?variant=46925330022635"
+     },
+     {
+      "variant_id": "46925330055403",
+      "title": "512gb/24R / 13.6\"",
+      "options": {
+       "Size": "512gb/24R",
+       "Type": "13.6\""
+      },
+      "price": "1275.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbook-air-m4?variant=46925330055403"
+     },
+     {
+      "variant_id": "46925330088171",
+      "title": "512gb/24R / 15\"",
+      "options": {
+       "Size": "512gb/24R",
+       "Type": "15\""
+      },
+      "price": "1475.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbook-air-m4?variant=46925330088171"
+     }
+    ],
+    "description": "MacBook Air 13.6\" M4 (10C CPU/10C GPU), 24 GB, 512 GB, Silver\nOverview\nProduct description\nSupercharged by the M2 chip, the 13-inch MacBook Air combines amazing performance and up to 18 hours of battery life into its strikingly thin aluminum enclosure.\nFeatures\nM2 chip for amazing performance\n8-core CPU and up to 10-core GPU to power through complex tasks\n16-core Neural Engine for advanced machine learning tasks\nUp to 24GB of unified memory makes everything you do fast and fluid\nUp to 20 percent faster for applying image filters and effects\nUp to 40 percent faster for editing complex video timelines\nGo all day with up to 18 hours of battery life\nFanless design for silent operation\n13.6-inch Liquid Retina display with 500 nits of brightness and P3 wide color for vibrant images and incredible detail\n1080p FaceTime HD camera\nThree-microphone array focuses on your voice instead of what’s going on around you\nFour-speaker sound system with Spatial Audio for an immersive listening experience\nMagSafe 3 port, two Thunderbolt ports, and headphone jack\nBacklit Magic Keyboard and Touch ID for secure unlock and payments\nFast Wi-Fi 6 wireless connectivity\nSuperfast SSD storage launches apps and opens files in an instant\nmacOS Sonoma gives you powerful ways to get more done, share, and collaborate—and works great with iPhone and iPad\nAvailable in Midnight, Starlight, Space Gray, and Silver\nApple 15-inch MacBook Air (M4)\nMW1L3, MW1G3, MC7A4, MW1J3, MW1M3, MW1H3, MC7C4, MW1K3, MC6L4, MC6J4, M"
+   }
+  },
+  {
+   "obs": "T6",
+   "kind": "page",
+   "url": "https://www.classic-phones.com/",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:36:38+00:00",
+   "sha256": "9b7aa11e92046057fd360fbc6d702df35845280d257da93a4644121d0c054ed2",
+   "excerpt": "Classic Phones - Mobile Devices & Accessories in Lebanon\nSkip to content\nDelivery Available All Over Lebanon\nFacebook\nInstagram\nShop All\nCameras\nCameras\nGo to Cameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nLaptops\nLaptops\nGo to Laptops\nMacbook\nNew\nUsed\nTablets\nTablets\nGo to Tablets\nApple\nSamsung\nXiaomi\nBlackview\nModio\nSmart Watch\nSmart Watch\nGo to Smart Watch\nApple\nSamsung\nFitbit\nHuawei\nAmazfit\nXiaomi\nGreen Lion\nProdo\nKieslect\nAccessories\nAccessories\nGo to Accessories\nAdapters & Cables\nStorage\nKids\nScooters\nGaming\nGaming\nGo to Gaming\nNintendo\nPS\nXBOX\nOthers\nPersonal Care\nPersonal Care\nGo to Personal Care\nHome Accessories\nPerfume\nMassage\nOthers\nTech Gadgets\nTech Gadgets\nGo to Tech Gadgets\nKits (Cleaning, Repair...)\nPower Devices\nSmart Devices\nRouters\nBags\nKindle\nStands\nCalculator\nHandy Phones\nAudio\nAudio\nGo to Audio\nEarphones\nSpeakers\nHeadphones\nEarbuds\nMicrophones\nCases\nCases\nGo to Cases\nApple\nSamsung\nOthers\nWatch Accessories\nKeyboards & Mouses\nOthers\nBlogs\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nLebanon\nFast Delivery\nFacebook\nInstagram\nLog in\nSearch\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nSearch\nLog in\n0\n00 items\nSubtotal\n$0\nShop All\nCameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nGo to Cameras\nLaptops\nMacbook\nNew\nUsed\nGo to L",
+   "quoted": [
+    {
+     "quote": "Delivery Available All Over Lebanon",
+     "found": true
+    },
+    {
+     "quote": "Delivery Available All Over Lebanon",
+     "found": true
+    },
+    {
+     "quote": "Delivery Available All Over Lebanon",
+     "found": true
+    },
+    {
+     "quote": "Delivery Available All Over Lebanon",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "P12",
+   "kind": "product",
+   "url": "https://jakcomputer.com/products/apple-macbook-air13-m5-mdhh4lla",
+   "shop_id": "jak_computer",
+   "observed_at": "2026-11-28T05:36:39+00:00",
+   "sha256": "ca08670407ca497d108e819f6c638f16955913b8eff9e347f54b683d0afbe722",
+   "product": {
+    "shop": "JAK Computer",
+    "shop_id": "jak_computer",
+    "title": "Apple MacBook Air 13 - M5 10 CORE Processor - M5 8-CORE GPU - MDHH4LL/A",
+    "url": "https://jakcomputer.com/products/apple-macbook-air13-m5-mdhh4lla",
+    "vendor": "Apple",
+    "product_type": "Laptops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:36:39+00:00",
+    "variants": [
+     {
+      "variant_id": "47059623084079",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "1260.00",
+      "compare_at": "1350.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "MDHH4LL/A",
+      "url": "https://jakcomputer.com/products/apple-macbook-air13-m5-mdhh4lla?variant=47059623084079"
+     }
+    ],
+    "description": "Apple MacBook Air 13 M5 MDHH4LL/A - 10-Core CPU Sky Blue Laptop\nThe Apple MacBook Air 13-inch M5 (MDHH4LL/A) brings next-generation M5 silicon power, hardware-accelerated ray tracing, and ultra-portable fanless efficiency directly to students, creative professionals, and executive users at JAK Computer. Driven by the Apple M5 chip featuring a 10-core CPU (4 performance super cores and 6 efficiency cores) and an 8-core GPU with embedded Neural Accelerators, this lightweight laptop handles multi-stream 4K video editing, advanced AI tasks, and heavy multitasking effortlessly. Finished in refreshing Sky Blue anodized aluminum, working across Beirut feels remarkably smooth, silent, and futuristic.\nApple M5 Chip Performance & 13.6\" Liquid Retina Display\nEngineered for extreme efficiency and portable speed, the M5 chip delivers up to 153GB/s of unified memory bandwidth paired with 16GB of onboard LPDDR5X RAM and a fast 512GB SSD starting storage. The 8-core GPU includes third-generation hardware-accelerated ray tracing and mesh shading, delivering realistic lighting and shadow rendering across creative applications and modern gaming. The vibrant 13.6-inch Liquid Retina display (2560x1664 at 224 ppi) outputs 500 nits of brightness with P3 wide color and True Tone technology, producing stunning visual detail and realistic color reproduction across Lebanon.\nWhy Choose Apple MacBook Air 13 M5 for Mobile Computing\nEvery ultra-portable workspace benefits from a whisper-quiet, fanless alum"
+   }
+  },
+  {
+   "obs": "P13",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/apple-macbook-air-m5-13-inch-2026",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:36:39+00:00",
+   "sha256": "fc0c4d8e528defc5ea4df6f71c87e628ad6680b48cfcc71f53a59ca592a4d59a",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "Apple MacBook Air M5 (13-inch, 2026)",
+    "url": "https://outgeeked.net/products/apple-macbook-air-m5-13-inch-2026",
+    "vendor": "Apple",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:36:39+00:00",
+    "variants": [
+     {
+      "variant_id": "47589100781826",
+      "title": "Midnight / 16GB/512GB",
+      "options": {
+       "Color": "Midnight",
+       "Storage": "16GB/512GB"
+      },
+      "price": "1200.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/apple-macbook-air-m5-13-inch-2026?variant=47589100781826"
+     },
+     {
+      "variant_id": "47589100814594",
+      "title": "Midnight / 16GB/1TB",
+      "options": {
+       "Color": "Midnight",
+       "Storage": "16GB/1TB"
+      },
+      "price": "1525.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/apple-macbook-air-m5-13-inch-2026?variant=47589100814594"
+     },
+     {
+      "variant_id": "47589100847362",
+      "title": "Midnight / 24GB/1TB",
+      "options": {
+       "Color": "Midnight",
+       "Storage": "24GB/1TB"
+      },
+      "price": "1800.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/apple-macbook-air-m5-13-inch-2026?variant=47589100847362"
+     },
+     {
+      "variant_id": "47589100880130",
+      "title": "Starlight / 16GB/512GB",
+      "options": {
+       "Color": "Starlight",
+       "Storage": "16GB/512GB"
+      },
+      "price": "1200.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/apple-macbook-air-m5-13-inch-2026?variant=47589100880130"
+     },
+     {
+      "variant_id": "47589100912898",
+      "title": "Starlight / 16GB/1TB",
+      "options": {
+       "Color": "Starlight",
+       "Storage": "16GB/1TB"
+      },
+      "price": "1525.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/apple-macbook-air-m5-13-inch-2026?variant=47589100912898"
+     },
+     {
+      "variant_id": "47589100945666",
+      "title": "Starlight / 24GB/1TB",
+      "options": {
+       "Color": "Starlight",
+       "Storage": "24GB/1TB"
+      },
+      "price": "1700.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/apple-macbook-air-m5-13-inch-2026?variant=47589100945666"
+     },
+     {
+      "variant_id": "47589100978434",
+      "title": "Silver / 16GB/512GB",
+      "options": {
+       "Color": "Silver",
+       "Storage": "16GB/512GB"
+      },
+      "price": "1200.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/apple-macbook-air-m5-13-inch-2026?variant=47589100978434"
+     },
+     {
+      "variant_id": "47589101011202",
+      "title": "Silver / 16GB/1TB",
+      "options": {
+       "Color": "Silver",
+       "Storage": "16GB/1TB"
+      },
+      "price": "1595.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/apple-macbook-air-m5-13-inch-2026?variant=47589101011202"
+     },
+     {
+      "variant_id": "47589101043970",
+      "title": "Silver / 24GB/1TB",
+      "options": {
+       "Color": "Silver",
+       "Storage": "24GB/1TB"
+      },
+      "price": "1800.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/apple-macbook-air-m5-13-inch-2026?variant=47589101043970"
+     },
+     {
+      "variant_id": "47589101076738",
+      "title": "Skyblue / 16GB/512GB",
+      "options": {
+       "Color": "Skyblue",
+       "Storage": "16GB/512GB"
+      },
+      "price": "1200.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/apple-macbook-air-m5-13-inch-2026?variant=47589101076738"
+     },
+     {
+      "variant_id": "47589101109506",
+      "title": "Skyblue / 16GB/1TB",
+      "options": {
+       "Color": "Skyblue",
+       "Storage": "16GB/1TB"
+      },
+      "price": "1525.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/apple-macbook-air-m5-13-inch-2026?variant=47589101109506"
+     },
+     {
+      "variant_id": "47589101142274",
+      "title": "Skyblue / 24GB/1TB",
+      "options": {
+       "Color": "Skyblue",
+       "Storage": "24GB/1TB"
+      },
+      "price": "1700.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/apple-macbook-air-m5-13-inch-2026?variant=47589101142274"
+     }
+    ],
+    "description": "The Apple 13-inch MacBook Air with M5 is available at OutGeeked in Midnight, Starlight, Silver and Skyblue, in 16GB/512GB, 16GB/1TB or 24GB/1TB. Pick your options above to see the price, then pay cash on delivery anywhere in Lebanon.\nWhy the 13-inch MacBook Air with M5\nM5 chip: 10-core CPU and a GPU with a Neural Accelerator in every core, up to 4x faster AI than MacBook Air with M4.\nBattery: up to 18 hours of video streaming, in a silent fanless design.\nDisplay: 13.6-inch Liquid Retina, 2560 x 1664 at 224 ppi, 500 nits, P3 wide colour and True Tone.\nStorage: 512GB or 1TB on an SSD with up to 2x faster read/write than the previous generation.\nConnectivity: two Thunderbolt 4 ports, MagSafe 3, up to two external displays, Wi-Fi 7 and Bluetooth 6.\nGood to know\nIn the box: 13-inch MacBook Air, a 40W Dynamic Power Adapter with 60W Max and a 2 m USB-C to MagSafe 3 cable.\nProtect it: MacBook cases and keyboard covers.\nMore Macs: compare every Apple MacBook at OutGeeked.\nModel numbers\nEvery configuration we stock, with its Apple part number — useful when comparing or ordering a specific model.\nConfiguration\nModel number\nPrice\nMidnight / 16GB/512GB\nMDHE4LL/A\n$1,200\nMidnight / 16GB/1TB\nMDHF4LL/A\n$1,525\nMidnight / 24GB/1TB\nMDHG4LL/A\n$1,800\nStarlight / 16GB/512GB\nMDHA4LL/A\n$1,200\nStarlight / 16GB/1TB\nMDHC4LL/A\n$1,525\nSilver / 16GB/512GB\nMDH74LL/A\n$1,200\nSilver / 16GB/1TB\nMDH84LL/A\n$1,595\nSilver / 24GB/1TB\nMDH94LL/A\n$1,800\nSkyblue / 16GB/512GB\nMDHH4LL/A\n$1,200\nSkyblue / 16GB/1TB\nMDHJ4LL/A"
+   }
+  },
+  {
+   "obs": "P14",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/apple-macbooks-air",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:36:39+00:00",
+   "sha256": "2efac417095fcaa16e1577a91b88d880272d9fd59123275cc207b3ebe8fc600d",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Apple MacBooks air m2",
+    "url": "https://classic-phones.com/products/apple-macbooks-air",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:36:39+00:00",
+    "variants": [
+     {
+      "variant_id": "44467372163307",
+      "title": "13.6” 8/256gb / M2 / Starlight",
+      "options": {
+       "Size": "13.6” 8/256gb",
+       "Type": "M2",
+       "Colors": "Starlight"
+      },
+      "price": "770.00",
+      "compare_at": "980.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44467372163307"
+     },
+     {
+      "variant_id": "44495407055083",
+      "title": "13.6” 8/256gb / M2 / Midnight",
+      "options": {
+       "Size": "13.6” 8/256gb",
+       "Type": "M2",
+       "Colors": "Midnight"
+      },
+      "price": "770.00",
+      "compare_at": "985.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44495407055083"
+     },
+     {
+      "variant_id": "44467372228843",
+      "title": "13.6” 512gb / M2 / Starlight",
+      "options": {
+       "Size": "13.6” 512gb",
+       "Type": "M2",
+       "Colors": "Starlight"
+      },
+      "price": "980.00",
+      "compare_at": "1300.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44467372228843"
+     },
+     {
+      "variant_id": "44495546253547",
+      "title": "13.6” 512gb / M2 / Midnight",
+      "options": {
+       "Size": "13.6” 512gb",
+       "Type": "M2",
+       "Colors": "Midnight"
+      },
+      "price": "980.00",
+      "compare_at": "1300.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44495546253547"
+     },
+     {
+      "variant_id": "44467372359915",
+      "title": "15” 256gb / M2 / Starlight",
+      "options": {
+       "Size": "15” 256gb",
+       "Type": "M2",
+       "Colors": "Starlight"
+      },
+      "price": "1010.00",
+      "compare_at": "1090.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44467372359915"
+     },
+     {
+      "variant_id": "44541840621803",
+      "title": "15” 256gb / M2 / Midnight",
+      "options": {
+       "Size": "15” 256gb",
+       "Type": "M2",
+       "Colors": "Midnight"
+      },
+      "price": "1010.00",
+      "compare_at": "1090.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44541840621803"
+     },
+     {
+      "variant_id": "44541840654571",
+      "title": "15” 256gb / M2 / Space Grey",
+      "options": {
+       "Size": "15” 256gb",
+       "Type": "M2",
+       "Colors": "Space Grey"
+      },
+      "price": "1010.00",
+      "compare_at": "1090.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44541840654571"
+     },
+     {
+      "variant_id": "44467372425451",
+      "title": "15” 512gb / M2 / Starlight",
+      "options": {
+       "Size": "15” 512gb",
+       "Type": "M2",
+       "Colors": "Starlight"
+      },
+      "price": "990.00",
+      "compare_at": "1290.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44467372425451"
+     },
+     {
+      "variant_id": "44495461875947",
+      "title": "15” 512gb / M2 / Midnight",
+      "options": {
+       "Size": "15” 512gb",
+       "Type": "M2",
+       "Colors": "Midnight"
+      },
+      "price": "1230.00",
+      "compare_at": "1290.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44495461875947"
+     },
+     {
+      "variant_id": "44541716496619",
+      "title": "15” 512gb / M2 / Grey",
+      "options": {
+       "Size": "15” 512gb",
+       "Type": "M2",
+       "Colors": "Grey"
+      },
+      "price": "1230.00",
+      "compare_at": "1290.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44541716496619"
+     },
+     {
+      "variant_id": "44495463252203",
+      "title": "15” 512gb / M2 / Silver",
+      "options": {
+       "Size": "15” 512gb",
+       "Type": "M2",
+       "Colors": "Silver"
+      },
+      "price": "1230.00",
+      "compare_at": "1300.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44495463252203"
+     },
+     {
+      "variant_id": "44643992797419",
+      "title": "15” 8/256gb / m2 / silver",
+      "options": {
+       "Size": "15” 8/256gb",
+       "Type": "m2",
+       "Colors": "silver"
+      },
+      "price": "1010.00",
+      "compare_at": "1095.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=44643992797419"
+     },
+     {
+      "variant_id": "45207927816427",
+      "title": "13.6” 8/256gb / m2 / silver",
+      "options": {
+       "Size": "13.6” 8/256gb",
+       "Type": "m2",
+       "Colors": "silver"
+      },
+      "price": "770.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=45207927816427"
+     },
+     {
+      "variant_id": "45207935746283",
+      "title": "13.6” 8/256gb / m2 / gray",
+      "options": {
+       "Size": "13.6” 8/256gb",
+       "Type": "m2",
+       "Colors": "gray"
+      },
+      "price": "770.00",
+      "compare_at": "965.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=45207935746283"
+     },
+     {
+      "variant_id": "45207945380075",
+      "title": "13.6” 8/512gb / M2 / Space gray",
+      "options": {
+       "Size": "13.6” 8/512gb",
+       "Type": "M2",
+       "Colors": "Space gray"
+      },
+      "price": "980.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=45207945380075"
+     },
+     {
+      "variant_id": "45207948427499",
+      "title": "13.6” 8/512gb / M2 / silver",
+      "options": {
+       "Size": "13.6” 8/512gb",
+       "Type": "M2",
+       "Colors": "silver"
+      },
+      "price": "980.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/apple-macbooks-air?variant=45207948427499"
+     }
+    ],
+    "description": "Apple MacBook Air 13.6\" Laptop - Apple M2 Chip\nSKU:55982504\nMPN:MLXY3\nCONDITION:New\nApple MacBook Air 13.6\" Laptop - Apple M2 Chip - RAM 8GB - SSD 256GB - Silver | MLXY3\nProcessor: Apple M2 Chip 8-Core\nMemory: 8GB On-Board\nStorage: 256GB Apple NVMe\nDisplay: 13.6\" IPS-Type LCD 2560x1664\nI/O Ports: 2 x Thunderbolt 3; 1 x 1/8\" 3.5mm Headphone\nWireless Connectivity: Wi-Fi 6, Bluetooth 5.2\nCamera: 1080p HD Webcam\nBattery: 18 Hours\nCPU:\nApple M2\nRAM:\n8GB\nSSD:\n256GB\nSIZE:\n13.6\"\nCLASS:\nApple Laptop\nSERIES:\nMacBook Air\nCONDITION:\nNew\nGPU:\nApple (8-core)\nWARRANTY:\n1 Year\nApple's New MacBook Air 15 launched 15.3-inch display, M2 chip, Six-speaker\nApple has launched its new MacBook Air 15-inch model based on the M2 chip in India at its WWDC 2023event. It has a large 15.3-inch Liquid Retina display with 500 nits of brightness, and has the same fanless design, as the 13-inch model, but this has an all-new six-speaker sound system with Spatial Audio and up to 18 hours of battery life.\nThe thickness of the MacBook Air is just 11.5 mm and weighs just 1.4 kg. There is a 1080p Facetime HD camera inside a notch and has an all-aluminum unibody enclosure and integrates its components so efficiently. It also has MagSafe charging port, two Thunderbolt ports for connecting accessories, up to a 6K external display, and a 3.5mm headphone jack.\nApple MacBook Air 15 (M2) Specifications -\nDisplay\n15.3-inch (2880×1864 pixels) 224 PPI Liquid Retina display with True Tone, Wide color (P3), 500 nits brightnes"
+   }
+  }
+ ]
+}

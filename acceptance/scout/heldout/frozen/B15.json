@@ -1,0 +1,1009 @@
+{
+ "run_id": "scout-b15-20261128T053700",
+ "request": {
+  "id": "B15",
+  "text": "I want a new Wi-Fi iPad mini with the A17 Pro chip and 64 GB internal storage. Deliver to Saida.",
+  "mode": "delivery",
+  "destination": "Saida",
+  "category": "tablet",
+  "run_id": "scout-b15-20261128T053700"
+ },
+ "status": "impossible",
+ "message": "Apple never made a 64GB iPad mini with A17 Pro: this generation starts at 128GB. The 64GB mini is the older A15 model.\n• Abed Tahan: iPad mini 7 Wi-Fi 256GB, Starlight — $649.00, listed in stock. Delivery across Lebanon is advertised, but the Saida delivery fee and new condition are not explicitly confirmed.\n• OutGeeked: iPad mini A17 Pro 128GB, Space Gray — $480.00, sold out. The shop confirms brand-new products; shipping is calculated at checkout.\nMy suggestion: choose the 256GB mini if you need one now, after confirming new condition and the delivery charge to Saida.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "alternative",
+   "shop": "Abed Tahan",
+   "shop_id": "abed_tahan",
+   "title": "iPad Mini 7 256GB Wifi  - Starlight",
+   "variant": "Default Title",
+   "url": "https://abedtahan.com/products/ipad-mini-7-256gb-wifi-starlight-1?variant=44664318656691",
+   "price": "649.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "near",
+   "identity_reason": "Same iPad mini A17 Pro generation and Wi-Fi configuration, but 256GB rather than the requested nonexistent 64GB.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "iPad mini with A17 Pro",
+     "status": "met",
+     "quote": "iPad Mini 7",
+     "obs": "P8",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Wi-Fi model",
+     "status": "met",
+     "quote": "Wifi",
+     "obs": "P8",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "64GB internal storage",
+     "status": "unmet",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Saida",
+     "status": "met",
+     "quote": "Fast delivery across Lebanon",
+     "obs": "T9",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P8",
+     "url": "https://abedtahan.com/products/ipad-mini-7-256gb-wifi-starlight-1",
+     "read": "https://abedtahan.com/products/ipad-mini-7-256gb-wifi-starlight-1.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:37:36+00:00",
+     "sha256": "0dad3e626c425a5b99b95a7a569344499e02082273fcde8bd90234addc9657a4"
+    }
+   ],
+   "seller_basis": "Abed Tahan: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": [
+    "does not meet: 64GB internal storage"
+   ]
+  },
+  {
+   "tier": "unavailable",
+   "shop": "OutGeeked",
+   "shop_id": "outgeeked",
+   "title": "Apple iPad Mini A17 Pro (7th Gen, 2024)",
+   "variant": "Space Gray / 128GB",
+   "url": "https://outgeeked.net/products/apple-ipad-mini-a17-pro-7th-gen-2024?variant=47452730884354",
+   "price": "480.00",
+   "currency": "USD",
+   "in_stock": false,
+   "condition": "new",
+   "identity": "near",
+   "identity_reason": "A17 Pro mini with 128GB instead of 64GB; currently sold out.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "not confirmed: Wi-Fi model",
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "iPad mini with A17 Pro",
+     "status": "met",
+     "quote": "Apple iPad Mini A17 Pro (7th Gen, 2024)",
+     "obs": "P4",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Wi-Fi model",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "64GB internal storage",
+     "status": "unmet",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "every item brand-new and genuine",
+     "obs": "T6",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Saida",
+     "status": "met",
+     "quote": "Cashon delivery, anywhere in Lebanon",
+     "obs": "T6",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P4",
+     "url": "https://outgeeked.net/products/apple-ipad-mini-a17-pro-7th-gen-2024",
+     "read": "https://outgeeked.net/products/apple-ipad-mini-a17-pro-7th-gen-2024.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:37:34+00:00",
+     "sha256": "f598fd7587f3b28dca667b61f5e24a6544e516f73ca2971649a31ef26f91ffbe"
+    }
+   ],
+   "seller_basis": "OutGeeked: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": [
+    "does not meet: 64GB internal storage"
+   ]
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P8",
+   "variant_id": "44664318656691",
+   "identity": "near",
+   "identity_reason": "Same iPad mini A17 Pro generation and Wi-Fi configuration, but 256GB rather than the requested nonexistent 64GB.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "iPad mini with A17 Pro",
+     "status": "met",
+     "evidence_obs": "P8",
+     "quote": "iPad Mini 7"
+    },
+    {
+     "requirement": "Wi-Fi model",
+     "status": "met",
+     "evidence_obs": "P8",
+     "quote": "Wifi"
+    },
+    {
+     "requirement": "64GB internal storage",
+     "status": "unmet",
+     "evidence_obs": "P8",
+     "quote": "256GB"
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Delivery to Saida",
+     "status": "met",
+     "evidence_obs": "T9",
+     "quote": "Fast delivery across Lebanon"
+    }
+   ],
+   "delivery_obs": "T9",
+   "delivery_quote": "Fast delivery across Lebanon",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P4",
+   "variant_id": "47452730884354",
+   "identity": "near",
+   "identity_reason": "A17 Pro mini with 128GB instead of 64GB; currently sold out.",
+   "condition": "new",
+   "condition_quote": "every item brand-new and genuine",
+   "condition_obs": "T6",
+   "requirements": [
+    {
+     "requirement": "iPad mini with A17 Pro",
+     "status": "met",
+     "evidence_obs": "P4",
+     "quote": "Apple iPad Mini A17 Pro (7th Gen, 2024)"
+    },
+    {
+     "requirement": "Wi-Fi model",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "64GB internal storage",
+     "status": "unmet",
+     "evidence_obs": "P4",
+     "quote": "Space Gray / 128GB"
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "T6",
+     "quote": "every item brand-new and genuine"
+    },
+    {
+     "requirement": "Delivery to Saida",
+     "status": "met",
+     "evidence_obs": "T6",
+     "quote": "Cashon delivery, anywhere in Lebanon"
+    }
+   ],
+   "delivery_obs": "T8",
+   "delivery_quote": "Taxes and shipping calculated at checkout",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "The A17 Pro iPad mini starts at 128GB; search real alternatives and older 64GB models.",
+   "at_s": 9.2,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "iPad mini A17 Pro"
+    },
+    {
+     "tool": "search",
+     "query": "iPad mini 128GB"
+    },
+    {
+     "tool": "search",
+     "query": "iPad mini 64GB"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Check product condition and delivery for the closest available mini and the 128GB sold-out alternative.",
+   "at_s": 45.3,
+   "calls": [
+    {
+     "tool": "read",
+     "url": "https://abedtahan.com/products/ipad-mini-7-256gb-wifi-starlight-1",
+     "terms": [
+      "new",
+      "condition",
+      "A17",
+      "delivery"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "abed_tahan"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "outgeeked"
+     ]
+    },
+    {
+     "tool": "read",
+     "url": "https://outgeeked.net/products/apple-ipad-mini-a17-pro-7th-gen-2024",
+     "terms": [
+      "new",
+      "condition",
+      "Wi-Fi"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "The requested capacity was never offered with A17 Pro. Closest available mini and a cheaper sold-out 128GB alternative are checked.",
+   "at_s": 65.7,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 26672,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 26813,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 27781,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 2032,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 2625,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 3922,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 4484,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7094,
+   "usage": {
+    "actual_usd": "0.004223",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3225,
+     "output_tokens": 119,
+     "total_tokens": 3344
+    },
+    "latency_ms": 3890,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 8297,
+   "usage": {
+    "actual_usd": "0.0214855",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 9858,
+     "output_tokens": 187,
+     "total_tokens": 10045
+    },
+    "latency_ms": 4922,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 15937,
+   "usage": {
+    "actual_usd": "0.032938",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 12387,
+     "output_tokens": 700,
+     "total_tokens": 13087
+    },
+    "latency_ms": 12687,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  }
+ ],
+ "retailer_requests": 80,
+ "seconds": 65.8,
+ "spend": {
+  "settled_usd": "0.0586465",
+  "uncertain_usd": "0",
+  "model_calls": 3,
+  "ledger_job": "scout-b15-20261128T053700"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://isolvedit.me/products/apple-ipad-mini-7",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T05:37:34+00:00",
+   "sha256": "93fcc5fa5d497ed391c4ceb30a4790b20e0a12b6aa12d27d56ae5f02767613d9",
+   "product": {
+    "shop": "iSolved IT Solutions",
+    "shop_id": "isolvedit",
+    "title": "Apple iPad mini 7 (A17 Pro) – 8.3\" Liquid Retina, Wi-Fi, Starlight",
+    "url": "https://isolvedit.me/products/apple-ipad-mini-7",
+    "vendor": "Apple",
+    "product_type": "apple ipad",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:37:34+00:00",
+    "variants": [
+     {
+      "variant_id": "44006465077359",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "585.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://isolvedit.me/products/apple-ipad-mini-7?variant=44006465077359"
+     }
+    ],
+    "description": "iPad mini 7 puts full iPad power in a tablet you can hold in one hand. The A17 Pro chip makes it fast enough for games, note-taking and Apple Intelligence, and the 8.3-inch screen is perfect for reading, travel and work on the move.\nKey features\nApple A17 Pro chip\n8.3\" Liquid Retina display, 2266 × 1488 (326 ppi)\nSupports Apple Pencil Pro\n12MP wide rear camera and 12MP ultra-wide front camera\nWi-Fi 6E and Bluetooth 5.3\nUSB-C port\nSpecifications\nChip\nA17 Pro\nDisplay\n8.3\" Liquid Retina\nConnectivity\nWi-Fi 6E, Bluetooth 5.3\nPort\nUSB-C\nColor in stock\nStarlight\nBuy from iSolved IT Solutions – order online or visit our store in Bourj Hammoud, Beirut, Lebanon."
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/apple-ipad-11-inches-a16-128gb-11th-gen-2025",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:37:34+00:00",
+   "sha256": "8435eafa6a1b75c5f6b4ea6706a6c7728147fff0260416605e8783f7063b2adb",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Apple iPad 11-inch (A16) 128GB (11th Gen, 2025)",
+    "url": "https://mobileleb.com/products/apple-ipad-11-inches-a16-128gb-11th-gen-2025",
+    "vendor": "Apple",
+    "product_type": "Computers",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:37:34+00:00",
+    "variants": [
+     {
+      "variant_id": "50699725242500",
+      "title": "Blue / Brand New / 1 Year",
+      "options": {
+       "Color": "Blue",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "458.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AI11128B",
+      "url": "https://mobileleb.com/products/apple-ipad-11-inches-a16-128gb-11th-gen-2025?variant=50699725242500",
+      "condition": "Brand New"
+     },
+     {
+      "variant_id": "50699725275268",
+      "title": "Pink / Brand New / 1 Year",
+      "options": {
+       "Color": "Pink",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "458.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AI11128P",
+      "url": "https://mobileleb.com/products/apple-ipad-11-inches-a16-128gb-11th-gen-2025?variant=50699725275268",
+      "condition": "Brand New"
+     },
+     {
+      "variant_id": "50699821449348",
+      "title": "Silver / Brand New / 1 Year",
+      "options": {
+       "Color": "Silver",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "458.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AI11128S",
+      "url": "https://mobileleb.com/products/apple-ipad-11-inches-a16-128gb-11th-gen-2025?variant=50699821449348",
+      "condition": "Brand New"
+     },
+     {
+      "variant_id": "50699821482116",
+      "title": "Yellow / Brand New / 1 Year",
+      "options": {
+       "Color": "Yellow",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "458.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AI11128Y",
+      "url": "https://mobileleb.com/products/apple-ipad-11-inches-a16-128gb-11th-gen-2025?variant=50699821482116",
+      "condition": "Brand New"
+     }
+    ],
+    "description": "Apple A16 5-Core Chip\n4-Core GPU | 16-Core Neural Engine\n11″ Liquid Retina Touchscreen\n2360 x 1640 Screen Resolution (264 ppi)\n128GB Storage Capacity\nWide 12MP Landscape Front Camera\nWide 12MP Rear Camera\nWi-Fi 6 (802.11ax) | Bluetooth 5.3\nUSB-C 2.0 Port (480 Mb/s)"
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://www.macrotronics.net/products/apple-a3354-ipad-11th-gen-10-9-inch-128gb-a16-silver",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:37:34+00:00",
+   "sha256": "1dbb2ab30fb53a751d9eeabeecb1ce93fda28393669e7f91b8c11259ab46ceb7",
+   "product": {
+    "shop": "Macrotronics",
+    "shop_id": "macrotronics",
+    "title": "Apple A3354 iPad 11th Gen 10.9-inch 128GB A16 Silver",
+    "url": "https://www.macrotronics.net/products/apple-a3354-ipad-11th-gen-10-9-inch-128gb-a16-silver",
+    "vendor": "Apple",
+    "product_type": "iPads & Tablets",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:37:34+00:00",
+    "variants": [
+     {
+      "variant_id": "52420361683233",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "480.70",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "1007457",
+      "url": "https://www.macrotronics.net/products/apple-a3354-ipad-11th-gen-10-9-inch-128gb-a16-silver?variant=52420361683233"
+     }
+    ],
+    "description": "Model: Apple iPad (11th Generation)\nModel Number: A3354\nColor: Silver\nStorage Capacity: 128GB\nProcessor: Apple A14 Bionic chip with 64‑bit architecture and Neural Engine\nDisplay: 10.9-inch Liquid Retina display with 2360 x 1640 resolution, True Tone, and P3 wide color\nOperating System: iPadOS 17 (upgradeable to newer versions)\nBiometric Security: Touch ID integrated in the top button\nRear Camera: 12MP Wide camera\nFront Camera: 12MP Ultra Wide front camera with Center Stage\nAudio: Landscape stereo speaker system\nBattery Life: Up to 10 hours of web browsing or video playback on Wi‑Fi\nCharging and Data Port: USB-C\nApple Pencil Compatibility: Supports 1st Generation Apple Pencil (requires USB-C to Lightning adapter)\nKeyboard Compatibility: Supports Bluetooth keyboards and third-party accessories like the Logitech Combo Touch\nWireless Connectivity: Wi-Fi 6 (802.11ax), Bluetooth 5.2"
+   }
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/apple-ipad-mini-a17-pro-7th-gen-2024",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:37:34+00:00",
+   "sha256": "f598fd7587f3b28dca667b61f5e24a6544e516f73ca2971649a31ef26f91ffbe",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "Apple iPad Mini A17 Pro (7th Gen, 2024)",
+    "url": "https://outgeeked.net/products/apple-ipad-mini-a17-pro-7th-gen-2024",
+    "vendor": "Apple",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:37:34+00:00",
+    "variants": [
+     {
+      "variant_id": "47452730884354",
+      "title": "Space Gray / 128GB",
+      "options": {
+       "Color": "Space Gray",
+       "Storage": "128GB"
+      },
+      "price": "480.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/apple-ipad-mini-a17-pro-7th-gen-2024?variant=47452730884354"
+     },
+     {
+      "variant_id": "47452730917122",
+      "title": "Space Gray / 256GB",
+      "options": {
+       "Color": "Space Gray",
+       "Storage": "256GB"
+      },
+      "price": "580.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/apple-ipad-mini-a17-pro-7th-gen-2024?variant=47452730917122"
+     },
+     {
+      "variant_id": "47452730949890",
+      "title": "Starlight / 128GB",
+      "options": {
+       "Color": "Starlight",
+       "Storage": "128GB"
+      },
+      "price": "480.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/apple-ipad-mini-a17-pro-7th-gen-2024?variant=47452730949890"
+     },
+     {
+      "variant_id": "47452730982658",
+      "title": "Starlight / 256GB",
+      "options": {
+       "Color": "Starlight",
+       "Storage": "256GB"
+      },
+      "price": "580.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/apple-ipad-mini-a17-pro-7th-gen-2024?variant=47452730982658"
+     },
+     {
+      "variant_id": "47452731015426",
+      "title": "Blue / 128GB",
+      "options": {
+       "Color": "Blue",
+       "Storage": "128GB"
+      },
+      "price": "480.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/apple-ipad-mini-a17-pro-7th-gen-2024?variant=47452731015426"
+     },
+     {
+      "variant_id": "47452731048194",
+      "title": "Blue / 256GB",
+      "options": {
+       "Color": "Blue",
+       "Storage": "256GB"
+      },
+      "price": "580.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/apple-ipad-mini-a17-pro-7th-gen-2024?variant=47452731048194"
+     },
+     {
+      "variant_id": "47452731080962",
+      "title": "Purple / 128GB",
+      "options": {
+       "Color": "Purple",
+       "Storage": "128GB"
+      },
+      "price": "480.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/apple-ipad-mini-a17-pro-7th-gen-2024?variant=47452731080962"
+     },
+     {
+      "variant_id": "47452731113730",
+      "title": "Purple / 256GB",
+      "options": {
+       "Color": "Purple",
+       "Storage": "256GB"
+      },
+      "price": "580.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/apple-ipad-mini-a17-pro-7th-gen-2024?variant=47452731113730"
+     }
+    ],
+    "description": "The Apple iPad mini 7 (A17 Pro) is sold out at OutGeeked right now. Tap Notify me above and we'll let you know when it's back in Space Gray, Starlight, Blue or Purple (128GB or 256GB). Want an iPad today? The iPad 11th Gen (A16) is available, with cash on delivery anywhere in Lebanon.\nWhy iPad mini (A17 Pro)\nUltraportable: 8.3-inch Liquid Retina display in a 293 g, 6.3 mm design.\nA17 Pro chip: 30% faster CPU, 25% faster graphics and a 2x faster Neural Engine than the previous iPad mini.\nBuilt for Apple Intelligence: Writing Tools, Image Wand and Clean Up, in supported languages.\nApple Pencil Pro: squeeze, barrel roll and haptic feedback, attached magnetically.\nFaster connections: Wi-Fi 6E and USB-C with USB 3 speeds.\nGood to know\nWorks with: Apple Pencil Pro, Apple Pencil (USB-C) and Bluetooth keyboards, sold separately.\nCompare models: see every Apple iPad at OutGeeked."
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://isolvedit.me/products/apple-ipad-11-a16-chip-2025-wi-fi-ttc",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T05:37:34+00:00",
+   "sha256": "6d5585b11f40cbd0d502cf25a0932454597aa191454a76c841b2d82df2cb2ed1",
+   "product": {
+    "shop": "iSolved IT Solutions",
+    "shop_id": "isolvedit",
+    "title": "Apple iPad 11\" A16 (2025) – 128GB Wi-Fi",
+    "url": "https://isolvedit.me/products/apple-ipad-11-a16-chip-2025-wi-fi-ttc",
+    "vendor": "Apple",
+    "product_type": "apple ipad",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:37:34+00:00",
+    "variants": [
+     {
+      "variant_id": "52842436395119",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "450.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://isolvedit.me/products/apple-ipad-11-a16-chip-2025-wi-fi-ttc?variant=52842436395119"
+     }
+    ],
+    "description": "The 2025 iPad with the A16 chip is the easiest way into iPad: fast enough for school apps, streaming and note-taking, and light enough to carry all day. Its 11-inch Liquid Retina display with True Tone keeps colors natural in any light.\nKey features\nApple A16 chip with 5-core CPU and 4-core GPU\n11\" Liquid Retina display with True Tone\n128GB storage\nWi-Fi model\nUltra-light design for school and travel\nSpecifications\nChip\nA16\nDisplay\n11\" Liquid Retina, True Tone\nStorage\n128GB\nConnectivity\nWi-Fi\nColors in stock\nSilver, Blue (Pink on order)\nBuy from iSolved IT Solutions – order online or visit our store in Bourj Hammoud, Beirut, Lebanon."
+   }
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://isolvedit.me/products/apple-ipad-10-2-9th-generation-64gb",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T05:37:35+00:00",
+   "sha256": "c43611a51ba1dda6c635e0f7d899f540eaa2eb6f64ff21368f0d3e0d07bc82a0",
+   "product": {
+    "shop": "iSolved IT Solutions",
+    "shop_id": "isolvedit",
+    "title": "Apple iPad 10.2 (9th Generation) 64gb",
+    "url": "https://isolvedit.me/products/apple-ipad-10-2-9th-generation-64gb",
+    "vendor": "Apple",
+    "product_type": "apple ipad",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:37:35+00:00",
+    "variants": [
+     {
+      "variant_id": "41286583615599",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "310.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "Apple iPad 10.2",
+      "url": "https://isolvedit.me/products/apple-ipad-10-2-9th-generation-64gb?variant=41286583615599"
+     }
+    ],
+    "description": "Brand\nApple\nConnectivity\nWi-Fi\nDimension\n250.6 x 174.1 x 7.5 mm (9.87 x 6.85 x 0.30 in)\nGlass\nGlass front, aluminum back, aluminum frame\nDisplay Size\n10.2\"\nDisplay Type\nRetina IPS LCD, 500 nits (typ)\nCPU\nHexa-core (2×2.65 GHz Lightning + 4×1.8 GHz Thunder)\nChip\nApple A13 Bionic (7 nm+)\nOperating System\niPadOS 15, upgradable to iPadOS 15.1\nMemory\n64 GB, 256 GB\nRAM\n3GB\nMain Camera\n8 MP, f/2.4, 31mm (standard), 1.12µm, AF\nSelfie Camera\n12 MP, f/2.4, 122˚ (ultrawide)\nBattery\nLi-Ion, non-removable 8557 mAh (32.4 Wh)\nColor\nSilver, Space Grey"
+   }
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/ipad-mini-7-256gb-wifi-space-grey",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:37:36+00:00",
+   "sha256": "f489b5db0402ff49e92668a0a39a46c36fa29d8893febdb5b8cffb0e3b5233bb",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "iPad Mini 7 256GB Wifi  - Space Grey",
+    "url": "https://abedtahan.com/products/ipad-mini-7-256gb-wifi-space-grey",
+    "vendor": "APPLE",
+    "product_type": "iPads",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:37:36+00:00",
+    "variants": [
+     {
+      "variant_id": "44664318623923",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "649.00",
+      "compare_at": "773.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "IPAD MINI 256GB GREY",
+      "url": "https://abedtahan.com/products/ipad-mini-7-256gb-wifi-space-grey?variant=44664318623923"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P8",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/ipad-mini-7-256gb-wifi-starlight-1",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:37:36+00:00",
+   "sha256": "0dad3e626c425a5b99b95a7a569344499e02082273fcde8bd90234addc9657a4",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "iPad Mini 7 256GB Wifi  - Starlight",
+    "url": "https://abedtahan.com/products/ipad-mini-7-256gb-wifi-starlight-1",
+    "vendor": "APPLE",
+    "product_type": "iPads",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:37:36+00:00",
+    "variants": [
+     {
+      "variant_id": "44664318656691",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "649.00",
+      "compare_at": "773.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "IPAD MINI 256GB STARLIGHT",
+      "url": "https://abedtahan.com/products/ipad-mini-7-256gb-wifi-starlight-1?variant=44664318656691"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://isolvedit.me/policies/shipping-policy",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T05:37:36+00:00",
+   "sha256": "613f66e849ee344209664eef884e35a68ffc67ab6de196e4feadfa57ad038c26",
+   "excerpt": "Shipping policy | iSolved IT\nSkip to content\nYour cart is empty\nContinue shopping\nHave an account?\nLog in to check out faster.\nYour cart\nLoading...\nEstimated total\n$0.00 USD\n✅ All prices include VAT – nothing extra to pay. Discounts and shipping calculated at checkout.\nCheck out\n🎄 Christmas deals are live — order on WhatsApp\n✅ All prices include VAT — nothing extra to pay\n💵 Cash on delivery\n🛡️ 6-month warranty on used laptops\nShop\nApple\nApple\nApple Accessories\nApple Macbook\nApple iPad\nGaming\nGaming\nGaming Laptops\nGaming Monitors\nGaming Consoles\nGaming Accessories\nLaptops\nLaptops\nApple Laptops\nAsus Laptops\nAcer Laptops\nDell Laptops\nHp laptops\nLenovo Laptops\nMsi Laptops\nSecond Hand Laptops\nSony Laptops\nLaptop Parts\nDesktops\nDesktops\nAll Desktops & All-in-Ones\nDesktop PCs\nAll-in-One PCs\nComputer Parts\nComputer Parts\nMotherboards\nCPU's\nGPU's\nStorages\nRAM's\nCases and Chassis\nPower Supply\nAccessories\nAccessories\nAdapters & Converters\nBackpacks & Bags\nCables\nExternal Hard Drives\nFlash Drives & SD Cards\nMobile Accessories\nPower Banks\nChargers\nPhone Holders & Car Mounts\nDocking Stations & USB-C Hubs\nLaptop Stands & Coolers\nWebcams\nWireless Presenters\nInks & Toners\nMouse\nMouse Pads & Wrist Pads\nKeyboards\nAudio\nAudio\nEarbuds\nSpeakers\nHeadsets\nMicrophones\nElectronics\nElectronics\nTablets\nGadgets\nMonitors\nPrinters & Scanners\nPaper Shredders\nPOS & Barcode Scanners\nNetworking Products\nNetworking Products\nFiber Optic\nNetworking Accessories\nSwitches\nNetwork & Server Cabinets\nRouters & Modems\nC",
+   "quoted": []
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://www.macrotronics.net/policies/shipping-policy",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:37:36+00:00",
+   "sha256": "d9c0a92663d74b802fa65183e6786f8c3a7549f6dade752ba9c83f35e291f756",
+   "excerpt": "Shipping policy – Macrotronics\nSkip to content\nFacebook\nTwitter\nInstagram\nHelpline +961 71 854 621 | +961 9 853 008\nTechnical Support +961 71 94 84 94\nPause slideshow\nPlay slideshow\nComputers\nComputers\nLaptops\nOn-Demand Laptops\nLaptop Power Adapters\nLaptop Accessories\nApple Computers\nApple Accessories\niPads and Tablets\nTablets Accessories\nComputer & Smart Monitors\nMonitor Accessories\nServers, Workstations and NAS\nDesktops and Mini PCs\nPOS and POS Equipment\nOriginal Softwares and Antivirus\nComputer Parts\nComputer Parts\nProcessors\nGraphic Cards\nMotherboards\nRAMs\nSSD\nHDD\nCPU Coolers\nThermal Paste and Pads\nPower Supplies\nComputer Cases\nComputer Case Accessories\nMore PC Components\nLegacy Computer Parts\nUsed Computer Parts\nComputer Peripherals\nComputer Peripherals\nMice & Keyboards\nEarphones & Headphones\nComputer & Bluetooth Speakers\nWebcams & Microphones\nLaptop Bags & Cases\nComputer & Video Cables\nFlash Drives & Memory Cards\nPrinters, Scanners & Faxes\nPaper & Media Supplies\nGenuine Inks & Ribbons\nGenuine Toners & Drums\nCompatible Toners & Drums\nOffice Furniture\nElectronics & More\nElectronics & More\nUPS\nBatteries\nSmart Appliances\nAdapters and Converters\nEducational Electronics\nConsumer Electronics\nSurveillance and Security\nProjectors, Screens and More\nRouters, Repeaters and APs\nNetwork Switches\nNetwork Adapters\nNetworking and Tools\nGaming\nGaming\nGaming PCs\nGaming Monitors\nGaming Headsets\nGaming Pads\nGaming Mice\nGaming Keyboards\nGaming Chairs\nGaming Desks\nGaming Console and VR\nGaming",
+   "quoted": []
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://abedtahan.com/pages/contact",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:37:36+00:00",
+   "sha256": "2b118d4d9e40dfa29328b008d2ddc1bd475ce167d184705ba2ca8af012f90585",
+   "excerpt": "Contact\n– Abed Tahan\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & Crepe Makers\nIce Cube, Ice Cream & Yoghurt Makers\nSaj Machines\nL",
+   "quoted": []
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://outgeeked.net/meta.json",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:37:45+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"OutGeeked\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"outgeeked.net\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://abedtahan.com/meta.json",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:37:46+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"Abed Tahan\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"abedtahan.com\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T6",
+   "kind": "page",
+   "url": "https://outgeeked.net/products/apple-ipad-mini-a17-pro-7th-gen-2024",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:37:47+00:00",
+   "sha256": "38e2bc6d68dc9be9e0240595109bec7c361a5128854154900e2493987f305034",
+   "excerpt": "Apple iPad Mini A17 Pro (7th Gen, 2024) | Lebanon - OutGeeked\nSkip to content\nCash on delivery\nall over Lebanon\nFacebook\nX (Twitter)\nInstagram\nTikTok\nSearch\nClear\nMost searched products\nSamsung Galaxy S26 12GB/256GB\nRegular price\n$848.00 USD\nSale price\n$848.00 USD\nRegular price\nUnit price\n/per\n4 colours\nView details\nChoose your option\n-9%\nApple iPhone 17 Pro Max (eSIM)\nRegular price\nFrom $1,470.00 USD\nSale price\nFrom $1,470.00 USD\nRegular price\n$1,630.00 USD\nUnit price\n/per\n256GB–2TB · 3 colours\nView details\nChoose your option\n-9%\nApple MacBook Pro M5 (14-inch, 2025)\nRegular price\nFrom $1,600.00 USD\nSale price\nFrom $1,600.00 USD\nRegular price\n$1,799.00 USD\nUnit price\n/per\n16GB/512GB–32GB/1TB · 2 colours\nView details\nChoose your option\n-24%\nSoundcore R50i NC\nRegular price\n$25.00 USD\nSale price\n$25.00 USD\nRegular price\n$33.00 USD\nUnit price\n/per\nIn stock\nView details\nChoose your option\nCart\n0\nBuild Your PC\nSmartphones\nShop All\niPhone\nAll iPhones\niPhone 18 Series\nAndroid Phones\nSamsung Galaxy\nHonor\nXiaomi\nRedmi\nPoco\nOppo\nTecno\nInfinix\nRealme\nRedMagic\nMore Phone Brands\nGoogle Pixel\nOnePlus\nNothing\nMotorola\nHuawei\nVivo\nCMF\nHMD\nBudget\nUnder $200$200–500$500–1,000$1,000+\nTop brands\nAppleSamsungXiaomiRedmiGoogleHonor\nAll brands →\nBest sellers\nSamsung\nSamsung Galaxy S26 12GB/256GB\n$848.00\nApple\nApple iPhone 17 Pro Max (eSIM)\nFrom $1,470.00$1,630.00\nTablets\nShop All\neReaders\nAndroid Tablets\nSamsung Galaxy Tab\nXiaomi\nRedmi\nHonor\nTecno\nHuawei\niPad\niPad\niPad Air\niPad Pro\niPad mini\nBudget\n",
+   "quoted": [
+    {
+     "quote": "every item brand-new and genuine",
+     "found": true
+    },
+    {
+     "quote": "every item brand-new and genuine",
+     "found": true
+    },
+    {
+     "quote": "Cashon delivery, anywhere in Lebanon",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T7",
+   "kind": "page",
+   "url": "https://abedtahan.com/products/ipad-mini-7-256gb-wifi-starlight-1",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:37:47+00:00",
+   "sha256": "ba9067149043b8cf065b1fb52d53c23ff1108ff1c94c210a907793921bdf2372",
+   "excerpt": "iPad Mini 7 256GB Wifi - Starlight – Abed Tahan\nRead the Privacy Policy\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & Crepe Makers\n",
+   "quoted": []
+  },
+  {
+   "obs": "T8",
+   "kind": "page",
+   "url": "https://outgeeked.net/",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:37:48+00:00",
+   "sha256": "9303211d1b20e13ebfb306ebc4d54da27acb33c4d8f6c6fd5e771d1317687565",
+   "excerpt": "Buy Smartphones & Laptops in Lebanon | OutGeeked.net\nSkip to content\nCash on delivery\nall over Lebanon\nFacebook\nX (Twitter)\nInstagram\nTikTok\nSearch\nClear\nMost searched products\nSamsung Galaxy S26 12GB/256GB\nRegular price\n$848.00 USD\nSale price\n$848.00 USD\nRegular price\nUnit price\n/per\n4 colours\nView details\nChoose your option\n-9%\nApple iPhone 17 Pro Max (eSIM)\nRegular price\nFrom $1,470.00 USD\nSale price\nFrom $1,470.00 USD\nRegular price\n$1,630.00 USD\nUnit price\n/per\n256GB–2TB · 3 colours\nView details\nChoose your option\n-9%\nApple MacBook Pro M5 (14-inch, 2025)\nRegular price\nFrom $1,600.00 USD\nSale price\nFrom $1,600.00 USD\nRegular price\n$1,799.00 USD\nUnit price\n/per\n16GB/512GB–32GB/1TB · 2 colours\nView details\nChoose your option\n-24%\nSoundcore R50i NC\nRegular price\n$25.00 USD\nSale price\n$25.00 USD\nRegular price\n$33.00 USD\nUnit price\n/per\nIn stock\nView details\nChoose your option\nCart\n0\nBuild Your PC\nSmartphones\nShop All\niPhone\nAll iPhones\niPhone 18 Series\nAndroid Phones\nSamsung Galaxy\nHonor\nXiaomi\nRedmi\nPoco\nOppo\nTecno\nInfinix\nRealme\nRedMagic\nMore Phone Brands\nGoogle Pixel\nOnePlus\nNothing\nMotorola\nHuawei\nVivo\nCMF\nHMD\nBudget\nUnder $200$200–500$500–1,000$1,000+\nTop brands\nAppleSamsungXiaomiRedmiGoogleHonor\nAll brands →\nBest sellers\nSamsung\nSamsung Galaxy S26 12GB/256GB\n$848.00\nApple\nApple iPhone 17 Pro Max (eSIM)\nFrom $1,470.00$1,630.00\nTablets\nShop All\neReaders\nAndroid Tablets\nSamsung Galaxy Tab\nXiaomi\nRedmi\nHonor\nTecno\nHuawei\niPad\niPad\niPad Air\niPad Pro\niPad mini\nBudget\nUnder $30",
+   "quoted": [
+    {
+     "quote": "Taxes and shipping calculated at checkout",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T9",
+   "kind": "page",
+   "url": "https://abedtahan.com/",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:37:48+00:00",
+   "sha256": "1906e98caf28761dd778a345b46c5681ee14e240efa57812e95d7551e99ba946",
+   "excerpt": "Lebanon's Leading Electronics & Appliances Retailer | Abed Tahan\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & Crepe Makers\nIce Cub",
+   "quoted": [
+    {
+     "quote": "Fast delivery across Lebanon",
+     "found": true
+    },
+    {
+     "quote": "Fast delivery across Lebanon",
+     "found": true
+    }
+   ]
+  }
+ ]
+}

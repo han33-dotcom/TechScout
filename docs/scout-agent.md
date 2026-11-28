@@ -94,4 +94,25 @@ python -m unittest tests.test_scout -v       # offline: synthetic shops, scripte
 
 ## Evaluation
 
-See [the scout evaluation](../acceptance/scout/README.md) for the development iterations, the six reserved confirmation requests and the frozen 20, scored with the frozen protocol next to the earlier baselines.
+[The scout evaluation](../acceptance/scout/README.md) has the development iterations, the edge-case runs, and the held-out results. The held-out results were scored by independent graders with the frozen protocol, and set next to the earlier baselines.
+
+**Locked candidate, frozen 20, compared with the single agent on 26 Nov:**
+- **Useful offers:** a correct, current, linked, in-stock offer with the open facts named in 8 of 10 full cases (baseline: 2 of 20 showed a price and link).
+- **Delivered totals:** evidenced on 4 cases (baseline: 0).
+- **Partials and blockers:** 4/5 strict partials (0/5) and 5/5 explained blockers (4/5).
+- **Speed and cost:** median 76 s, all within 120 s, USD 1.27 for the 20 runs.
+
+**What still fails:**
+- **The full acceptance gate.**
+  - No verified payable total in any case, because new condition, the delivery fee or VAT was rarely published.
+  - No verified seller pair.
+- **Overclaims in three cases** (B05, B07, B11). They were fixed afterwards, each with a regression test, and the fixes are recorded separately from the score.
+
+## Limitations
+
+- **Delivered totals need a published fee.** Shops that compute the fee at checkout (Mobileleb, iSolved, OutGeeked, Classic Phones) stay "fee to confirm", because cart and checkout are never read.
+- **Condition and VAT.** New condition and VAT are often not stated, so they show as open facts.
+- **Blocked shops.** Shops behind bot challenges or blocks (Class Cellulars, Mojitech, PC and Parts, Ayoub, Expert-Zone, DSLR Zone, Carrefour) are not read.
+- **Shop list.** The directory is a fixed, reviewed list, and new shops need a detection run. It lives in `config/scout-shops.json`, separate from `config/sources.json`; merging the two is a team decision.
+- **No main-UI integration yet.** The scout runs from its CLI and demo page, not the normal buyer UI, API and worker. Wiring it in means mapping checked offers to the v2 contracts, which is a shared-contract change.
+- **Unchecked summary text.** The model's summary text is checked for amounts and free-delivery wording only. Other statements in it are labelled as the assistant's summary.

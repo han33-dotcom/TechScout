@@ -1,0 +1,807 @@
+{
+ "run_id": "scout-b25-20261128T053938",
+ "request": {
+  "id": "B25",
+  "text": "I want the Sony MDR-ZX110 in black, new, but it must connect over Bluetooth without an adapter. Can it be delivered to Tripoli?",
+  "mode": "delivery",
+  "destination": "Tripoli",
+  "category": "audio",
+  "run_id": "scout-b25-20261128T053938"
+ },
+ "status": "impossible",
+ "message": "The Sony MDR-ZX110 is wired-only: no version connects over Bluetooth without an adapter.\nThe closest suitable alternative is the Sony WH-CH520 in black:\n• Mobileleb: $42.00, in stock and explicitly “Brand New”; Tripoli delivery and its fee remain unconfirmed.\n• Abed Tahan: $39.00, in stock, with delivery across Lebanon (including Tripoli); the delivery fee and new condition are not explicitly confirmed.\nMy suggestion: choose the WH-CH520 instead, but confirm delivery with Mobileleb or new condition with Abed Tahan before ordering.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "alternative",
+   "shop": "Mobileleb",
+   "shop_id": "mobileleb",
+   "title": "Sony WH-CH520, Wireless Headphones Bluetooth On-Ear Headset with Microphone",
+   "variant": "Black / Brand New",
+   "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?variant=41750795845764",
+   "price": "42.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "near",
+   "identity_reason": "Sony WH-CH520 is a native Bluetooth on-ear alternative, not the requested MDR-ZX110.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "Black",
+     "status": "met",
+     "quote": "Black / Brand New",
+     "obs": "P5",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New",
+     "status": "met",
+     "quote": "Black / Brand New",
+     "obs": "P5",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Bluetooth without an adapter",
+     "status": "met",
+     "quote": "Sony WH-CH520, Wireless Headphones Bluetooth On-Ear Headset with Microphone",
+     "obs": "P5",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Delivery to Tripoli",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P5",
+     "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone",
+     "read": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:40:16+00:00",
+     "sha256": "41fbab37a2efb7afb2adf274d8a1de0c9eb16f65d968e0cd524305308a524df6"
+    }
+   ],
+   "seller_basis": "Mobileleb: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  },
+  {
+   "tier": "alternative",
+   "shop": "Abed Tahan",
+   "shop_id": "abed_tahan",
+   "title": "Sony WH-CH520 Wireless On-Ear Headphones – Black",
+   "variant": "Default Title",
+   "url": "https://abedtahan.com/products/sony-wireless-headphones-bluetooth-black?variant=44220684828851",
+   "price": "39.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "near",
+   "identity_reason": "Sony WH-CH520 is a native Bluetooth on-ear alternative, not the requested MDR-ZX110.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "Black",
+     "status": "met",
+     "quote": "Sony Wireless Headphones Bluetooth - Black",
+     "obs": "P3",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Bluetooth without an adapter",
+     "status": "met",
+     "quote": "Sony Wireless Headphones Bluetooth - Black",
+     "obs": "P3",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Delivery to Tripoli",
+     "status": "met",
+     "quote": "Fast delivery across Lebanon",
+     "obs": "T8",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P3",
+     "url": "https://abedtahan.com/products/sony-wireless-headphones-bluetooth-black",
+     "read": "https://abedtahan.com/products/sony-wireless-headphones-bluetooth-black.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:40:14+00:00",
+     "sha256": "8cf6cee7a10dd306002509af4b0545b205b6e36687f0f0c321df525f760f26cd"
+    }
+   ],
+   "seller_basis": "Abed Tahan: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P5",
+   "variant_id": "41750795845764",
+   "identity": "near",
+   "identity_reason": "Sony WH-CH520 is a native Bluetooth on-ear alternative, not the requested MDR-ZX110.",
+   "condition": "new",
+   "condition_quote": "Black / Brand New",
+   "condition_obs": "P5",
+   "requirements": [
+    {
+     "requirement": "Black",
+     "status": "met",
+     "evidence_obs": "P5",
+     "quote": "Black / Brand New"
+    },
+    {
+     "requirement": "New",
+     "status": "met",
+     "evidence_obs": "P5",
+     "quote": "Black / Brand New"
+    },
+    {
+     "requirement": "Bluetooth without an adapter",
+     "status": "met",
+     "evidence_obs": "P5",
+     "quote": "Sony WH-CH520, Wireless Headphones Bluetooth On-Ear Headset with Microphone"
+    },
+    {
+     "requirement": "Delivery to Tripoli",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": null,
+   "delivery_quote": null,
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P3",
+   "variant_id": "44220684828851",
+   "identity": "near",
+   "identity_reason": "Sony WH-CH520 is a native Bluetooth on-ear alternative, not the requested MDR-ZX110.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "Black",
+     "status": "met",
+     "evidence_obs": "P3",
+     "quote": "Sony Wireless Headphones Bluetooth - Black"
+    },
+    {
+     "requirement": "New",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Bluetooth without an adapter",
+     "status": "met",
+     "evidence_obs": "P3",
+     "quote": "Sony Wireless Headphones Bluetooth - Black"
+    },
+    {
+     "requirement": "Delivery to Tripoli",
+     "status": "met",
+     "evidence_obs": "T8",
+     "quote": "Fast delivery across Lebanon"
+    }
+   ],
+   "delivery_obs": "T8",
+   "delivery_quote": "Fast delivery across Lebanon",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "MDR-ZX110 is wired only; check exact and Bluetooth alternatives.",
+   "at_s": 11.4,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "Sony MDR-ZX110"
+    },
+    {
+     "tool": "search",
+     "query": "Sony WH-CH520 black"
+    },
+    {
+     "tool": "search",
+     "query": "Sony WH-CH510"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Check delivery and new-condition policies for the two best black WH-CH520 options; exact ZX110 cannot meet Bluetooth requirement.",
+   "at_s": 49.1,
+   "calls": [
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "mobileleb"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "abed_tahan"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Exact requested model cannot support native Bluetooth. Present checked WH-CH520 alternatives, distinguishing confirmed new condition from delivery coverage.",
+   "at_s": 68.9,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 16016,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 28766,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 30062,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 4406,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 5109,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 9125,
+   "usage": {
+    "actual_usd": "0.004133",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3229,
+     "output_tokens": 109,
+     "total_tokens": 3338
+    },
+    "latency_ms": 5406,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7641,
+   "usage": {
+    "actual_usd": "0.0165955",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 8278,
+     "output_tokens": 93,
+     "total_tokens": 8371
+    },
+    "latency_ms": 4468,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 14343,
+   "usage": {
+    "actual_usd": "0.023708",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 9103,
+     "output_tokens": 598,
+     "total_tokens": 9701
+    },
+    "latency_ms": 11078,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": true
+  }
+ ],
+ "retailer_requests": 78,
+ "seconds": 69.0,
+ "spend": {
+  "settled_usd": "0.0444365",
+  "uncertain_usd": "0",
+  "model_calls": 3,
+  "ledger_job": "scout-b25-20261128T053938"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/sony-wireless-headphones-bluetooth-black",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:40:12+00:00",
+   "sha256": "8cf6cee7a10dd306002509af4b0545b205b6e36687f0f0c321df525f760f26cd",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "Sony WH-CH520 Wireless On-Ear Headphones – Black",
+    "url": "https://abedtahan.com/products/sony-wireless-headphones-bluetooth-black",
+    "vendor": "SONY",
+    "product_type": "Headsets & Microphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:40:12+00:00",
+    "variants": [
+     {
+      "variant_id": "44220684828851",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "39.00",
+      "compare_at": "49.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "WH-CH520 BZ#",
+      "url": "https://abedtahan.com/products/sony-wireless-headphones-bluetooth-black?variant=44220684828851"
+     }
+    ],
+    "description": "Sony Wireless Headphones Bluetooth - Black"
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://wincell.store/products/sony-wh-ch520-wireless-on-ear-bluetooth-headphones-black",
+   "shop_id": "wincell",
+   "observed_at": "2026-11-28T05:40:14+00:00",
+   "sha256": "a395a89c3d45318a9f81d471824a49ecfd38ad6d0058037844b3e2f2a864da21",
+   "product": {
+    "shop": "WinCell",
+    "shop_id": "wincell",
+    "title": "Sony WH-CH520 Wireless On-Ear Bluetooth Headphones – Black",
+    "url": "https://wincell.store/products/sony-wh-ch520-wireless-on-ear-bluetooth-headphones-black",
+    "vendor": "Sony",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:40:14+00:00",
+    "variants": [
+     {
+      "variant_id": "53481565520170",
+      "title": "Black",
+      "options": {
+       "Color": "Black"
+      },
+      "price": "70.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "1",
+      "url": "https://wincell.store/products/sony-wh-ch520-wireless-on-ear-bluetooth-headphones-black?variant=53481565520170"
+     },
+     {
+      "variant_id": "53481565552938",
+      "title": "White",
+      "options": {
+       "Color": "White"
+      },
+      "price": "70.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "1",
+      "url": "https://wincell.store/products/sony-wh-ch520-wireless-on-ear-bluetooth-headphones-black?variant=53481565552938"
+     }
+    ],
+    "description": "Sony WH-CH520 Wireless On-Ear Bluetooth Headphones – Black\nEnjoy high-quality sound, comfort, and wireless freedom with the Sony WH-CH520 headphones. Featuring 30mm dynamic drivers and Sony's DSEE technology, these headphones enhance compressed music files to deliver clearer, richer sound. With an impressive battery life of up to 50 hours, Bluetooth 5.2 connectivity, and multipoint connection, you can enjoy your favorite music and easily switch between two devices. Customize your listening experience with the Sony Headphones Connect app and its adjustable EQ settings. The built-in microphone ensures clear hands-free calls, while the lightweight 147g design and soft ear cushions provide comfortable listening throughout the day. Perfect for music, calls, work, travel, and everyday use.\nKey Features:\nSony DSEE sound enhancement technology\n30mm dynamic drivers\nUp to 50 hours of battery life\nBluetooth 5.2 connectivity\nMultipoint connection\nCustomizable EQ through Sony Headphones Connect app\nBuilt-in microphone for hands-free calls\nUSB-C charging\nQuick charging: 3 minutes for up to 1.5 hours of playback\nLightweight design (147g)\nComfortable on-ear cushions\nColor: Black"
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/sony-wireless-headphones-bluetooth-black",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:40:14+00:00",
+   "sha256": "8cf6cee7a10dd306002509af4b0545b205b6e36687f0f0c321df525f760f26cd",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "Sony WH-CH520 Wireless On-Ear Headphones – Black",
+    "url": "https://abedtahan.com/products/sony-wireless-headphones-bluetooth-black",
+    "vendor": "SONY",
+    "product_type": "Headsets & Microphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:40:14+00:00",
+    "variants": [
+     {
+      "variant_id": "44220684828851",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "39.00",
+      "compare_at": "49.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "WH-CH520 BZ#",
+      "url": "https://abedtahan.com/products/sony-wireless-headphones-bluetooth-black?variant=44220684828851"
+     }
+    ],
+    "description": "Sony Wireless Headphones Bluetooth - Black"
+   }
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://corexlb.net/products/sony-wh-ch720n-wireless-headphones-bluetooth",
+   "shop_id": "corex",
+   "observed_at": "2026-11-28T05:40:15+00:00",
+   "sha256": "9ab85c66b54cca6af0dfbfb3848436c59668024804c403bb519d0dfcd62ffa85",
+   "product": {
+    "shop": "COREX",
+    "shop_id": "corex",
+    "title": "Sony WH-CH720N Wireless Headphones | Bluetooth",
+    "url": "https://corexlb.net/products/sony-wh-ch720n-wireless-headphones-bluetooth",
+    "vendor": "corex",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:40:15+00:00",
+    "variants": [
+     {
+      "variant_id": "55530910220607",
+      "title": "blue",
+      "options": {
+       "Color": "blue"
+      },
+      "price": "12.50",
+      "compare_at": "18.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://corexlb.net/products/sony-wh-ch720n-wireless-headphones-bluetooth?variant=55530910220607"
+     },
+     {
+      "variant_id": "55530910253375",
+      "title": "Black",
+      "options": {
+       "Color": "Black"
+      },
+      "price": "12.50",
+      "compare_at": "18.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://corexlb.net/products/sony-wh-ch720n-wireless-headphones-bluetooth?variant=55530910253375"
+     },
+     {
+      "variant_id": "55530910286143",
+      "title": "Beige",
+      "options": {
+       "Color": "Beige"
+      },
+      "price": "12.50",
+      "compare_at": "18.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://corexlb.net/products/sony-wh-ch720n-wireless-headphones-bluetooth?variant=55530910286143"
+     }
+    ],
+    "description": "Sony WH-CH720N wireless headphones — Active Noise Cancellation, Bluetooth 5.0, lightweight foldable design with soft ear cushions and adjustable headband, long battery with quick charging, deep bass and crisp vocals. Cash on delivery in Lebanon at COREX.\nFeatures\nActive Noise Cancellation\nWireless Bluetooth 5.0 — stable pairing.\nLightweight foldable design — soft cushions, adjustable headband.\nQuick charging — hours of playback with minutes of charge.\nDeep bass and clear sound quality\nSpecifications\nBrand\nSony (WH-CH720N)\nBluetooth\n5.0\nANC\nYes\nWhat's in the Box\n1× Sony WH-CH720N Wireless Headphones"
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:40:16+00:00",
+   "sha256": "41fbab37a2efb7afb2adf274d8a1de0c9eb16f65d968e0cd524305308a524df6",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Sony WH-CH520, Wireless Headphones Bluetooth On-Ear Headset with Microphone",
+    "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone",
+    "vendor": "Sony",
+    "product_type": "Audio",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:40:16+00:00",
+    "variants": [
+     {
+      "variant_id": "41750795911300",
+      "title": "White / Brand New",
+      "options": {
+       "Color": "White",
+       "Product Condition": "Brand New"
+      },
+      "price": "42.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "WH-CH520-white",
+      "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?variant=41750795911300",
+      "condition": "Brand New"
+     },
+     {
+      "variant_id": "41750795845764",
+      "title": "Black / Brand New",
+      "options": {
+       "Color": "Black",
+       "Product Condition": "Brand New"
+      },
+      "price": "42.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "WH-CH520-Black",
+      "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?variant=41750795845764",
+      "condition": "Brand New"
+     },
+     {
+      "variant_id": "52885514944644",
+      "title": "Blue / Brand New",
+      "options": {
+       "Color": "Blue",
+       "Product Condition": "Brand New"
+      },
+      "price": "42.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "WH-CH520-Blue",
+      "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?variant=52885514944644",
+      "condition": "Brand New"
+     },
+     {
+      "variant_id": "52885515010180",
+      "title": "Pink / Brand New",
+      "options": {
+       "Color": "Pink",
+       "Product Condition": "Brand New"
+      },
+      "price": "42.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "WH-CH520-Pink",
+      "url": "https://mobileleb.com/products/sony-wh-ch520-wireless-headphones-bluetooth-on-ear-headset-with-microphone?variant=52885515010180",
+      "condition": "Brand New"
+     }
+    ],
+    "description": "LONG BATTERY LIFE: With up to 50-hour battery life and quick charging, you’ll have enough power for multi-day road trips and long festival weekends. (USB Type-C Cable included)\nHIGH QUALITY SOUND: Great sound quality customizable to your music preference with EQ Custom on the Sony | Headphones Connect App.\nLIGHT & COMFORTABLE: The lightweight build and swivel earcups gently slip on and off, while the adjustable headband, cushion and soft ear pads give you all-day comfort.\nCRYSTAL CLEAR CALLS: A built-in microphone provides you with hands-free calling. No need to even take your phone from your pocket.\nMULTIPOINT CONNECTION: Quickly switch between two devices at once.\nAVAILABLE IN SIX COLORS: With Black, Blue, White, Pink, Yellow and Cappuccino to choose from, find the color that suits you best.\nGIVE YOUR MUSIC A BOOST: Boost the quality of compressed music files and enjoy streaming music with high quality sound through DSEE.\nFIND YOUR HEADPHONES WITH FAST PAIR: Easily find your missing headphones by sound or check their last known location in Google’s Find My Device app on your smartphone.\nEASY CONNECTION TO YOUR PC: Swift Pair makes it quick and easy to pair your headphones with your Windows 10 computer via Bluetooth."
+   }
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/sony-wh-ch520-headphones",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:40:17+00:00",
+   "sha256": "ec3a9b8fab6c252297ea6af28411b21882f2282d3a3e49662285004fdf95db65",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Sony WH-CH520 headphones",
+    "url": "https://classic-phones.com/products/sony-wh-ch520-headphones",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:40:17+00:00",
+    "variants": [
+     {
+      "variant_id": "45288258371819",
+      "title": "Blue",
+      "options": {
+       "Color": "Blue"
+      },
+      "price": "35.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/sony-wh-ch520-headphones?variant=45288258371819"
+     },
+     {
+      "variant_id": "45288261976299",
+      "title": "White",
+      "options": {
+       "Color": "White"
+      },
+      "price": "31.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/sony-wh-ch520-headphones?variant=45288261976299"
+     },
+     {
+      "variant_id": "46841537626347",
+      "title": "Yellow",
+      "options": {
+       "Color": "Yellow"
+      },
+      "price": "31.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/sony-wh-ch520-headphones?variant=46841537626347"
+     }
+    ],
+    "description": "Sony WH-CH520 Compact Easy Carrying Wireless Bluetooth On-Ear Headphones with Microphone (Black) Bundle with Protective Hard Case for Headphones (2 Items)\nBrand\nSony\nColor\nBlack\nForm Factor\nOn Ear\nConnectivity Technology\nWireless\nWireless Communication Technology\nBluetooth\nAbout this item\nBundle Includes: Sony WH-CH520 Compact Easy Carrying Wireless Bluetooth On-Ear Headphones with Microphone (Black), and Hard Case for Headphones\nDesigned to be Lightweight: Designed with comfort in mind, the WH-CH520 headphones are lightweight and feature soft earpads, additional head cushion, and silent joints so you can enjoy your favorite music and podcasts all day long\nEasy Hands Free-Calling: Conversation flows freely with easy hands-free calling, thanks to the built-in microphone. No need to even take your phone from your pocket\nMultipoint Connection: For total convenience, this Bluetooth headphone can be paired with two Bluetooth devices at the same time. Simply switch from a video or song on your laptop to a call on your cellphone, so that you’ll never miss a call\nFast Pair: Easily find your missing headphones by sound or check their last known location in Google’s Find My Device app on your smartphone\nNote: Products with electrical plugs are designed for use in the US. Outlets and voltage differ internationally and this product may require an adapter or converter for use in your destination. Please check compatibility before purchasing.\nProduct information\nProduct Dimensions\n10.4 x 8"
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://wincell.store/products/belkin-boostcharge-compact-charger-20w-usb-c-power-delivery-fast-charger-power",
+   "shop_id": "wincell",
+   "observed_at": "2026-11-28T05:40:17+00:00",
+   "sha256": "3190c9a88561aa4ba84f683b6ad6958458ada65ff1927eb8a1db34581ea53f4f",
+   "excerpt": "Belkin BoostCharge Compact Charger (20W) USB-C Power Delivery Fast Cha – WinCell\nSkip to content\nHappy Independence Day, Lebanon\n/\n83 years of independence\nOrder by 22 December for delivery before Christmas/\nMerry Christmas from all of us at Win Cell\nBlack Friday ends in\nBlack Friday is over. Thank you, Lebanon.\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nHome\nOur story\nShop\nShop by category\n00\nAll products\n464\nAll products\n01\nPhones\n18\nPhones\n02\nAudio\n107\nAudio\n03\nwatches & gadgets\n166\nwatches & gadgets\n04\nchargers & power\n88\nchargers & powe",
+   "quoted": []
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://abedtahan.com/pages/contact",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:40:18+00:00",
+   "sha256": "01e4460f5dee4b892d2751200bbb499bde447a74e4178b9f636117451a1d4f8f",
+   "excerpt": "Contact\n– Abed Tahan\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & Crepe Makers\nIce Cube, Ice Cream & Yoghurt Makers\nSaj Machines\nL",
+   "quoted": []
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://corexlb.net/",
+   "shop_id": "corex",
+   "observed_at": "2026-11-28T05:40:19+00:00",
+   "sha256": "b9c7db707b080d2e94f20971f81313a0f4a88aff5afb9827472115bb80a4d49c",
+   "excerpt": "COREX\nSkip to content\nHOCO · Anker · Green Lion · Acefast · Porodo\nSame-day dispatch on orders before 3pm\nCOREX\nShop all\nCharging\nCases & Protection\nSound & Audio\nWatches & Accessories\nCar & Moto\nCreator kit\nComputer\nLifestyle & More\nHome & Office\nBy device\niPhone 17 series\niPhone 16 Pro Max\niPhone 15 Pro Max\nGalaxy S26 Ultra\nGalaxy S25 Ultra\nGalaxy Z Fold 7\nAll devices\nCharging\nAudio\nTop sellers\nContact\nSearch\nShop all\nShow Shop all submenu\nCharging\nCases & Protection\nSound & Audio\nWatches & Accessories\nCar & Moto\nCreator kit\nComputer\nLifestyle & More\nHome & Office\nBy device\nShow By device submenu\niPhone 17 series\niPhone 16 Pro Max\niPhone 15 Pro Max\nGalaxy S26 Ultra\nGalaxy S25 Ultra\nGalaxy Z Fold 7\nAll devices\nCharging\nAudio\nTop sellers\nContact\nMore\nSearch\nAccount\nCart\n0\nPhone & tech accessories\nGear\nthat\nkeeps\nup\nCases, charging, audio and creator kit from HOCO, Anker, Green Lion, Acefast and Porodo. Delivered anywhere in Lebanon.\nShop allFind your phone\n24hDispatch\n7 daysReturns\nCODPay on delivery\nFast delivery\nAll over Lebanon\nCash on delivery\nPay when it arrives\nGenuine brands\nHOCO, Anker, Green Lion\nWhatsApp support\nWe reply fast\nFind your fit\nShop by device\niPhone\nSamsung\n‹\n›\nGalaxy A371\nGalaxy A571\nGalaxy S23 Ultra2\nGalaxy S24 Ultra3\nGalaxy S252\nGalaxy S25 Ultra14\nGalaxy S25+5\nGalaxy S262\nGalaxy S26 Ultra25\nGalaxy Z Flip 73\nGalaxy Z Fold 78\nGalaxy Z Fold 88\nGalaxy Z Fold 8 Ultra8\niPhone 1111\niPhone 11 Pro11\niPhone 11 Pro Max11\niPhone 1218\niPhone 12 mini9\niPhone 12 Pro",
+   "quoted": []
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://www.classic-phones.com/policies/shipping-policy",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:40:19+00:00",
+   "sha256": "30de9f36095efe6342c2af0452813924beccd8e9d65ed3ff948424b031505fe0",
+   "excerpt": "Shipping policy\nSkip to content\nDelivery Available All Over Lebanon\nFacebook\nInstagram\nShop All\nCameras\nCameras\nGo to Cameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nLaptops\nLaptops\nGo to Laptops\nMacbook\nNew\nUsed\nTablets\nTablets\nGo to Tablets\nApple\nSamsung\nXiaomi\nBlackview\nModio\nSmart Watch\nSmart Watch\nGo to Smart Watch\nApple\nSamsung\nFitbit\nHuawei\nAmazfit\nXiaomi\nGreen Lion\nProdo\nKieslect\nAccessories\nAccessories\nGo to Accessories\nAdapters & Cables\nStorage\nKids\nScooters\nGaming\nGaming\nGo to Gaming\nNintendo\nPS\nXBOX\nOthers\nPersonal Care\nPersonal Care\nGo to Personal Care\nHome Accessories\nPerfume\nMassage\nOthers\nTech Gadgets\nTech Gadgets\nGo to Tech Gadgets\nKits (Cleaning, Repair...)\nPower Devices\nSmart Devices\nRouters\nBags\nKindle\nStands\nCalculator\nHandy Phones\nAudio\nAudio\nGo to Audio\nEarphones\nSpeakers\nHeadphones\nEarbuds\nMicrophones\nCases\nCases\nGo to Cases\nApple\nSamsung\nOthers\nWatch Accessories\nKeyboards & Mouses\nOthers\nBlogs\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nLebanon\nFast Delivery\nFacebook\nInstagram\nLog in\nSearch\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nSearch\nLog in\n0\n00 items\nSubtotal\n$0\nShop All\nCameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nGo to Cameras\nLaptops\nMacbook\nNew\nUsed\nGo to Laptops\nTablets\nApple\nSamsung\nXiaomi\nBlack",
+   "quoted": []
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://mobileleb.com/meta.json",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:40:27+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"Mobileleb\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"mobileleb.com\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T6",
+   "kind": "page",
+   "url": "https://abedtahan.com/meta.json",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:40:27+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"Abed Tahan\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"abedtahan.com\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T7",
+   "kind": "page",
+   "url": "https://mobileleb.com/",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:40:30+00:00",
+   "sha256": "f7379094340ac980df3cd545433a238d111d0bec2335fc7a200eb12ca297fbb8",
+   "excerpt": "Mobileleb.com | Mobile Price in Lebanon, Laptop, PS5\nCell Phones & Tablets\nCell Phones\nSamsung\nHonor\nXiaomi\nTecno\nApple\nFeature Phones\nInfinix\nApple Open Box\nGoogle\nSamsung Open Box\nOppo\nVivo\nMotorola\nBlackview\nitel\nRealme\nZTE nubia\nOnePlus\nFreeYond\nNokia\nHuawei\nAlcatel\nHiSense\nDoogee\nTCL\nBlackBerry\nCAT\nUmidigi\nI-Plus\nTablets, iPads & eReaders\nApple iPads\nAndroid Tablets\nWindows Tablets\neReaders\nDrawing Tablets & Accessories\nSamsung\nBlackview\nRed Magic Gaming Tablets\nLenovo\nAmazon\nAlcatel\nMicrosoft\ni-Plus\nHuawei\nG-TiDE\nWearables, Smart Watches & Trackers\nCell Phone Accessories\nMobile Phone Cases\nScreen Protectors\nCharging & Data Cables\nChargers & Power Adapters\nMobile Gaming Controllers\nMobiles & Tablets Cables & Connectors\nMounts & Stands\nCar Accessories\nMobile Phone Accessories\nMobile Phone Camera Accessories\nLED Ring Lights\nGimbals & Camera Stabilizers\nSelfie Sticks, Tripods & Monopods\niPad & Tablet Accessories\nKeyboards\nStylus Pens\nCovers & Screen Protectors\nTablet Computer Docks & Stands\nTablet Computer Parts\nComputers & Parts\nApple Accessories\nKeyboards & Mice\nTime Capsule\nAirPods & Audio\nAll Laptops\nHP Laptops\nLenovo Laptops\nNEC Laptops\nAcer Laptops\nMacBooks, iMacs & Mac mini\nMac Studio\nDell Laptops\nAsus Laptops\nMSI Laptops\nGigabyte Laptops\nRazer Laptops\nGateway Laptops\nToshiba Laptops\nMicrosoft Surface\nLaptops Open Box\nDesktop Computers\nMini PCs\nDesktops\nAll-in-One Computers\nP.O.S Systems\nCore Components\nGraphics Cards\nCPU / Computer Processors\nRAM\nMotherboards\nAudio ",
+   "quoted": []
+  },
+  {
+   "obs": "T8",
+   "kind": "page",
+   "url": "https://abedtahan.com/",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:40:31+00:00",
+   "sha256": "1a1c1cdb4cec15ad11f88b050735f7f8133fc81a240ea960f95b6710cf15cd48",
+   "excerpt": "Lebanon's Leading Electronics & Appliances Retailer | Abed Tahan\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & Crepe Makers\nIce Cub",
+   "quoted": [
+    {
+     "quote": "Fast delivery across Lebanon",
+     "found": true
+    },
+    {
+     "quote": "Fast delivery across Lebanon",
+     "found": true
+    }
+   ]
+  }
+ ]
+}
