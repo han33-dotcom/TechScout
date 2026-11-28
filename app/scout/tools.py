@@ -41,6 +41,8 @@ class Tools:
         self._terms_lock = threading.Lock()
         self._opened: dict[str, str] = {}   # product URL (no query) -> observation ID
         self.leads: list[dict] = []          # search leads, kept for an honest fallback answer
+        self.attach_terms = True             # False in the listed-price scope: delivery terms are not read
+        self.searches: list[dict] = []       # per search: shops asked, answered and failed, top hits (diagnostics)
 
     # ---- dispatch ----------------------------------------------------------------------------
     def run_many(self, calls: list[dict]) -> list[dict]:
@@ -76,6 +78,11 @@ class Tools:
             return dict(error='empty_query', reason='write a short product query, e.g. "galaxy s24 ultra 256"')
         report = self.search_engine.search(query, shop_ids=shop_ids, deadline=self.deadline)
         hits = report.hits[:15]
+        self.searches.append(dict(query=query, seconds=report.seconds, local_s=report.local_s,
+                                  slowest_live=list(report.slowest), shops_asked=report.shops_asked,
+                                  shops_answered=report.shops_answered, failed=dict(report.failures),
+                                  top=[dict(shop=h.shop_id, title=h.title[:80], price=_money(h.price), url=h.url)
+                                       for h in hits]))
         with self._terms_lock:
             for h in hits[:5]:
                 if all(h.url != x['url'] for x in self.leads):
@@ -94,10 +101,11 @@ class Tools:
         chosen, seen = [], set()
         from app.scout.verify import USED
         # Strongest text match first; listings marked used or open box after new ones; in stock first.
-        for h in sorted(hits, key=lambda h: (-round(score(query, h.title), 2), bool(USED.search(h.title)),
+        rank = self.search_engine.rank
+        for h in sorted(hits, key=lambda h: (-round(rank(query, h.title), 2), bool(USED.search(h.title)),
                                              h.available is False)):
             key = h.url.split('?')[0]
-            if score(query, h.title) < 0.6 or key in seen or key in self._opened:
+            if rank(query, h.title) < 0.6 or key in seen or key in self._opened:
                 continue
             seen.add(key)
             chosen.append(h.url)
@@ -136,30 +144,35 @@ class Tools:
 
     def open(self, url: str) -> dict:
         shop = self._check_scope(url)
-        product = None
+        product, page_parsed = None, False
         if shop is not None and shop.platform == 'shopify' and '/products/' in url:
             product = Shopify(self.web, shop).product(url, deadline=self.deadline)
         elif shop is not None and shop.platform == 'woocommerce':
             try:
                 product = WooCommerce(self.web, shop).product(url, deadline=self.deadline)
-            except FetchError:
+            except FetchError as exc:
+                if exc.code in ('RATE_LIMITED', 'RESTING'):
+                    raise   # a shop that said "slow down" is not asked again through another page
                 product = None
         if product is None:
             page = self.web.get(url, accept='html', deadline=self.deadline)
             product, parsed = product_from_html(page, shop or _Anon(url))
+            page_parsed = product is not None
             if product is None:
                 obs = self.evidence.add('T', kind='page', url=page.final_url, shop_id=getattr(shop, 'shop_id', None),
                                         observed_at=page.observed_at, sha256=page.sha256, text=parsed.text,
                                         meta=dict(title=parsed.title))
                 return dict(obs=obs.obs_id, kind='page', note='No structured product data; read the text.',
                             title=parsed.title, url=page.final_url, text=_window(parsed.text, 0, PAGE_CHARS))
+        page_text = parsed.text[:30000] if page_parsed else ''
         obs = self.evidence.add('P', kind='product', url=product.url, shop_id=product.shop_id,
                                 observed_at=product.observed_at, sha256=product.sha256,
-                                text=product_text(product), product=product)
+                                text=product_text(product),
+                                product=product, meta=dict(page_text=page_text) if page_text else {})
         self._opened[product.url.split('?')[0]] = obs.obs_id
         shown = product.compact()
         out = dict(obs=obs.obs_id, kind='product', **shown)
-        if shop is not None:
+        if shop is not None and self.attach_terms:
             terms = self.terms_for(shop)
             if terms:
                 out['shop_terms'] = terms

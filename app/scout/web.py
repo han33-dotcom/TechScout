@@ -99,6 +99,37 @@ class _Pinned(httpcore2.NetworkBackend):
         return self._backend.connect_tcp(self._address, port, timeout, local_address, socket_options)
 
 
+# Shops that answered "slow down" (HTTP 429), remembered across runs in this process, per host.
+# Several 429s within a few seconds are one episode (parallel requests hit the same limiter). A second
+# episode within the memory window rests the whole host for SLOWDOWN_REST_S: nothing is sent there. A
+# later success does not clear the memory; it expires with time.
+SLOWDOWN_REST_S = 600.0
+SLOWDOWN_EPISODE_S = 5.0
+_SLOWED: dict[str, list[float]] = {}   # host -> [episodes, last episode at, rest until]
+_SLOWED_LOCK = threading.Lock()
+
+
+def _slow_key(url: str) -> str:
+    return (urlsplit(url).hostname or '').lower()
+
+
+def resting(url: str, now: float) -> bool:
+    with _SLOWED_LOCK:
+        state = _SLOWED.get(_slow_key(url))
+        return bool(state and state[2] > now)
+
+
+def _note_slowdown(url: str, now: float) -> None:
+    with _SLOWED_LOCK:
+        state = _SLOWED.setdefault(_slow_key(url), [0, float('-inf'), 0.0])
+        if now - state[1] > SLOWDOWN_REST_S:
+            state[0] = 0
+        if state[0] == 0 or now - state[1] > SLOWDOWN_EPISODE_S:
+            state[0], state[1] = state[0] + 1, now
+        if state[0] >= 2:
+            state[2] = now + SLOWDOWN_REST_S
+
+
 @dataclass
 class _HostState:
     lock: threading.Lock = field(default_factory=threading.Lock)
@@ -242,7 +273,11 @@ class SafeWeb:
     def _once(self, url: str, accept: str, deadline: float | None, started: float, original: str, *,
               allow_status: bool = False, count_robots: bool = True, read_timeout: float | None = None) -> Page | str:
         host = _host(url)
+        if resting(url, self._clock()):
+            raise FetchError('RESTING', 'the shop asked us to slow down; it is not asked again for a while')
         self._pace(host, deadline, count=count_robots)
+        if resting(url, self._clock()):   # it may have said "slow down" while this request waited its turn
+            raise FetchError('RESTING', 'the shop asked us to slow down; it is not asked again for a while')
         address = self._address(host)  # checked even when a test supplies the transport
         timeout = read_timeout or READ_TIMEOUT_S
         if deadline is not None:
@@ -281,6 +316,7 @@ class SafeWeb:
         entry['bytes'] = len(body)
         if not allow_status:
             if status == 429:
+                _note_slowdown(url, self._clock())
                 raise FetchError('RATE_LIMITED', 'the shop asked us to slow down')
             if 400 <= status < 500:
                 raise FetchError('HTTP_4XX', f'the shop answered {status}')

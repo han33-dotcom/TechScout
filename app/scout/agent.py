@@ -34,7 +34,7 @@ from app.scout.verify import (CONDITIONAL_FREE, CheckedOffer, Final, OfferClaim,
                               currency_amounts)
 from app.scout.web import SafeWeb
 
-PROMPT_VERSION = 'scout-1'
+PROMPT_VERSION = 'scout-2'
 MAX_DATA_BYTES = 88_000
 
 
@@ -124,6 +124,33 @@ request_kind: "exact", "needs" or "link". budget_max_usd: the buyer's hard maxim
 """
 
 
+def listed_prompt() -> str:
+    """The loop's prompt for the listed-price scope: no delivery or VAT research, and proof for a
+    requirement must come from the offered product's own listing."""
+    text = PROMPT
+    start = text.index('3. For the shops you will recommend for delivery')
+    end = text.index('4. Finish as soon as you have a well-supported answer.')
+    text = text[:start] + LISTED_STEP + text[end:]
+    start = text.index('- Delivery (when the buyer wants delivery)')
+    end = text.index('- price_quote: only when the observation')
+    text = text[:start] + ('- Leave delivery_obs, delivery_quote, delivery_fee_usd, free_delivery_over_usd and vat_quote null.\n'
+                           '- A requirement is "met" only with a quote from this same product (its P<n>, or a read of\n'
+                           '  its own page); a quote from another product does not count.\n') + text[end:]
+    text = text.replace('what is confirmed, what is not (delivery fee, new condition, branch\nstock...)',
+                        'what is confirmed, what is not (new condition, a requirement, branch stock...)')
+    return text + ('\nAlways say once in final.message that prices are listed prices before delivery and VAT.\n')
+
+
+LISTED_STEP = """3. Scope: you report the shop's listed price, before delivery and VAT. Do not research delivery fees,
+   VAT or shipping policies, and do not call shop_info for them. Spend your turns on finding the right
+   product at several shops and confirming condition and the buyer's requirements from each listing.
+   New is the default. When a shop does not state the condition, still propose the offer with condition
+   "unknown" and say in final.message that you could not verify it is new because the shop does not say.
+   Propose used, refurbished or open-box listings only when the buyer says they accept them, and name
+   the condition.
+"""
+
+
 @dataclass
 class RunConfig:
     max_turns: int = 7
@@ -150,6 +177,7 @@ class RunResult:
     fallback: bool = False
     warnings: list[str] = field(default_factory=list)
     observations: list[dict] = field(default_factory=list)
+    searches: list[dict] = field(default_factory=list)
 
     def public(self) -> dict:
         return dict(run_id=self.run_id, request=self.request, status=self.status, message=self.message,
@@ -157,13 +185,15 @@ class RunResult:
                     turns=self.turns, tool_calls=self.tool_calls, model_calls=self.model_calls,
                     retailer_requests=self.retailer_requests, seconds=self.seconds, spend=self.spend,
                     fallback=self.fallback, warnings=self.warnings, prompt_version=PROMPT_VERSION,
-                    observations=self.observations)
+                    observations=self.observations, searches=self.searches)
 
 
 class ScoutAgent:
     def __init__(self, provider, *, web: SafeWeb | None = None, search: ShopSearch | None = None,
                  budget_factory=None, config: RunConfig | None = None, clock=time.monotonic,
-                 extra_hosts: set[str] | None = None):
+                 extra_hosts: set[str] | None = None, scope: str = 'listed'):
+        self.scope = scope
+        self.prompt = listed_prompt() if scope == 'listed' else PROMPT
         self.provider = provider
         self.web = web or SafeWeb()
         self.search = search or ShopSearch(self.web)
@@ -186,6 +216,7 @@ class ScoutAgent:
         start = self.clock()
         evidence = Evidence()
         tools = Tools(self.web, self.search, evidence, extra_hosts=self.extra_hosts)
+        tools.attach_terms = self.scope != 'listed'
         shops = tools.shops
         budget, job = self.budget_factory(run_id) if self.budget_factory else (None, None)
         data = dict(
@@ -212,7 +243,7 @@ class ScoutAgent:
                                                 turns_left=self.config.max_turns - len(turns) - 1,
                                                 must_finish_now=must_finish))
                 t0 = self.clock()
-                result = self.provider.generate(PROMPT, body, Step, budget=budget)
+                result = self.provider.generate(self.prompt, body, Step, budget=budget)
                 model_calls.append(dict(turn=len(turns) + 1, attempt=attempt, status=result.status,
                                         ms=round((self.clock() - t0) * 1000), usage=_usage(result.usage),
                                         must_finish=must_finish))
@@ -264,12 +295,14 @@ class ScoutAgent:
         if fallback:
             final = fallback_final(request, evidence, tools.leads)
             warnings.append('The model did not finish; the answer lists related listings read in this run.')
-        offers = check_offers(final, evidence, shops, request)
+        offers = check_offers(final, evidence, shops, request, scope=self.scope)
         message = final.message
         bad = unsupported_amounts(message, offers, request, evidence)
         if bad:
             warnings.append('The model summary mentioned amounts that were not verified: ' + ', '.join(bad))
             message = deterministic_message(final, offers)
+        if self.scope == 'listed':
+            message = with_contract_notes(message, offers)
         status = final.status
         if status == 'offers' and not any(o.tier in ('best', 'alternative') for o in offers):
             status = 'no_match' if not offers else 'checked_unavailable'
@@ -279,7 +312,7 @@ class ScoutAgent:
         return RunResult(run_id, request, status, message, final.question, offers,
                          [c.model_dump() for c in final.offers], turns, tools.calls, model_calls,
                          self.web.requests, round(elapsed(), 1), spend, fallback, warnings,
-                         observations=snapshot(evidence, final))
+                         observations=snapshot(evidence, final), searches=tools.searches)
 
 
 def snapshot(evidence: Evidence, final: Final) -> list[dict]:
@@ -461,6 +494,22 @@ def unsupported_amounts(message: str, offers: list[CheckedOffer], request: dict,
         if not any(o.delivery_fee == 0 for o in offers):
             bad.append(m.group(0))
     return bad
+
+
+SCOPE_NOTE = 'Prices are the listed prices, before VAT and delivery.'
+
+
+def with_contract_notes(message: str, offers: list[CheckedOffer]) -> str:
+    """The two statements buyer contract v2 requires, added by code so they never depend on the model:
+    which matching offers have no stated condition, and that prices are before VAT and delivery."""
+    unstated = list(dict.fromkeys(o.shop for o in offers if o.tier == 'best' and o.condition == 'unknown'))
+    if unstated:
+        message = (message.rstrip() + "\nI couldn't verify these are new; the shop doesn't say: "
+                   + ', '.join(unstated[:5]) + '.')
+    low = message.lower()
+    if not ('before' in low and 'vat' in low and 'delivery' in low):
+        message = message.rstrip() + '\n' + SCOPE_NOTE
+    return message
 
 
 def deterministic_message(final: Final, offers: list[CheckedOffer]) -> str:

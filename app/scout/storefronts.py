@@ -84,6 +84,7 @@ class Hit:
     currency: str | None
     available: bool | None
     via: str
+    match: float = 0.0   # how well a local index row matched (title, variant titles and SKUs)
 
     def compact(self) -> dict:
         return dict(shop=self.shop_name, shop_id=self.shop_id, title=self.title, url=self.url,
@@ -350,9 +351,12 @@ def product_from_html(page: Page, shop) -> tuple[Product | None, pages.ParsedPag
     parsed = pages.parse_html(page.text(), page.final_url)
     found = pages.jsonld_products(parsed.jsonld)
     variants, title, condition, vendor = [], parsed.title, None, None
+    long_text = ''
     for item in found:
         name = str(item.get('name') or '')[:200]
         title = title or name
+        if isinstance(item.get('description'), str) and len(item['description']) > len(long_text):
+            long_text = item['description']
         brand = item.get('brand')
         vendor = vendor or (brand.get('name') if isinstance(brand, dict) else (str(brand) if brand else None))
         for i, offer in enumerate(pages.offers_of(item)):
@@ -364,9 +368,10 @@ def product_from_html(page: Page, shop) -> tuple[Product | None, pages.ParsedPag
                 title=name or title, options={k: str(item[k])[:60] for k in ('color', 'size', 'material') if item.get(k)},
                 price=money(offer.get('price') or (offer.get('priceSpecification') or {}).get('price')
                             if isinstance(offer.get('priceSpecification') or {}, dict) else offer.get('price')),
-                currency=offer.get('priceCurrency'), available=(availability in ('InStock', 'LimitedAvailability',
-                                                                                 'OnlineOnly', 'InStoreOnly')
-                                                                 if availability else None),
+                currency=offer.get('priceCurrency'),
+                available=(None if availability in ('InStoreOnly', 'PreOrder', 'PreSale', 'BackOrder')
+                           else availability in ('InStock', 'LimitedAvailability', 'OnlineOnly')
+                           if availability else None),
                 stock_text=availability or None, sku=str(offer.get('sku') or item.get('sku') or '')[:80] or None,
                 url=offer.get('url') if isinstance(offer.get('url'), str) else None))
     if not variants:
@@ -382,7 +387,8 @@ def product_from_html(page: Page, shop) -> tuple[Product | None, pages.ParsedPag
     return Product(shop.shop_id, shop.name, getattr(shop, 'platform', 'html'), variants[0].variant_id, title,
                    page.final_url, 'schema_org_jsonld' if found else 'opengraph', page.final_url, page.sha256,
                    page.observed_at, vendor=vendor, condition=condition,
-                   description=parsed.meta.get('description', '')[:600], variants=variants), parsed
+                   description=(long_text or parsed.meta.get('description', ''))[:MAX_DESCRIPTION],
+                   variants=variants), parsed
 
 
 def as_dict(obj) -> dict:

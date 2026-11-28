@@ -13,12 +13,14 @@ claim a price or stock state.
 """
 from __future__ import annotations
 
+from bisect import bisect_right
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, wait
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 import json
+import math
 from pathlib import Path
 import re
 import sys
@@ -33,6 +35,7 @@ ROOT = Path(__file__).resolve().parents[2]
 CACHE_DIR = ROOT / 'var' / 'scout-catalog'
 INDEX_MAX_AGE = timedelta(days=2)
 SEARCH_SECONDS = 9.0  # shops that have not answered by then are reported as SLOW and skipped
+LOCAL_SEARCH_SECONDS = 4.0  # the same limit when most shops are searched in a local catalog
 TOKEN = re.compile(r'[a-z0-9]+(?:\.[0-9]+)?')
 STOP = {'the', 'a', 'an', 'and', 'or', 'for', 'with', 'new', 'of', 'in', 'to', 'by', 'gb', 'inch'}
 
@@ -58,21 +61,43 @@ def accessory_penalty(query: str, title: str) -> float:
     return 0.6
 
 
-def score(query: str, title: str, extra: str = '') -> float:
+class WordWeights:
+    """How distinctive each word is across all indexed product titles (inverse document frequency).
+
+    "airpods" appears in few titles and decides a match; "pro" and "2" appear everywhere and decide
+    little. A word no shop lists is treated as rare, not as infinitely rare, so one unknown part
+    number does not hide every listing of the product."""
+
+    def __init__(self, indexes: list['PreparedIndex']):
+        self.n = sum(len(i.rows) for i in indexes)
+        self.df: dict[str, int] = defaultdict(int)
+        for index in indexes:
+            for word, rows in index.lookup.items():
+                self.df[word] += len(rows)
+        self.floor = max(1.0, self.n * 0.002)
+
+    def __call__(self, word: str) -> float:
+        return math.log(1 + self.n / (1 + max(self.df.get(word, 0), self.floor))) if self.n else 1.0
+
+
+def score(query: str, title: str, extra: str = '', weight=None) -> float:
     """Share of the query's distinctive words that appear in the title (extra text counts half),
-    scaled down for accessory listings the buyer did not ask for."""
+    scaled down for accessory listings the buyer did not ask for. With ``weight`` (word -> weight),
+    rare words count more than common ones."""
     q = [t for t in tokens(query) if t not in STOP] or tokens(query)
     if not q:
         return 0.0
     words, more = set(tokens(title)), set(tokens(extra))
     joined = ''.join(tokens(title))
-    got = 0.0
+    got = total = 0.0
     for t in q:
+        w = weight(t) if weight else 1.0
+        total += w
         if t in words or (len(t) >= 4 and t in joined):
-            got += 1
+            got += w
         elif t in more:
-            got += 0.5
-    return got / len(q) * accessory_penalty(query, title)
+            got += 0.5 * w
+    return got / total * accessory_penalty(query, title) if total else 0.0
 
 
 class PreparedIndex:
@@ -98,28 +123,50 @@ class PreparedIndex:
             self.more_words.append(set(more))
             for w in words | set(more):
                 self.lookup[w].append(i)
+        self.vocabulary = list(self.lookup)
+        # All words in one string, so "which words contain this code" is one fast scan, not a Python loop.
+        self._blob = '\n'.join(self.vocabulary)
+        self._starts, at = [], 0
+        for word in self.vocabulary:
+            self._starts.append(at)
+            at += len(word) + 1
 
-    def best(self, query: str, k: int) -> list[tuple[float, dict]]:
+    def containing(self, part: str) -> list[str]:
+        """Index words that contain ``part`` (a partial model code such as "ls27cg55")."""
+        out, pos = [], self._blob.find(part)
+        while pos >= 0:
+            i = bisect_right(self._starts, pos) - 1
+            out.append(self.vocabulary[i])
+            pos = self._blob.find(part, self._starts[i] + len(self.vocabulary[i]) + 1)
+        return out
+
+    def best(self, query: str, k: int, weight=None) -> list[tuple[float, dict]]:
         q = [t for t in tokens(query) if t not in STOP] or tokens(query)
         if not q:
             return []
         wanted = set(tokens(query))
+        weights = [weight(t) if weight else 1.0 for t in q]
+        total = sum(weights) or 1.0
         candidates = set()
         for t in q:
             candidates.update(self.lookup.get(t, ()))
+            if len(t) >= 4:  # partial model codes: "ls27cg55" finds "ls27cg552emxue", "mly33" finds "mly33pa"
+                for word in self.containing(t):
+                    if word != t:
+                        candidates.update(self.lookup[word])
         scored = []
         for i in candidates:
             words, joined, more = self.title_words[i], self.joined[i], self.more_words[i]
             got = 0.0
-            for t in q:
+            for t, w in zip(q, weights):
                 if t in words or (len(t) >= 4 and t in joined):
-                    got += 1
-                elif t in more:
-                    got += 0.5
+                    got += w
+                elif t in more or (len(t) >= 4 and any(t in m for m in more)):
+                    got += 0.5 * w
             extra = (words & ACCESSORY) - wanted
             penalty = 1.0 if not extra else (0.35 if 'for' in words or 'compatible' in words or len(extra) >= 2
                                              else 0.6)
-            scored.append((got / len(q) * penalty, self.rows[i]))
+            scored.append((got / total * penalty, self.rows[i]))
         scored.sort(key=lambda x: -x[0])
         return scored[:k]
 
@@ -149,11 +196,18 @@ class SearchReport:
     shops_answered: int
     failures: dict[str, str]
     seconds: float
+    local_s: float = 0.0                     # time spent in local index and catalog lookups
+    slowest: tuple = ()                      # the slowest live shops: (shop_id, seconds)
 
 
 class ShopSearch:
     def __init__(self, web: SafeWeb, shops: list | None = None, *, cache_dir: Path = CACHE_DIR,
-                 now=lambda: datetime.now(timezone.utc), workers: int = 12):
+                 now=lambda: datetime.now(timezone.utc), workers: int = 12, local_dir: Path | None = None,
+                 weights: 'WordWeights | None' = None):
+        # local_dir: a folder of full shop catalogs (title, price, stock per product). A shop that has a
+        # file there is searched locally instead of through its live search endpoint.
+        self.local_dir = Path(local_dir) if local_dir else None
+        self.weights = weights   # how distinctive each word is; built by warm() or passed in
         self.web = web
         self.shops = [s for s in (shops if shops is not None else shop_dir.load()) if s.enabled]
         self.cache_dir, self.now, self.workers = Path(cache_dir), now, workers
@@ -169,10 +223,34 @@ class ShopSearch:
         failures: dict[str, str] = {}
         results: list[Hit] = []
         answered = 0
-        wait_s = SEARCH_SECONDS if deadline is None else max(1.0, min(SEARCH_SECONDS, deadline - time.monotonic()))
-        pool = ThreadPoolExecutor(max_workers=self.workers)
-        futures = {pool.submit(self._one, s, query, per_shop, deadline): s for s in chosen}
-        done, late = wait(futures, timeout=wait_s)
+        # With local catalogs only a few shops are still asked live: they get a shorter wait.
+        limit_s = SEARCH_SECONDS if self.local_dir is None else LOCAL_SEARCH_SECONDS
+        wait_s = limit_s if deadline is None else max(1.0, min(limit_s, deadline - time.monotonic()))
+        # Shops searched in local data are looked up in this thread, so a slow live shop can never
+        # delay or drop them; only shops that need a live request go to the pool.
+        local = [s for s in chosen if self.is_local(s)]
+        live = [s for s in chosen if not self.is_local(s)]
+        took: dict[str, float] = {}
+
+        def timed(shop):
+            t0 = time.monotonic()
+            try:
+                return self._one(shop, query, per_shop, deadline)
+            finally:
+                took[shop.shop_id] = round(time.monotonic() - t0, 2)
+        pool = ThreadPoolExecutor(max_workers=max(1, min(len(live), 2 * self.workers)))
+        futures = {pool.submit(timed, s): s for s in live}
+        t_local = time.monotonic()
+        for shop in local:
+            try:
+                results.extend(self._one(shop, query, per_shop, deadline))
+                answered += 1
+            except FetchError as exc:
+                failures[shop.shop_id] = exc.code
+            except Exception as exc:  # noqa: BLE001 - one shop never sinks the search
+                failures[shop.shop_id] = type(exc).__name__
+        local_s = round(time.monotonic() - t_local, 2)
+        done, late = wait(futures, timeout=max(0.1, wait_s - (time.monotonic() - started)))
         pool.shutdown(wait=False, cancel_futures=True)  # a slow shop is dropped, never waited for
         for fut in late:
             failures[futures[fut].shop_id] = 'SLOW'
@@ -186,12 +264,44 @@ class ShopSearch:
                 failures[shop.shop_id] = exc.code
             except Exception as exc:  # noqa: BLE001 - one shop never sinks the search
                 failures[shop.shop_id] = type(exc).__name__
-        ranked = sorted(results, key=lambda h: (-score(query, h.title), h.available is False,
-                                                h.price if h.price is not None else Decimal('1e9')))
-        kept = [h for h in ranked if score(query, h.title) > 0][:limit]
-        return SearchReport(kept, len(chosen), answered, failures, round(time.monotonic() - started, 2))
+        def strength(h):   # an index row matched through its SKU or variant title keeps that match
+            return max(self.rank(query, h.title), h.match)
+        ranked = sorted((h for h in results if strength(h) > 0),
+                        key=lambda h: (-strength(h), h.available is False, h.price if h.price is not None else Decimal('1e9')))
+        # Every shop keeps its best hit before the list is cut, so shops whose index has no price survive.
+        firsts, rest, seen_shops = [], [], set()
+        for h in ranked:
+            (rest if h.shop_id in seen_shops else firsts).append(h)
+            seen_shops.add(h.shop_id)
+        kept = sorted((firsts + rest)[:limit], key=lambda h: -strength(h))
+        slowest = tuple(sorted(took.items(), key=lambda x: -x[1])[:3])
+        return SearchReport(kept, len(chosen), answered, failures, round(time.monotonic() - started, 2),
+                            local_s, slowest)
+
+    def is_local(self, shop) -> bool:
+        """True when this shop is searched in local data (a full catalog or a sitemap index), with no request."""
+        if self.local_dir is not None and (self.local_dir / f'{shop.shop_id}.json').is_file():
+            return True
+        return shop.platform not in ('shopify', 'woocommerce') and (shop.platform in ('merchant_feed', 'html')
+                                                                    or bool(shop.feed_url))
+
+    def warm(self) -> int:
+        """Load every local index now, so the first buyer search neither pays for it nor drops shops as slow."""
+        loaded = []
+        for shop in self.shops:
+            for folder in (self.local_dir, self.cache_dir):
+                if folder is not None and (folder / f'{shop.shop_id}.json').is_file():
+                    loaded.append(load_index(folder / f'{shop.shop_id}.json'))
+        self.weights = WordWeights(loaded) if loaded else None
+        return len(loaded)
+
+    def rank(self, query: str, title: str) -> float:
+        """How well a listing title matches a query, on one scale for live and local results."""
+        return score(query, title, weight=self.weights)
 
     def _one(self, shop, query: str, per_shop: int, deadline) -> list[Hit]:
+        if self.local_dir is not None and (self.local_dir / f'{shop.shop_id}.json').is_file():
+            return self._indexed(shop, query, per_shop, self.local_dir)
         if shop.platform == 'shopify':
             client = Shopify(self.web, shop)
             if self.web.robots_for(shop.origin + '/').allows(shop.origin + '/search/suggest.json?q=x'):
@@ -203,14 +313,18 @@ class ShopSearch:
             return self._indexed(shop, query, per_shop)
         return []
 
-    def _indexed(self, shop, query: str, per_shop: int) -> list[Hit]:
-        scored = load_index(self.cache_dir / f'{shop.shop_id}.json').best(query, per_shop)
+    def _indexed(self, shop, query: str, per_shop: int, folder: Path | None = None) -> list[Hit]:
+        index = load_index((folder or self.cache_dir) / f'{shop.shop_id}.json')
+        if not index.rows:
+            raise FetchError('NO_INDEX', 'this shop has no local index yet, so it was not searched')
+        scored = index.best(query, per_shop, self.weights)
         hits = []
         for s, r in scored:
             if s <= 0:
                 break
             hits.append(Hit(shop.shop_id, shop.name, r['title'], r['url'], money(r.get('price_min')),
-                            r.get('currency') or shop.currency, r.get('available'), f'index:{r.get("platform")}'))
+                            r.get('currency') or shop.currency, r.get('available'),
+                            'catalog' if folder is not None else f'index:{r.get("platform")}', match=round(s, 3)))
         return hits
 
     # ---- local index for shops without live search -------------------------------------------
@@ -229,13 +343,16 @@ class ShopSearch:
                 if not raw:
                     break
                 rows.extend(client.catalog_hits(raw))
-        elif shop.platform == 'html':
-            rows = self._sitemap_rows(shop)
+        elif shop.feed_url or shop.platform == 'html':
+            if shop.feed_url:   # a merchant feed carries titles, prices and stock; a sitemap only URLs
+                try:
+                    rows = parse_merchant_feed(self.web.get(shop.feed_url, accept='xml', timeout=90).body, shop)
+                except FetchError:
+                    rows = []
+            if not rows and shop.platform == 'html':
+                rows = self._sitemap_rows(shop)
             if not rows:
-                return dict(shop_id=shop.shop_id, status='skipped', reason='no product sitemap found')
-        elif shop.feed_url:
-            page = self.web.get(shop.feed_url, accept='xml', timeout=90)
-            rows = parse_merchant_feed(page.body, shop)
+                return dict(shop_id=shop.shop_id, status='skipped', reason='no readable feed or product sitemap')
         else:
             return dict(shop_id=shop.shop_id, status='skipped', reason='no public catalog to index')
         self.cache_dir.mkdir(parents=True, exist_ok=True)

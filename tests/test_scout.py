@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 from decimal import Decimal
 import json
 from types import SimpleNamespace
+from functools import partial
 import unittest
 
 import httpx2
@@ -23,7 +24,10 @@ from app.scout.storefronts import Product, Shopify, Variant, WooCommerce, produc
 from app.scout.terms import _checked, ShopTerms
 from app.scout.tools import Tools
 from app.scout.verify import Final, check_offers, identity_conflicts, hard_budget
+
 from app.scout.web import FetchError, SafeWeb
+
+check_total = partial(check_offers, scope='total')   # contract v1 rule: delivered total, fee and VAT
 
 PUBLIC = '93.184.216.34'
 NOW = datetime(2026, 11, 28, 10, 0, tzinfo=timezone.utc)
@@ -237,7 +241,7 @@ class VerifierTests(unittest.TestCase):
         ev = Evidence()
         p = product_obs(ev, make_product())
         t = page_obs(ev, 'alpha', 'Delivery inside Beirut: $3. Outside Beirut: $5, 2-4 days. All prices include VAT.')
-        out = check_offers(final([claim(p.obs_id, delivery_obs=t.obs_id, delivery_quote='Outside Beirut: $5',
+        out = check_total(final([claim(p.obs_id, delivery_obs=t.obs_id, delivery_quote='Outside Beirut: $5',
                                         delivery_fee_usd='5', vat_quote='All prices include VAT')]), ev, SHOPS, REQ)
         o = out[0]
         self.assertEqual((o.tier, o.price, o.delivery_fee, o.total), ('best', Decimal('42.00'), Decimal('5.00'),
@@ -249,7 +253,7 @@ class VerifierTests(unittest.TestCase):
         ev = Evidence()
         p = product_obs(ev, make_product())
         other = page_obs(ev, 'beta', 'Outside Beirut: $2', url='https://beta.example/shipping')
-        out = check_offers(final([claim(p.obs_id, delivery_obs=other.obs_id, delivery_quote='Outside Beirut: $2',
+        out = check_total(final([claim(p.obs_id, delivery_obs=other.obs_id, delivery_quote='Outside Beirut: $2',
                                         delivery_fee_usd='2')]), ev, SHOPS, REQ)
         self.assertIsNone(out[0].total)
         self.assertIsNone(out[0].delivery_fee)
@@ -261,7 +265,7 @@ class VerifierTests(unittest.TestCase):
         p = product_obs(ev, make_product())
         t = page_obs(ev, 'alpha', 'Outside Beirut: $5')
         for quote, fee in [('Outside Beirut: $4', '4'), ('Outside Beirut: $5', '3')]:
-            out = check_offers(final([claim(p.obs_id, delivery_obs=t.obs_id, delivery_quote=quote,
+            out = check_total(final([claim(p.obs_id, delivery_obs=t.obs_id, delivery_quote=quote,
                                             delivery_fee_usd=fee)]), ev, SHOPS, REQ)
             self.assertIsNone(out[0].total)
 
@@ -269,11 +273,11 @@ class VerifierTests(unittest.TestCase):
         ev = Evidence()
         p = product_obs(ev, make_product())
         t = page_obs(ev, 'alpha', 'Delivery inside Beirut: $3. Outside Beirut: $5.')
-        out = check_offers(final([claim(p.obs_id, delivery_obs=t.obs_id, delivery_quote='Delivery inside Beirut: $3',
+        out = check_total(final([claim(p.obs_id, delivery_obs=t.obs_id, delivery_quote='Delivery inside Beirut: $3',
                                         delivery_fee_usd='3')]), ev, SHOPS, REQ)  # destination Batroun
         self.assertIsNone(out[0].total)
         self.assertTrue(any('for Beirut' in d for d in out[0].downgrades))
-        out = check_offers(final([claim(p.obs_id, delivery_obs=t.obs_id, delivery_quote='Delivery inside Beirut: $3',
+        out = check_total(final([claim(p.obs_id, delivery_obs=t.obs_id, delivery_quote='Delivery inside Beirut: $3',
                                         delivery_fee_usd='3')]), ev, SHOPS, dict(REQ, destination='Hamra, Beirut'))
         self.assertEqual(out[0].total, Decimal('45.00'))
 
@@ -283,10 +287,10 @@ class VerifierTests(unittest.TestCase):
         policy = page_obs(ev, 'alpha', 'All our products are brand new and sealed.',
                           url='https://alpha.example/pages/faq')
         unrelated = page_obs(ev, 'alpha', 'Brand new arrivals this week', url='https://alpha.example/blogs/news')
-        ok = check_offers(final([claim(p.obs_id, condition_quote='brand new and sealed',
+        ok = check_total(final([claim(p.obs_id, condition_quote='brand new and sealed',
                                        condition_obs=policy.obs_id)]), ev, SHOPS, REQ)
         self.assertEqual(ok[0].condition, 'new')
-        no = check_offers(final([claim(p.obs_id, condition_quote='Brand new arrivals',
+        no = check_total(final([claim(p.obs_id, condition_quote='Brand new arrivals',
                                        condition_obs=unrelated.obs_id)]), ev, SHOPS, REQ)
         self.assertEqual(no[0].condition, 'unknown')
 
@@ -294,7 +298,7 @@ class VerifierTests(unittest.TestCase):
         ev = Evidence()
         p = product_obs(ev, make_product(price='150.00'))
         t = page_obs(ev, 'alpha', 'Outside Beirut: $5. Free delivery on orders over $100.')
-        out = check_offers(final([claim(p.obs_id, delivery_obs=t.obs_id,
+        out = check_total(final([claim(p.obs_id, delivery_obs=t.obs_id,
                                         delivery_quote='Outside Beirut: $5. Free delivery on orders over $100',
                                         delivery_fee_usd='5', free_delivery_over_usd='100')]), ev, SHOPS, REQ)
         self.assertEqual(out[0].total, Decimal('150.00'))
@@ -302,14 +306,14 @@ class VerifierTests(unittest.TestCase):
     def test_used_listing_is_rejected_even_if_the_model_says_new(self):
         ev = Evidence()
         p = product_obs(ev, make_product(title='Used Sony WH-CH520 Headphones'))
-        out = check_offers(final([claim(p.obs_id)]), ev, SHOPS, REQ)
+        out = check_total(final([claim(p.obs_id)]), ev, SHOPS, REQ)
         self.assertEqual(out[0].tier, 'rejected')
         self.assertEqual(out[0].condition, 'used')
 
     def test_condition_quote_must_exist(self):
         ev = Evidence()
         p = product_obs(ev, make_product(options={'Color': 'Black'}))
-        out = check_offers(final([claim(p.obs_id, condition_quote='Factory sealed')]), ev, SHOPS, REQ)
+        out = check_total(final([claim(p.obs_id, condition_quote='Factory sealed')]), ev, SHOPS, REQ)
         self.assertEqual(out[0].condition, 'unknown')
         self.assertIn('new condition is not stated by the shop', out[0].gaps)
 
@@ -321,7 +325,7 @@ class VerifierTests(unittest.TestCase):
         self.assertEqual(identity_conflicts('laptop 16GB RAM', 'Lenovo 8GB 512GB', 'needs'), [])
         ev = Evidence()
         p = product_obs(ev, make_product(title='Apple iPhone 15 Pro Max 256GB'))
-        out = check_offers(final([claim(p.obs_id)]), ev, SHOPS,
+        out = check_total(final([claim(p.obs_id)]), ev, SHOPS,
                            dict(REQ, text='new iPhone 15 256GB black delivered to Batroun'))
         self.assertEqual((out[0].identity, out[0].tier), ('near', 'alternative'))
 
@@ -329,16 +333,16 @@ class VerifierTests(unittest.TestCase):
         ev = Evidence()
         p = product_obs(ev, make_product())
         req_met = dict(requirement='Bluetooth', status='met', evidence_obs=p.obs_id, quote='Bluetooth 6.0 with LDAC')
-        out = check_offers(final([claim(p.obs_id, requirements=[req_met])]), ev, SHOPS, REQ)
+        out = check_total(final([claim(p.obs_id, requirements=[req_met])]), ev, SHOPS, REQ)
         self.assertEqual(out[0].requirements[0]['status'], 'unknown')
         unmet = dict(requirement='USB-C charging', status='unmet', evidence_obs=None, quote=None)
-        out = check_offers(final([claim(p.obs_id, requirements=[unmet])]), ev, SHOPS, REQ)
+        out = check_total(final([claim(p.obs_id, requirements=[unmet])]), ev, SHOPS, REQ)
         self.assertEqual(out[0].tier, 'rejected')
 
     def test_budget_ceiling_and_unknown_observation(self):
         ev = Evidence()
         p = product_obs(ev, make_product(price='70.00'))
-        out = check_offers(final([claim(p.obs_id), claim('P99')]), ev, SHOPS,
+        out = check_total(final([claim(p.obs_id), claim('P99')]), ev, SHOPS,
                            dict(REQ, text='Sony WH-CH520 for at most $60 delivered'))
         self.assertEqual(len(out), 1)
         self.assertEqual(out[0].tier, 'rejected')
@@ -350,8 +354,8 @@ class VerifierTests(unittest.TestCase):
         t = page_obs(ev, 'alpha', 'Logitech H111 headset Price: $13.00 In stock', url='https://alpha.example/h111')
         good = claim(t.obs_id, variant_id='-', price_quote='Price: $13.00', condition='unknown', condition_quote=None)
         bad = claim(t.obs_id, variant_id='-', price_quote='Price: $9.00', condition='unknown', condition_quote=None)
-        self.assertEqual(check_offers(final([good]), ev, SHOPS, REQ)[0].price, Decimal('13.00'))
-        self.assertEqual(check_offers(final([bad]), ev, SHOPS, REQ), [])
+        self.assertEqual(check_total(final([good]), ev, SHOPS, REQ)[0].price, Decimal('13.00'))
+        self.assertEqual(check_total(final([bad]), ev, SHOPS, REQ), [])
 
 
 class ScriptedProvider:
@@ -374,10 +378,10 @@ def step(notes, calls=(), final_=None):
 
 
 class AgentLoopTests(unittest.TestCase):
-    def agent(self, steps):
+    def agent(self, steps, scope='listed'):
         w = web()
         return ScoutAgent(ScriptedProvider(steps), web=w, search=ShopSearch(w, [ALPHA, BETA, GAMMA]),
-                          config=RunConfig(max_turns=5))
+                          config=RunConfig(max_turns=5), scope=scope)
 
     def test_search_open_and_finish_with_verified_offer(self):
         fin = dict(status='offers', request_kind='exact', message='Alpha Shop has the black pair at USD 42.',
@@ -388,7 +392,7 @@ class AgentLoopTests(unittest.TestCase):
             step('search', [dict(tool='search', query='sony wh-ch520', shop_ids=['alpha'])]),
             step('open + terms', [dict(tool='open', url='https://alpha.example/products/sony-ch520'),
                                   dict(tool='read', url='https://alpha.example/pages/shipping', terms=['Beirut'])]),
-            step('done', final_=fin)])
+            step('done', final_=fin)], scope='total')   # the contract v1 rule: a delivered total
         result = agent.run(dict(REQ))
         self.assertEqual(result.status, 'offers')
         best = result.offers[0]

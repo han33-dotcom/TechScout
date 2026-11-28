@@ -6,6 +6,7 @@ something it must not. Offline only: synthetic shops and pages, no network, no m
 from decimal import Decimal
 import json
 from types import SimpleNamespace
+from functools import partial
 import unittest
 
 import httpx2
@@ -15,9 +16,12 @@ from app.scout.evidence import Evidence, contains_quote
 from app.scout.pages import snippets
 from app.scout.storefronts import _woo_variant, money, product_from_html
 from app.scout.verify import check_offers, hard_budget
+
 from app.scout.web import FetchError, SafeWeb
 from tests.test_scout import (GAMMA, NOW, PUBLIC, REQ, SHOPS, claim, final, make_product, page_obs,
                               product_obs)
+
+check_total = partial(check_offers, scope='total')   # contract v1 rule: delivered total, fee and VAT
 
 
 class ReviewRegressionTests(unittest.TestCase):
@@ -29,7 +33,7 @@ class ReviewRegressionTests(unittest.TestCase):
         self.assertEqual(hard_budget('budget is $1,000 delivered'), Decimal('1000.00'))
         ev = Evidence()
         p = product_obs(ev, make_product(title='Apple iPhone 15 Pro Max 256GB', price='1199.00'))
-        out = check_offers(final([claim(p.obs_id)]), ev, SHOPS,
+        out = check_total(final([claim(p.obs_id)]), ev, SHOPS,
                            dict(REQ, text='New iPhone 15 Pro Max 256GB delivered to Batroun'))
         self.assertEqual(out[0].tier, 'best')
 
@@ -37,7 +41,7 @@ class ReviewRegressionTests(unittest.TestCase):
         ev = Evidence()
         a = product_obs(ev, make_product(price='1049.00'))
         b = product_obs(ev, make_product(price='999.00', shop='beta'))
-        offers = check_offers(final([claim(a.obs_id), claim(b.obs_id)]), ev, SHOPS, REQ)
+        offers = check_total(final([claim(a.obs_id), claim(b.obs_id)]), ev, SHOPS, REQ)
         self.assertEqual(unsupported_amounts('Alpha has it for $1049 and Beta for $999.', offers, REQ), [])
         self.assertEqual(unsupported_amounts('Beta is $50 cheaper than Alpha.', offers, REQ), [])
         self.assertTrue(unsupported_amounts('Alpha adds $50 delivery.', offers, REQ))
@@ -57,13 +61,13 @@ class ReviewRegressionTests(unittest.TestCase):
                  dict(delivery_quote='Delivery fee: $3 inside Beirut, $5 outside Beirut', delivery_fee_usd='3'),
                  dict(delivery_quote='Delivery within 2 days for $5', delivery_fee_usd='2')]
         for case in cases:
-            out = check_offers(final([claim(p.obs_id, delivery_obs=t.obs_id, **case)]), ev, SHOPS, REQ)
+            out = check_total(final([claim(p.obs_id, delivery_obs=t.obs_id, **case)]), ev, SHOPS, REQ)
             self.assertIsNone(out[0].total, case)
         quote = 'Delivery fee: $3 inside Beirut, $5 outside Beirut'
-        ok = check_offers(final([claim(p.obs_id, delivery_obs=t.obs_id, delivery_fee_usd='5', delivery_quote=quote)]),
+        ok = check_total(final([claim(p.obs_id, delivery_obs=t.obs_id, delivery_fee_usd='5', delivery_quote=quote)]),
                           ev, SHOPS, REQ)
         self.assertEqual(ok[0].total, Decimal('47.00'))
-        none = check_offers(final([claim(p.obs_id, delivery_obs=t.obs_id, delivery_fee_usd='5', delivery_quote=quote)]),
+        none = check_total(final([claim(p.obs_id, delivery_obs=t.obs_id, delivery_fee_usd='5', delivery_quote=quote)]),
                             ev, SHOPS, dict(REQ, destination=None))
         self.assertIsNone(none[0].total)
 
@@ -73,7 +77,7 @@ class ReviewRegressionTests(unittest.TestCase):
         t = page_obs(ev, 'alpha', 'Outside Beirut: $5, delivered in 2-4 business days. All prices include VAT.')
         req = dict(requirement='Delivered by Friday', status='met', evidence_obs=t.obs_id,
                    quote='delivered in 2-4 business days')
-        out = check_offers(final([claim(p.obs_id, delivery_obs=t.obs_id, delivery_quote='Outside Beirut: $5',
+        out = check_total(final([claim(p.obs_id, delivery_obs=t.obs_id, delivery_quote='Outside Beirut: $5',
                                         delivery_fee_usd='5', vat_quote='All prices include VAT',
                                         requirements=[req])]), ev, SHOPS, REQ)
         self.assertFalse(out[0].complete)
@@ -84,16 +88,16 @@ class ReviewRegressionTests(unittest.TestCase):
         t = page_obs(ev, 'alpha', 'Lenovo IdeaPad 5 16GB 512GB Price: $699 Was: $799', url='https://alpha.example/l5')
         for quote in ('Lenovo IdeaPad 5 16GB', 'Price: $699 Was: $799'):
             c = claim(t.obs_id, variant_id='-', price_quote=quote, condition='unknown', condition_quote=None)
-            self.assertEqual(check_offers(final([c]), ev, SHOPS, REQ), [], quote)
+            self.assertEqual(check_total(final([c]), ev, SHOPS, REQ), [], quote)
         c = claim(t.obs_id, variant_id='-', price_quote='Price: $699', condition='unknown', condition_quote=None)
-        self.assertEqual(check_offers(final([c]), ev, SHOPS, REQ)[0].price, Decimal('699.00'))
+        self.assertEqual(check_total(final([c]), ev, SHOPS, REQ)[0].price, Decimal('699.00'))
 
     def test_published_variant_condition_wins(self):
         ev = Evidence()
         product = make_product()
         product.variants[0].condition = 'RefurbishedCondition'
         p = product_obs(ev, product)
-        out = check_offers(final([claim(p.obs_id)]), ev, SHOPS, REQ)
+        out = check_total(final([claim(p.obs_id)]), ev, SHOPS, REQ)
         self.assertEqual((out[0].condition, out[0].tier), ('refurbished', 'rejected'))
         offers = [{'@type': 'Offer', 'price': '500', 'priceCurrency': 'USD', 'sku': 'N',
                    'itemCondition': 'https://schema.org/NewCondition'},
@@ -110,18 +114,18 @@ class ReviewRegressionTests(unittest.TestCase):
         ev = Evidence()
         p = product_obs(ev, make_product())
         t = page_obs(ev, 'alpha', 'Outside Beirut: $5. Prices exclude VAT.')
-        out = check_offers(final([claim(p.obs_id, delivery_obs=t.obs_id, delivery_quote='Outside Beirut: $5',
+        out = check_total(final([claim(p.obs_id, delivery_obs=t.obs_id, delivery_quote='Outside Beirut: $5',
                                         delivery_fee_usd='5', vat_quote='Prices exclude VAT')]), ev, SHOPS, REQ)
         self.assertFalse(out[0].complete)
         self.assertTrue(any('VAT is added' in g for g in out[0].gaps))
         no_currency = make_product()
         no_currency.variants[0].currency = None
         q = product_obs(ev, no_currency)
-        out = check_offers(final([claim(q.obs_id, delivery_obs=t.obs_id, delivery_quote='Outside Beirut: $5',
+        out = check_total(final([claim(q.obs_id, delivery_obs=t.obs_id, delivery_quote='Outside Beirut: $5',
                                         delivery_fee_usd='5')]), ev, SHOPS, REQ)
         self.assertIsNone(out[0].total)
         self.assertIsNone(money('0.00'))
-        pickup = check_offers(final([claim(p.obs_id)]), ev, SHOPS, dict(REQ, mode='pickup', destination='Beirut'))
+        pickup = check_total(final([claim(p.obs_id)]), ev, SHOPS, dict(REQ, mode='pickup', destination='Beirut'))
         self.assertFalse(pickup[0].complete)
 
     def test_woocommerce_backorder_is_not_in_stock(self):
@@ -222,7 +226,7 @@ class HeldOutFindingTests(unittest.TestCase):
         ev = Evidence()
         p = product_obs(ev, make_product(title='Apple iPad A16 128GB Blue'))
         req = dict(requirement='Wi-Fi only (not cellular)', status='unknown', evidence_obs=None, quote=None)
-        out = check_offers(final([claim(p.obs_id, requirements=[req])]), ev, SHOPS,
+        out = check_total(final([claim(p.obs_id, requirements=[req])]), ev, SHOPS,
                            dict(REQ, text='new blue iPad A16 Wi-Fi 128GB delivered to Batroun'))
         self.assertEqual((out[0].identity, out[0].tier), ('near', 'alternative'))
 
@@ -232,7 +236,7 @@ class HeldOutFindingTests(unittest.TestCase):
         p = product_obs(ev, product)
         page_obs(ev, 'alpha', 'Menu | Home | -%Pre-order iPhone 15 Pro 128GB $1,080 | Add to cart',
                  url='https://alpha.example/products/x')
-        out = check_offers(final([claim(p.obs_id)]), ev, SHOPS, REQ)
+        out = check_total(final([claim(p.obs_id)]), ev, SHOPS, REQ)
         self.assertIsNone(out[0].in_stock)
         self.assertTrue(any('pre-order' in g.lower() for g in out[0].gaps))
 
@@ -243,7 +247,7 @@ class HeldOutFindingTests(unittest.TestCase):
                                                           Decimal('999'), currency='USD', available=True))
         product.description = 'SSD 256GB - Silver | MLXY3 | CONDITION:New'
         p = product_obs(ev, product)
-        out = check_offers(final([claim(p.obs_id, condition_quote='CONDITION:New')]), ev, SHOPS, REQ)
+        out = check_total(final([claim(p.obs_id, condition_quote='CONDITION:New')]), ev, SHOPS, REQ)
         self.assertEqual(out[0].condition, 'unknown')
 
     def test_fallback_names_unchecked_leads_instead_of_claiming_none(self):

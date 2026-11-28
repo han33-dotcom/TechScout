@@ -49,6 +49,14 @@ buyer text ─▶ LLM turn ─▶ tools (parallel) ─▶ observations P1.., T1.
 | `read` | Reads a policy, FAQ, contact or product page, with search terms. Returns `T<n>`. |
 | `shop_info` | The shop's published location (Shopify `meta.json` gives country and city), home-page delivery lines and policy links. |
 
+**Price scope (buyer contract v2, 28 November).** The scout reports the shop's listed price, before
+VAT and delivery, and says so in every answer. The checker (`check_offers`, listed scope by default)
+no longer reads or requires a delivery fee or a VAT statement. An exact, in-stock offer with a price
+read in the current run counts as verified when its condition is evidenced new, or not stated (the
+answer then says the shop does not state it), or other than new for a buyer who accepted that. The
+contract v1 rule (a delivered total) remains only as `scope='total'`, which no entry point uses; the
+shop-terms job below belongs to it.
+
 **Shop terms** (`app/scout/terms.py`) are each shop's published delivery fees, VAT statement and addresses. A daily job extracts them with exact quotes. Code keeps a rule only when its quote occurs on the page and contains the amount. During a buyer run the pages are re-read once per shop and only quotes still present are offered to the model. Delivery evidence is therefore current-run, not cached.
 
 **The shop directory** (`config/scout-shops.json`, `app/scout/shops.py`) lists 36 enabled shops with their platform and provenance, detected on 27 Nov. Shops known only from frozen evaluation references are deliberately left out. Shops that answer with a bot challenge, block automated reads or report a non-Lebanese country are listed as disabled with the reason. Challenges are never bypassed.

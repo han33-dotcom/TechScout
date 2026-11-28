@@ -80,7 +80,9 @@ class CheckedOffer:
     delivery_fee: Decimal | None = None
     total: Decimal | None = None
     total_basis: str | None = None
-    complete: bool = False          # exact, in stock, new, all requirements met, fee and VAT evidenced
+    complete: bool = False          # verified output under buyer contract v2: exact product, in stock, price read
+                                    # in this run, every requirement proven; condition new, or not stated (then a
+                                    # gap says so), or used/refurbished/open box when the buyer opted in
     gaps: list[str] = field(default_factory=list)
     requirements: list[dict] = field(default_factory=list)
     evidence: list[dict] = field(default_factory=list)
@@ -97,6 +99,22 @@ class CheckedOffer:
 USED = re.compile(r'\b(used|pre-?owned|refurb\w*|renewed|open[- ]?box|second[- ]?hand|like[- ]new|grade [abc]|'
                   r'cpo|ex[- ]?demo|demo unit|activated|مستعمل)\b', re.IGNORECASE)
 NEW = re.compile(r'(brand[- ]new|\bnew\b|sealed|newcondition|جديد)', re.IGNORECASE)
+NOT_NEW = ('used', 'refurbished', 'open_box')
+# The buyer's own words that accept a condition other than new, in English, Arabic and Arabizi.
+USED_WANTED = re.compile(r'(\bused\b|pre-?owned|refurb\w*|renewed|open[- ]?box|second[- ]?hand|مستعمل\w*|'
+                         r'm[ou]sta3mal\w*|mesta3mal\w*|\boccasion\b)', re.IGNORECASE)
+USED_REFUSED = re.compile(r"(\bno\b|\bnot\b|\bnon\b|\bnever\b|n't|\bwithout\b|\bavoid\b|\bexcept\b|\bexclude\w*|"
+                          r'مش|بدون|غير)[^.!?\n]{0,24}$', re.IGNORECASE)
+
+
+def accepts_used(request_text: str) -> bool:
+    """True when the buyer says a used, refurbished or open-box item is acceptable.
+
+    New is the default. A mention that is refused ("not used", "no refurbished") is not an opt-in."""
+    for m in USED_WANTED.finditer(request_text or ''):
+        if not USED_REFUSED.search(request_text[:m.start()]):
+            return True
+    return False
 DEADLINE = re.compile(r'\b(by|before|within|tomorrow|today|tonight|deadline|same[- ]day|next[- ]day|'
                       r'monday|tuesday|wednesday|thursday|friday|saturday|sunday|\d+\s?(?:days?|hours?))\b',
                       re.IGNORECASE)
@@ -222,8 +240,21 @@ def _variant(obs: Observation, variant_id: str):
     return product.variants[0] if len(product.variants) == 1 else None
 
 
-def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -> list[CheckedOffer]:
+def check_offers(final, evidence: Evidence, shops: dict, request: dict, *,
+                 scope: str = 'listed') -> list[CheckedOffer]:
+    """Check proposed offers against what was read in this run.
+
+    ``scope='listed'`` (the default, buyer contract v2): the answer is the shop's listed price before
+    VAT and delivery, so no fee or tax claim is read, checked or required; a requirement counts only
+    when its quote comes from the offered product's own data; an offer whose condition the shop does
+    not state still counts as verified, with that gap named; used, refurbished and open-box offers
+    count only when the buyer opted in.
+
+    ``scope='total'`` is the contract v1 rule (delivered total with evidenced fee and VAT). No entry
+    point uses it any more; it is kept so the recorded v1 results can be reproduced."""
+    listed = scope == 'listed'
     request_text = request.get('text', '')
+    used_ok = listed and accepts_used(request_text)
     mode = request.get('mode') or 'delivery'
     budget = hard_budget(request_text) or dec(final.budget_max_usd)
     out: list[CheckedOffer] = []
@@ -247,6 +278,8 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
             title, vtitle = product.title, variant.title
             url = variant.url or product.url
             offer_text = ' '.join([product.title, variant.title, ' '.join(variant.options.values())])
+            own_text = ' | '.join(str(x) for x in (product.title, variant.title, *variant.options.values(), variant.sku,
+                                                   published_condition, product.description) if x)
             evidence_rows = [dict(obs=obs.obs_id, url=product.url, read=product.endpoint, source=product.source,
                                   observed_at=obs.observed_at.isoformat(timespec='seconds'), sha256=obs.sha256)]
         else:
@@ -260,6 +293,7 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
             published_condition, stock_text = '', None
             available, title, vtitle, url = None, obs.meta.get('title', ''), '', obs.url
             offer_text = title
+            own_text = obs.text
             evidence_rows = [dict(obs=obs.obs_id, url=obs.url, read=obs.url, source='page text quote',
                                   observed_at=obs.observed_at.isoformat(timespec='seconds'), sha256=obs.sha256)]
         key = (url, vtitle)
@@ -272,6 +306,7 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
         if conflicts:
             identity = 'near'
             downgrades.extend(conflicts)
+        condition_conflict = False   # the shop publishes a condition that is neither new nor a known used word
         # Condition: used markers in the listing win over anything the model says.
         published = re.sub(r'condition$', '', published_condition.strip().lower())  # schema 'UsedCondition'
         marker = USED.search(offer_text) or USED.search(published) or (
@@ -281,7 +316,14 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
             downgrades.append(f'listing says "{marker.group(0)}"')
         elif published.startswith('new') or published in ('brand new', 'sealed'):
             condition = 'new'
-        elif claim.condition == 'new' and claim.condition_quote and NEW.search(claim.condition_quote) \
+        elif listed and published:
+            condition, condition_conflict = 'unknown', True
+            gaps.append(f'the shop lists the condition as "{published_condition.strip()}", not as new')
+        elif listed and claim.condition == 'new' and claim.condition_quote and NEW.search(claim.condition_quote) \
+                and not USED.search(claim.condition_quote) and contains_quote(own_text, claim.condition_quote) \
+                and not description_for_other_model(obs, claim.condition_quote, offer_text):
+            condition = 'new'
+        elif not listed and claim.condition == 'new' and claim.condition_quote and NEW.search(claim.condition_quote) \
                 and not USED.search(claim.condition_quote) \
                 and any(contains_quote(o.text, claim.condition_quote)
                         for o in condition_sources(evidence, obs, claim.condition_obs, url)) \
@@ -295,8 +337,13 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
         for r in claim.requirements:
             status = r.status
             src = evidence.get(r.evidence_obs) or obs
-            if status == 'met' and not (r.quote and contains_quote(src.text, r.quote)
-                                        and (src.shop_id == obs.shop_id)):
+            same_product = src.obs_id == obs.obs_id or (
+                src.shop_id == obs.shop_id and _path(src.url) in (_path(url), _path(obs.url)))
+            bound = same_product if listed else src.shop_id == obs.shop_id
+            # Listed scope: a quote from the product itself must be in the chosen variant's own text
+            # (title, its options, SKU, description), not in a sibling variant's.
+            quoted_in = own_text if listed and src.obs_id == obs.obs_id else src.text
+            if status == 'met' and not (r.quote and contains_quote(quoted_in, r.quote) and bound):
                 status = 'unknown'
             deadline = bool(DEADLINE.search(r.requirement))
             if deadline and status == 'met':
@@ -322,14 +369,17 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
             gaps.append('no current price published')
         usd = bool(currency) and currency.upper() == 'USD'
         if price is not None and not currency:
-            gaps.append('currency is not published; no total is computed')
+            gaps.append('currency is not published')
         elif currency and not usd:
-            gaps.append(f'price is in {currency}; no USD total is computed')
+            gaps.append(f'price is in {currency}, not USD')
         if available is None:
             gaps.append(f'stock is not confirmed ({stock_text})' if stock_text else 'stock is not published')
-        # Delivery fee and total.
+        # Delivery fee and total (not part of the listed-price scope).
         fee, total, basis = None, None, None
-        if mode == 'delivery':
+        if listed:
+            if mode == 'pickup':
+                gaps.append('pickup branch stock is not confirmed (online stock only)')
+        elif mode == 'delivery':
             dobs = evidence.get(claim.delivery_obs)
             fee = dec(claim.delivery_fee_usd)
             quote = claim.delivery_quote or ''
@@ -359,7 +409,9 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
                                                   for o in evidence.all() if o.shop_id == obs.shop_id)
         vat = vat_status(claim.vat_quote, vat_found)
         vat_ok = vat == 'included'
-        if vat == 'excluded':
+        if listed:
+            pass
+        elif vat == 'excluded':
             gaps.append('VAT is added on top of the listed price (the total excludes it)')
         elif not vat_ok:
             gaps.append('VAT not stated by the shop')
@@ -372,7 +424,7 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
             seller = 'shop is outside the directory; Lebanese location not established'
             gaps.append('seller location not established')
         tier = 'best'
-        if identity == 'different' or condition in ('used', 'refurbished', 'open_box') or unmet:
+        if identity == 'different' or (condition in NOT_NEW and not used_ok) or unmet:
             tier = 'rejected'
             if unmet:
                 downgrades.append('does not meet: ' + '; '.join(unmet))
@@ -392,12 +444,21 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
             if amount is not None and amount > budget:
                 tier = 'rejected'
                 downgrades.append(f'over the stated maximum of USD {budget}')
-            elif total is None and price is not None:
+            elif total is None and price is not None and not listed:
                 gaps.append(f'may exceed USD {budget} once delivery is added')
-        complete = (tier == 'best' and identity == 'exact' and available is True and condition == 'new'
-                    and all(r['status'] == 'met' for r in reqs if not r['covered_elsewhere'])
-                    and mode == 'delivery' and total is not None and usd
-                    and vat_ok and shop is not None)
+        checked = (tier == 'best' and identity == 'exact' and available is True
+                   and all(r['status'] == 'met' for r in reqs if not r['covered_elsewhere'])
+                   and price is not None and usd and shop is not None)
+        confirmed = checked and condition == 'new'
+        # Contract v2 (listed scope): an exact, in-stock offer with a price read in this run is a verified
+        # output when its condition is evidenced new, or not stated (the gap above says so), or other than
+        # new for a buyer who opted in. A condition the shop publishes as something else is not verified.
+        # Online stock never proves pickup stock at a branch, so a pickup request is never "complete".
+        verified = checked and (condition == 'new' or (condition == 'unknown' and not condition_conflict)
+                                or (condition in NOT_NEW and used_ok))
+        # Contract v1 (total scope) also needs new condition, the evidenced delivery fee and the VAT position.
+        complete = (verified and mode != 'pickup') if listed else (
+            confirmed and mode == 'delivery' and total is not None and vat_ok)
         out.append(CheckedOffer(
             tier=tier, shop=obs.product.shop_name if obs.product else (shop.name if shop else obs.shop_id or ''),
             shop_id=obs.shop_id or '', title=title, variant=vtitle, url=url, price=price, currency=currency,
@@ -408,6 +469,9 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
     # Within a tier: offers with an evidenced delivered total, ranked by total; then listed prices with the
     # fee still to confirm, established-new first, ranked by price. Totals and listed prices are never
     # ranked against each other (buyer contract: only comparable totals are ranked).
+    if listed:
+        out.sort(key=lambda o: (order[o.tier], not o.complete, o.price if o.price is not None else Decimal('1e9')))
+        return out
     out.sort(key=lambda o: (order[o.tier], o.total is None,
                             (o.total if o.total is not None else Decimal('1e9')),
                             o.condition != 'new', o.price if o.price is not None else Decimal('1e9')))

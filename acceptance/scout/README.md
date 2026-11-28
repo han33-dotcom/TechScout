@@ -2,6 +2,29 @@
 
 The scout agent ([design](../../docs/scout-agent.md)) was developed on separate requests and then run once on held-out requests. The held-out results are reported next to the earlier baselines. Every run report keeps the request, each turn's notes and tool calls, the model calls with tokens and USD, the checked offers, and the observations they rest on (URL, UTC time, SHA-256, and the shop data or quoted page text).
 
+## Corrections and current rule (28 November)
+
+A later review of this page found statements that claimed more than the evidence supports. They are
+corrected here, and the affected lines below are marked.
+
+- **The frozen 20 were not unseen requests.** One frozen product code appeared in the agent's prompt,
+  and frozen products appear in the unit tests. Read the frozen-20 scores as a regression result, not
+  as a held-out result. The six reserved requests are the closer thing to a held-out set.
+- **"8/10 on a realistic bar" is not an acceptance score.** That bar was written by the builder after
+  the results were known, and model graders applied it. Under the scout's own evidence rules, 2 of the
+  10 full cases had every stated fact evidenced. The protocol score is the first row: 0/10.
+- **The reserved six score 3/6 when one standard is applied to all six**, not 4/6.
+- **One post-fix rerun line named "the reference shop and price".** The grader references were not
+  read for that rerun, so the line now states only what the run showed.
+- All scores on this page were measured under buyer contract v1, which required a delivered total
+  with an evidenced delivery fee and VAT position.
+
+**Current rule.** The team adopted [buyer contract v2](../../docs/buyer-product-contract.md) on
+28 November: prices are compared before VAT and delivery, an unstated condition is a caveat, and
+used, refurbished or open-box offers count only when the buyer opts in. The scout's checker follows
+it from issue #273 on (`tests/test_scout_contract.py`). No score under contract v2 is recorded on
+this page; that is issue #272.
+
 ## Development requests
 
 Eight development requests ([inputs](requests/development.json)) cover several kinds of request:
@@ -87,10 +110,10 @@ Eight robustness requests ([inputs](requests/robustness.json), [reports](robustn
 
 ### Frozen 20
 
-| What the buyer needed | Scout (held-out) | Single agent, 26 Nov | Required |
+| What the buyer needed | Scout (locked candidate; see the corrections above) | Single agent, 26 Nov | Required |
 | --- | ---: | ---: | ---: |
 | Complete answer with a verified payable total | 0/10 | 0/10 | 8/10 |
-| A correct, current, linked, in-stock offer with the open facts named (realistic bar) | 8/10 | 2/20 showed a price and link | — |
+| A correct, current, linked, in-stock offer with the open facts named (a bar the builder wrote after the results, applied by model graders; not an acceptance score) | 8/10 | 2/20 showed a price and link | — |
 | An evidenced delivered total on a correct offer | 4/10 | 0 | — |
 | Useful partial (strict) | 4/5 | 0/5 | 4/5 |
 | Useful partial (realistic) | 5/5 | 0/5 | — |
@@ -112,7 +135,7 @@ Eight robustness requests ([inputs](requests/robustness.json), [reports](robustn
   - **B11:** "Exact match" badges stood while Wi-Fi-only was still unconfirmed.
 
 **Where the scout improves on the baseline.**
-- It reached a correct, priced, linked offer in 8 of 10 full cases, against none before.
+- Model graders found a correct, priced, linked offer in 8 of 10 full cases, against none before. This is not an acceptance score (see the corrections above).
 - It showed evidenced delivered totals: for example, iSTYLE's iPad A16 at USD 609.39 + USD 4, and Electroslab's 32 GB / 1 TB HP laptop at USD 740 under its published November free-delivery promotion (orders of USD 20 or more, through 30 Nov).
 - It earned every blocked explanation.
 
@@ -152,7 +175,7 @@ Commit `74271e6` contains the fixes in the last four rows.
 | --- | --- | --- |
 | B05 | Pre-order iPhone 15 Pro shown "in stock" | No pre-order item shown as stock. Alternatives: IT Promax iPhone 15 USD 660 + USD 4 and ITWorks USD 660 + USD 5, both new and in stock. |
 | B07 | Correct MacBook Air downgraded; "new" taken from another SKU's block | Classic Phones Midnight 8/256 at USD 770 shown as exact; new condition left open. |
-| B11 | "Exact match" with Wi-Fi unconfirmed | Technodel iPad MD4A4 (Wi-Fi, 128 GB, Blue) USD 475 + USD 4 = USD 479, new, the reference shop and price. |
+| B11 | "Exact match" with Wi-Fi unconfirmed | Technodel iPad MD4A4 (Wi-Fi, 128 GB, Blue) USD 475 + USD 4 = USD 479, new. |
 | C06 | Fallback after a 26.6 s model timeout | Technodel Logitech H390 USD 26 + USD 4 = USD 30 to Byblos, new, under the USD 60 ceiling (reference: USD 40). |
 
 Times were 44.8-76.5 s, and the four runs cost USD 0.35 in model calls.
