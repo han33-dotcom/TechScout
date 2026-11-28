@@ -73,36 +73,18 @@ Its integration must preserve a single run resource allowance across clarificati
 resumes; the API active-time counter does not itself authorize paid calls. A Python
 thread cannot forcibly terminate a remote request already dispatched.
 
-Start the domestic buyer worker in the backend environment with the shared database, evidence
-volume, inference configuration and ledger used by the API.
+## Worker controller
+
+No buyer controller is installed on main. The earlier controllers (`app.buyer_flow:run` and the
+single shopping agent) were retired and remain inspectable at the `baseline/pre-scout` tag. The
+[scout agent](scout-agent.md) currently runs standalone (`python -m app.scout.server`). Once it
+passes its evaluation it will be connected through this worker:
 
 ```text
-python -m app.run_worker --controller app.buyer_flow:run --quotes
+python -m app.run_worker --controller <module:function>
 ```
 
-`--quotes` also runs the delivery quote loop in that process. It plans finished chats and sends their pending pre-order quotes, then the chat's destination state shows the quotes and revised totals without a new search ([delivery quotes](delivery-quotes.md)). Without it, quotes stay pending.
-
-The v2 request accepts an optional `implementation` field. The UI's **Shopping assistant**
-selector sends `control` (default for existing callers and saved requests) or `single_agent`.
-The latter uses the original intent wording, structured requirements, refinement note and
-recorded question/answer pairs on every decision. It uses the OpenRouter route and low effort
-in `config/evaluation.json#/evaluation_inference`. A decision can select only server-offered
-actions and verified offer IDs. The same domestic verifier calculates eligibility and costs.
-The local catalog, reviewed retailer search, scoped reads and configured discovery channels
-are available separately. Web queries can use the offered public product and locality terms.
-
-For #201, inject the shared search implementation at `research.workers.domestic_tools`
-(`connectors` and `search(SearchObjective, job, alternatives=()) -> SearchReport`).
-Set `FlowDependencies.tavily_preflight_ok` after the common successful preflight.
-`FlowDependencies.retailer_browser(request, run)` opens an isolated context manager yielding
-the `BrowserSession` interface in `app.shopping_agent`. It exposes state-bound action IDs
-and safe labels. Dispatch receives the selected listing, action ID, phase-limited ledger job
-and remaining time. The adapter owns source scope, consent and traffic accounting and returns
-the selected listing plus `ReadResult` receipts. The agent offers browser actions only while
-the adapter is present. A scoped pre-order quote may supply delivery evidence. Payment
-and ordering are outside this interface.
-
-The worker can use stored listings, reviewed retailer reads and discovery to find candidates. The [experiment record](buyer-architecture-comparison.md) reports demonstrated results. The [buyer contract](buyer-product-contract.md) defines the intended comparison. The historical single-source phone controller is available as `app.buyer_flow:run_checkpoint`. [Checkpoint runbook](live-flow.md)
+Until then, searches submitted from the buyer workspace stay queued.
 
 ## React and validation
 

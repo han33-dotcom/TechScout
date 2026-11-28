@@ -1,11 +1,10 @@
 # Contributing to TechScout
 
-Claim a ready issue on the [project board](https://github.com/users/han33-dotcom/projects/2). Preserve existing work and branch from current main or the issue’s declared base. Read the [project rules](AGENTS.md).
+Pick an issue on the [project board](https://github.com/users/han33-dotcom/projects/3) and follow the [team workflow](docs/team-workflow.md). Read the [project rules](AGENTS.md).
 
 ## Setup and tests
 
-Use Python 3.11 for the shared baseline. Create a virtual environment at the repository
-root and install the current pinned backend requirements.
+Use Python 3.11 for the shared baseline. Create a virtual environment at the repository root and install the pinned requirements.
 
 Windows PowerShell:
 ```powershell
@@ -21,10 +20,10 @@ python3.11 -m venv .venv
 .venv/bin/python -m unittest discover -s tests -v
 ```
 
-Ordinary tests use offline fixtures. Use the [local development guide](docs/local-development.md) for PostgreSQL, frontend setup and recovery. Keep credentials and local configuration private.
+Ordinary tests use offline fixtures and never call retailers or paid models. Live scout runs and evaluations are described in the [scout agent guide](docs/scout-agent.md). Keep credentials and local configuration private.
 
 ## Submit a change
 
-Open a focused PR and link the issue. Record checks, limitations and observed results. For buyer-facing changes, identify the [acceptance scenarios](docs/buyer-acceptance-matrix.md) and show what the buyer saw, on which revision, using live or fixture evidence. Inspect the diff and fix material findings. The author can merge once the required checks pass on the current branch, then verify the result and close the issue. [Team workflow](docs/team-workflow.md)
+Open a focused PR that links its issue. Record what changed, the checks you ran, observed results and limitations. For changes to scout behavior, include before-and-after results on the development requests, and never tune on the evaluation requests. Inspect your own diff and fix material findings, then merge once the required checks pass.
 
-Coding assistants follow [AGENTS.md](AGENTS.md). [CLAUDE.md](CLAUDE.md) imports those same rules for Claude Code. [Collaborator setup](docs/collaborator-setup.md) explains how to verify a checkout.
+Coding assistants follow [AGENTS.md](AGENTS.md). [CLAUDE.md](CLAUDE.md) imports those same rules.

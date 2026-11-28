@@ -1,5 +1,7 @@
 # Team workflow
 
-Use the [project board](https://github.com/users/han33-dotcom/projects/2) to find work. Each issue has one active writer. An unassigned issue is ready when its prerequisites are complete. Assign it when starting and record any blocker on the issue. Keep durable decisions in the repository or on the issue.
+Find work on the [project board](https://github.com/users/han33-dotcom/projects/3). Each issue has one active writer: assign yourself when you start and record any blocker on the issue. Keep lasting decisions in the repository or on the issue.
 
-Follow the [PR workflow](../CONTRIBUTING.md). Main requires an up-to-date branch and passing `test` and `build` checks. The author records the merged result and acceptance evidence before closing the issue. Teammate review is optional. [Main ruleset](https://github.com/han33-dotcom/TechScout/rules/24940148) · [Workflow decision](https://github.com/han33-dotcom/TechScout/issues/37)
+Work on a focused branch and open a PR into `main`, or into the declared base for stacked work. Each person reviews, approves and merges their own PRs once the `test` and `build` checks pass. Teammate review is welcome but optional. A PR into someone else's branch is merged by that branch's owner. After merging, record the result and evidence on the issue and close it.
+
+Retired implementations are not developed further. To compare against or inspect them, use the `baseline/pre-scout` and `archive/<branch>` tags.

@@ -239,7 +239,7 @@ class Directory:
 
 
 def import_audit(directory: Directory, *, seed_path=ROOT/'config/retailer-directory-seed.json',
-                 audit_path=ROOT/'docs/retailer-audit-2026-11-16.json') -> int:
+                 audit_path=ROOT/'config/retailer-audit-2026-11-16.json') -> int:
     """Import dated local research. Never activate a source or infer qualifying offers."""
     seeds = [RetailerDirectoryEntry.model_validate(item) for item in json.loads(Path(seed_path).read_text(encoding='utf-8'))]
     audit = json.loads(Path(audit_path).read_text(encoding='utf-8'))

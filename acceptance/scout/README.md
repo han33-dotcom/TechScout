@@ -79,7 +79,7 @@ Eight robustness requests ([inputs](requests/robustness.json), [reports](robustn
 - Runs used the CLI runner, not the normal buyer UI, API and worker, which the protocol asks for. Treat this as a deviation.
 - Reference answers were read only after every run had finished.
 - Grading was independent of the builder:
-  - grader agents applied the [frozen protocol](../../docs/buyer-correctness-acceptance.md) to the run reports and references, four cases each;
+  - grader agents applied the [frozen protocol](https://github.com/han33-dotcom/TechScout/blob/baseline/pre-scout/docs/buyer-correctness-acceptance.md) to the run reports and references, four cases each;
   - a separate skeptic agent per batch tried to refute every credit and find misleading claims;
   - the skeptic's corrected values are final.
 
