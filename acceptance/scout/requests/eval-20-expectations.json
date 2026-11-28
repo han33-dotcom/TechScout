@@ -39,7 +39,7 @@
     {"id": "E16", "category": "monitor", "entry": "needs", "pass": "27-inch, 2560x1440 confirmed for each pick; every recommended offer under the hard $250 ceiling."},
     {"id": "E17", "category": "monitor", "entry": "blocker", "pass": "Explains no new 32-inch 4K OLED is available near $150 and shows the real listed prices found. No offer over $150 is presented as meeting the budget."},
     {"id": "E18", "category": "audio", "entry": "exact", "pass": "Galaxy Buds3 Pro, priced and linked. Buds3 or Buds2 Pro is not a match."},
-    {"id": "E19", "category": "audio", "entry": "seller_pair", "pass": "AirPods 4 with Active Noise Cancellation at two or more shops. The non-ANC AirPods 4 is not a match."},
+    {"id": "E19", "category": "audio", "entry": "seller_pair", "pass": "The exact Sony WF-C700N at two or more shops; the cheapest is named. The WF-C500 or WF-C510 is not a match.", "replaced": "Replaced on 28 November 2026: the earlier AirPods 4 ANC request duplicated request F04 in the flow comparison of PR #278."},
     {"id": "E20", "category": "audio", "entry": "needs", "pass": "Wireless earbuds under the hard $50 ceiling; any sweat or water-resistance claim is evidenced."}
   ]
 }
