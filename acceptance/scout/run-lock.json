@@ -1,0 +1,341 @@
+{
+ "locked_at": "2026-11-28T05:05:46+00:00",
+ "candidate_commit": "cdf26b77302570e5f80cdcd20f5d1109c033b7c9",
+ "working_tree_clean_for_app_config_eval": true,
+ "model": {
+  "model": "openai/gpt-6.1-sol",
+  "serving_provider": "openai",
+  "effort": "low",
+  "rates": {
+   "input": "2.000000",
+   "cached": "0.1000000",
+   "cache_write": "2.5000000",
+   "output": "10.00000"
+  },
+  "pricing_checked_on": "2026-11-23",
+  "max_input_bytes": 96000,
+  "max_output_tokens": 5000,
+  "timeout_seconds": 25,
+  "fallback": "disabled"
+ },
+ "prompts": {
+  "agent": "scout-1",
+  "terms": "scout-terms-1"
+ },
+ "limits": {
+  "max_turns": 7,
+  "research_until_s": 62.0,
+  "final_by_s": 92.0,
+  "search_seconds": 15.0,
+  "ledger": "shared buyer job per run (120 s window, USD 1 cap)"
+ },
+ "shop_directory": {
+  "path": "config/scout-shops.json",
+  "sha256": "9ea2786bd585bb2332d0ed00b2ca770915c79eeafe7b8fca006bc164db1deb28"
+ },
+ "catalog_indexes": {
+  "abed_tahan": {
+   "fetched_at": "2026-11-27T22:13:30.438832+00:00",
+   "rows": 7500
+  },
+  "compuline": {
+   "fetched_at": "2026-11-27T22:16:10.002938+00:00",
+   "rows": 5748
+  },
+  "itpromax": {
+   "fetched_at": "2026-11-27T22:15:51.122686+00:00",
+   "rows": 14289
+  },
+  "itworks": {
+   "fetched_at": "2026-11-27T22:15:42.498935+00:00",
+   "rows": 18684
+  },
+  "jak_computer": {
+   "fetched_at": "2026-11-27T22:13:53.116303+00:00",
+   "rows": 2066
+  },
+  "lebtech": {
+   "fetched_at": "2026-11-27T22:16:12.183422+00:00",
+   "rows": 1532
+  },
+  "martix": {
+   "fetched_at": "2026-11-27T22:16:01.093190+00:00",
+   "rows": 17965
+  },
+  "microcity": {
+   "fetched_at": "2026-11-27T22:15:31.171582+00:00",
+   "rows": 1046
+  },
+  "souq_961": {
+   "fetched_at": "2026-11-27T22:15:28.957124+00:00",
+   "rows": 27500
+  },
+  "technodel": {
+   "fetched_at": "2026-11-27T22:14:12.748806+00:00",
+   "rows": 13552
+  }
+ },
+ "shop_terms": {
+  "abed_tahan": {
+   "fetched_at": "2026-11-28T00:03:10+00:00",
+   "status": "ok",
+   "delivery_rules": 0,
+   "vat": false,
+   "addresses": 3
+  },
+  "beytech": {
+   "fetched_at": "2026-11-28T00:06:26+00:00",
+   "status": "ok",
+   "delivery_rules": 2,
+   "vat": false,
+   "addresses": 0
+  },
+  "classic_phones": {
+   "fetched_at": "2026-11-28T00:04:49+00:00",
+   "status": "ok",
+   "delivery_rules": 1,
+   "vat": false,
+   "addresses": 1
+  },
+  "compuline": {
+   "fetched_at": "2026-11-28T00:09:00+00:00",
+   "status": "no_pages",
+   "delivery_rules": 0,
+   "vat": false,
+   "addresses": 0
+  },
+  "compuone": {
+   "fetched_at": "2026-11-28T00:06:26+00:00",
+   "status": "ok",
+   "delivery_rules": 2,
+   "vat": false,
+   "addresses": 1
+  },
+  "corex": {
+   "fetched_at": "2026-11-28T00:06:26+00:00",
+   "status": "ok",
+   "delivery_rules": 1,
+   "vat": false,
+   "addresses": 0
+  },
+  "electroslab": {
+   "fetched_at": "2026-11-28T00:04:49+00:00",
+   "status": "ok",
+   "delivery_rules": 2,
+   "vat": false,
+   "addresses": 0
+  },
+  "gcs": {
+   "fetched_at": "2026-11-28T00:07:47+00:00",
+   "status": "no_pages",
+   "delivery_rules": 0,
+   "vat": false,
+   "addresses": 0
+  },
+  "ifixlb": {
+   "fetched_at": "2026-11-28T00:07:34+00:00",
+   "status": "ok",
+   "delivery_rules": 2,
+   "vat": false,
+   "addresses": 1
+  },
+  "isolvedit": {
+   "fetched_at": "2026-11-28T00:04:49+00:00",
+   "status": "ok",
+   "delivery_rules": 1,
+   "vat": true,
+   "addresses": 1
+  },
+  "istore_plus": {
+   "fetched_at": "2026-11-28T00:03:10+00:00",
+   "status": "ok",
+   "delivery_rules": 0,
+   "vat": false,
+   "addresses": 0
+  },
+  "istyle_lebanon": {
+   "fetched_at": "2026-11-28T00:03:10+00:00",
+   "status": "ok",
+   "delivery_rules": 2,
+   "vat": false,
+   "addresses": 0
+  },
+  "itpromax": {
+   "fetched_at": "2026-11-28T00:08:36+00:00",
+   "status": "ok",
+   "delivery_rules": 1,
+   "vat": false,
+   "addresses": 1
+  },
+  "itworks": {
+   "fetched_at": "2026-11-28T00:08:36+00:00",
+   "status": "ok",
+   "delivery_rules": 1,
+   "vat": true,
+   "addresses": 0
+  },
+  "jak_computer": {
+   "fetched_at": "2026-11-28T00:04:49+00:00",
+   "status": "ok",
+   "delivery_rules": 1,
+   "vat": true,
+   "addresses": 0
+  },
+  "karizma": {
+   "fetched_at": "2026-11-28T00:04:49+00:00",
+   "status": "ok",
+   "delivery_rules": 1,
+   "vat": false,
+   "addresses": 0
+  },
+  "kaystore": {
+   "fetched_at": "2026-11-28T00:06:26+00:00",
+   "status": "ok",
+   "delivery_rules": 0,
+   "vat": false,
+   "addresses": 0
+  },
+  "lebanon_stores": {
+   "fetched_at": "2026-11-28T00:08:17+00:00",
+   "status": "no_pages",
+   "delivery_rules": 0,
+   "vat": false,
+   "addresses": 0
+  },
+  "lebtech": {
+   "fetched_at": "2026-11-28T00:09:00+00:00",
+   "status": "no_pages",
+   "delivery_rules": 0,
+   "vat": false,
+   "addresses": 0
+  },
+  "m2": {
+   "fetched_at": "2026-11-28T00:06:26+00:00",
+   "status": "ok",
+   "delivery_rules": 0,
+   "vat": false,
+   "addresses": 1
+  },
+  "macrotronics": {
+   "fetched_at": "2026-11-28T00:03:10+00:00",
+   "status": "ok",
+   "delivery_rules": 1,
+   "vat": true,
+   "addresses": 0
+  },
+  "martix": {
+   "fetched_at": "2026-11-28T00:08:36+00:00",
+   "status": "ok",
+   "delivery_rules": 0,
+   "vat": false,
+   "addresses": 0
+  },
+  "mediatech": {
+   "fetched_at": "2026-11-28T00:07:34+00:00",
+   "status": "ok",
+   "delivery_rules": 1,
+   "vat": false,
+   "addresses": 0
+  },
+  "microcity": {
+   "fetched_at": "2026-11-28T00:08:36+00:00",
+   "status": "ok",
+   "delivery_rules": 0,
+   "vat": false,
+   "addresses": 1
+  },
+  "mobileleb": {
+   "fetched_at": "2026-11-28T00:04:48+00:00",
+   "status": "ok",
+   "delivery_rules": 0,
+   "vat": false,
+   "addresses": 0
+  },
+  "najem_star": {
+   "fetched_at": "2026-11-28T00:07:34+00:00",
+   "status": "ok",
+   "delivery_rules": 0,
+   "vat": false,
+   "addresses": 0
+  },
+  "outgeeked": {
+   "fetched_at": "2026-11-28T00:03:10+00:00",
+   "status": "ok",
+   "delivery_rules": 0,
+   "vat": false,
+   "addresses": 0
+  },
+  "phonefinity": {
+   "fetched_at": "2026-11-28T00:07:34+00:00",
+   "status": "ok",
+   "delivery_rules": 2,
+   "vat": true,
+   "addresses": 0
+  },
+  "safa": {
+   "fetched_at": "2026-11-28T00:08:58+00:00",
+   "status": "no_pages",
+   "delivery_rules": 0,
+   "vat": false,
+   "addresses": 0
+  },
+  "sbeity": {
+   "fetched_at": "2026-11-28T00:07:34+00:00",
+   "status": "ok",
+   "delivery_rules": 1,
+   "vat": false,
+   "addresses": 1
+  },
+  "souq_961": {
+   "fetched_at": "2026-11-28T00:08:36+00:00",
+   "status": "ok",
+   "delivery_rules": 0,
+   "vat": false,
+   "addresses": 2
+  },
+  "syscom": {
+   "fetched_at": "2026-11-28T00:08:36+00:00",
+   "status": "ok",
+   "delivery_rules": 0,
+   "vat": false,
+   "addresses": 1
+  },
+  "tech_zone": {
+   "fetched_at": "2026-11-28T00:06:26+00:00",
+   "status": "ok",
+   "delivery_rules": 1,
+   "vat": false,
+   "addresses": 0
+  },
+  "technodel": {
+   "fetched_at": "2026-11-28T00:07:34+00:00",
+   "status": "ok",
+   "delivery_rules": 1,
+   "vat": false,
+   "addresses": 2
+  },
+  "wincell": {
+   "fetched_at": "2026-11-28T00:03:10+00:00",
+   "status": "ok",
+   "delivery_rules": 0,
+   "vat": false,
+   "addresses": 1
+  },
+  "zaytoun": {
+   "fetched_at": "2026-11-28T00:08:51+00:00",
+   "status": "no_pages",
+   "delivery_rules": 0,
+   "vat": false,
+   "addresses": 0
+  }
+ },
+ "inputs": {
+  "acceptance/architecture-v2/confirmation-inputs.json": "a9927dc42e899657bb00e3ddfd782ac01befddb462cbd7beb27a62863e9fbbc6",
+  "acceptance/architecture-v2/primary-inputs.json": "e01fafb5e782b349cdfe21936770b151e88a23c35f3046b306ebd4d6ad176644"
+ },
+ "order": [
+  "confirmation (C01, C02, C03, C07, C05, C06)",
+  "frozen 20 in primary-inputs.json order"
+ ],
+ "rule": "Run once each, sequentially, on this commit; no code, prompt, directory or index change until all held-out runs and grading are complete. Reference answers are read only after the runs."
+}
