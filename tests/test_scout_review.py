@@ -165,6 +165,27 @@ class ReviewRegressionTests(unittest.TestCase):
                 w.get(url)
 
 
+class ShopTermsSpotCheckTests(unittest.TestCase):
+    """Wording found in the real shop-terms extraction on 28 Nov (before the held-out freeze)."""
+
+    def test_conditional_or_regional_free_delivery_is_never_a_zero_fee(self):
+        from app.scout.verify import fee_problem
+        price = Decimal('42.00')
+        for quote, destination in [
+                ('Free shipping on your first order', 'Beirut'),                       # Karizma
+                ('Free delivery may apply to promotional campaigns or specific order values.', 'Beirut'),  # CompuOne
+                ('Spend $1,500.00 more to reach free shipping!', 'Beirut'),            # Macrotronics cart text
+                ('Free delivery in beirut', 'Tripoli'),                                # Mediatech
+                ('Free standard shipping all over Beirut', 'Jounieh')]:                # I Fix LB
+            self.assertIsNotNone(fee_problem(quote, Decimal('0'), None, price, destination), quote)
+        self.assertIsNone(fee_problem('Free delivery in beirut', Decimal('0'), None, price, 'Hamra, Beirut'))
+        self.assertIsNone(fee_problem('Free delivery all over Lebanon', Decimal('0'), None, price, 'Tripoli'))
+        flat = 'Flat $4 anywhere in Lebanon; free on orders of $500 or more'
+        self.assertIsNotNone(fee_problem(flat, Decimal('0'), Decimal('500'), price, 'Tripoli'))
+        self.assertIsNone(fee_problem(flat, Decimal('0'), Decimal('500'), Decimal('600'), 'Tripoli'))
+        self.assertIsNone(fee_problem(flat, Decimal('4'), None, price, 'Tripoli'))
+
+
 class SlowShopTests(unittest.TestCase):
     def test_a_slow_shop_is_dropped_not_waited_for(self):
         import time

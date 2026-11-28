@@ -105,10 +105,16 @@ VAT_INCLUDED = re.compile(r"(includ\w*|inclusive|\bttc\b|no vat|not charg\w*|don
                           r"free of (?:vat|tax))", re.IGNORECASE)
 VAT_EXCLUDED = re.compile(r'(exclud\w*|not included|\+\s?vat|plus vat|added at checkout|calculated at checkout|'
                           r'will be added)', re.IGNORECASE)
-CONDITIONAL_FREE = re.compile(r'\b(over|above|orders? of|minimum|more than|exceed\w*|starting|from|at least)\b',
+THRESHOLD_WORD = r'(?:over|above|exceed\w*|more than|at least|from|starting(?: at| from)?|orders? of|minimum(?: order)?(?: of)?)'
+# A minimum-order condition: a threshold word right before an amount, or "orders of", "minimum", "or more".
+# ("all over Lebanon" is not a condition.)
+CONDITIONAL_FREE = re.compile(r'\b(?:' + THRESHOLD_WORD + r'\s*(?:usd|us\$|\$)?\s?\d|orders? of|minimum|or more)',
                               re.IGNORECASE)
-NATIONWIDE = re.compile(r'(all (?:of )?lebanon|anywhere|nationwide|all (?:areas|regions|over)|across lebanon|flat|'
-                        r'all lebanese|any region|everywhere)', re.IGNORECASE)
+# Free delivery that depends on something the verifier cannot check for this buyer and order.
+FREE_QUALIFIER = re.compile(r'\b(may|might|first order|promo\w*|campaigns?|selected|specific|eligible|spend|reach|'
+                            r'coupons?|codes?|members?|students?|if|when|some|certain)\b', re.IGNORECASE)
+NATIONWIDE = re.compile(r'(all (?:of )?lebanon|anywhere|nationwide|all (?:areas|regions)|all over lebanon|'
+                        r'across lebanon|flat|all lebanese|any region|everywhere)', re.IGNORECASE)
 TIER_WORDS = ('max', 'plus', 'ultra', 'mini', 'lite', 'pro', 'fe', 'air', 'slim', 'edge')
 GB = re.compile(r'(\d{1,4})\s?(gb|tb)\b', re.IGNORECASE)
 INCH = re.compile(r'(\d{2}(?:\.\d)?)\s?(?:-?\s?inch|in\b|"|”|\'\')', re.IGNORECASE)
@@ -421,10 +427,21 @@ def fee_problem(quote: str, fee: Decimal, threshold: Decimal | None, price: Deci
         q = quote.lower()
         if 'free' not in q:
             return 'the quote does not say delivery is free'
+        qualifier = FREE_QUALIFIER.search(q)
+        if qualifier:
+            return f'free delivery in the quote is conditional ("{qualifier.group(0)}")'
         if CONDITIONAL_FREE.search(q):
             limit = threshold if threshold is not None else (amounts[0][0] if amounts else None)
             if limit is None or price is None or price < limit or not any(a[0] == limit for a in amounts):
                 return 'free delivery in the quote depends on a minimum order this price does not reach'
+        # Region rules apply to free delivery too ("Free delivery in Beirut" does not cover Tripoli).
+        problem = region_mismatch(quote, destination)
+        if problem:
+            return problem
+        d = destination.lower()
+        in_beirut = 'beirut' in d or 'بيروت' in d
+        if not in_beirut and re.search(r'\bbeirut\b|بيروت', q) and not NATIONWIDE.search(q):
+            return f'the free delivery in the quote is for Beirut, not {destination}'
         return None
     if not any(a[0] == fee for a in amounts):
         return 'the fee is not written as a currency amount in the quote'
@@ -473,7 +490,7 @@ def nearest_region(quote: str, start: int, end: int, destination: str) -> str | 
 
 def free_threshold(quote: str) -> Decimal | None:
     """'Free delivery on orders over $100' -> 100 (a currency amount after the condition word)."""
-    m = re.search(r'free[^.;|]*?' + CONDITIONAL_FREE.pattern, quote or '', re.IGNORECASE)
+    m = re.search(r'free[^.;|]{0,60}?\b' + THRESHOLD_WORD + r'\s*', quote or '', re.IGNORECASE)
     if not m:
         return None
     after = [a for a in currency_amounts((quote or '')[m.end():m.end() + 40]) if a[1] == 'USD']
