@@ -1,0 +1,58 @@
+{
+ "run_id": "scout-r06-20261127T225217",
+ "request": {
+  "id": "R06",
+  "text": "Find me a new three-seat sofa delivered to Beirut",
+  "mode": "delivery",
+  "destination": "Beirut",
+  "run_id": "scout-r06-20261127T225217"
+ },
+ "status": "no_match",
+ "message": "I cover electronics at Lebanese shops, so I can’t reliably recommend a new three-seat sofa or verify furniture delivery to Beirut. Try a furniture retailer that explicitly confirms new condition, three-seat dimensions, and delivery charges—including any floor-access or assembly fees—before ordering.",
+ "question": null,
+ "offers": [],
+ "proposed": [],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "The request is for furniture, outside this electronics shopping service's coverage. No product search or availability verification was performed.",
+   "at_s": 11.7,
+   "finished": true
+  }
+ ],
+ "tool_calls": [],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 9625,
+   "usage": {
+    "actual_usd": "0.0044152",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3175,
+     "output_tokens": 144,
+     "total_tokens": 3319
+    },
+    "latency_ms": 5718,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  }
+ ],
+ "retailer_requests": 0,
+ "seconds": 11.7,
+ "spend": {
+  "settled_usd": "0.0044152",
+  "uncertain_usd": "0",
+  "model_calls": 1,
+  "ledger_job": "scout-r06-20261127T225217"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": []
+}

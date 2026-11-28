@@ -1,0 +1,1370 @@
+{
+ "run_id": "scout-b05-20261128T053431",
+ "request": {
+  "id": "B05",
+  "text": "I need the iPhone 15 generation in the Mini size, new. Can you find an iPhone 15 mini for delivery to Beirut?",
+  "mode": "delivery",
+  "destination": "Beirut",
+  "category": "phone",
+  "run_id": "scout-b05-20261128T053431"
+ },
+ "status": "impossible",
+ "message": "Apple never made an iPhone 15 mini. The last Mini was the 5.4-inch iPhone 13 mini; the smallest iPhone 15 models are 6.1 inches.\nClosest checked alternatives:\n• iStore Plus: iPhone 15 Pro 128GB — $1080.00, listed in stock. Lebanon-wide delivery is advertised, but the fee and brand-new condition are unconfirmed.\n• Phonefinity: standard iPhone 15 128GB Blue — $830.00, currently out of stock. Beirut delivery is $3; new condition is unconfirmed.\n• Mobileleb: iPhone 13 mini 128GB — $320.00, listed in stock, but explicitly Open Box, so excluded from your new-only requirement. Delivery terms were not confirmed.\nSuggestion: keep your new-only requirement and consider the larger standard iPhone 15; none of these checked listings confirms a new Mini that meets your request.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "alternative",
+   "shop": "iStore Plus",
+   "shop_id": "istore_plus",
+   "title": "Apple iPhone 15 Pro",
+   "variant": "128GB",
+   "url": "https://istoreplus.me/products/apple-iphone-15-pro?variant=46273357447383",
+   "price": "1080.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "near",
+   "identity_reason": "Real iPhone 15-generation alternative, but a 6.1-inch Pro rather than a Mini.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "iPhone 15 generation",
+     "status": "met",
+     "quote": "Apple iPhone 15 Pro",
+     "obs": "P4",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Mini size",
+     "status": "unmet",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "met",
+     "quote": "DELIVERY ALL OVER LEBANON",
+     "obs": "T9",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P4",
+     "url": "https://istoreplus.me/products/apple-iphone-15-pro",
+     "read": "https://istoreplus.me/products/apple-iphone-15-pro.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:35:05+00:00",
+     "sha256": "1398d76b843b67331dc46997cd69c5ad758521c89b83cb904ada7490a1b192ef"
+    }
+   ],
+   "seller_basis": "iStore Plus: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": [
+    "does not meet: Mini size"
+   ]
+  },
+  {
+   "tier": "unavailable",
+   "shop": "Phonefinity",
+   "shop_id": "phonefinity",
+   "title": "Apple iPhone 15 – 128GB",
+   "variant": "Color: Blue",
+   "url": "https://phonefinity.net/products/apple-iphone-15/?attribute_pa_color=blue",
+   "price": "830.00",
+   "currency": "USD",
+   "in_stock": false,
+   "condition": "unknown",
+   "identity": "near",
+   "identity_reason": "Standard iPhone 15 rather than the nonexistent Mini; currently unavailable.",
+   "delivery_fee": "3.00",
+   "total": "833.00",
+   "total_basis": "listed price + delivery fee published by phonefinity (\"Inside Beirut: 3$, within 1 business day\", T8)",
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "iPhone 15 generation",
+     "status": "met",
+     "quote": "Apple iPhone 15 – 128GB",
+     "obs": "P11",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Mini size",
+     "status": "unmet",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "met",
+     "quote": "Inside Beirut: 3$, within 1 business day",
+     "obs": "T8",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P11",
+     "url": "https://phonefinity.net/products/apple-iphone-15/?attribute_pa_color=blue",
+     "read": "https://phonefinity.net/wp-json/wc/store/v1/products?slug=apple-iphone-15",
+     "source": "woo_store_api",
+     "observed_at": "2026-11-28T05:35:18+00:00",
+     "sha256": "78e72a6207b6e0740e0706a794b16071f8e22530fd3a28a962bf78f78b048b00"
+    },
+    {
+     "obs": "T8",
+     "url": "https://phonefinity.net/",
+     "source": "shop delivery terms",
+     "observed_at": "2026-11-28T05:35:19+00:00",
+     "sha256": "dae31dd3ebabdccad32e6fd121ba0a4d2bca7e27f5627528a9789a8dd3710a83"
+    }
+   ],
+   "seller_basis": "Phonefinity: Lebanese shop in the reviewed directory",
+   "downgrades": [
+    "does not meet: Mini size"
+   ]
+  },
+  {
+   "tier": "rejected",
+   "shop": "Mobileleb",
+   "shop_id": "mobileleb",
+   "title": "Apple iPhone 13 mini 128GB - Open Box",
+   "variant": "Black / Open Box",
+   "url": "https://mobileleb.com/products/apple-iphone-13-mini-128gb?variant=68121140232324",
+   "price": "320.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "used",
+   "identity": "near",
+   "identity_reason": "Mini size, but older iPhone 13 generation and Open Box; excluded from the new-only requirement.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "iPhone 15 generation",
+     "status": "unmet",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Mini size",
+     "status": "met",
+     "quote": "Apple iPhone 13 mini 128GB - Open Box",
+     "obs": "P7",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "unmet",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P7",
+     "url": "https://mobileleb.com/products/apple-iphone-13-mini-128gb",
+     "read": "https://mobileleb.com/products/apple-iphone-13-mini-128gb.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:35:06+00:00",
+     "sha256": "a8beb0eeaf04022829907ec08b0435b7d03ee4ce7f1e2666dd79a3e0fcc52fc8"
+    }
+   ],
+   "seller_basis": "Mobileleb: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": [
+    "listing says \"Open Box\"",
+    "does not meet: iPhone 15 generation; New condition"
+   ]
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P4",
+   "variant_id": "46273357447383",
+   "identity": "near",
+   "identity_reason": "Real iPhone 15-generation alternative, but a 6.1-inch Pro rather than a Mini.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "iPhone 15 generation",
+     "status": "met",
+     "evidence_obs": "P4",
+     "quote": "Apple iPhone 15 Pro"
+    },
+    {
+     "requirement": "Mini size",
+     "status": "unmet",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "met",
+     "evidence_obs": "T9",
+     "quote": "DELIVERY ALL OVER LEBANON"
+    }
+   ],
+   "delivery_obs": "T9",
+   "delivery_quote": "DELIVERY ALL OVER LEBANON",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P11",
+   "variant_id": "74374",
+   "identity": "near",
+   "identity_reason": "Standard iPhone 15 rather than the nonexistent Mini; currently unavailable.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "iPhone 15 generation",
+     "status": "met",
+     "evidence_obs": "P11",
+     "quote": "Apple iPhone 15 – 128GB"
+    },
+    {
+     "requirement": "Mini size",
+     "status": "unmet",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "met",
+     "evidence_obs": "T8",
+     "quote": "Inside Beirut: 3$, within 1 business day"
+    }
+   ],
+   "delivery_obs": "T8",
+   "delivery_quote": "Inside Beirut: 3$, within 1 business day",
+   "delivery_fee_usd": "3",
+   "free_delivery_over_usd": null,
+   "vat_quote": "Prices are final. We don't charge VAT",
+   "price_quote": null
+  },
+  {
+   "obs": "P7",
+   "variant_id": "68121140232324",
+   "identity": "near",
+   "identity_reason": "Mini size, but older iPhone 13 generation and Open Box; excluded from the new-only requirement.",
+   "condition": "open_box",
+   "condition_quote": "Black / Open Box",
+   "condition_obs": "P7",
+   "requirements": [
+    {
+     "requirement": "iPhone 15 generation",
+     "status": "unmet",
+     "evidence_obs": "P7",
+     "quote": "Apple iPhone 13 mini 128GB - Open Box"
+    },
+    {
+     "requirement": "Mini size",
+     "status": "met",
+     "evidence_obs": "P7",
+     "quote": "Apple iPhone 13 mini 128GB - Open Box"
+    },
+    {
+     "requirement": "New condition",
+     "status": "unmet",
+     "evidence_obs": "P7",
+     "quote": "Black / Open Box"
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": null,
+   "delivery_quote": null,
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Apple never made an iPhone 15 mini. Search for the closest real alternatives: iPhone 13 mini for size and standard iPhone 15 for generation.",
+   "at_s": 9.1,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "iPhone 15 mini"
+    },
+    {
+     "tool": "search",
+     "query": "iPhone 13 mini"
+    },
+    {
+     "tool": "search",
+     "query": "iPhone 15 128"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Check alternate standard iPhone 15 listings and shop policies for delivery and new condition.",
+   "at_s": 45.2,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "iPhone 15",
+     "shop_ids": [
+      "istyle_lebanon",
+      "istore_plus",
+      "outgeeked",
+      "wincell",
+      "phonefinity",
+      "abed_tahan",
+      "karizma"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "istore_plus"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "mobileleb"
+     ]
+    },
+    {
+     "tool": "read",
+     "url": "https://istoreplus.me/products/apple-iphone-15-pro",
+     "terms": [
+      "new",
+      "condition",
+      "sealed"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "The requested model never existed; report checked alternatives without implying they meet all requirements.",
+   "at_s": 68.1,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 27141,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 27157,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 27781,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 1282,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 2860,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 2985,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 3563,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7172,
+   "usage": {
+    "actual_usd": "0.004308",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3227,
+     "output_tokens": 127,
+     "total_tokens": 3354
+    },
+    "latency_ms": 4079,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 8266,
+   "usage": {
+    "actual_usd": "0.0226005",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 10348,
+     "output_tokens": 176,
+     "total_tokens": 10524
+    },
+    "latency_ms": 4531,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 19359,
+   "usage": {
+    "actual_usd": "0.038533",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 13905,
+     "output_tokens": 880,
+     "total_tokens": 14785
+    },
+    "latency_ms": 15953,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  }
+ ],
+ "retailer_requests": 89,
+ "seconds": 68.2,
+ "spend": {
+  "settled_usd": "0.0654415",
+  "uncertain_usd": "0",
+  "model_calls": 3,
+  "ledger_job": "scout-b05-20261128T053431"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/instax-mini-13-instant-camera-blue",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:35:03+00:00",
+   "sha256": "a5106b89e1e255f39d4c2f5b2284082cc5979711a52942a215b69bfc96ab1df9",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "Instax Mini 13 Instant Camera - Blue",
+    "url": "https://abedtahan.com/products/instax-mini-13-instant-camera-blue",
+    "vendor": "FUJI",
+    "product_type": "Instant Cameras",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:35:03+00:00",
+    "variants": [
+     {
+      "variant_id": "45570451341491",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "130.00",
+      "compare_at": "130.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "INSTAX MINI 13 BLUE#",
+      "url": "https://abedtahan.com/products/instax-mini-13-instant-camera-blue?variant=45570451341491"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://jakcomputer.com/products/mini-jet-blower-13000-rpm",
+   "shop_id": "jak_computer",
+   "observed_at": "2026-11-28T05:35:03+00:00",
+   "sha256": "f91e0650407f237d895129936079c9d66c76c9a2e25869f8ba3229e585d277ca",
+   "product": {
+    "shop": "JAK Computer",
+    "shop_id": "jak_computer",
+    "title": "MINI JET BLOWER 13,000 RPM MINI-BLOWER",
+    "url": "https://jakcomputer.com/products/mini-jet-blower-13000-rpm",
+    "vendor": "jakcomputer",
+    "product_type": "simple",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:35:03+00:00",
+    "variants": [
+     {
+      "variant_id": "44593489051695",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "60.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "MINI-BLOWER-A21-ST",
+      "url": "https://jakcomputer.com/products/mini-jet-blower-13000-rpm?variant=44593489051695"
+     }
+    ],
+    "description": "Mini Jet Blower 130,000 RPM Portable Turbo Fan\nThe Mini Jet Blower 130,000 RPM Portable Turbo Fan is an incredibly powerful and versatile cleaning tool designed for those who need high-velocity airflow in a compact form factor. This handheld device produces a concentrated jet of air, making it perfect for clearing dust from sensitive electronics, drying surfaces, or even assisting with outdoor activities. At JAK Computer, we recommend this high-performance blower for tech enthusiasts in Beirut who want a durable and eco-friendly alternative to compressed air cans for maintaining their gear in Lebanon.\nIncredible Power and Multi-Speed Control\nExperience the raw power of a high-speed brushless motor with the Mini Jet Blower. Capable of reaching speeds up to 130,000 RPM, this tool generates a wind speed that can easily blow away stubborn debris from keyboards, PC interiors, and camera lenses. At jakcomputer.com, we highlight its step-less speed regulation, allowing you to fine-tune the airflow from a gentle breeze to a powerful jet. This level of control ensures you have the right amount of force for any task in Beirut, whether you are performing delicate maintenance or heavy-duty cleaning in Lebanon.\nThe Mini Jet Blower is powered by a high-capacity rechargeable battery, offering long-lasting performance without the need for constant cable connections. Its USB-C fast charging capability means you can quickly top up the power at your desk or in your car. The professional build f"
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/apple-iphone-13-mini-128gb",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:35:04+00:00",
+   "sha256": "a8beb0eeaf04022829907ec08b0435b7d03ee4ce7f1e2666dd79a3e0fcc52fc8",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Apple iPhone 13 mini 128GB - Open Box",
+    "url": "https://mobileleb.com/products/apple-iphone-13-mini-128gb",
+    "vendor": "Apple",
+    "product_type": "Communications",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:35:04+00:00",
+    "variants": [
+     {
+      "variant_id": "68121140232324",
+      "title": "Black / Open Box",
+      "options": {
+       "Color": "Black",
+       "Product Condition": "Open Box"
+      },
+      "price": "320.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppZ643bT",
+      "url": "https://mobileleb.com/products/apple-iphone-13-mini-128gb?variant=68121140232324",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68121140265092",
+      "title": "Blue / Open Box",
+      "options": {
+       "Color": "Blue",
+       "Product Condition": "Open Box"
+      },
+      "price": "320.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppYxblVB",
+      "url": "https://mobileleb.com/products/apple-iphone-13-mini-128gb?variant=68121140265092",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68121140297860",
+      "title": "Pink / Open Box",
+      "options": {
+       "Color": "Pink",
+       "Product Condition": "Open Box"
+      },
+      "price": "320.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppCSIgG4",
+      "url": "https://mobileleb.com/products/apple-iphone-13-mini-128gb?variant=68121140297860",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68121140330628",
+      "title": "Red / Open Box",
+      "options": {
+       "Color": "Red",
+       "Product Condition": "Open Box"
+      },
+      "price": "320.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "App2qMI8H",
+      "url": "https://mobileleb.com/products/apple-iphone-13-mini-128gb?variant=68121140330628",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68121140363396",
+      "title": "White / Open Box",
+      "options": {
+       "Color": "White",
+       "Product Condition": "Open Box"
+      },
+      "price": "320.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "App4ZodgX",
+      "url": "https://mobileleb.com/products/apple-iphone-13-mini-128gb?variant=68121140363396",
+      "condition": "Open Box"
+     }
+    ],
+    "description": "Dimensions: 131.5 x 64.2 x 7.7 mm (5.18 x 2.53 x 0.30 in)\nWeight: 141 g (4.97 oz)\nBuild: Glass front (Gorilla Glass), glass back (Gorilla Glass), aluminum frame\nSIM: Single SIM (Nano-SIM and/or eSIM) or Dual SIM (Nano-SIM, dual stand-by)\nIP68 dust/water resistant (up to 6m for 30 mins) Apple Pay (Visa, MasterCard, AMEX certified)\nDISPLAY Type: Super Retina XDR OLED, HDR10, Dolby Vision, 800 nits (typ), 1200 nits (peak)\nSize: 5.4 inches, 71.9 cm2 (~85.1% screen-to-body ratio)\nResolution: 1080 x 2340 pixels, 19.5:9 ratio (~476 ppi density)\nProtection: Scratch-resistant ceramic glass, oleophobic coating\nWide color gamut True-tone\nOS: iOS 15\nChipset: Apple A15 Bionic (5 nm)\nCPU: Hexa-core (2 + 4)\nGPU: Apple GPU (4-core graphics)\nMEMORY Card slot: No\nInternal: 6GB RAM, 128GB\nMAIN CAMERA: Dual 12 MP, f/1.6, 26mm (wide), 1.7µm, dual pixel PDAF, sensor-shift stabilization (IBIS), 12 MP, f/2.4, 120˚, 13mm (ultrawide)\nFeatures: Dual-LED dual-tone flash, HDR (photo/panorama)\nVideo: 4K@24/30/60fps, 1080p@30/60/120/240fps, HDR, Dolby Vision HDR (up to XXfps), stereo sound rec.\nSELFIE CAMERA: Dual 12 MP, f/2.2, 23mm (wide), 1/3.6”, SL 3D, (depth/biometrics sensor)\nFeatures: HDR\nVideo: 4K@24/25/30/60fps, 1080p@30/60/120fps, gyro-EIS\nLoudspeaker: Yes, with stereo speakers\n3.5mm jack: No\nWLAN: Wi-Fi 802.11 a/b/g/n/ac/6, dual-band, hotspot\nBluetooth: 5.0, A2DP, LE\nGPS: Yes, with A-GPS, GLONASS, GALILEO, BDS, QZSS\nNFC: Yes\nRadio: No\nUSB: Lightning, USB 2.0\nSensors: Face ID, accelerometer, gyro,"
+   }
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://istoreplus.me/products/apple-iphone-15-pro",
+   "shop_id": "istore_plus",
+   "observed_at": "2026-11-28T05:35:05+00:00",
+   "sha256": "1398d76b843b67331dc46997cd69c5ad758521c89b83cb904ada7490a1b192ef",
+   "product": {
+    "shop": "iStore Plus",
+    "shop_id": "istore_plus",
+    "title": "Apple iPhone 15 Pro",
+    "url": "https://istoreplus.me/products/apple-iphone-15-pro",
+    "vendor": "Apple",
+    "product_type": "Smart Phone",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:35:05+00:00",
+    "variants": [
+     {
+      "variant_id": "46273357447383",
+      "title": "128GB",
+      "options": {
+       "Storage": "128GB"
+      },
+      "price": "1080.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://istoreplus.me/products/apple-iphone-15-pro?variant=46273357447383"
+     },
+     {
+      "variant_id": "46273357480151",
+      "title": "256GB",
+      "options": {
+       "Storage": "256GB"
+      },
+      "price": "1190.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://istoreplus.me/products/apple-iphone-15-pro?variant=46273357480151"
+     },
+     {
+      "variant_id": "46273357512919",
+      "title": "512GB",
+      "options": {
+       "Storage": "512GB"
+      },
+      "price": "1590.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://istoreplus.me/products/apple-iphone-15-pro?variant=46273357512919"
+     },
+     {
+      "variant_id": "46273357545687",
+      "title": "1TB",
+      "options": {
+       "Storage": "1TB"
+      },
+      "price": "1700.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://istoreplus.me/products/apple-iphone-15-pro?variant=46273357545687"
+     }
+    ],
+    "description": "Apple iPhone 15 Pro\nTitanium Design | A17 Pro Chip | Advanced Camera System\n*Next-Level Performance. Unmatched Elegance.*\nThe iPhone 15 Pro redefines smartphone excellence with its aerospace-grade titanium design, groundbreaking A17 Pro chip, and most advanced Pro camera system yet. Engineered for power users and creative professionals, it delivers unrivaled performance, stunning photography capabilities, and Apple's most immersive display—all in our lightest Pro model ever.\n✨ Key Features\n🛠️ Premium Titanium Design\nAerospace-Grade Titanium – Strongest iPhone frame yet, 19% lighter than stainless steel\nTextured Matte Glass Back – Elegant, fingerprint-resistant finish\nNarrower Bezels – More screen in nearly the same footprint\n⚡ A17 Pro Chip – Next-Gen Performance\n3nm Technology – 10% faster CPU, 20% faster GPU\nHardware-Accelerated Ray Tracing – Console-quality gaming\nProRes 4K60 Log Encoding – Professional video workflows\n📸 Pro Camera System\n48MP Main Sensor – 2x Telephoto option from main camera\nNew 12MP Telephoto – 3x optical zoom (120mm equivalent)\nNext-Gen Portrait Mode – Automatic depth capture\nNight Mode on All Cameras – Stellar low-light performance\n🔄 USB-C Connectivity\nUSB 3.2 Gen 2 – 20x faster transfers than Lightning\n4K HDR Video Output – Direct to external displays\n🎮 Gaming & Display\nProMotion 120Hz OLED – Always-On Display option\nConsole-Quality Games – Resident Evil Village, Death Stranding\n📊 Technical Specifications\nFeature\nSpecification\nDisplay\n6.1\" Super Retin"
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://isolvedit.me/products/apple-mac-mini-m5-pro-mhqn4ll-a",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T05:35:05+00:00",
+   "sha256": "74a3c75991dde4942fb6cb968b9def0853170aa3b560e804c892fb5041430939",
+   "product": {
+    "shop": "iSolved IT Solutions",
+    "shop_id": "isolvedit",
+    "title": "Apple Mac mini M5 Pro – 24GB RAM, 512GB SSD, 15-Core CPU, 16-Core GPU | MHQN4LL/A",
+    "url": "https://isolvedit.me/products/apple-mac-mini-m5-pro-mhqn4ll-a",
+    "vendor": "Apple",
+    "product_type": "Desktops",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:35:05+00:00",
+    "variants": [
+     {
+      "variant_id": "68610915106927",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "1950.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "MHQN4LL/A",
+      "url": "https://isolvedit.me/products/apple-mac-mini-m5-pro-mhqn4ll-a?variant=68610915106927"
+     }
+    ],
+    "description": "✅ Available – delivery within 24 hours anywhere in Lebanon\nThe Mac mini with the Apple M5 Pro chip is a tiny desktop with pro-level power for editing, coding and design. This model has 24GB unified memory and a 512GB SSD. Keyboard, mouse and screen are sold separately.\nApple Mac mini M5 Pro (MHQN4LL/A) – Specifications\nModel\nApple Mac mini (M5 Pro) — MHQN4LL/A\nChip\nApple M5 Pro, 15-core CPU, 16-core GPU, 16-core Neural Engine\nMemory\n24GB unified memory\nStorage\n512GB SSD\nOperating system\nmacOS with Apple Intelligence\nWarranty\n1 year\nWhy buy from iSolved IT\nBrand-new, original sealed unit\n1 year warranty\nDelivery within 24 hours anywhere in Lebanon, or pick up from our shop in Bourj Hammoud, Beirut\nPrices include VAT\nQuestions? WhatsApp us on +961 70 611 637\nFAQ\nWhat is the price of the Apple Mac mini M5 Pro in Lebanon?\n$1,950 at iSolved IT, VAT included.\nIs it in stock?\nYes – it is available and delivered within 24 hours anywhere in Lebanon.\nDoes it come with warranty?\nYes, 1 year warranty."
+   }
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://istoreplus.me/products/apple-iphone-15-pro",
+   "shop_id": "istore_plus",
+   "observed_at": "2026-11-28T05:35:05+00:00",
+   "sha256": "1398d76b843b67331dc46997cd69c5ad758521c89b83cb904ada7490a1b192ef",
+   "product": {
+    "shop": "iStore Plus",
+    "shop_id": "istore_plus",
+    "title": "Apple iPhone 15 Pro",
+    "url": "https://istoreplus.me/products/apple-iphone-15-pro",
+    "vendor": "Apple",
+    "product_type": "Smart Phone",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:35:05+00:00",
+    "variants": [
+     {
+      "variant_id": "46273357447383",
+      "title": "128GB",
+      "options": {
+       "Storage": "128GB"
+      },
+      "price": "1080.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://istoreplus.me/products/apple-iphone-15-pro?variant=46273357447383"
+     },
+     {
+      "variant_id": "46273357480151",
+      "title": "256GB",
+      "options": {
+       "Storage": "256GB"
+      },
+      "price": "1190.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://istoreplus.me/products/apple-iphone-15-pro?variant=46273357480151"
+     },
+     {
+      "variant_id": "46273357512919",
+      "title": "512GB",
+      "options": {
+       "Storage": "512GB"
+      },
+      "price": "1590.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://istoreplus.me/products/apple-iphone-15-pro?variant=46273357512919"
+     },
+     {
+      "variant_id": "46273357545687",
+      "title": "1TB",
+      "options": {
+       "Storage": "1TB"
+      },
+      "price": "1700.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://istoreplus.me/products/apple-iphone-15-pro?variant=46273357545687"
+     }
+    ],
+    "description": "Apple iPhone 15 Pro\nTitanium Design | A17 Pro Chip | Advanced Camera System\n*Next-Level Performance. Unmatched Elegance.*\nThe iPhone 15 Pro redefines smartphone excellence with its aerospace-grade titanium design, groundbreaking A17 Pro chip, and most advanced Pro camera system yet. Engineered for power users and creative professionals, it delivers unrivaled performance, stunning photography capabilities, and Apple's most immersive display—all in our lightest Pro model ever.\n✨ Key Features\n🛠️ Premium Titanium Design\nAerospace-Grade Titanium – Strongest iPhone frame yet, 19% lighter than stainless steel\nTextured Matte Glass Back – Elegant, fingerprint-resistant finish\nNarrower Bezels – More screen in nearly the same footprint\n⚡ A17 Pro Chip – Next-Gen Performance\n3nm Technology – 10% faster CPU, 20% faster GPU\nHardware-Accelerated Ray Tracing – Console-quality gaming\nProRes 4K60 Log Encoding – Professional video workflows\n📸 Pro Camera System\n48MP Main Sensor – 2x Telephoto option from main camera\nNew 12MP Telephoto – 3x optical zoom (120mm equivalent)\nNext-Gen Portrait Mode – Automatic depth capture\nNight Mode on All Cameras – Stellar low-light performance\n🔄 USB-C Connectivity\nUSB 3.2 Gen 2 – 20x faster transfers than Lightning\n4K HDR Video Output – Direct to external displays\n🎮 Gaming & Display\nProMotion 120Hz OLED – Always-On Display option\nConsole-Quality Games – Resident Evil Village, Death Stranding\n📊 Technical Specifications\nFeature\nSpecification\nDisplay\n6.1\" Super Retin"
+   }
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/apple-iphone-13-mini-128gb",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:35:06+00:00",
+   "sha256": "a8beb0eeaf04022829907ec08b0435b7d03ee4ce7f1e2666dd79a3e0fcc52fc8",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Apple iPhone 13 mini 128GB - Open Box",
+    "url": "https://mobileleb.com/products/apple-iphone-13-mini-128gb",
+    "vendor": "Apple",
+    "product_type": "Communications",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:35:06+00:00",
+    "variants": [
+     {
+      "variant_id": "68121140232324",
+      "title": "Black / Open Box",
+      "options": {
+       "Color": "Black",
+       "Product Condition": "Open Box"
+      },
+      "price": "320.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppZ643bT",
+      "url": "https://mobileleb.com/products/apple-iphone-13-mini-128gb?variant=68121140232324",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68121140265092",
+      "title": "Blue / Open Box",
+      "options": {
+       "Color": "Blue",
+       "Product Condition": "Open Box"
+      },
+      "price": "320.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppYxblVB",
+      "url": "https://mobileleb.com/products/apple-iphone-13-mini-128gb?variant=68121140265092",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68121140297860",
+      "title": "Pink / Open Box",
+      "options": {
+       "Color": "Pink",
+       "Product Condition": "Open Box"
+      },
+      "price": "320.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppCSIgG4",
+      "url": "https://mobileleb.com/products/apple-iphone-13-mini-128gb?variant=68121140297860",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68121140330628",
+      "title": "Red / Open Box",
+      "options": {
+       "Color": "Red",
+       "Product Condition": "Open Box"
+      },
+      "price": "320.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "App2qMI8H",
+      "url": "https://mobileleb.com/products/apple-iphone-13-mini-128gb?variant=68121140330628",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68121140363396",
+      "title": "White / Open Box",
+      "options": {
+       "Color": "White",
+       "Product Condition": "Open Box"
+      },
+      "price": "320.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "App4ZodgX",
+      "url": "https://mobileleb.com/products/apple-iphone-13-mini-128gb?variant=68121140363396",
+      "condition": "Open Box"
+     }
+    ],
+    "description": "Dimensions: 131.5 x 64.2 x 7.7 mm (5.18 x 2.53 x 0.30 in)\nWeight: 141 g (4.97 oz)\nBuild: Glass front (Gorilla Glass), glass back (Gorilla Glass), aluminum frame\nSIM: Single SIM (Nano-SIM and/or eSIM) or Dual SIM (Nano-SIM, dual stand-by)\nIP68 dust/water resistant (up to 6m for 30 mins) Apple Pay (Visa, MasterCard, AMEX certified)\nDISPLAY Type: Super Retina XDR OLED, HDR10, Dolby Vision, 800 nits (typ), 1200 nits (peak)\nSize: 5.4 inches, 71.9 cm2 (~85.1% screen-to-body ratio)\nResolution: 1080 x 2340 pixels, 19.5:9 ratio (~476 ppi density)\nProtection: Scratch-resistant ceramic glass, oleophobic coating\nWide color gamut True-tone\nOS: iOS 15\nChipset: Apple A15 Bionic (5 nm)\nCPU: Hexa-core (2 + 4)\nGPU: Apple GPU (4-core graphics)\nMEMORY Card slot: No\nInternal: 6GB RAM, 128GB\nMAIN CAMERA: Dual 12 MP, f/1.6, 26mm (wide), 1.7µm, dual pixel PDAF, sensor-shift stabilization (IBIS), 12 MP, f/2.4, 120˚, 13mm (ultrawide)\nFeatures: Dual-LED dual-tone flash, HDR (photo/panorama)\nVideo: 4K@24/30/60fps, 1080p@30/60/120/240fps, HDR, Dolby Vision HDR (up to XXfps), stereo sound rec.\nSELFIE CAMERA: Dual 12 MP, f/2.2, 23mm (wide), 1/3.6”, SL 3D, (depth/biometrics sensor)\nFeatures: HDR\nVideo: 4K@24/25/30/60fps, 1080p@30/60/120fps, gyro-EIS\nLoudspeaker: Yes, with stereo speakers\n3.5mm jack: No\nWLAN: Wi-Fi 802.11 a/b/g/n/ac/6, dual-band, hotspot\nBluetooth: 5.0, A2DP, LE\nGPS: Yes, with A-GPS, GLONASS, GALILEO, BDS, QZSS\nNFC: Yes\nRadio: No\nUSB: Lightning, USB 2.0\nSensors: Face ID, accelerometer, gyro,"
+   }
+  },
+  {
+   "obs": "P8",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/apple-iphone-15-128gb",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:35:07+00:00",
+   "sha256": "49067a25cd73d0cdc0b63a9b6f4a48ebe6bbf1eaf530e7727c38114cefa2ce28",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Apple iPhone 15 128GB - Open Box",
+    "url": "https://mobileleb.com/products/apple-iphone-15-128gb",
+    "vendor": "Apple",
+    "product_type": "Communications",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:35:07+00:00",
+    "variants": [
+     {
+      "variant_id": "68136921301124",
+      "title": "Black / Open Box",
+      "options": {
+       "Color": "Black",
+       "Product Condition": "Open Box"
+      },
+      "price": "560.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "App3r3pVa",
+      "url": "https://mobileleb.com/products/apple-iphone-15-128gb?variant=68136921301124",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68136921333892",
+      "title": "Blue / Open Box",
+      "options": {
+       "Color": "Blue",
+       "Product Condition": "Open Box"
+      },
+      "price": "560.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppGG0Fab",
+      "url": "https://mobileleb.com/products/apple-iphone-15-128gb?variant=68136921333892",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68136921366660",
+      "title": "Green / Open Box",
+      "options": {
+       "Color": "Green",
+       "Product Condition": "Open Box"
+      },
+      "price": "560.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppAUjhoB",
+      "url": "https://mobileleb.com/products/apple-iphone-15-128gb?variant=68136921366660",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68136921399428",
+      "title": "Pink / Open Box",
+      "options": {
+       "Color": "Pink",
+       "Product Condition": "Open Box"
+      },
+      "price": "560.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppzDgxZD",
+      "url": "https://mobileleb.com/products/apple-iphone-15-128gb?variant=68136921399428",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68136921432196",
+      "title": "Yellow / Open Box",
+      "options": {
+       "Color": "Yellow",
+       "Product Condition": "Open Box"
+      },
+      "price": "560.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "App0Tv0i3",
+      "url": "https://mobileleb.com/products/apple-iphone-15-128gb?variant=68136921432196",
+      "condition": "Open Box"
+     }
+    ],
+    "description": "Dimensions: 147.6 x 71.6 x 7.8 mm (5.81 x 2.82 x 0.31 in)\nWeight: 171 g (6.03 oz)\nBuild: Glass front (Corning-made glass), glass back (Corning-made glass), aluminum frame\nSIM: Nano-SIM and eSIM - International\nIP68 dust/water resistant (up to 6m for 30 min)\nApple Pay (Visa, MasterCard, AMEX certified)\nDISPLAY Type: Super Retina XDR OLED, HDR10, Dolby Vision, 1000 nits (HBM), 2000 nits (peak)\nSize: 6.1 inches, 91.3 cm2 (~86.4% screen-to-body ratio)\nResolution: 1179 x 2556 pixels, 19.5:9 ratio (~461 ppi density)\nProtection: Ceramic Shield glass\nPLATFORM OS: iOS 17\nChipset: Apple A16 Bionic (4 nm)\nCPU: Hexa-core (2x3.46 GHz Everest + 4x2.02 GHz Sawtooth)\nGPU: Apple GPU (5-core graphics)\nMEMORY Card slot: No\nInternal 128GB 6GB RAM, NVMe\nMAIN CAMERA: Dual 48 MP, f/1.6, 26mm (wide), 1.0µm, dual pixel PDAF, sensor-shift OIS, 12 MP, f/2.4, 13mm, 120˚ (ultrawide)\nFeatures: Dual-LED dual-tone flash, HDR (photo/panorama)\nVideo: 4K@24/25/30/60fps, 1080p@25/30/60/120/240fps, HDR, Dolby Vision HDR (up to 60fps), Cinematic mode (4K@30fps), stereo sound rec.\nSELFIE CAMERA: Single 12 MP, f/1.9, 23mm (wide), 1/3.6\", PDAF\nSL 3D, (depth/biometrics sensor)\nFeatures: HDR, Cinematic mode (4K@30fps)\nVideo: 4K@24/25/30/60fps, 1080p@25/30/60/120fps, gyro-EIS\nLoudspeaker: Yes, with stereo speakers\n3.5mm jack: No\nWLAN: Wi-Fi 802.11 a/b/g/n/ac/6, dual-band, hotspot\nBluetooth: 5.3, A2DP, LE\nPositioning: GPS, GLONASS, GALILEO, BDS, QZSS\nNFC: Yes\nRadio: No\nUSB: USB Type-C 2.0, DisplayPort\nSensors: Face ID, "
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://isolvedit.me/policies/shipping-policy",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T05:35:07+00:00",
+   "sha256": "28ad344be49bf3feba773c8c6024bbce81afd3b8d541f0db7d46c68c6c53a45b",
+   "excerpt": "Shipping policy | iSolved IT\nSkip to content\nYour cart is empty\nContinue shopping\nHave an account?\nLog in to check out faster.\nYour cart\nLoading...\nEstimated total\n$0.00 USD\n✅ All prices include VAT – nothing extra to pay. Discounts and shipping calculated at checkout.\nCheck out\n🎄 Christmas deals are live — order on WhatsApp\n✅ All prices include VAT — nothing extra to pay\n💵 Cash on delivery\n🛡️ 6-month warranty on used laptops\nShop\nApple\nApple\nApple Accessories\nApple Macbook\nApple iPad\nGaming\nGaming\nGaming Laptops\nGaming Monitors\nGaming Consoles\nGaming Accessories\nLaptops\nLaptops\nApple Laptops\nAsus Laptops\nAcer Laptops\nDell Laptops\nHp laptops\nLenovo Laptops\nMsi Laptops\nSecond Hand Laptops\nSony Laptops\nLaptop Parts\nDesktops\nDesktops\nAll Desktops & All-in-Ones\nDesktop PCs\nAll-in-One PCs\nComputer Parts\nComputer Parts\nMotherboards\nCPU's\nGPU's\nStorages\nRAM's\nCases and Chassis\nPower Supply\nAccessories\nAccessories\nAdapters & Converters\nBackpacks & Bags\nCables\nExternal Hard Drives\nFlash Drives & SD Cards\nMobile Accessories\nPower Banks\nChargers\nPhone Holders & Car Mounts\nDocking Stations & USB-C Hubs\nLaptop Stands & Coolers\nWebcams\nWireless Presenters\nInks & Toners\nMouse\nMouse Pads & Wrist Pads\nKeyboards\nAudio\nAudio\nEarbuds\nSpeakers\nHeadsets\nMicrophones\nElectronics\nElectronics\nTablets\nGadgets\nMonitors\nPrinters & Scanners\nPaper Shredders\nPOS & Barcode Scanners\nNetworking Products\nNetworking Products\nFiber Optic\nNetworking Accessories\nSwitches\nNetwork & Server Cabinets\nRouters & Modems\nC",
+   "quoted": []
+  },
+  {
+   "obs": "P9",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/apple-iphone-15-pro-128gb",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:35:07+00:00",
+   "sha256": "fcb1c38e24c58d32432205142b8693e2b195dc8f8cd2daf4d9071fb5bd427891",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Apple iPhone 15 Pro 128GB - Open Box",
+    "url": "https://mobileleb.com/products/apple-iphone-15-pro-128gb",
+    "vendor": "Apple",
+    "product_type": "Communications",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:35:07+00:00",
+    "variants": [
+     {
+      "variant_id": "68137116827780",
+      "title": "Black Titanium / Open Box",
+      "options": {
+       "Color": "Black Titanium",
+       "Product Condition": "Open Box"
+      },
+      "price": "710.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "App97L6Dd",
+      "url": "https://mobileleb.com/products/apple-iphone-15-pro-128gb?variant=68137116827780",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68137116860548",
+      "title": "Blue Titanium / Open Box",
+      "options": {
+       "Color": "Blue Titanium",
+       "Product Condition": "Open Box"
+      },
+      "price": "710.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppJyvi6j",
+      "url": "https://mobileleb.com/products/apple-iphone-15-pro-128gb?variant=68137116860548",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68137116893316",
+      "title": "Natural Titanium / Open Box",
+      "options": {
+       "Color": "Natural Titanium",
+       "Product Condition": "Open Box"
+      },
+      "price": "710.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppwQEHW8",
+      "url": "https://mobileleb.com/products/apple-iphone-15-pro-128gb?variant=68137116893316",
+      "condition": "Open Box"
+     },
+     {
+      "variant_id": "68137116926084",
+      "title": "White Titanium / Open Box",
+      "options": {
+       "Color": "White Titanium",
+       "Product Condition": "Open Box"
+      },
+      "price": "710.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppbppIHp",
+      "url": "https://mobileleb.com/products/apple-iphone-15-pro-128gb?variant=68137116926084",
+      "condition": "Open Box"
+     }
+    ],
+    "description": "Dimensions: 146.6 x 70.6 x 8.3 mm (5.77 x 2.78 x 0.33 in)\nWeight: 187 g (6.60 oz)\nBuild: Glass front (Corning-made glass), glass back (Corning-made glass), titanium frame (grade 5)\nSIM Nano-SIM and eSIM - International\nIP68 dust/water resistant (up to 6m for 30 min)\nApple Pay (Visa, MasterCard, AMEX certified)\nDISPLAY Type: LTPO Super Retina XDR OLED, 120Hz, HDR10, Dolby Vision, 1000 nits (typ), 2000 nits (HBM)\nSize: 6.1 inches, 91.3 cm2 (~88.2% screen-to-body ratio)\nResolution: 1179 x 2556 pixels, 19.5:9 ratio (~461 ppi density)\nProtection: Ceramic Shield glass\nAlways-On display\nOS: iOS 17\nChipset: Apple A17 Pro (3 nm)\nCPU: Hexa-core (2x3.78 GHz + 4)\nGPU: Apple GPU (6-core graphics)\nMEMORY Card slot: No\nInternal 128GB 8GB RAM, NVMe\nMAIN CAMERA: Triple 48 MP, f/1.8, 24mm (wide), 1/1.28\", 1.22µm, dual pixel PDAF, sensor-shift OIS, 12 MP, f/2.8, 77mm (telephoto), 1.0µm, PDAF, OIS, 3x optical zoom, 12 MP, f/2.2, 13mm, 120˚ (ultrawide), 1/2.55\", 1.4µm, dual pixel PDAF, TOF 3D LiDAR scanner (depth)\nFeatures: Dual-LED dual-tone flash, HDR (photo/panorama)\nVideo: 4K@24/25/30/60fps, 1080p@25/30/60/120/240fps, 10-bit HDR, Dolby Vision HDR (up to 60fps), ProRes, Cinematic mode (4K@24/30fps), 3D (spatial) video, stereo sound rec.\nSELFIE CAMERA: Single 12 MP, f/1.9, 23mm (wide), 1/3.6\", PDAF, OIS, SL 3D, (depth/biometrics sensor)\nFeatures: HDR, Cinematic mode (4K@24/30fps)\nVideo: 4K@24/25/30/60fps, 1080p@25/30/60/120fps, gyro-EIS\nLoudspeaker: Yes, with stereo speakers\n3.5mm jack: No\nWLAN"
+   }
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://jakcomputer.com/pages/faq-delivery-information",
+   "shop_id": "jak_computer",
+   "observed_at": "2026-11-28T05:35:07+00:00",
+   "sha256": "c2ca8175cffae29bb8734479802315c327bfa1ff85a8d3d6d3e4a748331e7f2e",
+   "excerpt": "FAQ & Delivery Info | JAK Computer Lebanon\nSkip to content\nYour cart is empty\nContinue shopping\nHave an account?\nLog in to checkout faster.\nShopping cart (0)\nLoading...\nYou might like\nRECCI Armor Series RPB-W20 High Power Fast Charging Power Bank 5000mAh\nRegular price\n$40.00 USD\nSale price\n$40.00 USD\nRegular price\nUnit price\n/\nper\nSale\nSold out\nRAZER BARRACUDA X WHITE HEADSET RZ04-04430200-R3M1\nRegular price\n$110.00 USD\nSale price\n$110.00 USD\nRegular price\nUnit price\n/\nper\nSale\nSold out\nFor Store Pickups: Please enter your phone number here before checking out.\nFor Store Pickups: Please enter your phone number here before checking out.\nSubtotal (0)\n$0.00 USD\nVAT calculated at checkout.\nView Cart\nCheckout\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. I",
+   "quoted": []
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://abedtahan.com/pages/contact",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:35:08+00:00",
+   "sha256": "47944565132487fe4e7f51e8bd6626454e8551ee58674f36b0d70b3272de187a",
+   "excerpt": "Contact\n– Abed Tahan\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & Crepe Makers\nIce Cube, Ice Cream & Yoghurt Makers\nSaj Machines\nL",
+   "quoted": []
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://mobileleb.com/meta.json",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:35:17+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"Mobileleb\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"mobileleb.com\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://istoreplus.me/meta.json",
+   "shop_id": "istore_plus",
+   "observed_at": "2026-11-28T05:35:17+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"Istore Plus\", \"city\": \"Beirut\", \"province\": null, \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"istoreplus.me\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T6",
+   "kind": "page",
+   "url": "https://istoreplus.me/products/apple-iphone-15-pro",
+   "shop_id": "istore_plus",
+   "observed_at": "2026-11-28T05:35:17+00:00",
+   "sha256": "aa35b6f5a4de4d19263d02f7b379ae57b60cba89b92ff9769cd53a9d0c890fd8",
+   "excerpt": "Apple iPhone 15 Pro | Buy in Lebanon – Istore Plus\nCustom Event Setup\n×\nClick on the elements you want to track as custom events. Selected elements will appear in the list below.\nTrack New Element\nSelected Elements (0)\nFinish Setup\nSkip to content\n+961 70 92 4848\ninfo@istoreplus.me\nDISCOUNT UP TO 30%\nDELIVERY ALL OVER LEBANON\nFacebook\nHome\nShop by Brand\nAmazon Brand\nApple Brand\nBeats Brand\nBose Brand\nDJI Brand\nDyson Brand\nGoogle Brand\nGoPro Brand\nGreen Lion Brand\nImalent Brand\nJBL Brand\nKica Brand\nKospet Brand\nMarshall Brand\nSamsung Brand\nSKG Brand\nSkullcandy Brand\nSony Brand\nXiaomi Brand\nYesido Brand\nPhones & Tablets\nAccessories\nSmartphones\nChargers\nPhone & Tablet Cases\nPhone Stands And Holders\nTablets\nPhotography\nCamera Accessories\nAction Cameras\nDrones\nInstant Cameras\nStabilizer\nTripod & Selfie Sticks\nDigital Cameras\nAudio\nDigital Recorders\nEarphones\nHeadphones\nMicrophones\nSpeakers\nHome Appliances\nElectronic Cleaner\nHair Styling\nHair Clippers\nKitchen Appliances\nMassage Devices\nSecurity Cameras\nSmart Devices\nTools\nWearables\nBags\nSmart Glasses\nSmart Rings\nSmart Watch\nCar Accessories\nSALE\n0\n$0.00\nMenuCategories\nWishlist\nSearch\nNeed help ? Email: info@istoreplus.mePhone: (212) 555-1234\nPhones & Tablets\nPhotography\nAudio\nHome Appliances\nWearables\nCar Accessories\nOpen Sidebar\nSidebar\n-%Pre-order\n1\n/\nof\n9\nApple iPhone 15 Pro\nRegular price\nSale price\n$1,080.00\nUnit price\n/\nper\nStorage: 128GB\nVariant sold out128GB\nVariant sold out256GB\nVariant sold out512GB\nVariant sold out1TB\nDecr",
+   "quoted": []
+  },
+  {
+   "obs": "P10",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/anker-iphone-15-pro-clear-magnetic-phone-case",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:35:18+00:00",
+   "sha256": "2192d7998144fc7ff2ee3714fcec5e8519bda091122bac8c26d211e4d74d4c22",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "Anker iPhone 15 Pro Clear Magnetic Phone Case",
+    "url": "https://abedtahan.com/products/anker-iphone-15-pro-clear-magnetic-phone-case",
+    "vendor": "ANKER",
+    "product_type": "Cases & Covers",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:35:18+00:00",
+    "variants": [
+     {
+      "variant_id": "44526364164275",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "17.00",
+      "compare_at": "22.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "ANK-A90A7H01",
+      "url": "https://abedtahan.com/products/anker-iphone-15-pro-clear-magnetic-phone-case?variant=44526364164275"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P11",
+   "kind": "product",
+   "url": "https://phonefinity.net/products/apple-iphone-15/?attribute_pa_color=blue",
+   "shop_id": "phonefinity",
+   "observed_at": "2026-11-28T05:35:18+00:00",
+   "sha256": "78e72a6207b6e0740e0706a794b16071f8e22530fd3a28a962bf78f78b048b00",
+   "product": {
+    "shop": "Phonefinity",
+    "shop_id": "phonefinity",
+    "title": "Apple iPhone 15 – 128GB",
+    "url": "https://phonefinity.net/products/apple-iphone-15/?attribute_pa_color=blue",
+    "vendor": null,
+    "product_type": null,
+    "condition": null,
+    "source": "woo_store_api",
+    "observed_at": "2026-11-28T05:35:18+00:00",
+    "variants": [
+     {
+      "variant_id": "74374",
+      "title": "Color: Blue",
+      "options": {
+       "variation": "Color: Blue"
+      },
+      "price": "830.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": "Out of stock",
+      "sku": null,
+      "url": "https://phonefinity.net/products/apple-iphone-15/?attribute_pa_color=blue"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "T7",
+   "kind": "page",
+   "url": "https://mobileleb.com/",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:35:18+00:00",
+   "sha256": "4137fa56547c9ea664376d29ed7c034e6e6ef5b5df3a6b9d2276ec74ea2a8c26",
+   "excerpt": "Mobileleb.com | Mobile Price in Lebanon, Laptop, PS5\nCell Phones & Tablets\nCell Phones\nSamsung\nHonor\nXiaomi\nTecno\nApple\nFeature Phones\nInfinix\nApple Open Box\nGoogle\nSamsung Open Box\nOppo\nVivo\nMotorola\nBlackview\nitel\nRealme\nZTE nubia\nOnePlus\nFreeYond\nNokia\nHuawei\nAlcatel\nHiSense\nDoogee\nTCL\nBlackBerry\nCAT\nUmidigi\nI-Plus\nTablets, iPads & eReaders\nApple iPads\nAndroid Tablets\nWindows Tablets\neReaders\nDrawing Tablets & Accessories\nSamsung\nBlackview\nRed Magic Gaming Tablets\nLenovo\nAmazon\nAlcatel\nMicrosoft\ni-Plus\nHuawei\nG-TiDE\nWearables, Smart Watches & Trackers\nCell Phone Accessories\nMobile Phone Cases\nScreen Protectors\nCharging & Data Cables\nChargers & Power Adapters\nMobile Gaming Controllers\nMobiles & Tablets Cables & Connectors\nMounts & Stands\nCar Accessories\nMobile Phone Accessories\nMobile Phone Camera Accessories\nLED Ring Lights\nGimbals & Camera Stabilizers\nSelfie Sticks, Tripods & Monopods\niPad & Tablet Accessories\nKeyboards\nStylus Pens\nCovers & Screen Protectors\nTablet Computer Docks & Stands\nTablet Computer Parts\nComputers & Parts\nApple Accessories\nKeyboards & Mice\nTime Capsule\nAirPods & Audio\nAll Laptops\nHP Laptops\nLenovo Laptops\nNEC Laptops\nAcer Laptops\nMacBooks, iMacs & Mac mini\nMac Studio\nDell Laptops\nAsus Laptops\nMSI Laptops\nGigabyte Laptops\nRazer Laptops\nGateway Laptops\nToshiba Laptops\nMicrosoft Surface\nLaptops Open Box\nDesktop Computers\nMini PCs\nDesktops\nAll-in-One Computers\nP.O.S Systems\nCore Components\nGraphics Cards\nCPU / Computer Processors\nRAM\nMotherboards\nAudio ",
+   "quoted": []
+  },
+  {
+   "obs": "T8",
+   "kind": "page",
+   "url": "https://phonefinity.net/",
+   "shop_id": "phonefinity",
+   "observed_at": "2026-11-28T05:35:19+00:00",
+   "sha256": "dae31dd3ebabdccad32e6fd121ba0a4d2bca7e27f5627528a9789a8dd3710a83",
+   "excerpt": "Phonefinity.net: Genuine Products. Quality Service.\nSkip to content\n[email protected]\nOnline Only | Cash on Delivery\nOnline Only | Cash on Delivery\nSearch for:\nLogin / Register\nCart\n0\nNo products in the cart.\nReturn to shop\nSearch for:\n0\nCart\nNo products in the cart.\nReturn to shop\nPhones\nTablets\nApple iPads\nAndroid Tablets\nAmazon Kindles\nMacbooks\nSmart\nSmart Watches & Bands\nSmart Scales\nSmart Display\nAudio\nEarphones\nHeadphones\nSpeakers\nMicrophones\nMedia Streaming\nGaming\nPlayStation\nNintendo Switch\nNetworking\nCameras\nAccessories\nCables\nChargers & Power Banks\nMobile & Tablet Covers\nMobile Accessories\nComputer Accessories\nSleeves, Carrying Cases & Backpacks\nUSB Hubs\nPRELOVED\nFilter\nNew\nPower\nAnker Prime Charger (160W, 3 Ports, Smart Display)\n$132\nNew\nPower\nAnker Prime Power Bank (26K, 300W)\n$176\nNew\nPower\nAnker Prime Wireless Charging Base (100W, 3 Ports)\n$65\nEarphones\nApple AirPods 5\n$140 – $165Price range: $140 through $165\nNew\nApple iPads\nApple iPad mini (2026)\n$820 – $920Price range: $820 through $920\nPhones\nApple iPhone 18 Pro\n$1,550 – $1,825Price range: $1,550 through $1,825\nPhones\nApple iPhone 18 Pro Max\n$1,700 – $2,000Price range: $1,700 through $2,000\nSmart Watches & Bands\nApple Watch Series 12\n$440 – $490Price range: $440 through $490\nSmart Watches & Bands\nApple Watch Ultra 4\n$850 – $1,000Price range: $850 through $1,000\nEarphones\nCMF by Nothing Buds Neo\n$50\nEarphones\nCMF Clip Pro\n$110\nNetworking\nDeco XE75 Pro\n$154 – $374Price range: $154 through $374\nCameras\nDJI OSMO",
+   "quoted": [
+    {
+     "quote": "Inside Beirut: 3$, within 1 business day",
+     "found": true
+    },
+    {
+     "quote": "Inside Beirut: 3$, within 1 business day",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T9",
+   "kind": "page",
+   "url": "https://istoreplus.me/",
+   "shop_id": "istore_plus",
+   "observed_at": "2026-11-28T05:35:19+00:00",
+   "sha256": "61ee51975d9c819240fb1a45796b63fbcc43403f1abb136568d45746bb9a991d",
+   "excerpt": "iStore Plus – Top Electronics & Gadgets Store in Lebanon\nCustom Event Setup\n×\nClick on the elements you want to track as custom events. Selected elements will appear in the list below.\nTrack New Element\nSelected Elements (0)\nFinish Setup\niStore Plus – Top Electronics & Gadgets Store in Lebanon\nSkip to content\n+961 70 92 4848\ninfo@istoreplus.me\nDISCOUNT UP TO 30%\nDELIVERY ALL OVER LEBANON\nFacebook\nHome\nShop by Brand\nAmazon Brand\nApple Brand\nBeats Brand\nBose Brand\nDJI Brand\nDyson Brand\nGoogle Brand\nGoPro Brand\nGreen Lion Brand\nImalent Brand\nJBL Brand\nKica Brand\nKospet Brand\nMarshall Brand\nSamsung Brand\nSKG Brand\nSkullcandy Brand\nSony Brand\nXiaomi Brand\nYesido Brand\nPhones & Tablets\nAccessories\nSmartphones\nChargers\nPhone & Tablet Cases\nPhone Stands And Holders\nTablets\nPhotography\nCamera Accessories\nAction Cameras\nDrones\nInstant Cameras\nStabilizer\nTripod & Selfie Sticks\nDigital Cameras\nAudio\nDigital Recorders\nEarphones\nHeadphones\nMicrophones\nSpeakers\nHome Appliances\nElectronic Cleaner\nHair Styling\nHair Clippers\nKitchen Appliances\nMassage Devices\nSecurity Cameras\nSmart Devices\nTools\nWearables\nBags\nSmart Glasses\nSmart Rings\nSmart Watch\nCar Accessories\nSALE\n0\n$0.00\nMenuCategories\nWishlist\nSearch\nNeed help ? Email: info@istoreplus.mePhone: (212) 555-1234\nPhones & Tablets\nPhotography\nAudio\nHome Appliances\nWearables\nCar Accessories\nSHOP NOW\niStore Plus — quality products, fast delivery, and reliable service.\nFEATURED CATEGORIES\nSMARTPHONES\nACTION CAMERAS\nHOME APPLIANCES\nGAMING\nSPEAKERS",
+   "quoted": [
+    {
+     "quote": "DELIVERY ALL OVER LEBANON",
+     "found": true
+    },
+    {
+     "quote": "DELIVERY ALL OVER LEBANON",
+     "found": true
+    }
+   ]
+  }
+ ]
+}

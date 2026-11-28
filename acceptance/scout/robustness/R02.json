@@ -1,0 +1,1351 @@
+{
+ "run_id": "scout-r02-20261127T224754",
+ "request": {
+  "id": "R02",
+  "text": "بدي سماعات سوني WH-1000XM5 جديدة لونها أسود، توصيل على جونية. وين أرخص؟",
+  "mode": "delivery",
+  "destination": "Jounieh",
+  "run_id": "scout-r02-20261127T224754"
+ },
+ "status": "offers",
+ "message": "أرخص عرض تأكّدت إنّه أسود وجديد ومتوفر هو **Mobileleb بسعر $229.00**، مع كفالة سنة. التوصيل لكل لبنان مؤكّد، بس رسم التوصيل لجونية مش مبيّن، لذلك ما فيني أجزم بالمجموع النهائي.\nللمقارنة:\n• Phonefinity: بسعر $245.00، وتوصيل خارج بيروت 5$؛ الأسود متوفر، بس حالة «جديد» مش مؤكّدة بالنص.\n• Technodel: بسعر $273.90، جديد وأسود ومتوفر؛ التوصيل 4$ لكل لبنان.\n• Najem Star Call: بسعر $225.00 وجديد، لكن الأسود نافد.\nاستبعدت عرض Classic Phones بـ$220.00 لأنّه موصوف «Like new»، مش جديد.\nبنصحك بـMobileleb، مع التأكّد من رسم التوصيل قبل إتمام الطلب.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "best",
+   "shop": "Technodel",
+   "shop_id": "technodel",
+   "title": "Sony Noise Canceling Over Ear Headphones Black | Technodel Lebanon",
+   "variant": "Sony Noise Canceling Over Ear Headphones Black Wh1000xm5b",
+   "url": "https://technodel.net/product/sony-noise-canceling-over-ear-headphones-black-wh1000xm5b",
+   "price": "273.90",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "WH1000XM5B black, explicitly NewCondition.",
+   "delivery_fee": "4.00",
+   "total": "277.90",
+   "total_basis": "listed price + delivery fee published by technodel (\"Flat $4 anywhere in Lebanon; free on orders of $500 or more\", T3)",
+   "complete": false,
+   "gaps": [
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "Sony WH-1000XM5 أسود",
+     "status": "met",
+     "quote": "Sony Noise Canceling Over Ear Headphones Black Wh1000xm5b",
+     "obs": "P3",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "جديد",
+     "status": "met",
+     "quote": "NewCondition",
+     "obs": "P3",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "توصيل لجونية",
+     "status": "met",
+     "quote": "Nationwide delivery across all of Lebanon",
+     "obs": "T3",
+     "covered_elsewhere": false
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P3",
+     "url": "https://technodel.net/product/sony-noise-canceling-over-ear-headphones-black-wh1000xm5b",
+     "read": "https://technodel.net/product/sony-noise-canceling-over-ear-headphones-black-wh1000xm5b",
+     "source": "schema_org_jsonld",
+     "observed_at": "2026-11-27T22:48:18+00:00",
+     "sha256": "9256d93c52c9c3bbe6681ac49bdbc0982612c23352e273870178cb33591f30ca"
+    },
+    {
+     "obs": "T3",
+     "url": "https://technodel.net/api/llm-context",
+     "source": "shop delivery terms",
+     "observed_at": "2026-11-27T22:48:33+00:00",
+     "sha256": "b55d9346dff533ed1909b1f8a99169bed1f5e262d2fdf59ad12d96d780aa7c84"
+    }
+   ],
+   "seller_basis": "Technodel: Lebanese shop in the reviewed directory",
+   "downgrades": []
+  },
+  {
+   "tier": "best",
+   "shop": "Mobileleb",
+   "shop_id": "mobileleb",
+   "title": "Sony WH-1000XM5 Wireless Industry Leading Noise Canceling Optimizer Headphones, Crystal Clear Hands-Free Calling, Alexa Voice Control",
+   "variant": "Black / Brand New / 1 Year",
+   "url": "https://mobileleb.com/products/sony-wh-1000xm5-wireless-industry-leading-noise-canceling-headphones-with-auto-noise-canceling-optimizer?variant=41183547064452",
+   "price": "229.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "Sony WH-1000XM5, black, brand new.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "Sony WH-1000XM5",
+     "status": "met",
+     "quote": "Sony WH-1000XM5",
+     "obs": "P7",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "أسود",
+     "status": "met",
+     "quote": "Black",
+     "obs": "P7",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "جديد",
+     "status": "met",
+     "quote": "Brand New",
+     "obs": "P7",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "توصيل لجونية",
+     "status": "met",
+     "quote": "Delivering At Your Doorstep All Over Lebanon Within 1-2 Days.",
+     "obs": "T12",
+     "covered_elsewhere": false
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P7",
+     "url": "https://mobileleb.com/products/sony-wh-1000xm5-wireless-industry-leading-noise-canceling-headphones-with-auto-noise-canceling-optimizer",
+     "read": "https://mobileleb.com/products/sony-wh-1000xm5-wireless-industry-leading-noise-canceling-headphones-with-auto-noise-canceling-optimizer.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-27T22:48:33+00:00",
+     "sha256": "fa715b3187207612903252484930a771f790462b96c683d21e6ea3bed28da381"
+    }
+   ],
+   "seller_basis": "Mobileleb: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  },
+  {
+   "tier": "best",
+   "shop": "Phonefinity",
+   "shop_id": "phonefinity",
+   "title": "Sony WH-1000XM5 – Noise-Canceling Wireless Over-Ear Headphones",
+   "variant": "Color: Black",
+   "url": "https://phonefinity.net/products/sony-wh-1000xm5/?attribute_pa_color=black",
+   "price": "245.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "exact",
+   "identity_reason": "Same model in black; new condition unverified.",
+   "delivery_fee": "5.00",
+   "total": "250.00",
+   "total_basis": "listed price + delivery fee published by phonefinity (\"Outside Beirut: 5$, in 2-4 business days\", T11)",
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "not confirmed: جديد"
+   ],
+   "requirements": [
+    {
+     "requirement": "Sony WH-1000XM5",
+     "status": "met",
+     "quote": "Sony WH-1000XM5",
+     "obs": "P8",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "أسود",
+     "status": "met",
+     "quote": "Color: Black",
+     "obs": "P8",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "جديد",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "توصيل لجونية",
+     "status": "met",
+     "quote": "Outside Beirut: 5$, in 2-4 business days",
+     "obs": "T11",
+     "covered_elsewhere": false
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P8",
+     "url": "https://phonefinity.net/products/sony-wh-1000xm5/",
+     "read": "https://phonefinity.net/wp-json/wc/store/v1/products?slug=sony-wh-1000xm5",
+     "source": "woo_store_api",
+     "observed_at": "2026-11-27T22:48:34+00:00",
+     "sha256": "d7477a264d84d48dfe65cc8affb30f43a9cf90f436ed8b4d5ae768c08790fdd7"
+    },
+    {
+     "obs": "T11",
+     "url": "https://phonefinity.net",
+     "source": "shop delivery terms",
+     "observed_at": "2026-11-27T22:48:56+00:00",
+     "sha256": "f74bc4e8d46f75fd2227a106aae7b5d2d627537311854f95c1547c80af509957"
+    }
+   ],
+   "seller_basis": "Phonefinity: Lebanese shop in the reviewed directory",
+   "downgrades": []
+  },
+  {
+   "tier": "unavailable",
+   "shop": "Najem Star Call",
+   "shop_id": "najem_star",
+   "title": "Sony WH-1000XM5 Wireless Headphones",
+   "variant": "Color: Black",
+   "url": "https://najemstarcall.com/product/sony-wh-1000xm5-wireless-headphones/?attribute_pa_color=black",
+   "price": "225.00",
+   "currency": "USD",
+   "in_stock": false,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "Exact black brand-new model, but black variant is out of stock.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "not confirmed: توصيل لجونية",
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "Sony WH-1000XM5",
+     "status": "met",
+     "quote": "Sony WH-1000XM5 Wireless Headphones",
+     "obs": "P9",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "أسود",
+     "status": "met",
+     "quote": "Color: Black",
+     "obs": "P9",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "جديد",
+     "status": "met",
+     "quote": "Brand New",
+     "obs": "P9",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "توصيل لجونية",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P9",
+     "url": "https://najemstarcall.com/product/sony-wh-1000xm5-wireless-headphones/",
+     "read": "https://najemstarcall.com/wp-json/wc/store/v1/products?slug=sony-wh-1000xm5-wireless-headphones",
+     "source": "woo_store_api",
+     "observed_at": "2026-11-27T22:48:34+00:00",
+     "sha256": "7adbf4ae38f0fff0d69b1d5b47abfa6ffc3246f48acfc09b88ab1fa575de3bfa"
+    }
+   ],
+   "seller_basis": "Najem Star Call: Lebanese shop in the reviewed directory",
+   "downgrades": []
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P7",
+   "variant_id": "41183547064452",
+   "identity": "exact",
+   "identity_reason": "Sony WH-1000XM5, black, brand new.",
+   "condition": "new",
+   "condition_quote": "Brand New",
+   "condition_obs": "P7",
+   "requirements": [
+    {
+     "requirement": "Sony WH-1000XM5",
+     "status": "met",
+     "evidence_obs": "P7",
+     "quote": "Sony WH-1000XM5"
+    },
+    {
+     "requirement": "أسود",
+     "status": "met",
+     "evidence_obs": "P7",
+     "quote": "Black"
+    },
+    {
+     "requirement": "جديد",
+     "status": "met",
+     "evidence_obs": "P7",
+     "quote": "Brand New"
+    },
+    {
+     "requirement": "توصيل لجونية",
+     "status": "met",
+     "evidence_obs": "T12",
+     "quote": "Delivering At Your Doorstep All Over Lebanon Within 1-2 Days."
+    }
+   ],
+   "delivery_obs": "T12",
+   "delivery_quote": "Delivering At Your Doorstep All Over Lebanon Within 1-2 Days.",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P8",
+   "variant_id": "32016",
+   "identity": "exact",
+   "identity_reason": "Same model in black; new condition unverified.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "Sony WH-1000XM5",
+     "status": "met",
+     "evidence_obs": "P8",
+     "quote": "Sony WH-1000XM5"
+    },
+    {
+     "requirement": "أسود",
+     "status": "met",
+     "evidence_obs": "P8",
+     "quote": "Color: Black"
+    },
+    {
+     "requirement": "جديد",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "توصيل لجونية",
+     "status": "met",
+     "evidence_obs": "T11",
+     "quote": "Outside Beirut: 5$, in 2-4 business days"
+    }
+   ],
+   "delivery_obs": "T11",
+   "delivery_quote": "Outside Beirut: 5$, in 2-4 business days",
+   "delivery_fee_usd": "5",
+   "free_delivery_over_usd": null,
+   "vat_quote": "Prices are final. We don't charge VAT",
+   "price_quote": null
+  },
+  {
+   "obs": "P3",
+   "variant_id": "HA-ZRDNATYF",
+   "identity": "exact",
+   "identity_reason": "WH1000XM5B black, explicitly NewCondition.",
+   "condition": "new",
+   "condition_quote": "NewCondition",
+   "condition_obs": "P3",
+   "requirements": [
+    {
+     "requirement": "Sony WH-1000XM5 أسود",
+     "status": "met",
+     "evidence_obs": "P3",
+     "quote": "Sony Noise Canceling Over Ear Headphones Black Wh1000xm5b"
+    },
+    {
+     "requirement": "جديد",
+     "status": "met",
+     "evidence_obs": "P3",
+     "quote": "NewCondition"
+    },
+    {
+     "requirement": "توصيل لجونية",
+     "status": "met",
+     "evidence_obs": "T3",
+     "quote": "Nationwide delivery across all of Lebanon"
+    }
+   ],
+   "delivery_obs": "T3",
+   "delivery_quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more",
+   "delivery_fee_usd": "4",
+   "free_delivery_over_usd": "500",
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P9",
+   "variant_id": "24526",
+   "identity": "exact",
+   "identity_reason": "Exact black brand-new model, but black variant is out of stock.",
+   "condition": "new",
+   "condition_quote": "Brand New",
+   "condition_obs": "P9",
+   "requirements": [
+    {
+     "requirement": "Sony WH-1000XM5",
+     "status": "met",
+     "evidence_obs": "P9",
+     "quote": "Sony WH-1000XM5 Wireless Headphones"
+    },
+    {
+     "requirement": "أسود",
+     "status": "met",
+     "evidence_obs": "P9",
+     "quote": "Color: Black"
+    },
+    {
+     "requirement": "جديد",
+     "status": "met",
+     "evidence_obs": "P9",
+     "quote": "Brand New"
+    },
+    {
+     "requirement": "توصيل لجونية",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": null,
+   "delivery_quote": null,
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Search exact model across shops with common spellings.",
+   "at_s": 11.6,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "Sony WH-1000XM5"
+    },
+    {
+     "tool": "search",
+     "query": "Sony WH1000XM5 black"
+    },
+    {
+     "tool": "search",
+     "query": "Sony XM5"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Check cheaper exact listings and delivery/condition policies for leading shops.",
+   "at_s": 37.9,
+   "calls": [
+    {
+     "tool": "open",
+     "url": "https://najemstarcall.com/product/sony-wh-1000xm5-wireless-headphones/"
+    },
+    {
+     "tool": "open",
+     "url": "https://mobileleb.com/products/sony-wh-1000xm5-wireless-industry-leading-noise-canceling-headphones-with-auto-noise-canceling-optimizer"
+    },
+    {
+     "tool": "open",
+     "url": "https://phonefinity.net/products/sony-wh-1000xm5/"
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "classic_phones"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "abed_tahan"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "technodel"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Need delivery pricing for best confirmed new offer and condition for cheaper SA alternative; check Phonefinity delivery and condition too.",
+   "at_s": 50.3,
+   "calls": [
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "mobileleb"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "phonefinity"
+     ]
+    },
+    {
+     "tool": "read",
+     "url": "https://classic-phones.com/products/sony-wh-1000xm5-sa-headphones",
+     "terms": [
+      "new",
+      "condition",
+      "sealed"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 4,
+   "notes": "Check delivery on the best confirmed new offer and competing shop directly.",
+   "at_s": 60.6,
+   "calls": [
+    {
+     "tool": "read",
+     "url": "https://mobileleb.com/products/sony-wh-1000xm5-wireless-industry-leading-noise-canceling-headphones-with-auto-noise-canceling-optimizer",
+     "terms": [
+      "delivery",
+      "shipping",
+      "Jounieh"
+     ]
+    },
+    {
+     "tool": "read",
+     "url": "https://phonefinity.net",
+     "terms": [
+      "Delivery (less",
+      "new",
+      "VAT",
+      "outside Beirut"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 5,
+   "notes": "Mobileleb is the cheapest verified available black, brand-new exact match; delivery coverage confirmed but fee not published in retrieved evidence. Cheaper black Najem listing is out of stock; Classic SA listing says Like new and is excluded.",
+   "at_s": 86.5,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 10969,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 11313,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 15578,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 360,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 1313,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 1907,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 2500,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 3016,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 4047,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 250,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 984,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 1906,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 765,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 1484,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 8656,
+   "usage": {
+    "actual_usd": "0.0040727",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3194,
+     "output_tokens": 105,
+     "total_tokens": 3299
+    },
+    "latency_ms": 4516,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 10782,
+   "usage": {
+    "actual_usd": "0.0170302",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 7849,
+     "output_tokens": 237,
+     "total_tokens": 8086
+    },
+    "latency_ms": 5781,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 8266,
+   "usage": {
+    "actual_usd": "0.0259927",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 11854,
+     "output_tokens": 132,
+     "total_tokens": 11986
+    },
+    "latency_ms": 3969,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 4,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 8438,
+   "usage": {
+    "actual_usd": "0.0296627",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 13338,
+     "output_tokens": 128,
+     "total_tokens": 13466
+    },
+    "latency_ms": 3875,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 5,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 23750,
+   "usage": {
+    "actual_usd": "0.0430702",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 14769,
+     "output_tokens": 1111,
+     "total_tokens": 15880
+    },
+    "latency_ms": 19797,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": true
+  }
+ ],
+ "retailer_requests": 95,
+ "seconds": 86.5,
+ "spend": {
+  "settled_usd": "0.1198285",
+  "uncertain_usd": "0",
+  "model_calls": 5,
+  "ledger_job": "scout-r02-20261127T224754"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/sony-premium-wireless-noise-canceling-headphones-black",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-27T22:48:17+00:00",
+   "sha256": "8425a44ade65df64ff050e48b9426ae81b54f4256c0d4eea2f927c5666724ecc",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "Sony WH-1000XM5-B Bluetooth Noise Cancelling Headset, Black",
+    "url": "https://abedtahan.com/products/sony-premium-wireless-noise-canceling-headphones-black",
+    "vendor": "SONY",
+    "product_type": "Noise Cancellation Headphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-27T22:48:17+00:00",
+    "variants": [
+     {
+      "variant_id": "45708803866803",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "269.00",
+      "compare_at": "329.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "WH1000XM5 BME",
+      "url": "https://abedtahan.com/products/sony-premium-wireless-noise-canceling-headphones-black?variant=45708803866803"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/sony-wireless-headphones-bluetooth-black",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-27T22:48:17+00:00",
+   "sha256": "8cf6cee7a10dd306002509af4b0545b205b6e36687f0f0c321df525f760f26cd",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "Sony WH-CH520 Wireless On-Ear Headphones – Black",
+    "url": "https://abedtahan.com/products/sony-wireless-headphones-bluetooth-black",
+    "vendor": "SONY",
+    "product_type": "Headsets & Microphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-27T22:48:17+00:00",
+    "variants": [
+     {
+      "variant_id": "44220684828851",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "39.00",
+      "compare_at": "49.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "WH-CH520 BZ#",
+      "url": "https://abedtahan.com/products/sony-wireless-headphones-bluetooth-black?variant=44220684828851"
+     }
+    ],
+    "description": "Sony Wireless Headphones Bluetooth - Black"
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://technodel.net/product/sony-noise-canceling-over-ear-headphones-black-wh1000xm5b",
+   "shop_id": "technodel",
+   "observed_at": "2026-11-27T22:48:18+00:00",
+   "sha256": "9256d93c52c9c3bbe6681ac49bdbc0982612c23352e273870178cb33591f30ca",
+   "product": {
+    "shop": "Technodel",
+    "shop_id": "technodel",
+    "title": "Sony Noise Canceling Over Ear Headphones Black | Technodel Lebanon",
+    "url": "https://technodel.net/product/sony-noise-canceling-over-ear-headphones-black-wh1000xm5b",
+    "vendor": "Sony",
+    "product_type": null,
+    "condition": "NewCondition",
+    "source": "schema_org_jsonld",
+    "observed_at": "2026-11-27T22:48:18+00:00",
+    "variants": [
+     {
+      "variant_id": "HA-ZRDNATYF",
+      "title": "Sony Noise Canceling Over Ear Headphones Black Wh1000xm5b",
+      "options": {},
+      "price": "273.90",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": "InStock",
+      "sku": "HA-ZRDNATYF",
+      "url": "https://technodel.net/product/sony-noise-canceling-over-ear-headphones-black-wh1000xm5b"
+     }
+    ],
+    "description": "Sony over-ear noise-canceling headphones in black with up to 30 hours of battery life, a 30mm driver, four beamforming microphones and multipoint connection."
+   }
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://phonefinity.net/products/sony-wh-1000xm5sa-premium-noise-cancelling-headphones/",
+   "shop_id": "phonefinity",
+   "observed_at": "2026-11-27T22:48:19+00:00",
+   "sha256": "c20b0422c2941ba46a1f8dd51926b62cceb00bb1492c3e325d0860a86eb512fc",
+   "product": {
+    "shop": "Phonefinity",
+    "shop_id": "phonefinity",
+    "title": "Sony WH-1000XM5SA Premium Noise Cancelling Headphones",
+    "url": "https://phonefinity.net/products/sony-wh-1000xm5sa-premium-noise-cancelling-headphones/",
+    "vendor": null,
+    "product_type": null,
+    "condition": null,
+    "source": "woo_store_api",
+    "observed_at": "2026-11-27T22:48:19+00:00",
+    "variants": [
+     {
+      "variant_id": "79242",
+      "title": "Sony WH-1000XM5SA Premium Noise Cancelling Headphones",
+      "options": {},
+      "price": "0.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/sony-wh-1000xm5sa-premium-noise-cancelling-headphones/"
+     }
+    ],
+    "description": "Advanced noise cancelling\nExceptional sound quality\nSuperior noise-free calls\nUltra comfortable design with Soft Case\nThe advanced noise cancelling\nFrom airplane noise to people’s voices, our WH-1000XM5SA wireless headphones with multiple microphone noise cancelling keep out more high and mid frequency sounds than ever. And with Auto NC Optimizer, noise cancelling is automatically optimised based on your wearing conditions and environment.\nMulti Noise Sensor technology\nWith four microphones on each earcup, this is our biggest ever step forward in noise cancelling. Ambient sound is captured even more accurately for a dramatic reduction in high frequency noise. Thanks to Auto NC Optimizer, noise cancelling performance is always and automatically optimised based on wearing conditions and external environmental factors such as atmospheric pressure.\nIncomparable noise cancelling\nSpecially developed by Sony, the Integrated Processor V1 unlocks the full potential of our HD Noise Cancelling Processor QN1. This unique combination of technology controls eight microphones to deliver unprecedented noise cancelling quality.\nEnjoy High-Resolution Audio with and without wires\nThe WH-1000XM5SA supports High-Resolution Audio and High-Resolution Audio Wireless, thanks to LDAC, our industry-adopted audio coding technology. LDAC transmits approximately three times more data ⓘ[At the maximum transfer rate of 990 kbps.] than conventional Bluetooth® audio for exceptional High-Resolution Audio quali"
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/sony-wh-1000xm5-sa-headphones",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-27T22:48:21+00:00",
+   "sha256": "68f991eebb0fb1a60108d4c91a59c78dd082896ace711560bdf99eb71a3ae8c9",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Sony Wh-1000XM5 SA headphones",
+    "url": "https://classic-phones.com/products/sony-wh-1000xm5-sa-headphones",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-27T22:48:21+00:00",
+    "variants": [
+     {
+      "variant_id": "47808780533995",
+      "title": "Black",
+      "options": {
+       "Color": "Black"
+      },
+      "price": "220.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/sony-wh-1000xm5-sa-headphones?variant=47808780533995"
+     }
+    ],
+    "description": "WH-1000XM5 SA Wireless Active Noise-Cancellation Bluetooth Headphones-Black\nDescription\nThe WH-1000XM5 SA Wireless Active Noise-Cancellation Bluetooth Headphones in Black offer a premium audio experience with their active noise cancellation technology and wireless Bluetooth connectivity. Designed for studio monitoring, DJ, and live monitoring, these headphones feature built-in microphones, volume control, and come with a charger included. With a sleek design and high-quality sound, these headphones from are a top choice for professionals in the music industry looking for reliable and stylish equipment. Alexa built-in and Hey Google. Open box, box only slightly ripped. Comes with all accessories in picture.\nProduct Information\nCategory\nElectronics > Headphones & MP3 Players > Bluetooth Headphones\nBrand\nCondition\nLike new"
+   }
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/sony-wh-1000xm5-headphones",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-27T22:48:22+00:00",
+   "sha256": "4e176ad9daa972a7a06b7cdf6d704056716b6ecb38149e454a5a83635a11ce3d",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Sony WH-1000XM5 headphones",
+    "url": "https://classic-phones.com/products/sony-wh-1000xm5-headphones",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-27T22:48:22+00:00",
+    "variants": [
+     {
+      "variant_id": "45288184316139",
+      "title": "Midnight Blue",
+      "options": {
+       "Color": "Midnight Blue"
+      },
+      "price": "225.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/sony-wh-1000xm5-headphones?variant=45288184316139"
+     },
+     {
+      "variant_id": "48109532184811",
+      "title": "Smoky pink",
+      "options": {
+       "Color": "Smoky pink"
+      },
+      "price": "225.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/sony-wh-1000xm5-headphones?variant=48109532184811"
+     }
+    ],
+    "description": "SONY HEADPHONES WH-1000XM5\nDescription\nThe WH-1000XM5 headphones rewrite the rules for distraction-free listening. Two processors control 8 microphones for unprecedented noise cancellation and exceptional call quality. With a newly developed driver, DSEE – Extreme and Hires audio support the WH-1000XM5 headphones provide awe-inspiring audio quality.\nFeatures & details\nIndustry Leading noise cancellation-two processors control 8 microphones for unprecedented noise cancellation. With Auto NC Optimizer, noise canceling is automatically optimized based on your wearing conditions and environment.\nMagnificent Sound, engineered to perfection with the new Integrated Processor V1\nCrystal clear hands-free calling with 4 beamforming microphones, precise voice pickup, and advanced audio signal processing.\nUp to 30-hour battery life with quick charging (3 min charge for 3 hours of playback)\nUltra-comfortable, lightweight design with soft fit leather\nMultipoint connection allows you to quickly switch between devices\nCarry your headphones effortlessly in the redesigned case.\nIntuitive touch control settings to pause play skip tracks, control volume, activate your voice assistant, and answer phone calls.\nFor everyday convenience, just Speak-to-Chat and Quick Attention mode stop your music and let in ambient sound\nWith instant pause/instant play music automatically pauses when headphones are taken off and starts again when they are put back on."
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://classic-phones.com/meta.json",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-27T22:48:33+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"Classic Phones\", \"city\": \"Beirut \", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"www.classic-phones.com\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://abedtahan.com/meta.json",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-27T22:48:33+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"Abed Tahan\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"abedtahan.com\"}",
+   "quoted": []
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/sony-wh-1000xm5-wireless-industry-leading-noise-canceling-headphones-with-auto-noise-canceling-optimizer",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-27T22:48:33+00:00",
+   "sha256": "fa715b3187207612903252484930a771f790462b96c683d21e6ea3bed28da381",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Sony WH-1000XM5 Wireless Industry Leading Noise Canceling Optimizer Headphones, Crystal Clear Hands-Free Calling, Alexa Voice Control",
+    "url": "https://mobileleb.com/products/sony-wh-1000xm5-wireless-industry-leading-noise-canceling-headphones-with-auto-noise-canceling-optimizer",
+    "vendor": "Sony",
+    "product_type": "Headsets & Earphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-27T22:48:33+00:00",
+    "variants": [
+     {
+      "variant_id": "41183547064452",
+      "title": "Black / Brand New / 1 Year",
+      "options": {
+       "Color": "Black",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "229.00",
+      "compare_at": "390.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://mobileleb.com/products/sony-wh-1000xm5-wireless-industry-leading-noise-canceling-headphones-with-auto-noise-canceling-optimizer?variant=41183547064452"
+     },
+     {
+      "variant_id": "41222740050052",
+      "title": "Silver / Brand New / 1 Year",
+      "options": {
+       "Color": "Silver",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "229.00",
+      "compare_at": "390.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://mobileleb.com/products/sony-wh-1000xm5-wireless-industry-leading-noise-canceling-headphones-with-auto-noise-canceling-optimizer?variant=41222740050052"
+     }
+    ],
+    "description": "Industry Leading noise cancellation-two processors control 8 microphones for unprecedented noise cancellation. With Auto NC Optimizer, noise canceling is automatically optimized based on your wearing conditions and environment.\nMagnificent Sound, engineered to perfection with the new Integrated Processor V1\nCrystal clear hands-free calling with 4 beamforming microphones, precise voice pickup, and advanced audio signal processing.\nUp to 30-hour battery life with quick charging (3 min charge for 3 hours of playback)\nUltra-comfortable, lightweight design with soft-fit leather\nThe multipoint connection allows you to quickly switch between devices\nCarry your headphones effortlessly in the redesigned case.\nIntuitive touch control settings to pause play skip tracks, control volume, activate your voice assistant and answer phone calls.\nFor everyday convenience, just Speak-to-Chat and Quick Attention modes to stop your music and let in ambient sound\nWith instant pause/instant play, the music automatically pauses when headphones are taken off and starts again when they are put back on."
+   }
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://technodel.net/api/llm-context",
+   "shop_id": "technodel",
+   "observed_at": "2026-11-27T22:48:33+00:00",
+   "sha256": "b55d9346dff533ed1909b1f8a99169bed1f5e262d2fdf59ad12d96d780aa7c84",
+   "excerpt": "{\"site\": \"Technodel Lebanon\", \"stores\": [{\"area\": \"Beirut area\", \"address\": \"Badaro, Beirut\"}, {\"area\": \"South Lebanon\", \"address\": \"Abbassiyeh (serving Tyre / Sour and the South)\"}], \"delivery\": {\"coverage\": \"Nationwide delivery across all of Lebanon\", \"sameDayAreas\": \"Beirut, Sour, Tripoli and surroundings\", \"otherRegions\": \"1-2 days\", \"sameDay\": \"Same-day delivery to Beirut, Sour, Tripoli and surroundings\", \"costUsd\": 4, \"costNote\": \"Flat $4 anywhere in Lebanon; free on orders of $500 or more\", \"freeDeliveryAboveUsd\": 500}, \"warranty\": {\"summary\": \"Manufacturer warranty on everything, handled through Technodel.\", \"laptopsAndPcs\": \"1-2 years\", \"accessories\": \"minimum 6 months\"}, \"returns\": {\"returnDays\": 30, \"policy\": \"30-day returns: any eligible product can be returned within 30 days of delivery for a full refund, free of charge at the Badaro (Beirut) or Abbassiyeh (Tyre) branch. Digital codes once revealed, opened consumables and opened in-ear headphones can only be returned if defective.\", \"doa\": \"Defective, damaged or not-as-described items are replaced or refunded in full within 30 days, at no cost to the customer.\"}, \"currency\": \"USD\"}",
+   "quoted": [
+    {
+     "quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more",
+     "found": true
+    },
+    {
+     "quote": "Nationwide delivery across all of Lebanon",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://www.classic-phones.com/",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-27T22:48:34+00:00",
+   "sha256": "c6c7468ccfe1e397a652212f77a9219cf19a2f270f5102f44a8d749274dc4d77",
+   "excerpt": "Classic Phones - Mobile Devices & Accessories in Lebanon\nSkip to content\nDelivery Available All Over Lebanon\nFacebook\nInstagram\nShop All\nCameras\nCameras\nGo to Cameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nLaptops\nLaptops\nGo to Laptops\nMacbook\nNew\nUsed\nTablets\nTablets\nGo to Tablets\nApple\nSamsung\nXiaomi\nBlackview\nModio\nSmart Watch\nSmart Watch\nGo to Smart Watch\nApple\nSamsung\nFitbit\nHuawei\nAmazfit\nXiaomi\nGreen Lion\nProdo\nKieslect\nAccessories\nAccessories\nGo to Accessories\nAdapters & Cables\nStorage\nKids\nScooters\nGaming\nGaming\nGo to Gaming\nNintendo\nPS\nXBOX\nOthers\nPersonal Care\nPersonal Care\nGo to Personal Care\nHome Accessories\nPerfume\nMassage\nOthers\nTech Gadgets\nTech Gadgets\nGo to Tech Gadgets\nKits (Cleaning, Repair...)\nPower Devices\nSmart Devices\nRouters\nBags\nKindle\nStands\nCalculator\nHandy Phones\nAudio\nAudio\nGo to Audio\nEarphones\nSpeakers\nHeadphones\nEarbuds\nMicrophones\nCases\nCases\nGo to Cases\nApple\nSamsung\nOthers\nWatch Accessories\nKeyboards & Mouses\nOthers\nBlogs\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nLebanon\nFast Delivery\nFacebook\nInstagram\nLog in\nSearch\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nSearch\nLog in\n0\n00 items\nSubtotal\n$0\nShop All\nCameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nGo to Cameras\nLaptops\nMacbook\nNew\nUsed\nGo to L",
+   "quoted": []
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://technodel.net/",
+   "shop_id": "technodel",
+   "observed_at": "2026-11-27T22:48:34+00:00",
+   "sha256": "2e804f3f5afa844a6345d628b99f38993085730f6658d3f36a137c3bf040dc70",
+   "excerpt": "Technodel – Lebanon's Tech Store | Laptops, Smartphones & More\nFlat $4 Fast Delivery across Lebanon\n🔥 Get exclusive daily tech deals before anyone else.Join Channel\nLight\nToday's offerEnds in--:--:--\nPC Builder· build & check compatibilityNEW\nPrice matchFound it cheaper?We'll match it\nBeirutBadaroSourAbbassiyeh\nBlog\nCompare\nCart\nPC Builder\nAll CategoriesBrands\nAudio▾\nMonitors▾\nHardwareComputer parts▾\nLaptops▾\nGaming▾\nNetworking▾\nDeals\nMy AccountOrdersLBP\n🇱🇧 Lebanon's Premium Tech Destination\nLebanon's Premium Tech\nDestination\nDiscover the latest Smartphones, gaming gear and accessories — with low fees delivery across Lebanon.\nExplore Products\nToday's Deals\n29,609\nProducts\n195\nBrands\nSame Day\nBeirut · Sour · Tripoli\n15,000+\nHappy Clients\n🔥 Daily Offer\nHP OMEN MAX 16 – RTX 5080 16GB\nDaily offer — $1999\nShop Now →\n🔥 Daily Offers\nAll days →\n-50%\nTurn any laptop to Touch! AirBar 15.6\"\n$40$80\nOrder on WhatsApp\n-27%\nLenovo Legion 24-10 240HZ Monitor\n$138$188\nOrder on WhatsApp\nHP OMEN MAX 16 – RTX 5080 16GB\n$1999\nOrder on WhatsApp\n🚀 NEW — BUILD YOUR OWN\nDesign Your Dream PC\nSelect CPU, GPU, RAM, and more — our smart engine checks compatibility, estimates gaming FPS, detects bottlenecks, and calculates the total price. Lebanon's most advanced PC configurator.\n✓ Compatibility Check🎮 FPS Estimator⚡ Bottleneck Detection💰 Instant Pricing💬 WhatsApp Order\nStart Building Your PC→\nPC BUILDER\nShop by category\nLaptops\nGaming laptops\nUsed laptops\nGraphics cards\nProcessors\nMonitors\nSmartphones\nSh",
+   "quoted": []
+  },
+  {
+   "obs": "T6",
+   "kind": "page",
+   "url": "https://abedtahan.com/",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-27T22:48:35+00:00",
+   "sha256": "2b4aee833fc5f96206f004385e7b5daf7fb5a9ec22aca0014473de653bb58b00",
+   "excerpt": "Lebanon's Leading Electronics & Appliances Retailer | Abed Tahan\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & Crepe Makers\nIce Cub",
+   "quoted": []
+  },
+  {
+   "obs": "P8",
+   "kind": "product",
+   "url": "https://phonefinity.net/products/sony-wh-1000xm5/",
+   "shop_id": "phonefinity",
+   "observed_at": "2026-11-27T22:48:34+00:00",
+   "sha256": "d7477a264d84d48dfe65cc8affb30f43a9cf90f436ed8b4d5ae768c08790fdd7",
+   "product": {
+    "shop": "Phonefinity",
+    "shop_id": "phonefinity",
+    "title": "Sony WH-1000XM5 – Noise-Canceling Wireless Over-Ear Headphones",
+    "url": "https://phonefinity.net/products/sony-wh-1000xm5/",
+    "vendor": null,
+    "product_type": null,
+    "condition": null,
+    "source": "woo_store_api",
+    "observed_at": "2026-11-27T22:48:34+00:00",
+    "variants": [
+     {
+      "variant_id": "32016",
+      "title": "Color: Black",
+      "options": {
+       "Color": "black"
+      },
+      "price": "245.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/sony-wh-1000xm5/?attribute_pa_color=black"
+     },
+     {
+      "variant_id": "48643",
+      "title": "Color: Midnight Blue",
+      "options": {
+       "Color": "midnight-blue"
+      },
+      "price": "245.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": "Out of stock",
+      "sku": null,
+      "url": "https://phonefinity.net/products/sony-wh-1000xm5/?attribute_pa_color=midnight-blue"
+     },
+     {
+      "variant_id": "32017",
+      "title": "Color: Silver",
+      "options": {
+       "Color": "silver"
+      },
+      "price": "245.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/sony-wh-1000xm5/?attribute_pa_color=silver"
+     }
+    ],
+    "description": "8-Microphone Active Noise Cancellation\n4 x Beamforming Mics for Clear Calls\nUp to 30 Hours of Playback with ANC On\nLDAC Support for Hi-Res Audio\nLeave Them On & Talk with Speak-to-Chat\nWear Detection for Instant Pause & Play\nMultipoint Seamless Device Switching\nLightweight & Comfortable Design\nYOUR WORLD. NOTHING ELSE.\nIndustry Leading Noise Canceling Headphones\nTwo processors control 8 microphones\nSpecially developed by Sony, the new Integrated Processor V1 unlocks the full potential of our HD Noise Canceling Processor QN1. This unique combination of technology controls 8 microphones to deliver unprecedent noise canceling quality.\nIndustry Leading Noise Cancellation\nFrom airplane noise to people’s voices, our WH-1000XM5 wireless headphones keep out more high and mid frequency sounds than ever. And with Auto NC Optimizer, noise canceling is automatically optimized based on your wearing conditions and environment.\nAll day power and quick charging\nWith up to 30 hours of battery life, you’ll have enough power even for long trips. If you need to charge in a hurry, you can get 3 hours’ worth of charge after just 3 minutes with an optional USB-PD compatible AC adapter.\nCrystal clear hands-free calling\nWith Precise Voice Pickup Technology & advanced audio signal processing, the person on the other end of the call will hear your voice clearly, even when you are in noisy situations. Equipped with two beamforming microphones on each earcup, these headphones are calibrated to only pick ",
+    "extra": {
+     "attributes": {
+      "Color": [
+       "Black",
+       "Midnight Blue",
+       "Silver"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "obs": "P9",
+   "kind": "product",
+   "url": "https://najemstarcall.com/product/sony-wh-1000xm5-wireless-headphones/",
+   "shop_id": "najem_star",
+   "observed_at": "2026-11-27T22:48:34+00:00",
+   "sha256": "7adbf4ae38f0fff0d69b1d5b47abfa6ffc3246f48acfc09b88ab1fa575de3bfa",
+   "product": {
+    "shop": "Najem Star Call",
+    "shop_id": "najem_star",
+    "title": "Sony WH-1000XM5 Wireless Headphones",
+    "url": "https://najemstarcall.com/product/sony-wh-1000xm5-wireless-headphones/",
+    "vendor": null,
+    "product_type": null,
+    "condition": null,
+    "source": "woo_store_api",
+    "observed_at": "2026-11-27T22:48:34+00:00",
+    "variants": [
+     {
+      "variant_id": "107513",
+      "title": "Color: Pink /",
+      "options": {
+       "Color": "pink-2"
+      },
+      "price": "225.00",
+      "compare_at": "270.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": "Out of stock",
+      "sku": null,
+      "url": "https://najemstarcall.com/product/sony-wh-1000xm5-wireless-headphones/?attribute_pa_color=pink-2"
+     },
+     {
+      "variant_id": "77427",
+      "title": "Color: Midnight Blue",
+      "options": {
+       "Color": "midnight-blue"
+      },
+      "price": "225.00",
+      "compare_at": "270.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": "In stock",
+      "sku": "SonyXM5 Headphones Midnight Blue",
+      "url": "https://najemstarcall.com/product/sony-wh-1000xm5-wireless-headphones/?attribute_pa_color=midnight-blue"
+     },
+     {
+      "variant_id": "24526",
+      "title": "Color: Black",
+      "options": {
+       "Color": "black"
+      },
+      "price": "225.00",
+      "compare_at": "270.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": "Out of stock",
+      "sku": "sony-xm5-blk-1015",
+      "url": "https://najemstarcall.com/product/sony-wh-1000xm5-wireless-headphones/?attribute_pa_color=black"
+     },
+     {
+      "variant_id": "24527",
+      "title": "Color: Silver",
+      "options": {
+       "Color": "silver"
+      },
+      "price": "225.00",
+      "compare_at": "270.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": "In stock",
+      "sku": "sony-xm5-silver-1016",
+      "url": "https://najemstarcall.com/product/sony-wh-1000xm5-wireless-headphones/?attribute_pa_color=silver"
+     }
+    ],
+    "description": "Industry-leading noise cancellation optimized to you\nMagnificent Sound, engineered to perfection\nCrystal clear hands-free calling\nUp to 30-hour battery life with quick charging (3 min charge for 3 hours of playback)\nUltra-comfortable, lightweight design with soft fit leather\nMultipoint connection allows you to quickly switch between devices\nRedesigned collapsible case made for easy storage in a bag\nSony XM5 headphones feature intuitive touch control settings\nFor everyday convenience, just Speak-to-Chat and Quick Attention mode stop your music and let in ambient sound\nInstant pause. Instant play.\nSony WH-1000XM5 Wireless Headphones\nWH-1000XM5\nYOUR WORLD. NOTHING ELSE.\nThe WH-1000XM5 headphones rewrite the rules for distraction-free listening. 2 processors control 8 microphones for unprecedented noise cancellation and exceptional call quality. With a newly developed driver, DSEE – Extreme and Hi-Res audio support the WH-1000XM5 headphones provide awe-inspiring audio quality.\nOur best noise canceling headphones gets even better\nSee how the WH-1000XM5 noise canceling headphones combine our best ever noise canceling technology with superlative sound for a truly remarkable listening experience.\nMulti Noise Sensor Technology\nWith 8 total microphones, these headphones are our biggest step forward in noise canceling technology. Ambient sound is captured even more accurately for a dramatic reduction in high frequency noise. Thanks to the new Auto NC Optimizer, noise canceling performan",
+    "extra": {
+     "attributes": {
+      "Color": [
+       "Black",
+       "Midnight Blue",
+       "Pink /",
+       "Silver"
+      ],
+      "Brand": [
+       "Sony"
+      ],
+      "Condition": [
+       "Brand New"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "obs": "T7",
+   "kind": "page",
+   "url": "https://phonefinity.net/",
+   "shop_id": "phonefinity",
+   "observed_at": "2026-11-27T22:48:45+00:00",
+   "sha256": "c4cff6106da9fe70be7880023f7e9a7b6cb4101208ea5f2a82d862d0ba88c981",
+   "excerpt": "Phonefinity.net: Genuine Products. Quality Service.\nSkip to content\n[email protected]\nOnline Only | Cash on Delivery\nOnline Only | Cash on Delivery\nSearch for:\nLogin / Register\nCart\n0\nNo products in the cart.\nReturn to shop\nSearch for:\n0\nCart\nNo products in the cart.\nReturn to shop\nPhones\nTablets\nApple iPads\nAndroid Tablets\nAmazon Kindles\nMacbooks\nSmart\nSmart Watches & Bands\nSmart Scales\nSmart Display\nAudio\nEarphones\nHeadphones\nSpeakers\nMicrophones\nMedia Streaming\nGaming\nPlayStation\nNintendo Switch\nNetworking\nCameras\nAccessories\nCables\nChargers & Power Banks\nMobile & Tablet Covers\nMobile Accessories\nComputer Accessories\nSleeves, Carrying Cases & Backpacks\nUSB Hubs\nPRELOVED\nFilter\nShowing 1–30 of 2904 results\nNew\nPower\nAnker Prime Charger (160W, 3 Ports, Smart Display)\n$132\nNew\nPower\nAnker Prime Power Bank (26K, 300W)\n$176\nNew\nPower\nAnker Prime Wireless Charging Base (100W, 3 Ports)\n$65\nEarphones\nApple AirPods 5\n$140 – $165Price range: $140 through $165\nNew\nApple iPads\nApple iPad mini (2026)\n$820 – $920Price range: $820 through $920\nPhones\nApple iPhone 18 Pro\n$1,550 – $1,825Price range: $1,550 through $1,825\nPhones\nApple iPhone 18 Pro Max\n$1,700 – $2,000Price range: $1,700 through $2,000\nSmart Watches & Bands\nApple Watch Series 12\n$440 – $490Price range: $440 through $490\nSmart Watches & Bands\nApple Watch Ultra 4\n$850 – $1,000Price range: $850 through $1,000\nEarphones\nCMF by Nothing Buds Neo\n$50\nEarphones\nCMF Clip Pro\n$110\nNetworking\nDeco XE75 Pro\n$154 – $374Price range: $154 ",
+   "quoted": []
+  },
+  {
+   "obs": "T8",
+   "kind": "page",
+   "url": "https://mobileleb.com/meta.json",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-27T22:48:45+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"Mobileleb\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"mobileleb.com\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T9",
+   "kind": "page",
+   "url": "https://www.classic-phones.com/products/sony-wh-1000xm5-sa-headphones",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-27T22:48:46+00:00",
+   "sha256": "71198b198515c49d433df77b826c6f04efefa5d7fc3ef377180509555bd90446",
+   "excerpt": "Sony Wh-1000XM5 SA headphones\nSkip to content\nDelivery Available All Over Lebanon\nFacebook\nInstagram\nShop All\nCameras\nCameras\nGo to Cameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nLaptops\nLaptops\nGo to Laptops\nMacbook\nNew\nUsed\nTablets\nTablets\nGo to Tablets\nApple\nSamsung\nXiaomi\nBlackview\nModio\nSmart Watch\nSmart Watch\nGo to Smart Watch\nApple\nSamsung\nFitbit\nHuawei\nAmazfit\nXiaomi\nGreen Lion\nProdo\nKieslect\nAccessories\nAccessories\nGo to Accessories\nAdapters & Cables\nStorage\nKids\nScooters\nGaming\nGaming\nGo to Gaming\nNintendo\nPS\nXBOX\nOthers\nPersonal Care\nPersonal Care\nGo to Personal Care\nHome Accessories\nPerfume\nMassage\nOthers\nTech Gadgets\nTech Gadgets\nGo to Tech Gadgets\nKits (Cleaning, Repair...)\nPower Devices\nSmart Devices\nRouters\nBags\nKindle\nStands\nCalculator\nHandy Phones\nAudio\nAudio\nGo to Audio\nEarphones\nSpeakers\nHeadphones\nEarbuds\nMicrophones\nCases\nCases\nGo to Cases\nApple\nSamsung\nOthers\nWatch Accessories\nKeyboards & Mouses\nOthers\nBlogs\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nLebanon\nFast Delivery\nFacebook\nInstagram\nLog in\nSearch\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nSearch\nLog in\n0\n00 items\nSubtotal\n$0\nShop All\nCameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nGo to Cameras\nLaptops\nMacbook\nNew\nUsed\nGo to Laptops\nTablets\nApple\nSamsun",
+   "quoted": []
+  },
+  {
+   "obs": "T10",
+   "kind": "page",
+   "url": "https://mobileleb.com/",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-27T22:48:47+00:00",
+   "sha256": "1a15b355bd4df1c901956576c7f1e1b99aa0608e85510ca341d2a3f1f36eae83",
+   "excerpt": "Mobileleb.com | Mobile Price in Lebanon, Laptop, PS5\nCell Phones & Tablets\nCell Phones\nSamsung\nHonor\nXiaomi\nTecno\nApple\nFeature Phones\nInfinix\nApple Open Box\nGoogle\nSamsung Open Box\nOppo\nVivo\nMotorola\nBlackview\nitel\nRealme\nZTE nubia\nOnePlus\nFreeYond\nNokia\nHuawei\nAlcatel\nHiSense\nDoogee\nTCL\nBlackBerry\nCAT\nUmidigi\nI-Plus\nTablets, iPads & eReaders\nApple iPads\nAndroid Tablets\nWindows Tablets\neReaders\nDrawing Tablets & Accessories\nSamsung\nBlackview\nRed Magic Gaming Tablets\nLenovo\nAmazon\nAlcatel\nMicrosoft\ni-Plus\nHuawei\nG-TiDE\nWearables, Smart Watches & Trackers\nCell Phone Accessories\nMobile Phone Cases\nScreen Protectors\nCharging & Data Cables\nChargers & Power Adapters\nMobile Gaming Controllers\nMobiles & Tablets Cables & Connectors\nMounts & Stands\nCar Accessories\nMobile Phone Accessories\nMobile Phone Camera Accessories\nLED Ring Lights\nGimbals & Camera Stabilizers\nSelfie Sticks, Tripods & Monopods\niPad & Tablet Accessories\nKeyboards\nStylus Pens\nCovers & Screen Protectors\nTablet Computer Docks & Stands\nTablet Computer Parts\nComputers & Parts\nApple Accessories\nKeyboards & Mice\nTime Capsule\nAirPods & Audio\nAll Laptops\nHP Laptops\nLenovo Laptops\nNEC Laptops\nAcer Laptops\nMacBooks, iMacs & Mac mini\nMac Studio\nDell Laptops\nAsus Laptops\nMSI Laptops\nGigabyte Laptops\nRazer Laptops\nGateway Laptops\nToshiba Laptops\nMicrosoft Surface\nLaptops Open Box\nDesktop Computers\nMini PCs\nDesktops\nAll-in-One Computers\nP.O.S Systems\nCore Components\nGraphics Cards\nCPU / Computer Processors\nRAM\nMotherboards\nAudio ",
+   "quoted": []
+  },
+  {
+   "obs": "T11",
+   "kind": "page",
+   "url": "https://phonefinity.net",
+   "shop_id": "phonefinity",
+   "observed_at": "2026-11-27T22:48:56+00:00",
+   "sha256": "f74bc4e8d46f75fd2227a106aae7b5d2d627537311854f95c1547c80af509957",
+   "excerpt": "Phonefinity.net: Genuine Products. Quality Service.\nSkip to content\n[email protected]\nOnline Only | Cash on Delivery\nOnline Only | Cash on Delivery\nSearch for:\nLogin / Register\nCart\n0\nNo products in the cart.\nReturn to shop\nSearch for:\n0\nCart\nNo products in the cart.\nReturn to shop\nPhones\nTablets\nApple iPads\nAndroid Tablets\nAmazon Kindles\nMacbooks\nSmart\nSmart Watches & Bands\nSmart Scales\nSmart Display\nAudio\nEarphones\nHeadphones\nSpeakers\nMicrophones\nMedia Streaming\nGaming\nPlayStation\nNintendo Switch\nNetworking\nCameras\nAccessories\nCables\nChargers & Power Banks\nMobile & Tablet Covers\nMobile Accessories\nComputer Accessories\nSleeves, Carrying Cases & Backpacks\nUSB Hubs\nPRELOVED\nFilter\nShowing 1–30 of 2904 results\nNew\nPower\nAnker Prime Charger (160W, 3 Ports, Smart Display)\n$132\nNew\nPower\nAnker Prime Power Bank (26K, 300W)\n$176\nNew\nPower\nAnker Prime Wireless Charging Base (100W, 3 Ports)\n$65\nEarphones\nApple AirPods 5\n$140 – $165Price range: $140 through $165\nNew\nApple iPads\nApple iPad mini (2026)\n$820 – $920Price range: $820 through $920\nPhones\nApple iPhone 18 Pro\n$1,550 – $1,825Price range: $1,550 through $1,825\nPhones\nApple iPhone 18 Pro Max\n$1,700 – $2,000Price range: $1,700 through $2,000\nSmart Watches & Bands\nApple Watch Series 12\n$440 – $490Price range: $440 through $490\nSmart Watches & Bands\nApple Watch Ultra 4\n$850 – $1,000Price range: $850 through $1,000\nEarphones\nCMF by Nothing Buds Neo\n$50\nEarphones\nCMF Clip Pro\n$110\nNetworking\nDeco XE75 Pro\n$154 – $374Price range: $154 ",
+   "quoted": [
+    {
+     "quote": "Outside Beirut: 5$, in 2-4 business days",
+     "found": true
+    },
+    {
+     "quote": "Outside Beirut: 5$, in 2-4 business days",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T12",
+   "kind": "page",
+   "url": "https://mobileleb.com/products/sony-wh-1000xm5-wireless-industry-leading-noise-canceling-headphones-with-auto-noise-canceling-optimizer",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-27T22:48:57+00:00",
+   "sha256": "4ad10e450d6997a2b8b3fa07627d36483bedd6bd83d8840e2ad9e09727bd5a57",
+   "excerpt": "Sony WH-1000XM5 Wireless Headphones Best Price In Lebanon\n– Mobileleb\nCell Phones & Tablets\nCell Phones\nSamsung\nHonor\nXiaomi\nTecno\nApple\nFeature Phones\nInfinix\nApple Open Box\nGoogle\nSamsung Open Box\nOppo\nVivo\nMotorola\nBlackview\nitel\nRealme\nZTE nubia\nOnePlus\nFreeYond\nNokia\nHuawei\nAlcatel\nHiSense\nDoogee\nTCL\nBlackBerry\nCAT\nUmidigi\nI-Plus\nTablets, iPads & eReaders\nApple iPads\nAndroid Tablets\nWindows Tablets\neReaders\nDrawing Tablets & Accessories\nSamsung\nBlackview\nRed Magic Gaming Tablets\nLenovo\nAmazon\nAlcatel\nMicrosoft\ni-Plus\nHuawei\nG-TiDE\nWearables, Smart Watches & Trackers\nCell Phone Accessories\nMobile Phone Cases\nScreen Protectors\nCharging & Data Cables\nChargers & Power Adapters\nMobile Gaming Controllers\nMobiles & Tablets Cables & Connectors\nMounts & Stands\nCar Accessories\nMobile Phone Accessories\nMobile Phone Camera Accessories\nLED Ring Lights\nGimbals & Camera Stabilizers\nSelfie Sticks, Tripods & Monopods\niPad & Tablet Accessories\nKeyboards\nStylus Pens\nCovers & Screen Protectors\nTablet Computer Docks & Stands\nTablet Computer Parts\nComputers & Parts\nApple Accessories\nKeyboards & Mice\nTime Capsule\nAirPods & Audio\nAll Laptops\nHP Laptops\nLenovo Laptops\nNEC Laptops\nAcer Laptops\nMacBooks, iMacs & Mac mini\nMac Studio\nDell Laptops\nAsus Laptops\nMSI Laptops\nGigabyte Laptops\nRazer Laptops\nGateway Laptops\nToshiba Laptops\nMicrosoft Surface\nLaptops Open Box\nDesktop Computers\nMini PCs\nDesktops\nAll-in-One Computers\nP.O.S Systems\nCore Components\nGraphics Cards\nCPU / Computer Processors\nRAM\nMo",
+   "quoted": [
+    {
+     "quote": "Delivering At Your Doorstep All Over Lebanon Within 1-2 Days.",
+     "found": true
+    },
+    {
+     "quote": "Delivering At Your Doorstep All Over Lebanon Within 1-2 Days.",
+     "found": true
+    }
+   ]
+  }
+ ]
+}

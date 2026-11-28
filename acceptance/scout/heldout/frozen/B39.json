@@ -1,0 +1,758 @@
+{
+ "run_id": "scout-b39-20261128T052640",
+ "request": {
+  "id": "B39",
+  "text": "Find me a new wireless gaming headset with a USB receiver and a flip-to-mute microphone for PC. What would it cost delivered to Byblos?",
+  "mode": "delivery",
+  "destination": "Byblos",
+  "category": "audio",
+  "run_id": "scout-b39-20261128T052640"
+ },
+ "status": "offers",
+ "message": "The best lead is OutGeeked’s HyperX Cloud Stinger 3 Wireless: $101.99 in black, listed in stock. PC support and a wireless USB-A receiver are confirmed, and the shop states every item is brand-new and genuine.\nHowever, its listing does not confirm flip-to-mute, so I cannot call it a fully verified match yet.\nOutGeeked delivers nationwide, but shipping and taxes are calculated at checkout; the delivered cost to Byblos is therefore not confirmed.\nSuggestion: verify the microphone’s flip-to-mute function before buying rather than compromise on your requirement.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "best",
+   "shop": "OutGeeked",
+   "shop_id": "outgeeked",
+   "title": "HyperX Cloud Stinger 3 Wireless Gaming Headset",
+   "variant": "Black",
+   "url": "https://outgeeked.net/products/hyperx-cloud-stinger-3-wireless-gaming-headset?variant=51034132840706",
+   "price": "101.99",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "exact",
+   "identity_reason": "Matches the requested wireless PC gaming headset category with USB receiver; flip-to-mute remains unverified.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "not confirmed: Flip-to-mute microphone",
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "every item brand-new and genuine",
+     "obs": "T7",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Wireless gaming headset",
+     "status": "met",
+     "quote": "HyperX Cloud Stinger 3 Wireless Gaming Headset",
+     "obs": "P7",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "USB receiver",
+     "status": "met",
+     "quote": "Wireless USB Type-A dongle plus Bluetooth connection",
+     "obs": "P7",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "PC compatibility",
+     "status": "met",
+     "quote": "Works with PC, PS5, Nintendo Switch, Mac and mobile; NGENUITY software support",
+     "obs": "P7",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Flip-to-mute microphone",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P7",
+     "url": "https://outgeeked.net/products/hyperx-cloud-stinger-3-wireless-gaming-headset",
+     "read": "https://outgeeked.net/products/hyperx-cloud-stinger-3-wireless-gaming-headset.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:27:38+00:00",
+     "sha256": "19603b6d169d944699c0b5cb655e14d750473a2361240d7835bb8fb92b712257"
+    }
+   ],
+   "seller_basis": "OutGeeked: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P7",
+   "variant_id": "51034132840706",
+   "identity": "exact",
+   "identity_reason": "Matches the requested wireless PC gaming headset category with USB receiver; flip-to-mute remains unverified.",
+   "condition": "new",
+   "condition_quote": "every item brand-new and genuine",
+   "condition_obs": "T7",
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "T7",
+     "quote": "every item brand-new and genuine"
+    },
+    {
+     "requirement": "Wireless gaming headset",
+     "status": "met",
+     "evidence_obs": "P7",
+     "quote": "HyperX Cloud Stinger 3 Wireless Gaming Headset"
+    },
+    {
+     "requirement": "USB receiver",
+     "status": "met",
+     "evidence_obs": "P7",
+     "quote": "Wireless USB Type-A dongle plus Bluetooth connection"
+    },
+    {
+     "requirement": "PC compatibility",
+     "status": "met",
+     "evidence_obs": "P7",
+     "quote": "Works with PC, PS5, Nintendo Switch, Mac and mobile; NGENUITY software support"
+    },
+    {
+     "requirement": "Flip-to-mute microphone",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": "T9",
+   "delivery_quote": "Taxes and shipping calculated at checkout",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Search suitable wireless models known for flip-to-mute microphones.",
+   "at_s": 11.7,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "Logitech G535"
+    },
+    {
+     "tool": "search",
+     "query": "Logitech G733"
+    },
+    {
+     "tool": "search",
+     "query": "Corsair HS55 Wireless"
+    },
+    {
+     "tool": "search",
+     "query": "HyperX Cloud Stinger Core Wireless"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Check suitable Stinger models across shops, plus full product specifications and condition/delivery policies.",
+   "at_s": 57.5,
+   "calls": [
+    {
+     "tool": "open",
+     "url": "https://outgeeked.net/products/hyperx-cloud-stinger-3-wireless-gaming-headset"
+    },
+    {
+     "tool": "open",
+     "url": "https://www.macrotronics.net/products/hyperx-cloud-stinger-2-wireless-gaming-headset-676a2aa"
+    },
+    {
+     "tool": "read",
+     "url": "https://outgeeked.net/products/hyperx-cloud-stinger-core-wireless-gaming-headset-for-playstation-white-blue",
+     "terms": [
+      "mute",
+      "PC",
+      "new"
+     ]
+    },
+    {
+     "tool": "read",
+     "url": "https://sbeitycomputer.com/product/hyperx-cloud-stinger-core-wireless-gaming-headset-4p5j1aa/",
+     "terms": [
+      "mute",
+      "PC",
+      "new"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "outgeeked"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Finish with strongest PC-compatible candidate; flag missing flip-to-mute evidence and unknown delivered total rather than claim full confirmation.",
+   "at_s": 76.0,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 15156,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 15578,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 31344,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 33922,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 265,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 1031,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 1609,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 2500,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 3219,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 9359,
+   "usage": {
+    "actual_usd": "0.0043455",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3230,
+     "output_tokens": 130,
+     "total_tokens": 3360
+    },
+    "latency_ms": 4188,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 11781,
+   "usage": {
+    "actual_usd": "0.0216755",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 9654,
+     "output_tokens": 257,
+     "total_tokens": 9911
+    },
+    "latency_ms": 7157,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 14907,
+   "usage": {
+    "actual_usd": "0.0321305",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 13084,
+     "output_tokens": 445,
+     "total_tokens": 13529
+    },
+    "latency_ms": 9953,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": true
+  }
+ ],
+ "retailer_requests": 101,
+ "seconds": 76.0,
+ "spend": {
+  "settled_usd": "0.0581515",
+  "uncertain_usd": "0",
+  "model_calls": 3,
+  "ledger_job": "scout-b39-20261128T052640"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://beytech.com.lb/product/logitech-g733-lightspeed-wireless-headset/",
+   "shop_id": "beytech",
+   "observed_at": "2026-11-28T05:27:20+00:00",
+   "sha256": "ddcfda40d5e2fbbd76b0ab8fe17f17a131842af72895c3779a557ad45ac655e4",
+   "product": {
+    "shop": "Beytech",
+    "shop_id": "beytech",
+    "title": "Logitech G733 Lightspeed Wrls Rgb Gmg Headset  Lilac 981-000890",
+    "url": "https://beytech.com.lb/product/logitech-g733-lightspeed-wireless-headset/",
+    "vendor": null,
+    "product_type": null,
+    "condition": null,
+    "source": "woo_store_api",
+    "observed_at": "2026-11-28T05:27:20+00:00",
+    "variants": [
+     {
+      "variant_id": "88809",
+      "title": "Logitech G733 Lightspeed Wrls Rgb Gmg Headset  Lilac 981-000890",
+      "options": {},
+      "price": "189.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": "In stock",
+      "sku": "264203",
+      "url": "https://beytech.com.lb/product/logitech-g733-lightspeed-wireless-headset/"
+     }
+    ],
+    "description": "Logitech G733 Lightspeed Wrls Rgb Gmg Headset Lilac 981-000890\nDIMENSIONS\nEarphones and cable weight: 19 g USB-C\nadapter weight: 6 g\nTECHNICAL SPECIFICATIONS EARPHONES\n2 dynamic drivers: 5.8 mm + 9.2 mm\nFrequency Response: 20Hz ~ 20KHz Impedance: 24 Ohms 20%\nSensitivity: 101.6 3 dB @ 1 kHz SPL\nMicrophone 4 mm ECM mic,\nsensitivity: -42 dB PLATFORM\nCOMPATIBILITY PC, mobile, Xbox, PlayStation, Nintendo, etc.",
+    "extra": {
+     "attributes": {
+      "Brand": [
+       "Logitech"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://sbeitycomputer.com/product/hyperx-cloud-stinger-core-wireless-gaming-headset-4p5j1aa/",
+   "shop_id": "sbeity",
+   "observed_at": "2026-11-28T05:27:22+00:00",
+   "sha256": "f52e5d220b0d41321151d320503527475bdc8c4bc8ed8e535779fe79a048f3e6",
+   "product": {
+    "shop": "Sbeity Computer",
+    "shop_id": "sbeity",
+    "title": "HYPERX CLOUD STINGER CORE WIRELESS GAMING HEADSET (4P5J1AA)",
+    "url": "https://sbeitycomputer.com/product/hyperx-cloud-stinger-core-wireless-gaming-headset-4p5j1aa/",
+    "vendor": null,
+    "product_type": null,
+    "condition": null,
+    "source": "woo_store_api",
+    "observed_at": "2026-11-28T05:27:22+00:00",
+    "variants": [
+     {
+      "variant_id": "25006",
+      "title": "HYPERX CLOUD STINGER CORE WIRELESS GAMING HEADSET (4P5J1AA)",
+      "options": {},
+      "price": "75.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "2495",
+      "url": "https://sbeitycomputer.com/product/hyperx-cloud-stinger-core-wireless-gaming-headset-4p5j1aa/"
+     }
+    ],
+    "description": "HYPERX CLOUD STINGER CORE WIRELESS GAMING HEADSET (4P5J1AA)\nHYPERX CLOUD STINGER CORE WIRELESS GAMING HEADSET (4P5J1AA)\nTYPE: WIRELESS GAMING HEADSET\nDRIVERS: 40MM DRIVERS\nAUDIO: HYPERX SPATIAL AUDIO\nMICROPHONE: NOISE-CANCELLING MICROPHONE\nEAR PADS: MEMORY FOAM\nCONNECTIVITY: USB-A WIRELESS\nCOLOR: WHITE / BLUE\nMODEL: 4P5J1AA\nBRAND: HYPERX"
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/hyperx-cloud-stinger-core-wireless-gaming-headset-for-playstation-white-blue",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:27:22+00:00",
+   "sha256": "e65a750deecd244dfa4a6ee52ceaa18a400655153e93b34c30064f7b70d7dd4f",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "HyperX Cloud Stinger Core Wireless Gaming Headset for PlayStation - White-Blue",
+    "url": "https://outgeeked.net/products/hyperx-cloud-stinger-core-wireless-gaming-headset-for-playstation-white-blue",
+    "vendor": "HyperX",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:27:22+00:00",
+    "variants": [
+     {
+      "variant_id": "50812628730114",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "90.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/hyperx-cloud-stinger-core-wireless-gaming-headset-for-playstation-white-blue?variant=50812628730114"
+     }
+    ],
+    "description": "The HyperX Cloud Stinger Core Wireless Gaming Headset for PlayStation - White-Blue gives PS5 and PS4 players a simple 2.4 GHz wireless headset: plug in the USB adapter, and enjoy up to 17 hours of battery life, a range of up to 12 m in open field and 40 mm drivers in a closed-back, over-ear design.\nKey features\n2.4 GHz wireless connection through a USB adapter, made for PS5 and PS4\nUp to 17 hours of battery life, about 3 hours to recharge over USB-C\nWireless range of up to 12 m in open field\n40 mm dynamic drivers with neodymium magnets and 10 Hz to 21 kHz frequency response\nClosed-back, over-ear design at approximately 240 g\nUni-directional noise-cancelling microphone with swivel-to-mute\nOn-board audio controls\nSteel sliders with soft foam and fabric ear cushions\nWho it is for and how it fits your setup\nThis headset is for PlayStation players who want to ditch the cable and keep things simple. The USB wireless adapter handles the connection, the on-board controls manage the audio, and the swivel-to-mute microphone is there when you need to talk to your squad. It is listed as compatible with PS5 and PS4.\nIf your gaming spot is a sofa a few metres from the console, the 12 m open-field range gives you room to move, and the USB-C charge cable makes top-ups simple.\nBattery, range and sound\nThe headset runs for up to 17 hours per charge and takes approximately 3 hours to recharge over USB-C. Wireless range is up to 12 m in open field, which is plenty for playing from a sofa or desk"
+   }
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/hyperx-cloud-stinger-2-core-gaming-headset",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:27:22+00:00",
+   "sha256": "c7b53cf4a3af6fd6b7dcf1cb79f99478d215f6e31a7f35d5b1b3130fa5c497d1",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "HyperX Cloud Stinger 2 Core Gaming Headset",
+    "url": "https://abedtahan.com/products/hyperx-cloud-stinger-2-core-gaming-headset",
+    "vendor": "HYPERX",
+    "product_type": "Gaming Accessories",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:27:22+00:00",
+    "variants": [
+     {
+      "variant_id": "45078883532979",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "49.00",
+      "compare_at": "54.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "683L9AA",
+      "url": "https://abedtahan.com/products/hyperx-cloud-stinger-2-core-gaming-headset?variant=45078883532979"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://beytech.com.lb/product/logitech-g733-lightspeed-gaming-headset-blk/",
+   "shop_id": "beytech",
+   "observed_at": "2026-11-28T05:27:23+00:00",
+   "sha256": "e919b7e69adcebbbbb8ef0cf27afc98f3252bbed9fb7298211dee799116abd95",
+   "product": {
+    "shop": "Beytech",
+    "shop_id": "beytech",
+    "title": "Logitech G733 Lightspeed Wrls Rgb Gmg Headset Blk 981-000864",
+    "url": "https://beytech.com.lb/product/logitech-g733-lightspeed-gaming-headset-blk/",
+    "vendor": null,
+    "product_type": null,
+    "condition": null,
+    "source": "woo_store_api",
+    "observed_at": "2026-11-28T05:27:23+00:00",
+    "variants": [
+     {
+      "variant_id": "88808",
+      "title": "Logitech G733 Lightspeed Wrls Rgb Gmg Headset Blk 981-000864",
+      "options": {},
+      "price": "189.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": "In stock",
+      "sku": "264202",
+      "url": "https://beytech.com.lb/product/logitech-g733-lightspeed-gaming-headset-blk/"
+     }
+    ],
+    "description": "Logitech G733 Lightspeed Wrls Rgb Gmg Headset Blk 981-000864\nDIMENSIONS\nEarphones and cable weight: 19 g USB-C\nadapter weight: 6 g\nTECHNICAL SPECIFICATIONS EARPHONES\n2 dynamic drivers: 5.8 mm + 9.2 mm\nFrequency Response: 20Hz ~ 20KHz\nImpedance: 24 Ohms 20%\nSensitivity: 101.6 3 dB @ 1 kHz SPL\nMicrophone 4 mm ECM mic, sensitivity: -42 dB\nPLATFORM COMPATIBILITY PC, mobile, Xbox, PlayStation, Nintendo, etc.",
+    "extra": {
+     "attributes": {
+      "Brand": [
+       "Logitech"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://techzone.com.lb/product/logitech-g733-lightspeed-wireless-rgb-gaming-headset-black/",
+   "shop_id": "tech_zone",
+   "observed_at": "2026-11-28T05:27:25+00:00",
+   "sha256": "b734dd28e90ebe2a4c6959aeee39f65a110cbb98d32d478ab2d5855e610f6033",
+   "product": {
+    "shop": "Tech Zone",
+    "shop_id": "tech_zone",
+    "title": "LOGITECH G733 LIGHTSPEED Wireless RGB Gaming Headset – BLACK",
+    "url": "https://techzone.com.lb/product/logitech-g733-lightspeed-wireless-rgb-gaming-headset-black/",
+    "vendor": null,
+    "product_type": null,
+    "condition": null,
+    "source": "woo_store_api",
+    "observed_at": "2026-11-28T05:27:25+00:00",
+    "variants": [
+     {
+      "variant_id": "36961",
+      "title": "LOGITECH G733 LIGHTSPEED Wireless RGB Gaming Headset – BLACK",
+      "options": {},
+      "price": "145.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": "<span>Out of stock</span>",
+      "sku": "981-000864",
+      "url": "https://techzone.com.lb/product/logitech-g733-lightspeed-wireless-rgb-gaming-headset-black/"
+     }
+    ],
+    "description": "2 Years Warranty\nLength: 7.64 in (194 mm) *Width: 7.48 in (190 mm) *Depth: 3.27 in (83 mm) *Weight: 9.81 oz (278 g)\nDriver: PRO-G 1.57 in (40 mm)\nFrequency Response: 20 Hz – 20 kHz\nImpedance: 39 Ohms (passive), 5k Ohms (active)\nSensitivity: 87.5 dB SPL/mW\nMICROPHONE\nMicrophone Pickup Pattern: Cardioid (Unidirectional)\nSize: 0.24 in (6 mm)\nFrequency Response: 100 Hz-10 KHz\nWireless range: Up to 65.62 ft (20 m) 1May vary based on user and computing conditions. Battery life is based on headset volume set to 50%.\nConnection Type: LIGHTSPEED Wireless via USB.27 in (83 mm)",
+    "extra": {
+     "attributes": {
+      "Brand": [
+       "Logitech"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://beytech.com.lb/faq-2/",
+   "shop_id": "beytech",
+   "observed_at": "2026-11-28T05:27:25+00:00",
+   "sha256": "8d87bf6ee790833dbec1db1e336323616c540a9a7e015214b5ac6a72dd059d7f",
+   "excerpt": "FAQ | Beytech\nSkip to content\nDelivery all over lebanon\nWA: 03252076\nBlog\n01243000\nNewsletter\nSign up for Newsletter\nSign up and never miss any new item's arrival!\nWA: 03252076\nDelivery all over lebanon\nAll\nBaby & Toys\nBeauty & Healthcare\nBooks & Stationery\nDryers\nElectronics\nGift Card\nHome & Kitchen\nHome Appliances\nOur Brands\nPay by link\nSale!\nSports & Outdoors\nWedding list\nSearch for:\nLogin / Register\nCart / USD0.00\nNo products in the cart.\nReturn to shop\nCart\nNo products in the cart.\nReturn to shop\nMENUMENU\nHome Appliances\nCooling, Heating & Air Quality\nAir Conditioners\nAir Coolers\nAir Purifiers\nDehumidifiers\nFans\nHeating & Solar Water Heater\nHumidifiers\nLarge Appliances\nBuilt-in Coffee Makers\nCookers\nDishwashers\nDryers\nFreezers\nHobs\nHoods\nMicrowaves\nOvens\nRefrigerators\nWarming Drawers\nWasher Dryers\nWashing Machines\nTop Loaders\nFront Loaders\nTwin Tub\nWater Dispensers\nWine Coolers & Cigar Humidors\nSmall Appliances\nBreakfast\nElectric Ovens\nFood Preparation\nGarment Care\nGrills\nSpecialty Appliances\nVacuums & Floor Care\nBooks & Stationery\nBooks\nCooking Crafts & Home\nChildren's Books\nEducation & Teaching\nStationery\nBags\nOffice & School Supplies\nElectronics\nMobiles & Tablets\nIpad & Tablets\nLandlines\nMobiles\nMobiles & Tablets Accessories\nHome Audio & Video\nAudio\nAV Accessories\nBlu-Ray & DVD Players\nCameras\nProjectors\nTelevisions\nTV Brackets & Stands\nComputers & Accessories\nComputer Accessories\nComputer Software\nInk&Toners\nLaptops\nMedia Storage\nMonitors\nPrinters & Scanners\nGaming Z",
+   "quoted": []
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://abedtahan.com/pages/contact",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:27:26+00:00",
+   "sha256": "6e07e5f850b668c475462ff4e97ea20e331a24b2ca670a32fa31c577c1312ebf",
+   "excerpt": "Contact\n– Abed Tahan\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & Crepe Makers\nIce Cube, Ice Cream & Yoghurt Makers\nSaj Machines\nL",
+   "quoted": []
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://sbeitycomputer.com/contact-us/",
+   "shop_id": "sbeity",
+   "observed_at": "2026-11-28T05:27:26+00:00",
+   "sha256": "818fe5500c94668c44a8a20b6dc5c54fd42905134890886f2fe5416fed79ddd6",
+   "excerpt": "Contact Us – sbeitycomputer\nSkip to navigation\nSkip to main content\nAll Categories\nPOS\nPOS SYSTEM\n2ND DISPLAY\nLABEL MAKER\nCard Readers\nBARCODE SCANNER\nCARD PRINTER\nCASH DRAWER\nDATA COLLECTOR\nINVOICE PRINTER SUPPLIES\nLABEL PRINTER\nRECEIPT PRINTER\nSCALE\nMONEY COUNTER\nLAPTOP\nLAPTOPS NEW\nLAPTOPS USED\nLAPTOPS REFURBISHED\nComputer & Desktop\nALL IN ONE\nDESKTOP\nSERVER\nNEW SERVER\nUSED SERVER\nCABINET\nMONITOR\nHardware & Components\nCASE\nGPU\nMOTHERBOARD\nPOWER SUPPLY\nCPU\nCPU COOLER\nCPU Fan\nDRIVE EXTERNAL\nExpansion HDD\nENCLOSURE\nDRIVE INTERNAL\nHDD\nRAM\nSSD\nSSD Drive\nSSD NVME\nUPS\nMOUSE\nMOUSE PAD\nKEYBOARD\nMICRO SD\nPEN\nMICROPHONE\nBATTERY\nUSB FLASH\nPOWER BANK\nUSB EXTENTION\nUSB HUB\nUSB FLASH\nCABLES\nCABLE DISPLAY\nCABLE VGA\nCONVERTER\nPHONE CABLE\nPRINTER\nLASER PRINTER\nINK PRINTER\nRECEIPT PRINTER\nLABEL PRINTER\nCARD PRINTER\nSCANNER\nPRINTER CABLE\nPRINTER SUPPLIES\nTONER\nNETWORK\nSECURITY SYSTEM\nTIME ATTENDANCE\nUSB WIFI\nWIFI Sticks\nWIRELESS\nWIFI Routers\nSWITCH\nKEYSTONE\nMODEM\nNAS STORAGE\nNETWORK CABLES\nPATCH PANEL\nRANGE EXTENDER\nROUTER\nKVM SWITCH\nWEBCAM\nPROJECTOR\nPRESENTER\nWALL SCREEN\nSAFES\nCAMERA\nDVR-NVR-XVR\nADAPTER\nORIGINAL ADAPTER\nCOPY ADAPTER\nSelect category\nSelect category\nAccessories\nBAG\nBELL\nBRACKET\nBRUSH\nCABLES\nCABLE DISPLAY\nCABLE VGA\nPATCH CABLE\nPHONE CABLE\nPOWER CABLE\nPRINTER CABLE\nUSB EXTENTION\nCHAIR\nCOMBO\nCONVERTER\nDOCKING STATION\nEARPHONES\nENCLOSURE\nEXTERNAL HDD\nHEADSET\nKEYBOARD\nKeyboard & Mouse\nKVM SWITCH\nMICRO SD\nMICROPHONE\nMONEY COUNTER\nMOUSE\nMOUSE PAD\nPATCH CABLE\nPEN\nPHONE\nPOWER BANK\nPRESE",
+   "quoted": []
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://techzone.com.lb/faqs/",
+   "shop_id": "tech_zone",
+   "observed_at": "2026-11-28T05:27:27+00:00",
+   "sha256": "b78283828088e73fa10032964bcdded3bb7230c7edadf29f9b720080000ece40",
+   "excerpt": "FAQs - Tech Zone\nSkip to navigation\nSkip to main content\nAll Categories\nComputer\nComputer Accessories\nBackup\nCables and Hubs\nHeadsets and Speakers\nKeyboards\nMice\nMouse Pad\nWeb Cameras\nMonitors\nMonitor Accessories\nTV Stands\nComputer Components\nCase\nCPU\nMotherboards\nPower Supply\nRAM\nSystem Cooling\nVGA\nSoftware\nPC’s\nAll In one Desktops\nBranded Desktops\nPrebuilt Desktops\nPOS Components\nSecurity, Attendance and CCTV\nAttendance and Access Control\nCCTV\nIP\nAnalog\nVideo Recorder\nFire Alarms\nWifi Camera\nLaptops and Accessories\nLaptops\nLaptop Accessories\nLaptop Bags\nPhones and Tablets\nPhones\nPhone Accessories\nHeadphones\nCopy A Airpods\nAirpods Accessories\nBluetooth\nEarbuds\nWired Earphones\nCables and Adapters\nCases and Protection\nMicrophones\nPower Banks\nPower Socket\nTablets\nTablets Accessories\nHealth and Wellness\nMassagers\nMixers\nStreaming and Projectors\nProjectors\nSmart TV\nGaming, Console and VR\nGaming Console\nVR\nPhotography\nCamera\nDrones\nInstant Camera\nPhotography/Cameras Accessories\nCar Stuff\nCar Accessories\nCar Charger\nBags\nSmart Devices\nSpeakers\nSmart Watches\nWatch Accessories\nPrinters\nLabel Printers and Makers\nPrinters and Scanners\nINK & Toner Supply\nStorage\nStorage Accessories\nNetworking\nFiber and Passive\nFiber Optics\nSFP\nCabinet and Components\nOutlets\nHome and Small Office\nBusiness and Enterprise\nNetwork Adapters\nVOIP and PBX\nWireless and Microwave\neScooter\nOutlet\nUsed\nOpen Box\nRefurbished\nFactory Certified\nSearch for products\n×\n[email protected]\n+96171050505\nDelivery available ac",
+   "quoted": []
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/hyperx-cloud-stinger-3-wireless-gaming-headset",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:27:38+00:00",
+   "sha256": "19603b6d169d944699c0b5cb655e14d750473a2361240d7835bb8fb92b712257",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "HyperX Cloud Stinger 3 Wireless Gaming Headset",
+    "url": "https://outgeeked.net/products/hyperx-cloud-stinger-3-wireless-gaming-headset",
+    "vendor": "HyperX",
+    "product_type": "Headset",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:27:38+00:00",
+    "variants": [
+     {
+      "variant_id": "51034132840706",
+      "title": "Black",
+      "options": {
+       "Colour": "Black"
+      },
+      "price": "101.99",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "BS1T8AA",
+      "url": "https://outgeeked.net/products/hyperx-cloud-stinger-3-wireless-gaming-headset?variant=51034132840706"
+     },
+     {
+      "variant_id": "51034132873474",
+      "title": "White",
+      "options": {
+       "Colour": "White"
+      },
+      "price": "104.99",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "BS1T9AA",
+      "url": "https://outgeeked.net/products/hyperx-cloud-stinger-3-wireless-gaming-headset?variant=51034132873474"
+     }
+    ],
+    "description": "The HyperX Cloud Stinger 3 Wireless Gaming Headset (BS1T8AA) pairs 50 mm drivers with two ways to connect: a wireless USB Type-A dongle and Bluetooth. It is rated for 80 hours or more of battery life and has an electret condenser microphone.\nIt suits gamers who switch between a PC, PS5, Nintendo Switch, Mac and phone and want one headset for all of them. Settings can be adjusted in HyperX NGENUITY software. Browse more HyperX products if you want matching gear.\nHighlights\nWireless USB Type-A dongle plus Bluetooth connection\n50 mm drivers with 10 Hz to 50 kHz frequency response\nBattery life of 80 hours or more, about 4 hours to charge\nWireless range of up to 20 m\nElectret condenser microphone\nWorks with PC, PS5, Nintendo Switch, Mac and mobile; NGENUITY software support\nBest for\nLong gaming sessions on PC or PS5 without a cable\nPlayers who move between a console, a Nintendo Switch and a phone\nVoice chat in multiplayer games\nListening to music or calls on mobile over Bluetooth\nSpecifications\nCompatibility\nPC; PS5; Nintendo Switch; Mac; Mobile. Software Compatibility: NGENUITY\nUSB audio format\nStereo\nWireless range\nup to 20 m\nAudio connection\nWireless USB Type-A; Bluetooth®\nDrivers\n50 mm\nBit-depth\n16-bit\nCable Type\nUSB-C to USB-C\nElement\nElectret condenser microphone\nFrequency response (headphone)\n10 Hz to 50 kHz\nSampling rates\n16 kHz; 48 kHz\nSensitivity (headphone)\n114 dB SPL/ mW at 1 kHz\nSensitivity (microphone)\n-41 dBV (0 dB=1 V/ Pa, 1 kHz)\nTotal harmonic distortion\n≤ 2%\nImpe"
+   }
+  },
+  {
+   "obs": "P8",
+   "kind": "product",
+   "url": "https://www.macrotronics.net/products/hyperx-cloud-stinger-2-wireless-gaming-headset-676a2aa",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:27:38+00:00",
+   "sha256": "253e9923c4e52e069caf75f5cfabf2b76377ccfb62d7311138b1dd79293d7a92",
+   "product": {
+    "shop": "Macrotronics",
+    "shop_id": "macrotronics",
+    "title": "HyperX Cloud Stinger 2 Wireless Gaming Headset 676A2AA",
+    "url": "https://www.macrotronics.net/products/hyperx-cloud-stinger-2-wireless-gaming-headset-676a2aa",
+    "vendor": "HyperX",
+    "product_type": "Earphones and Headphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:27:38+00:00",
+    "variants": [
+     {
+      "variant_id": "50561740439841",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "97.55",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "1006239",
+      "url": "https://www.macrotronics.net/products/hyperx-cloud-stinger-2-wireless-gaming-headset-676a2aa?variant=50561740439841"
+     }
+    ],
+    "description": "Specifications:\nDriver Size: 50mm\nFrequency Response: 20Hz – 20kHz\nWireless Range: Up to 20 meters\nBattery Life: Up to 20 hours\nMicrophone: Noise-canceling, swivel-to-mute\nAudio Technology: DTS HeadphoneSpatial Audio\nConnectivity: 2.4GHz wireless"
+   }
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://www.macrotronics.net/policies/shipping-policy",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:27:39+00:00",
+   "sha256": "1f7308166c6c1cb75fac17cc83e4fcf27db45a4d3a9cf8983ecb614f556848d0",
+   "excerpt": "Shipping policy – Macrotronics\nSkip to content\nFacebook\nTwitter\nInstagram\nHelpline +961 71 854 621 | +961 9 853 008\nTechnical Support +961 71 94 84 94\nPause slideshow\nPlay slideshow\nComputers\nComputers\nLaptops\nOn-Demand Laptops\nLaptop Power Adapters\nLaptop Accessories\nApple Computers\nApple Accessories\niPads and Tablets\nTablets Accessories\nComputer & Smart Monitors\nMonitor Accessories\nServers, Workstations and NAS\nDesktops and Mini PCs\nPOS and POS Equipment\nOriginal Softwares and Antivirus\nComputer Parts\nComputer Parts\nProcessors\nGraphic Cards\nMotherboards\nRAMs\nSSD\nHDD\nCPU Coolers\nThermal Paste and Pads\nPower Supplies\nComputer Cases\nComputer Case Accessories\nMore PC Components\nLegacy Computer Parts\nUsed Computer Parts\nComputer Peripherals\nComputer Peripherals\nMice & Keyboards\nEarphones & Headphones\nComputer & Bluetooth Speakers\nWebcams & Microphones\nLaptop Bags & Cases\nComputer & Video Cables\nFlash Drives & Memory Cards\nPrinters, Scanners & Faxes\nPaper & Media Supplies\nGenuine Inks & Ribbons\nGenuine Toners & Drums\nCompatible Toners & Drums\nOffice Furniture\nElectronics & More\nElectronics & More\nUPS\nBatteries\nSmart Appliances\nAdapters and Converters\nEducational Electronics\nConsumer Electronics\nSurveillance and Security\nProjectors, Screens and More\nRouters, Repeaters and APs\nNetwork Switches\nNetwork Adapters\nNetworking and Tools\nGaming\nGaming\nGaming PCs\nGaming Monitors\nGaming Headsets\nGaming Pads\nGaming Mice\nGaming Keyboards\nGaming Chairs\nGaming Desks\nGaming Console and VR\nGaming",
+   "quoted": []
+  },
+  {
+   "obs": "T6",
+   "kind": "page",
+   "url": "https://outgeeked.net/meta.json",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:27:39+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"OutGeeked\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"outgeeked.net\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T7",
+   "kind": "page",
+   "url": "https://outgeeked.net/products/hyperx-cloud-stinger-core-wireless-gaming-headset-for-playstation-white-blue",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:27:39+00:00",
+   "sha256": "861b2da3555116fdc7ec1181517aeeeb2c5b6e5c45e404e5aa26bf6884e2bd8b",
+   "excerpt": "HyperX Cloud Stinger Core Wireless for PS5 and PS4 – OutGeeked\nSkip to content\nCash on delivery\nall over Lebanon\nFacebook\nX (Twitter)\nInstagram\nTikTok\nSearch\nClear\nMost searched products\nSamsung Galaxy S26 12GB/256GB\nRegular price\n$848.00 USD\nSale price\n$848.00 USD\nRegular price\nUnit price\n/per\n4 colours\nView details\nChoose your option\n-9%\nApple iPhone 17 Pro Max (eSIM)\nRegular price\nFrom $1,470.00 USD\nSale price\nFrom $1,470.00 USD\nRegular price\n$1,630.00 USD\nUnit price\n/per\n256GB–2TB · 3 colours\nView details\nChoose your option\n-9%\nApple MacBook Pro M5 (14-inch, 2025)\nRegular price\nFrom $1,600.00 USD\nSale price\nFrom $1,600.00 USD\nRegular price\n$1,799.00 USD\nUnit price\n/per\n16GB/512GB–32GB/1TB · 2 colours\nView details\nChoose your option\n-24%\nSoundcore R50i NC\nRegular price\n$25.00 USD\nSale price\n$25.00 USD\nRegular price\n$33.00 USD\nUnit price\n/per\nIn stock\nView details\nChoose your option\nCart\n0\nBuild Your PC\nSmartphones\nShop All\niPhone\nAll iPhones\niPhone 18 Series\nAndroid Phones\nSamsung Galaxy\nHonor\nXiaomi\nRedmi\nPoco\nOppo\nTecno\nInfinix\nRealme\nRedMagic\nMore Phone Brands\nGoogle Pixel\nOnePlus\nNothing\nMotorola\nHuawei\nVivo\nCMF\nHMD\nBudget\nUnder $200$200–500$500–1,000$1,000+\nTop brands\nAppleSamsungXiaomiRedmiGoogleHonor\nAll brands →\nBest sellers\nSamsung\nSamsung Galaxy S26 12GB/256GB\n$848.00\nApple\nApple iPhone 17 Pro Max (eSIM)\nFrom $1,470.00$1,630.00\nTablets\nShop All\neReaders\nAndroid Tablets\nSamsung Galaxy Tab\nXiaomi\nRedmi\nHonor\nTecno\nHuawei\niPad\niPad\niPad Air\niPad Pro\niPad mini\nBudget",
+   "quoted": [
+    {
+     "quote": "every item brand-new and genuine",
+     "found": true
+    },
+    {
+     "quote": "every item brand-new and genuine",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T8",
+   "kind": "page",
+   "url": "https://sbeitycomputer.com/product/hyperx-cloud-stinger-core-wireless-gaming-headset-4p5j1aa/",
+   "shop_id": "sbeity",
+   "observed_at": "2026-11-28T05:27:40+00:00",
+   "sha256": "c0828c82a6aa86f18418285278ec7e6b777d0c6ca2609ba6aad6a1ae24635552",
+   "excerpt": "HYPERX CLOUD STINGER CORE WIRELESS GAMING HEADSET (4P5J1AA) – sbeitycomputer\nSkip to navigation\nSkip to main content\nAll Categories\nPOS\nPOS SYSTEM\n2ND DISPLAY\nLABEL MAKER\nCard Readers\nBARCODE SCANNER\nCARD PRINTER\nCASH DRAWER\nDATA COLLECTOR\nINVOICE PRINTER SUPPLIES\nLABEL PRINTER\nRECEIPT PRINTER\nSCALE\nMONEY COUNTER\nLAPTOP\nLAPTOPS NEW\nLAPTOPS USED\nLAPTOPS REFURBISHED\nComputer & Desktop\nALL IN ONE\nDESKTOP\nSERVER\nNEW SERVER\nUSED SERVER\nCABINET\nMONITOR\nHardware & Components\nCASE\nGPU\nMOTHERBOARD\nPOWER SUPPLY\nCPU\nCPU COOLER\nCPU Fan\nDRIVE EXTERNAL\nExpansion HDD\nENCLOSURE\nDRIVE INTERNAL\nHDD\nRAM\nSSD\nSSD Drive\nSSD NVME\nUPS\nMOUSE\nMOUSE PAD\nKEYBOARD\nMICRO SD\nPEN\nMICROPHONE\nBATTERY\nUSB FLASH\nPOWER BANK\nUSB EXTENTION\nUSB HUB\nUSB FLASH\nCABLES\nCABLE DISPLAY\nCABLE VGA\nCONVERTER\nPHONE CABLE\nPRINTER\nLASER PRINTER\nINK PRINTER\nRECEIPT PRINTER\nLABEL PRINTER\nCARD PRINTER\nSCANNER\nPRINTER CABLE\nPRINTER SUPPLIES\nTONER\nNETWORK\nSECURITY SYSTEM\nTIME ATTENDANCE\nUSB WIFI\nWIFI Sticks\nWIRELESS\nWIFI Routers\nSWITCH\nKEYSTONE\nMODEM\nNAS STORAGE\nNETWORK CABLES\nPATCH PANEL\nRANGE EXTENDER\nROUTER\nKVM SWITCH\nWEBCAM\nPROJECTOR\nPRESENTER\nWALL SCREEN\nSAFES\nCAMERA\nDVR-NVR-XVR\nADAPTER\nORIGINAL ADAPTER\nCOPY ADAPTER\nSelect category\nSelect category\nAccessories\nBAG\nBELL\nBRACKET\nBRUSH\nCABLES\nCABLE DISPLAY\nCABLE VGA\nPATCH CABLE\nPHONE CABLE\nPOWER CABLE\nPRINTER CABLE\nUSB EXTENTION\nCHAIR\nCOMBO\nCONVERTER\nDOCKING STATION\nEARPHONES\nENCLOSURE\nEXTERNAL HDD\nHEADSET\nKEYBOARD\nKeyboard & Mouse\nKVM SWITCH\nMICRO SD\nMICROPHONE\nMONEY COUNTER\nMOUSE",
+   "quoted": []
+  },
+  {
+   "obs": "T9",
+   "kind": "page",
+   "url": "https://outgeeked.net/",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:27:41+00:00",
+   "sha256": "0fb1bc990a9958e44a4af47cb86d61edca7bc632e6d2b19996987c3b8c448a2f",
+   "excerpt": "Buy Smartphones & Laptops in Lebanon | OutGeeked.net\nSkip to content\nCash on delivery\nall over Lebanon\nFacebook\nX (Twitter)\nInstagram\nTikTok\nSearch\nClear\nMost searched products\nSamsung Galaxy S26 12GB/256GB\nRegular price\n$848.00 USD\nSale price\n$848.00 USD\nRegular price\nUnit price\n/per\n4 colours\nView details\nChoose your option\n-9%\nApple iPhone 17 Pro Max (eSIM)\nRegular price\nFrom $1,470.00 USD\nSale price\nFrom $1,470.00 USD\nRegular price\n$1,630.00 USD\nUnit price\n/per\n256GB–2TB · 3 colours\nView details\nChoose your option\n-9%\nApple MacBook Pro M5 (14-inch, 2025)\nRegular price\nFrom $1,600.00 USD\nSale price\nFrom $1,600.00 USD\nRegular price\n$1,799.00 USD\nUnit price\n/per\n16GB/512GB–32GB/1TB · 2 colours\nView details\nChoose your option\n-24%\nSoundcore R50i NC\nRegular price\n$25.00 USD\nSale price\n$25.00 USD\nRegular price\n$33.00 USD\nUnit price\n/per\nIn stock\nView details\nChoose your option\nCart\n0\nBuild Your PC\nSmartphones\nShop All\niPhone\nAll iPhones\niPhone 18 Series\nAndroid Phones\nSamsung Galaxy\nHonor\nXiaomi\nRedmi\nPoco\nOppo\nTecno\nInfinix\nRealme\nRedMagic\nMore Phone Brands\nGoogle Pixel\nOnePlus\nNothing\nMotorola\nHuawei\nVivo\nCMF\nHMD\nBudget\nUnder $200$200–500$500–1,000$1,000+\nTop brands\nAppleSamsungXiaomiRedmiGoogleHonor\nAll brands →\nBest sellers\nSamsung\nSamsung Galaxy S26 12GB/256GB\n$848.00\nApple\nApple iPhone 17 Pro Max (eSIM)\nFrom $1,470.00$1,630.00\nTablets\nShop All\neReaders\nAndroid Tablets\nSamsung Galaxy Tab\nXiaomi\nRedmi\nHonor\nTecno\nHuawei\niPad\niPad\niPad Air\niPad Pro\niPad mini\nBudget\nUnder $30",
+   "quoted": [
+    {
+     "quote": "Taxes and shipping calculated at checkout",
+     "found": true
+    }
+   ]
+  }
+ ]
+}

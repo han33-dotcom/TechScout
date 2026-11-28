@@ -1,0 +1,1005 @@
+{
+ "run_id": "scout-r04-20261127T225035",
+ "request": {
+  "id": "R04",
+  "text": "I need a good phone",
+  "mode": "delivery",
+  "destination": "Beirut",
+  "run_id": "scout-r04-20261127T225035"
+ },
+ "status": "offers",
+ "message": "My default pick is the Galaxy A56 for value; you don’t need a flagship for everyday use.\n• Karizma: Galaxy A56, 256GB/8GB RAM — $400.00, listed in stock with BMS Official Warranty. New condition is not explicitly confirmed.\n• Mobileleb: Galaxy S25 FE, 256GB/8GB RAM — $655.00, in stock and explicitly Brand New; a stronger premium Android option.\n• Mobileleb: iPhone 16, 128GB — $840.00, in stock and explicitly Brand New; my pick if you prefer iOS.\nFor Beirut delivery, Mobileleb’s fee is unconfirmed. Karizma advertises free shipping on your first order, but Beirut eligibility and other delivery charges are unconfirmed.\nI’d start with the A56 unless gaming or camera performance is a priority. What’s your budget, and do you prefer Android or iPhone?",
+ "question": null,
+ "offers": [
+  {
+   "tier": "best",
+   "shop": "Mobileleb",
+   "shop_id": "mobileleb",
+   "title": "Samsung Galaxy S25 FE 8GB/256GB",
+   "variant": "Jet Black / Brand New / 1 Year",
+   "url": "https://mobileleb.com/products/samsung-galaxy-s25-fe-8gb-256gb?variant=51108760223876",
+   "price": "655.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "A premium Android smartphone option for the broad request.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [],
+   "evidence": [
+    {
+     "obs": "P4",
+     "url": "https://mobileleb.com/products/samsung-galaxy-s25-fe-8gb-256gb",
+     "read": "https://mobileleb.com/products/samsung-galaxy-s25-fe-8gb-256gb.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-27T22:50:57+00:00",
+     "sha256": "65df7b3c959acb4116ec45fb5d398f4df0147a5908eb9d2c0ae4c0937983c413"
+    }
+   ],
+   "seller_basis": "Mobileleb: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  },
+  {
+   "tier": "best",
+   "shop": "Mobileleb",
+   "shop_id": "mobileleb",
+   "title": "Apple iPhone 16 128GB, 1 Year Warranty",
+   "variant": "Black / Brand New / 1 Year",
+   "url": "https://mobileleb.com/products/apple-iphone-16-128gb?variant=51217657692292",
+   "price": "840.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "An iOS smartphone option for the broad request.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [],
+   "evidence": [
+    {
+     "obs": "P2",
+     "url": "https://mobileleb.com/products/apple-iphone-16-128gb",
+     "read": "https://mobileleb.com/products/apple-iphone-16-128gb.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-27T22:50:56+00:00",
+     "sha256": "4e4616305bf38b85024951c9370f536e4acd2e68ec137a09569a2a353ecd83ae"
+    }
+   ],
+   "seller_basis": "Mobileleb: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  },
+  {
+   "tier": "best",
+   "shop": "Karizma Megastore",
+   "shop_id": "karizma",
+   "title": "Samsung Galaxy A56 BMS Official Warranty",
+   "variant": "Black / 256GB/8RAM",
+   "url": "https://karizmamegastore.com/products/samsung-galaxy-a56-256gb-12gb-ram-bms-official-warranty?variant=46553638928573",
+   "price": "400.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "exact",
+   "identity_reason": "A suitable everyday smartphone for the broad request; no model or configuration was specified.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [],
+   "evidence": [
+    {
+     "obs": "P6",
+     "url": "https://karizmamegastore.com/products/samsung-galaxy-a56-256gb-12gb-ram-bms-official-warranty",
+     "read": "https://karizmamegastore.com/products/samsung-galaxy-a56-256gb-12gb-ram-bms-official-warranty.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-27T22:50:57+00:00",
+     "sha256": "3b1c015a32f94eb15f9af0b0489bd71d36c21da3a2dc63af4bea14fbb3804a5a"
+    }
+   ],
+   "seller_basis": "Karizma Megastore: Lebanese shop in the reviewed directory (shop metadata: Ghaziyeh, LB)",
+   "downgrades": []
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P6",
+   "variant_id": "46553638928573",
+   "identity": "exact",
+   "identity_reason": "A suitable everyday smartphone for the broad request; no model or configuration was specified.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [],
+   "delivery_obs": "T4",
+   "delivery_quote": "Free shipping on your first order",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P4",
+   "variant_id": "51108760223876",
+   "identity": "exact",
+   "identity_reason": "A premium Android smartphone option for the broad request.",
+   "condition": "new",
+   "condition_quote": "Brand New",
+   "condition_obs": "P4",
+   "requirements": [],
+   "delivery_obs": null,
+   "delivery_quote": null,
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P2",
+   "variant_id": "51217657692292",
+   "identity": "exact",
+   "identity_reason": "An iOS smartphone option for the broad request.",
+   "condition": "new",
+   "condition_quote": "Brand New",
+   "condition_obs": "P2",
+   "requirements": [],
+   "delivery_obs": null,
+   "delivery_quote": null,
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Compare sensible midrange and premium defaults because no budget or operating system was specified.",
+   "at_s": 10.3,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "Samsung Galaxy A56"
+    },
+    {
+     "tool": "search",
+     "query": "Samsung Galaxy S25"
+    },
+    {
+     "tool": "search",
+     "query": "iPhone 16 128"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Existing product observations support three sensible price tiers; check delivery at the two shops to recommend.",
+   "at_s": 30.6,
+   "calls": [
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "karizma"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "mobileleb"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Recommend three price tiers using verified product variants; delivery pricing remains unconfirmed except the conditional first-order promotion.",
+   "at_s": 46.4,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 11125,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 11875,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 13109,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 1141,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 1750,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7813,
+   "usage": {
+    "actual_usd": "0.0040427",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3170,
+     "output_tokens": 108,
+     "total_tokens": 3278
+    },
+    "latency_ms": 3703,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7172,
+   "usage": {
+    "actual_usd": "0.0195902",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 9485,
+     "output_tokens": 84,
+     "total_tokens": 9569
+    },
+    "latency_ms": 4078,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 14063,
+   "usage": {
+    "actual_usd": "0.0260677",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 10320,
+     "output_tokens": 523,
+     "total_tokens": 10843
+    },
+    "latency_ms": 9875,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  }
+ ],
+ "retailer_requests": 83,
+ "seconds": 46.4,
+ "spend": {
+  "settled_usd": "0.0497006",
+  "uncertain_usd": "0",
+  "model_calls": 3,
+  "ledger_job": "scout-r04-20261127T225035"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/screen-protection-for-iphone-16",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-27T22:50:56+00:00",
+   "sha256": "9372f8d870c1998c08eda1e4a5d67fa528ac720439c470a8f32511cfc211b04a",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "SCREEN PROTECTION FOR - iPhone 16 / 17",
+    "url": "https://abedtahan.com/products/screen-protection-for-iphone-16",
+    "vendor": "CHN",
+    "product_type": "Screen Protectors",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-27T22:50:56+00:00",
+    "variants": [
+     {
+      "variant_id": "44052349419699",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "10.00",
+      "compare_at": "10.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SP-IPH16",
+      "url": "https://abedtahan.com/products/screen-protection-for-iphone-16?variant=44052349419699"
+     }
+    ],
+    "description": "Screen Protection For - Iphone 16"
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/apple-iphone-16-128gb",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-27T22:50:56+00:00",
+   "sha256": "4e4616305bf38b85024951c9370f536e4acd2e68ec137a09569a2a353ecd83ae",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Apple iPhone 16 128GB, 1 Year Warranty",
+    "url": "https://mobileleb.com/products/apple-iphone-16-128gb",
+    "vendor": "Apple",
+    "product_type": "Communications",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-27T22:50:56+00:00",
+    "variants": [
+     {
+      "variant_id": "51217657692292",
+      "title": "Black / Brand New / 1 Year",
+      "options": {
+       "Color": "Black",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "840.00",
+      "compare_at": "0.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppnnXj3g",
+      "url": "https://mobileleb.com/products/apple-iphone-16-128gb?variant=51217657692292"
+     },
+     {
+      "variant_id": "51217657725060",
+      "title": "Pink / Brand New / 1 Year",
+      "options": {
+       "Color": "Pink",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "840.00",
+      "compare_at": "0.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppRj8U6w",
+      "url": "https://mobileleb.com/products/apple-iphone-16-128gb?variant=51217657725060"
+     },
+     {
+      "variant_id": "51217657757828",
+      "title": "Teal / Brand New / 1 Year",
+      "options": {
+       "Color": "Teal",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "840.00",
+      "compare_at": "0.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "App3O1ulX",
+      "url": "https://mobileleb.com/products/apple-iphone-16-128gb?variant=51217657757828"
+     },
+     {
+      "variant_id": "51217657790596",
+      "title": "Ultramarine / Brand New / 1 Year",
+      "options": {
+       "Color": "Ultramarine",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "840.00",
+      "compare_at": "0.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppTILB2i",
+      "url": "https://mobileleb.com/products/apple-iphone-16-128gb?variant=51217657790596"
+     },
+     {
+      "variant_id": "51217657823364",
+      "title": "White / Brand New / 1 Year",
+      "options": {
+       "Color": "White",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "840.00",
+      "compare_at": "0.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppMVDn3A",
+      "url": "https://mobileleb.com/products/apple-iphone-16-128gb?variant=51217657823364"
+     }
+    ],
+    "description": "Dimensions: 147.6 x 71.6 x 7.8 mm (5.81 x 2.82 x 0.31 in)\nWeight: 170 g (6.00 oz)\nBuild: Glass front (Corning-made glass), glass back (Corning-made glass), aluminum frame\nIP68 dust/water resistant (up to 6m for 30 min)\nApple Pay (Visa, MasterCard, AMEX certified)\nDisplay Type: Super Retina XDR OLED, HDR10, Dolby Vision, 1000 nits (typ), 2000 nits (HBM)\nSize: 6.1 inches, 91.7 cm2 (~86.8% screen-to-body ratio)\nResolution: 1179 x 2556 pixels, 19.5:9 ratio (~460 ppi density)\nProtection: Ceramic Shield glass (2024 gen)\nPlatform OS: iOS 18\nChipset: Apple A18 (3 nm)\nCPU: Hexa-core\nGPU: Apple GPU (5-core graphics)\nMemory Card slot: No\nInternal: 128GB 8GB RAM, NVMe\nMain Camera: Dual: 48 MP, f/1.6, 26mm (wide), 1/1.56\", 1.0µm, dual pixel PDAF, sensor-shift OIS, 12 MP, f/2.2, 13mm, 120˚ (ultrawide), 0.7µm, dual pixel PDAF\nFeatures: Dual-LED dual-tone flash, HDR (photo/panorama)\nVideo: 4K@24/25/30/60fps, 1080p@25/30/60/120/240fps, HDR, Dolby Vision HDR (up to 60fps), stereo sound rec.\nSelfie camera: Single: 12 MP, f/1.9, 23mm (wide), 1/3.6\", PDAF\nSL 3D, (depth/biometrics sensor)\nFeatures: HDR, Dolby Vision HDR, 3D (spatial) audio, stereo sound rec.\nVideo: 4K@24/25/30/60fps, 1080p@25/30/60/120fps, gyro-EIS\nLoudspeaker: Yes, with stereo speakers\n3.5mm jack: No\nWLAN: Wi-Fi 802.11 a/b/g/n/ac/6/7, dual-band, hotspot\nBluetooth: 5.3, A2DP, LE\nPositioning: GPS, GLONASS, GALILEO, BDS, QZSS\nNFC: Yes\nRadio: No\nUSB: USB Type-C 2.0, DisplayPort\nSensors: Face ID, accelerometer, gyro, proximity, compas"
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/apple-iphone-16-pro-128gb",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-27T22:50:57+00:00",
+   "sha256": "bcdf490050f29646740225c0ee3cf747691c975dea441a967129ff06e24f19cc",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Apple iPhone 16 Pro 128GB, 1 Year Warranty",
+    "url": "https://mobileleb.com/products/apple-iphone-16-pro-128gb",
+    "vendor": "Apple",
+    "product_type": "Communications",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-27T22:50:57+00:00",
+    "variants": [
+     {
+      "variant_id": "51217659003012",
+      "title": "Black Titanium / Brand New / 1 Year",
+      "options": {
+       "Color": "Black Titanium",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "1080.00",
+      "compare_at": "1110.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "Appr7WAhD",
+      "url": "https://mobileleb.com/products/apple-iphone-16-pro-128gb?variant=51217659003012"
+     },
+     {
+      "variant_id": "51217659035780",
+      "title": "Desert Titanium / Brand New / 1 Year",
+      "options": {
+       "Color": "Desert Titanium",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "1080.00",
+      "compare_at": "1110.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppiHUWfy",
+      "url": "https://mobileleb.com/products/apple-iphone-16-pro-128gb?variant=51217659035780"
+     },
+     {
+      "variant_id": "51217659068548",
+      "title": "Natural Titanium / Brand New / 1 Year",
+      "options": {
+       "Color": "Natural Titanium",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "1080.00",
+      "compare_at": "1110.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppvDbgXs",
+      "url": "https://mobileleb.com/products/apple-iphone-16-pro-128gb?variant=51217659068548"
+     },
+     {
+      "variant_id": "51217659101316",
+      "title": "White Titanium / Brand New / 1 Year",
+      "options": {
+       "Color": "White Titanium",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "1080.00",
+      "compare_at": "1110.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AppfkGSIQ",
+      "url": "https://mobileleb.com/products/apple-iphone-16-pro-128gb?variant=51217659101316"
+     }
+    ],
+    "description": "Dimensions: 149.6 x 71.5 x 8.3 mm (5.89 x 2.81 x 0.33 in)\nWeight: 199 g (7.02 oz)\nBuild: Glass front (Corning-made glass), glass back (Corning-made glass), titanium frame (grade 5)\nIP68 dust/water resistant (up to 6m for 30 min)\nApple Pay (Visa, MasterCard, AMEX certified)\nDisplay Type: LTPO Super Retina XDR OLED, 120Hz, HDR10, Dolby Vision, 1000 nits (typ), 2000 nits (HBM)\nSize: 6.3 inches, 96.4 cm2 (~90.1% screen-to-body ratio)\nResolution: 1206 x 2622 pixels, 19.5:9 ratio (~460 ppi density)\nProtection: Ceramic Shield glass (2024 gen)\nAlways-On display\nPlatform OS: iOS 18\nChipset: Apple A18 Pro (3 nm)\nCPU: Hexa-core (2x4.04 GHz + 4x2.X GHz)\nGPU: Apple GPU (6-core graphics)\nMemory Card slot: No\nInternal: 128GB 8GB RAM, NVMe\nMain Camera Triple: 48 MP, f/1.8, 24mm (wide), 1/1.28\", 1.22µm, dual pixel PDAF, sensor-shift OIS, 12 MP, f/2.8, 120mm (periscope telephoto), 1/3.06\", 1.12µm, dual pixel PDAF, 3D sensor‑shift OIS, 5x optical zoom, 48 MP, f/2.2, 13mm (ultrawide), 0.7µm, PDAF\nTOF 3D LiDAR scanner (depth)\nFeatures: Dual-LED dual-tone flash, HDR (photo/panorama)\nVideo: 4K@24/25/30/60/100/120fps, 1080p@25/30/60/120/240fps, 10-bit HDR, Dolby Vision HDR (up to 60fps), ProRes, 3D (spatial) video/audio, stereo sound rec.\nSelfie camera Single: 12 MP, f/1.9, 23mm (wide), 1/3.6\", PDAF, OIS\nSL 3D, (depth/biometrics sensor)\nFeatures: HDR, Dolby Vision HDR, 3D (spatial) audio, stereo sound rec.\nVideo: 4K@24/25/30/60fps, 1080p@25/30/60/120fps, gyro-EIS\nLoudspeaker: Yes, with stereo speake"
+   }
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/samsung-galaxy-s25-fe-8gb-256gb",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-27T22:50:57+00:00",
+   "sha256": "65df7b3c959acb4116ec45fb5d398f4df0147a5908eb9d2c0ae4c0937983c413",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Samsung Galaxy S25 FE 8GB/256GB",
+    "url": "https://mobileleb.com/products/samsung-galaxy-s25-fe-8gb-256gb",
+    "vendor": "Samsung",
+    "product_type": "Communications",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-27T22:50:57+00:00",
+    "variants": [
+     {
+      "variant_id": "51108760289412",
+      "title": "Navy / Brand New / 1 Year",
+      "options": {
+       "Color": "Navy",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "655.00",
+      "compare_at": "0.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "s25fen",
+      "url": "https://mobileleb.com/products/samsung-galaxy-s25-fe-8gb-256gb?variant=51108760289412"
+     },
+     {
+      "variant_id": "51108760223876",
+      "title": "Jet Black / Brand New / 1 Year",
+      "options": {
+       "Color": "Jet Black",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "655.00",
+      "compare_at": "0.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "s25fejb",
+      "url": "https://mobileleb.com/products/samsung-galaxy-s25-fe-8gb-256gb?variant=51108760223876"
+     },
+     {
+      "variant_id": "51108760191108",
+      "title": "Ice Blue / Brand New / 1 Year",
+      "options": {
+       "Color": "Ice Blue",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "655.00",
+      "compare_at": "0.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "s25feib",
+      "url": "https://mobileleb.com/products/samsung-galaxy-s25-fe-8gb-256gb?variant=51108760191108"
+     },
+     {
+      "variant_id": "51108760256644",
+      "title": "White / Brand New / 1 Year",
+      "options": {
+       "Color": "White",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "655.00",
+      "compare_at": "0.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "s25few",
+      "url": "https://mobileleb.com/products/samsung-galaxy-s25-fe-8gb-256gb?variant=51108760256644"
+     }
+    ],
+    "description": "Dimensions: 161.3 x 76.6 x 7.4 mm (6.35 x 3.02 x 0.29 in)\nWeight: 190 g (6.70 oz)\nBuild: Glass front (Gorilla Glass Victus+), glass back (Gorilla Glass Victus+), aluminum frame\nSIM: Nano-SIM, Nano-SIM + Nano-SIM, Nano-SIM + eSIM, eSIM + eSIM\nIP68 dust tight and water resistant (immersible up to 1.5m for 30 min)\nEnhanced armor aluminum frame\nDisplay Type: Dynamic LTPO AMOLED 2X, 120Hz, HDR10+, 1900 nits (peak)\nSize: 6.7 inches, 110.2 cm2 (~89.2% screen-to-body ratio)\nResolution: 1080 x 2340 pixels, 19.5:9 ratio (~385 ppi density)\nProtection: Corning Gorilla Glass Victus+, Mohs level 5\nOS: Android 16, up to 7 major Android upgrades, One UI 8\nChipset: Exynos 2400 (4 nm)\nCPU: 10-core (1x3.2GHz Cortex-X4 & 2x2.9GHz Cortex-A720 & 3x2.6GHz Cortex-A720 & 4x1.95GHz Cortex-A520)\nGPU: Xclipse 940\nMemory Card slot: No\nInternal: 256GB 8GB RAM\nMain Camera: Triple 50 MP, f/1.8, 24mm (wide), 1/1.57\", 1.0µm, dual pixel PDAF, OIS, 8 MP, f/2.4, 75mm (telephoto), 1/4.4\", 1.0µm, PDAF, OIS, 3x optical zoom, 12 MP, f/2.2, 13mm, 123˚ (ultrawide), 1/3.0\", 1.12µm\nFeatures: LED flash, HDR, panorama\nVideo: 8K@30fps, 4K@30/60/120fps, 1080p@30/60/120/240fps; gyro-EIS, HDR\nSelfie camera: Single 12 MP, f/2.2, 26mm (wide), 1/3.2\", 1.12µm\nVideo: 4K@30/60fps, 1080p@30/60fps; gyro-EIS, HDR\nLoudspeaker: Yes, with stereo speakers\n3.5mm jack: No\nWLAN: Wi-Fi 802.11 a/b/g/n/ac/6e, dual-band or tri-band (market/region dependent), Wi-Fi Direct\nBluetooth: 5.4, A2DP, LE\nPositioning: GPS, GLONASS, GALILEO, BDS\nNFC: Yes\nR"
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://itpromax.store/en/p/samsung-galaxy-a56",
+   "shop_id": "itpromax",
+   "observed_at": "2026-11-27T22:50:57+00:00",
+   "sha256": "e56d375932734f422a788367bf2151ab0a9d9ead0ffbce884a00a1e658df1a41",
+   "product": {
+    "shop": "IT Promax",
+    "shop_id": "itpromax",
+    "title": "Samsung Galaxy A56 price Lebanon | IT Promax",
+    "url": "https://itpromax.store/en/p/samsung-galaxy-a56",
+    "vendor": "Samsung",
+    "product_type": null,
+    "condition": "NewCondition",
+    "source": "schema_org_jsonld",
+    "observed_at": "2026-11-27T22:50:57+00:00",
+    "variants": [
+     {
+      "variant_id": "samsung-galaxy-a56",
+      "title": "Samsung Galaxy A56",
+      "options": {},
+      "price": "400.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": "InStock",
+      "sku": "samsung-galaxy-a56",
+      "url": "https://itpromax.store/en/p/samsung-galaxy-a56"
+     }
+    ],
+    "description": "Samsung Galaxy A56 in Lebanon at IT Promax. Delivery to every town in 1–3 days, cash on delivery, prices in US dollars. Abroad orders welcome."
+   }
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://karizmamegastore.com/products/samsung-galaxy-a56-256gb-12gb-ram-bms-official-warranty",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-27T22:50:57+00:00",
+   "sha256": "3b1c015a32f94eb15f9af0b0489bd71d36c21da3a2dc63af4bea14fbb3804a5a",
+   "product": {
+    "shop": "Karizma Megastore",
+    "shop_id": "karizma",
+    "title": "Samsung Galaxy A56 BMS Official Warranty",
+    "url": "https://karizmamegastore.com/products/samsung-galaxy-a56-256gb-12gb-ram-bms-official-warranty",
+    "vendor": "Samsung",
+    "product_type": "Smartphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-27T22:50:57+00:00",
+    "variants": [
+     {
+      "variant_id": "46553638895805",
+      "title": "White / 256GB/8RAM",
+      "options": {
+       "Color": "White",
+       "STORAGE": "256GB/8RAM"
+      },
+      "price": "400.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SAMS-A56-256-12",
+      "url": "https://karizmamegastore.com/products/samsung-galaxy-a56-256gb-12gb-ram-bms-official-warranty?variant=46553638895805"
+     },
+     {
+      "variant_id": "46553639059645",
+      "title": "White / 256GB/12RAM",
+      "options": {
+       "Color": "White",
+       "STORAGE": "256GB/12RAM"
+      },
+      "price": "440.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/samsung-galaxy-a56-256gb-12gb-ram-bms-official-warranty?variant=46553639059645"
+     },
+     {
+      "variant_id": "46553638928573",
+      "title": "Black / 256GB/8RAM",
+      "options": {
+       "Color": "Black",
+       "STORAGE": "256GB/8RAM"
+      },
+      "price": "400.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SAMS-A56-256-14",
+      "url": "https://karizmamegastore.com/products/samsung-galaxy-a56-256gb-12gb-ram-bms-official-warranty?variant=46553638928573"
+     },
+     {
+      "variant_id": "46553639092413",
+      "title": "Black / 256GB/12RAM",
+      "options": {
+       "Color": "Black",
+       "STORAGE": "256GB/12RAM"
+      },
+      "price": "440.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/samsung-galaxy-a56-256gb-12gb-ram-bms-official-warranty?variant=46553639092413"
+     },
+     {
+      "variant_id": "46553638961341",
+      "title": "Olive Green / 256GB/8RAM",
+      "options": {
+       "Color": "Olive Green",
+       "STORAGE": "256GB/8RAM"
+      },
+      "price": "400.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SAMS-A56-256-16",
+      "url": "https://karizmamegastore.com/products/samsung-galaxy-a56-256gb-12gb-ram-bms-official-warranty?variant=46553638961341"
+     },
+     {
+      "variant_id": "46553639125181",
+      "title": "Olive Green / 256GB/12RAM",
+      "options": {
+       "Color": "Olive Green",
+       "STORAGE": "256GB/12RAM"
+      },
+      "price": "440.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/samsung-galaxy-a56-256gb-12gb-ram-bms-official-warranty?variant=46553639125181"
+     }
+    ],
+    "description": "Maximum Performance Configuration\nThe Samsung Galaxy A56 delivers flagship-level multitasking performance. Experience the ultimate A-series smartphone with maximum RAM, premium features, and BMS Official Warranty.\nKey Features:\nDisplay: Super AMOLED 120Hz display with peak brightness optimization\nCamera: Professional-grade camera system with advanced OIS and computational photography\nBattery: Large battery with 45W super-fast charging technology\nPerformance: Premium processor for intensive gaming and productivity\n5G: Advanced 5G connectivity with Wi-Fi 6 support\nDesign: Premium construction with Gorilla Glass Victus protection\nFeatures: IP67 water resistance, stereo speakers, enhanced haptics\nWarranty: BMS Official Warranty included\nPerfect for power users who demand maximum RAM and flagship-level performance in the A-series lineup."
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://shop.itworkslb.net/products/samsung-galaxy-a56-5g-sm-a566b",
+   "shop_id": "itworks",
+   "observed_at": "2026-11-27T22:50:57+00:00",
+   "sha256": "a109974cbb07dca89e4d062769c44f9f19640d17fc6c3fef7d1315c1e4dc8344",
+   "excerpt": "Samsung Galaxy A56 5G (SM-A566B) | ITWorks LebanonSkip to content\nCART\n×\nLoading cart ...\nSEARCH\n×\nSearch\nStart typing to search…\nMENU\n×\nHomeAccountVisit\nShop by category\nDesktop PCs & SystemsGaming PCs, Business PCs, Mini PCs & more\nLaptopsGaming Laptops, Business Laptops, Ultrabooks & more\nPC ComponentsGraphics Cards, Processors, Motherboards & more\nMonitors & DisplaysGaming Monitors, Office Monitors, 4K Monitors & more\nPeripheralsKeyboards, Mice, Headsets & more\nPrinters, Office & POSLaser Printers, Inkjet Printers, Multifunction Printers & more\nNetworkingRouters, Mesh Wi-Fi, Switches & more\nStorageSSDs & NVMe, Hard Drives, External SSDs & more\nGaming & ConsolesConsoles, Video Games, Console Accessories & more\nMobile Devices & WearablesSmartphones, iPads, Android Tablets & more\nCCTV, Security & Smart DevicesIP Cameras, CCTV Cameras, DVR & NVR & more\nCameras & Creator GearDSLR Cameras, Mirrorless Cameras, Action Cameras & more\nAccessories & CablesLaptop Chargers, Laptop Bags & Sleeves, Docking Stations & more\nPower & BackupUPS, Surge Protectors, Power Banks & more\nSoftwareWindows, Microsoft Office, Antivirus & Security\nHome & Personal CareAir Purifiers & Humidifiers, Fans & Dehumidifiers, Desk Lamps & Lighting & more\nITWorksAll CategoriesPC BuilderIT Services\nAsk AI\nSearch/Sign in\nHome\n/\nMobiles, Tablets & Wearables\n/\nSamsung Galaxy A56 5G (SM-A566B)\nSamsung\nSamsung Galaxy A56 5G (SM-A566B)\nCall for availability\nColor\nBlackLight PinkGreenGray\nStorage\n8GB/256GB12GB/256GB8GB/",
+   "quoted": []
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://karizmamegastore.com/products/samsung-galaxy-s25-fe-256gb-8gb-ram-golden-warranty",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-27T22:50:57+00:00",
+   "sha256": "24b895409ce33983fd152f0080bc44eb9d6d1dbafb8bfe49b76b82b3c1cb7c06",
+   "product": {
+    "shop": "Karizma Megastore",
+    "shop_id": "karizma",
+    "title": "Samsung Galaxy S25 FE Golden Warranty",
+    "url": "https://karizmamegastore.com/products/samsung-galaxy-s25-fe-256gb-8gb-ram-golden-warranty",
+    "vendor": "Samsung",
+    "product_type": "Smartphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-27T22:50:57+00:00",
+    "variants": [
+     {
+      "variant_id": "46553613140157",
+      "title": "256GB/8RAM / Navy",
+      "options": {
+       "STORAGE": "256GB/8RAM",
+       "Color": "Navy"
+      },
+      "price": "670.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SAMS-S25FE-256-8",
+      "url": "https://karizmamegastore.com/products/samsung-galaxy-s25-fe-256gb-8gb-ram-golden-warranty?variant=46553613140157"
+     },
+     {
+      "variant_id": "46553620119741",
+      "title": "256GB/8RAM / Jet Black",
+      "options": {
+       "STORAGE": "256GB/8RAM",
+       "Color": "Jet Black"
+      },
+      "price": "670.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/samsung-galaxy-s25-fe-256gb-8gb-ram-golden-warranty?variant=46553620119741"
+     },
+     {
+      "variant_id": "46553620152509",
+      "title": "256GB/8RAM / Ice Blue",
+      "options": {
+       "STORAGE": "256GB/8RAM",
+       "Color": "Ice Blue"
+      },
+      "price": "670.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/samsung-galaxy-s25-fe-256gb-8gb-ram-golden-warranty?variant=46553620152509"
+     },
+     {
+      "variant_id": "46553620185277",
+      "title": "256GB/8RAM / White",
+      "options": {
+       "STORAGE": "256GB/8RAM",
+       "Color": "White"
+      },
+      "price": "670.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/samsung-galaxy-s25-fe-256gb-8gb-ram-golden-warranty?variant=46553620185277"
+     }
+    ],
+    "description": "Flagship Experience at Accessible Price\nThe Samsung Galaxy S25 FE (Fan Edition) brings flagship features to a more accessible price point. Experience premium performance, advanced cameras, and cutting-edge technology with Golden Warranty protection.\nKey Features:\nRAM: 8GB RAM for smooth multitasking\nDisplay: Dynamic AMOLED 2X display with 120Hz refresh rate\nCamera: Triple camera system with advanced AI and night mode\nChip: Flagship Exynos/Snapdragon processor for powerful performance\nBattery: All-day battery with 25W fast charging and wireless charging\n5G: Advanced 5G connectivity\nDesign: Premium build with Gorilla Glass Victus\nFeatures: IP68 water resistance, stereo speakers, Samsung DeX\nWarranty: Golden Warranty for premium protection\nPerfect for users who want flagship features and performance at a more accessible price point."
+   }
+  },
+  {
+   "obs": "P8",
+   "kind": "product",
+   "url": "https://phonefinity.net/products/samsung-galaxy-s25-fe/",
+   "shop_id": "phonefinity",
+   "observed_at": "2026-11-27T22:50:57+00:00",
+   "sha256": "1f07e595f9d28db89fcf876db08bf93ab7c7d17a9a9f379a7b7462c9a80a80f9",
+   "product": {
+    "shop": "Phonefinity",
+    "shop_id": "phonefinity",
+    "title": "Samsung Galaxy S25 FE",
+    "url": "https://phonefinity.net/products/samsung-galaxy-s25-fe/",
+    "vendor": null,
+    "product_type": null,
+    "condition": null,
+    "source": "woo_store_api",
+    "observed_at": "2026-11-27T22:50:57+00:00",
+    "variants": [
+     {
+      "variant_id": "73917",
+      "title": "Color: Iceblue",
+      "options": {
+       "Color": "iceblue"
+      },
+      "price": "675.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/samsung-galaxy-s25-fe/?attribute_pa_color=iceblue"
+     },
+     {
+      "variant_id": "73918",
+      "title": "Color: Jet Black",
+      "options": {
+       "Color": "jet-black"
+      },
+      "price": "675.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/samsung-galaxy-s25-fe/?attribute_pa_color=jet-black"
+     },
+     {
+      "variant_id": "73919",
+      "title": "Color: Navy",
+      "options": {
+       "Color": "navy"
+      },
+      "price": "675.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://phonefinity.net/products/samsung-galaxy-s25-fe/?attribute_pa_color=navy"
+     },
+     {
+      "variant_id": "73920",
+      "title": "Color: White",
+      "options": {
+       "Color": "white"
+      },
+      "price": "675.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": "Out of stock",
+      "sku": null,
+      "url": "https://phonefinity.net/products/samsung-galaxy-s25-fe/?attribute_pa_color=white"
+     }
+    ],
+    "description": "6.7″ 1080×2340 pixels AMOLED 2X, 120Hz, HDR10+ Display\n50MP 4320p Main Camera\nExynos 2400\n4900mAh Battery (45W wired, 15W wireless)\n1 Year Warranty\nLaunch\nAnnounced\n2025, September 04\nBody\nDimensions\n161.3 x 76.6 x 7.4 mm (6.35 x 3.02 x 0.29 in)\nWeight\n190 g (6.70 oz)\nBuild\nGlass front (Gorilla Glass Victus+), glass back (Gorilla Glass Victus+), aluminum frame\nSIM\nNano-SIM + eSIM\nIP68 dust tight and water resistant (immersible up to 1.5m for 30 min)\nDisplay\nType\nDynamic LTPO AMOLED 2X, 120Hz, HDR10+, 1900 nits (peak)\nSize\n6.7 inches, 110.2 cm2 (~89.2% screen-to-body ratio)\nResolution\n1080 x 2340 pixels, 19.5:9 ratio (~385 ppi density)\nProtection\nCorning Gorilla Glass Victus+, Mohs level 5\nPlatform\nOS\nAndroid 16, up to 7 major Android upgrades, One UI 8\nChipset\nExynos 2400 (4 nm)\nCPU\n10-core (1×3.2GHz Cortex-X4 & 2×2.9GHz Cortex-A720 & 3×2.6GHz Cortex-A720 & 4×1.95GHz Cortex-A520)\nGPU\nXclipse 940\nMemory\nCard slot\nNo\nInternal\n256GB 8GB RAM\nMain Camera\nTriple\n50 MP, f/1.8, 24mm (wide), 1/1.57″, 1.0µm, dual pixel PDAF, OIS\n8 MP, f/2.4, 75mm (telephoto), 1/4.4″, 1.0µm, PDAF, OIS, 3x optical zoom\n12 MP, f/2.2, 13mm, 123˚ (ultrawide), 1/3.0″, 1.12µm\nFeatures\nLED flash, HDR, panorama\nVideo\n8K@30fps, 4K@30/60/120fps, 1080p@30/60/120/240fps; gyro-EIS, HDR\nSelfie Camera\nSingle\n12 MP, f/2.2, 26mm (wide), 1/3.2″, 1.12µm\nVideo\n4K@30/60fps, 1080p@30/60fps; gyro-EIS, HDR\nSound\nLoudspeaker\nYes, with stereo speakers\n3.5mm jack\nNo\nComms\nWLAN\nWi-Fi 802.11 a/b/g/n/ac/6e, dual-band or tri-band (ma",
+    "extra": {
+     "attributes": {
+      "Color": [
+       "Iceblue",
+       "Jet Black",
+       "Navy",
+       "White"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://karizmamegastore.com/meta.json",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-27T22:51:06+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"Karizma Megastore\", \"city\": \"Ghaziyeh\", \"province\": null, \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"www.karizmamegastore.com\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://mobileleb.com/meta.json",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-27T22:51:06+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"Mobileleb\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"mobileleb.com\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://www.karizmamegastore.com/",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-27T22:51:07+00:00",
+   "sha256": "ffd837010ffefc9129ab609d624aa5de0e8c381bc6008ff1fed0bbb843d59eb1",
+   "excerpt": "Karizma Megastore\nSkip to content\nReturns extended to 60 days\nFree shipping on your first order\nHome\nCategories\nCategories\nSmart Phones\nSmart Phones\nApple\nXiaomi\nSamsung\nHonor\nTecno\nInfinix\nGadgets\nGadgets\nWearables\nAudio Devices\nPower & Charging\nGaming Consoles\nGaming Consoles\nConsoles\nGames\nGaming Wheels & Peripherals\nLaptops\nLaptops\nGaming Laptops\nOffice Laptops\nComputer Accessories\nComputer Accessories\nGaming Accessories\nMouse & Keyboards\nConnectivity & Hubs\nStorage & Memory\nMonitors\nHeadphones & Earphones\nWiFi and Networking\nContent Creation\nsoundcore\nPitaka\nAnker\nCases\nContact\nHome\nCategories\nCases\nContact\nLogin\n0\nHome\nCategories\nSmart Phones\nApple\nXiaomi\nSamsung\nHonor\nTecno\nInfinix\nGadgets\nWearables\nAudio Devices\nPower & Charging\nGaming Consoles\nConsoles\nGames\nGaming Wheels & Peripherals\nLaptops\nGaming Laptops\nOffice Laptops\nComputer Accessories\nGaming Accessories\nMouse & Keyboards\nConnectivity & Hubs\nStorage & Memory\nMonitors\nHeadphones & Earphones\nWiFi and Networking\nContent Creation\nsoundcore\nPitaka\nAnker\nCases\nContact\nASUS\nASUS Vivobook Go 15 – Intel Core i3-N305, 8GB RAM, 256GB SSD\n$499.00 USD\n/\nSave 17%\nAcer\nAcer TravelMate P2 – Core i7-1165G7, 8GB RAM, 256GB SSD, MX330\n$599.99 USD\n$499.99 USD\n/\nLenovo\nLenovo IdeaPad 1i – Core i5-1334U, 8GB RAM, 256GB SSD, 15.6\" Touchscreen\n$645.00 USD\n/\nLenovo\nLenovo IdeaPad Slim 3 – Core i5-13420H, 8GB DDR5, 512GB SSD\n$649.99 USD\n/\nBack To School\nback to school offers\nShop back to school\nXiaomi\nRedmi Pad 2 9.7\nFrom $210.00 USD\n",
+   "quoted": [
+    {
+     "quote": "Free shipping on your first order",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://mobileleb.com/",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-27T22:51:07+00:00",
+   "sha256": "c2da4df29ccb42f6e0e93d6567bffc1b29ac7ba374906001406cdba15ad28064",
+   "excerpt": "Mobileleb.com | Mobile Price in Lebanon, Laptop, PS5\nCell Phones & Tablets\nCell Phones\nSamsung\nHonor\nXiaomi\nTecno\nApple\nFeature Phones\nInfinix\nApple Open Box\nGoogle\nSamsung Open Box\nOppo\nVivo\nMotorola\nBlackview\nitel\nRealme\nZTE nubia\nOnePlus\nFreeYond\nNokia\nHuawei\nAlcatel\nHiSense\nDoogee\nTCL\nBlackBerry\nCAT\nUmidigi\nI-Plus\nTablets, iPads & eReaders\nApple iPads\nAndroid Tablets\nWindows Tablets\neReaders\nDrawing Tablets & Accessories\nSamsung\nBlackview\nRed Magic Gaming Tablets\nLenovo\nAmazon\nAlcatel\nMicrosoft\ni-Plus\nHuawei\nG-TiDE\nWearables, Smart Watches & Trackers\nCell Phone Accessories\nMobile Phone Cases\nScreen Protectors\nCharging & Data Cables\nChargers & Power Adapters\nMobile Gaming Controllers\nMobiles & Tablets Cables & Connectors\nMounts & Stands\nCar Accessories\nMobile Phone Accessories\nMobile Phone Camera Accessories\nLED Ring Lights\nGimbals & Camera Stabilizers\nSelfie Sticks, Tripods & Monopods\niPad & Tablet Accessories\nKeyboards\nStylus Pens\nCovers & Screen Protectors\nTablet Computer Docks & Stands\nTablet Computer Parts\nComputers & Parts\nApple Accessories\nKeyboards & Mice\nTime Capsule\nAirPods & Audio\nAll Laptops\nHP Laptops\nLenovo Laptops\nNEC Laptops\nAcer Laptops\nMacBooks, iMacs & Mac mini\nMac Studio\nDell Laptops\nAsus Laptops\nMSI Laptops\nGigabyte Laptops\nRazer Laptops\nGateway Laptops\nToshiba Laptops\nMicrosoft Surface\nLaptops Open Box\nDesktop Computers\nMini PCs\nDesktops\nAll-in-One Computers\nP.O.S Systems\nCore Components\nGraphics Cards\nCPU / Computer Processors\nRAM\nMotherboards\nAudio ",
+   "quoted": []
+  }
+ ]
+}

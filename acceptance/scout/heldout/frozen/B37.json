@@ -1,0 +1,803 @@
+{
+ "run_id": "scout-b37-20261128T053039",
+ "request": {
+  "id": "B37",
+  "text": "I need a new 27-inch IPS monitor with a USB-C input for my laptop. Where in Beirut can I pick one up and what will I pay?",
+  "mode": "pickup",
+  "destination": "Beirut",
+  "category": "monitor",
+  "run_id": "scout-b37-20261128T053039"
+ },
+ "status": "offers",
+ "message": "Best checked options:\n• Electroslab: MINIFIRE MF27X3 — $115.00, new, 27-inch FHD IPS with USB-C. A Beirut branch is listed, but its street address and branch stock are unconfirmed.\n• iSolved IT: ASUS VU279CFE-B — $240.00 including VAT, new, 27-inch FHD IPS, 100Hz and USB-C. Pickup is explicitly offered at its Bourj Hammoud shop (greater Beirut); no street address was published in the checked details. Branch stock is unconfirmed.\n• Mobileleb: ViewSonic VP2768a — $545.00, new, 27-inch QHD IPS with USB-C video and 90W laptop charging. Online stock is available, but a pickup address was not verified.\nI’d choose the ASUS for a documented pickup option, or the MINIFIRE for lowest cost. Confirm branch availability before travelling, and check that your laptop’s USB-C port supports video output.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "best",
+   "shop": "Electroslab",
+   "shop_id": "electroslab",
+   "title": "MINIFIRE 27\" FHD IPS Monitor | 100Hz, Type-C & HDMI – MF27X3 | Brand New",
+   "variant": "Default Title",
+   "url": "https://electroslab.com/products/brand-new-monitor-minifire-27-inch-fhd-ips-100hz-hdmi-type-c-mf27x3?variant=47126528917671",
+   "price": "115.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "Meets the requested size, panel type, USB-C connectivity and new condition.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "pickup branch stock is not confirmed (online stock only)",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "27-inch IPS monitor",
+     "status": "met",
+     "quote": "MINIFIRE 27\" FHD IPS Monitor",
+     "obs": "P4",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "USB-C input",
+     "status": "met",
+     "quote": "HDMI USB Type-C ports",
+     "obs": "P4",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "Brand New",
+     "obs": "P4",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Beirut pickup",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P4",
+     "url": "https://electroslab.com/products/brand-new-monitor-minifire-27-inch-fhd-ips-100hz-hdmi-type-c-mf27x3",
+     "read": "https://electroslab.com/products/brand-new-monitor-minifire-27-inch-fhd-ips-100hz-hdmi-type-c-mf27x3.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:31:23+00:00",
+     "sha256": "bbeae742f84f3f6381fbbf4489f1dcfbce1f322e747b9e7123fdb1374fc27be7"
+    }
+   ],
+   "seller_basis": "Electroslab: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  },
+  {
+   "tier": "best",
+   "shop": "iSolved IT Solutions",
+   "shop_id": "isolvedit",
+   "title": "ASUS VU279CFE-B 27\" Full HD 100Hz IPS Monitor | VU279CFE-B",
+   "variant": "Default Title",
+   "url": "https://isolvedit.me/products/asus-vu279cfe-b-27-100hz-monitor-vu279cfe-b?variant=68528933077103",
+   "price": "240.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "Meets requested monitor specifications and new condition; pickup offered in greater Beirut.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "not confirmed: USB-C input",
+    "pickup branch stock is not confirmed (online stock only)"
+   ],
+   "requirements": [
+    {
+     "requirement": "27-inch IPS monitor",
+     "status": "met",
+     "quote": "brand-new 27\" Full HD 1920x1080 IPS monitor",
+     "obs": "P6",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "USB-C input",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "Brand-new, original sealed unit",
+     "obs": "P6",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Beirut pickup",
+     "status": "met",
+     "quote": "pick up from our shop in Bourj Hammoud, Beirut",
+     "obs": "P6",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P6",
+     "url": "https://isolvedit.me/products/asus-vu279cfe-b-27-100hz-monitor-vu279cfe-b",
+     "read": "https://isolvedit.me/products/asus-vu279cfe-b-27-100hz-monitor-vu279cfe-b.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:31:36+00:00",
+     "sha256": "5cab92feaebe7119c7559b88aae02548b4b50d32c65130002d4a8eddb2816297"
+    }
+   ],
+   "seller_basis": "iSolved IT Solutions: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  },
+  {
+   "tier": "best",
+   "shop": "Mobileleb",
+   "shop_id": "mobileleb",
+   "title": "ViewSonic VP2768a, 27-Inch Premium IPS 1440p Monitor with Advanced Ergonomics, ColorPro 100% SRGB Rec 709, 14-Bit 3D LUT, Eye Care, 90W USB C, RJ45, HDMI",
+   "variant": "Black / Brand New / 1 Year",
+   "url": "https://mobileleb.com/products/viewsonic-vp2768a-27-inch-premium-ips-1440p-monitor-with-advanced-ergonomics-colorpro?variant=41707722080388",
+   "price": "545.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "Meets requested new 27-inch IPS USB-C monitor specifications; pickup location remains unverified.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "pickup branch stock is not confirmed (online stock only)",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "27-inch IPS monitor",
+     "status": "met",
+     "quote": "27 Inch QHD (2560x1440p) IPS monitor",
+     "obs": "P2",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "USB-C video input",
+     "status": "met",
+     "quote": "USB-C connectivity for fast data, audio, and video transfer, 90W charging over one cable",
+     "obs": "P2",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "Black / Brand New / 1 Year",
+     "obs": "P2",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Beirut pickup",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P2",
+     "url": "https://mobileleb.com/products/viewsonic-vp2768a-27-inch-premium-ips-1440p-monitor-with-advanced-ergonomics-colorpro",
+     "read": "https://mobileleb.com/products/viewsonic-vp2768a-27-inch-premium-ips-1440p-monitor-with-advanced-ergonomics-colorpro.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:31:17+00:00",
+     "sha256": "3631900619de7a3ff05064f7ae36e37f011f102a20b0d021ebc57af6bb134052"
+    }
+   ],
+   "seller_basis": "Mobileleb: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P4",
+   "variant_id": "47126528917671",
+   "identity": "exact",
+   "identity_reason": "Meets the requested size, panel type, USB-C connectivity and new condition.",
+   "condition": "new",
+   "condition_quote": "Brand New",
+   "condition_obs": "P4",
+   "requirements": [
+    {
+     "requirement": "27-inch IPS monitor",
+     "status": "met",
+     "evidence_obs": "P4",
+     "quote": "MINIFIRE 27\" FHD IPS Monitor"
+    },
+    {
+     "requirement": "USB-C input",
+     "status": "met",
+     "evidence_obs": "P4",
+     "quote": "HDMI USB Type-C ports"
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "P4",
+     "quote": "Brand New"
+    },
+    {
+     "requirement": "Beirut pickup",
+     "status": "unknown",
+     "evidence_obs": "T5",
+     "quote": "📍 Beirut Branch +961 71504160"
+    }
+   ],
+   "delivery_obs": null,
+   "delivery_quote": null,
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P6",
+   "variant_id": "68528933077103",
+   "identity": "exact",
+   "identity_reason": "Meets requested monitor specifications and new condition; pickup offered in greater Beirut.",
+   "condition": "new",
+   "condition_quote": "Brand-new, original sealed unit",
+   "condition_obs": "P6",
+   "requirements": [
+    {
+     "requirement": "27-inch IPS monitor",
+     "status": "met",
+     "evidence_obs": "P6",
+     "quote": "brand-new 27\" Full HD 1920x1080 IPS monitor"
+    },
+    {
+     "requirement": "USB-C input",
+     "status": "met",
+     "evidence_obs": "P6",
+     "quote": "Ports\nHDMI, USB-C"
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "P6",
+     "quote": "Brand-new, original sealed unit"
+    },
+    {
+     "requirement": "Beirut pickup",
+     "status": "met",
+     "evidence_obs": "P6",
+     "quote": "pick up from our shop in Bourj Hammoud, Beirut"
+    }
+   ],
+   "delivery_obs": null,
+   "delivery_quote": null,
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": "All prices include VAT — nothing extra to pay",
+   "price_quote": null
+  },
+  {
+   "obs": "P2",
+   "variant_id": "41707722080388",
+   "identity": "exact",
+   "identity_reason": "Meets requested new 27-inch IPS USB-C monitor specifications; pickup location remains unverified.",
+   "condition": "new",
+   "condition_quote": "Black / Brand New / 1 Year",
+   "condition_obs": "P2",
+   "requirements": [
+    {
+     "requirement": "27-inch IPS monitor",
+     "status": "met",
+     "evidence_obs": "P2",
+     "quote": "27 Inch QHD (2560x1440p) IPS monitor"
+    },
+    {
+     "requirement": "USB-C video input",
+     "status": "met",
+     "evidence_obs": "P2",
+     "quote": "USB-C connectivity for fast data, audio, and video transfer, 90W charging over one cable"
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "P2",
+     "quote": "Black / Brand New / 1 Year"
+    },
+    {
+     "requirement": "Beirut pickup",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": null,
+   "delivery_quote": null,
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Search laptop-friendly 27-inch IPS USB-C models across shops.",
+   "at_s": 11.5,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "Dell P2723DE"
+    },
+    {
+     "tool": "search",
+     "query": "27UP850"
+    },
+    {
+     "tool": "search",
+     "query": "ASUS ProArt PA279CV"
+    },
+    {
+     "tool": "search",
+     "query": "27 USB-C IPS"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Check Beirut pickup locations and additional midrange options.",
+   "at_s": 55.8,
+   "calls": [
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "electroslab"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "mobileleb"
+     ]
+    },
+    {
+     "tool": "open",
+     "url": "https://outgeeked.net/products/viewsonic-vg2709-mhu-27-full-hd-usb-c-monitor-with-dual-speakers"
+    },
+    {
+     "tool": "open",
+     "url": "https://isolvedit.me/products/asus-vu279cfe-b-27-100hz-monitor-vu279cfe-b"
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Finish with verified offers; distinguish Beirut branch evidence from unconfirmed pickup addresses.",
+   "at_s": 80.4,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 15156,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 26531,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 28422,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 34828,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 438,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 906,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 1375,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 2735,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 9375,
+   "usage": {
+    "actual_usd": "0.0043455",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3230,
+     "output_tokens": 130,
+     "total_tokens": 3360
+    },
+    "latency_ms": 5438,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 9203,
+   "usage": {
+    "actual_usd": "0.018313",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 8637,
+     "output_tokens": 175,
+     "total_tokens": 8812
+    },
+    "latency_ms": 4781,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 21468,
+   "usage": {
+    "actual_usd": "0.0315805",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 10944,
+     "output_tokens": 925,
+     "total_tokens": 11869
+    },
+    "latency_ms": 18281,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": true
+  }
+ ],
+ "retailer_requests": 99,
+ "seconds": 80.4,
+ "spend": {
+  "settled_usd": "0.0542390",
+  "uncertain_usd": "0",
+  "model_calls": 3,
+  "ledger_job": "scout-b37-20261128T053039"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/lg-27up850n-w-27-inch-ips-4k-uhd-vesa",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:31:14+00:00",
+   "sha256": "6d1b84ed5c3e49efad11e6b328479394aec4cb8db164f1b85f6f6ca2525f283a",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "LG 27UP850N-W 27 inch IPS 4K UHD VESA HDR400 Monitor with USB Type-C 2 Pack Bundle with 1 YR CPS Enhanced Protection Pack",
+    "url": "https://mobileleb.com/products/lg-27up850n-w-27-inch-ips-4k-uhd-vesa",
+    "vendor": "LG",
+    "product_type": "Monitors",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:31:14+00:00",
+    "variants": [
+     {
+      "variant_id": "40977339056260",
+      "title": "White / Brand New / 1 Year",
+      "options": {
+       "Color": "White",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "545.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://mobileleb.com/products/lg-27up850n-w-27-inch-ips-4k-uhd-vesa?variant=40977339056260",
+      "condition": "Brand New"
+     }
+    ],
+    "description": "27” UHD (3840 x 2160) IPS Display\nVESA DisplayHDR 400 with DCI-P3 95% Color Gamut\nUSB-C with 90W Power Delivery\n3-Side Virtually Borderless Display\nHeight / Pivot / Tilt Adjustable Stand"
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/viewsonic-vp2768a-27-inch-premium-ips-1440p-monitor-with-advanced-ergonomics-colorpro",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:31:17+00:00",
+   "sha256": "3631900619de7a3ff05064f7ae36e37f011f102a20b0d021ebc57af6bb134052",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "ViewSonic VP2768a, 27-Inch Premium IPS 1440p Monitor with Advanced Ergonomics, ColorPro 100% SRGB Rec 709, 14-Bit 3D LUT, Eye Care, 90W USB C, RJ45, HDMI",
+    "url": "https://mobileleb.com/products/viewsonic-vp2768a-27-inch-premium-ips-1440p-monitor-with-advanced-ergonomics-colorpro",
+    "vendor": "ViewSonic",
+    "product_type": "Video",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:31:17+00:00",
+    "variants": [
+     {
+      "variant_id": "41707722080388",
+      "title": "Black / Brand New / 1 Year",
+      "options": {
+       "Color": "Black",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "545.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "VP2768A",
+      "url": "https://mobileleb.com/products/viewsonic-vp2768a-27-inch-premium-ips-1440p-monitor-with-advanced-ergonomics-colorpro?variant=41707722080388",
+      "condition": "Brand New"
+     }
+    ],
+    "description": "PREMIUM MONITOR: 27 Inch QHD (2560x1440p) IPS monitor with thin bezels and 60Hz refresh rate\nLESS CABLE CLUTTER: Ethernet RJ45 and USB-C connectivity for fast data, audio, and video transfer, 90W charging over one cable\nERGONOMIC STAND: Advanced ergonomics (tilt, swivel, pivot, and height) for all-day comfort\nENHANCED VIEWING COMFORT: Flicker-free technology and Blue Light Filter for reduced eye fatigue\nEXCEPTIONAL COLOR ACCURACY: 100% sRGB, EBU, SMPTE-C, Rec. 709, and DICOM-SIM color spaces and Delta E<2 Accuracy"
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://electroslab.com/products/brand-new-monitor-minifire-24-inch",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:31:20+00:00",
+   "sha256": "4a68b57cc9bdfc639f2b90f9c3be75ea16dadd780f714e3526dd42522832bd0f",
+   "product": {
+    "shop": "Electroslab",
+    "shop_id": "electroslab",
+    "title": "Brand New MINIFIRE MF24X3 24-Inch Monitor | FHD IPS | 100Hz | HDMI & USB-C",
+    "url": "https://electroslab.com/products/brand-new-monitor-minifire-24-inch",
+    "vendor": "MINIFIRE",
+    "product_type": "Monitors",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:31:20+00:00",
+    "variants": [
+     {
+      "variant_id": "47419537817767",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "90.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "01-1-1-4252.001",
+      "url": "https://electroslab.com/products/brand-new-monitor-minifire-24-inch?variant=47419537817767"
+     }
+    ],
+    "description": "The Brand New MINIFIRE MF24X3 24-Inch Monitor combines a sharp Full HD IPS display with a smooth 100Hz refresh rate, making it a versatile choice for work, study, entertainment, and everyday computing. The IPS panel provides consistent image quality and wide viewing angles for a comfortable desktop experience.\nFeaturing both HDMI and USB-C connectivity, the MF24X3 offers flexible connection options for compatible laptops, desktop computers, and other devices. Its compact 24-inch size makes it especially suitable for home offices, study spaces, professional workstations, and multimedia setups.\nKey Features\nBrand: MINIFIRE\nModel: MF24X3\nCondition: Brand New\nProduct: Monitor\nScreen Size: 24 inches\nResolution: Full HD (FHD)\nPanel Type: IPS\nRefresh Rate: 100Hz\nConnectivity: HDMI & USB-C\nSmooth 100Hz visual performance\nIPS technology for wide viewing angles\nClear Full HD image quality\nCompact size for desktop workspaces\nSuitable for work, study, multimedia, and casual gaming\nCompatible with supported laptops and desktop computers\nWhy Choose This Product?\n24-inch Full HD IPS display\nSmooth 100Hz refresh rate\nUSB-C connectivity for compatible devices\nHDMI support for flexible connections\nIPS panel for consistent visuals and viewing angles\nExcellent size for home and office desks\nBrand New condition"
+   }
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://electroslab.com/products/brand-new-monitor-minifire-27-inch-fhd-ips-100hz-hdmi-type-c-mf27x3",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:31:23+00:00",
+   "sha256": "bbeae742f84f3f6381fbbf4489f1dcfbce1f322e747b9e7123fdb1374fc27be7",
+   "product": {
+    "shop": "Electroslab",
+    "shop_id": "electroslab",
+    "title": "MINIFIRE 27\" FHD IPS Monitor | 100Hz, Type-C & HDMI – MF27X3 | Brand New",
+    "url": "https://electroslab.com/products/brand-new-monitor-minifire-27-inch-fhd-ips-100hz-hdmi-type-c-mf27x3",
+    "vendor": "MINIFIRE",
+    "product_type": "Monitors",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:31:23+00:00",
+    "variants": [
+     {
+      "variant_id": "47126528917671",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "115.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "01-1-1-4255.001",
+      "url": "https://electroslab.com/products/brand-new-monitor-minifire-27-inch-fhd-ips-100hz-hdmi-type-c-mf27x3?variant=47126528917671"
+     }
+    ],
+    "description": "Minifire - Monitor 27 inch screen in frameless design, IPS, 100Hz, USB Tpye-C, FHD(1080P), sRGB110%, 300 nits, FreeSync, Eye-Care, HDMI USB Type-C ports, supports VESA - Black\nBrand\nMinifire\nScreen Size\n27 Inches\nResolution\nFHD 1080p\nBeeldverhouding\n16:9\nScreen surface description\n面\nImage contrast ratio\n1000:1\nResponse time\n1 Milliseconds\nRefresh rate\n100 Hz\nDisplay resolution maximum\n1920 x 1080\nSpecial feature\nUltra-Slim"
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://electroslab.com/policies/shipping-policy",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:31:28+00:00",
+   "sha256": "b14ef8682d0d62190bc79c58577fd41fe908c7c270788ce6de3be9f7593da4ab",
+   "excerpt": "Shipping policy\nWEBSITE ORDERS ONLY⚡\nNOVEMBER DISCOUNTS + ⚡FREE DELIVERY ON ORDERS OF $20 OR MORE⚡\nTHROUGH NOV 30\n0\nView All\nNo result found for your search.\nHome\nShipping policy\nShipping policy\na {\ntext-decoration: none;\ncolor: #464feb;\n}\ntr th, tr td {\nborder: 1px solid #e6e6e6;\n}\ntr th {\nbackground-color: #f5f5f5;\n}\nShipping Policy\nDelivery Coverage & Rates\nWe deliver across all of Lebanon for a flat rate of $4.\nFree delivery may apply during promotions or on selected items.\nDelivery Time\nThe estimated delivery time begins once your order is placed and confirmed.\nBeirut: Delivery within 1–3 business days.\nOutside Beirut: Delivery within 3–5 business days.\nCustom, special-order, or high-demand items may require additional time.\nOnce your order has been shipped, you will receive order confirmation and tracking details.\nInternational Shipping\nWe currently ship only within Lebanon.\nInternational shipping may become available in the future.\nLost or Stolen Packages\nElectroSlab is not responsible for lost or stolen packages after delivery confirmation.\nIf your order is marked as delivered but has not been received, please:\nCheck with your local courier or post office.\nCheck with neighbors, building reception, or security personnel.\nContact us at info@electroslab.com, and we will assist where possible.\nBusiness Days\nBusiness days are Monday through Saturday, excluding public holidays.\nContact\nFor shipping questions or delivery issues, please contact us at info@electroslab.com.\nThi",
+   "quoted": []
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://electroslab.com/meta.json",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:31:36+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"Electroslab\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"electroslab.com\"}",
+   "quoted": []
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/viewsonic-vg2709-mhu-27-full-hd-usb-c-monitor-with-dual-speakers",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:31:36+00:00",
+   "sha256": "e38b61d34a6d87e694847327cc3d882d5de5df12c9efa87eef3fc80a4660fdb7",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "ViewSonic VG2709-MHU 27\" Full HD USB-C Monitor with Dual Speakers",
+    "url": "https://outgeeked.net/products/viewsonic-vg2709-mhu-27-full-hd-usb-c-monitor-with-dual-speakers",
+    "vendor": "ViewSonic",
+    "product_type": "Monitor",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:31:36+00:00",
+    "variants": [
+     {
+      "variant_id": "50968559321346",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "267.51",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "OG-PC-1029",
+      "url": "https://outgeeked.net/products/viewsonic-vg2709-mhu-27-full-hd-usb-c-monitor-with-dual-speakers?variant=50968559321346"
+     }
+    ],
+    "description": "The ViewSonic VG2709-MHU 27\" Full HD USB-C Monitor with Dual Speakers is a 27-inch Full HD display with a vertical refresh range of 48 to 75 Hz, HDMI (v1.4), USB Type-C and analog RGB inputs, and two built-in 2.5 W speakers.\nIts stand adjusts for height, swivel, tilt and pivot, which suits long work sessions, shared desks and portrait viewing of documents or code. It is a good fit for office and home-office users who want one cable from a USB-C laptop and do not want separate speakers. Browse more desktop monitors to compare.\nHighlights\n27-inch Full HD screen with up to 75 Hz vertical frequency\nInputs: HDMI (v1.4), USB Type-C and analog RGB\nDual 2.5 W internal speakers\nStand with 130 mm height adjustment, 360º swivel, -3.5º / 28º tilt and 90º pivot\nVESA 100 x 100 mm wall mount compatible\nKensington lock slot and built-in cable organization\nBest for\nOffice and home-office setups with a USB-C laptop\nPortrait use for documents, spreadsheets or code thanks to the 90º pivot\nShared or hot desks where the stand needs frequent adjustment\nDesks with no room for separate speakers\nSpecifications\nAudio Internal Speakers\n2.5Watts x2\nAdditional Hardware Kensington Lock Slot\n1 Cable Organization: Yes\nOperating Conditions Temperature\n32°F to 104°F (0°C to 40°C) Humidity (non-condensing): 20% to 90%\nWall Mount VESA Compatible\n100 x 100 mm\nInput Signal Frequency Horizontal\n24 ~ 86KHz Frequency Vertical: 48 ~ 75Hz\nVideo Input Digital Sync\nTMDS - HDMI (v1.4), Micro-Packet - Type C Analog Sync: S"
+   }
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://isolvedit.me/products/asus-vu279cfe-b-27-100hz-monitor-vu279cfe-b",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T05:31:36+00:00",
+   "sha256": "5cab92feaebe7119c7559b88aae02548b4b50d32c65130002d4a8eddb2816297",
+   "product": {
+    "shop": "iSolved IT Solutions",
+    "shop_id": "isolvedit",
+    "title": "ASUS VU279CFE-B 27\" Full HD 100Hz IPS Monitor | VU279CFE-B",
+    "url": "https://isolvedit.me/products/asus-vu279cfe-b-27-100hz-monitor-vu279cfe-b",
+    "vendor": "ASUS",
+    "product_type": "Monitors",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:31:36+00:00",
+    "variants": [
+     {
+      "variant_id": "68528933077103",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "240.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "VU279CFE-B",
+      "url": "https://isolvedit.me/products/asus-vu279cfe-b-27-100hz-monitor-vu279cfe-b?variant=68528933077103"
+     }
+    ],
+    "description": "✅ Available – delivery within 24 hours anywhere in Lebanon\nThe ASUS VU279CFE-B is a brand-new 27\" Full HD 1920x1080 IPS monitor with a 100Hz refresh rate and 1ms (MPRT) response time. Eye Care, blue light filter, flicker-free; USB-C single-cable connection. Ideal for office work, study and home use.\nASUS VU279CFE-B – Specifications\nModel\nASUS VU279CFE-B — VU279CFE-B (90LM09IK-B01K)\nScreen size\n27\"\nResolution\nFull HD 1920x1080\nRefresh rate\n100Hz\nPanel\nIPS\nResponse time\n1ms (MPRT)\nPorts\nHDMI, USB-C\nStand\nTilt\nFeatures\nEye Care, blue light filter, flicker-free; USB-C single-cable connection\nWarranty\n3 years\nWhy buy from iSolved IT\nBrand-new, original sealed unit\n3 years warranty\nDelivery within 24 hours anywhere in Lebanon, or pick up from our shop in Bourj Hammoud, Beirut\nQuestions? WhatsApp us on +961 70 611 637\nFAQ\nWhat is the price of the ASUS VU279CFE-B in Lebanon?\n$240 at iSolved IT.\nDoes it come with warranty?\nYes, 3 years warranty."
+   }
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://mobileleb.com/meta.json",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:31:36+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"Mobileleb\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"mobileleb.com\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://isolvedit.me/policies/shipping-policy",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T05:31:36+00:00",
+   "sha256": "a020feba92e3a59d0bc9d8574a2437a1f20657c930eec8f2fe894a9342d1b4dd",
+   "excerpt": "Shipping policy | iSolved IT\nSkip to content\nYour cart is empty\nContinue shopping\nHave an account?\nLog in to check out faster.\nYour cart\nLoading...\nEstimated total\n$0.00 USD\n✅ All prices include VAT – nothing extra to pay. Discounts and shipping calculated at checkout.\nCheck out\n🎄 Christmas deals are live — order on WhatsApp\n✅ All prices include VAT — nothing extra to pay\n💵 Cash on delivery\n🛡️ 6-month warranty on used laptops\nShop\nApple\nApple\nApple Accessories\nApple Macbook\nApple iPad\nGaming\nGaming\nGaming Laptops\nGaming Monitors\nGaming Consoles\nGaming Accessories\nLaptops\nLaptops\nApple Laptops\nAsus Laptops\nAcer Laptops\nDell Laptops\nHp laptops\nLenovo Laptops\nMsi Laptops\nSecond Hand Laptops\nSony Laptops\nLaptop Parts\nDesktops\nDesktops\nAll Desktops & All-in-Ones\nDesktop PCs\nAll-in-One PCs\nComputer Parts\nComputer Parts\nMotherboards\nCPU's\nGPU's\nStorages\nRAM's\nCases and Chassis\nPower Supply\nAccessories\nAccessories\nAdapters & Converters\nBackpacks & Bags\nCables\nExternal Hard Drives\nFlash Drives & SD Cards\nMobile Accessories\nPower Banks\nChargers\nPhone Holders & Car Mounts\nDocking Stations & USB-C Hubs\nLaptop Stands & Coolers\nWebcams\nWireless Presenters\nInks & Toners\nMouse\nMouse Pads & Wrist Pads\nKeyboards\nAudio\nAudio\nEarbuds\nSpeakers\nHeadsets\nMicrophones\nElectronics\nElectronics\nTablets\nGadgets\nMonitors\nPrinters & Scanners\nPaper Shredders\nPOS & Barcode Scanners\nNetworking Products\nNetworking Products\nFiber Optic\nNetworking Accessories\nSwitches\nNetwork & Server Cabinets\nRouters & Modems\nC",
+   "quoted": []
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://electroslab.com/",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:31:36+00:00",
+   "sha256": "bc5fbf974bf832fbb0ef135b89929b45e12175237fd733f9741e2297ecd3c41d",
+   "excerpt": "ElectroSlab — Electronics, Laptops & Components in Lebanon\nWEBSITE ORDERS ONLY⚡\nNOVEMBER DISCOUNTS + ⚡FREE DELIVERY ON ORDERS OF $20 OR MORE⚡\nTHROUGH NOV 30\n0\nView All\nNo result found for your search.\nElectroSlab — electronics, laptops, components and STEM kits in Lebanon\nValid for website orders only\nBlue November\nOnline Exclusive | حصرياً عبر الموقع\nLaptops, Arduino & Raspberry Pi, kits, 3D printers and accessories. Delivery all over Lebanon.\nShop the sale\nUP TO 30% OFF\nEnds 30 November\n00Days\n00Hours\n00Minutes\n00Seconds\nThis promotion has ended.\nNew Laptops\nRaspberry Pi\nArduino Boards\nEducational Kits\nTablets\nComputer Accessories\nMeasurement\nBoards\nNetwork Devices\nHome Automation\nCertified Refurbished Laptops\nLIU Kits\nElectronic Components\nGaming Consoles\nPartners Section\nOur Valued Partners\nWe’re proud to collaborate with outstanding universities, schools, academies, and partner organizations.\nBecome a Business Partner\nUniversities\nAUB\nAmerican University of Beirut\nLU\nLebanese University\nIUL\nIslamic University of Lebanon\nMU\nAl Maaref University\nBAU\nBeirut Arab University\nLIU\nLebanese International University\nMUBS\nModern University for Business and Science\nAUST\nAmerican University of Science and Technology\nUSAL\nUniversity of Sciences and Arts in Lebanon\nCIS\nCIS College\nAntonine\nAntonine University\nUSEK\nHoly Spirit University of Kaslik\nSchools\nCongrégation des Sœurs Maronites\nCongrégation des Sœurs Maronites\nAl Makassed\nAl Makassed Schools\nAmlieh\nAmlieh School\nAl Mahdi\nAl M",
+   "quoted": [
+    {
+     "quote": "📍 Beirut Branch +961 71504160",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T6",
+   "kind": "page",
+   "url": "https://mobileleb.com/",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:31:37+00:00",
+   "sha256": "984a780465e805727144ead8f83b8fc183bf8985a393b72bbf7cbcfc3c597b4d",
+   "excerpt": "Mobileleb.com | Mobile Price in Lebanon, Laptop, PS5\nCell Phones & Tablets\nCell Phones\nSamsung\nHonor\nXiaomi\nTecno\nApple\nFeature Phones\nInfinix\nApple Open Box\nGoogle\nSamsung Open Box\nOppo\nVivo\nMotorola\nBlackview\nitel\nRealme\nZTE nubia\nOnePlus\nFreeYond\nNokia\nHuawei\nAlcatel\nHiSense\nDoogee\nTCL\nBlackBerry\nCAT\nUmidigi\nI-Plus\nTablets, iPads & eReaders\nApple iPads\nAndroid Tablets\nWindows Tablets\neReaders\nDrawing Tablets & Accessories\nSamsung\nBlackview\nRed Magic Gaming Tablets\nLenovo\nAmazon\nAlcatel\nMicrosoft\ni-Plus\nHuawei\nG-TiDE\nWearables, Smart Watches & Trackers\nCell Phone Accessories\nMobile Phone Cases\nScreen Protectors\nCharging & Data Cables\nChargers & Power Adapters\nMobile Gaming Controllers\nMobiles & Tablets Cables & Connectors\nMounts & Stands\nCar Accessories\nMobile Phone Accessories\nMobile Phone Camera Accessories\nLED Ring Lights\nGimbals & Camera Stabilizers\nSelfie Sticks, Tripods & Monopods\niPad & Tablet Accessories\nKeyboards\nStylus Pens\nCovers & Screen Protectors\nTablet Computer Docks & Stands\nTablet Computer Parts\nComputers & Parts\nApple Accessories\nKeyboards & Mice\nTime Capsule\nAirPods & Audio\nAll Laptops\nHP Laptops\nLenovo Laptops\nNEC Laptops\nAcer Laptops\nMacBooks, iMacs & Mac mini\nMac Studio\nDell Laptops\nAsus Laptops\nMSI Laptops\nGigabyte Laptops\nRazer Laptops\nGateway Laptops\nToshiba Laptops\nMicrosoft Surface\nLaptops Open Box\nDesktop Computers\nMini PCs\nDesktops\nAll-in-One Computers\nP.O.S Systems\nCore Components\nGraphics Cards\nCPU / Computer Processors\nRAM\nMotherboards\nAudio ",
+   "quoted": []
+  }
+ ]
+}

@@ -1,0 +1,164 @@
+{
+ "run_id": "scout-c07-20261128T050920",
+ "request": {
+  "id": "C07",
+  "text": "Can I pick up a new BenQ PD2705Q monitor at a shop in Beirut? Tell me the price and which branch has one.",
+  "mode": "pickup",
+  "destination": "Beirut",
+  "category": "monitor",
+  "run_id": "scout-c07-20261128T050920"
+ },
+ "status": "no_match",
+ "message": "I couldn’t verify a new BenQ PD2705Q for pickup in Beirut. Searches for PD2705Q, PD2705 and alternate spellings found no matching listing in the shops that responded; some shops’ searches failed.\nSo I don’t have a confirmed price or a branch with stock. This does not prove it’s unavailable locally. Before travelling, ask a retailer to confirm the exact PD2705Q model, new condition, price and stock at the specific Beirut branch.",
+ "question": null,
+ "offers": [],
+ "proposed": [],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "",
+   "at_s": 11.9,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "BenQ PD2705Q"
+    },
+    {
+     "tool": "search",
+     "query": "PD2705"
+    },
+    {
+     "tool": "search",
+     "query": "BenQ PD 2705 Q"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Try the exact model token and Designer-series name before concluding; earlier searches found no matching listing.",
+   "at_s": 56.6,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "PD2705Q"
+    },
+    {
+     "tool": "search",
+     "query": "BenQ Designer"
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "No exact-model leads after multiple model spellings and series searches; no verified pickup offer.",
+   "at_s": 83.8,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 15813,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 16875,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 17406,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 7375,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 7500,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 8437,
+   "usage": {
+    "actual_usd": "0.003978",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3227,
+     "output_tokens": 94,
+     "total_tokens": 3321
+    },
+    "latency_ms": 3766,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 27109,
+   "usage": {
+    "actual_usd": "0.010053",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 5601,
+     "output_tokens": 108,
+     "total_tokens": 5709
+    },
+    "latency_ms": 8281,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 15188,
+   "usage": {
+    "actual_usd": "0.014293",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 7097,
+     "output_tokens": 158,
+     "total_tokens": 7255
+    },
+    "latency_ms": 6891,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": true
+  }
+ ],
+ "retailer_requests": 105,
+ "seconds": 83.8,
+ "spend": {
+  "settled_usd": "0.028324",
+  "uncertain_usd": "0",
+  "model_calls": 3,
+  "ledger_job": "scout-c07-20261128T050920"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": []
+}

@@ -1,0 +1,905 @@
+{
+ "run_id": "scout-b27-20261128T052052",
+ "request": {
+  "id": "B27",
+  "text": "My PC can drive 144 Hz over DisplayPort. What would I pay for a new 24-inch-class Full HD gaming monitor with DisplayPort and at least 144 Hz, delivered to Zahle?",
+  "mode": "delivery",
+  "destination": "Zahle",
+  "category": "monitor",
+  "run_id": "scout-b27-20261128T052052"
+ },
+ "status": "offers",
+ "message": "Best starting point: iSolved IT’s LG 24G411A-B at $114.00, VAT included. It is explicitly brand-new, 24-inch Full HD, with DisplayPort and 144Hz (OC). Delivery covers Lebanon, but the Zahle delivery fee is not published, so the delivered total remains unconfirmed.\n• Electroslab: AOC 24G15N, $145.00; brand-new, 23.8-inch Full HD, 180Hz. Its website promotion gives free delivery on orders of $20 or more through Nov 30, making this $145.00 delivered during the promotion—but DisplayPort is not confirmed in the listing. The title and description also disagree on panel type.\n• Karizma: MSI G244F E2, $150.00; 24-inch Full HD, 180Hz and DisplayPort confirmed. First-order shipping is advertised free; new condition and Zahle coverage are not explicitly confirmed.\nAll three show online availability. I’d choose the LG once its delivery charge is confirmed; use DisplayPort and enable the advertised 144Hz overclock mode.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "best",
+   "shop": "iSolved IT Solutions",
+   "shop_id": "isolvedit",
+   "title": "LG UltraGear 24G411A-B 24\" Full HD 144Hz Gaming Monitor | 24G411A-B",
+   "variant": "Default Title",
+   "url": "https://isolvedit.me/products/lg-ultragear-24g411a-b-24-144hz-monitor?variant=68529016176751",
+   "price": "114.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "Meets the requested monitor specifications; 144Hz is advertised as an overclock mode.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "delivery fee to your area is not published or not confirmed"
+   ],
+   "requirements": [
+    {
+     "requirement": "24-inch-class Full HD",
+     "status": "met",
+     "quote": "24\" Full HD 1920x1080",
+     "obs": "P4",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "At least 144Hz",
+     "status": "met",
+     "quote": "144Hz (OC)",
+     "obs": "P4",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "DisplayPort input",
+     "status": "met",
+     "quote": "DisplayPort, HDMI",
+     "obs": "P4",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "Brand-new, original sealed unit",
+     "obs": "P4",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Zahle",
+     "status": "met",
+     "quote": "Delivery within 24 hours anywhere in Lebanon",
+     "obs": "P4",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P4",
+     "url": "https://isolvedit.me/products/lg-ultragear-24g411a-b-24-144hz-monitor",
+     "read": "https://isolvedit.me/products/lg-ultragear-24g411a-b-24-144hz-monitor.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:21:51+00:00",
+     "sha256": "9686a929d55043eb5e85dec11e39c03c625d313d2e673af13f46b0ed2071f6c8"
+    }
+   ],
+   "seller_basis": "iSolved IT Solutions: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  },
+  {
+   "tier": "alternative",
+   "shop": "Electroslab",
+   "shop_id": "electroslab",
+   "title": "Brand New Monitor Gaming AOC 24G15N 24 Inch IPS FHD Adaptive Sync 0.5ms 180HZ",
+   "variant": "Default Title",
+   "url": "https://electroslab.com/products/brand-new-monitor-gaming-aoc-24g15n-24-inch-ips-fhd-adaptive-sync-0-5ms-185hz?variant=47126517579943",
+   "price": "145.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "near",
+   "identity_reason": "Appropriate size, resolution and refresh rate, but DisplayPort is not verified.",
+   "delivery_fee": "0.00",
+   "total": "145.00",
+   "total_basis": "listed price + delivery fee published by electroslab (\"WEBSITE ORDERS ONLY⚡ | NOVEMBER DISCOUNTS + ⚡FREE DELIVERY ON ORDERS OF $20 OR MORE⚡ | THROUGH NOV 30\", T4)",
+   "complete": false,
+   "gaps": [
+    "not confirmed: DisplayPort input",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "24-inch-class Full HD",
+     "status": "met",
+     "quote": "23.8\" 180Hz Gaming Monitor",
+     "obs": "P6",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Full HD resolution",
+     "status": "met",
+     "quote": "1920 × 1080 (FHD)",
+     "obs": "P6",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "At least 144Hz",
+     "status": "met",
+     "quote": "180Hz",
+     "obs": "P6",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "DisplayPort input",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "Brand New",
+     "obs": "P6",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Zahle",
+     "status": "met",
+     "quote": "We deliver across all of Lebanon for a flat rate of $4.",
+     "obs": "T4",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P6",
+     "url": "https://electroslab.com/products/brand-new-monitor-gaming-aoc-24g15n-24-inch-ips-fhd-adaptive-sync-0-5ms-185hz",
+     "read": "https://electroslab.com/products/brand-new-monitor-gaming-aoc-24g15n-24-inch-ips-fhd-adaptive-sync-0-5ms-185hz.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:21:51+00:00",
+     "sha256": "bf9229853bc25f7b805e0594e47f90b141181ecb28e577e8f4f724b321ab3f15"
+    },
+    {
+     "obs": "T4",
+     "url": "https://electroslab.com/policies/shipping-policy",
+     "source": "shop delivery terms",
+     "observed_at": "2026-11-28T05:21:51+00:00",
+     "sha256": "3000ab4ec1e4d0163ae0c57f6b72dbd303a13b632f834629a2d3e2ce825da6d5"
+    }
+   ],
+   "seller_basis": "Electroslab: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  },
+  {
+   "tier": "alternative",
+   "shop": "Karizma Megastore",
+   "shop_id": "karizma",
+   "title": "MSI G244F E2 24\" 180HZ",
+   "variant": "Default Title",
+   "url": "https://karizmamegastore.com/products/msi-g244f-e2-24-180hz?variant=46089696051389",
+   "price": "150.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "near",
+   "identity_reason": "Hardware specifications match, but new condition and destination coverage are unconfirmed.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "24-inch-class Full HD",
+     "status": "met",
+     "quote": "Screen Size: 24 inches",
+     "obs": "P7",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Full HD resolution",
+     "status": "met",
+     "quote": "Resolution: 1920 x 1080 (Full HD)",
+     "obs": "P7",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "At least 144Hz",
+     "status": "met",
+     "quote": "Refresh Rate: 180Hz",
+     "obs": "P7",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "DisplayPort input",
+     "status": "met",
+     "quote": "1x DisplayPort 1.2",
+     "obs": "P7",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Zahle",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P7",
+     "url": "https://karizmamegastore.com/products/msi-g244f-e2-24-180hz",
+     "read": "https://karizmamegastore.com/products/msi-g244f-e2-24-180hz.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:21:51+00:00",
+     "sha256": "4390a2f045420fc4ad239ea75cd3ff0531e0965b4c2e1a13f37905097725f062"
+    }
+   ],
+   "seller_basis": "Karizma Megastore: Lebanese shop in the reviewed directory (shop metadata: Ghaziyeh, LB)",
+   "downgrades": [
+    "free delivery in the quote is conditional (\"first order\")"
+   ]
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P4",
+   "variant_id": "68529016176751",
+   "identity": "exact",
+   "identity_reason": "Meets the requested monitor specifications; 144Hz is advertised as an overclock mode.",
+   "condition": "new",
+   "condition_quote": "Brand-new, original sealed unit",
+   "condition_obs": "P4",
+   "requirements": [
+    {
+     "requirement": "24-inch-class Full HD",
+     "status": "met",
+     "evidence_obs": "P4",
+     "quote": "24\" Full HD 1920x1080"
+    },
+    {
+     "requirement": "At least 144Hz",
+     "status": "met",
+     "evidence_obs": "P4",
+     "quote": "144Hz (OC)"
+    },
+    {
+     "requirement": "DisplayPort input",
+     "status": "met",
+     "evidence_obs": "P4",
+     "quote": "DisplayPort, HDMI"
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "P4",
+     "quote": "Brand-new, original sealed unit"
+    },
+    {
+     "requirement": "Delivery to Zahle",
+     "status": "met",
+     "evidence_obs": "P4",
+     "quote": "Delivery within 24 hours anywhere in Lebanon"
+    }
+   ],
+   "delivery_obs": "T3",
+   "delivery_quote": "🚚 Delivery all over Lebanon",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": "All prices include VAT — nothing extra to pay",
+   "price_quote": null
+  },
+  {
+   "obs": "P6",
+   "variant_id": "47126517579943",
+   "identity": "near",
+   "identity_reason": "Appropriate size, resolution and refresh rate, but DisplayPort is not verified.",
+   "condition": "new",
+   "condition_quote": "Brand New",
+   "condition_obs": "P6",
+   "requirements": [
+    {
+     "requirement": "24-inch-class Full HD",
+     "status": "met",
+     "evidence_obs": "P6",
+     "quote": "23.8\" 180Hz Gaming Monitor"
+    },
+    {
+     "requirement": "Full HD resolution",
+     "status": "met",
+     "evidence_obs": "P6",
+     "quote": "1920 × 1080 (FHD)"
+    },
+    {
+     "requirement": "At least 144Hz",
+     "status": "met",
+     "evidence_obs": "P6",
+     "quote": "180Hz"
+    },
+    {
+     "requirement": "DisplayPort input",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "P6",
+     "quote": "Brand New"
+    },
+    {
+     "requirement": "Delivery to Zahle",
+     "status": "met",
+     "evidence_obs": "T4",
+     "quote": "We deliver across all of Lebanon for a flat rate of $4."
+    }
+   ],
+   "delivery_obs": "T4",
+   "delivery_quote": "WEBSITE ORDERS ONLY⚡ | NOVEMBER DISCOUNTS + ⚡FREE DELIVERY ON ORDERS OF $20 OR MORE⚡ | THROUGH NOV 30",
+   "delivery_fee_usd": "0",
+   "free_delivery_over_usd": "20",
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P7",
+   "variant_id": "46089696051389",
+   "identity": "near",
+   "identity_reason": "Hardware specifications match, but new condition and destination coverage are unconfirmed.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "24-inch-class Full HD",
+     "status": "met",
+     "evidence_obs": "P7",
+     "quote": "Screen Size: 24 inches"
+    },
+    {
+     "requirement": "Full HD resolution",
+     "status": "met",
+     "evidence_obs": "P7",
+     "quote": "Resolution: 1920 x 1080 (Full HD)"
+    },
+    {
+     "requirement": "At least 144Hz",
+     "status": "met",
+     "evidence_obs": "P7",
+     "quote": "Refresh Rate: 180Hz"
+    },
+    {
+     "requirement": "DisplayPort input",
+     "status": "met",
+     "evidence_obs": "P7",
+     "quote": "1x DisplayPort 1.2"
+    },
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Delivery to Zahle",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": "T2",
+   "delivery_quote": "Free shipping on your first order",
+   "delivery_fee_usd": "0",
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Search suitable 24-inch-class FHD high-refresh models.",
+   "at_s": 9.8,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "AOC 24G4"
+    },
+    {
+     "tool": "search",
+     "query": "MSI G244F"
+    },
+    {
+     "tool": "search",
+     "query": "ASUS VG249"
+    },
+    {
+     "tool": "search",
+     "query": "LG 24GN"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Open four promising models across shops to verify ports, condition and delivery.",
+   "at_s": 58.1,
+   "calls": [
+    {
+     "tool": "open",
+     "url": "https://isolvedit.me/products/lg-ultragear-24g411a-b-24-144hz-monitor"
+    },
+    {
+     "tool": "open",
+     "url": "https://electroslab.com/products/brand-new-monitor-gaming-aoc-24g15n-24-inch-ips-fhd-adaptive-sync-0-5ms-185hz"
+    },
+    {
+     "tool": "open",
+     "url": "https://outgeeked.net/products/asus-tuf-gaming-vg249qm5a-24-240hz-0-3ms-monitor"
+    },
+    {
+     "tool": "open",
+     "url": "https://karizmamegastore.com/products/msi-g244f-e2-24-180hz"
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Finish with verified lowest-price fit and two comparisons, explicitly flagging missing evidence.",
+   "at_s": 83.1,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 20375,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 21469,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 26453,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 33000,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 391,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 953,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 984,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 1188,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7782,
+   "usage": {
+    "actual_usd": "0.004358",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3239,
+     "output_tokens": 129,
+     "total_tokens": 3368
+    },
+    "latency_ms": 4562,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 13954,
+   "usage": {
+    "actual_usd": "0.0198505",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 9048,
+     "output_tokens": 226,
+     "total_tokens": 9274
+    },
+    "latency_ms": 7203,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 23234,
+   "usage": {
+    "actual_usd": "0.0346205",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 11492,
+     "output_tokens": 1092,
+     "total_tokens": 12584
+    },
+    "latency_ms": 18797,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": true
+  }
+ ],
+ "retailer_requests": 93,
+ "seconds": 83.2,
+ "spend": {
+  "settled_usd": "0.0588290",
+  "uncertain_usd": "0",
+  "model_calls": 3,
+  "ledger_job": "scout-b27-20261128T052052"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://techzone.com.lb/product/msi-g244f-e2-24-inch-fhd-gaming-monitor-1920-x-1080-rapid-ips-panel-180-hz-1ms-118-srgb-colou/",
+   "shop_id": "tech_zone",
+   "observed_at": "2026-11-28T05:21:30+00:00",
+   "sha256": "d0372c582916de4aa8fe1ab95e637d72d1d6d6930b3419dec5199eeefe32acef",
+   "product": {
+    "shop": "Tech Zone",
+    "shop_id": "tech_zone",
+    "title": "MSI G244F E2 24 Inch FHD Gaming Monitor – 1920 x 1080 Rapid IPS Panel, 180 Hz / 1ms, 118% sRGB Color",
+    "url": "https://techzone.com.lb/product/msi-g244f-e2-24-inch-fhd-gaming-monitor-1920-x-1080-rapid-ips-panel-180-hz-1ms-118-srgb-colou/",
+    "vendor": null,
+    "product_type": null,
+    "condition": null,
+    "source": "woo_store_api",
+    "observed_at": "2026-11-28T05:21:30+00:00",
+    "variants": [
+     {
+      "variant_id": "20738",
+      "title": "MSI G244F E2 24 Inch FHD Gaming Monitor – 1920 x 1080 Rapid IPS Panel, 180 Hz / 1ms, 118% sRGB Color",
+      "options": {},
+      "price": "170.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "MSI-G244FE2",
+      "url": "https://techzone.com.lb/product/msi-g244f-e2-24-inch-fhd-gaming-monitor-1920-x-1080-rapid-ips-panel-180-hz-1ms-118-srgb-colou/"
+     }
+    ],
+    "description": "Panel Size 23.8” (60cm)\nActive Display Area (mm) 527.04(H) x 296.46(V)\nCurvature Flat\nPanel Type Rapid IPS\nPanel Resolution 1920 x 1080 (FHD)\nPixel Pitch (H x V) 0.2745(H) x 0.2745(V)\nAspect Ratio 16:9\nBrightness (nits) 300\nContrast Ratio 1000:1\nDCR 100000000:1\nSignal Frequency 55.3~200 KHz(H) /48~180 Hz(V)\nACTIVATED RANGE 48~180Hz\nRefresh Rate 180Hz\nResponse time 1ms (GtG)\nDYNAMIC REFRESH RATE\nTECHNOLOGY Adaptive-Sync\nHDR Support N/A\nVideo ports 1x Display Port (1.2a)\n2x HDMI™ (2.0b)\nUSB ports N/A\nAudio ports 1x Earphone out\nViewing Angle 178° (H) / 178° (V)\nAdobe RGB / DCI-P3 / sRGB 91% / 88% / 118%\nSurface Treatment Anti-glare\nDisplay Colors 16.7M (8bits)\nPower Type External Adaptor 12V 3A\nPower Input 100~240V, 50/60Hz\nAdjustment (Tilt) -5° ~ 20°\nAdjustment (Swivel) N/A\nAdjustment (Pivot) N/A\nAdjustment (Height) N/A\nKensington Lock Yes\nDimension (W x D x H)\n541.9 x 231.9 x 424.3 mm\n541.9 x 59.7 x 322.3 mm (Without\nstand)\nCarton Dimension (W X D X H) 622 x 160 x 409 mm (WW carton)\n637 x 174 x 433 mm (JP carton)\nFrameless Design Yes",
+    "extra": {
+     "attributes": {
+      "Brand": [
+       "MSI"
+      ],
+      "Size": [
+       "24\" Monitor"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/asus-tuf-gaming-vg249qm5a-24-240hz-0-3ms-monitor",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:21:30+00:00",
+   "sha256": "dc1e5b6d47ce76977bb5ae497d8f6ae4b925776dff0eff4deb05c03cbc7c8ef5",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "Asus TUF Gaming VG249QM5A 24\" 240Hz 0.3ms Monitor",
+    "url": "https://outgeeked.net/products/asus-tuf-gaming-vg249qm5a-24-240hz-0-3ms-monitor",
+    "vendor": "Asus",
+    "product_type": "Gaming Monitor",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:21:30+00:00",
+    "variants": [
+     {
+      "variant_id": "50967964090626",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "149.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "OG-PC-0134",
+      "url": "https://outgeeked.net/products/asus-tuf-gaming-vg249qm5a-24-240hz-0-3ms-monitor?variant=50967964090626"
+     }
+    ],
+    "description": "The Asus TUF Gaming VG249QM5A 24\" 240Hz 0.3ms Monitor is a 24-inch gaming display from the Asus TUF Gaming line, with a 240Hz refresh rate and a 0.3ms response time.\nIt suits fast competitive games, where a high refresh rate and quick response help motion look smoother and clearer. It is a good fit for players who want a compact 24-inch screen for esports titles and a PC that can push high frame rates. Browse more gaming monitors to compare.\nHighlights\n24-inch screen size\n240Hz refresh rate\n0.3ms response time\nPart of the Asus TUF Gaming series\nModel VG249QM5A\nBest for\nCompetitive and esports gaming at high frame rates\nFast shooters and racing games where motion clarity matters\nDesks that need a compact 24-inch gaming display\nUpgrading from a standard refresh rate monitor\nCompatibility and related parts\nTo get the full benefit of 240Hz, your graphics card needs to deliver high frame rates in the games you play, and you should connect it with a port and cable on your GPU that support high refresh rates. Check the outputs on your graphics card against the monitor's inputs before you buy. If you are planning a new system, the PC builder checks part compatibility, and parts bought as part of a PC build get free assembly and testing. You can also see other Asus products or our full gaming range."
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://karizmamegastore.com/products/msi-g244f-e2-24-180hz",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:21:40+00:00",
+   "sha256": "4390a2f045420fc4ad239ea75cd3ff0531e0965b4c2e1a13f37905097725f062",
+   "product": {
+    "shop": "Karizma Megastore",
+    "shop_id": "karizma",
+    "title": "MSI G244F E2 24\" 180HZ",
+    "url": "https://karizmamegastore.com/products/msi-g244f-e2-24-180hz",
+    "vendor": "MSI",
+    "product_type": "Monitors",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:21:40+00:00",
+    "variants": [
+     {
+      "variant_id": "46089696051389",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "150.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/msi-g244f-e2-24-180hz?variant=46089696051389"
+     }
+    ],
+    "description": "Screen Size: 24 inches\nResolution: 1920 x 1080 (Full HD)\nRefresh Rate: 180Hz\nPanel Type: IPS\nResponse Time: 1ms (MPRT)\nBrightness: 250 nits\nContrast Ratio: 1000:1\nConnectivity: 2x HDMI 2.0, 1x DisplayPort 1.2, 1x 3.5mm Audio Jack\nStand Features: Height adjustable, tilt, swivel, and pivot\nSpecial Technologies: AMD FreeSync Premium, Flicker-Free, Blue Light Filter\n1 Year Warranty"
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://techzone.com.lb/faqs/",
+   "shop_id": "tech_zone",
+   "observed_at": "2026-11-28T05:21:41+00:00",
+   "sha256": "25569b82595b4f7bc1e4177ccd9538dfe4f7ace5b3307e53c0c157e93fc5329b",
+   "excerpt": "FAQs - Tech Zone\nSkip to navigation\nSkip to main content\nAll Categories\nComputer\nComputer Accessories\nBackup\nCables and Hubs\nHeadsets and Speakers\nKeyboards\nMice\nMouse Pad\nWeb Cameras\nMonitors\nMonitor Accessories\nTV Stands\nComputer Components\nCase\nCPU\nMotherboards\nPower Supply\nRAM\nSystem Cooling\nVGA\nSoftware\nPC’s\nAll In one Desktops\nBranded Desktops\nPrebuilt Desktops\nPOS Components\nSecurity, Attendance and CCTV\nAttendance and Access Control\nCCTV\nIP\nAnalog\nVideo Recorder\nFire Alarms\nWifi Camera\nLaptops and Accessories\nLaptops\nLaptop Accessories\nLaptop Bags\nPhones and Tablets\nPhones\nPhone Accessories\nHeadphones\nCopy A Airpods\nAirpods Accessories\nBluetooth\nEarbuds\nWired Earphones\nCables and Adapters\nCases and Protection\nMicrophones\nPower Banks\nPower Socket\nTablets\nTablets Accessories\nHealth and Wellness\nMassagers\nMixers\nStreaming and Projectors\nProjectors\nSmart TV\nGaming, Console and VR\nGaming Console\nVR\nPhotography\nCamera\nDrones\nInstant Camera\nPhotography/Cameras Accessories\nCar Stuff\nCar Accessories\nCar Charger\nBags\nSmart Devices\nSpeakers\nSmart Watches\nWatch Accessories\nPrinters\nLabel Printers and Makers\nPrinters and Scanners\nINK & Toner Supply\nStorage\nStorage Accessories\nNetworking\nFiber and Passive\nFiber Optics\nSFP\nCabinet and Components\nOutlets\nHome and Small Office\nBusiness and Enterprise\nNetwork Adapters\nVOIP and PBX\nWireless and Microwave\neScooter\nOutlet\nUsed\nOpen Box\nRefurbished\nFactory Certified\nSearch for products\n×\n[email protected]\n+96171050505\nDelivery available ac",
+   "quoted": []
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://www.karizmamegastore.com/policies/privacy-policy",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:21:41+00:00",
+   "sha256": "b1141d495b291ae07f9a9f0c229cc574adc126d60eca5db2fb2aa029274998cc",
+   "excerpt": "Privacy policy – Karizma Megastore\nSkip to content\nReturns extended to 60 days\nFree shipping on your first order\nHome\nCategories\nCategories\nSmart Phones\nSmart Phones\nApple\nXiaomi\nSamsung\nHonor\nTecno\nInfinix\nGadgets\nGadgets\nWearables\nAudio Devices\nPower & Charging\nGaming Consoles\nGaming Consoles\nConsoles\nGames\nGaming Wheels & Peripherals\nLaptops\nLaptops\nGaming Laptops\nOffice Laptops\nComputer Accessories\nComputer Accessories\nGaming Accessories\nMouse & Keyboards\nConnectivity & Hubs\nStorage & Memory\nMonitors\nHeadphones & Earphones\nWiFi and Networking\nContent Creation\nsoundcore\nPitaka\nAnker\nCases\nContact\nHome\nCategories\nCases\nContact\nLogin\n0\nHome\nCategories\nSmart Phones\nApple\nXiaomi\nSamsung\nHonor\nTecno\nInfinix\nGadgets\nWearables\nAudio Devices\nPower & Charging\nGaming Consoles\nConsoles\nGames\nGaming Wheels & Peripherals\nLaptops\nGaming Laptops\nOffice Laptops\nComputer Accessories\nGaming Accessories\nMouse & Keyboards\nConnectivity & Hubs\nStorage & Memory\nMonitors\nHeadphones & Earphones\nWiFi and Networking\nContent Creation\nsoundcore\nPitaka\nAnker\nCases\nContact\nPrivacy policy\nLast updated: September 2, 2024\nThis Privacy Policy describes how Karizma Megastore (the \"Site\", \"we\", \"us\", or \"our\") collects, uses, and discloses your personal information when you visit, use our services, or make a purchase from www.karizmamegastore.com (the \"Site\") or otherwise communicate with us regarding the Site (collectively, the \"Services\"). For purposes of this Privacy Policy, \"you\" and \"your\" means you as t",
+   "quoted": [
+    {
+     "quote": "Free shipping on your first order",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://isolvedit.me/products/lg-ultragear-24g411a-b-24-144hz-monitor",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T05:21:51+00:00",
+   "sha256": "9686a929d55043eb5e85dec11e39c03c625d313d2e673af13f46b0ed2071f6c8",
+   "product": {
+    "shop": "iSolved IT Solutions",
+    "shop_id": "isolvedit",
+    "title": "LG UltraGear 24G411A-B 24\" Full HD 144Hz Gaming Monitor | 24G411A-B",
+    "url": "https://isolvedit.me/products/lg-ultragear-24g411a-b-24-144hz-monitor",
+    "vendor": "LG",
+    "product_type": "Gaming Monitor",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:21:51+00:00",
+    "variants": [
+     {
+      "variant_id": "68529016176751",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "114.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "24G411A-B",
+      "url": "https://isolvedit.me/products/lg-ultragear-24g411a-b-24-144hz-monitor?variant=68529016176751"
+     }
+    ],
+    "description": "✅ Available – delivery within 24 hours anywhere in Lebanon\nThe LG UltraGear 24G411A-B is a brand-new 24\" Full HD 1920x1080 gaming monitor with a 144Hz (OC) refresh rate and 1ms response time. G-Sync compatible. Ideal for gaming and fast-paced action.\nLG UltraGear 24G411A-B – Specifications\nModel\nLG UltraGear 24G411A-B — 24G411A-B\nScreen size\n24\"\nResolution\nFull HD 1920x1080\nRefresh rate\n144Hz (OC)\nPanel\nIPS\nResponse time\n1ms\nPorts\nDisplayPort, HDMI\nFeatures\nG-Sync compatible\nWarranty\nOfficial distributor warranty\nWhy buy from iSolved IT\nBrand-new, original sealed unit\nOfficial warranty\nDelivery within 24 hours anywhere in Lebanon, or pick up from our shop in Bourj Hammoud, Beirut\nQuestions? WhatsApp us on +961 70 611 637\nFAQ\nWhat is the price of the LG UltraGear 24G411A-B in Lebanon?\n$114 at iSolved IT."
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/asus-tuf-gaming-vg249qm5a-24-240hz-0-3ms-monitor",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:21:51+00:00",
+   "sha256": "dc1e5b6d47ce76977bb5ae497d8f6ae4b925776dff0eff4deb05c03cbc7c8ef5",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "Asus TUF Gaming VG249QM5A 24\" 240Hz 0.3ms Monitor",
+    "url": "https://outgeeked.net/products/asus-tuf-gaming-vg249qm5a-24-240hz-0-3ms-monitor",
+    "vendor": "Asus",
+    "product_type": "Gaming Monitor",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:21:51+00:00",
+    "variants": [
+     {
+      "variant_id": "50967964090626",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "149.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "OG-PC-0134",
+      "url": "https://outgeeked.net/products/asus-tuf-gaming-vg249qm5a-24-240hz-0-3ms-monitor?variant=50967964090626"
+     }
+    ],
+    "description": "The Asus TUF Gaming VG249QM5A 24\" 240Hz 0.3ms Monitor is a 24-inch gaming display from the Asus TUF Gaming line, with a 240Hz refresh rate and a 0.3ms response time.\nIt suits fast competitive games, where a high refresh rate and quick response help motion look smoother and clearer. It is a good fit for players who want a compact 24-inch screen for esports titles and a PC that can push high frame rates. Browse more gaming monitors to compare.\nHighlights\n24-inch screen size\n240Hz refresh rate\n0.3ms response time\nPart of the Asus TUF Gaming series\nModel VG249QM5A\nBest for\nCompetitive and esports gaming at high frame rates\nFast shooters and racing games where motion clarity matters\nDesks that need a compact 24-inch gaming display\nUpgrading from a standard refresh rate monitor\nCompatibility and related parts\nTo get the full benefit of 240Hz, your graphics card needs to deliver high frame rates in the games you play, and you should connect it with a port and cable on your GPU that support high refresh rates. Check the outputs on your graphics card against the monitor's inputs before you buy. If you are planning a new system, the PC builder checks part compatibility, and parts bought as part of a PC build get free assembly and testing. You can also see other Asus products or our full gaming range."
+   }
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://electroslab.com/products/brand-new-monitor-gaming-aoc-24g15n-24-inch-ips-fhd-adaptive-sync-0-5ms-185hz",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:21:51+00:00",
+   "sha256": "bf9229853bc25f7b805e0594e47f90b141181ecb28e577e8f4f724b321ab3f15",
+   "product": {
+    "shop": "Electroslab",
+    "shop_id": "electroslab",
+    "title": "Brand New Monitor Gaming AOC 24G15N 24 Inch IPS FHD Adaptive Sync 0.5ms 180HZ",
+    "url": "https://electroslab.com/products/brand-new-monitor-gaming-aoc-24g15n-24-inch-ips-fhd-adaptive-sync-0-5ms-185hz",
+    "vendor": "AOC",
+    "product_type": "Monitors",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:21:51+00:00",
+    "variants": [
+     {
+      "variant_id": "47126517579943",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "145.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "01-1-1-4184.001",
+      "url": "https://electroslab.com/products/brand-new-monitor-gaming-aoc-24g15n-24-inch-ips-fhd-adaptive-sync-0-5ms-185hz?variant=47126517579943"
+     }
+    ],
+    "description": "24G15N\n23.8\" 180Hz Gaming Monitor\nAOC 24G15 is a 23.8 inch gaming monitor made with a VA panel, equipped with Adaptive-Sync technology, guaranteeing you unbeatable gaming experience. With a 180Hz refresh rate and 1ms response time your display will be equipped to perform at a pro gaming standard. Enjoy an ultra-smooth experience with no visible screen blur to ensure you're always prepped to win!\n...\n1920 × 1080 (FHD)\n180Hz\n1ms\nAdaptive Sync\nHDR10\nVA"
+   }
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://isolvedit.me/policies/shipping-policy",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T05:21:51+00:00",
+   "sha256": "666332f30c9117f3e15ec215fc323cbc91a1e1ff0684b83532e7a03001900f85",
+   "excerpt": "Shipping policy | iSolved IT\nSkip to content\nYour cart is empty\nContinue shopping\nHave an account?\nLog in to check out faster.\nYour cart\nLoading...\nEstimated total\n$0.00 USD\n✅ All prices include VAT – nothing extra to pay. Discounts and shipping calculated at checkout.\nCheck out\n🎄 Christmas deals are live — order on WhatsApp\n✅ All prices include VAT — nothing extra to pay\n💵 Cash on delivery\n🛡️ 6-month warranty on used laptops\nShop\nApple\nApple\nApple Accessories\nApple Macbook\nApple iPad\nGaming\nGaming\nGaming Laptops\nGaming Monitors\nGaming Consoles\nGaming Accessories\nLaptops\nLaptops\nApple Laptops\nAsus Laptops\nAcer Laptops\nDell Laptops\nHp laptops\nLenovo Laptops\nMsi Laptops\nSecond Hand Laptops\nSony Laptops\nLaptop Parts\nDesktops\nDesktops\nAll Desktops & All-in-Ones\nDesktop PCs\nAll-in-One PCs\nComputer Parts\nComputer Parts\nMotherboards\nCPU's\nGPU's\nStorages\nRAM's\nCases and Chassis\nPower Supply\nAccessories\nAccessories\nAdapters & Converters\nBackpacks & Bags\nCables\nExternal Hard Drives\nFlash Drives & SD Cards\nMobile Accessories\nPower Banks\nChargers\nPhone Holders & Car Mounts\nDocking Stations & USB-C Hubs\nLaptop Stands & Coolers\nWebcams\nWireless Presenters\nInks & Toners\nMouse\nMouse Pads & Wrist Pads\nKeyboards\nAudio\nAudio\nEarbuds\nSpeakers\nHeadsets\nMicrophones\nElectronics\nElectronics\nTablets\nGadgets\nMonitors\nPrinters & Scanners\nPaper Shredders\nPOS & Barcode Scanners\nNetworking Products\nNetworking Products\nFiber Optic\nNetworking Accessories\nSwitches\nNetwork & Server Cabinets\nRouters & Modems\nC",
+   "quoted": [
+    {
+     "quote": "🚚 Delivery all over Lebanon",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://karizmamegastore.com/products/msi-g244f-e2-24-180hz",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:21:51+00:00",
+   "sha256": "4390a2f045420fc4ad239ea75cd3ff0531e0965b4c2e1a13f37905097725f062",
+   "product": {
+    "shop": "Karizma Megastore",
+    "shop_id": "karizma",
+    "title": "MSI G244F E2 24\" 180HZ",
+    "url": "https://karizmamegastore.com/products/msi-g244f-e2-24-180hz",
+    "vendor": "MSI",
+    "product_type": "Monitors",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:21:51+00:00",
+    "variants": [
+     {
+      "variant_id": "46089696051389",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "150.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/msi-g244f-e2-24-180hz?variant=46089696051389"
+     }
+    ],
+    "description": "Screen Size: 24 inches\nResolution: 1920 x 1080 (Full HD)\nRefresh Rate: 180Hz\nPanel Type: IPS\nResponse Time: 1ms (MPRT)\nBrightness: 250 nits\nContrast Ratio: 1000:1\nConnectivity: 2x HDMI 2.0, 1x DisplayPort 1.2, 1x 3.5mm Audio Jack\nStand Features: Height adjustable, tilt, swivel, and pivot\nSpecial Technologies: AMD FreeSync Premium, Flicker-Free, Blue Light Filter\n1 Year Warranty"
+   }
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://electroslab.com/policies/shipping-policy",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:21:51+00:00",
+   "sha256": "3000ab4ec1e4d0163ae0c57f6b72dbd303a13b632f834629a2d3e2ce825da6d5",
+   "excerpt": "Shipping policy\nWEBSITE ORDERS ONLY⚡\nNOVEMBER DISCOUNTS + ⚡FREE DELIVERY ON ORDERS OF $20 OR MORE⚡\nTHROUGH NOV 30\n0\nView All\nNo result found for your search.\nHome\nShipping policy\nShipping policy\na {\ntext-decoration: none;\ncolor: #464feb;\n}\ntr th, tr td {\nborder: 1px solid #e6e6e6;\n}\ntr th {\nbackground-color: #f5f5f5;\n}\nShipping Policy\nDelivery Coverage & Rates\nWe deliver across all of Lebanon for a flat rate of $4.\nFree delivery may apply during promotions or on selected items.\nDelivery Time\nThe estimated delivery time begins once your order is placed and confirmed.\nBeirut: Delivery within 1–3 business days.\nOutside Beirut: Delivery within 3–5 business days.\nCustom, special-order, or high-demand items may require additional time.\nOnce your order has been shipped, you will receive order confirmation and tracking details.\nInternational Shipping\nWe currently ship only within Lebanon.\nInternational shipping may become available in the future.\nLost or Stolen Packages\nElectroSlab is not responsible for lost or stolen packages after delivery confirmation.\nIf your order is marked as delivered but has not been received, please:\nCheck with your local courier or post office.\nCheck with neighbors, building reception, or security personnel.\nContact us at info@electroslab.com, and we will assist where possible.\nBusiness Days\nBusiness days are Monday through Saturday, excluding public holidays.\nContact\nFor shipping questions or delivery issues, please contact us at info@electroslab.com.\nThi",
+   "quoted": [
+    {
+     "quote": "WEBSITE ORDERS ONLY⚡ | NOVEMBER DISCOUNTS + ⚡FREE DELIVERY ON ORDERS OF $20 OR MORE⚡ | THROUGH NOV 30",
+     "found": true
+    },
+    {
+     "quote": "We deliver across all of Lebanon for a flat rate of $4.",
+     "found": true
+    }
+   ]
+  }
+ ]
+}

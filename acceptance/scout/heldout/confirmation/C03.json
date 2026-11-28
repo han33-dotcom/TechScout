@@ -1,0 +1,1350 @@
+{
+ "run_id": "scout-c03-20261128T050759",
+ "request": {
+  "id": "C03",
+  "text": "I want the new Wi-Fi version of the Xiaomi Redmi Pad 2, 8 GB RAM and 256 GB storage. What would one cost delivered to Tripoli?",
+  "mode": "delivery",
+  "destination": "Tripoli",
+  "category": "tablet",
+  "run_id": "scout-c03-20261128T050759"
+ },
+ "status": "offers",
+ "message": "The clearest delivered price is Electroslab: $275.00, with free delivery to Tripoli under its website promotion through Nov 30 (orders of $20 or more). The listing confirms Redmi Pad 2 Wi-Fi, 8GB/256GB, gray, with a cover—but does not explicitly confirm brand-new condition.\nOther in-stock options:\n• OutGeeked: $265.00 for the exact 8GB/256GB Wi-Fi configuration; delivery fee and new condition unconfirmed.\n• Abed Tahan: $245.00 for an 8GB/256GB Pad 2; Wi-Fi connectivity, new condition and delivery fee remain unconfirmed.\nI’d favor Electroslab for the documented delivered cost, provided you verify it is brand new before ordering.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "best",
+   "shop": "Electroslab",
+   "shop_id": "electroslab",
+   "title": "Tablet XIAOMI REDMI PAD 2 256GB/8GB WIFI WITH COVER GRAY 2 YEAR WARRANTY 11 inch",
+   "variant": "Default Title",
+   "url": "https://electroslab.com/products/tablet-xiaomi-redmi-pad-2-256gb-8gb-wifi-with-cover-gray-2-year-warranty-11-inch?variant=51424572866727",
+   "price": "275.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "exact",
+   "identity_reason": "Title explicitly identifies Redmi Pad 2, 256GB/8GB and Wi-Fi.",
+   "delivery_fee": "0.00",
+   "total": "275.00",
+   "total_basis": "listed price + delivery fee published by electroslab (\"WEBSITE ORDERS ONLY⚡ | NOVEMBER DISCOUNTS + ⚡FREE DELIVERY ON ORDERS OF $20 OR MORE⚡ | THROUGH NOV 30\", T5)",
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "Redmi Pad 2 Wi-Fi, 8GB RAM and 256GB storage",
+     "status": "met",
+     "quote": "Tablet XIAOMI REDMI PAD 2 256GB/8GB WIFI WITH COVER GRAY 2 YEAR WARRANTY 11 inch",
+     "obs": "P10",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Brand new",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P10",
+     "url": "https://electroslab.com/products/tablet-xiaomi-redmi-pad-2-256gb-8gb-wifi-with-cover-gray-2-year-warranty-11-inch",
+     "read": "https://electroslab.com/products/tablet-xiaomi-redmi-pad-2-256gb-8gb-wifi-with-cover-gray-2-year-warranty-11-inch.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:08:57+00:00",
+     "sha256": "28f32bdd269cc2e4d494c43ea4e2ed55f04b0262207c3a9d06bfd3d34f1a312a"
+    },
+    {
+     "obs": "T5",
+     "url": "https://electroslab.com/policies/shipping-policy",
+     "source": "shop delivery terms",
+     "observed_at": "2026-11-28T05:08:57+00:00",
+     "sha256": "cefede69a3a5749fc1c617c4a8b09ddb93366533acf556ae4e5d8a9f5128fba2"
+    }
+   ],
+   "seller_basis": "Electroslab: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  },
+  {
+   "tier": "alternative",
+   "shop": "Abed Tahan",
+   "shop_id": "abed_tahan",
+   "title": "MI Xiaomi Pad 2- 11\"- 8GB- 256GB Storage- Gray",
+   "variant": "Default Title",
+   "url": "https://abedtahan.com/products/mi-xiaomi-pad-2-8gb-256gb-storage-gray?variant=45302448193715",
+   "price": "245.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "near",
+   "identity_reason": "Pad 2 with matching memory and storage, but the listing does not explicitly establish Redmi branding or Wi-Fi-only connectivity.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "not confirmed: Wi-Fi version",
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "8GB RAM and 256GB storage",
+     "status": "met",
+     "quote": "MI Xiaomi Pad 2- 11\"- 8GB- 256GB Storage- Gray",
+     "obs": "P11",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Wi-Fi version",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Brand new",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P11",
+     "url": "https://abedtahan.com/products/mi-xiaomi-pad-2-8gb-256gb-storage-gray",
+     "read": "https://abedtahan.com/products/mi-xiaomi-pad-2-8gb-256gb-storage-gray.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:08:57+00:00",
+     "sha256": "964b097f2a0db854e0e79535da10bbe89da338864b79477d3619096da9ca65ea"
+    }
+   ],
+   "seller_basis": "Abed Tahan: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  },
+  {
+   "tier": "alternative",
+   "shop": "OutGeeked",
+   "shop_id": "outgeeked",
+   "title": "Redmi Pad 2 11-inch",
+   "variant": "Graphite Gray / 8GB/256 / WiFi",
+   "url": "https://outgeeked.net/products/redmi-pad-2-with-cover?variant=47452731736322",
+   "price": "265.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "near",
+   "identity_reason": "Redmi Pad 2 with the requested 8GB/256GB WiFi variant.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "8GB RAM, 256GB storage and Wi-Fi",
+     "status": "met",
+     "quote": "Graphite Gray / 8GB/256 / WiFi",
+     "obs": "P13",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Brand new",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P13",
+     "url": "https://outgeeked.net/products/redmi-pad-2-with-cover",
+     "read": "https://outgeeked.net/products/redmi-pad-2-with-cover.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:08:57+00:00",
+     "sha256": "fc82c6c52a4fe7db78228f8004d027d4426dcc9fd6512c2da35dfa2fa9c728c6"
+    }
+   ],
+   "seller_basis": "OutGeeked: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": [
+    "requested 256 GB not in the listed variant"
+   ]
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P10",
+   "variant_id": "51424572866727",
+   "identity": "exact",
+   "identity_reason": "Title explicitly identifies Redmi Pad 2, 256GB/8GB and Wi-Fi.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "Redmi Pad 2 Wi-Fi, 8GB RAM and 256GB storage",
+     "status": "met",
+     "evidence_obs": "P10",
+     "quote": "Tablet XIAOMI REDMI PAD 2 256GB/8GB WIFI WITH COVER GRAY 2 YEAR WARRANTY 11 inch"
+    },
+    {
+     "requirement": "Brand new",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": "T5",
+   "delivery_quote": "WEBSITE ORDERS ONLY⚡ | NOVEMBER DISCOUNTS + ⚡FREE DELIVERY ON ORDERS OF $20 OR MORE⚡ | THROUGH NOV 30",
+   "delivery_fee_usd": "0",
+   "free_delivery_over_usd": "20",
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P13",
+   "variant_id": "47452731736322",
+   "identity": "exact",
+   "identity_reason": "Redmi Pad 2 with the requested 8GB/256GB WiFi variant.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "8GB RAM, 256GB storage and Wi-Fi",
+     "status": "met",
+     "evidence_obs": "P13",
+     "quote": "Graphite Gray / 8GB/256 / WiFi"
+    },
+    {
+     "requirement": "Brand new",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": null,
+   "delivery_quote": null,
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P11",
+   "variant_id": "45302448193715",
+   "identity": "near",
+   "identity_reason": "Pad 2 with matching memory and storage, but the listing does not explicitly establish Redmi branding or Wi-Fi-only connectivity.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "8GB RAM and 256GB storage",
+     "status": "met",
+     "evidence_obs": "P11",
+     "quote": "MI Xiaomi Pad 2- 11\"- 8GB- 256GB Storage- Gray"
+    },
+    {
+     "requirement": "Wi-Fi version",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Brand new",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": null,
+   "delivery_quote": null,
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Search exact model and memory with common spellings.",
+   "at_s": 11.2,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "Redmi Pad 2 8 256"
+    },
+    {
+     "tool": "search",
+     "query": "Xiaomi Redmi Pad 2 WiFi"
+    },
+    {
+     "tool": "search",
+     "query": "Redmi Pad 2 256GB"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Open strongest offers across four shops, plus unavailable exact configuration.",
+   "at_s": 57.0,
+   "calls": [
+    {
+     "tool": "open",
+     "url": "https://outgeeked.net/products/redmi-pad-2-with-cover"
+    },
+    {
+     "tool": "open",
+     "url": "https://abedtahan.com/products/mi-xiaomi-pad-2-8gb-256gb-storage-gray"
+    },
+    {
+     "tool": "open",
+     "url": "https://electroslab.com/products/tablet-xiaomi-redmi-pad-2-256gb-8gb-wifi-with-cover-gray-2-year-warranty-11-inch"
+    },
+    {
+     "tool": "open",
+     "url": "https://classic-phones.com/products/xiaomi-redmi-pad-se"
+    },
+    {
+     "tool": "open",
+     "url": "https://jakcomputer.com/products/redmi-pad-2-8gbram-256gbrom"
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Finish with checked listings; new condition is not established. Delivered total is supported only for Electroslab's dated promotion.",
+   "at_s": 78.3,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 29797,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 33094,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 33985,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 484,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 515,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 797,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 1890,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 1938,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 8484,
+   "usage": {
+    "actual_usd": "0.0041805",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3232,
+     "output_tokens": 113,
+     "total_tokens": 3345
+    },
+    "latency_ms": 4187,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 11860,
+   "usage": {
+    "actual_usd": "0.019723",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 8961,
+     "output_tokens": 235,
+     "total_tokens": 9196
+    },
+    "latency_ms": 7297,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 18735,
+   "usage": {
+    "actual_usd": "0.035523",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 13121,
+     "output_tokens": 775,
+     "total_tokens": 13896
+    },
+    "latency_ms": 14656,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": true
+  }
+ ],
+ "retailer_requests": 91,
+ "seconds": 78.3,
+ "spend": {
+  "settled_usd": "0.0594265",
+  "uncertain_usd": "0",
+  "model_calls": 3,
+  "ledger_job": "scout-c03-20261128T050759"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/redmi-pad-2-4gb-128gb-storage-9-7-silver",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:08:40+00:00",
+   "sha256": "2960e17fa358b554b99bb98ccbd4323ce7f8a5c06f2c6b036d88b8085fafedc2",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "MI Xiaomi Pad 2- 9.7\"- 4GB- 128GB Storage - Silver",
+    "url": "https://abedtahan.com/products/redmi-pad-2-4gb-128gb-storage-9-7-silver",
+    "vendor": "MI",
+    "product_type": "Tablets",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:08:40+00:00",
+    "variants": [
+     {
+      "variant_id": "45523651756211",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "185.00",
+      "compare_at": "200.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "TAB-PAD 2 128GB SLV",
+      "url": "https://abedtahan.com/products/redmi-pad-2-4gb-128gb-storage-9-7-silver?variant=45523651756211"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://karizmamegastore.com/products/redmi-pad-2-pro-256gb-8gb-ram",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:08:42+00:00",
+   "sha256": "4e010ed6948e3b7e26e219d9a15914e4ffefa4e7e9bb7c3fbba556d0af015eb7",
+   "product": {
+    "shop": "Karizma Megastore",
+    "shop_id": "karizma",
+    "title": "Redmi Pad 2 Pro – 256GB / 8GB RAM",
+    "url": "https://karizmamegastore.com/products/redmi-pad-2-pro-256gb-8gb-ram",
+    "vendor": "Redmi",
+    "product_type": "Tablets",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:08:42+00:00",
+    "variants": [
+     {
+      "variant_id": "48449952481469",
+      "title": "256GB / 8GB RAM",
+      "options": {
+       "Configuration": "256GB / 8GB RAM"
+      },
+      "price": "400.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/redmi-pad-2-pro-256gb-8gb-ram?variant=48449952481469"
+     }
+    ],
+    "description": "Redmi Pad 2 Pro tablet with 256GB storage and 8GB RAM."
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/xiaomi-redmi-pad-6-128gb-graphite-gray",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:08:42+00:00",
+   "sha256": "a8ddbe910e93677512d146d04b03bf7ec6c876f95cfe7166d14c9303bf890563",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Xiaomi redmi pad 2 (9.7\") 2025",
+    "url": "https://classic-phones.com/products/xiaomi-redmi-pad-6-128gb-graphite-gray",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:08:42+00:00",
+    "variants": [
+     {
+      "variant_id": "49347347841259",
+      "title": "8/128gb (4G)",
+      "options": {
+       "Size": "8/128gb (4G)"
+      },
+      "price": "219.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/xiaomi-redmi-pad-6-128gb-graphite-gray?variant=49347347841259"
+     },
+     {
+      "variant_id": "49347347874027",
+      "title": "8/128gb (Wi-Fi)",
+      "options": {
+       "Size": "8/128gb (Wi-Fi)"
+      },
+      "price": "199.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/xiaomi-redmi-pad-6-128gb-graphite-gray?variant=49347347874027"
+     }
+    ],
+    "description": "Xiaomi Redmi Pad 2 9.7 (Bundle with Cover)\n9.7″ 1280×2560 pixels Display\n8MP 1080p Main Camera\nSnapdragon 6s 4G Gen 2\n7600mAh 18W Battery.\nDescription\nDesign\nGraphite Gray | Silver\nHeight: 226.51mm\nWidth: 147.97mm\nThickness: 7.4mm\nWeight: 406g\nScreen-to-body ratio: 84.70%\nDisplay\n9.7″ 2K 120Hz crystal-clear display\n9.7″\n16:10\n2048 x 1280\nRefresh rate: 120Hz\nTouch sampling rate: up to 180Hz\nBrightness: 500 nits (typ), 600 nits (Outdoor mode)\nTÜV Rheinland Low Blue Light (Software Solution) Certified\nTÜV Rheinland Flicker Free Certified\nTÜV Rheinland Circadian Friendly Certified\nPerformance\nSnapdragon® 6s 4G Gen 2 Mobile Platform\n6nm manufacturing process\nCPU: 8-core\nGPU: Adreno 610\nStorage & RAM\n4GB + 128GB\nLPDDR4X + UFS2.2\nCamera\n8MP rear camera\nf/2.0, 1.12μm pixel size\nRear camera video recording\n1080P 1920 x 1080 30fps\n720P 1280 x 720 30fps\n5MP front camera\nf/2.2, 1.12μm pixel size\nFront camera video recording\n1080P 1920 x 1080 30fps\n720P 1280 x 720 30fps\nBattery & Charging\n7600mAh (typ)\n18 Fast charging (In box 15W)\nUSB Type-C\nSecurity\nAI face unlock\nConnectivity\nWi-Fi 5 capability\n*Wi-Fi 5 capability may vary based on regional availability and local network support.\n*Wi-Fi connectivity (including Wi-Fi frequency bands, Wi-Fi standards and other features as ratified in IEEE Standard 802.11 specifications) may vary based on regional availability and local network support. The function may be added via OTA when and where applicable.\n802.11a/b/g/n/ac, 2.4GHz&5GHz, 1×1 SISO, W"
+   }
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://karizmamegastore.com/products/redmi-pad-2",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:08:42+00:00",
+   "sha256": "0c0f2924e244e711146f0fd03c2ecb105b846087bdfbbe9ade817bbb7f0d4973",
+   "product": {
+    "shop": "Karizma Megastore",
+    "shop_id": "karizma",
+    "title": "Redmi Pad 2",
+    "url": "https://karizmamegastore.com/products/redmi-pad-2",
+    "vendor": "Redmi",
+    "product_type": "Tablets",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:08:42+00:00",
+    "variants": [
+     {
+      "variant_id": "48293803720893",
+      "title": "128GB/4GB / Grey",
+      "options": {
+       "Storage": "128GB/4GB",
+       "Color": "Grey"
+      },
+      "price": "200.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/redmi-pad-2?variant=48293803720893"
+     },
+     {
+      "variant_id": "48293803753661",
+      "title": "128GB/4GB / Mist Blue",
+      "options": {
+       "Storage": "128GB/4GB",
+       "Color": "Mist Blue"
+      },
+      "price": "200.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/redmi-pad-2?variant=48293803753661"
+     },
+     {
+      "variant_id": "48293803786429",
+      "title": "128GB/4GB 4G / Grey",
+      "options": {
+       "Storage": "128GB/4GB 4G",
+       "Color": "Grey"
+      },
+      "price": "235.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/redmi-pad-2?variant=48293803786429"
+     },
+     {
+      "variant_id": "48293803819197",
+      "title": "128GB/4GB 4G / Mist Blue",
+      "options": {
+       "Storage": "128GB/4GB 4G",
+       "Color": "Mist Blue"
+      },
+      "price": "235.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/redmi-pad-2?variant=48293803819197"
+     },
+     {
+      "variant_id": "46987744542909",
+      "title": "256GB/8GB / Grey",
+      "options": {
+       "Storage": "256GB/8GB",
+       "Color": "Grey"
+      },
+      "price": "300.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/redmi-pad-2?variant=46987744542909"
+     },
+     {
+      "variant_id": "46987744575677",
+      "title": "256GB/8GB / Mist Blue",
+      "options": {
+       "Storage": "256GB/8GB",
+       "Color": "Mist Blue"
+      },
+      "price": "300.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/redmi-pad-2?variant=46987744575677"
+     }
+    ],
+    "description": "The Redmi Pad 2 delivers powerful performance in a sleek, portable design. Featuring a vibrant display and responsive processor, it handles streaming, gaming, and productivity tasks with ease. The long-lasting battery keeps you connected throughout the day, while the lightweight build makes it perfect for on-the-go use. Whether you're browsing, working, or entertaining yourself, the Redmi Pad 2 offers excellent value and reliability for everyday computing needs."
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/xiaomi-redmi-pad-se",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:08:43+00:00",
+   "sha256": "f32e1403b490fd35e96a0d00243df7ec5b897f940047cefa1aad8fd55bb35b7f",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Xiaomi Redmi Pad 2 (11\") 2026",
+    "url": "https://classic-phones.com/products/xiaomi-redmi-pad-se",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:08:43+00:00",
+    "variants": [
+     {
+      "variant_id": "49347333587179",
+      "title": "8/128gb",
+      "options": {
+       "Size": "8/128gb"
+      },
+      "price": "229.00",
+      "compare_at": "185.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/xiaomi-redmi-pad-se?variant=49347333587179"
+     },
+     {
+      "variant_id": "49347333619947",
+      "title": "16/256gb",
+      "options": {
+       "Size": "16/256gb"
+      },
+      "price": "275.00",
+      "compare_at": "185.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/xiaomi-redmi-pad-se?variant=49347333619947"
+     },
+     {
+      "variant_id": "49347333652715",
+      "title": "16/256gb (4G)",
+      "options": {
+       "Size": "16/256gb (4G)"
+      },
+      "price": "289.00",
+      "compare_at": "185.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/xiaomi-redmi-pad-se?variant=49347333652715"
+     }
+    ],
+    "description": "Xiaomi Redmi Pad 2\nThe Xiaomi Redmi Pad 2 Android tablet is designed for immersive entertainment, reliable everyday performance, and long battery life in a lightweight mobile form factor. A large 11.0 inch IPS LCD screen is featured with a smooth 90Hz refresh rate and bright 600 nits (HBM) peak brightness, allowing videos, games, and browsing to be enjoyed with vivid colors and clarity. Slim bezels and an 83% screen-to-body ratio are provided to maximize viewing area, while robust build quality is supported by a glass front and aluminum frame.\nEfficient multimedia performance is enabled through a Mediatek Helio G100 Ultra chipset paired with responsive graphics, allowing casual gaming and everyday apps to be handled with ease. Dual stereo speakers with Dolby Atmos support and 24-bit/192kHz Hi-Res audio are included for enhanced sound quality. A long-lasting 9000mAh battery with 18W wired charging is integrated, making all-day use possible for work, study, and entertainment on the go.\nKey Features\n• Large 11.0 inch tablet display is provided, allowing immersive viewing with smooth 90Hz refresh.\n• Powerful multimedia performance is supported through a Mediatek Helio G100 Ultra processor.\n• Long battery life is ensured, allowing extended daily usage with 9000mAh capacity and fast charging.\n• Dual stereo speakers with Dolby Atmos are included, enabling rich and clear audio playback.\n• Lightweight and durable build is featured, allowing confident handling with glass front and alum"
+   }
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://karizmamegastore.com/products/redmi-pad-2-4g-256gb-8gb-ram",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:08:43+00:00",
+   "sha256": "5e2fc078a02c9089ac7b837dc1f0ac00253a4ffee294bee7c057dfcc36404402",
+   "product": {
+    "shop": "Karizma Megastore",
+    "shop_id": "karizma",
+    "title": "Redmi Pad 2 4G – 256GB / 8GB RAM",
+    "url": "https://karizmamegastore.com/products/redmi-pad-2-4g-256gb-8gb-ram",
+    "vendor": "Redmi",
+    "product_type": "Tablets",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:08:43+00:00",
+    "variants": [
+     {
+      "variant_id": "48449952121021",
+      "title": "256GB / 8GB RAM",
+      "options": {
+       "Configuration": "256GB / 8GB RAM"
+      },
+      "price": "320.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/redmi-pad-2-4g-256gb-8gb-ram?variant=48449952121021"
+     }
+    ],
+    "description": "Redmi Pad 2 4G tablet with 256GB storage and 8GB RAM."
+   }
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/xiaomi-redmi-pad-6-128gb-graphite-gray",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:08:43+00:00",
+   "sha256": "a8ddbe910e93677512d146d04b03bf7ec6c876f95cfe7166d14c9303bf890563",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Xiaomi redmi pad 2 (9.7\") 2025",
+    "url": "https://classic-phones.com/products/xiaomi-redmi-pad-6-128gb-graphite-gray",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:08:43+00:00",
+    "variants": [
+     {
+      "variant_id": "49347347841259",
+      "title": "8/128gb (4G)",
+      "options": {
+       "Size": "8/128gb (4G)"
+      },
+      "price": "219.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/xiaomi-redmi-pad-6-128gb-graphite-gray?variant=49347347841259"
+     },
+     {
+      "variant_id": "49347347874027",
+      "title": "8/128gb (Wi-Fi)",
+      "options": {
+       "Size": "8/128gb (Wi-Fi)"
+      },
+      "price": "199.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/xiaomi-redmi-pad-6-128gb-graphite-gray?variant=49347347874027"
+     }
+    ],
+    "description": "Xiaomi Redmi Pad 2 9.7 (Bundle with Cover)\n9.7″ 1280×2560 pixels Display\n8MP 1080p Main Camera\nSnapdragon 6s 4G Gen 2\n7600mAh 18W Battery.\nDescription\nDesign\nGraphite Gray | Silver\nHeight: 226.51mm\nWidth: 147.97mm\nThickness: 7.4mm\nWeight: 406g\nScreen-to-body ratio: 84.70%\nDisplay\n9.7″ 2K 120Hz crystal-clear display\n9.7″\n16:10\n2048 x 1280\nRefresh rate: 120Hz\nTouch sampling rate: up to 180Hz\nBrightness: 500 nits (typ), 600 nits (Outdoor mode)\nTÜV Rheinland Low Blue Light (Software Solution) Certified\nTÜV Rheinland Flicker Free Certified\nTÜV Rheinland Circadian Friendly Certified\nPerformance\nSnapdragon® 6s 4G Gen 2 Mobile Platform\n6nm manufacturing process\nCPU: 8-core\nGPU: Adreno 610\nStorage & RAM\n4GB + 128GB\nLPDDR4X + UFS2.2\nCamera\n8MP rear camera\nf/2.0, 1.12μm pixel size\nRear camera video recording\n1080P 1920 x 1080 30fps\n720P 1280 x 720 30fps\n5MP front camera\nf/2.2, 1.12μm pixel size\nFront camera video recording\n1080P 1920 x 1080 30fps\n720P 1280 x 720 30fps\nBattery & Charging\n7600mAh (typ)\n18 Fast charging (In box 15W)\nUSB Type-C\nSecurity\nAI face unlock\nConnectivity\nWi-Fi 5 capability\n*Wi-Fi 5 capability may vary based on regional availability and local network support.\n*Wi-Fi connectivity (including Wi-Fi frequency bands, Wi-Fi standards and other features as ratified in IEEE Standard 802.11 specifications) may vary based on regional availability and local network support. The function may be added via OTA when and where applicable.\n802.11a/b/g/n/ac, 2.4GHz&5GHz, 1×1 SISO, W"
+   }
+  },
+  {
+   "obs": "P8",
+   "kind": "product",
+   "url": "https://karizmamegastore.com/products/redmi-pad-3",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:08:43+00:00",
+   "sha256": "684bcf3952c91a93a8a692dbcd2b7c30c7cf723ad46183984b08a0af9e3e0e0d",
+   "product": {
+    "shop": "Karizma Megastore",
+    "shop_id": "karizma",
+    "title": "Redmi Pad 2 9.7",
+    "url": "https://karizmamegastore.com/products/redmi-pad-3",
+    "vendor": "Xiaomi",
+    "product_type": "Tablets",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:08:43+00:00",
+    "variants": [
+     {
+      "variant_id": "48354950578365",
+      "title": "128GB/4GB - WiFi",
+      "options": {
+       "Storage": "128GB/4GB - WiFi"
+      },
+      "price": "210.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/redmi-pad-3?variant=48354950578365"
+     },
+     {
+      "variant_id": "48354950611133",
+      "title": "128GB/4GB - 4G",
+      "options": {
+       "Storage": "128GB/4GB - 4G"
+      },
+      "price": "235.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/redmi-pad-3?variant=48354950611133"
+     },
+     {
+      "variant_id": "48354950643901",
+      "title": "256GB/8GB - WiFi",
+      "options": {
+       "Storage": "256GB/8GB - WiFi"
+      },
+      "price": "300.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/redmi-pad-3?variant=48354950643901"
+     }
+    ],
+    "description": "A big, bright screen built for study sessions.\n9.7\" 2K Display: Sharp, vivid visuals for reading, note-taking, and video.\nSnapdragon 6s Gen 2: Smooth everyday performance for school and streaming.\n7,600mAh Battery: All-day power that easily lasts through classes.\nHyperOS 3: Xiaomi's latest, most refined tablet software experience.\nThe reliable everyday tablet for the new school year."
+   }
+  },
+  {
+   "obs": "P9",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/xiaomi-redmi-pad-6-128gb-graphite-gray",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:08:43+00:00",
+   "sha256": "a8ddbe910e93677512d146d04b03bf7ec6c876f95cfe7166d14c9303bf890563",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Xiaomi redmi pad 2 (9.7\") 2025",
+    "url": "https://classic-phones.com/products/xiaomi-redmi-pad-6-128gb-graphite-gray",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:08:43+00:00",
+    "variants": [
+     {
+      "variant_id": "49347347841259",
+      "title": "8/128gb (4G)",
+      "options": {
+       "Size": "8/128gb (4G)"
+      },
+      "price": "219.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/xiaomi-redmi-pad-6-128gb-graphite-gray?variant=49347347841259"
+     },
+     {
+      "variant_id": "49347347874027",
+      "title": "8/128gb (Wi-Fi)",
+      "options": {
+       "Size": "8/128gb (Wi-Fi)"
+      },
+      "price": "199.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/xiaomi-redmi-pad-6-128gb-graphite-gray?variant=49347347874027"
+     }
+    ],
+    "description": "Xiaomi Redmi Pad 2 9.7 (Bundle with Cover)\n9.7″ 1280×2560 pixels Display\n8MP 1080p Main Camera\nSnapdragon 6s 4G Gen 2\n7600mAh 18W Battery.\nDescription\nDesign\nGraphite Gray | Silver\nHeight: 226.51mm\nWidth: 147.97mm\nThickness: 7.4mm\nWeight: 406g\nScreen-to-body ratio: 84.70%\nDisplay\n9.7″ 2K 120Hz crystal-clear display\n9.7″\n16:10\n2048 x 1280\nRefresh rate: 120Hz\nTouch sampling rate: up to 180Hz\nBrightness: 500 nits (typ), 600 nits (Outdoor mode)\nTÜV Rheinland Low Blue Light (Software Solution) Certified\nTÜV Rheinland Flicker Free Certified\nTÜV Rheinland Circadian Friendly Certified\nPerformance\nSnapdragon® 6s 4G Gen 2 Mobile Platform\n6nm manufacturing process\nCPU: 8-core\nGPU: Adreno 610\nStorage & RAM\n4GB + 128GB\nLPDDR4X + UFS2.2\nCamera\n8MP rear camera\nf/2.0, 1.12μm pixel size\nRear camera video recording\n1080P 1920 x 1080 30fps\n720P 1280 x 720 30fps\n5MP front camera\nf/2.2, 1.12μm pixel size\nFront camera video recording\n1080P 1920 x 1080 30fps\n720P 1280 x 720 30fps\nBattery & Charging\n7600mAh (typ)\n18 Fast charging (In box 15W)\nUSB Type-C\nSecurity\nAI face unlock\nConnectivity\nWi-Fi 5 capability\n*Wi-Fi 5 capability may vary based on regional availability and local network support.\n*Wi-Fi connectivity (including Wi-Fi frequency bands, Wi-Fi standards and other features as ratified in IEEE Standard 802.11 specifications) may vary based on regional availability and local network support. The function may be added via OTA when and where applicable.\n802.11a/b/g/n/ac, 2.4GHz&5GHz, 1×1 SISO, W"
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://abedtahan.com/pages/contact",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:08:43+00:00",
+   "sha256": "db2c6f4ca28e114203b49c4c6b77a05910b04ae5764bc22e8545f3be1e049d71",
+   "excerpt": "Contact\n– Abed Tahan\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & Crepe Makers\nIce Cube, Ice Cream & Yoghurt Makers\nSaj Machines\nL",
+   "quoted": []
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://www.classic-phones.com/policies/shipping-policy",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:08:44+00:00",
+   "sha256": "eda2cba47456d87c3ffc6e6fe8a5a21427a35b2adfb2cdb7added9bd9fafc73d",
+   "excerpt": "Shipping policy\nSkip to content\nDelivery Available All Over Lebanon\nFacebook\nInstagram\nShop All\nCameras\nCameras\nGo to Cameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nLaptops\nLaptops\nGo to Laptops\nMacbook\nNew\nUsed\nTablets\nTablets\nGo to Tablets\nApple\nSamsung\nXiaomi\nBlackview\nModio\nSmart Watch\nSmart Watch\nGo to Smart Watch\nApple\nSamsung\nFitbit\nHuawei\nAmazfit\nXiaomi\nGreen Lion\nProdo\nKieslect\nAccessories\nAccessories\nGo to Accessories\nAdapters & Cables\nStorage\nKids\nScooters\nGaming\nGaming\nGo to Gaming\nNintendo\nPS\nXBOX\nOthers\nPersonal Care\nPersonal Care\nGo to Personal Care\nHome Accessories\nPerfume\nMassage\nOthers\nTech Gadgets\nTech Gadgets\nGo to Tech Gadgets\nKits (Cleaning, Repair...)\nPower Devices\nSmart Devices\nRouters\nBags\nKindle\nStands\nCalculator\nHandy Phones\nAudio\nAudio\nGo to Audio\nEarphones\nSpeakers\nHeadphones\nEarbuds\nMicrophones\nCases\nCases\nGo to Cases\nApple\nSamsung\nOthers\nWatch Accessories\nKeyboards & Mouses\nOthers\nBlogs\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nLebanon\nFast Delivery\nFacebook\nInstagram\nLog in\nSearch\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nSearch\nLog in\n0\n00 items\nSubtotal\n$0\nShop All\nCameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nGo to Cameras\nLaptops\nMacbook\nNew\nUsed\nGo to Laptops\nTablets\nApple\nSamsung\nXiaomi\nBlack",
+   "quoted": []
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://www.karizmamegastore.com/policies/privacy-policy",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:08:44+00:00",
+   "sha256": "a448935270ad2fa3ace967003aff6c0744db8b3337e51b6d8994f2752ae1a386",
+   "excerpt": "Privacy policy – Karizma Megastore\nSkip to content\nReturns extended to 60 days\nFree shipping on your first order\nHome\nCategories\nCategories\nSmart Phones\nSmart Phones\nApple\nXiaomi\nSamsung\nHonor\nTecno\nInfinix\nGadgets\nGadgets\nWearables\nAudio Devices\nPower & Charging\nGaming Consoles\nGaming Consoles\nConsoles\nGames\nGaming Wheels & Peripherals\nLaptops\nLaptops\nGaming Laptops\nOffice Laptops\nComputer Accessories\nComputer Accessories\nGaming Accessories\nMouse & Keyboards\nConnectivity & Hubs\nStorage & Memory\nMonitors\nHeadphones & Earphones\nWiFi and Networking\nContent Creation\nsoundcore\nPitaka\nAnker\nCases\nContact\nHome\nCategories\nCases\nContact\nLogin\n0\nHome\nCategories\nSmart Phones\nApple\nXiaomi\nSamsung\nHonor\nTecno\nInfinix\nGadgets\nWearables\nAudio Devices\nPower & Charging\nGaming Consoles\nConsoles\nGames\nGaming Wheels & Peripherals\nLaptops\nGaming Laptops\nOffice Laptops\nComputer Accessories\nGaming Accessories\nMouse & Keyboards\nConnectivity & Hubs\nStorage & Memory\nMonitors\nHeadphones & Earphones\nWiFi and Networking\nContent Creation\nsoundcore\nPitaka\nAnker\nCases\nContact\nPrivacy policy\nLast updated: September 2, 2024\nThis Privacy Policy describes how Karizma Megastore (the \"Site\", \"we\", \"us\", or \"our\") collects, uses, and discloses your personal information when you visit, use our services, or make a purchase from www.karizmamegastore.com (the \"Site\") or otherwise communicate with us regarding the Site (collectively, the \"Services\"). For purposes of this Privacy Policy, \"you\" and \"your\" means you as t",
+   "quoted": []
+  },
+  {
+   "obs": "P10",
+   "kind": "product",
+   "url": "https://electroslab.com/products/tablet-xiaomi-redmi-pad-2-256gb-8gb-wifi-with-cover-gray-2-year-warranty-11-inch",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:08:57+00:00",
+   "sha256": "28f32bdd269cc2e4d494c43ea4e2ed55f04b0262207c3a9d06bfd3d34f1a312a",
+   "product": {
+    "shop": "Electroslab",
+    "shop_id": "electroslab",
+    "title": "Tablet XIAOMI REDMI PAD 2 256GB/8GB WIFI WITH COVER GRAY 2 YEAR WARRANTY 11 inch",
+    "url": "https://electroslab.com/products/tablet-xiaomi-redmi-pad-2-256gb-8gb-wifi-with-cover-gray-2-year-warranty-11-inch",
+    "vendor": "Electroslab",
+    "product_type": "tablets",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:08:57+00:00",
+    "variants": [
+     {
+      "variant_id": "51424572866727",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "275.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "01-1-6-26.001",
+      "url": "https://electroslab.com/products/tablet-xiaomi-redmi-pad-2-256gb-8gb-wifi-with-cover-gray-2-year-warranty-11-inch?variant=51424572866727"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P11",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/mi-xiaomi-pad-2-8gb-256gb-storage-gray",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:08:57+00:00",
+   "sha256": "964b097f2a0db854e0e79535da10bbe89da338864b79477d3619096da9ca65ea",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "MI Xiaomi Pad 2- 11\"- 8GB- 256GB Storage- Gray",
+    "url": "https://abedtahan.com/products/mi-xiaomi-pad-2-8gb-256gb-storage-gray",
+    "vendor": "MI",
+    "product_type": "Tablets",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:08:57+00:00",
+    "variants": [
+     {
+      "variant_id": "45302448193715",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "245.00",
+      "compare_at": "275.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "TAB-MI-PAD 2 256GB GRAY",
+      "url": "https://abedtahan.com/products/mi-xiaomi-pad-2-8gb-256gb-storage-gray?variant=45302448193715"
+     }
+    ],
+    "description": ""
+   }
+  },
+  {
+   "obs": "P12",
+   "kind": "product",
+   "url": "https://jakcomputer.com/products/redmi-pad-2-8gbram-256gbrom",
+   "shop_id": "jak_computer",
+   "observed_at": "2026-11-28T05:08:57+00:00",
+   "sha256": "c88668a10ac780b4d8067c17e5cb762082d2f0add313de28f041939d74141202",
+   "product": {
+    "shop": "JAK Computer",
+    "shop_id": "jak_computer",
+    "title": "XIAOMI REDMI PAD 2 BUNDLE WITH COVER GRAPHITE GRAY 8GB RAM 256GB ROM",
+    "url": "https://jakcomputer.com/products/redmi-pad-2-8gbram-256gbrom",
+    "vendor": "Xiaomi",
+    "product_type": "Tablet Computers",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:08:57+00:00",
+    "variants": [
+     {
+      "variant_id": "45162803003439",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "265.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "444471",
+      "url": "https://jakcomputer.com/products/redmi-pad-2-8gbram-256gbrom?variant=45162803003439"
+     }
+    ],
+    "description": "Xiaomi Redmi Pad 2 Bundle with Cover (Graphite Gray)\nThe Xiaomi Redmi Pad 2 is an elite, high-performance tablet bundle meticulously engineered to provide a superior multimedia and productivity experience in 2026. This specific configuration features a robust 8GB of RAM and a generous 256GB of internal storage, powered by the advanced MediaTek G100-Ultra chipset. Clad in a professional Graphite Gray metal unibody, this bundle includes the official protective cover, making it the definitive, resilient choice for users who demand a high-resolution 2.5K display and long-lasting endurance in a sleek, travel-ready package.\nKey Features:\n11-inch 2.5K Crystal-Clear Display: Features a stunning $2560 \\times 1600$ resolution with a 16:10 aspect ratio and 1.07 billion colors, delivering vivid, lifelike visuals for professional streaming and creative tasks.\n90Hz AdaptiveSync Refresh Rate: Provides an exceptionally smooth and responsive visual experience that automatically adjusts to your content, reducing motion blur and optimizing battery life.\nMediaTek G100-Ultra Processor: Built on a 6nm process, this octa-core CPU (up to 2.2GHz) provides enhanced performance for lag-free multitasking and efficient daily entertainment.\nElite Memory & Storage (8GB+256GB): Equipped with high-speed LPDDR4X RAM for seamless app switching and ample UFS 2.2 storage, expandable up to 2TB via MicroSD for massive media libraries.\nMassive 9000mAh Endurance Battery: Engineered for unstoppable longevity, providi"
+   }
+  },
+  {
+   "obs": "P13",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/redmi-pad-2-with-cover",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:08:57+00:00",
+   "sha256": "fc82c6c52a4fe7db78228f8004d027d4426dcc9fd6512c2da35dfa2fa9c728c6",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "Redmi Pad 2 11-inch",
+    "url": "https://outgeeked.net/products/redmi-pad-2-with-cover",
+    "vendor": "Redmi",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:08:57+00:00",
+    "variants": [
+     {
+      "variant_id": "47452731703554",
+      "title": "Graphite Gray / 4GB/128 / WiFi",
+      "options": {
+       "Color": "Graphite Gray",
+       "Storage": "4GB/128",
+       "Network": "WiFi"
+      },
+      "price": "219.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/redmi-pad-2-with-cover?variant=47452731703554"
+     },
+     {
+      "variant_id": "47452731736322",
+      "title": "Graphite Gray / 8GB/256 / WiFi",
+      "options": {
+       "Color": "Graphite Gray",
+       "Storage": "8GB/256",
+       "Network": "WiFi"
+      },
+      "price": "265.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/redmi-pad-2-with-cover?variant=47452731736322"
+     },
+     {
+      "variant_id": "47452731769090",
+      "title": "Graphite Gray / 8GB/256 / LTE",
+      "options": {
+       "Color": "Graphite Gray",
+       "Storage": "8GB/256",
+       "Network": "LTE"
+      },
+      "price": "279.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/redmi-pad-2-with-cover?variant=47452731769090"
+     },
+     {
+      "variant_id": "47452731801858",
+      "title": "Mint Green / 4GB/128 / WiFi",
+      "options": {
+       "Color": "Mint Green",
+       "Storage": "4GB/128",
+       "Network": "WiFi"
+      },
+      "price": "219.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/redmi-pad-2-with-cover?variant=47452731801858"
+     },
+     {
+      "variant_id": "47452731834626",
+      "title": "Mint Green / 8GB/256 / WiFi",
+      "options": {
+       "Color": "Mint Green",
+       "Storage": "8GB/256",
+       "Network": "WiFi"
+      },
+      "price": "265.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/redmi-pad-2-with-cover?variant=47452731834626"
+     },
+     {
+      "variant_id": "47452731867394",
+      "title": "Mint Green / 8GB/256 / LTE",
+      "options": {
+       "Color": "Mint Green",
+       "Storage": "8GB/256",
+       "Network": "LTE"
+      },
+      "price": "279.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/redmi-pad-2-with-cover?variant=47452731867394"
+     },
+     {
+      "variant_id": "47452731900162",
+      "title": "Lavender Purple / 4GB/128 / WiFi",
+      "options": {
+       "Color": "Lavender Purple",
+       "Storage": "4GB/128",
+       "Network": "WiFi"
+      },
+      "price": "219.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/redmi-pad-2-with-cover?variant=47452731900162"
+     },
+     {
+      "variant_id": "47452731932930",
+      "title": "Lavender Purple / 8GB/256 / WiFi",
+      "options": {
+       "Color": "Lavender Purple",
+       "Storage": "8GB/256",
+       "Network": "WiFi"
+      },
+      "price": "265.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/redmi-pad-2-with-cover?variant=47452731932930"
+     },
+     {
+      "variant_id": "47452731965698",
+      "title": "Lavender Purple / 8GB/256 / LTE",
+      "options": {
+       "Color": "Lavender Purple",
+       "Storage": "8GB/256",
+       "Network": "LTE"
+      },
+      "price": "279.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://outgeeked.net/products/redmi-pad-2-with-cover?variant=47452731965698"
+     }
+    ],
+    "description": "Overview\nThe Redmi Pad 2 11-inch is a feature-rich Android tablet designed for users who demand a premium visual experience without breaking the bank. Powered by the MediaTek Helio G100-Ultra octa-core processor built on a 6nm architecture, it delivers smooth, responsive performance whether you're streaming, studying, or multitasking. Running Android 15 with HyperOS 2, it combines a refined software experience with capable hardware — making it one of the most compelling tablet options available in Lebanon starting from $219.\nKey Features\n2.5K IPS LCD Display: The 11.0-inch screen outputs a crisp 2560 × 1600 resolution with 1.07 billion colours, delivering vivid, true-to-life visuals for media and productivity alike.\n90Hz AdaptiveSync: Smooth, adaptive refresh rate technology ensures fluid scrolling and responsive touch interactions while helping manage power consumption intelligently.\nMediaTek Helio G100-Ultra (6nm): An octa-core processor manufactured on an efficient 6nm process provides strong CPU and GPU performance for gaming, streaming, and everyday tasks.\nMali-G57 MC2 GPU: Handles graphics-intensive applications and games with capable rendering performance for a tablet at this price point.\n9000mAh Battery: A large-capacity battery keeps you going through extended sessions of browsing, video playback, and work without frequent trips to the charger.\n18W Wired Charging: Refuel the 9000mAh cell efficiently with 18W wired fast charging support.\nDual Cameras: An 8MP rear came"
+   }
+  },
+  {
+   "obs": "P14",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/xiaomi-redmi-pad-se",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:08:57+00:00",
+   "sha256": "f32e1403b490fd35e96a0d00243df7ec5b897f940047cefa1aad8fd55bb35b7f",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Xiaomi Redmi Pad 2 (11\") 2026",
+    "url": "https://classic-phones.com/products/xiaomi-redmi-pad-se",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:08:57+00:00",
+    "variants": [
+     {
+      "variant_id": "49347333587179",
+      "title": "8/128gb",
+      "options": {
+       "Size": "8/128gb"
+      },
+      "price": "229.00",
+      "compare_at": "185.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/xiaomi-redmi-pad-se?variant=49347333587179"
+     },
+     {
+      "variant_id": "49347333619947",
+      "title": "16/256gb",
+      "options": {
+       "Size": "16/256gb"
+      },
+      "price": "275.00",
+      "compare_at": "185.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/xiaomi-redmi-pad-se?variant=49347333619947"
+     },
+     {
+      "variant_id": "49347333652715",
+      "title": "16/256gb (4G)",
+      "options": {
+       "Size": "16/256gb (4G)"
+      },
+      "price": "289.00",
+      "compare_at": "185.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/xiaomi-redmi-pad-se?variant=49347333652715"
+     }
+    ],
+    "description": "Xiaomi Redmi Pad 2\nThe Xiaomi Redmi Pad 2 Android tablet is designed for immersive entertainment, reliable everyday performance, and long battery life in a lightweight mobile form factor. A large 11.0 inch IPS LCD screen is featured with a smooth 90Hz refresh rate and bright 600 nits (HBM) peak brightness, allowing videos, games, and browsing to be enjoyed with vivid colors and clarity. Slim bezels and an 83% screen-to-body ratio are provided to maximize viewing area, while robust build quality is supported by a glass front and aluminum frame.\nEfficient multimedia performance is enabled through a Mediatek Helio G100 Ultra chipset paired with responsive graphics, allowing casual gaming and everyday apps to be handled with ease. Dual stereo speakers with Dolby Atmos support and 24-bit/192kHz Hi-Res audio are included for enhanced sound quality. A long-lasting 9000mAh battery with 18W wired charging is integrated, making all-day use possible for work, study, and entertainment on the go.\nKey Features\n• Large 11.0 inch tablet display is provided, allowing immersive viewing with smooth 90Hz refresh.\n• Powerful multimedia performance is supported through a Mediatek Helio G100 Ultra processor.\n• Long battery life is ensured, allowing extended daily usage with 9000mAh capacity and fast charging.\n• Dual stereo speakers with Dolby Atmos are included, enabling rich and clear audio playback.\n• Lightweight and durable build is featured, allowing confident handling with glass front and alum"
+   }
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://jakcomputer.com/pages/faq-delivery-information",
+   "shop_id": "jak_computer",
+   "observed_at": "2026-11-28T05:08:58+00:00",
+   "sha256": "c6d4bbeeaad6d632ccc9c42bb8bc7b7a867cb4e51423d2f6bd178e71e804f1bb",
+   "excerpt": "FAQ & Delivery Info | JAK Computer Lebanon\nSkip to content\nYour cart is empty\nContinue shopping\nHave an account?\nLog in to checkout faster.\nShopping cart (0)\nLoading...\nYou might like\nRECCI Armor Series RPB-W20 High Power Fast Charging Power Bank 5000mAh\nRegular price\n$40.00 USD\nSale price\n$40.00 USD\nRegular price\nUnit price\n/\nper\nSale\nSold out\nRAZER BARRACUDA X WHITE HEADSET RZ04-04430200-R3M1\nRegular price\n$110.00 USD\nSale price\n$110.00 USD\nRegular price\nUnit price\n/\nper\nSale\nSold out\nFor Store Pickups: Please enter your phone number here before checking out.\nFor Store Pickups: Please enter your phone number here before checking out.\nSubtotal (0)\n$0.00 USD\nVAT calculated at checkout.\nView Cart\nCheckout\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. I",
+   "quoted": []
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://electroslab.com/policies/shipping-policy",
+   "shop_id": "electroslab",
+   "observed_at": "2026-11-28T05:08:57+00:00",
+   "sha256": "cefede69a3a5749fc1c617c4a8b09ddb93366533acf556ae4e5d8a9f5128fba2",
+   "excerpt": "Shipping policy\nWEBSITE ORDERS ONLY⚡\nNOVEMBER DISCOUNTS + ⚡FREE DELIVERY ON ORDERS OF $20 OR MORE⚡\nTHROUGH NOV 30\n0\nView All\nNo result found for your search.\nHome\nShipping policy\nShipping policy\na {\ntext-decoration: none;\ncolor: #464feb;\n}\ntr th, tr td {\nborder: 1px solid #e6e6e6;\n}\ntr th {\nbackground-color: #f5f5f5;\n}\nShipping Policy\nDelivery Coverage & Rates\nWe deliver across all of Lebanon for a flat rate of $4.\nFree delivery may apply during promotions or on selected items.\nDelivery Time\nThe estimated delivery time begins once your order is placed and confirmed.\nBeirut: Delivery within 1–3 business days.\nOutside Beirut: Delivery within 3–5 business days.\nCustom, special-order, or high-demand items may require additional time.\nOnce your order has been shipped, you will receive order confirmation and tracking details.\nInternational Shipping\nWe currently ship only within Lebanon.\nInternational shipping may become available in the future.\nLost or Stolen Packages\nElectroSlab is not responsible for lost or stolen packages after delivery confirmation.\nIf your order is marked as delivered but has not been received, please:\nCheck with your local courier or post office.\nCheck with neighbors, building reception, or security personnel.\nContact us at info@electroslab.com, and we will assist where possible.\nBusiness Days\nBusiness days are Monday through Saturday, excluding public holidays.\nContact\nFor shipping questions or delivery issues, please contact us at info@electroslab.com.\nThi",
+   "quoted": [
+    {
+     "quote": "WEBSITE ORDERS ONLY⚡ | NOVEMBER DISCOUNTS + ⚡FREE DELIVERY ON ORDERS OF $20 OR MORE⚡ | THROUGH NOV 30",
+     "found": true
+    }
+   ]
+  }
+ ]
+}

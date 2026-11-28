@@ -1,0 +1,1114 @@
+{
+ "run_id": "scout-b23-20261128T051935",
+ "request": {
+  "id": "B23",
+  "text": "I want new wired USB-C earbuds with a microphone for phone calls. What is the delivered price to Saida?",
+  "mode": "delivery",
+  "destination": "Saida",
+  "category": "audio",
+  "run_id": "scout-b23-20261128T051935"
+ },
+ "status": "offers",
+ "message": "Best confirmed-new option: Mobileleb Apple EarPods (USB-C), $24.00, in stock, with a microphone and call controls. Delivery charges to Saida were not published in the checked sources, so I cannot confirm a delivered total.\nOther in-stock options:\n• Macrotronics JBL Tune 310C: $19.38, USB-C wired with a mic; new condition and delivery fee unconfirmed. Tax included.\n• Classic Phones Samsung AKG USB-C, black: $12.00, wired with an inline microphone. Delivery across Lebanon is advertised, but the fee and new condition are unconfirmed.\nI suggest the Mobileleb EarPods because their new condition is explicit; check compatibility with your phone and the Saida delivery charge before buying.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "best",
+   "shop": "Mobileleb",
+   "shop_id": "mobileleb",
+   "title": "Apple, EarPods (USB-C)",
+   "variant": "White / Brand New",
+   "url": "https://mobileleb.com/products/apple-earpods-usb-c?variant=41722568802436",
+   "price": "24.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "USB-C earbuds with remote and microphone meet the requested product needs.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "White / Brand New",
+     "obs": "P4",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Wired USB-C earbuds",
+     "status": "met",
+     "quote": "EarPods with USB-C Connector",
+     "obs": "T7",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Microphone for phone calls",
+     "status": "met",
+     "quote": "With Remote and Mic",
+     "obs": "T7",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Delivery to Saida",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P4",
+     "url": "https://mobileleb.com/products/apple-earpods-usb-c",
+     "read": "https://mobileleb.com/products/apple-earpods-usb-c.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:20:11+00:00",
+     "sha256": "c642f6bc686a1b792fb2a1810762294b6492ef3467f62d361340a219680d3e25"
+    }
+   ],
+   "seller_basis": "Mobileleb: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  },
+  {
+   "tier": "best",
+   "shop": "Classic Phones",
+   "shop_id": "classic_phones",
+   "title": "Samsung type-c earphone akg",
+   "variant": "Black",
+   "url": "https://classic-phones.com/products/samsung-type-c-earphone-akg?variant=42906867466475",
+   "price": "12.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "exact",
+   "identity_reason": "In-ear wired USB-C headset with inline microphone; condition not stated.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Wired USB-C earbuds",
+     "status": "met",
+     "quote": "USB connectorUSB Type-C",
+     "obs": "P11",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Microphone for phone calls",
+     "status": "met",
+     "quote": "Microphone type:In-line",
+     "obs": "P11",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Delivery to Saida",
+     "status": "met",
+     "quote": "Delivery Available All Over Lebanon",
+     "obs": "T5",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P11",
+     "url": "https://classic-phones.com/products/samsung-type-c-earphone-akg",
+     "read": "https://classic-phones.com/products/samsung-type-c-earphone-akg.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:20:27+00:00",
+     "sha256": "a8370317c89821d352969a36cce5d17f12d92c836c32a35d93b92bc0dce9c0c5"
+    }
+   ],
+   "seller_basis": "Classic Phones: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  },
+  {
+   "tier": "best",
+   "shop": "Macrotronics",
+   "shop_id": "macrotronics",
+   "title": "JBL Tune 310C Wired Earphones Black",
+   "variant": "Default Title",
+   "url": "https://www.macrotronics.net/products/jbl-tune-310c-wired-earphones-black?variant=51845500961057",
+   "price": "19.38",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "exact",
+   "identity_reason": "Wired USB-C earphones with microphone; condition not stated.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "delivery fee to your area is not published or not confirmed"
+   ],
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Wired USB-C earbuds",
+     "status": "met",
+     "quote": "Connector: USB‑C",
+     "obs": "P10",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Microphone for phone calls",
+     "status": "met",
+     "quote": "Mic sensitivity: 42 dBV/Pa",
+     "obs": "P10",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Delivery to Saida",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P10",
+     "url": "https://www.macrotronics.net/products/jbl-tune-310c-wired-earphones-black",
+     "read": "https://www.macrotronics.net/products/jbl-tune-310c-wired-earphones-black.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:20:27+00:00",
+     "sha256": "8fc2df22e098cfd75b2c1219baa8dc0e1ae4c7f40c4e0b7b45919552a5626caf"
+    }
+   ],
+   "seller_basis": "Macrotronics: Lebanese shop in the reviewed directory (shop metadata: Ghazir, LB)",
+   "downgrades": []
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P4",
+   "variant_id": "41722568802436",
+   "identity": "exact",
+   "identity_reason": "USB-C earbuds with remote and microphone meet the requested product needs.",
+   "condition": "new",
+   "condition_quote": "White / Brand New",
+   "condition_obs": "P4",
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "P4",
+     "quote": "White / Brand New"
+    },
+    {
+     "requirement": "Wired USB-C earbuds",
+     "status": "met",
+     "evidence_obs": "T7",
+     "quote": "EarPods with USB-C Connector"
+    },
+    {
+     "requirement": "Microphone for phone calls",
+     "status": "met",
+     "evidence_obs": "T7",
+     "quote": "With Remote and Mic"
+    },
+    {
+     "requirement": "Delivery to Saida",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": null,
+   "delivery_quote": null,
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P10",
+   "variant_id": "51845500961057",
+   "identity": "exact",
+   "identity_reason": "Wired USB-C earphones with microphone; condition not stated.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Wired USB-C earbuds",
+     "status": "met",
+     "evidence_obs": "P10",
+     "quote": "Connector: USB‑C"
+    },
+    {
+     "requirement": "Microphone for phone calls",
+     "status": "met",
+     "evidence_obs": "P10",
+     "quote": "Mic sensitivity: 42 dBV/Pa"
+    },
+    {
+     "requirement": "Delivery to Saida",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": "T4",
+   "delivery_quote": "Spend $1,500.00 more to reach free shipping!",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": "1500",
+   "vat_quote": "Tax included.",
+   "price_quote": null
+  },
+  {
+   "obs": "P11",
+   "variant_id": "42906867466475",
+   "identity": "exact",
+   "identity_reason": "In-ear wired USB-C headset with inline microphone; condition not stated.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Wired USB-C earbuds",
+     "status": "met",
+     "evidence_obs": "P11",
+     "quote": "USB connectorUSB Type-C"
+    },
+    {
+     "requirement": "Microphone for phone calls",
+     "status": "met",
+     "evidence_obs": "P11",
+     "quote": "Microphone type:In-line"
+    },
+    {
+     "requirement": "Delivery to Saida",
+     "status": "met",
+     "evidence_obs": "T5",
+     "quote": "Delivery Available All Over Lebanon"
+    }
+   ],
+   "delivery_obs": "T5",
+   "delivery_quote": "Delivery Available All Over Lebanon",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Search suitable wired USB-C earphones across shops.",
+   "at_s": 9.4,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "Samsung AKG USB C"
+    },
+    {
+     "tool": "search",
+     "query": "Apple EarPods USB C"
+    },
+    {
+     "tool": "search",
+     "query": "JBL Tune 310C"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Check two additional shops and obtain delivery terms and full microphone descriptions.",
+   "at_s": 51.3,
+   "calls": [
+    {
+     "tool": "open",
+     "url": "https://www.macrotronics.net/products/jbl-tune-310c-wired-earphones-black"
+    },
+    {
+     "tool": "open",
+     "url": "https://classic-phones.com/products/samsung-type-c-earphone-akg"
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "mobileleb"
+     ]
+    },
+    {
+     "tool": "read",
+     "url": "https://mobileleb.com/products/apple-earpods-usb-c",
+     "terms": [
+      "microphone",
+      "calls",
+      "remote"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Delivery prices remain unverified; distinguish confirmed-new option from listings with unknown condition.",
+   "at_s": 73.9,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 29812,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 31406,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 32531,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 406,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 718,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 2141,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 4047,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7219,
+   "usage": {
+    "actual_usd": "0.004063",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3221,
+     "output_tokens": 104,
+     "total_tokens": 3325
+    },
+    "latency_ms": 4000,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 9266,
+   "usage": {
+    "actual_usd": "0.015073",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 7365,
+     "output_tokens": 169,
+     "total_tokens": 7534
+    },
+    "latency_ms": 5094,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 18094,
+   "usage": {
+    "actual_usd": "0.0277855",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 9890,
+     "output_tokens": 809,
+     "total_tokens": 10699
+    },
+    "latency_ms": 14359,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": true
+  }
+ ],
+ "retailer_requests": 86,
+ "seconds": 74.0,
+ "spend": {
+  "settled_usd": "0.0469215",
+  "uncertain_usd": "0",
+  "model_calls": 3,
+  "ledger_job": "scout-b23-20261128T051935"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/apple-usb-c-to-lightning-with-lightning-headset-jack",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:20:10+00:00",
+   "sha256": "c6b412ff2a37eea0676dd987d2ee4bce0fd15986be0314a83d48a7456bc49ba5",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "APPLE USB-C TO LIGHTNING WITH LIGHTNING HEADSET JACK",
+    "url": "https://abedtahan.com/products/apple-usb-c-to-lightning-with-lightning-headset-jack",
+    "vendor": "APPLE",
+    "product_type": "Mobile Accessories",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:20:10+00:00",
+    "variants": [
+     {
+      "variant_id": "44037802033331",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "1.00",
+      "compare_at": "8.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "CBL-APPL-MA068-C",
+      "url": "https://abedtahan.com/products/apple-usb-c-to-lightning-with-lightning-headset-jack?variant=44037802033331"
+     }
+    ],
+    "description": "Apple Usb-C To Lightning With Lightning Headset Jack"
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://www.macrotronics.net/products/jbl-tune-310c-wired-earphones-black",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:20:10+00:00",
+   "sha256": "8fc2df22e098cfd75b2c1219baa8dc0e1ae4c7f40c4e0b7b45919552a5626caf",
+   "product": {
+    "shop": "Macrotronics",
+    "shop_id": "macrotronics",
+    "title": "JBL Tune 310C Wired Earphones Black",
+    "url": "https://www.macrotronics.net/products/jbl-tune-310c-wired-earphones-black",
+    "vendor": "JBL",
+    "product_type": "Earphones and Headphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:20:10+00:00",
+    "variants": [
+     {
+      "variant_id": "51845500961057",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "19.38",
+      "compare_at": "19.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "1006965",
+      "url": "https://www.macrotronics.net/products/jbl-tune-310c-wired-earphones-black?variant=51845500961057"
+     }
+    ],
+    "description": "Driver size: 9 mm\nFrequency response: 20 Hz – 40 kHz\nImpedance: 16 Ω\nSensitivity: 98 dB SPL\nMic sensitivity: 42 dBV/Pa\nConnector: USB‑C\nCable length: 1.2 m"
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/samsung-type-c-earphones-sound-by-akg",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:20:11+00:00",
+   "sha256": "d4a7e07fa12d1b299b7f059665ebe3850b8350e09e89487499d72e73de1d07ef",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Samsung, Type-C Earphones Sound By AKG",
+    "url": "https://mobileleb.com/products/samsung-type-c-earphones-sound-by-akg",
+    "vendor": "Samsung",
+    "product_type": "Audio",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:20:11+00:00",
+    "variants": [
+     {
+      "variant_id": "41876384120964",
+      "title": "Black / Brand New",
+      "options": {
+       "Color": "Black",
+       "Product Condition": "Brand New"
+      },
+      "price": "19.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SamG3CzwG",
+      "url": "https://mobileleb.com/products/samsung-type-c-earphones-sound-by-akg?variant=41876384120964",
+      "condition": "Brand New"
+     },
+     {
+      "variant_id": "41876384153732",
+      "title": "White / Brand New",
+      "options": {
+       "Color": "White",
+       "Product Condition": "Brand New"
+      },
+      "price": "19.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SamJZh5md",
+      "url": "https://mobileleb.com/products/samsung-type-c-earphones-sound-by-akg?variant=41876384153732",
+      "condition": "Brand New"
+     }
+    ],
+    "description": "Compatible Devices: Tablets Phones Laptop.Note : If the size of the earbud tips does not match the size of your ear canals or the headset is not worn properly in your ears, you may not obtain the correct sound qualities or call performance. Change the earbud tips to ones that fit more snugly in your ear\nCompatible Phone Models: Universal Support To Phones And Tablets With Type-C Port Galaxy S10 Galaxy Note10"
+   }
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/apple-earpods-usb-c",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:20:11+00:00",
+   "sha256": "c642f6bc686a1b792fb2a1810762294b6492ef3467f62d361340a219680d3e25",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Apple, EarPods (USB-C)",
+    "url": "https://mobileleb.com/products/apple-earpods-usb-c",
+    "vendor": "Apple",
+    "product_type": "Audio",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:20:11+00:00",
+    "variants": [
+     {
+      "variant_id": "41722568802436",
+      "title": "White / Brand New",
+      "options": {
+       "Color": "White",
+       "Product Condition": "Brand New"
+      },
+      "price": "24.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "App07Iavy",
+      "url": "https://mobileleb.com/products/apple-earpods-usb-c?variant=41722568802436",
+      "condition": "Brand New"
+     }
+    ],
+    "description": "Unlike traditional, circular earbuds, the design of the EarPods is defined by the geometry of the ear. Which makes them more comfortable for more people than any other earbud-style headphones.\nThe speakers inside the EarPods have been engineered to maximize sound output which means you get high-quality audio.\nThe EarPods (USB-C) also include a built-in remote that lets you adjust the volume, control the playback of music and video, and answer or end calls with a press of the remote.\nHighlights\nDesigned by Apple\nDeep, rich bass tones\nProtection from sweat and water\nControl music and video playback\nAnswer and end calls\nWhat’s in the Box\nEarPods with USB-C Connector\nTech Specs\nGeneral\nWith Remote and Mic\nSystem Requirements\nCompatibility Information\nMac models with USB-C running macOS Monterey 12.6 or later.\niPad models with USB-C running iPadOS 16.4 or later.\niPhone models with USB-C running iOS 17 or later.\nCompatibility\nMac Models\niPhone 15 Pro\niPhone 15 Pro Max\niPhone 15\niPhone 15 Plus.\niPad Models\niPad Pro 12.9-inch (6th generation)\niPad Pro 12.9-inch (5th generation)\niPad Pro 12.9-inch (4th generation)\niPad Pro 12.9-inch (3rd generation)\niPad Pro 11-inch (4th generation)\niPad Pro 11-inch (3rd generation)\niPad Pro 11-inch (2nd generation)\niPad Pro 11-inch (1st generation)\niPad Air (5th generation)\niPad Air (4th generation)\niPad (10th generation)\niPad mini (6th generation)\nMac Models\nMacBook Air (15-inch, M2, 2023)\nMacBook Air (13-inch, M2, 2022)\nMacBook Air (M1, 2020)\nMacBo"
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://wincell.store/products/apple-earpods-usb-c-wired-earphones-original",
+   "shop_id": "wincell",
+   "observed_at": "2026-11-28T05:20:11+00:00",
+   "sha256": "ebbfd76bf9bd96afc58d10e7f7c18972685eddde4e2466aed54f25bb01cd70c3",
+   "product": {
+    "shop": "WinCell",
+    "shop_id": "wincell",
+    "title": "APPLE EarPods – USB-C Wired Earphones | Original",
+    "url": "https://wincell.store/products/apple-earpods-usb-c-wired-earphones-original",
+    "vendor": "Apple",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:20:11+00:00",
+    "variants": [
+     {
+      "variant_id": "53465518309674",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "35.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://wincell.store/products/apple-earpods-usb-c-wired-earphones-original?variant=53465518309674"
+     }
+    ],
+    "description": "APPLE EarPods – USB-C Wired Earphones | Original\nEnjoy clear sound and everyday comfort with the Apple EarPods USB-C, designed for excellent audio quality and seamless compatibility with your Apple devices!\nUSB-C Connector: Direct connection to compatible USB-C devices.\nHigh-Quality Audio: Clear sound with balanced bass and crisp vocals.\nErgonomic Design: Comfortable fit based on the geometry of the ear.\nBuilt-in Remote: Control music, adjust volume, and manage playback.\nIntegrated Microphone: Clear hands-free phone calls.\nCall Control: Answer and end calls with the built-in remote.\nPlug & Play: No Bluetooth pairing or charging required.\nWide Compatibility: Works with compatible iPhone, iPad, Mac, and other USB-C devices.\nOriginal Apple Quality: Reliable performance and premium construction.\n🎧 Enjoy your favorite music with Apple's signature comfort and sound quality!"
+   }
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://technodel.net/product/jbl-tune-310c-red-wired-usb-c-in-ear-earphones-t310cred",
+   "shop_id": "technodel",
+   "observed_at": "2026-11-28T05:20:16+00:00",
+   "sha256": "c07ebb46c42c6f5628935d9c2d704c5cf35692a9af3d5ed92a640904f13eec5d",
+   "product": {
+    "shop": "Technodel",
+    "shop_id": "technodel",
+    "title": "JBL Tune 310C Red Wired USB-C In-Ear Earphones | T310CRED",
+    "url": "https://technodel.net/product/jbl-tune-310c-red-wired-usb-c-in-ear-earphones-t310cred",
+    "vendor": "JBL",
+    "product_type": null,
+    "condition": "NewCondition",
+    "source": "schema_org_jsonld",
+    "observed_at": "2026-11-28T05:20:16+00:00",
+    "variants": [
+     {
+      "variant_id": "HA-P6HVEJ5K",
+      "title": "JBL Tune 310C Red Wired USB-C In-Ear Earphones | T310CRED",
+      "options": {},
+      "price": "17.60",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": "InStock",
+      "sku": "HA-P6HVEJ5K",
+      "url": "https://technodel.net/product/jbl-tune-310c-red-wired-usb-c-in-ear-earphones-t310cred",
+      "condition": "NewCondition"
+     }
+    ],
+    "description": "JBL Tune 310C wired USB-C in-ear earphones in red with JBL Pure Bass sound, Hi-Res Audio, a three-button remote with microphone and a flat cable."
+   }
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/untitled-sep13_24-46",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:20:17+00:00",
+   "sha256": "d908f6d6cbd6f63f82d0b24e7d5407cfe48c206d0608ceb9d37e9374cd74e21b",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "SAMSUNG USB-A TO USB-C CABLES",
+    "url": "https://classic-phones.com/products/untitled-sep13_24-46",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:20:17+00:00",
+    "variants": [
+     {
+      "variant_id": "45646370930923",
+      "title": "Black / 1.5M",
+      "options": {
+       "Color": "Black",
+       "size": "1.5M"
+      },
+      "price": "7.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/untitled-sep13_24-46?variant=45646370930923"
+     },
+     {
+      "variant_id": "45646376370411",
+      "title": "Black / 1.5m 2 pack",
+      "options": {
+       "Color": "Black",
+       "size": "1.5m 2 pack"
+      },
+      "price": "12.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/untitled-sep13_24-46?variant=45646376370411"
+     }
+    ],
+    "description": "SAMSUNG USB-A TO USB-C CABLE 1.5M\nBrand\nSamsung\nConnector type\nUSB Type C\nCable type\nUSB\nCompatible devices\nTablet, Smartphone\nSpecial feature\nHigh Speed, Durable, Fast Charging\nCompatible phone models\nSamsung USB A\nUSB-A to C Cable for up to 15W Charging Speeds\nGet it in black to suit your style and device"
+   }
+  },
+  {
+   "obs": "P8",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/jbl-tune-310c-usb-c-wired-earphones",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:20:17+00:00",
+   "sha256": "573c8e90622ee0e8c14d6e41ddc4525cbc3e2d5239375155180f926316fc2afa",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Jbl Tune 310c usb-c wired earphones",
+    "url": "https://classic-phones.com/products/jbl-tune-310c-usb-c-wired-earphones",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:20:17+00:00",
+    "variants": [
+     {
+      "variant_id": "45861725044971",
+      "title": "White",
+      "options": {
+       "Color": "White"
+      },
+      "price": "25.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/jbl-tune-310c-usb-c-wired-earphones?variant=45861725044971"
+     },
+     {
+      "variant_id": "45861797036267",
+      "title": "blue",
+      "options": {
+       "Color": "blue"
+      },
+      "price": "25.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/jbl-tune-310c-usb-c-wired-earphones?variant=45861797036267"
+     },
+     {
+      "variant_id": "45861951865067",
+      "title": "red",
+      "options": {
+       "Color": "red"
+      },
+      "price": "25.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/jbl-tune-310c-usb-c-wired-earphones?variant=45861951865067"
+     },
+     {
+      "variant_id": "45861951897835",
+      "title": "Black",
+      "options": {
+       "Color": "Black"
+      },
+      "price": "25.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/jbl-tune-310c-usb-c-wired-earphones?variant=45861951897835"
+     }
+    ],
+    "description": "JBL TUNE 310C USB-C Wired Hi-Res In-Ear Headphones\nDescription\nHi-Res Audio with JBL Pure Bass Sound. Now available to go.\nIntroducing JBL Tune 310C USB-C in-ear headphones. They’re lightweight,comfortable and compact. A pair of 9mm dynamic drivers punch out powerful JBL Pure Bass Sound, while the High-Resolution Audio support ensures great sound quality. A USB-C connection makes them compatible with a large variety of devices like PCs, mobiles, and gaming devices. In addition, the three-button remote on a tangle-free flat cable lets you control music playback and volume adjustment, EQ presets, as well as answering calls on the fly with a built-in microphone. All this makes the JBL Tune 310C USB-C your everyday companion, at work, at home, and on the road.\nJBL Pure Bass sound, Hi-Res certified\nFor over 75 years, JBL has engineered the precise, impressive sound found in big venues around the world. These headphones reproduce that same JBL sound, punching out bass that’s deep, powerful. Hi-Res Audio brings clear and detailed sound quality with a wide frequency range\nCompatible with USB-C devices\nNeed to connect to a PC, mobile or gaming device? USB-C connectivity ensures compatibility with a wide range of devices*. *Please check USB-C compatibility with your device.\n3-button remote with microphone\nControl music playback and volume adjustment with a convenient three-button remote. Got an incoming call? Answer it on the fly with the built-in microphone."
+   }
+  },
+  {
+   "obs": "P9",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/samsung-type-c-earphone-akg",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:20:17+00:00",
+   "sha256": "a8370317c89821d352969a36cce5d17f12d92c836c32a35d93b92bc0dce9c0c5",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Samsung type-c earphone akg",
+    "url": "https://classic-phones.com/products/samsung-type-c-earphone-akg",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:20:17+00:00",
+    "variants": [
+     {
+      "variant_id": "42906867466475",
+      "title": "Black",
+      "options": {
+       "Color": "Black"
+      },
+      "price": "12.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/samsung-type-c-earphone-akg?variant=42906867466475"
+     },
+     {
+      "variant_id": "43548257648875",
+      "title": "White",
+      "options": {
+       "Color": "White"
+      },
+      "price": "17.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/samsung-type-c-earphone-akg?variant=43548257648875"
+     }
+    ],
+    "description": "Product description Samsung AKG USB-C Headphones\nSpecifications:\nPerformance:\n- Product type:Headset\n- Wearing style:In-ear\n- Recommended usage:Calls & Music\n- Headset typeBinaural\n- Volume controlButton\n- Control unit typeIn-line control unit\n- Control typeButtons\nPorts & interfaces:\n- Connectivity technology:Wired\n- 3.5 mm connector:No\n- USB connectivity:Yes\n- USB connectorUSB Type-C\nPorts & interfaces:\n- Bluetooth:No\nHeadphones:\n- Ear coupling:Intraaural\n- Headphone frequency:20 - 20000 Hz\n- Impedance:32 Ω\n- Headphone sensitivity94.3 dB\nMicrophone:\n- Microphone type:In-line\n- Noise-cancelingNo\n- Microphone muteYes"
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://wincell.store/products/belkin-boostcharge-compact-charger-20w-usb-c-power-delivery-fast-charger-power",
+   "shop_id": "wincell",
+   "observed_at": "2026-11-28T05:20:17+00:00",
+   "sha256": "346c23e734ef97db99f1675cc925869d00b831be142c6083dbb94f1dbcb488a9",
+   "excerpt": "Belkin BoostCharge Compact Charger (20W) USB-C Power Delivery Fast Cha – WinCell\nSkip to content\nHappy Independence Day, Lebanon\n/\n83 years of independence\nOrder by 22 December for delivery before Christmas/\nMerry Christmas from all of us at Win Cell\nBlack Friday ends in\nBlack Friday is over. Thank you, Lebanon.\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nHome\nOur story\nShop\nShop by category\n00\nAll products\n464\nAll products\n01\nPhones\n18\nPhones\n02\nAudio\n107\nAudio\n03\nwatches & gadgets\n166\nwatches & gadgets\n04\nchargers & power\n88\nchargers & powe",
+   "quoted": []
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://abedtahan.com/pages/contact",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:20:17+00:00",
+   "sha256": "fd6dac96f87918bdabffe3a980693879770d70fb36c368ce38e175f4226b445b",
+   "excerpt": "Contact\n– Abed Tahan\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & Crepe Makers\nIce Cube, Ice Cream & Yoghurt Makers\nSaj Machines\nL",
+   "quoted": []
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://technodel.net/api/llm-context",
+   "shop_id": "technodel",
+   "observed_at": "2026-11-28T05:20:18+00:00",
+   "sha256": "b55d9346dff533ed1909b1f8a99169bed1f5e262d2fdf59ad12d96d780aa7c84",
+   "excerpt": "{\"_metadata\":{\"site\":\"Technodel Lebanon\",\"description\":\"Lebanon's premier online tech store - laptops, desktops, PC components, gaming gear, networking and accessories, with nationwide delivery.\",\"company\":\"Technodel\",\"founded\":2010,\"slogan\":\"We deliver Technology.\",\"url\":\"https://technodel.net\",\"currency\":\"USD\",\"languages\":[\"English\",\"Arabic\"],\"contact\":{\"phone\":\"+961 3 659 872\",\"whatsapp\":\"+961 3 659 872\",\"whatsappUrl\":\"https://wa.me/9613659872\",\"supportEmail\":\"support@technodel.net\",\"ordersEmail\":\"orders@technodel.net\"},\"stores\":[{\"area\":\"Beirut area\",\"address\":\"Badaro, Beirut\"},{\"area\":\"South Lebanon\",\"address\":\"Abbassiyeh (serving Tyre / Sour and the South)\"}],\"delivery\":{\"coverage\":\"Nationwide delivery across all of Lebanon\",\"sameDayAreas\":\"Beirut, Sour, Tripoli and surroundings\",\"otherRegions\":\"1-2 days\",\"sameDay\":\"Same-day delivery to Beirut, Sour, Tripoli and surroundings\",\"costUsd\":4,\"costNote\":\"Flat $4 anywhere in Lebanon; free on orders of $500 or more\",\"freeDeliveryAboveUsd\":500},\"payments\":[\"Cash on Delivery (USD)\",\"Wish Money\",\"Cryptocurrency (USDT, BTC, ETH)\"],\"warranty\":{\"summary\":\"Manufacturer warranty on everything, handled through Technodel.\",\"laptopsAndPcs\":\"1-2 years\",\"accessories\":\"minimum 6 months\"},\"returns\":{\"returnDays\":30,\"policy\":\"30-day returns: any eligible product can be returned within 30 days of delivery for a full refund, free of charge at the Badaro (Beirut) or Abbassiyeh (Tyre) branch. Digital codes once revealed, opened consumables and op",
+   "quoted": []
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://www.macrotronics.net/policies/shipping-policy",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:20:18+00:00",
+   "sha256": "8ae27af39a26175822c97389fd3d451f88f0f892460e0fecce3ec842dc46cd69",
+   "excerpt": "Shipping policy – Macrotronics\nSkip to content\nFacebook\nTwitter\nInstagram\nHelpline +961 71 854 621 | +961 9 853 008\nTechnical Support +961 71 94 84 94\nPause slideshow\nPlay slideshow\nComputers\nComputers\nLaptops\nOn-Demand Laptops\nLaptop Power Adapters\nLaptop Accessories\nApple Computers\nApple Accessories\niPads and Tablets\nTablets Accessories\nComputer & Smart Monitors\nMonitor Accessories\nServers, Workstations and NAS\nDesktops and Mini PCs\nPOS and POS Equipment\nOriginal Softwares and Antivirus\nComputer Parts\nComputer Parts\nProcessors\nGraphic Cards\nMotherboards\nRAMs\nSSD\nHDD\nCPU Coolers\nThermal Paste and Pads\nPower Supplies\nComputer Cases\nComputer Case Accessories\nMore PC Components\nLegacy Computer Parts\nUsed Computer Parts\nComputer Peripherals\nComputer Peripherals\nMice & Keyboards\nEarphones & Headphones\nComputer & Bluetooth Speakers\nWebcams & Microphones\nLaptop Bags & Cases\nComputer & Video Cables\nFlash Drives & Memory Cards\nPrinters, Scanners & Faxes\nPaper & Media Supplies\nGenuine Inks & Ribbons\nGenuine Toners & Drums\nCompatible Toners & Drums\nOffice Furniture\nElectronics & More\nElectronics & More\nUPS\nBatteries\nSmart Appliances\nAdapters and Converters\nEducational Electronics\nConsumer Electronics\nSurveillance and Security\nProjectors, Screens and More\nRouters, Repeaters and APs\nNetwork Switches\nNetwork Adapters\nNetworking and Tools\nGaming\nGaming\nGaming PCs\nGaming Monitors\nGaming Headsets\nGaming Pads\nGaming Mice\nGaming Keyboards\nGaming Chairs\nGaming Desks\nGaming Console and VR\nGaming",
+   "quoted": [
+    {
+     "quote": "Spend $1,500.00 more to reach free shipping!",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://www.classic-phones.com/policies/shipping-policy",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:20:18+00:00",
+   "sha256": "471674fe54f338b83941fd9801ec8e931f3704ae398ac7b4573e97b51b7b3036",
+   "excerpt": "Shipping policy\nSkip to content\nDelivery Available All Over Lebanon\nFacebook\nInstagram\nShop All\nCameras\nCameras\nGo to Cameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nLaptops\nLaptops\nGo to Laptops\nMacbook\nNew\nUsed\nTablets\nTablets\nGo to Tablets\nApple\nSamsung\nXiaomi\nBlackview\nModio\nSmart Watch\nSmart Watch\nGo to Smart Watch\nApple\nSamsung\nFitbit\nHuawei\nAmazfit\nXiaomi\nGreen Lion\nProdo\nKieslect\nAccessories\nAccessories\nGo to Accessories\nAdapters & Cables\nStorage\nKids\nScooters\nGaming\nGaming\nGo to Gaming\nNintendo\nPS\nXBOX\nOthers\nPersonal Care\nPersonal Care\nGo to Personal Care\nHome Accessories\nPerfume\nMassage\nOthers\nTech Gadgets\nTech Gadgets\nGo to Tech Gadgets\nKits (Cleaning, Repair...)\nPower Devices\nSmart Devices\nRouters\nBags\nKindle\nStands\nCalculator\nHandy Phones\nAudio\nAudio\nGo to Audio\nEarphones\nSpeakers\nHeadphones\nEarbuds\nMicrophones\nCases\nCases\nGo to Cases\nApple\nSamsung\nOthers\nWatch Accessories\nKeyboards & Mouses\nOthers\nBlogs\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nLebanon\nFast Delivery\nFacebook\nInstagram\nLog in\nSearch\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nSearch\nLog in\n0\n00 items\nSubtotal\n$0\nShop All\nCameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nGo to Cameras\nLaptops\nMacbook\nNew\nUsed\nGo to Laptops\nTablets\nApple\nSamsung\nXiaomi\nBlack",
+   "quoted": [
+    {
+     "quote": "Delivery Available All Over Lebanon",
+     "found": true
+    },
+    {
+     "quote": "Delivery Available All Over Lebanon",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "P10",
+   "kind": "product",
+   "url": "https://www.macrotronics.net/products/jbl-tune-310c-wired-earphones-black",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T05:20:27+00:00",
+   "sha256": "8fc2df22e098cfd75b2c1219baa8dc0e1ae4c7f40c4e0b7b45919552a5626caf",
+   "product": {
+    "shop": "Macrotronics",
+    "shop_id": "macrotronics",
+    "title": "JBL Tune 310C Wired Earphones Black",
+    "url": "https://www.macrotronics.net/products/jbl-tune-310c-wired-earphones-black",
+    "vendor": "JBL",
+    "product_type": "Earphones and Headphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:20:27+00:00",
+    "variants": [
+     {
+      "variant_id": "51845500961057",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "19.38",
+      "compare_at": "19.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "1006965",
+      "url": "https://www.macrotronics.net/products/jbl-tune-310c-wired-earphones-black?variant=51845500961057"
+     }
+    ],
+    "description": "Driver size: 9 mm\nFrequency response: 20 Hz – 40 kHz\nImpedance: 16 Ω\nSensitivity: 98 dB SPL\nMic sensitivity: 42 dBV/Pa\nConnector: USB‑C\nCable length: 1.2 m"
+   }
+  },
+  {
+   "obs": "T6",
+   "kind": "page",
+   "url": "https://mobileleb.com/meta.json",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:20:27+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"Mobileleb\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"mobileleb.com\"}",
+   "quoted": []
+  },
+  {
+   "obs": "P11",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/samsung-type-c-earphone-akg",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T05:20:27+00:00",
+   "sha256": "a8370317c89821d352969a36cce5d17f12d92c836c32a35d93b92bc0dce9c0c5",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Samsung type-c earphone akg",
+    "url": "https://classic-phones.com/products/samsung-type-c-earphone-akg",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:20:27+00:00",
+    "variants": [
+     {
+      "variant_id": "42906867466475",
+      "title": "Black",
+      "options": {
+       "Color": "Black"
+      },
+      "price": "12.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/samsung-type-c-earphone-akg?variant=42906867466475"
+     },
+     {
+      "variant_id": "43548257648875",
+      "title": "White",
+      "options": {
+       "Color": "White"
+      },
+      "price": "17.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/samsung-type-c-earphone-akg?variant=43548257648875"
+     }
+    ],
+    "description": "Product description Samsung AKG USB-C Headphones\nSpecifications:\nPerformance:\n- Product type:Headset\n- Wearing style:In-ear\n- Recommended usage:Calls & Music\n- Headset typeBinaural\n- Volume controlButton\n- Control unit typeIn-line control unit\n- Control typeButtons\nPorts & interfaces:\n- Connectivity technology:Wired\n- 3.5 mm connector:No\n- USB connectivity:Yes\n- USB connectorUSB Type-C\nPorts & interfaces:\n- Bluetooth:No\nHeadphones:\n- Ear coupling:Intraaural\n- Headphone frequency:20 - 20000 Hz\n- Impedance:32 Ω\n- Headphone sensitivity94.3 dB\nMicrophone:\n- Microphone type:In-line\n- Noise-cancelingNo\n- Microphone muteYes"
+   }
+  },
+  {
+   "obs": "T7",
+   "kind": "page",
+   "url": "https://mobileleb.com/products/apple-earpods-usb-c",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:20:27+00:00",
+   "sha256": "b8efc684f243f9a454deca62ad1940d3b6b2065944e859826ef1b5d3ae1b23aa",
+   "excerpt": "Apple, EarPods (USB-C) Best Price in Lebanon\n– Mobileleb\nCell Phones & Tablets\nCell Phones\nSamsung\nHonor\nXiaomi\nTecno\nApple\nFeature Phones\nInfinix\nApple Open Box\nGoogle\nSamsung Open Box\nOppo\nVivo\nMotorola\nBlackview\nitel\nRealme\nZTE nubia\nOnePlus\nFreeYond\nNokia\nHuawei\nAlcatel\nHiSense\nDoogee\nTCL\nBlackBerry\nCAT\nUmidigi\nI-Plus\nTablets, iPads & eReaders\nApple iPads\nAndroid Tablets\nWindows Tablets\neReaders\nDrawing Tablets & Accessories\nSamsung\nBlackview\nRed Magic Gaming Tablets\nLenovo\nAmazon\nAlcatel\nMicrosoft\ni-Plus\nHuawei\nG-TiDE\nWearables, Smart Watches & Trackers\nCell Phone Accessories\nMobile Phone Cases\nScreen Protectors\nCharging & Data Cables\nChargers & Power Adapters\nMobile Gaming Controllers\nMobiles & Tablets Cables & Connectors\nMounts & Stands\nCar Accessories\nMobile Phone Accessories\nMobile Phone Camera Accessories\nLED Ring Lights\nGimbals & Camera Stabilizers\nSelfie Sticks, Tripods & Monopods\niPad & Tablet Accessories\nKeyboards\nStylus Pens\nCovers & Screen Protectors\nTablet Computer Docks & Stands\nTablet Computer Parts\nComputers & Parts\nApple Accessories\nKeyboards & Mice\nTime Capsule\nAirPods & Audio\nAll Laptops\nHP Laptops\nLenovo Laptops\nNEC Laptops\nAcer Laptops\nMacBooks, iMacs & Mac mini\nMac Studio\nDell Laptops\nAsus Laptops\nMSI Laptops\nGigabyte Laptops\nRazer Laptops\nGateway Laptops\nToshiba Laptops\nMicrosoft Surface\nLaptops Open Box\nDesktop Computers\nMini PCs\nDesktops\nAll-in-One Computers\nP.O.S Systems\nCore Components\nGraphics Cards\nCPU / Computer Processors\nRAM\nMotherboards\nAu",
+   "quoted": [
+    {
+     "quote": "EarPods with USB-C Connector",
+     "found": true
+    },
+    {
+     "quote": "With Remote and Mic",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T8",
+   "kind": "page",
+   "url": "https://mobileleb.com/",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:20:28+00:00",
+   "sha256": "6b754f94409cbb8b67320f000732c20f5f7cf1132c160378cf0af132d65562c7",
+   "excerpt": "Mobileleb.com | Mobile Price in Lebanon, Laptop, PS5\nCell Phones & Tablets\nCell Phones\nSamsung\nHonor\nXiaomi\nTecno\nApple\nFeature Phones\nInfinix\nApple Open Box\nGoogle\nSamsung Open Box\nOppo\nVivo\nMotorola\nBlackview\nitel\nRealme\nZTE nubia\nOnePlus\nFreeYond\nNokia\nHuawei\nAlcatel\nHiSense\nDoogee\nTCL\nBlackBerry\nCAT\nUmidigi\nI-Plus\nTablets, iPads & eReaders\nApple iPads\nAndroid Tablets\nWindows Tablets\neReaders\nDrawing Tablets & Accessories\nSamsung\nBlackview\nRed Magic Gaming Tablets\nLenovo\nAmazon\nAlcatel\nMicrosoft\ni-Plus\nHuawei\nG-TiDE\nWearables, Smart Watches & Trackers\nCell Phone Accessories\nMobile Phone Cases\nScreen Protectors\nCharging & Data Cables\nChargers & Power Adapters\nMobile Gaming Controllers\nMobiles & Tablets Cables & Connectors\nMounts & Stands\nCar Accessories\nMobile Phone Accessories\nMobile Phone Camera Accessories\nLED Ring Lights\nGimbals & Camera Stabilizers\nSelfie Sticks, Tripods & Monopods\niPad & Tablet Accessories\nKeyboards\nStylus Pens\nCovers & Screen Protectors\nTablet Computer Docks & Stands\nTablet Computer Parts\nComputers & Parts\nApple Accessories\nKeyboards & Mice\nTime Capsule\nAirPods & Audio\nAll Laptops\nHP Laptops\nLenovo Laptops\nNEC Laptops\nAcer Laptops\nMacBooks, iMacs & Mac mini\nMac Studio\nDell Laptops\nAsus Laptops\nMSI Laptops\nGigabyte Laptops\nRazer Laptops\nGateway Laptops\nToshiba Laptops\nMicrosoft Surface\nLaptops Open Box\nDesktop Computers\nMini PCs\nDesktops\nAll-in-One Computers\nP.O.S Systems\nCore Components\nGraphics Cards\nCPU / Computer Processors\nRAM\nMotherboards\nAudio ",
+   "quoted": []
+  }
+ ]
+}

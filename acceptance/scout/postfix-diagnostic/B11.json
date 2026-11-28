@@ -1,0 +1,1231 @@
+{
+ "run_id": "scout-b11-20261128T060403",
+ "request": {
+  "id": "B11",
+  "text": "Find a new blue iPad with the A16 chip, Wi-Fi only and 128 GB, delivered to Beirut.",
+  "mode": "delivery",
+  "destination": "Beirut",
+  "category": "tablet",
+  "run_id": "scout-b11-20261128T060403"
+ },
+ "status": "offers",
+ "message": "Best confirmed match: Technodel — $475.00, in stock, new, blue, A16, Wi-Fi and 128GB. Delivery to Beirut is $4.\nLower-priced option: Mobileleb — $458.00 for the in-stock Blue / Brand New / 1 Year variant. Its listing specifies Wi-Fi, but Beirut delivery availability and fees could not be confirmed from its published shipping page.\nI suggest Technodel for the clearest verified match and delivery terms.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "best",
+   "shop": "Technodel",
+   "shop_id": "technodel",
+   "title": "Apple iPad MD4A4 | A16 | 11\" | Wi-Fi | 128GB | Blue",
+   "variant": "Apple iPad MD4A4 | A16 | 11\" | Wi-Fi | 128GB | Blue",
+   "url": "https://technodel.net/product/apple-ipad-md4a4-a16-11-wi-fi-128gb-blue",
+   "price": "475.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "The listing explicitly matches the A16 iPad, blue, Wi-Fi and 128GB configuration.",
+   "delivery_fee": "4.00",
+   "total": "479.00",
+   "total_basis": "listed price + delivery fee published by technodel (\"Flat $4 anywhere in Lebanon; free on orders of $500 or more\", T3)",
+   "complete": false,
+   "gaps": [
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "A16 iPad, blue, Wi-Fi only, 128GB",
+     "status": "met",
+     "quote": "Apple iPad MD4A4 | A16 | 11\" | Wi-Fi | 128GB | Blue",
+     "obs": "P6",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "NewCondition",
+     "obs": "P6",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "met",
+     "quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more",
+     "obs": "T3",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P6",
+     "url": "https://technodel.net/product/apple-ipad-md4a4-a16-11-wi-fi-128gb-blue",
+     "read": "https://technodel.net/product/apple-ipad-md4a4-a16-11-wi-fi-128gb-blue",
+     "source": "schema_org_jsonld",
+     "observed_at": "2026-11-28T06:04:18+00:00",
+     "sha256": "3e8228206b7c27fde72a675ccb8fc43860e82580f47bd154c8f6de8c349dba08"
+    },
+    {
+     "obs": "T3",
+     "url": "https://technodel.net/api/llm-context",
+     "source": "shop delivery terms",
+     "observed_at": "2026-11-28T06:04:19+00:00",
+     "sha256": "b55d9346dff533ed1909b1f8a99169bed1f5e262d2fdf59ad12d96d780aa7c84"
+    }
+   ],
+   "seller_basis": "Technodel: Lebanese shop in the reviewed directory",
+   "downgrades": []
+  },
+  {
+   "tier": "best",
+   "shop": "Mobileleb",
+   "shop_id": "mobileleb",
+   "title": "Apple iPad 11-inch (A16) 128GB (11th Gen, 2025)",
+   "variant": "Blue / Brand New / 1 Year",
+   "url": "https://mobileleb.com/products/apple-ipad-11-inches-a16-128gb-11th-gen-2025?variant=50699725242500",
+   "price": "458.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "Blue 128GB A16 iPad variant with Wi-Fi listed in its specifications.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "iPad with A16 chip and 128GB",
+     "status": "met",
+     "quote": "Apple iPad 11-inch (A16) 128GB (11th Gen, 2025)",
+     "obs": "P8",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Blue and new",
+     "status": "met",
+     "quote": "Blue / Brand New / 1 Year",
+     "obs": "P8",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Wi-Fi only",
+     "status": "met",
+     "quote": "Wi-Fi 6 (802.11ax) | Bluetooth 5.3",
+     "obs": "P8",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P8",
+     "url": "https://mobileleb.com/products/apple-ipad-11-inches-a16-128gb-11th-gen-2025",
+     "read": "https://mobileleb.com/products/apple-ipad-11-inches-a16-128gb-11th-gen-2025.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T06:04:28+00:00",
+     "sha256": "8435eafa6a1b75c5f6b4ea6706a6c7728147fff0260416605e8783f7063b2adb"
+    }
+   ],
+   "seller_basis": "Mobileleb: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P6",
+   "variant_id": "RK-PVVZE9H5",
+   "identity": "exact",
+   "identity_reason": "The listing explicitly matches the A16 iPad, blue, Wi-Fi and 128GB configuration.",
+   "condition": "new",
+   "condition_quote": "NewCondition",
+   "condition_obs": "P6",
+   "requirements": [
+    {
+     "requirement": "A16 iPad, blue, Wi-Fi only, 128GB",
+     "status": "met",
+     "evidence_obs": "P6",
+     "quote": "Apple iPad MD4A4 | A16 | 11\" | Wi-Fi | 128GB | Blue"
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "P6",
+     "quote": "NewCondition"
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "met",
+     "evidence_obs": "T3",
+     "quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more"
+    }
+   ],
+   "delivery_obs": "T3",
+   "delivery_quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more",
+   "delivery_fee_usd": "4",
+   "free_delivery_over_usd": "500",
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P8",
+   "variant_id": "50699725242500",
+   "identity": "exact",
+   "identity_reason": "Blue 128GB A16 iPad variant with Wi-Fi listed in its specifications.",
+   "condition": "new",
+   "condition_quote": "Brand New",
+   "condition_obs": "P8",
+   "requirements": [
+    {
+     "requirement": "iPad with A16 chip and 128GB",
+     "status": "met",
+     "evidence_obs": "P8",
+     "quote": "Apple iPad 11-inch (A16) 128GB (11th Gen, 2025)"
+    },
+    {
+     "requirement": "Blue and new",
+     "status": "met",
+     "evidence_obs": "P8",
+     "quote": "Blue / Brand New / 1 Year"
+    },
+    {
+     "requirement": "Wi-Fi only",
+     "status": "met",
+     "evidence_obs": "P8",
+     "quote": "Wi-Fi 6 (802.11ax) | Bluetooth 5.3"
+    },
+    {
+     "requirement": "Delivery to Beirut",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    }
+   ],
+   "delivery_obs": null,
+   "delivery_quote": null,
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Search exact iPad A16 configuration across shops.",
+   "at_s": 9.3,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "iPad A16 128 blue"
+    },
+    {
+     "tool": "search",
+     "query": "iPad 11 128 Wi-Fi"
+    },
+    {
+     "tool": "search",
+     "query": "MD4A4"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Check lower-priced candidates for exact blue Wi-Fi variant and new condition, and verify iSTYLE condition.",
+   "at_s": 24.5,
+   "calls": [
+    {
+     "tool": "open",
+     "url": "https://mobileleb.com/products/apple-ipad-11-inches-a16-128gb-11th-gen-2025"
+    },
+    {
+     "tool": "open",
+     "url": "https://karizmamegastore.com/products/apple-ipad-11-inch-128gb-versatile-tablet"
+    },
+    {
+     "tool": "read",
+     "url": "https://abedtahan.com/products/ipad-a16-11-128gb-blue",
+     "terms": [
+      "Wi-Fi",
+      "new",
+      "delivery"
+     ]
+    },
+    {
+     "tool": "read",
+     "url": "https://istyle.com.lb/products/2025-ipad-a16-md4a4qa-a",
+     "terms": [
+      "new",
+      "condition"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Verify Mobileleb delivery terms; Technodel already provides a fully confirmed exact new option.",
+   "at_s": 34.1,
+   "calls": [
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "mobileleb"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 4,
+   "notes": "Check Mobileleb's shipping policy for Beirut coverage and delivery charges.",
+   "at_s": 45.1,
+   "calls": [
+    {
+     "tool": "read",
+     "url": "https://mobileleb.com/policies/shipping-policy",
+     "terms": [
+      "delivery",
+      "Beirut",
+      "shipping",
+      "$"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 5,
+   "notes": "Finish with the fully verified delivered option and the lower-priced new listing whose delivery remains unconfirmed.",
+   "at_s": 61.3,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 5313,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 6516,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 7047,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 375,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 1578,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 1688,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 2204,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 2844,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 1844,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7125,
+   "usage": {
+    "actual_usd": "0.0040955",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3222,
+     "output_tokens": 107,
+     "total_tokens": 3329
+    },
+    "latency_ms": 3672,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 8093,
+   "usage": {
+    "actual_usd": "0.017018",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 7975,
+     "output_tokens": 211,
+     "total_tokens": 8186
+    },
+    "latency_ms": 5235,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7406,
+   "usage": {
+    "actual_usd": "0.023778",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 11287,
+     "output_tokens": 59,
+     "total_tokens": 11346
+    },
+    "latency_ms": 3875,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 4,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 8125,
+   "usage": {
+    "actual_usd": "0.0251255",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 11726,
+     "output_tokens": 84,
+     "total_tokens": 11810
+    },
+    "latency_ms": 4734,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 5,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 14391,
+   "usage": {
+    "actual_usd": "0.031803",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 12273,
+     "output_tokens": 615,
+     "total_tokens": 12888
+    },
+    "latency_ms": 11406,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  }
+ ],
+ "retailer_requests": 83,
+ "seconds": 61.4,
+ "spend": {
+  "settled_usd": "0.1018200",
+  "uncertain_usd": "0",
+  "model_calls": 5,
+  "ledger_job": "scout-b11-20261128T060403"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://isolvedit.me/products/apple-ipad-11-a16-chip-2025-wi-fi-ttc",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T06:04:17+00:00",
+   "sha256": "6d5585b11f40cbd0d502cf25a0932454597aa191454a76c841b2d82df2cb2ed1",
+   "product": {
+    "shop": "iSolved IT Solutions",
+    "shop_id": "isolvedit",
+    "title": "Apple iPad 11\" A16 (2025) – 128GB Wi-Fi",
+    "url": "https://isolvedit.me/products/apple-ipad-11-a16-chip-2025-wi-fi-ttc",
+    "vendor": "Apple",
+    "product_type": "apple ipad",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T06:04:17+00:00",
+    "variants": [
+     {
+      "variant_id": "52842436395119",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "450.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://isolvedit.me/products/apple-ipad-11-a16-chip-2025-wi-fi-ttc?variant=52842436395119"
+     }
+    ],
+    "description": "The 2025 iPad with the A16 chip is the easiest way into iPad: fast enough for school apps, streaming and note-taking, and light enough to carry all day. Its 11-inch Liquid Retina display with True Tone keeps colors natural in any light.\nKey features\nApple A16 chip with 5-core CPU and 4-core GPU\n11\" Liquid Retina display with True Tone\n128GB storage\nWi-Fi model\nUltra-light design for school and travel\nSpecifications\nChip\nA16\nDisplay\n11\" Liquid Retina, True Tone\nStorage\n128GB\nConnectivity\nWi-Fi\nColors in stock\nSilver, Blue (Pink on order)\nBuy from iSolved IT Solutions – order online or visit our store in Bourj Hammoud, Beirut, Lebanon.",
+    "extra": {
+     "tags": [
+      "a16",
+      "Apple",
+      "apple ipad",
+      "Apple tablet",
+      "gift",
+      "isolvedit",
+      "New",
+      "Tablets"
+     ]
+    }
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/apple-ipad-air-11-inch-m4-128gb-wi-fi",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T06:04:17+00:00",
+   "sha256": "6988c82e714a6c23a89338e8762f983322b508985684cbab1db54fdabc6a6148",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Apple iPad Air 11-Inch M4 128GB, Wi-Fi",
+    "url": "https://mobileleb.com/products/apple-ipad-air-11-inch-m4-128gb-wi-fi",
+    "vendor": "Apple",
+    "product_type": "Computers",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T06:04:17+00:00",
+    "variants": [
+     {
+      "variant_id": "68152146362500",
+      "title": "Space Gray / Brand New / 1 Year",
+      "options": {
+       "Color": "Space Gray",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "705.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AM411128WIFISG",
+      "url": "https://mobileleb.com/products/apple-ipad-air-11-inch-m4-128gb-wi-fi?variant=68152146362500",
+      "condition": "Brand New"
+     },
+     {
+      "variant_id": "68152146395268",
+      "title": "Starlight / Brand New / 1 Year",
+      "options": {
+       "Color": "Starlight",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "705.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AM411128WIFISL",
+      "url": "https://mobileleb.com/products/apple-ipad-air-11-inch-m4-128gb-wi-fi?variant=68152146395268",
+      "condition": "Brand New"
+     },
+     {
+      "variant_id": "68152146428036",
+      "title": "Blue / Brand New / 1 Year",
+      "options": {
+       "Color": "Blue",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "705.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AM411128WIFIBL",
+      "url": "https://mobileleb.com/products/apple-ipad-air-11-inch-m4-128gb-wi-fi?variant=68152146428036",
+      "condition": "Brand New"
+     },
+     {
+      "variant_id": "68152146460804",
+      "title": "Purple / Brand New / 1 Year",
+      "options": {
+       "Color": "Purple",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "705.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AM411128WIFIP",
+      "url": "https://mobileleb.com/products/apple-ipad-air-11-inch-m4-128gb-wi-fi?variant=68152146460804",
+      "condition": "Brand New"
+     }
+    ],
+    "description": "Apple M4 chip powers incredible performance, advanced graphics, and on-device AI\nLiquid Retina display delivers a stunning, immersive viewing experience\n12MP Center Stage front camera for dynamic video calls\nWi-Fi 7 with Apple N1 gives you fast wireless connections\nWHY IPAD AIR — iPad Air with the Apple M4 chip packs even more performance into a beautiful design, and it comes in two portable sizes. It features Apple Intelligence* along with a stunning Liquid Retina display, Touch ID, advanced cameras, and Wi-Fi 7.*\nPERFORMANCE AND STORAGE — The M4 chip delivers advanced graphics and incredible performance for smooth multitasking and complex AI tasks. And with all-day battery life, you can keep working and playing wherever you go.* Choose up to 1TB of storage for apps, music, movies, and more.*\nIPADOS + APPS — Run apps and get more done with the game-changing capabilities and intuitive design of iPadOS. The flexible windowing system lets you control, organize, and manage your workflows like never before.\nAPPLE INTELLIGENCE — Apple Intelligence is the personal intelligence system that helps you create, communicate, and get things done effortlessly with groundbreaking privacy protections at every step.*\n11-INCH LIQUID RETINA DISPLAY — The gorgeous Liquid Retina display features advanced technologies like P3 wide color, True Tone, and ultralow reflectivity, which make everything look stunning.*\nCONNECTIVITY — Wi-Fi 7 with Apple N1 gives you fast wireless connections.* Work from a",
+    "extra": {
+     "tags": [
+      "Apple",
+      "apple ipad menu tag",
+      "Apple Tablets menu tag",
+      "IOS Tablets menu tag",
+      "new product",
+      "Tablet Computers",
+      "Tablets & iPads"
+     ]
+    }
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://isolvedit.me/products/apple-ipad-air-11-m3-chip-2025-wi-fi",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T06:04:17+00:00",
+   "sha256": "17fd3d746f1d9267ee7ab54cd1e16912d1365aa46642462af3e0fe1307b2bbff",
+   "product": {
+    "shop": "iSolved IT Solutions",
+    "shop_id": "isolvedit",
+    "title": "Apple iPad Air 11\" M3 (2025) – 128GB Wi-Fi",
+    "url": "https://isolvedit.me/products/apple-ipad-air-11-m3-chip-2025-wi-fi",
+    "vendor": "Apple",
+    "product_type": "apple ipad",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T06:04:17+00:00",
+    "variants": [
+     {
+      "variant_id": "44071679819887",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "650.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://isolvedit.me/products/apple-ipad-air-11-m3-chip-2025-wi-fi?variant=44071679819887"
+     }
+    ],
+    "description": "iPad Air with M3 brings laptop-class power to a thin, light tablet. It is built for Apple Intelligence, creative apps and serious multitasking, and turns into a laptop alternative with the Magic Keyboard and Apple Pencil Pro.\nKey features\nApple M3 chip\n11\" Liquid Retina display with True Tone and P3 wide color\n128GB storage, Wi-Fi\nSupports Apple Pencil Pro and Magic Keyboard\nBuilt for Apple Intelligence\nSpecifications\nChip\nM3\nDisplay\n11\" Liquid Retina\nStorage\n128GB\nConnectivity\nWi-Fi\nColors in stock\nSpace Gray, Blue\nBuy from iSolved IT Solutions – order online or visit our store in Bourj Hammoud, Beirut, Lebanon.",
+    "extra": {
+     "tags": [
+      "Apple",
+      "apple ipad Air",
+      "gift",
+      "iPad",
+      "isolvedit",
+      "m3",
+      "New",
+      "Tablets"
+     ]
+    }
+   }
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/ipad-a16-11-128gb-blue",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T06:04:18+00:00",
+   "sha256": "098b9ec91091ae5bee4d8b86f5413150c8df5041c83a630c7dc4e9ae3d79ad1b",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "iPad (A16) 11'' 128GB - Blue",
+    "url": "https://abedtahan.com/products/ipad-a16-11-128gb-blue",
+    "vendor": "APPLE",
+    "product_type": "iPads",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T06:04:18+00:00",
+    "variants": [
+     {
+      "variant_id": "44611691610291",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "445.00",
+      "compare_at": "530.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "IPAD-11 128GB BLUE",
+      "url": "https://abedtahan.com/products/ipad-a16-11-128gb-blue?variant=44611691610291"
+     }
+    ],
+    "description": "",
+    "extra": {
+     "tags": [
+      "1111",
+      "Annv",
+      "Anv",
+      "auto-type",
+      "b2s",
+      "bazar2026",
+      "bf2026",
+      "Clearance",
+      "Computers and Tablets",
+      "Essentials2025",
+      "iPad",
+      "new-322060",
+      "Not Defined",
+      "R",
+      "smalldelivery",
+      "Tablets",
+      "vhim",
+      "xmashim",
+      "xmass2025",
+      "xmastech"
+     ]
+    }
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://istyle.com.lb/products/2025-ipad-a16-md4a4qa-a",
+   "shop_id": "istyle_lebanon",
+   "observed_at": "2026-11-28T06:04:18+00:00",
+   "sha256": "dc368a8450df229e19f34efcc31a5e460770e874ff3ffcd0967a5279eb888ef8",
+   "product": {
+    "shop": "iSTYLE Lebanon",
+    "shop_id": "istyle_lebanon",
+    "title": "iPad Wi-Fi 128GB - Blue (A16)",
+    "url": "https://istyle.com.lb/products/2025-ipad-a16-md4a4qa-a",
+    "vendor": "Apple",
+    "product_type": "iPad",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T06:04:18+00:00",
+    "variants": [
+     {
+      "variant_id": "41969474437218",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "609.39",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "MD4A4QA/A",
+      "url": "https://istyle.com.lb/products/2025-ipad-a16-md4a4qa-a?variant=41969474437218"
+     }
+    ],
+    "description": "The 11-inch iPad is now more capable than ever with the superfast A16 chip, Liquid Retina display, advanced cameras, fast Wi-Fi 6 and 5G, USB-C connector, and four gorgeous colors. iPad delivers a powerful way to create, stay connected, and get things done‚ all for a surprisingly affordable price.",
+    "extra": {
+     "tags": [
+      "customer-favorite"
+     ]
+    }
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://isolvedit.me/policies/shipping-policy",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T06:04:18+00:00",
+   "sha256": "10c8b5f2ee76c44ca821544a50daca4a1cb039ec33e9395edb94ad314ee45234",
+   "excerpt": "Shipping policy | iSolved IT\nSkip to content\nYour cart is empty\nContinue shopping\nHave an account?\nLog in to check out faster.\nYour cart\nLoading...\nEstimated total\n$0.00 USD\n✅ All prices include VAT – nothing extra to pay. Discounts and shipping calculated at checkout.\nCheck out\n🎄 Christmas deals are live — order on WhatsApp\n✅ All prices include VAT — nothing extra to pay\n💵 Cash on delivery\n🛡️ 6-month warranty on used laptops\nShop\nApple\nApple\nApple Accessories\nApple Macbook\nApple iPad\nGaming\nGaming\nGaming Laptops\nGaming Monitors\nGaming Consoles\nGaming Accessories\nLaptops\nLaptops\nApple Laptops\nAsus Laptops\nAcer Laptops\nDell Laptops\nHp laptops\nLenovo Laptops\nMsi Laptops\nSecond Hand Laptops\nSony Laptops\nLaptop Parts\nDesktops\nDesktops\nAll Desktops & All-in-Ones\nDesktop PCs\nAll-in-One PCs\nComputer Parts\nComputer Parts\nMotherboards\nCPU's\nGPU's\nStorages\nRAM's\nCases and Chassis\nPower Supply\nAccessories\nAccessories\nAdapters & Converters\nBackpacks & Bags\nCables\nExternal Hard Drives\nFlash Drives & SD Cards\nMobile Accessories\nPower Banks\nChargers\nPhone Holders & Car Mounts\nDocking Stations & USB-C Hubs\nLaptop Stands & Coolers\nWebcams\nWireless Presenters\nInks & Toners\nMouse\nMouse Pads & Wrist Pads\nKeyboards\nAudio\nAudio\nEarbuds\nSpeakers\nHeadsets\nMicrophones\nElectronics\nElectronics\nTablets\nGadgets\nMonitors\nPrinters & Scanners\nPaper Shredders\nPOS & Barcode Scanners\nNetworking Products\nNetworking Products\nFiber Optic\nNetworking Accessories\nSwitches\nNetwork & Server Cabinets\nRouters & Modems\nC",
+   "quoted": []
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://technodel.net/product/apple-ipad-md4a4-a16-11-wi-fi-128gb-blue",
+   "shop_id": "technodel",
+   "observed_at": "2026-11-28T06:04:18+00:00",
+   "sha256": "3e8228206b7c27fde72a675ccb8fc43860e82580f47bd154c8f6de8c349dba08",
+   "product": {
+    "shop": "Technodel",
+    "shop_id": "technodel",
+    "title": "Apple iPad MD4A4 | A16 | 11\" | Wi-Fi | 128GB | Blue",
+    "url": "https://technodel.net/product/apple-ipad-md4a4-a16-11-wi-fi-128gb-blue",
+    "vendor": "Apple",
+    "product_type": null,
+    "condition": "NewCondition",
+    "source": "schema_org_jsonld",
+    "observed_at": "2026-11-28T06:04:18+00:00",
+    "variants": [
+     {
+      "variant_id": "RK-PVVZE9H5",
+      "title": "Apple iPad MD4A4 | A16 | 11\" | Wi-Fi | 128GB | Blue",
+      "options": {},
+      "price": "475.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": "InStock",
+      "sku": "RK-PVVZE9H5",
+      "url": "https://technodel.net/product/apple-ipad-md4a4-a16-11-wi-fi-128gb-blue",
+      "condition": "NewCondition"
+     }
+    ],
+    "description": "Apple iPad with an 11-inch screen, Wi-Fi connectivity and 128GB of storage in a blue finish. A tablet for everyday browsing, streaming and light work."
+   }
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/ipad-a16-11-256gb-blue",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T06:04:18+00:00",
+   "sha256": "981165fe0f466383fb08056df979cd47f87571f7fd18b5d571809b7d040df5a8",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "iPad (A16) 11'' 256GB - Blue",
+    "url": "https://abedtahan.com/products/ipad-a16-11-256gb-blue",
+    "vendor": "APPLE",
+    "product_type": "iPads",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T06:04:18+00:00",
+    "variants": [
+     {
+      "variant_id": "44611691839667",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "559.00",
+      "compare_at": "665.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "IPAD-11 256GB BLUE",
+      "url": "https://abedtahan.com/products/ipad-a16-11-256gb-blue?variant=44611691839667"
+     }
+    ],
+    "description": "",
+    "extra": {
+     "tags": [
+      "Anv",
+      "auto-type",
+      "b2s",
+      "bazar2026",
+      "bf2026",
+      "Clearance",
+      "Computers and Tablets",
+      "iPad",
+      "new-322060",
+      "Not Defined",
+      "smalldelivery",
+      "Tablets",
+      "vhim",
+      "xmashim"
+     ]
+    }
+   }
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://istyle.com.lb/pages/delivery-payment-info#gbaid5672908",
+   "shop_id": "istyle_lebanon",
+   "observed_at": "2026-11-28T06:04:18+00:00",
+   "sha256": "7ee7affab05c6548514d6f224c8e8c988234559e1ee3043b93fe0001c6b3c4e4",
+   "excerpt": "Delivery & Payment Options – Fast, Flexible & Secure\n– iSTYLE Lebanon\nSkip to content\nShop online & collect in-store.\nLoading store\nAddress:\nTelephone:\nEmail:\nHours:\nView store map\nSelect another store\nLoading store\nAddress:\nTelephone:\nEmail:\nHours:\nView store map\nSelect another store\nLog in\nCart\nCountries\nSelect your country\nMiddle East & Africa\nUnited Arab Emirates\nOman\nLebanon\nMarocco\nIraq\nEurope\nHungary\nCzech Republic\nCroatia\nBulgaria\nMacedonia\nRomania\nSerbia\nSlovakia\nSlovenia\nSpain (K-Tuin)\nAndorra (K-tuin)\nCanary Islands (Banana Computer)\nMac\niPad\niPhone\nWatch\nAirPods\nTV\nAccessories\nDeals\nBusiness\nServices\nStores\nBlogs\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\nDelivery & Payment Options – Fast, Flexible & Secure\nOnline delivery and payment options\nOnline delivery and payment options | Return policy\nShipping information\nFree delivery across Lebanon for order value above USD 900.\nUSD 4 delivery fee across Lebanon for order value below USD 900.\nStore Pickup\nOrder online and pick up the products at your nearest iSTYLE. Choose the Store Pickup option at the check out.Please wait for our pick up confirmation email before you go to the desired iSTYLE store. Please note your order will be canc",
+   "quoted": []
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://technodel.net/api/llm-context",
+   "shop_id": "technodel",
+   "observed_at": "2026-11-28T06:04:19+00:00",
+   "sha256": "b55d9346dff533ed1909b1f8a99169bed1f5e262d2fdf59ad12d96d780aa7c84",
+   "excerpt": "{\"_metadata\":{\"site\":\"Technodel Lebanon\",\"description\":\"Lebanon's premier online tech store - laptops, desktops, PC components, gaming gear, networking and accessories, with nationwide delivery.\",\"company\":\"Technodel\",\"founded\":2010,\"slogan\":\"We deliver Technology.\",\"url\":\"https://technodel.net\",\"currency\":\"USD\",\"languages\":[\"English\",\"Arabic\"],\"contact\":{\"phone\":\"+961 3 659 872\",\"whatsapp\":\"+961 3 659 872\",\"whatsappUrl\":\"https://wa.me/9613659872\",\"supportEmail\":\"support@technodel.net\",\"ordersEmail\":\"orders@technodel.net\"},\"stores\":[{\"area\":\"Beirut area\",\"address\":\"Badaro, Beirut\"},{\"area\":\"South Lebanon\",\"address\":\"Abbassiyeh (serving Tyre / Sour and the South)\"}],\"delivery\":{\"coverage\":\"Nationwide delivery across all of Lebanon\",\"sameDayAreas\":\"Beirut, Sour, Tripoli and surroundings\",\"otherRegions\":\"1-2 days\",\"sameDay\":\"Same-day delivery to Beirut, Sour, Tripoli and surroundings\",\"costUsd\":4,\"costNote\":\"Flat $4 anywhere in Lebanon; free on orders of $500 or more\",\"freeDeliveryAboveUsd\":500},\"payments\":[\"Cash on Delivery (USD)\",\"Wish Money\",\"Cryptocurrency (USDT, BTC, ETH)\"],\"warranty\":{\"summary\":\"Manufacturer warranty on everything, handled through Technodel.\",\"laptopsAndPcs\":\"1-2 years\",\"accessories\":\"minimum 6 months\"},\"returns\":{\"returnDays\":30,\"policy\":\"30-day returns: any eligible product can be returned within 30 days of delivery for a full refund, free of charge at the Badaro (Beirut) or Abbassiyeh (Tyre) branch. Digital codes once revealed, opened consumables and op",
+   "quoted": [
+    {
+     "quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more",
+     "found": true
+    },
+    {
+     "quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://abedtahan.com/pages/contact",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T06:04:19+00:00",
+   "sha256": "8851115687c29a1be25521b95c057036e22265d8fe8d85062dbd98485e21c1e3",
+   "excerpt": "Contact\n– Abed Tahan\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & Crepe Makers\nIce Cube, Ice Cream & Yoghurt Makers\nSaj Machines\nL",
+   "quoted": []
+  },
+  {
+   "obs": "P8",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/apple-ipad-11-inches-a16-128gb-11th-gen-2025",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T06:04:28+00:00",
+   "sha256": "8435eafa6a1b75c5f6b4ea6706a6c7728147fff0260416605e8783f7063b2adb",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Apple iPad 11-inch (A16) 128GB (11th Gen, 2025)",
+    "url": "https://mobileleb.com/products/apple-ipad-11-inches-a16-128gb-11th-gen-2025",
+    "vendor": "Apple",
+    "product_type": "Computers",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T06:04:28+00:00",
+    "variants": [
+     {
+      "variant_id": "50699725242500",
+      "title": "Blue / Brand New / 1 Year",
+      "options": {
+       "Color": "Blue",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "458.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AI11128B",
+      "url": "https://mobileleb.com/products/apple-ipad-11-inches-a16-128gb-11th-gen-2025?variant=50699725242500",
+      "condition": "Brand New"
+     },
+     {
+      "variant_id": "50699725275268",
+      "title": "Pink / Brand New / 1 Year",
+      "options": {
+       "Color": "Pink",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "458.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AI11128P",
+      "url": "https://mobileleb.com/products/apple-ipad-11-inches-a16-128gb-11th-gen-2025?variant=50699725275268",
+      "condition": "Brand New"
+     },
+     {
+      "variant_id": "50699821449348",
+      "title": "Silver / Brand New / 1 Year",
+      "options": {
+       "Color": "Silver",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "458.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AI11128S",
+      "url": "https://mobileleb.com/products/apple-ipad-11-inches-a16-128gb-11th-gen-2025?variant=50699821449348",
+      "condition": "Brand New"
+     },
+     {
+      "variant_id": "50699821482116",
+      "title": "Yellow / Brand New / 1 Year",
+      "options": {
+       "Color": "Yellow",
+       "Product Condition": "Brand New",
+       "Warranty Validity": "1 Year"
+      },
+      "price": "458.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "AI11128Y",
+      "url": "https://mobileleb.com/products/apple-ipad-11-inches-a16-128gb-11th-gen-2025?variant=50699821482116",
+      "condition": "Brand New"
+     }
+    ],
+    "description": "Apple A16 5-Core Chip\n4-Core GPU | 16-Core Neural Engine\n11″ Liquid Retina Touchscreen\n2360 x 1640 Screen Resolution (264 ppi)\n128GB Storage Capacity\nWide 12MP Landscape Front Camera\nWide 12MP Rear Camera\nWi-Fi 6 (802.11ax) | Bluetooth 5.3\nUSB-C 2.0 Port (480 Mb/s)",
+    "extra": {
+     "tags": [
+      "Apple",
+      "apple ipad menu tag",
+      "Apple Tablets menu tag",
+      "IOS Tablets menu tag",
+      "promo8",
+      "Single Rear 8MP",
+      "Tablet Computers",
+      "Tablets & iPads",
+      "Wi-Fi"
+     ]
+    }
+   }
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://istyle.com.lb/products/2025-ipad-a16-md4a4qa-a",
+   "shop_id": "istyle_lebanon",
+   "observed_at": "2026-11-28T06:04:29+00:00",
+   "sha256": "8a62bfcd8adb4c88843853a8f6a06427307ad7639b29fc125998d6f0d4477dec",
+   "excerpt": "Buy iPad Wi-Fi 128GB - Blue (A16) Online in Beirut, Lebanon\n– iSTYLE Lebanon\nSkip to content\nShop online & collect in-store.\nLoading store\nAddress:\nTelephone:\nEmail:\nHours:\nView store map\nSelect another store\nLoading store\nAddress:\nTelephone:\nEmail:\nHours:\nView store map\nSelect another store\nLog in\nCart\nCountries\nSelect your country\nMiddle East & Africa\nUnited Arab Emirates\nOman\nLebanon\nMarocco\nIraq\nEurope\nHungary\nCzech Republic\nCroatia\nBulgaria\nMacedonia\nRomania\nSerbia\nSlovakia\nSlovenia\nSpain (K-Tuin)\nAndorra (K-tuin)\nCanary Islands (Banana Computer)\nMac\niPad\niPhone\nWatch\nAirPods\nTV\nAccessories\nDeals\nBusiness\nServices\nStores\nBlogs\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\n🗓️\nTrusted since 20+ years\n🌍\n15 Countries in Europe & MENA\n\n150+ Stores worldwide\n13-inch iPad Air M4\nFrom\nUSD 1,219\n11-inch iPad Air M4\nFrom\nUSD 915\n13-inch iPad Pro M5\nFrom\nUSD 1,919\n11-inch iPad Pro M5\nFrom\nUSD 1,519\n13-inch iPad Air M3\nFrom\nUSD 879\niPad mini A17 Pro\nFrom\nUSD 715\niPad Accessories\nFrom\nUSD 60\nView All iPad\n2025 iPad\nA16\nSKU: MD4A4QA/A\nBarcode:\n195950086508\nSkip to product information\nOpen media 1 in modal\nOpen media 2 in modal\nOpen media 3 in modal\nOpen media 4 in modal\nOpen media 5 in modal\nOpen media 6 in modal\nOpen media 7 in modal\nOpen media 8 in modal\n1\n/\nof\n8\n2025 iPad\nA16\nSKU:\n",
+   "quoted": []
+  },
+  {
+   "obs": "T6",
+   "kind": "page",
+   "url": "https://abedtahan.com/products/ipad-a16-11-128gb-blue",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T06:04:29+00:00",
+   "sha256": "1d0e76e6f758ad4b1ad102fa4ec788ba748686d314c764faa298fcf4e010c3a6",
+   "excerpt": "iPad (A16) 11'' 128GB - Blue – Abed Tahan\nRead the Privacy Policy\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & Crepe Makers\nIce Cu",
+   "quoted": []
+  },
+  {
+   "obs": "P9",
+   "kind": "product",
+   "url": "https://karizmamegastore.com/products/apple-ipad-11-inch-128gb-versatile-tablet",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T06:04:29+00:00",
+   "sha256": "7b343b9feb290167736a0ad8c8847992a1a66e7abe78789724edb1b2a62f32a9",
+   "product": {
+    "shop": "Karizma Megastore",
+    "shop_id": "karizma",
+    "title": "Apple iPad 11 Inch A16",
+    "url": "https://karizmamegastore.com/products/apple-ipad-11-inch-128gb-versatile-tablet",
+    "vendor": "Apple",
+    "product_type": "Tablets",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T06:04:29+00:00",
+    "variants": [
+     {
+      "variant_id": "46552371953853",
+      "title": "128GB / Silver",
+      "options": {
+       "storage": "128GB",
+       "Color": "Silver"
+      },
+      "price": "440.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "APPL-IPAD11-128GB-1",
+      "url": "https://karizmamegastore.com/products/apple-ipad-11-inch-128gb-versatile-tablet?variant=46552371953853"
+     },
+     {
+      "variant_id": "46552371986621",
+      "title": "128GB / Blue",
+      "options": {
+       "storage": "128GB",
+       "Color": "Blue"
+      },
+      "price": "440.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "APPL-IPAD11-128GB-2",
+      "url": "https://karizmamegastore.com/products/apple-ipad-11-inch-128gb-versatile-tablet?variant=46552371986621"
+     },
+     {
+      "variant_id": "46552372019389",
+      "title": "128GB / Pink",
+      "options": {
+       "storage": "128GB",
+       "Color": "Pink"
+      },
+      "price": "440.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "APPL-IPAD11-128GB-3",
+      "url": "https://karizmamegastore.com/products/apple-ipad-11-inch-128gb-versatile-tablet?variant=46552372019389"
+     },
+     {
+      "variant_id": "46552372052157",
+      "title": "128GB / Yellow",
+      "options": {
+       "storage": "128GB",
+       "Color": "Yellow"
+      },
+      "price": "440.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "APPL-IPAD11-128GB-4",
+      "url": "https://karizmamegastore.com/products/apple-ipad-11-inch-128gb-versatile-tablet?variant=46552372052157"
+     },
+     {
+      "variant_id": "46552372084925",
+      "title": "256GB / Silver",
+      "options": {
+       "storage": "256GB",
+       "Color": "Silver"
+      },
+      "price": "540.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "APPL-IPAD11-128GB-5",
+      "url": "https://karizmamegastore.com/products/apple-ipad-11-inch-128gb-versatile-tablet?variant=46552372084925"
+     },
+     {
+      "variant_id": "46552372117693",
+      "title": "256GB / Blue",
+      "options": {
+       "storage": "256GB",
+       "Color": "Blue"
+      },
+      "price": "540.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "APPL-IPAD11-128GB-6",
+      "url": "https://karizmamegastore.com/products/apple-ipad-11-inch-128gb-versatile-tablet?variant=46552372117693"
+     },
+     {
+      "variant_id": "46552372150461",
+      "title": "256GB / Pink",
+      "options": {
+       "storage": "256GB",
+       "Color": "Pink"
+      },
+      "price": "540.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "APPL-IPAD11-128GB-7",
+      "url": "https://karizmamegastore.com/products/apple-ipad-11-inch-128gb-versatile-tablet?variant=46552372150461"
+     },
+     {
+      "variant_id": "46552372183229",
+      "title": "256GB / Yellow",
+      "options": {
+       "storage": "256GB",
+       "Color": "Yellow"
+      },
+      "price": "540.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "APPL-IPAD11-128GB-8",
+      "url": "https://karizmamegastore.com/products/apple-ipad-11-inch-128gb-versatile-tablet?variant=46552372183229"
+     }
+    ],
+    "description": "Powerful and Versatile\nThe iPad 11-inch delivers incredible performance in a portable design. Perfect for work, creativity, and entertainment with the power of iPadOS.\nKey Features:\nDisplay: 11-inch Liquid Retina display with True Tone\nPerformance: Powerful chip for smooth multitasking\nCamera: Advanced camera system for photos and video calls\nConnectivity: Wi-Fi 6 for fast wireless performance\nApple Pencil: Compatible with Apple Pencil for note-taking and drawing\nBattery: All-day battery life\niPadOS: Powerful features and intuitive multitasking\nIdeal for students, professionals, and anyone who needs a versatile tablet for everyday tasks.",
+    "extra": {
+     "tags": [
+      "11-inch",
+      "128GB",
+      "Apple",
+      "iPad",
+      "Tablet"
+     ]
+    }
+   }
+  },
+  {
+   "obs": "T7",
+   "kind": "page",
+   "url": "https://www.karizmamegastore.com/policies/privacy-policy",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T06:04:30+00:00",
+   "sha256": "a0aef73c6f448fd059443213b618d281aa03e39d9181490671be88c59dfe77c4",
+   "excerpt": "Privacy policy – Karizma Megastore\nSkip to content\nReturns extended to 60 days\nFree shipping on your first order\nHome\nCategories\nCategories\nSmart Phones\nSmart Phones\nApple\nXiaomi\nSamsung\nHonor\nTecno\nInfinix\nGadgets\nGadgets\nWearables\nAudio Devices\nPower & Charging\nGaming Consoles\nGaming Consoles\nConsoles\nGames\nGaming Wheels & Peripherals\nLaptops\nLaptops\nGaming Laptops\nOffice Laptops\nComputer Accessories\nComputer Accessories\nGaming Accessories\nMouse & Keyboards\nConnectivity & Hubs\nStorage & Memory\nMonitors\nHeadphones & Earphones\nWiFi and Networking\nContent Creation\nsoundcore\nPitaka\nAnker\nCases\nContact\nHome\nCategories\nCases\nContact\nLogin\n0\nHome\nCategories\nSmart Phones\nApple\nXiaomi\nSamsung\nHonor\nTecno\nInfinix\nGadgets\nWearables\nAudio Devices\nPower & Charging\nGaming Consoles\nConsoles\nGames\nGaming Wheels & Peripherals\nLaptops\nGaming Laptops\nOffice Laptops\nComputer Accessories\nGaming Accessories\nMouse & Keyboards\nConnectivity & Hubs\nStorage & Memory\nMonitors\nHeadphones & Earphones\nWiFi and Networking\nContent Creation\nsoundcore\nPitaka\nAnker\nCases\nContact\nPrivacy policy\nLast updated: September 2, 2024\nThis Privacy Policy describes how Karizma Megastore (the \"Site\", \"we\", \"us\", or \"our\") collects, uses, and discloses your personal information when you visit, use our services, or make a purchase from www.karizmamegastore.com (the \"Site\") or otherwise communicate with us regarding the Site (collectively, the \"Services\"). For purposes of this Privacy Policy, \"you\" and \"your\" means you as t",
+   "quoted": []
+  },
+  {
+   "obs": "T8",
+   "kind": "page",
+   "url": "https://mobileleb.com/meta.json",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T06:04:38+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"Mobileleb\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"mobileleb.com\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T9",
+   "kind": "page",
+   "url": "https://mobileleb.com/",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T06:04:39+00:00",
+   "sha256": "6e07585bbe3c3dc4b46d9bfa96d36025ecb033867f676cc9fa453e5f2579c9ab",
+   "excerpt": "Mobileleb.com | Mobile Price in Lebanon, Laptop, PS5\nCell Phones & Tablets\nCell Phones\nSamsung\nHonor\nXiaomi\nTecno\nApple\nFeature Phones\nInfinix\nApple Open Box\nGoogle\nSamsung Open Box\nOppo\nVivo\nMotorola\nBlackview\nitel\nRealme\nZTE nubia\nOnePlus\nFreeYond\nNokia\nHuawei\nAlcatel\nHiSense\nDoogee\nTCL\nBlackBerry\nCAT\nUmidigi\nI-Plus\nTablets, iPads & eReaders\nApple iPads\nAndroid Tablets\nWindows Tablets\neReaders\nDrawing Tablets & Accessories\nSamsung\nBlackview\nRed Magic Gaming Tablets\nLenovo\nAmazon\nAlcatel\nMicrosoft\ni-Plus\nHuawei\nG-TiDE\nWearables, Smart Watches & Trackers\nCell Phone Accessories\nMobile Phone Cases\nScreen Protectors\nCharging & Data Cables\nChargers & Power Adapters\nMobile Gaming Controllers\nMobiles & Tablets Cables & Connectors\nMounts & Stands\nCar Accessories\nMobile Phone Accessories\nMobile Phone Camera Accessories\nLED Ring Lights\nGimbals & Camera Stabilizers\nSelfie Sticks, Tripods & Monopods\niPad & Tablet Accessories\nKeyboards\nStylus Pens\nCovers & Screen Protectors\nTablet Computer Docks & Stands\nTablet Computer Parts\nComputers & Parts\nApple Accessories\nKeyboards & Mice\nTime Capsule\nAirPods & Audio\nAll Laptops\nHP Laptops\nLenovo Laptops\nNEC Laptops\nAcer Laptops\nMacBooks, iMacs & Mac mini\nMac Studio\nDell Laptops\nAsus Laptops\nMSI Laptops\nGigabyte Laptops\nRazer Laptops\nGateway Laptops\nToshiba Laptops\nMicrosoft Surface\nLaptops Open Box\nDesktop Computers\nMini PCs\nDesktops\nAll-in-One Computers\nP.O.S Systems\nCore Components\nGraphics Cards\nCPU / Computer Processors\nRAM\nMotherboards\nAudio ",
+   "quoted": []
+  },
+  {
+   "obs": "T10",
+   "kind": "page",
+   "url": "https://mobileleb.com/policies/shipping-policy",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T06:04:49+00:00",
+   "sha256": "366d68f350536463d40f4164db08d48c6a51cad3d8c021b2b521e97bd17d8fa2",
+   "excerpt": "Shipping policy\n– Mobileleb\nCell Phones & Tablets\nCell Phones\nSamsung\nHonor\nXiaomi\nTecno\nApple\nFeature Phones\nInfinix\nApple Open Box\nGoogle\nSamsung Open Box\nOppo\nVivo\nMotorola\nBlackview\nitel\nRealme\nZTE nubia\nOnePlus\nFreeYond\nNokia\nHuawei\nAlcatel\nHiSense\nDoogee\nTCL\nBlackBerry\nCAT\nUmidigi\nI-Plus\nTablets, iPads & eReaders\nApple iPads\nAndroid Tablets\nWindows Tablets\neReaders\nDrawing Tablets & Accessories\nSamsung\nBlackview\nRed Magic Gaming Tablets\nLenovo\nAmazon\nAlcatel\nMicrosoft\ni-Plus\nHuawei\nG-TiDE\nWearables, Smart Watches & Trackers\nCell Phone Accessories\nMobile Phone Cases\nScreen Protectors\nCharging & Data Cables\nChargers & Power Adapters\nMobile Gaming Controllers\nMobiles & Tablets Cables & Connectors\nMounts & Stands\nCar Accessories\nMobile Phone Accessories\nMobile Phone Camera Accessories\nLED Ring Lights\nGimbals & Camera Stabilizers\nSelfie Sticks, Tripods & Monopods\niPad & Tablet Accessories\nKeyboards\nStylus Pens\nCovers & Screen Protectors\nTablet Computer Docks & Stands\nTablet Computer Parts\nComputers & Parts\nApple Accessories\nKeyboards & Mice\nTime Capsule\nAirPods & Audio\nAll Laptops\nHP Laptops\nLenovo Laptops\nNEC Laptops\nAcer Laptops\nMacBooks, iMacs & Mac mini\nMac Studio\nDell Laptops\nAsus Laptops\nMSI Laptops\nGigabyte Laptops\nRazer Laptops\nGateway Laptops\nToshiba Laptops\nMicrosoft Surface\nLaptops Open Box\nDesktop Computers\nMini PCs\nDesktops\nAll-in-One Computers\nP.O.S Systems\nCore Components\nGraphics Cards\nCPU / Computer Processors\nRAM\nMotherboards\nAudio Cards & Adapters\nComputer",
+   "quoted": []
+  }
+ ]
+}

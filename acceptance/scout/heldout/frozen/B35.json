@@ -1,0 +1,1230 @@
+{
+ "run_id": "scout-b35-20261128T052355",
+ "request": {
+  "id": "B35",
+  "text": "I want a new Samsung Galaxy S-series phone with 256 GB and an integrated S Pen for taking notes. What's the delivered price in Beirut?",
+  "mode": "delivery",
+  "destination": "Beirut",
+  "category": "phone",
+  "run_id": "scout-b35-20261128T052355"
+ },
+ "status": "offers",
+ "message": "Checked offers:\n- OutGeeked: Samsung Galaxy S25 Ultra (Titanium Black / 12GB/256GB) - USD 1000.00 listed. Open questions: not confirmed: Integrated S Pen for notes; delivery fee to your area is not published or not confirmed; VAT not stated by the shop\n- Karizma Megastore: Samsung Galaxy S25 Ultra Golden Warranty (256GB/12RAM / Natural Titanium) - USD 1090.00 listed. Open questions: new condition is not stated by the shop; delivery fee to your area is not published or not confirmed; VAT not stated by the shop",
+ "question": null,
+ "offers": [
+  {
+   "tier": "best",
+   "shop": "OutGeeked",
+   "shop_id": "outgeeked",
+   "title": "Samsung Galaxy S25 Ultra",
+   "variant": "Titanium Black / 12GB/256GB",
+   "url": "https://outgeeked.net/products/samsung-galaxy-s25-ultra?variant=47452746285314",
+   "price": "1000.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "Galaxy S25 Ultra with 256GB meets the requested S-series configuration and has a built-in S Pen.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "not confirmed: Integrated S Pen for notes",
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "every item brand-new and genuine",
+     "obs": "T6",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Samsung Galaxy S-series phone",
+     "status": "met",
+     "quote": "Samsung Galaxy S25 Ultra",
+     "obs": "P1",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "256 GB storage",
+     "status": "met",
+     "quote": "Titanium Black / 12GB/256GB",
+     "obs": "P1",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Integrated S Pen for notes",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P1",
+     "url": "https://outgeeked.net/products/samsung-galaxy-s25-ultra",
+     "read": "https://outgeeked.net/products/samsung-galaxy-s25-ultra.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:24:26+00:00",
+     "sha256": "e5343237f276ba1ef99ce4a4bb68276483eb471e29c198e74b801f6285d17014"
+    }
+   ],
+   "seller_basis": "OutGeeked: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  },
+  {
+   "tier": "best",
+   "shop": "Karizma Megastore",
+   "shop_id": "karizma",
+   "title": "Samsung Galaxy S25 Ultra Golden Warranty",
+   "variant": "256GB/12RAM / Natural Titanium",
+   "url": "https://karizmamegastore.com/products/samsung-galaxy-s25-ultra-512gb-12gb-ram-golden-warranty?variant=46553612550333",
+   "price": "1090.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "unknown",
+   "identity": "exact",
+   "identity_reason": "Galaxy S25 Ultra 256GB with integrated S Pen; new condition remains unconfirmed.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "new condition is not stated by the shop",
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Samsung Galaxy S-series phone",
+     "status": "met",
+     "quote": "Samsung Galaxy S25 Ultra Golden Warranty",
+     "obs": "P7",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "256 GB storage",
+     "status": "met",
+     "quote": "256GB/12RAM / Natural Titanium",
+     "obs": "P7",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Integrated S Pen for notes",
+     "status": "met",
+     "quote": "S Pen: Advanced integrated S Pen for productivity and creativity",
+     "obs": "T5",
+     "covered_elsewhere": false
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P7",
+     "url": "https://karizmamegastore.com/products/samsung-galaxy-s25-ultra-512gb-12gb-ram-golden-warranty",
+     "read": "https://karizmamegastore.com/products/samsung-galaxy-s25-ultra-512gb-12gb-ram-golden-warranty.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:24:31+00:00",
+     "sha256": "bd7a8ce65f19aaadcaab401a203be4ca3e33534d2e0c519d4d54a5e35cc8b227"
+    }
+   ],
+   "seller_basis": "Karizma Megastore: Lebanese shop in the reviewed directory (shop metadata: Ghaziyeh, LB)",
+   "downgrades": [
+    "free delivery in the quote is conditional (\"first order\")"
+   ]
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P1",
+   "variant_id": "47452746285314",
+   "identity": "exact",
+   "identity_reason": "Galaxy S25 Ultra with 256GB meets the requested S-series configuration and has a built-in S Pen.",
+   "condition": "new",
+   "condition_quote": "every item brand-new and genuine",
+   "condition_obs": "T6",
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "T6",
+     "quote": "every item brand-new and genuine"
+    },
+    {
+     "requirement": "Samsung Galaxy S-series phone",
+     "status": "met",
+     "evidence_obs": "P1",
+     "quote": "Samsung Galaxy S25 Ultra"
+    },
+    {
+     "requirement": "256 GB storage",
+     "status": "met",
+     "evidence_obs": "P1",
+     "quote": "Titanium Black / 12GB/256GB"
+    },
+    {
+     "requirement": "Integrated S Pen for notes",
+     "status": "met",
+     "evidence_obs": "T5",
+     "quote": "S Pen: Advanced integrated S Pen for productivity and creativity"
+    }
+   ],
+   "delivery_obs": "T9",
+   "delivery_quote": "Taxes and shipping calculated at checkout",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P7",
+   "variant_id": "46553612550333",
+   "identity": "exact",
+   "identity_reason": "Galaxy S25 Ultra 256GB with integrated S Pen; new condition remains unconfirmed.",
+   "condition": "unknown",
+   "condition_quote": null,
+   "condition_obs": null,
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "unknown",
+     "evidence_obs": null,
+     "quote": null
+    },
+    {
+     "requirement": "Samsung Galaxy S-series phone",
+     "status": "met",
+     "evidence_obs": "P7",
+     "quote": "Samsung Galaxy S25 Ultra Golden Warranty"
+    },
+    {
+     "requirement": "256 GB storage",
+     "status": "met",
+     "evidence_obs": "P7",
+     "quote": "256GB/12RAM / Natural Titanium"
+    },
+    {
+     "requirement": "Integrated S Pen for notes",
+     "status": "met",
+     "evidence_obs": "T5",
+     "quote": "S Pen: Advanced integrated S Pen for productivity and creativity"
+    }
+   ],
+   "delivery_obs": "T2",
+   "delivery_quote": "Free shipping on your first order",
+   "delivery_fee_usd": "0",
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Search Ultra models with built-in S Pen and 256 GB.",
+   "at_s": 10.7,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "Samsung S25 Ultra 256"
+    },
+    {
+     "tool": "search",
+     "query": "Samsung S24 Ultra 256"
+    },
+    {
+     "tool": "search",
+     "query": "Samsung S23 Ultra 256"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Check new-condition evidence and delivery for leading S25 Ultra offers; compare Abed Tahan.",
+   "at_s": 52.7,
+   "calls": [
+    {
+     "tool": "read",
+     "url": "https://outgeeked.net/products/samsung-galaxy-s25-ultra",
+     "terms": [
+      "new",
+      "condition",
+      "S Pen",
+      "delivery"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "outgeeked"
+     ]
+    },
+    {
+     "tool": "open",
+     "url": "https://abedtahan.com/products/samsung-galaxy-s25-ultra-12gb-256gb-titanium-gray"
+    },
+    {
+     "tool": "read",
+     "url": "https://karizmamegastore.com/products/samsung-galaxy-s25-ultra-512gb-12gb-ram-golden-warranty",
+     "terms": [
+      "new",
+      "condition",
+      "S Pen"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "wincell"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Best verified-new option is OutGeeked; delivery total unavailable. Include Karizma as condition-unconfirmed comparison with conditional first-order shipping.",
+   "at_s": 73.3,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 25360,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 25672,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 27828,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 1344,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 2297,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 2578,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 2703,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 4047,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 8219,
+   "usage": {
+    "actual_usd": "0.004128",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3227,
+     "output_tokens": 109,
+     "total_tokens": 3336
+    },
+    "latency_ms": 4594,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 14219,
+   "usage": {
+    "actual_usd": "0.023433",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 10445,
+     "output_tokens": 235,
+     "total_tokens": 10680
+    },
+    "latency_ms": 7906,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 15968,
+   "usage": {
+    "actual_usd": "0.0341755",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 13062,
+     "output_tokens": 655,
+     "total_tokens": 13717
+    },
+    "latency_ms": 12188,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": true
+  }
+ ],
+ "retailer_requests": 82,
+ "seconds": 73.4,
+ "spend": {
+  "settled_usd": "0.0617365",
+  "uncertain_usd": "0",
+  "model_calls": 3,
+  "ledger_job": "scout-b35-20261128T052355"
+ },
+ "fallback": false,
+ "warnings": [
+  "The model summary mentioned amounts that were not verified: Free shipping"
+ ],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/samsung-galaxy-s25-ultra",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:24:26+00:00",
+   "sha256": "e5343237f276ba1ef99ce4a4bb68276483eb471e29c198e74b801f6285d17014",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "Samsung Galaxy S25 Ultra",
+    "url": "https://outgeeked.net/products/samsung-galaxy-s25-ultra",
+    "vendor": "Samsung",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:24:26+00:00",
+    "variants": [
+     {
+      "variant_id": "47452746055938",
+      "title": "Titanium Black / 12GB/512GB",
+      "options": {
+       "Color": "Titanium Black",
+       "Storage": "12GB/512GB"
+      },
+      "price": "1202.00",
+      "compare_at": "1290.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "OG-STK-4733",
+      "url": "https://outgeeked.net/products/samsung-galaxy-s25-ultra?variant=47452746055938"
+     },
+     {
+      "variant_id": "47452746088706",
+      "title": "Titanium Grey / 12GB/512GB",
+      "options": {
+       "Color": "Titanium Grey",
+       "Storage": "12GB/512GB"
+      },
+      "price": "1202.00",
+      "compare_at": "1290.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "OG-STK-4734",
+      "url": "https://outgeeked.net/products/samsung-galaxy-s25-ultra?variant=47452746088706"
+     },
+     {
+      "variant_id": "47452746121474",
+      "title": "Titanium Whitesilver / 12GB/512GB",
+      "options": {
+       "Color": "Titanium Whitesilver",
+       "Storage": "12GB/512GB"
+      },
+      "price": "1202.00",
+      "compare_at": "1290.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "OG-STK-4735",
+      "url": "https://outgeeked.net/products/samsung-galaxy-s25-ultra?variant=47452746121474"
+     },
+     {
+      "variant_id": "47452746154242",
+      "title": "Titanium Silverblue / 12GB/512GB",
+      "options": {
+       "Color": "Titanium Silverblue",
+       "Storage": "12GB/512GB"
+      },
+      "price": "1202.00",
+      "compare_at": "1290.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "OG-STK-4736",
+      "url": "https://outgeeked.net/products/samsung-galaxy-s25-ultra?variant=47452746154242"
+     },
+     {
+      "variant_id": "47452746187010",
+      "title": "Titanium Silverblue / 12GB/256GB",
+      "options": {
+       "Color": "Titanium Silverblue",
+       "Storage": "12GB/256GB"
+      },
+      "price": "1000.00",
+      "compare_at": "1240.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "OG-STK-4609",
+      "url": "https://outgeeked.net/products/samsung-galaxy-s25-ultra?variant=47452746187010"
+     },
+     {
+      "variant_id": "47452746219778",
+      "title": "Titanium Whitesilver / 12GB/256GB",
+      "options": {
+       "Color": "Titanium Whitesilver",
+       "Storage": "12GB/256GB"
+      },
+      "price": "1000.00",
+      "compare_at": "1240.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "OG-STK-4610",
+      "url": "https://outgeeked.net/products/samsung-galaxy-s25-ultra?variant=47452746219778"
+     },
+     {
+      "variant_id": "47452746252546",
+      "title": "Titanium Grey / 12GB/256GB",
+      "options": {
+       "Color": "Titanium Grey",
+       "Storage": "12GB/256GB"
+      },
+      "price": "1000.00",
+      "compare_at": "1240.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "OG-STK-4611",
+      "url": "https://outgeeked.net/products/samsung-galaxy-s25-ultra?variant=47452746252546"
+     },
+     {
+      "variant_id": "47452746285314",
+      "title": "Titanium Black / 12GB/256GB",
+      "options": {
+       "Color": "Titanium Black",
+       "Storage": "12GB/256GB"
+      },
+      "price": "1000.00",
+      "compare_at": "1240.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "OG-STK-4612",
+      "url": "https://outgeeked.net/products/samsung-galaxy-s25-ultra?variant=47452746285314"
+     }
+    ],
+    "description": "The Samsung Galaxy S25 Ultra is the pinnacle of innovation in Samsung's 2025 flagship lineup, offering unmatched performance, cutting-edge AI technology, and professional-grade camera capabilities. Designed for power users, the Galaxy S25 Ultra redefines what's possible with a smartphone.\nGalaxy AI\nSleek, Premium Design\nProVisual Engine\nQualcomm Snapdragon Elite 8\nLong-lasting battery life\nAll new One UI 7 - built for AI\n6.9-inch Quad HD+ 120Hz Refresh Rate\n12MP Selfie Camera\n200MP Wide-Angle Main camera\n3x Optical Zoom and 100x Digital Zoom\n5000mAh battery\nTitanium Frame\nCorning Gorilla Glass Armor 2\nIP68\nS Pen Compatible\nSamsung Care+ with Discounted Screen Repair Within 1 Year (BMS Only)\nShop the Samsung Galaxy S25 Ultra in Lebanon at OutGeeked. Stay connected with the best performance with fast nationwide delivery, cash on delivery, and 10-day returns. The best price for Samsung Galaxy S25 Ultra is at OutGeeked.net — your trusted tech store in Beirut, Lebanon.\nCompare models and current prices in our Samsung Galaxy Smartphones collection."
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://wincell.store/products/samsung-s25-ultra-screen-warranty",
+   "shop_id": "wincell",
+   "observed_at": "2026-11-28T05:24:27+00:00",
+   "sha256": "fc13e5fa6fd278e062301a55182899e38d977c448a622751eaa17a4516737c79",
+   "product": {
+    "shop": "WinCell",
+    "shop_id": "wincell",
+    "title": "Samsung S25 Ultra (SCREEN WARRANTY)",
+    "url": "https://wincell.store/products/samsung-s25-ultra-screen-warranty",
+    "vendor": "Samsung",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:24:27+00:00",
+    "variants": [
+     {
+      "variant_id": "53451816304938",
+      "title": "256GB/12",
+      "options": {
+       "STORAGE": "256GB/12"
+      },
+      "price": "1020.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://wincell.store/products/samsung-s25-ultra-screen-warranty?variant=53451816304938"
+     },
+     {
+      "variant_id": "53451816337706",
+      "title": "512GB/12",
+      "options": {
+       "STORAGE": "512GB/12"
+      },
+      "price": "1220.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://wincell.store/products/samsung-s25-ultra-screen-warranty?variant=53451816337706"
+     }
+    ],
+    "description": "Network\nTechnology\nGSM / CDMA / HSPA / EVDO / LTE / 5G\nLaunch\nAnnounced\n2025, January 22\nStatus\nAvailable. Released 2025, February 03\nBody\nDimensions\n162.8 x 77.6 x 8.2 mm (6.41 x 3.06 x 0.32 in)\nWeight\n218 g (7.69 oz)\nBuild\nGlass front (Corning Gorilla Armor 2), glass back (Gorilla Glass Victus 2), titanium frame (grade 5)\nSIM\n· Nano-SIM + Nano-SIM + eSIM + eSIM (max 2 at a time) - INT· Nano-SIM + eSIM + eSIM (max 2 at a time) - USA· Nano-SIM + Nano-SIM - CN\nIP68 dust tight and water resistant (immersible up to 1.5m for 30 min)Stylus\nDisplay\nType\nDynamic LTPO AMOLED 2X, 120Hz, HDR10+, 2600 nits (peak)\nSize\n6.9 inches, 116.9 cm2 (~92.5% screen-to-body ratio)\nResolution\n1440 x 3120 pixels, 19.5:9 ratio (~498 ppi density)\nProtection\nCorning Gorilla Armor 2\nDX anti-reflective coating\nPlatform\nOS\nAndroid 15, upgradable to Android 17, up to 7 major OS updates, One UI 9\nChipset\nQualcomm SM8750-AC Snapdragon 8 Elite (3 nm)\nCPU\nOcta-core (2x4.47 GHz Oryon V2 Phoenix L + 6x3.53 GHz Oryon V2 Phoenix M)\nGPU\nAdreno 830 (1200 MHz)\nMemory\nCard slot\nNo\nInternal\n256GB 12GB RAM, 512GB 12GB RAM, 1TB 12GB RAM, 1TB 16GB RAM\nUFS 4.0\nMain Camera\nQuad\n200 MP, f/1.7, 24mm (wide), 1/1.3\", 0.6µm, multi-directional PDAF, OIS10 MP, f/2.4, 67mm (telephoto), 1/3.52\", 1.12µm, PDAF, OIS, 3x optical zoom50 MP, f/3.4, 111mm (periscope telephoto), 1/2.52\", 0.7µm, PDAF, OIS, 5x optical zoom50 MP, f/1.9, 120˚ (ultrawide), 1/2.5\", 0.7µm, dual pixel PDAF, Super Steady video\nFeatures\nLaser AF, Best Face, LED flash,"
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/samsung-galaxy-s23-ultra-12gb512gb-open-box",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:24:30+00:00",
+   "sha256": "8b8e0c089a533065c8b2a26520c46827e5fac0fb9eb675ba6d40ec9bae47e955",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Samsung Galaxy S23 Ultra 12GB/512GB - Open Box",
+    "url": "https://mobileleb.com/products/samsung-galaxy-s23-ultra-12gb512gb-open-box",
+    "vendor": "Samsung",
+    "product_type": "Communications",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:24:30+00:00",
+    "variants": [
+     {
+      "variant_id": "68145203249284",
+      "title": "Cream / Open Box - Like New",
+      "options": {
+       "Color": "Cream",
+       "Product Condition": "Open Box - Like New"
+      },
+      "price": "680.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "Sam1IvsPy",
+      "url": "https://mobileleb.com/products/samsung-galaxy-s23-ultra-12gb512gb-open-box?variant=68145203249284",
+      "condition": "Open Box - Like New"
+     },
+     {
+      "variant_id": "68145203282052",
+      "title": "Green / Open Box - Like New",
+      "options": {
+       "Color": "Green",
+       "Product Condition": "Open Box - Like New"
+      },
+      "price": "680.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SamEZQZmK",
+      "url": "https://mobileleb.com/products/samsung-galaxy-s23-ultra-12gb512gb-open-box?variant=68145203282052",
+      "condition": "Open Box - Like New"
+     },
+     {
+      "variant_id": "68145203314820",
+      "title": "Lavender / Open Box - Like New",
+      "options": {
+       "Color": "Lavender",
+       "Product Condition": "Open Box - Like New"
+      },
+      "price": "680.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SamXHfG3x",
+      "url": "https://mobileleb.com/products/samsung-galaxy-s23-ultra-12gb512gb-open-box?variant=68145203314820",
+      "condition": "Open Box - Like New"
+     },
+     {
+      "variant_id": "68145203347588",
+      "title": "Phantom Black / Open Box - Like New",
+      "options": {
+       "Color": "Phantom Black",
+       "Product Condition": "Open Box - Like New"
+      },
+      "price": "680.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SamyM1eqt",
+      "url": "https://mobileleb.com/products/samsung-galaxy-s23-ultra-12gb512gb-open-box?variant=68145203347588",
+      "condition": "Open Box - Like New"
+     }
+    ],
+    "description": "Dimensions: 163.4 x 78.1 x 8.9 mm (6.43 x 3.07 x 0.35 in)\nWeight: 234 g (8.25 oz)\nBuild: Glass front (Gorilla Glass Victus 2), glass back (Gorilla Glass Victus 2), aluminum frame\nSIM: Nano-SIM + eSIM or Nano-SIM + Nano-SIM + eSIM (max 2 at a time)\nIP68 dust tight and water resistant (immersible up to 1.5m for 30 min), Armor Aluminum, Stylus (Bluetooth integration, accelerometer, gyro)\nDISPLAY Type: Dynamic AMOLED 2X, 120Hz, HDR10+, 1200 nits (HBM), 1750 nits (peak)\nSize: 6.8 inches, 114.7 cm2 (~89.9% screen-to-body ratio)\nResolution: 1440 x 3088 pixels, 19.3:9 ratio (~500 ppi density)\nProtection: Corning Gorilla Glass Victus 2\nAlways-on display\nOS: Android 13, upgradable to Android 17, One UI 9.0\nChipset: Qualcomm SM8550-AC Snapdragon 8 Gen 2 (4 nm)\nCPU: Octa-core (1x3.36 GHz Cortex-X3 & 2x2.8 GHz Cortex-A715 & 2x2.8 GHz Cortex-A710 & 3x2.0 GHz Cortex-A510)\nGPU: Adreno 740\nMEMORY Card slot: No\nInternal: 512GB 12GB RAM, UFS 4.0\nMAIN CAMERA: Quad 200 MP, f/1.7, 24mm (wide), 1/1.3\", 0.6µm, multi-directional PDAF, OIS, 10 MP, f/4.9, 230mm (periscope telephoto), 1/3.52\", 1.12µm, PDAF, OIS, 10x optical zoom, 10 MP, f/2.4, 70mm (telephoto), 1/3.52\", 1.12µm, PDAF, OIS, 3x optical zoom, 12 MP, f/2.2, 13mm, 120˚ (ultrawide), 1/2.55\", 1.4µm, dual pixel PDAF, Super Steady video\nFeatures: Laser AF, LED flash, auto-HDR, panorama\nVideo: 8K@24/30fps, 4K@30/60fps, 1080p@30/60/120/240fps, HDR10+, stereo sound rec., gyro-EIS\nSELFIE CAMERA: Single 12 MP, f/2.2, 26mm (wide), 1/3.2\", 1.12µm, dual "
+   }
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/samsung-galaxy-s23-ultra-12gb256gb-open-box",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:24:31+00:00",
+   "sha256": "51521134d6a92c2c1ad6a8e5dbad9c60505a3f6cf46638704c7f5fe3654e58e3",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Samsung Galaxy S23 Ultra 12GB/256GB - Open Box",
+    "url": "https://mobileleb.com/products/samsung-galaxy-s23-ultra-12gb256gb-open-box",
+    "vendor": "Samsung",
+    "product_type": "Communications",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:24:31+00:00",
+    "variants": [
+     {
+      "variant_id": "68139699536004",
+      "title": "Cream / Open Box - Like New",
+      "options": {
+       "Color": "Cream",
+       "Product Condition": "Open Box - Like New"
+      },
+      "price": "625.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SamAn2DcU",
+      "url": "https://mobileleb.com/products/samsung-galaxy-s23-ultra-12gb256gb-open-box?variant=68139699536004",
+      "condition": "Open Box - Like New"
+     },
+     {
+      "variant_id": "68139699568772",
+      "title": "Green / Open Box - Like New",
+      "options": {
+       "Color": "Green",
+       "Product Condition": "Open Box - Like New"
+      },
+      "price": "625.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SamDFRqvF",
+      "url": "https://mobileleb.com/products/samsung-galaxy-s23-ultra-12gb256gb-open-box?variant=68139699568772",
+      "condition": "Open Box - Like New"
+     },
+     {
+      "variant_id": "68139699601540",
+      "title": "Lavender / Open Box - Like New",
+      "options": {
+       "Color": "Lavender",
+       "Product Condition": "Open Box - Like New"
+      },
+      "price": "625.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SamrQAKdU",
+      "url": "https://mobileleb.com/products/samsung-galaxy-s23-ultra-12gb256gb-open-box?variant=68139699601540",
+      "condition": "Open Box - Like New"
+     },
+     {
+      "variant_id": "68139699634308",
+      "title": "Phantom Black / Open Box - Like New",
+      "options": {
+       "Color": "Phantom Black",
+       "Product Condition": "Open Box - Like New"
+      },
+      "price": "625.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SamQh4AcO",
+      "url": "https://mobileleb.com/products/samsung-galaxy-s23-ultra-12gb256gb-open-box?variant=68139699634308",
+      "condition": "Open Box - Like New"
+     }
+    ],
+    "description": "Dimensions: 163.4 x 78.1 x 8.9 mm (6.43 x 3.07 x 0.35 in)\nWeight: 234 g (8.25 oz)\nBuild: Glass front (Gorilla Glass Victus 2), glass back (Gorilla Glass Victus 2), aluminum frame\nSIM: Nano-SIM + eSIM or Nano-SIM + Nano-SIM + eSIM (max 2 at a time)\nIP68 dust tight and water resistant (immersible up to 1.5m for 30 min), Armor Aluminum, Stylus (Bluetooth integration, accelerometer, gyro)\nDISPLAY Type: Dynamic AMOLED 2X, 120Hz, HDR10+, 1200 nits (HBM), 1750 nits (peak)\nSize: 6.8 inches, 114.7 cm2 (~89.9% screen-to-body ratio)\nResolution: 1440 x 3088 pixels, 19.3:9 ratio (~500 ppi density)\nProtection: Corning Gorilla Glass Victus 2\nAlways-on display\nOS: Android 13, upgradable to Android 17, One UI 9.0\nChipset: Qualcomm SM8550-AC Snapdragon 8 Gen 2 (4 nm)\nCPU: Octa-core (1x3.36 GHz Cortex-X3 & 2x2.8 GHz Cortex-A715 & 2x2.8 GHz Cortex-A710 & 3x2.0 GHz Cortex-A510)\nGPU: Adreno 740\nMEMORY Card slot: No\nInternal: 256GB 12GB RAM, UFS 4.0\nMAIN CAMERA: Quad 200 MP, f/1.7, 24mm (wide), 1/1.3\", 0.6µm, multi-directional PDAF, OIS, 10 MP, f/4.9, 230mm (periscope telephoto), 1/3.52\", 1.12µm, PDAF, OIS, 10x optical zoom, 10 MP, f/2.4, 70mm (telephoto), 1/3.52\", 1.12µm, PDAF, OIS, 3x optical zoom, 12 MP, f/2.2, 13mm, 120˚ (ultrawide), 1/2.55\", 1.4µm, dual pixel PDAF, Super Steady video\nFeatures: Laser AF, LED flash, auto-HDR, panorama\nVideo: 8K@24/30fps, 4K@30/60fps, 1080p@30/60/120/240fps, HDR10+, stereo sound rec., gyro-EIS\nSELFIE CAMERA: Single 12 MP, f/2.2, 26mm (wide), 1/3.2\", 1.12µm, dual "
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/samsung-galaxy-s24-ultra-12gb-256gb",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:24:31+00:00",
+   "sha256": "96d73952a9e961bf37b69ea4bb7de32f3ee373adb2d0070769a9dd248a19a07a",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Samsung Galaxy S24 Ultra 12GB/256GB - Open Box",
+    "url": "https://mobileleb.com/products/samsung-galaxy-s24-ultra-12gb-256gb",
+    "vendor": "Samsung",
+    "product_type": "Communications",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:24:31+00:00",
+    "variants": [
+     {
+      "variant_id": "68145282941060",
+      "title": "Titanium Black / Open Box - Like New",
+      "options": {
+       "Color": "Titanium Black",
+       "Product Condition": "Open Box - Like New"
+      },
+      "price": "740.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SamCTFimQ",
+      "url": "https://mobileleb.com/products/samsung-galaxy-s24-ultra-12gb-256gb?variant=68145282941060",
+      "condition": "Open Box - Like New"
+     },
+     {
+      "variant_id": "68145282973828",
+      "title": "Titanium Gray / Open Box - Like New",
+      "options": {
+       "Color": "Titanium Gray",
+       "Product Condition": "Open Box - Like New"
+      },
+      "price": "740.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "Sam9H5bub",
+      "url": "https://mobileleb.com/products/samsung-galaxy-s24-ultra-12gb-256gb?variant=68145282973828",
+      "condition": "Open Box - Like New"
+     },
+     {
+      "variant_id": "68145283006596",
+      "title": "Titanium Violet / Open Box - Like New",
+      "options": {
+       "Color": "Titanium Violet",
+       "Product Condition": "Open Box - Like New"
+      },
+      "price": "740.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "Samfbx0td",
+      "url": "https://mobileleb.com/products/samsung-galaxy-s24-ultra-12gb-256gb?variant=68145283006596",
+      "condition": "Open Box - Like New"
+     },
+     {
+      "variant_id": "68145283039364",
+      "title": "Titanium Yellow / Open Box - Like New",
+      "options": {
+       "Color": "Titanium Yellow",
+       "Product Condition": "Open Box - Like New"
+      },
+      "price": "740.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SamoC5yQO",
+      "url": "https://mobileleb.com/products/samsung-galaxy-s24-ultra-12gb-256gb?variant=68145283039364",
+      "condition": "Open Box - Like New"
+     }
+    ],
+    "description": "Dimensions: 162.3 x 79 x 8.6 mm (6.39 x 3.11 x 0.34 in)\nWeight: 232 g or 233 g (8.18 oz)\nBuild: Glass front (Gorilla Glass Armor), glass back (Gorilla Glass), titanium frame\nSIM: Nano-SIM and eSIM/ Dual eSIM or Dual SIM (2 Nano-SIMs and eSIM, dual stand-by)\nIP68 dust/water resistant (up to 1.5m for 30 min)\nStylus (Bluetooth integration, accelerometer, gyro)\nDISPLAY Type: Dynamic LTPO AMOLED 2X, 120Hz, HDR10+, 2600 nits (peak)\nSize: 6.8 inches, 113.5 cm2 (~88.5% screen-to-body ratio)\nResolution: 1440 x 3120 pixels, 19.5:9 ratio (~505 ppi density)\nProtection: Corning Gorilla Glass Armor\nAlways-on display\nOS: Android 14, One UI 6.1\nChipset: Qualcomm SM8650-AC Snapdragon 8 Gen 3 (4 nm)\nCPU: 8-core (1x3.39GHz Cortex-X4 & 3x3.1GHz Cortex-A720 & 2x2.9GHz Cortex-A720 & 2x2.2GHz Cortex-A520)\nGPU: Adreno 750 (1 GHz)\nMEMORY Card slot: No\nInternal: 256GB 12GB RAM, UFS 4.0\nMAIN CAMERA: Quad 200 MP, f/1.7, 24mm (wide), 1/1.3\", 0.6µm, multi-directional PDAF, Laser AF, OIS, 50 MP, f/3.4, 111mm (periscope telephoto), PDAF, OIS, 5x optical zoom, 10 MP, f/2.4, 67mm (telephoto), 1/3.52\", 1.12µm, Dual Pixel PDAF, OIS, 3x optical zoom, 12 MP, f/2.2, 13mm, 120˚ (ultrawide), 1/2.55\", 1.4µm, Dual Pixel PDAF, Super Steady video\nFeatures: LED flash, auto-HDR, panorama\nVideo: 8K@24/30fps, 4K@30/60/120fps, 1080p@30/60/240fps, 1080p@960fps, HDR10+, stereo sound rec., gyro-EIS\nSELFIE CAMERA: Single 12 MP, f/2.2, 26mm (wide), Dual Pixel PDAF\nFeatures: Dual video call, Auto-HDR, HDR10+\nVideo: 4K@30/60fps, 10"
+   }
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://mobileleb.com/products/samsung-galaxy-s24-ultra-12gb-512gb-screen-warranty",
+   "shop_id": "mobileleb",
+   "observed_at": "2026-11-28T05:24:31+00:00",
+   "sha256": "3346d381fef80deba18156184b4db0119ac92928b37abff06c477250b0612d91",
+   "product": {
+    "shop": "Mobileleb",
+    "shop_id": "mobileleb",
+    "title": "Samsung Galaxy S24 Ultra 12GB/512GB - Open Box",
+    "url": "https://mobileleb.com/products/samsung-galaxy-s24-ultra-12gb-512gb-screen-warranty",
+    "vendor": "Samsung",
+    "product_type": "Communications",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:24:31+00:00",
+    "variants": [
+     {
+      "variant_id": "68145297490052",
+      "title": "Titanium Black / Open Box - Like New",
+      "options": {
+       "Color": "Titanium Black",
+       "Product Condition": "Open Box - Like New"
+      },
+      "price": "780.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SamuotM3f",
+      "url": "https://mobileleb.com/products/samsung-galaxy-s24-ultra-12gb-512gb-screen-warranty?variant=68145297490052",
+      "condition": "Open Box - Like New"
+     },
+     {
+      "variant_id": "68145297522820",
+      "title": "Titanium Gray / Open Box - Like New",
+      "options": {
+       "Color": "Titanium Gray",
+       "Product Condition": "Open Box - Like New"
+      },
+      "price": "780.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "Sam4Z7eRY",
+      "url": "https://mobileleb.com/products/samsung-galaxy-s24-ultra-12gb-512gb-screen-warranty?variant=68145297522820",
+      "condition": "Open Box - Like New"
+     },
+     {
+      "variant_id": "68145297555588",
+      "title": "Titanium Violet / Open Box - Like New",
+      "options": {
+       "Color": "Titanium Violet",
+       "Product Condition": "Open Box - Like New"
+      },
+      "price": "780.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "Sam2D81H0",
+      "url": "https://mobileleb.com/products/samsung-galaxy-s24-ultra-12gb-512gb-screen-warranty?variant=68145297555588",
+      "condition": "Open Box - Like New"
+     },
+     {
+      "variant_id": "68145297588356",
+      "title": "Titanium Yellow / Open Box - Like New",
+      "options": {
+       "Color": "Titanium Yellow",
+       "Product Condition": "Open Box - Like New"
+      },
+      "price": "780.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SamKkFg6X",
+      "url": "https://mobileleb.com/products/samsung-galaxy-s24-ultra-12gb-512gb-screen-warranty?variant=68145297588356",
+      "condition": "Open Box - Like New"
+     }
+    ],
+    "description": "Dimensions: 162.3 x 79 x 8.6 mm (6.39 x 3.11 x 0.34 in)\nWeight: 232 g or 233 g (8.18 oz)\nBuild: Glass front (Corning Gorilla Armor), glass back (Corning Gorilla Armor), titanium frame (grade 2)\nSIM: Nano-SIM and eSIM/ Dual eSIM or Dual SIM (2 Nano-SIMs and eSIM, dual stand-by)\nIP68 dust/water resistant (up to 1.5m for 30 min)\nStylus (Bluetooth integration, accelerometer, gyro)\nDisplay Type: Dynamic LTPO AMOLED 2X, 120Hz, HDR10+, 2600 nits (peak)\nSize: 6.8 inches, 113.5 cm2 (~88.5% screen-to-body ratio)\nResolution: 1440 x 3120 pixels, 19.5:9 ratio (~505 ppi density)\nProtection: Corning Gorilla Armor\nAlways-on display\nOS: Android 14, One UI 6.1.1\nChipset: Qualcomm SM8650-AC Snapdragon 8 Gen 3 (4 nm)\nCPU: 8-core (1x3.39GHz Cortex-X4 & 3x3.1GHz Cortex-A720 & 2x2.9GHz Cortex-A720 & 2x2.2GHz Cortex-A520)\nGPU: Adreno 750 (1 GHz)\nMemory Card slot: No\nInternal: 512GB 12GB RAM, UFS 4.0\nMain Camera Quad: 200 MP, f/1.7, 24mm (wide), 1/1.3\", 0.6µm, multi-directional PDAF, Laser AF, OIS, 10 MP, f/2.4, 67mm (telephoto), 1/3.52\", 1.12µm, PDAF, OIS, 3x optical zoom, 50 MP, f/3.4, 111mm (periscope telephoto), 1/2.52\", 0.7µm, PDAF, OIS, 5x optical zoom, 12 MP, f/2.2, 13mm, 120˚ (ultrawide), 1/2.55\", 1.4µm, dual pixel PDAF, Super Steady video\nFeatures: LED flash, auto-HDR, panorama\nVideo: 8K@24/30fps, 4K@30/60/120fps, 1080p@30/60/240fps, HDR10+, stereo sound rec., gyro-EIS\nSelfie camera Single: 12 MP, f/2.2, 26mm (wide), dual pixel PDAF\nFeatures: Dual video call, Auto-HDR, HDR10+\nVideo: 4K@30/60"
+   }
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://karizmamegastore.com/products/samsung-galaxy-s25-ultra-512gb-12gb-ram-golden-warranty",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:24:31+00:00",
+   "sha256": "bd7a8ce65f19aaadcaab401a203be4ca3e33534d2e0c519d4d54a5e35cc8b227",
+   "product": {
+    "shop": "Karizma Megastore",
+    "shop_id": "karizma",
+    "title": "Samsung Galaxy S25 Ultra Golden Warranty",
+    "url": "https://karizmamegastore.com/products/samsung-galaxy-s25-ultra-512gb-12gb-ram-golden-warranty",
+    "vendor": "Samsung",
+    "product_type": "Smartphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:24:31+00:00",
+    "variants": [
+     {
+      "variant_id": "46553612550333",
+      "title": "256GB/12RAM / Natural Titanium",
+      "options": {
+       "STORAGE": "256GB/12RAM",
+       "Color": "Natural Titanium"
+      },
+      "price": "1090.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SAMS-S25ULTRA-512-12",
+      "url": "https://karizmamegastore.com/products/samsung-galaxy-s25-ultra-512gb-12gb-ram-golden-warranty?variant=46553612550333"
+     },
+     {
+      "variant_id": "46553616941245",
+      "title": "256GB/12RAM / Silver",
+      "options": {
+       "STORAGE": "256GB/12RAM",
+       "Color": "Silver"
+      },
+      "price": "1090.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/samsung-galaxy-s25-ultra-512gb-12gb-ram-golden-warranty?variant=46553616941245"
+     },
+     {
+      "variant_id": "46553616974013",
+      "title": "256GB/12RAM / Black",
+      "options": {
+       "STORAGE": "256GB/12RAM",
+       "Color": "Black"
+      },
+      "price": "1090.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/samsung-galaxy-s25-ultra-512gb-12gb-ram-golden-warranty?variant=46553616974013"
+     },
+     {
+      "variant_id": "46553612583101",
+      "title": "512GB/12RAM / Natural Titanium",
+      "options": {
+       "STORAGE": "512GB/12RAM",
+       "Color": "Natural Titanium"
+      },
+      "price": "1250.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SAMS-S25ULTRA-512-13",
+      "url": "https://karizmamegastore.com/products/samsung-galaxy-s25-ultra-512gb-12gb-ram-golden-warranty?variant=46553612583101"
+     },
+     {
+      "variant_id": "46553617006781",
+      "title": "512GB/12RAM / Silver",
+      "options": {
+       "STORAGE": "512GB/12RAM",
+       "Color": "Silver"
+      },
+      "price": "1250.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/samsung-galaxy-s25-ultra-512gb-12gb-ram-golden-warranty?variant=46553617006781"
+     },
+     {
+      "variant_id": "46553617039549",
+      "title": "512GB/12RAM / Black",
+      "options": {
+       "STORAGE": "512GB/12RAM",
+       "Color": "Black"
+      },
+      "price": "1250.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://karizmamegastore.com/products/samsung-galaxy-s25-ultra-512gb-12gb-ram-golden-warranty?variant=46553617039549"
+     }
+    ],
+    "description": "Maximum Storage, Maximum Innovation\nThe Samsung Galaxy S25 Ultra offers double the capacity for professionals and content creators. Experience the latest flagship technology with extensive storage and Golden Warranty protection.\nKey Features:\nRAM: 12GB RAM for flagship-level performance\nDisplay: 6.9-inch Dynamic AMOLED 2X with 120Hz and anti-reflective technology\nS Pen: Advanced integrated S Pen for productivity and creativity\nCamera: Professional quad camera system with 200MP main sensor and 100x zoom\nChip: Snapdragon 8 Elite for Galaxy - ultimate mobile performance\nBattery: 5000mAh with 45W super-fast charging, wireless, and reverse wireless\nAI: Advanced Galaxy AI with enhanced computational photography and productivity\nDesign: Premium titanium frame with Gorilla Armor protection\nFeatures: IP68 water resistance, satellite connectivity, ultrasonic fingerprint\nWarranty: Golden Warranty included\nPerfect for professionals, videographers, and power users who need maximum storage with the latest flagship features."
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://wincell.store/products/belkin-boostcharge-compact-charger-20w-usb-c-power-delivery-fast-charger-power",
+   "shop_id": "wincell",
+   "observed_at": "2026-11-28T05:24:33+00:00",
+   "sha256": "28e88ad9571a43c2566c1eafed16aa3593ad5380059f177c457efb68efc0dc93",
+   "excerpt": "Belkin BoostCharge Compact Charger (20W) USB-C Power Delivery Fast Cha – WinCell\nSkip to content\nHappy Independence Day, Lebanon\n/\n83 years of independence\nOrder by 22 December for delivery before Christmas/\nMerry Christmas from all of us at Win Cell\nBlack Friday ends in\nBlack Friday is over. Thank you, Lebanon.\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nHome\nOur story\nShop\nShop by category\n00\nAll products\n464\nAll products\n01\nPhones\n18\nPhones\n02\nAudio\n107\nAudio\n03\nwatches & gadgets\n166\nwatches & gadgets\n04\nchargers & power\n88\nchargers & powe",
+   "quoted": []
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://www.karizmamegastore.com/policies/privacy-policy",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:24:33+00:00",
+   "sha256": "a72686fe80f1eb883633c554d74344a79a73aece3b937b5a269239a395453a04",
+   "excerpt": "Privacy policy – Karizma Megastore\nSkip to content\nReturns extended to 60 days\nFree shipping on your first order\nHome\nCategories\nCategories\nSmart Phones\nSmart Phones\nApple\nXiaomi\nSamsung\nHonor\nTecno\nInfinix\nGadgets\nGadgets\nWearables\nAudio Devices\nPower & Charging\nGaming Consoles\nGaming Consoles\nConsoles\nGames\nGaming Wheels & Peripherals\nLaptops\nLaptops\nGaming Laptops\nOffice Laptops\nComputer Accessories\nComputer Accessories\nGaming Accessories\nMouse & Keyboards\nConnectivity & Hubs\nStorage & Memory\nMonitors\nHeadphones & Earphones\nWiFi and Networking\nContent Creation\nsoundcore\nPitaka\nAnker\nCases\nContact\nHome\nCategories\nCases\nContact\nLogin\n0\nHome\nCategories\nSmart Phones\nApple\nXiaomi\nSamsung\nHonor\nTecno\nInfinix\nGadgets\nWearables\nAudio Devices\nPower & Charging\nGaming Consoles\nConsoles\nGames\nGaming Wheels & Peripherals\nLaptops\nGaming Laptops\nOffice Laptops\nComputer Accessories\nGaming Accessories\nMouse & Keyboards\nConnectivity & Hubs\nStorage & Memory\nMonitors\nHeadphones & Earphones\nWiFi and Networking\nContent Creation\nsoundcore\nPitaka\nAnker\nCases\nContact\nPrivacy policy\nLast updated: September 2, 2024\nThis Privacy Policy describes how Karizma Megastore (the \"Site\", \"we\", \"us\", or \"our\") collects, uses, and discloses your personal information when you visit, use our services, or make a purchase from www.karizmamegastore.com (the \"Site\") or otherwise communicate with us regarding the Site (collectively, the \"Services\"). For purposes of this Privacy Policy, \"you\" and \"your\" means you as t",
+   "quoted": [
+    {
+     "quote": "Free shipping on your first order",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "P8",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/samsung-galaxy-s25-ultra-12gb-256gb-titanium-gray",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:24:48+00:00",
+   "sha256": "ac3d61fa1e22edf832acc79c73961e0748f487711e824a74b77fbff2f45aa636",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "Samsung Galaxy S25 Ultra 12GB - 256GB Titanium Gray",
+    "url": "https://abedtahan.com/products/samsung-galaxy-s25-ultra-12gb-256gb-titanium-gray",
+    "vendor": "SAMSUNG",
+    "product_type": "Android Smartphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:24:48+00:00",
+    "variants": [
+     {
+      "variant_id": "44574567825587",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "1099.00",
+      "compare_at": "1020.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "SAMS-S25U 12/256-GRY-OE",
+      "url": "https://abedtahan.com/products/samsung-galaxy-s25-ultra-12gb-256gb-titanium-gray?variant=44574567825587"
+     }
+    ],
+    "description": "Samsung Galaxy S25 Ultra 12Gb - 256Gb Titanium Gray"
+   }
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://outgeeked.net/meta.json",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:24:49+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"OutGeeked\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"outgeeked.net\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://wincell.store/meta.json",
+   "shop_id": "wincell",
+   "observed_at": "2026-11-28T05:24:49+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"WinCell\", \"city\": \"zouk \", \"province\": null, \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"wincell.store\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://www.karizmamegastore.com/products/samsung-galaxy-s25-ultra-512gb-12gb-ram-golden-warranty",
+   "shop_id": "karizma",
+   "observed_at": "2026-11-28T05:24:49+00:00",
+   "sha256": "5b251d7a973d7d0a3f29d14c1f26a965fc81ad959d6bef8481c773699da028b9",
+   "excerpt": "Samsung Galaxy S25 Ultra 512GB/12GB RAM - Golden Warranty | Karizma Megastore\nSkip to content\nReturns extended to 60 days\nFree shipping on your first order\nHome\nCategories\nCategories\nSmart Phones\nSmart Phones\nApple\nXiaomi\nSamsung\nHonor\nTecno\nInfinix\nGadgets\nGadgets\nWearables\nAudio Devices\nPower & Charging\nGaming Consoles\nGaming Consoles\nConsoles\nGames\nGaming Wheels & Peripherals\nLaptops\nLaptops\nGaming Laptops\nOffice Laptops\nComputer Accessories\nComputer Accessories\nGaming Accessories\nMouse & Keyboards\nConnectivity & Hubs\nStorage & Memory\nMonitors\nHeadphones & Earphones\nWiFi and Networking\nContent Creation\nsoundcore\nPitaka\nAnker\nCases\nContact\nHome\nCategories\nCases\nContact\nLogin\n0\nHome\nCategories\nSmart Phones\nApple\nXiaomi\nSamsung\nHonor\nTecno\nInfinix\nGadgets\nWearables\nAudio Devices\nPower & Charging\nGaming Consoles\nConsoles\nGames\nGaming Wheels & Peripherals\nLaptops\nGaming Laptops\nOffice Laptops\nComputer Accessories\nGaming Accessories\nMouse & Keyboards\nConnectivity & Hubs\nStorage & Memory\nMonitors\nHeadphones & Earphones\nWiFi and Networking\nContent Creation\nsoundcore\nPitaka\nAnker\nCases\nContact\nHome\n/\nSamsung Galaxy S25 Ultra Golden Warranty\nSamsung\nSamsung Galaxy S25 Ultra Golden Warranty\n$1,090.00 USD\n/\nSTORAGE: 256GB/12RAM\n256GB/12RAM\n512GB/12RAM\nColor: Natural Titanium\nNatural Titanium\nSilver\nBlack\nQuantity\nAdd to cart\nPickup available at Karizma Megastore\nUsually ready in 4 hours\nView store information\nMaximum Storage, Maximum Innovation\nThe Samsung Galaxy S25 Ultra offers doub",
+   "quoted": [
+    {
+     "quote": "S Pen: Advanced integrated S Pen for productivity and creativity",
+     "found": true
+    },
+    {
+     "quote": "S Pen: Advanced integrated S Pen for productivity and creativity",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T6",
+   "kind": "page",
+   "url": "https://outgeeked.net/products/samsung-galaxy-s25-ultra",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:24:49+00:00",
+   "sha256": "97d1b7e1fe44ac0e60006d201db88d69c913552fd75bc9e841cf11258bdee2c5",
+   "excerpt": "Samsung Galaxy S25 Ultra Price in Lebanon | OutGeeked\nSkip to content\nCash on delivery\nall over Lebanon\nFacebook\nX (Twitter)\nInstagram\nTikTok\nSearch\nClear\nMost searched products\nSamsung Galaxy S26 12GB/256GB\nRegular price\n$848.00 USD\nSale price\n$848.00 USD\nRegular price\nUnit price\n/per\n4 colours\nView details\nChoose your option\n-9%\nApple iPhone 17 Pro Max (eSIM)\nRegular price\nFrom $1,470.00 USD\nSale price\nFrom $1,470.00 USD\nRegular price\n$1,630.00 USD\nUnit price\n/per\n256GB–2TB · 3 colours\nView details\nChoose your option\n-9%\nApple MacBook Pro M5 (14-inch, 2025)\nRegular price\nFrom $1,600.00 USD\nSale price\nFrom $1,600.00 USD\nRegular price\n$1,799.00 USD\nUnit price\n/per\n16GB/512GB–32GB/1TB · 2 colours\nView details\nChoose your option\n-24%\nSoundcore R50i NC\nRegular price\n$25.00 USD\nSale price\n$25.00 USD\nRegular price\n$33.00 USD\nUnit price\n/per\nIn stock\nView details\nChoose your option\nCart\n0\nBuild Your PC\nSmartphones\nShop All\niPhone\nAll iPhones\niPhone 18 Series\nAndroid Phones\nSamsung Galaxy\nHonor\nXiaomi\nRedmi\nPoco\nOppo\nTecno\nInfinix\nRealme\nRedMagic\nMore Phone Brands\nGoogle Pixel\nOnePlus\nNothing\nMotorola\nHuawei\nVivo\nCMF\nHMD\nBudget\nUnder $200$200–500$500–1,000$1,000+\nTop brands\nAppleSamsungXiaomiRedmiGoogleHonor\nAll brands →\nBest sellers\nSamsung\nSamsung Galaxy S26 12GB/256GB\n$848.00\nApple\nApple iPhone 17 Pro Max (eSIM)\nFrom $1,470.00$1,630.00\nTablets\nShop All\neReaders\nAndroid Tablets\nSamsung Galaxy Tab\nXiaomi\nRedmi\nHonor\nTecno\nHuawei\niPad\niPad\niPad Air\niPad Pro\niPad mini\nBudget\nUnder $3",
+   "quoted": [
+    {
+     "quote": "every item brand-new and genuine",
+     "found": true
+    },
+    {
+     "quote": "every item brand-new and genuine",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T7",
+   "kind": "page",
+   "url": "https://abedtahan.com/pages/contact",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T05:24:50+00:00",
+   "sha256": "00cae14055a134cc66ca786b5bbe156d0673c45076c88c667e93d8aa85150bed",
+   "excerpt": "Contact\n– Abed Tahan\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & Crepe Makers\nIce Cube, Ice Cream & Yoghurt Makers\nSaj Machines\nL",
+   "quoted": []
+  },
+  {
+   "obs": "T8",
+   "kind": "page",
+   "url": "https://wincell.store/",
+   "shop_id": "wincell",
+   "observed_at": "2026-11-28T05:24:50+00:00",
+   "sha256": "ad3a487327e49e82628b3ce11eea054df63acba5740891c674751bbd02314f4d",
+   "excerpt": "Win Cell | Phones, Accessories & more in Kaslik\nSkip to content\nHappy Independence Day, Lebanon\n/\n83 years of independence\nOrder by 22 December for delivery before Christmas/\nMerry Christmas from all of us at Win Cell\nBlack Friday ends in\nBlack Friday is over. Thank you, Lebanon.\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nPay cash when it reaches you\nDelivery across Lebanon\nOr walk in: Kaslik, near USEK\nHome\nOur story\nShop\nShop by category\n00\nAll products\n464\nAll products\n01\nPhones\n18\nPhones\n02\nAudio\n107\nAudio\n03\nwatches & gadgets\n166\nwatches & gadgets\n04\nchargers & power\n88\nchargers & power\n05\ncases\n40\ncases\n06\nGaming\n27\n",
+   "quoted": []
+  },
+  {
+   "obs": "T9",
+   "kind": "page",
+   "url": "https://outgeeked.net/",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:24:51+00:00",
+   "sha256": "8b46c0ad7290be58ab51bbca0725365ffc442cce72275030f3b11f95771b5418",
+   "excerpt": "Buy Smartphones & Laptops in Lebanon | OutGeeked.net\nSkip to content\nCash on delivery\nall over Lebanon\nFacebook\nX (Twitter)\nInstagram\nTikTok\nSearch\nClear\nMost searched products\nSamsung Galaxy S26 12GB/256GB\nRegular price\n$848.00 USD\nSale price\n$848.00 USD\nRegular price\nUnit price\n/per\n4 colours\nView details\nChoose your option\n-9%\nApple iPhone 17 Pro Max (eSIM)\nRegular price\nFrom $1,470.00 USD\nSale price\nFrom $1,470.00 USD\nRegular price\n$1,630.00 USD\nUnit price\n/per\n256GB–2TB · 3 colours\nView details\nChoose your option\n-9%\nApple MacBook Pro M5 (14-inch, 2025)\nRegular price\nFrom $1,600.00 USD\nSale price\nFrom $1,600.00 USD\nRegular price\n$1,799.00 USD\nUnit price\n/per\n16GB/512GB–32GB/1TB · 2 colours\nView details\nChoose your option\n-24%\nSoundcore R50i NC\nRegular price\n$25.00 USD\nSale price\n$25.00 USD\nRegular price\n$33.00 USD\nUnit price\n/per\nIn stock\nView details\nChoose your option\nCart\n0\nBuild Your PC\nSmartphones\nShop All\niPhone\nAll iPhones\niPhone 18 Series\nAndroid Phones\nSamsung Galaxy\nHonor\nXiaomi\nRedmi\nPoco\nOppo\nTecno\nInfinix\nRealme\nRedMagic\nMore Phone Brands\nGoogle Pixel\nOnePlus\nNothing\nMotorola\nHuawei\nVivo\nCMF\nHMD\nBudget\nUnder $200$200–500$500–1,000$1,000+\nTop brands\nAppleSamsungXiaomiRedmiGoogleHonor\nAll brands →\nBest sellers\nSamsung\nSamsung Galaxy S26 12GB/256GB\n$848.00\nApple\nApple iPhone 17 Pro Max (eSIM)\nFrom $1,470.00$1,630.00\nTablets\nShop All\neReaders\nAndroid Tablets\nSamsung Galaxy Tab\nXiaomi\nRedmi\nHonor\nTecno\nHuawei\niPad\niPad\niPad Air\niPad Pro\niPad mini\nBudget\nUnder $30",
+   "quoted": [
+    {
+     "quote": "Taxes and shipping calculated at checkout",
+     "found": true
+    }
+   ]
+  }
+ ]
+}

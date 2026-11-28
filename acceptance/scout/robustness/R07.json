@@ -1,0 +1,58 @@
+{
+ "run_id": "scout-r07-20261127T225232",
+ "request": {
+  "id": "R07",
+  "text": "asdkjh qwe zzz",
+  "mode": "delivery",
+  "destination": "Beirut",
+  "run_id": "scout-r07-20261127T225232"
+ },
+ "status": "clarify",
+ "message": "I couldn’t identify the product you’re looking for.",
+ "question": "What electronics would you like delivered to Beirut? Send a model name or describe what you need, ideally with your budget.",
+ "offers": [],
+ "proposed": [],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "The request does not identify a product or shopping need; clarification is necessary before searching.",
+   "at_s": 9.9,
+   "finished": true
+  }
+ ],
+ "tool_calls": [],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7218,
+   "usage": {
+    "actual_usd": "0.0038777",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3172,
+     "output_tokens": 91,
+     "total_tokens": 3263
+    },
+    "latency_ms": 3703,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  }
+ ],
+ "retailer_requests": 0,
+ "seconds": 9.9,
+ "spend": {
+  "settled_usd": "0.0038777",
+  "uncertain_usd": "0",
+  "model_calls": 1,
+  "ledger_job": "scout-r07-20261127T225232"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": []
+}

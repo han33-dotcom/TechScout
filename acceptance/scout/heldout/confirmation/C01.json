@@ -1,0 +1,476 @@
+{
+ "run_id": "scout-c01-20261128T050559",
+ "request": {
+  "id": "C01",
+  "text": "How much is a new Google Pixel 9a in Obsidian with 128 GB, delivered to Saida?",
+  "mode": "delivery",
+  "destination": "Saida",
+  "category": "phone",
+  "run_id": "scout-c01-20261128T050559"
+ },
+ "status": "no_match",
+ "message": "OutGeeked lists the Google Pixel 9a 128GB in Obsidian at $549.00, but it is currently out of stock. Its site states every item is brand-new and genuine.\nThe shop advertises nationwide delivery, but shipping is calculated at checkout, so I cannot confirm a delivered total to Saida.\nAcross the 36 shops searched, I found no available exact match. My suggestion is to wait for this configuration to return to stock rather than treat the listed price as a current purchase option.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "unavailable",
+   "shop": "OutGeeked",
+   "shop_id": "outgeeked",
+   "title": "Google Pixel 9a 8GB/128GB",
+   "variant": "Obsidian",
+   "url": "https://outgeeked.net/products/google-pixel-9a?variant=47452763455746",
+   "price": "549.00",
+   "currency": "USD",
+   "in_stock": false,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "Exact Pixel 9a with 128GB storage in Obsidian; currently unavailable.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "delivery fee to your area is not published or not confirmed",
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "Google Pixel 9a, 128GB",
+     "status": "met",
+     "quote": "Google Pixel 9a 8GB/128GB",
+     "obs": "P1",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Obsidian color",
+     "status": "met",
+     "quote": "Obsidian",
+     "obs": "P1",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "every item brand-new and genuine",
+     "obs": "T1",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Delivery to Saida",
+     "status": "met",
+     "quote": "Fast delivery nation-wide",
+     "obs": "T3",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P1",
+     "url": "https://outgeeked.net/products/google-pixel-9a",
+     "read": "https://outgeeked.net/products/google-pixel-9a.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T05:06:23+00:00",
+     "sha256": "378663b65629f130fb578d221119ae7efe92ca3fd2cff678caf6a519b711076d"
+    }
+   ],
+   "seller_basis": "OutGeeked: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P1",
+   "variant_id": "47452763455746",
+   "identity": "exact",
+   "identity_reason": "Exact Pixel 9a with 128GB storage in Obsidian; currently unavailable.",
+   "condition": "new",
+   "condition_quote": "every item brand-new and genuine",
+   "condition_obs": "T1",
+   "requirements": [
+    {
+     "requirement": "Google Pixel 9a, 128GB",
+     "status": "met",
+     "evidence_obs": "P1",
+     "quote": "Google Pixel 9a 8GB/128GB"
+    },
+    {
+     "requirement": "Obsidian color",
+     "status": "met",
+     "evidence_obs": "P1",
+     "quote": "Obsidian"
+    },
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "T1",
+     "quote": "every item brand-new and genuine"
+    },
+    {
+     "requirement": "Delivery to Saida",
+     "status": "met",
+     "evidence_obs": "T3",
+     "quote": "Fast delivery nation-wide"
+    }
+   ],
+   "delivery_obs": "T3",
+   "delivery_quote": "Taxes and shipping calculated at checkout",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": null,
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Search for exact model and configuration across directory.",
+   "at_s": 12.6,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "Google Pixel 9a 128"
+    },
+    {
+     "tool": "search",
+     "query": "Pixel 9a Obsidian"
+    },
+    {
+     "tool": "search",
+     "query": "Pixel 9a"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Check the only exact listing's condition and the shop's delivery terms; no need to reopen structured product data.",
+   "at_s": 34.8,
+   "calls": [
+    {
+     "tool": "read",
+     "url": "https://outgeeked.net/products/google-pixel-9a",
+     "terms": [
+      "new",
+      "condition"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "outgeeked"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Exact listing found but out of stock; condition confirmed, delivery fee not published in checked evidence.",
+   "at_s": 51.5,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 10859,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 11984,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 12078,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 953,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 2875,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 9860,
+   "usage": {
+    "actual_usd": "0.0091035",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3222,
+     "output_tokens": 105,
+     "total_tokens": 3327
+    },
+    "latency_ms": 5641,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 10156,
+   "usage": {
+    "actual_usd": "0.0158205",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 7928,
+     "output_tokens": 103,
+     "total_tokens": 8031
+    },
+    "latency_ms": 6031,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 13781,
+   "usage": {
+    "actual_usd": "0.0207355",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 8758,
+     "output_tokens": 387,
+     "total_tokens": 9145
+    },
+    "latency_ms": 10360,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  }
+ ],
+ "retailer_requests": 69,
+ "seconds": 51.5,
+ "spend": {
+  "settled_usd": "0.0456595",
+  "uncertain_usd": "0",
+  "model_calls": 3,
+  "ledger_job": "scout-c01-20261128T050559"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/google-pixel-9a",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:06:23+00:00",
+   "sha256": "378663b65629f130fb578d221119ae7efe92ca3fd2cff678caf6a519b711076d",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "Google Pixel 9a 8GB/128GB",
+    "url": "https://outgeeked.net/products/google-pixel-9a",
+    "vendor": "Google",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:06:23+00:00",
+    "variants": [
+     {
+      "variant_id": "47452763422978",
+      "title": "Iris",
+      "options": {
+       "Color": "Iris"
+      },
+      "price": "590.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "OG-STK-5189",
+      "url": "https://outgeeked.net/products/google-pixel-9a?variant=47452763422978"
+     },
+     {
+      "variant_id": "47452763455746",
+      "title": "Obsidian",
+      "options": {
+       "Color": "Obsidian"
+      },
+      "price": "549.00",
+      "compare_at": "590.00",
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "OG-STK-5187",
+      "url": "https://outgeeked.net/products/google-pixel-9a?variant=47452763455746"
+     },
+     {
+      "variant_id": "47452763488514",
+      "title": "Porcelain",
+      "options": {
+       "Color": "Porcelain"
+      },
+      "price": "590.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "OG-STK-5188",
+      "url": "https://outgeeked.net/products/google-pixel-9a?variant=47452763488514"
+     },
+     {
+      "variant_id": "47452763521282",
+      "title": "Peony",
+      "options": {
+       "Color": "Peony"
+      },
+      "price": "590.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": null,
+      "sku": "OG-STK-5190",
+      "url": "https://outgeeked.net/products/google-pixel-9a?variant=47452763521282"
+     }
+    ],
+    "description": "The Google Pixel 9a, is the latest addition to Google's A-series lineup, offering a blend of premium features and affordability. It delivers flagship-level performance, advanced AI capabilities, and a durable design, making it a compelling choice in the mid-range smartphone market.\nGoogle Tensor G4\n6.3-inch Actua Display\nAndroid 15 with 7 Major Upgrades\n13MP Selfie Camera\n48MP Main Camera\n5100mAh Battery with PD3.0\n7.5W Wireless Charging\neSIM Support\nShop the Google Pixel 9a 8GB/128GB in Lebanon at OutGeeked. Stay connected with the best performance with fast nationwide delivery, cash on delivery, and 10-day returns. The best price for Google Pixel 9a 8GB/128GB is at OutGeeked.net — your trusted tech store in Beirut, Lebanon.\nCompare models and current prices in our Google Pixel collection."
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/spigen-ultra-hybrid-clear-magfit-google-pixel-9a-case",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:06:23+00:00",
+   "sha256": "48bd6d3192e0a15f95d9b365d2918bf9352ece82dd853c7900cfe58f417bf3d0",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "Spigen Ultra Hybrid Clear Magfit | Google Pixel 9a Case",
+    "url": "https://outgeeked.net/products/spigen-ultra-hybrid-clear-magfit-google-pixel-9a-case",
+    "vendor": "Spigen",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:06:23+00:00",
+    "variants": [
+     {
+      "variant_id": "47351203070210",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "35.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "OG-STK-5495",
+      "url": "https://outgeeked.net/products/spigen-ultra-hybrid-clear-magfit-google-pixel-9a-case?variant=47351203070210"
+     }
+    ],
+    "description": "Military-grade drop protection via Air Cushion Technology Infused with blue resin for long-lasting clarity Raised edges for screen and camera protection\nKey Specifications\nCompatible with wireless charging\nCompatible with Google Pixel 9a\nBuy the Spigen Ultra Hybrid Clear Magfit | Google Pixel 9a Case online in Lebanon at OutGeeked. We offer the best price on Spigen smartphone products in Lebanon, with fast delivery across Beirut and nationwide. Enjoy cash on delivery, authentic warranty, and hassle-free 10-day returns. OutGeeked is Lebanon's trusted electronics store.\nCompare models and current prices in our Spigen collection."
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/spigen-ultra-hybrid-zero-one-magfit-google-pixel-9a-case",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:06:24+00:00",
+   "sha256": "7aceef607db39819ca353aa93679ac4de31f231be4ce5cee407da00fa652f508",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "Spigen Ultra Hybrid Zero One Magfit | Google Pixel 9a Case",
+    "url": "https://outgeeked.net/products/spigen-ultra-hybrid-zero-one-magfit-google-pixel-9a-case",
+    "vendor": "Spigen",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T05:06:24+00:00",
+    "variants": [
+     {
+      "variant_id": "47351204643074",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "35.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "OG-STK-5496",
+      "url": "https://outgeeked.net/products/spigen-ultra-hybrid-zero-one-magfit-google-pixel-9a-case?variant=47351204643074"
+     }
+    ],
+    "description": "Military-grade drop protection via Air Cushion Technology Infused with blue resin for long-lasting clarity Raised edges for screen and camera protection\nKey Specifications\nCompatible with wireless charging\nCompatible with Google Pixel 9a\nBuy the Spigen Ultra Hybrid Zero One Magfit | Google Pixel 9a Case online in Lebanon at OutGeeked. We offer the best price on Spigen smartphone products in Lebanon, with fast delivery across Beirut and nationwide. Enjoy cash on delivery, authentic warranty, and hassle-free 10-day returns. OutGeeked is Lebanon's trusted electronics store.\nCompare models and current prices in our Spigen collection."
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://outgeeked.net/products/google-pixel-9a",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:06:35+00:00",
+   "sha256": "c4d71f86523e2b6ffa157ea40525a0ea591cb5841924dcfac0a6c8e3b27b274c",
+   "excerpt": "Google Pixel 9a 8GB/128GB | Lebanon - OutGeeked\nSkip to content\nCash on delivery\nall over Lebanon\nFacebook\nX (Twitter)\nInstagram\nTikTok\nSearch\nClear\nMost searched products\nSamsung Galaxy S26 12GB/256GB\nRegular price\n$848.00 USD\nSale price\n$848.00 USD\nRegular price\nUnit price\n/per\n4 colours\nView details\nChoose your option\n-9%\nApple iPhone 17 Pro Max (eSIM)\nRegular price\nFrom $1,470.00 USD\nSale price\nFrom $1,470.00 USD\nRegular price\n$1,630.00 USD\nUnit price\n/per\n256GB–2TB · 3 colours\nView details\nChoose your option\n-9%\nApple MacBook Pro M5 (14-inch, 2025)\nRegular price\nFrom $1,600.00 USD\nSale price\nFrom $1,600.00 USD\nRegular price\n$1,799.00 USD\nUnit price\n/per\n16GB/512GB–32GB/1TB · 2 colours\nView details\nChoose your option\n-24%\nSoundcore R50i NC\nRegular price\n$25.00 USD\nSale price\n$25.00 USD\nRegular price\n$33.00 USD\nUnit price\n/per\nIn stock\nView details\nChoose your option\nCart\n0\nBuild Your PC\nSmartphones\nShop All\niPhone\nAll iPhones\niPhone 18 Series\nAndroid Phones\nSamsung Galaxy\nHonor\nXiaomi\nRedmi\nPoco\nOppo\nTecno\nInfinix\nRealme\nRedMagic\nMore Phone Brands\nGoogle Pixel\nOnePlus\nNothing\nMotorola\nHuawei\nVivo\nCMF\nHMD\nBudget\nUnder $200$200–500$500–1,000$1,000+\nTop brands\nAppleSamsungXiaomiRedmiGoogleHonor\nAll brands →\nBest sellers\nSamsung\nSamsung Galaxy S26 12GB/256GB\n$848.00\nApple\nApple iPhone 17 Pro Max (eSIM)\nFrom $1,470.00$1,630.00\nTablets\nShop All\neReaders\nAndroid Tablets\nSamsung Galaxy Tab\nXiaomi\nRedmi\nHonor\nTecno\nHuawei\niPad\niPad\niPad Air\niPad Pro\niPad mini\nBudget\nUnder $300$300",
+   "quoted": [
+    {
+     "quote": "every item brand-new and genuine",
+     "found": true
+    },
+    {
+     "quote": "every item brand-new and genuine",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://outgeeked.net/meta.json",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:06:35+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"OutGeeked\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"outgeeked.net\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://outgeeked.net/",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T05:06:37+00:00",
+   "sha256": "41735d4db5bd3250235483e02aa3fc6762b9d9103a55c0732154a1b59f9bb858",
+   "excerpt": "Buy Smartphones & Laptops in Lebanon | OutGeeked.net\nSkip to content\nCash on delivery\nall over Lebanon\nFacebook\nX (Twitter)\nInstagram\nTikTok\nSearch\nClear\nMost searched products\nSamsung Galaxy S26 12GB/256GB\nRegular price\n$848.00 USD\nSale price\n$848.00 USD\nRegular price\nUnit price\n/per\n4 colours\nView details\nChoose your option\n-9%\nApple iPhone 17 Pro Max (eSIM)\nRegular price\nFrom $1,470.00 USD\nSale price\nFrom $1,470.00 USD\nRegular price\n$1,630.00 USD\nUnit price\n/per\n256GB–2TB · 3 colours\nView details\nChoose your option\n-9%\nApple MacBook Pro M5 (14-inch, 2025)\nRegular price\nFrom $1,600.00 USD\nSale price\nFrom $1,600.00 USD\nRegular price\n$1,799.00 USD\nUnit price\n/per\n16GB/512GB–32GB/1TB · 2 colours\nView details\nChoose your option\n-24%\nSoundcore R50i NC\nRegular price\n$25.00 USD\nSale price\n$25.00 USD\nRegular price\n$33.00 USD\nUnit price\n/per\nIn stock\nView details\nChoose your option\nCart\n0\nBuild Your PC\nSmartphones\nShop All\niPhone\nAll iPhones\niPhone 18 Series\nAndroid Phones\nSamsung Galaxy\nHonor\nXiaomi\nRedmi\nPoco\nOppo\nTecno\nInfinix\nRealme\nRedMagic\nMore Phone Brands\nGoogle Pixel\nOnePlus\nNothing\nMotorola\nHuawei\nVivo\nCMF\nHMD\nBudget\nUnder $200$200–500$500–1,000$1,000+\nTop brands\nAppleSamsungXiaomiRedmiGoogleHonor\nAll brands →\nBest sellers\nSamsung\nSamsung Galaxy S26 12GB/256GB\n$848.00\nApple\nApple iPhone 17 Pro Max (eSIM)\nFrom $1,470.00$1,630.00\nTablets\nShop All\neReaders\nAndroid Tablets\nSamsung Galaxy Tab\nXiaomi\nRedmi\nHonor\nTecno\nHuawei\niPad\niPad\niPad Air\niPad Pro\niPad mini\nBudget\nUnder $30",
+   "quoted": [
+    {
+     "quote": "Taxes and shipping calculated at checkout",
+     "found": true
+    },
+    {
+     "quote": "Fast delivery nation-wide",
+     "found": true
+    }
+   ]
+  }
+ ]
+}

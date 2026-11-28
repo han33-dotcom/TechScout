@@ -1,0 +1,16 @@
+[
+ {
+  "id": "C06",
+  "status": "offers",
+  "seconds": 76.5,
+  "calls": 5,
+  "usd": "0.1635150",
+  "uncertain": "0",
+  "shops": 2,
+  "best": 2,
+  "totals": 1,
+  "complete": 0,
+  "fallback": false,
+  "top": "Technodel USD 26.00 (total 30.00)"
+ }
+]
