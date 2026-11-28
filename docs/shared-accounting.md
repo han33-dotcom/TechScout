@@ -59,9 +59,7 @@ original shop and a second shop observed on landing each count towards that shop
 workload allowance. Busy or exhausted live limits can defer or refuse an action.
 
 On Neon Free, monitor project compute and transfer for real runs in the Neon
-console. A continuously running maintenance `serve` process checks the ledger
-every minute and can keep it awake. Schedule `python -m app.maintenance tick`
-at the intended collection times for intermittent development. On a network or
+console. Any process using the ledger keeps Neon compute awake, so stop local workers when idle. On a network or
 quota outage, keep outstanding reservations and resume live work against the
 shared ledger after it recovers. Offline fixture development can continue.
 

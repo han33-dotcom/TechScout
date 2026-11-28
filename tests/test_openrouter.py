@@ -144,9 +144,6 @@ class OpenRouterTests(unittest.TestCase):
         raw = json.loads((ROOT / 'config' / 'evaluation.json').read_text(encoding='utf-8'))
         self.assertEqual(raw['model_provider']['provider'], 'openai')
         self.assertEqual(raw['evaluation_inference']['route']['model'], 'openai/gpt-6.1-sol')
-        from eval.deployment import pinned_inference
-        with patch.dict('os.environ', {'OPENROUTER_API_KEY':KEY}, clear=True):
-            self.assertIsInstance(pinned_inference().roles, OpenRouterProvider)
         # Existing explicit v1 direct entry points retain their configuration.
         with patch.dict('os.environ', {'OPENAI_API_KEY': 'synthetic-openai-key'}, clear=True):
             from app.runs import _planner

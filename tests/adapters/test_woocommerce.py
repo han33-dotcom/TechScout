@@ -739,28 +739,6 @@ class ParsingTests(unittest.TestCase):
 
 
 class ConfigurationTests(unittest.TestCase):
-    def test_adapters_match_the_reviewed_registry(self):
-        registry = json.loads((ROOT / 'config' / 'sources.json').read_text(encoding='utf-8'))
-        entries = {s['id']: s for s in registry['sources']}
-        from app.domestic_retailer_profiles import HOSTS
-        settings = json.loads((ROOT / 'config/maintenance.json').read_text(encoding='utf-8'))
-        directories = {page['source_id'] for page in settings['manufacturer_pages']}
-        self.assertFalse(directories & (set(adapters.ADAPTERS) | set(HOSTS)))
-        from app.adapters import itworks_audio, technodel_audio
-        self.assertEqual(set(adapters.ADAPTERS) | set(HOSTS) | directories | {itworks_audio.SOURCE, technodel_audio.SOURCE},
-                         set(registry['live_release']['admitted_source_ids']))
-        for source, adapter in adapters.ADAPTERS.items():
-            with self.subTest(source=source):
-                config = adapter.config
-                urls = [u for p in config.products for u in (p.api_url, p.page_url)]
-                urls += [p.url for p in config.policies]
-                self.assertEqual(sorted(urls), sorted(entries[source]['allowed_endpoints']))
-                self.assertEqual(sorted(urls), sorted(ROUTES[source]))
-                self.assertEqual((adapter.source_id, adapter.adapter_version), (source, f'{source}/1'))
-                self.assertIs(adapters.get_adapter(source), adapter)
-        with self.assertRaises(KeyError):
-            adapters.get_adapter('abed_tahan')
-
     def test_package_functions_delegate(self):
         fetch = FakeFetch(routes('beytech'))
         self.assertEqual(len(adapters.search_candidates(fetch, 'beytech', query()).offers), 4)

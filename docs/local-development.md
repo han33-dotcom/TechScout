@@ -57,11 +57,3 @@ Run `python scripts/check_local_stack.py` to rehearse with two disposable Compos
 projects and synthetic records. It checks the bundled assets, health, fixtures,
 vector query, restart and clean restore. Restored data includes an exact Decimal
 price, hash-verified evidence and retained trace and usage for an interrupted run.
-
-## Legacy CLI
-
-```sh
-python -m app.runs search examples/request-iphone17-beirut.json
-```
-
-The default planner uses rules. Pass `--planner none` for retrieval alone or `--planner model` for the paid planner with backend credentials and an accounting job. Budgets and retailer prices must share a currency. Check `source_coverage` on partial results. Exit 0 includes partial and cancelled results. Exit 1 signals runtime or storage failure. Exit 2 signals invalid inputs or configuration. Interrupt once for a result at the next step. A second interrupt can leave a running record until stale-run recovery. [v1 contract](mvp-spec.md)

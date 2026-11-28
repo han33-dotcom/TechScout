@@ -1,9 +1,0 @@
-[
-  {"id":"F1","entry":"exact_model","category":"audio","prompt":"How much is a new black Soundcore Q20i delivered to Jounieh?"},
-  {"id":"F2","entry":"exact_model","category":"phone","prompt":"Please price a new Samsung Galaxy A26 5G with 128 GB storage delivered to Sidon."},
-  {"id":"F3","series":"overlap audit only","entry":"needs","category":"monitor","prompt":"I need a monitor with at least 144 Hz for playing racing games, delivered to Zahle."},
-  {"id":"F7","entry":"needs","category":"monitor","prompt":"Find me a monitor with at least 120 Hz for editing video, delivered to Byblos."},
-  {"id":"F4","entry":"needs","category":"tablet","prompt":"I need a Wi-Fi tablet with at least 256 GB of storage for reading sheet music, delivered to Beirut."},
-  {"id":"F5","entry":"needs","category":"laptop","prompt":"Find me a laptop with at least 64 GB RAM for rendering animations, delivered to Tripoli."},
-  {"id":"F6","entry":"exact_model","category":"audio","prompt":"What would a new black Logitech H540 cost delivered to Batroun?"}
-]

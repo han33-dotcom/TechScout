@@ -1,6 +1,6 @@
 # OpenRouter adapter
 
-The baseline buyer worker builds its model roles from the pinned runtime route in [app/inference.py](../app/inference.py). The [experiment record](buyer-architecture-comparison.md) names the model and reasoning effort used for comparison. The legacy direct provider is documented [separately](model-provider.md).
+The baseline buyer worker builds its model roles from the pinned runtime route in [app/inference.py](../app/inference.py). The [experiment record](https://github.com/han33-dotcom/TechScout/blob/baseline/pre-scout/docs/buyer-architecture-comparison.md) names the model and reasoning effort used for comparison. The legacy direct provider is documented [separately](https://github.com/han33-dotcom/TechScout/blob/baseline/pre-scout/docs/model-provider.md).
 
 ## Off by default
 
@@ -172,4 +172,4 @@ counted twice. Recheck fees before buying; no code here buys credits.
 
 ## Evaluation and experiments
 
-Record the model, serving provider, reasoning effort, prompt versions, token usage, settled spend and uncertain reservations for each run. Pin the route used by both architectures and label any model or fallback experiment separately. Use the [applicable study protocol](buyer-correctness-acceptance.md) and the [comparison record](buyer-architecture-comparison.md) for current work. The [older adapter report](https://github.com/han33-dotcom/TechScout/blob/9006e2ac8557003c958c31f729371ccb8e160b9a/docs/openrouter.md) records account-specific limits and the original provider plan.
+Record the model, serving provider, reasoning effort, prompt versions, token usage, settled spend and uncertain reservations for each run. Pin the route used by both architectures and label any model or fallback experiment separately. Use the [applicable study protocol](https://github.com/han33-dotcom/TechScout/blob/baseline/pre-scout/docs/buyer-correctness-acceptance.md) and the [comparison record](https://github.com/han33-dotcom/TechScout/blob/baseline/pre-scout/docs/buyer-architecture-comparison.md) for current work. The [older adapter report](https://github.com/han33-dotcom/TechScout/blob/9006e2ac8557003c958c31f729371ccb8e160b9a/docs/openrouter.md) records account-specific limits and the original provider plan.

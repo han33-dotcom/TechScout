@@ -12,7 +12,6 @@ from unittest.mock import patch
 from app.accounting import Ledger, Charge, BudgetDenied, LIMITS
 from app.ledger_storage import Records
 from app.contracts import SourceLimits
-from app.research import research
 from app.storage import Storage
 from test_storage import migrate
 
@@ -245,42 +244,6 @@ class AccountingTests(unittest.TestCase):
         with ProcessPoolExecutor(4, mp_context=multiprocessing.get_context('spawn')) as pool:
             results = list(pool.map(contender, [(self.url,i,True) for i in range(8)]))
         self.assertEqual(sum(results), 1)
-
-    def test_parallel_roles_cannot_delegate_recursively(self):
-        job = self.ledger.open_job('research')
-        barrier = threading.Barrier(3)
-        def client(request, handle, stop):
-            barrier.wait(timeout=5)
-            with self.assertRaises(ValueError):
-                research(handle, [client], request)
-            a = handle.reserve('search', Charge(D('.1')), 5)
-            a.dispatch()
-            a.complete(D('.1'), 1)
-            return request
-        result = research(job, [client]*3, 'laptop')
-        self.assertEqual([r['status'] for r in result], ['completed']*3)
-        self.assertEqual(self.ledger.snapshot()['scopes']['project'][3], '0.3')
-
-    def test_timeout_cancels_dispatch_and_keeps_completed_results(self):
-        job = self.ledger.open_job('research')
-        finished, started = threading.Event(), threading.Event()
-        def slow(request, handle, stop):
-            started.set()
-            stop.wait(2)
-            try:
-                with self.assertRaises(BudgetDenied):
-                    handle.reserve('model', Charge(D('.1')), 1)
-            finally:
-                finished.set()
-        def fast(*args):
-            self.assertTrue(started.wait(2))
-            return 'partial'
-        # Both clients must enter before testing cancellation of an active one.
-        # A 100ms deadline could cancel a queued worker before it ever entered.
-        result = research(job, [fast, slow], None, timeout=1)
-        self.assertEqual(result[0], {'status':'completed','result':'partial'})
-        self.assertEqual(result[1]['status'], 'cancelled')
-        self.assertTrue(finished.wait(2))
 
     def test_three_worker_limit_is_durable(self):
         job = self.ledger.open_job('research')
