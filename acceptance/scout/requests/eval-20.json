@@ -1,0 +1,25 @@
+{
+  "purpose": "Evaluation requests for the scout agent (inputs only; grading expectations are in eval-20-expectations.json and must not be shown to the agent). None come from the frozen 20, the confirmation requests C01-C07, or the scout development and robustness requests. Scope: recommendations are given before VAT and delivery; an unstated condition is a caveat, not a failure.",
+  "requests": [
+    {"id": "E01", "text": "How much is a new Samsung Galaxy A56 5G with 256 GB?", "category": "phone"},
+    {"id": "E02", "text": "Compare Lebanese shops selling the new Xiaomi Redmi Note 14 Pro 8/256 GB. Which is cheapest?", "category": "phone"},
+    {"id": "E03", "text": "I need a new phone under $300 with the best battery life you can find.", "category": "phone"},
+    {"id": "E04", "text": "baddi iPhone 16 Pro 256 abyad jdid, adesh ha2o?", "category": "phone"},
+    {"id": "E05", "text": "Find me a new iPhone 16 with 1 TB of storage.", "category": "phone"},
+    {"id": "E06", "text": "I'm fine with refurbished or used. What's the cheapest Galaxy S23 128 GB?", "category": "phone"},
+    {"id": "E07", "text": "Price of a new 13-inch MacBook Air M4 with 16 GB RAM and 256 GB?", "category": "laptop"},
+    {"id": "E08", "text": "I'm a university student. I need a new laptop for classes and coding, around $600.", "category": "laptop"},
+    {"id": "E09", "text": "New gaming laptop with an RTX 4060, up to $1,200.", "category": "laptop"},
+    {"id": "E10", "text": "I want a new MacBook Air M3 with 64 GB of RAM.", "category": "laptop"},
+    {"id": "E11", "text": "I want a big, powerful laptop.", "category": "laptop"},
+    {"id": "E12", "text": "How much is the new Samsung Galaxy Tab S9 FE, Wi-Fi, 128 GB?", "category": "tablet"},
+    {"id": "E13", "text": "بدي آيباد إير جديد M2 ١١ إنش ١٢٨ جيجا واي فاي، قديش سعره؟", "category": "tablet"},
+    {"id": "E14", "text": "I need a new tablet for my 8-year-old, around $200.", "category": "tablet"},
+    {"id": "E15", "text": "Compare prices for the new LG UltraGear 24GS60F 24-inch 180 Hz monitor.", "category": "monitor"},
+    {"id": "E16", "text": "I need a new 27-inch 1440p monitor for office work, under $250.", "category": "monitor"},
+    {"id": "E17", "text": "Find me a new 32-inch 4K OLED monitor under $150.", "category": "monitor"},
+    {"id": "E18", "text": "How much are the new Samsung Galaxy Buds3 Pro?", "category": "audio"},
+    {"id": "E19", "text": "Compare shops for the new Apple AirPods 4 with Active Noise Cancellation.", "category": "audio"},
+    {"id": "E20", "text": "I need new wireless earbuds for the gym under $50.", "category": "audio"}
+  ]
+}

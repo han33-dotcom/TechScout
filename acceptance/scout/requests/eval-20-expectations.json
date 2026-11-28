@@ -1,0 +1,45 @@
+{
+  "purpose": "Grading expectations for eval-20.json. Read only after all runs finish; never pass to the agent.",
+  "scope": {
+    "prices": "Listed prices before VAT and delivery. VAT and delivery are out of scope and must not be required for a pass.",
+    "condition": "A recommended offer's condition is either evidenced as new, or explicitly flagged as not stated by the shop. Unstated condition is a caveat, not a failure. An offer the shop marks used, refurbished or open box only qualifies when the buyer opted in.",
+    "out_of_stock": "If an exact product is unavailable at every shop checked, an honest not-found or out-of-stock answer with the shops checked is a pass."
+  },
+  "every_recommended_offer": [
+    "exact requested variant (model, storage, memory, colour and connectivity where stated)",
+    "current listed price read in this run, with currency",
+    "stock status read in this run",
+    "working link to the exact listing",
+    "condition evidenced as new, or flagged as not stated by the shop",
+    "no claim of 'new', 'in stock', 'exact match' or any price without evidence from this run"
+  ],
+  "fail_conditions": [
+    "any misleading claim (unsupported price, stock, condition or exact-match claim)",
+    "a wrong variant presented as a match",
+    "a hard ceiling ('under', 'up to') exceeded by a recommended offer",
+    "a used or refurbished offer recommended without opt-in",
+    "no final answer within 120 seconds"
+  ],
+  "cases": [
+    {"id": "E01", "category": "phone", "entry": "exact", "pass": "Galaxy A56 5G 256 GB, priced and linked."},
+    {"id": "E02", "category": "phone", "entry": "seller_pair", "pass": "The same Redmi Note 14 Pro 8/256 GB variant at two or more shops; the cheapest is named."},
+    {"id": "E03", "category": "phone", "entry": "needs", "pass": "Up to three models, each under the hard $300 ceiling, with battery reasoning (e.g. capacity) explained."},
+    {"id": "E04", "category": "phone", "entry": "exact", "language": "arabizi", "pass": "Interprets 'abyad' as White Titanium and 256 GB iPhone 16 Pro; answers in the buyer's style."},
+    {"id": "E05", "category": "phone", "entry": "blocker", "pass": "Explains the iPhone 16 has no 1 TB option (maximum 512 GB) and offers the closest real configurations. No 1 TB offer is presented."},
+    {"id": "E06", "category": "phone", "entry": "exact", "condition_opt_in": "used_or_refurbished", "pass": "Used or refurbished Galaxy S23 128 GB offers qualify and are labelled with their condition; the cheapest is named."},
+    {"id": "E07", "category": "laptop", "entry": "exact", "pass": "13-inch MacBook Air with M4, 16 GB, 256 GB. An M3, M2 or 512 GB model is not a match."},
+    {"id": "E08", "category": "laptop", "entry": "needs", "pass": "Up to three suitable models near $600. 'Around' is a preference, so a modest overshoot is allowed if explained."},
+    {"id": "E09", "category": "laptop", "entry": "needs", "pass": "RTX 4060 confirmed for each recommended laptop; every recommended offer at or under the hard $1,200 ceiling."},
+    {"id": "E10", "category": "laptop", "entry": "blocker", "pass": "Explains the M3 MacBook Air maxes out at 24 GB RAM and offers the closest real configurations. No 64 GB offer is presented."},
+    {"id": "E11", "category": "laptop", "entry": "clarify", "pass": "Asks what the laptop will be used for and the budget before recommending. Recommending immediately without asking is a fail."},
+    {"id": "E12", "category": "tablet", "entry": "exact", "pass": "Galaxy Tab S9 FE Wi-Fi 128 GB. The 5G model or another storage size is not a match."},
+    {"id": "E13", "category": "tablet", "entry": "exact", "language": "arabic", "pass": "iPad Air 11-inch with M2, 128 GB, Wi-Fi only; answers in Arabic. An M3 or cellular model is not a match."},
+    {"id": "E14", "category": "tablet", "entry": "needs", "pass": "Sensible picks for a child near $200 with reasons. 'Around' is a preference."},
+    {"id": "E15", "category": "monitor", "entry": "seller_pair", "pass": "The exact LG 24GS60F at two or more shops; the cheapest is named."},
+    {"id": "E16", "category": "monitor", "entry": "needs", "pass": "27-inch, 2560x1440 confirmed for each pick; every recommended offer under the hard $250 ceiling."},
+    {"id": "E17", "category": "monitor", "entry": "blocker", "pass": "Explains no new 32-inch 4K OLED is available near $150 and shows the real listed prices found. No offer over $150 is presented as meeting the budget."},
+    {"id": "E18", "category": "audio", "entry": "exact", "pass": "Galaxy Buds3 Pro, priced and linked. Buds3 or Buds2 Pro is not a match."},
+    {"id": "E19", "category": "audio", "entry": "seller_pair", "pass": "AirPods 4 with Active Noise Cancellation at two or more shops. The non-ANC AirPods 4 is not a match."},
+    {"id": "E20", "category": "audio", "entry": "needs", "pass": "Wireless earbuds under the hard $50 ceiling; any sweat or water-resistance claim is evidenced."}
+  ]
+}
