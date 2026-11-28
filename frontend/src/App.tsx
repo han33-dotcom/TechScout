@@ -103,20 +103,27 @@ export default function App({ transport = api, historyTransport = api, accountTr
   const edit = (next: Draft) => { setDirty(true); setDraft(next); };
   useEffect(() => { if (state.workspace && !dirty && !state.busy && !state.error) setDraft(fromRequest(state.workspace.current.request)); }, [state.workspace, dirty, state.busy, state.error]);
   const submit = (e: FormEvent) => { e.preventDefault(); setValidation(''); try { const request = toRequest(draft, state.workspace?.current.request); setDirty(false); void state.submit(request); } catch (error) { setValidation(error instanceof Error ? error.message : 'Check your requirements.'); } };
-  const header = <header className="topbar"><a className="brand" href="/" aria-label="TechScout home"><span className="brand-mark">t↗</span>techscout<span className="brand-dot">.</span></a>
+  const [theme, setTheme] = useState<'system' | 'light' | 'dark'>(() => { try { const value = localStorage.getItem('techscout-theme'); return value === 'light' || value === 'dark' ? value : 'system'; } catch { return 'system'; } });
+  useEffect(() => { if (theme === 'system') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = theme; try { localStorage.setItem('techscout-theme', theme); } catch { /* storage unavailable */ } }, [theme]);
+  const mobileNav = <nav className="mobile-nav" aria-label="Mobile navigation">
+    <button type="button" aria-current={view === 'search' ? 'page' : undefined} onClick={backToChat}><span aria-hidden="true">⌕</span>Scout</button>
+    <button type="button" aria-current={view === 'locations' ? 'page' : undefined} onClick={() => go('locations')}><span aria-hidden="true">⌖</span>Locations</button>
+    <button type="button" aria-current={view === 'account' ? 'page' : undefined} onClick={() => go('account')}><span aria-hidden="true">◎</span>Account</button>
+  </nav>;
+  const header = <header className="topbar"><a className="brand" href="/" aria-label="TechScout home"><span className="brand-mark"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="20" fill="none" stroke="white" strokeWidth="2" opacity=".5"/><path d="M32 8V16 M32 48V56 M8 32H16 M48 32H56" stroke="white" strokeWidth="2.5" strokeLinecap="round"/><path d="M20 34L44 19L35 43L29 35Z" fill="white"/></svg></span>techscout<span className="brand-dot">.</span></a>
     <nav className="account-nav" aria-label="Account">{account ? <><span className="muted">Signed in as <strong>{account.username}</strong></span><button type="button" onClick={() => go('locations')}>Saved locations</button><button type="button" onClick={() => go('account')}>Account</button></>
       : <button type="button" disabled={account === undefined} onClick={() => go('account')}>Sign in or create account</button>}
-      <span className="location">LB <span>Built for buying in Lebanon</span></span></nav></header>;
+      <label className="theme-control">Appearance<select value={theme} onChange={e => setTheme(e.target.value as typeof theme)}><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label><span className="location">LB <span>Built for buying in Lebanon</span></span></nav></header>;
   if (view === 'account') return <>{header}<main>
     <Account api={accountTransport} account={account} onBack={backToChat}
       purpose={choice ? 'Sign in or create an account to choose a saved address. You will come back to this same comparison.' : undefined}
       onSignedIn={signedIn => { setAccount(signedIn); if (choice) go('locations'); else backToChat(); }}
       onSignedOut={() => { setAccount(null); setChoice(undefined); state.reset(); setView('search'); writeLocation(undefined, 'search'); }} />
-  </main></>;
+  </main>{mobileNav}</>;
   if (view === 'locations') return <>{header}<main>
     {account ? <Locations api={accountTransport} onBack={backToChat} choosing={choice?.sellers.filter(seller => choice.recipients.includes(seller.retailer_id))} onChoose={choice ? selectLocation : undefined} />
       : <section className="panel"><h2>Saved locations</h2><p>{account === undefined ? 'Checking your account…' : 'Sign in to manage saved locations.'}</p>{account === null && <button className="primary" onClick={() => go('account')}>Sign in or create account</button>}</section>}
-  </main></>;
+  </main>{mobileNav}</>;
   return <>{header}
     <main><section className="hero"><span className="eyebrow">LESS GUESSWORK. BETTER CHOICES.</span><h1>Find the right tech.<br/><span>Know what you’re buying.</span></h1><p>Tell us what matters. Compare configurations, local sellers and the full cost, with evidence you can check.</p></section>
       <History api={historyTransport} onDeleted={state.forget} onRecheck={request=>{setDirty(false);setValidation('');void state.startFresh({...request,market_scope:domesticScope,request_id:crypto.randomUUID(),revision:1});}}/>
@@ -129,5 +136,5 @@ export default function App({ transport = api, historyTransport = api, accountTr
           <label htmlFor="followup">What would you like to change?</label><div className="search-box"><input id="followup" value={followup} maxLength={4000} required onChange={e=>setFollowup(e.target.value)} placeholder="Tell us what matters more, or clarify a requirement..."/><button className="primary" disabled={state.busy}>Refine comparison</button></div><p className="muted">Adds to this request. Existing filters remain in force until you explicitly edit them above. Previous results stay labelled while new evidence is checked.</p>{state.workspace.current.request.refinement_note && <p>Refinement sent: {state.workspace.current.request.refinement_note}</p>}
         </form>{state.workspace.previous && <details className="panel previous"><summary>Previous search · revision {state.workspace.previous.request.revision}</summary><p>These results belong to earlier requirements and are not verified for your current search.</p><Comparison workspace={{schema_version:2,current:state.workspace.previous}} historical/></details>}</>}
       {!state.workspace && <section className="promise-grid"><article><span>01 / FIT</span><h2>The exact configuration</h2><p>Storage, specifications and regional differences stay visible.</p></article><article><span>02 / COST</span><h2>Beyond the sticker price</h2><p>Known charges and missing costs are kept separate.</p></article><article><span>03 / EVIDENCE</span><h2>Checked, then explained</h2><p>Verified recommendations stay separate from promising leads.</p></article></section>}
-    </main><footer><span>TECHSCOUT / BUY WITH CONTEXT</span><span>Compare here. Buy directly from the retailer.</span></footer></>;
+    </main><footer><span>TECHSCOUT / BUY WITH CONTEXT</span><span>Compare here. Buy directly from the retailer.</span></footer>{mobileNav}</>;
 }
