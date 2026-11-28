@@ -100,6 +100,26 @@ USED = re.compile(r'\b(used|pre-?owned|refurb\w*|renewed|open[- ]?box|second[- ]
                   r'cpo|ex[- ]?demo|demo unit|activated|مستعمل)\b', re.IGNORECASE)
 NEW = re.compile(r'(brand[- ]new|\bnew\b|sealed|newcondition|جديد)', re.IGNORECASE)
 NOT_NEW = ('used', 'refurbished', 'open_box')
+# Wording that states the item's condition. A bare "new" is too often marketing ("the new MacBook Air").
+NEW_CONDITION = re.compile(r'(brand[- ]new|factory[- ]sealed|\bsealed\b|\bunopened\b|never (?:been )?used|'
+                           r'new in (?:the )?box|\bb?nib\b|100\s?% new|condition\s*[:=-]?\s*(?:brand[- ])?new|'
+                           r'new condition|newcondition|جديد\s*(?:بالكرتونة|مختوم|بالعلبة)|حالة جديدة)', re.IGNORECASE)
+# Phrases where "new" describes the model or the shop's range, not this item's condition.
+NEW_MARKETING = re.compile(r"(all[- ]new|\bthe new\b|\bnewest\b|what'?s new|\bnew\s+(?:arrivals?|collections?|designs?|"
+                           r"models?|generations?|looks?|releases?|launch(?:es)?|features?|chips?|versions?|colou?rs?|"
+                           r"era|standards?|products?|items?|stock)\b)", re.IGNORECASE)
+
+
+def says_new(quote: str | None, own_values=()) -> bool:
+    """True when a quote states that the item is new: condition wording such as "Brand New", "sealed" or
+    "Condition: New", never marketing ("all-new", "the new MacBook Air", "new arrivals"). A bare "New"
+    counts only as one of the listing's own option or condition values."""
+    if not quote or USED.search(quote) or NEW_MARKETING.search(quote):
+        return False
+    if NEW_CONDITION.search(quote):
+        return True
+    q = normalize(quote)
+    return q in ('new', 'جديد') and q in {normalize(v) for v in own_values if v}
 # The buyer's own words that accept a condition other than new, in English, Arabic and Arabizi.
 USED_WANTED = re.compile(r'(\bused\b|pre-?owned|refurb\w*|renewed|open[- ]?box|second[- ]?hand|مستعمل\w*|'
                          r'm[ou]sta3mal\w*|mesta3mal\w*|\boccasion\b)', re.IGNORECASE)
@@ -169,7 +189,8 @@ def dec(value) -> Decimal | None:
     return d.quantize(Decimal('0.01')) if d >= 0 else None
 
 
-PAIR_GB = re.compile(r'(\d{1,3})\s?(?:gb)?\s?[/+]\s?(\d{2,4})\s?(gb|tb)\b', re.IGNORECASE)
+# The left number must not end a model name: "S24+ 256GB" is a Galaxy S24+, not 24 GB of RAM.
+PAIR_GB = re.compile(r'(?<![a-z0-9])(\d{1,3})\s?(?:gb)?\s?[/+]\s?(\d{2,4})\s?(gb|tb)\b', re.IGNORECASE)
 
 
 def storage_values(text: str) -> set[int]:
@@ -184,7 +205,9 @@ def storage_values(text: str) -> set[int]:
 
 
 def tier_words(text: str) -> set[str]:
-    words = set(re.findall(r'[a-z]+', (text or '').lower()))
+    text = PAIR_GB.sub(' ', (text or '').lower())       # "8+256GB" is memory and storage
+    text = re.sub(r'(?<=[a-z0-9])\+', ' plus ', text)   # "Pro+", "S24+", "FE+" name the plus model
+    words = set(re.findall(r'[a-z]+', text))
     return {w for w in TIER_WORDS if w in words}
 
 
@@ -199,13 +222,19 @@ def hard_budget(text: str) -> Decimal | None:
     return None
 
 
-def identity_conflicts(request_text: str, offer_text: str, kind: str) -> list[str]:
-    """Reasons an 'exact' claim cannot stand. Only applied to exact-model requests."""
+def identity_conflicts(request_text: str, offer_text: str, kind: str, description: str = '') -> list[str]:
+    """Reasons an 'exact' claim cannot stand. Only applied to exact-model requests.
+
+    ``description`` is the listing's own description: a requested memory or storage figure stated there
+    (a title often omits the RAM) counts, unless the description also names other configurations."""
     if kind != 'exact':
         return []
     problems = []
     req_gb, off_gb = storage_values(request_text), storage_values(offer_text)
-    missing = {g for g in req_gb if off_gb and g not in off_gb}
+    described = storage_values(description)
+    if described and not described <= (req_gb | off_gb):
+        described = set()   # a spec block for several configurations proves none of them
+    missing = {g for g in req_gb if off_gb and g not in off_gb and g not in described}
     if missing:
         problems.append(f'requested {", ".join(f"{g} GB" for g in sorted(missing))} not in the listed variant')
     req_tiers, off_tiers = tier_words(request_text), tier_words(offer_text)
@@ -280,6 +309,8 @@ def check_offers(final, evidence: Evidence, shops: dict, request: dict, *,
             offer_text = ' '.join([product.title, variant.title, ' '.join(variant.options.values())])
             own_text = ' | '.join(str(x) for x in (product.title, variant.title, *variant.options.values(), variant.sku,
                                                    published_condition, product.description) if x)
+            own_values = [*variant.options.values(), *variant.title.split('/'), published_condition]
+            description = product.description or ''
             evidence_rows = [dict(obs=obs.obs_id, url=product.url, read=product.endpoint, source=product.source,
                                   observed_at=obs.observed_at.isoformat(timespec='seconds'), sha256=obs.sha256)]
         else:
@@ -294,6 +325,7 @@ def check_offers(final, evidence: Evidence, shops: dict, request: dict, *,
             available, title, vtitle, url = None, obs.meta.get('title', ''), '', obs.url
             offer_text = title
             own_text = obs.text
+            own_values, description = [], ''
             evidence_rows = [dict(obs=obs.obs_id, url=obs.url, read=obs.url, source='page text quote',
                                   observed_at=obs.observed_at.isoformat(timespec='seconds'), sha256=obs.sha256)]
         key = (url, vtitle)
@@ -302,7 +334,8 @@ def check_offers(final, evidence: Evidence, shops: dict, request: dict, *,
         seen.add(key)
         gaps, downgrades = [], []
         identity = claim.identity
-        conflicts = identity_conflicts(request_text, offer_text, final.request_kind) if identity == 'exact' else []
+        conflicts = (identity_conflicts(request_text, offer_text, final.request_kind, description)
+                     if identity == 'exact' else [])
         if conflicts:
             identity = 'near'
             downgrades.extend(conflicts)
@@ -319,15 +352,13 @@ def check_offers(final, evidence: Evidence, shops: dict, request: dict, *,
         elif listed and published:
             condition, condition_conflict = 'unknown', True
             gaps.append(f'the shop lists the condition as "{published_condition.strip()}", not as new')
-        elif listed and claim.condition == 'new' and claim.condition_quote and NEW.search(claim.condition_quote) \
-                and not USED.search(claim.condition_quote) and contains_quote(own_text, claim.condition_quote) \
-                and not description_for_other_model(obs, claim.condition_quote, offer_text):
-            condition = 'new'
-        elif not listed and claim.condition == 'new' and claim.condition_quote and NEW.search(claim.condition_quote) \
-                and not USED.search(claim.condition_quote) \
-                and any(contains_quote(o.text, claim.condition_quote)
+        elif claim.condition == 'new' and says_new(claim.condition_quote, own_values) \
+                and any(contains_quote(own_text if (listed and o.obs_id == obs.obs_id) else o.text,
+                                       claim.condition_quote)
                         for o in condition_sources(evidence, obs, claim.condition_obs, url)) \
                 and not description_for_other_model(obs, claim.condition_quote, offer_text):
+            # The listing's own text (in the listed scope only the chosen variant, not its siblings), a read of
+            # the same product page, or the same shop's policy page ("all our products are brand new").
             condition = 'new'
         else:
             condition = 'unknown'
