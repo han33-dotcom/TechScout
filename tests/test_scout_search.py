@@ -52,7 +52,7 @@ class RankingTests(unittest.TestCase):
     def test_rare_words_decide_the_match(self):
         plain = {r['title']: s for s, r in self.index.best('AirPods Pro 2', 5)}
         weighted = {r['title']: s for s, r in self.index.best('AirPods Pro 2', 5, self.weights)}
-        self.assertEqual(weighted['Apple AirPods Pro 2 (USB-C)'], 1.0)
+        self.assertAlmostEqual(weighted['Apple AirPods Pro 2 (USB-C)'], 1.0)
         # "Pro" and "2" are everywhere in a catalog; on their own they count for less than before.
         self.assertGreater(plain['Segway GoKart Pro 2'], 0.6)
         self.assertLess(weighted['Segway GoKart Pro 2'], plain['Segway GoKart Pro 2'] - 0.1)
