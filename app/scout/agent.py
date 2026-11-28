@@ -262,7 +262,7 @@ class ScoutAgent:
                 turns.append(dict(turn=len(turns) + 1, notes=step.notes, finished=True, at_s=round(elapsed(), 1)))
         fallback = final is None
         if fallback:
-            final = fallback_final(request, evidence)
+            final = fallback_final(request, evidence, tools.leads)
             warnings.append('The model did not finish; the answer lists related listings read in this run.')
         offers = check_offers(final, evidence, shops, request)
         message = final.message
@@ -477,7 +477,7 @@ def deterministic_message(final: Final, offers: list[CheckedOffer]) -> str:
     return 'Checked offers:\n' + '\n'.join(lines)
 
 
-def fallback_final(request: dict, evidence: Evidence) -> Final:
+def fallback_final(request: dict, evidence: Evidence, leads: list[dict] | None = None) -> Final:
     """When the model cannot finish: list related products read in this run, labelled unconfirmed."""
     text = request.get('text', '')
     offers = []
@@ -494,10 +494,16 @@ def fallback_final(request: dict, evidence: Evidence) -> Final:
                                  requirements=[], delivery_obs=None,
                                  delivery_quote=None, delivery_fee_usd=None, free_delivery_over_usd=None,
                                  vat_quote=None, price_quote=None))
-    return Final(status='offers' if offers else 'no_match', request_kind='exact',
-                 message=('The assistant could not finish its review in time. These related listings were read '
-                          'in this run; check the exact model and options before buying.' if offers else
-                          'The assistant could not finish its review in time and found no related listing.'),
+    if offers:
+        message = ('The assistant could not finish its review in time. These related listings were read in this '
+                   'run; check the exact model and options before buying.')
+    elif leads:
+        names = '; '.join(f"{x['shop']}: {x['title']}" for x in leads[:5])
+        message = ('The assistant could not finish its review in time, so nothing below has been checked. '
+                   f'Its searches found these leads (price, stock and fit unverified): {names}.')
+    else:
+        message = 'The assistant could not finish its review in time and has no checked listing to show.'
+    return Final(status='offers' if offers else 'no_match', request_kind='exact', message=message,
                  offers=offers, question=None, budget_max_usd=None)
 
 

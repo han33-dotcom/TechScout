@@ -203,6 +203,57 @@ class PreparedIndexTests(unittest.TestCase):
         self.assertEqual(index.best('nothing matches this', 3), [])
 
 
+class HeldOutFindingTests(unittest.TestCase):
+    """Fixes after the locked held-out run (28 Nov): each pins a graded finding (B05, B07, B11, C06)."""
+
+    def test_ram_storage_pairs_are_read(self):
+        from app.scout.verify import identity_conflicts, storage_values
+        self.assertEqual(storage_values('13.6" 8/256gb / M2 / Midnight'), {8, 256})
+        self.assertEqual(storage_values('Galaxy A56 8GB+256GB'), {8, 256})
+        self.assertEqual(identity_conflicts('MacBook Air M2 13-inch 8 GB RAM 256 GB SSD Midnight',
+                                            'MacBook Air 13.6" 8/256gb / M2 / Midnight', 'exact'), [])
+
+    def test_tax_included_with_shipping_at_checkout_is_included(self):
+        from app.scout.verify import vat_status
+        self.assertEqual(vat_status('Tax included. Shipping calculated at checkout.', True), 'included')
+        self.assertEqual(vat_status('Taxes and shipping calculated at checkout.', True), 'excluded')
+
+    def test_unconfirmed_identity_requirement_is_not_an_exact_match(self):
+        ev = Evidence()
+        p = product_obs(ev, make_product(title='Apple iPad A16 128GB Blue'))
+        req = dict(requirement='Wi-Fi only (not cellular)', status='unknown', evidence_obs=None, quote=None)
+        out = check_offers(final([claim(p.obs_id, requirements=[req])]), ev, SHOPS,
+                           dict(REQ, text='new blue iPad A16 Wi-Fi 128GB delivered to Batroun'))
+        self.assertEqual((out[0].identity, out[0].tier), ('near', 'alternative'))
+
+    def test_preorder_on_the_product_is_not_stock(self):
+        ev = Evidence()
+        product = make_product(title='iPhone 15 Pro 128GB')
+        p = product_obs(ev, product)
+        page_obs(ev, 'alpha', 'Menu | Home | -%Pre-order iPhone 15 Pro 128GB $1,080 | Add to cart',
+                 url='https://alpha.example/products/x')
+        out = check_offers(final([claim(p.obs_id)]), ev, SHOPS, REQ)
+        self.assertIsNone(out[0].in_stock)
+        self.assertTrue(any('pre-order' in g.lower() for g in out[0].gaps))
+
+    def test_condition_from_another_models_spec_block_does_not_count(self):
+        ev = Evidence()
+        product = make_product(title='MacBook Air M2', options={'Config': '8/256gb Midnight'})
+        product.variants.append(type(product.variants[0])('12', '16/512gb Silver', {'Config': '16/512gb Silver'},
+                                                          Decimal('999'), currency='USD', available=True))
+        product.description = 'SSD 256GB - Silver | MLXY3 | CONDITION:New'
+        p = product_obs(ev, product)
+        out = check_offers(final([claim(p.obs_id, condition_quote='CONDITION:New')]), ev, SHOPS, REQ)
+        self.assertEqual(out[0].condition, 'unknown')
+
+    def test_fallback_names_unchecked_leads_instead_of_claiming_none(self):
+        from app.scout.agent import fallback_final
+        f = fallback_final(REQ, Evidence(), [dict(shop='ITWorks', title='Logitech H390 USB headset', url='https://x')])
+        self.assertIn('ITWorks: Logitech H390', f.message)
+        self.assertIn('unverified', f.message)
+        self.assertEqual(f.offers, [])
+
+
 class SlowShopTests(unittest.TestCase):
     def test_a_slow_shop_is_dropped_not_waited_for(self):
         import time

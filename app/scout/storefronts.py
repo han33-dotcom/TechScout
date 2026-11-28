@@ -213,10 +213,12 @@ class Shopify:
                 available=v.get('available') if isinstance(v.get('available'), bool) else None,
                 sku=(str(v['sku'])[:80] if v.get('sku') else None),
                 url=f"{self.shop.origin}/products/{handle}?variant={v.get('id')}"))
+        tags = [str(t)[:40] for t in (p.get('tags') or [])][:20] if isinstance(p.get('tags'), list) else []
         return Product(self.shop.shop_id, self.shop.name, 'shopify', str(p.get('id')), str(p.get('title', ''))[:240],
                        f'{self.shop.origin}/products/{handle}', 'shopify_product_js', endpoint, page.sha256,
                        page.observed_at, vendor=p.get('vendor'), product_type=p.get('type'),
-                       description=strip_html(p.get('description')), variants=variants)
+                       description=strip_html(p.get('description')), variants=variants,
+                       extra={'tags': tags} if tags else {})
 
 
 def _shopify_handle(url: str) -> str | None:

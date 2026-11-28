@@ -40,6 +40,7 @@ class Tools:
         self._terms: dict[str, dict | None] = {}
         self._terms_lock = threading.Lock()
         self._opened: dict[str, str] = {}   # product URL (no query) -> observation ID
+        self.leads: list[dict] = []          # search leads, kept for an honest fallback answer
 
     # ---- dispatch ----------------------------------------------------------------------------
     def run_many(self, calls: list[dict]) -> list[dict]:
@@ -75,6 +76,10 @@ class Tools:
             return dict(error='empty_query', reason='write a short product query, e.g. "galaxy s24 ultra 256"')
         report = self.search_engine.search(query, shop_ids=shop_ids, deadline=self.deadline)
         hits = report.hits[:15]
+        with self._terms_lock:
+            for h in hits[:5]:
+                if all(h.url != x['url'] for x in self.leads):
+                    self.leads.append(dict(shop=h.shop_name, title=h.title[:100], url=h.url))
         out = dict(query=query, shops_answered=report.shops_answered, shops_asked=report.shops_asked,
                    failed_shops=sorted(report.failures), seconds=report.seconds,
                    hits=[dict(shop=h.shop_name, title=h.title, price=_money(h.price), cur=h.currency,

@@ -151,10 +151,17 @@ def dec(value) -> Decimal | None:
     return d.quantize(Decimal('0.01')) if d >= 0 else None
 
 
+PAIR_GB = re.compile(r'(\d{1,3})\s?(?:gb)?\s?[/+]\s?(\d{2,4})\s?(gb|tb)\b', re.IGNORECASE)
+
+
 def storage_values(text: str) -> set[int]:
+    """Every GB/TB figure, including both halves of "8/256gb" or "12GB+256GB" (RAM / storage)."""
     out = set()
     for n, unit in GB.findall(text or ''):
         out.add(int(n) * (1024 if unit.lower() == 'tb' else 1))
+    for a, b, unit in PAIR_GB.findall(text or ''):
+        out.add(int(a))
+        out.add(int(b) * (1024 if unit.lower() == 'tb' else 1))
     return out
 
 
@@ -234,6 +241,9 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
             price, currency, available = variant.price, variant.currency, variant.available
             published_condition = variant.condition or product.condition or ''
             stock_text = variant.stock_text
+            preorder = preorder_marker(product, variant, evidence, obs)
+            if preorder and available:
+                available, stock_text = None, f'the shop marks it "{preorder}"'
             title, vtitle = product.title, variant.title
             url = variant.url or product.url
             offer_text = ' '.join([product.title, variant.title, ' '.join(variant.options.values())])
@@ -274,7 +284,8 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
         elif claim.condition == 'new' and claim.condition_quote and NEW.search(claim.condition_quote) \
                 and not USED.search(claim.condition_quote) \
                 and any(contains_quote(o.text, claim.condition_quote)
-                        for o in condition_sources(evidence, obs, claim.condition_obs, url)):
+                        for o in condition_sources(evidence, obs, claim.condition_obs, url)) \
+                and not description_for_other_model(obs, claim.condition_quote, offer_text):
             condition = 'new'
         else:
             condition = 'unknown'
@@ -302,6 +313,11 @@ def check_offers(final: Final, evidence: Evidence, shops: dict, request: dict) -
                 unmet.append(r.requirement)
             reqs.append(dict(requirement=r.requirement, status=status, quote=r.quote if status == 'met' else None,
                              obs=src.obs_id if status == 'met' else None, covered_elsewhere=bool(covered)))
+        identity_gaps = [r['requirement'] for r in reqs if r['status'] == 'unknown'
+                         and IDENTITY_WORDS.search(r['requirement'])]
+        if identity == 'exact' and identity_gaps:
+            identity = 'near'  # an unconfirmed Wi-Fi/colour/storage/model requirement is not an exact match
+            downgrades.append('identity not fully confirmed: ' + '; '.join(identity_gaps))
         if price is None:
             gaps.append('no current price published')
         usd = bool(currency) and currency.upper() == 'USD'
@@ -498,14 +514,63 @@ def free_threshold(quote: str) -> Decimal | None:
 
 
 def vat_status(quote: str | None, found: bool) -> str:
-    """'included' (stated included or not charged), 'excluded' (added on top), or 'unknown'."""
-    if not quote or not found or not VAT_WORD.search(quote):
+    """'included' (stated included or not charged), 'excluded' (added on top), or 'unknown'.
+
+    Judged per sentence that mentions VAT or tax, so "Tax included. Shipping calculated at
+    checkout." reads as included (the second sentence is about shipping)."""
+    if not quote or not found:
         return 'unknown'
-    if VAT_EXCLUDED.search(quote):
+    verdicts = set()
+    for sentence in re.split(r'(?<=[.!;|\n])\s+', quote):
+        if not VAT_WORD.search(sentence):
+            continue
+        if VAT_EXCLUDED.search(sentence):
+            verdicts.add('excluded')
+        elif VAT_INCLUDED.search(sentence):
+            verdicts.add('included')
+    if 'excluded' in verdicts:
         return 'excluded'
-    if VAT_INCLUDED.search(quote):
-        return 'included'
-    return 'unknown'
+    return 'included' if 'included' in verdicts else 'unknown'
+
+
+IDENTITY_WORDS = re.compile(r'(wi-?fi|cellular|\blte\b|\b[45]g\b|colou?r|black|white|blue|silver|gr[ae]y|gold|green|'
+                            r'pink|purple|midnight|starlight|titanium|storage|\d+\s?(?:gb|tb)\b|\bram\b|model|'
+                            r'generation|\bchip\b|\binch|\bsize\b)', re.IGNORECASE)
+PREORDER = re.compile(r'(pre-?\s?order|preorder|coming soon|available soon|on backorder|backorder)', re.IGNORECASE)
+MODEL_CODE = re.compile(r'\b(?:[A-Z]{4,5}[0-9][A-Z0-9]{0,6}|[A-Z]{2,3}[0-9][A-Z0-9]{2,6})\b')  # MLXY3, MD4A4QA
+
+
+def preorder_marker(product, variant, evidence: Evidence, obs: Observation) -> str | None:
+    """'Pre-order' on the product itself: its title, variant, tags or description, or within 200
+    characters of the product title on a page read of the same product (not a site-wide menu)."""
+    fields = ' '.join([product.title, variant.title, ' '.join(map(str, product.extra.get('tags', []))),
+                       (product.description or '')[:600]])
+    m = PREORDER.search(fields)
+    if m:
+        return m.group(0)
+    head = normalize(product.title)[:30]
+    for o in evidence.all():
+        if o.kind != 'page' or o.shop_id != obs.shop_id or _path(o.url) != _path(product.url) or not head:
+            continue
+        text = normalize(o.text)
+        at = text.find(head)
+        if at >= 0:
+            m = PREORDER.search(text[max(0, at - 200):at + len(head) + 200])
+            if m:
+                return m.group(0)
+    return None
+
+
+def description_for_other_model(obs: Observation, quote: str, offer_text: str) -> bool:
+    """A 'new' statement taken from a product description that names another model code (a spec
+    block copied from a different SKU on a multi-variant page) is not evidence for this variant."""
+    if obs.kind != 'product' or obs.product is None or len(obs.product.variants) < 2:
+        return False
+    if contains_quote(offer_text, quote):
+        return False  # the statement is in the title or the selected variant itself
+    codes = set(MODEL_CODE.findall(obs.product.description or ''))
+    own = offer_text.upper() + ' ' + ' '.join((v.sku or '').upper() for v in obs.product.variants)
+    return bool(codes) and not any(code in own for code in codes)
 
 
 POLICY_PATH = re.compile(r'polic|shipping|delivery|faq|terms|about|warranty|llm-context|meta\.json', re.IGNORECASE)
