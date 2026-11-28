@@ -145,3 +145,14 @@ The scores above belong to the locked candidate. These fixes came later, each wi
 | C06 fallback said nothing related was found | The fallback lists its unchecked search leads. |
 
 Commit `74271e6` contains the fixes in the last four rows.
+
+**Post-fix diagnostic (not a held-out score).** B05, B07, B11 and C06 were rerun once on `74271e6`, after their grades had been read. These four cases are no longer independent; the reruns only show that the fixes behave as intended live. [Reports](postfix-diagnostic/)
+
+| Case | Locked candidate | After the fixes |
+| --- | --- | --- |
+| B05 | Pre-order iPhone 15 Pro shown "in stock" | No pre-order item shown as stock. Alternatives: IT Promax iPhone 15 USD 660 + USD 4 and ITWorks USD 660 + USD 5, both new and in stock. |
+| B07 | Correct MacBook Air downgraded; "new" taken from another SKU's block | Classic Phones Midnight 8/256 at USD 770 shown as exact; new condition left open. |
+| B11 | "Exact match" with Wi-Fi unconfirmed | Technodel iPad MD4A4 (Wi-Fi, 128 GB, Blue) USD 475 + USD 4 = USD 479, new, the reference shop and price. |
+| C06 | Fallback after a 26.6 s model timeout | Technodel Logitech H390 USD 26 + USD 4 = USD 30 to Byblos, new, under the USD 60 ceiling (reference: USD 40). |
+
+Times were 44.8-76.5 s, and the four runs cost USD 0.35 in model calls.

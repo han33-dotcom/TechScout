@@ -1,0 +1,1283 @@
+{
+ "run_id": "scout-c06-20261128T060613",
+ "request": {
+  "id": "C06",
+  "text": "For calls at my desk I need a new wired USB-A headset with a microphone and a physical mute control. Can you find one for at most $60 including delivery to Byblos?",
+  "mode": "delivery",
+  "destination": "Byblos",
+  "category": "audio",
+  "run_id": "scout-c06-20261128T060613"
+ },
+ "status": "offers",
+ "message": "Best match: Technodel’s Logitech H390 USB-A (black), in stock at $26.00 plus $4 delivery to Byblos: $30 delivered, comfortably below your $60 limit.\nConfirmed new, wired USB-A, noise-cancelling boom microphone, and physical volume/mute controls on the cable. VAT treatment is not stated.\nAlternative: iSolved IT Solutions has a new H390 in black for $33.00, VAT included, with in-line mute. Delivery covers Lebanon, but shipping is calculated at checkout, so its delivered total is unconfirmed.\nI suggest the Technodel offer: it has the clearest verified fit and published delivery fee.",
+ "question": null,
+ "offers": [
+  {
+   "tier": "best",
+   "shop": "Technodel",
+   "shop_id": "technodel",
+   "title": "Logitech Wired H390 with Noise-Canceling Mic in-line controls USB A (Black) 981-000406",
+   "variant": "Logitech Wired H390 with Noise-Canceling Mic in-line controls USB A (Black) 981-000406",
+   "url": "https://technodel.net/product/logitech-logitech-wired-h390-with-noise-canceling-mic-in-line-controls-usb-a-black-981-000406",
+   "price": "26.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "Meets the requested headset specifications; no particular model was requested.",
+   "delivery_fee": "4.00",
+   "total": "30.00",
+   "total_basis": "listed price + delivery fee published by technodel (\"Flat $4 anywhere in Lebanon; free on orders of $500 or more\", T4)",
+   "complete": false,
+   "gaps": [
+    "VAT not stated by the shop"
+   ],
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "NewCondition",
+     "obs": "P11",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Wired USB-A connection",
+     "status": "met",
+     "quote": "Wired USB-A connection",
+     "obs": "T19",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Microphone for desk calls",
+     "status": "met",
+     "quote": "Noise-cancelling boom microphone",
+     "obs": "T19",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Physical mute control",
+     "status": "met",
+     "quote": "Volume and mute sit on the cable for quick adjustment without leaving the screen.",
+     "obs": "T19",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "At most $60 including delivery to Byblos",
+     "status": "met",
+     "quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more",
+     "obs": "T4",
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P11",
+     "url": "https://technodel.net/product/logitech-logitech-wired-h390-with-noise-canceling-mic-in-line-controls-usb-a-black-981-000406",
+     "read": "https://technodel.net/product/logitech-logitech-wired-h390-with-noise-canceling-mic-in-line-controls-usb-a-black-981-000406",
+     "source": "schema_org_jsonld",
+     "observed_at": "2026-11-28T06:07:03+00:00",
+     "sha256": "95eb666468acb10e2a67bd9093a5c39468a5aeb9ded6599085a968a0e4679aef"
+    },
+    {
+     "obs": "T4",
+     "url": "https://technodel.net/api/llm-context",
+     "source": "shop delivery terms",
+     "observed_at": "2026-11-28T06:06:40+00:00",
+     "sha256": "b55d9346dff533ed1909b1f8a99169bed1f5e262d2fdf59ad12d96d780aa7c84"
+    }
+   ],
+   "seller_basis": "Technodel: Lebanese shop in the reviewed directory",
+   "downgrades": []
+  },
+  {
+   "tier": "best",
+   "shop": "iSolved IT Solutions",
+   "shop_id": "isolvedit",
+   "title": "Logitech H390 USB Headset with Noise-Cancelling Mic",
+   "variant": "Black",
+   "url": "https://isolvedit.me/products/logitech-h390-wired-headset-h390?variant=42047722291311",
+   "price": "33.00",
+   "currency": "USD",
+   "in_stock": true,
+   "condition": "new",
+   "identity": "exact",
+   "identity_reason": "Logitech H390 suited to the requested needs; this shop confirms USB but does not explicitly specify USB-A.",
+   "delivery_fee": null,
+   "total": null,
+   "total_basis": null,
+   "complete": false,
+   "gaps": [
+    "not confirmed: Wired USB-A connection",
+    "delivery fee to your area is not published or not confirmed",
+    "may exceed USD 60.00 once delivery is added"
+   ],
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "quote": "New, original",
+     "obs": "P3",
+     "covered_elsewhere": true
+    },
+    {
+     "requirement": "Wired USB-A connection",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Microphone for calls",
+     "status": "met",
+     "quote": "Noise-cancelling mic",
+     "obs": "P3",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "Physical mute control",
+     "status": "met",
+     "quote": "In-line volume and mute controls",
+     "obs": "P3",
+     "covered_elsewhere": false
+    },
+    {
+     "requirement": "At most $60 including delivery to Byblos",
+     "status": "unknown",
+     "quote": null,
+     "obs": null,
+     "covered_elsewhere": true
+    }
+   ],
+   "evidence": [
+    {
+     "obs": "P3",
+     "url": "https://isolvedit.me/products/logitech-h390-wired-headset-h390",
+     "read": "https://isolvedit.me/products/logitech-h390-wired-headset-h390.js",
+     "source": "shopify_product_js",
+     "observed_at": "2026-11-28T06:06:37+00:00",
+     "sha256": "1891a87f54f915e72cade9c62038bc9d77c19ff1e4eafe6b2c69f28e8af1bd18"
+    }
+   ],
+   "seller_basis": "iSolved IT Solutions: Lebanese shop in the reviewed directory (shop metadata: Beirut, LB)",
+   "downgrades": []
+  }
+ ],
+ "proposed": [
+  {
+   "obs": "P11",
+   "variant_id": "RK-HPQYF11Q",
+   "identity": "exact",
+   "identity_reason": "Meets the requested headset specifications; no particular model was requested.",
+   "condition": "new",
+   "condition_quote": "NewCondition",
+   "condition_obs": "P11",
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "P11",
+     "quote": "NewCondition"
+    },
+    {
+     "requirement": "Wired USB-A connection",
+     "status": "met",
+     "evidence_obs": "T19",
+     "quote": "Wired USB-A connection"
+    },
+    {
+     "requirement": "Microphone for desk calls",
+     "status": "met",
+     "evidence_obs": "T19",
+     "quote": "Noise-cancelling boom microphone"
+    },
+    {
+     "requirement": "Physical mute control",
+     "status": "met",
+     "evidence_obs": "T19",
+     "quote": "Volume and mute sit on the cable for quick adjustment without leaving the screen."
+    },
+    {
+     "requirement": "At most $60 including delivery to Byblos",
+     "status": "met",
+     "evidence_obs": "T4",
+     "quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more"
+    }
+   ],
+   "delivery_obs": "T4",
+   "delivery_quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more",
+   "delivery_fee_usd": "4",
+   "free_delivery_over_usd": "500",
+   "vat_quote": null,
+   "price_quote": null
+  },
+  {
+   "obs": "P3",
+   "variant_id": "42047722291311",
+   "identity": "exact",
+   "identity_reason": "Logitech H390 suited to the requested needs; this shop confirms USB but does not explicitly specify USB-A.",
+   "condition": "new",
+   "condition_quote": "New, original",
+   "condition_obs": "P3",
+   "requirements": [
+    {
+     "requirement": "New condition",
+     "status": "met",
+     "evidence_obs": "P3",
+     "quote": "New, original"
+    },
+    {
+     "requirement": "Wired USB-A connection",
+     "status": "unknown",
+     "evidence_obs": "P3",
+     "quote": "USB plug-and-play"
+    },
+    {
+     "requirement": "Microphone for calls",
+     "status": "met",
+     "evidence_obs": "P3",
+     "quote": "Noise-cancelling mic"
+    },
+    {
+     "requirement": "Physical mute control",
+     "status": "met",
+     "evidence_obs": "P3",
+     "quote": "In-line volume and mute controls"
+    },
+    {
+     "requirement": "At most $60 including delivery to Byblos",
+     "status": "unknown",
+     "evidence_obs": "T17",
+     "quote": "Discounts and shipping calculated at checkout."
+    }
+   ],
+   "delivery_obs": "T3",
+   "delivery_quote": "🚚 Delivery all over Lebanon",
+   "delivery_fee_usd": null,
+   "free_delivery_over_usd": null,
+   "vat_quote": "All prices include VAT — nothing extra to pay",
+   "price_quote": null
+  }
+ ],
+ "turns": [
+  {
+   "turn": 1,
+   "notes": "Check office USB headsets with hardware mute.",
+   "at_s": 12.6,
+   "calls": [
+    {
+     "tool": "search",
+     "query": "Logitech H390"
+    },
+    {
+     "tool": "search",
+     "query": "Logitech H340"
+    },
+    {
+     "tool": "search",
+     "query": "Jabra Evolve 20"
+    },
+    {
+     "tool": "search",
+     "query": "Microsoft LifeChat LX-3000"
+    }
+   ]
+  },
+  {
+   "turn": 2,
+   "notes": "Read full H390 specifications and shipping/condition evidence for leading shops.",
+   "at_s": 36.5,
+   "calls": [
+    {
+     "tool": "read",
+     "url": "https://isolvedit.me/products/logitech-h390-wired-headset-h390",
+     "terms": [
+      "USB",
+      "wired",
+      "mute"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "isolvedit"
+     ]
+    },
+    {
+     "tool": "read",
+     "url": "https://outgeeked.net/products/logitech-h390-usb-headset-black",
+     "terms": [
+      "USB",
+      "mute",
+      "new"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "outgeeked"
+     ]
+    },
+    {
+     "tool": "shop_info",
+     "shop_ids": [
+      "macrotronics"
+     ]
+    },
+    {
+     "tool": "read",
+     "url": "https://abedtahan.com/products/logitech-h390-usb-stereo-headset-noise-cancelling",
+     "terms": [
+      "USB",
+      "mute",
+      "new"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 3,
+   "notes": "Check shipping policy for the confirmed-new H390 and a further shop with explicit USB-A specifications.",
+   "at_s": 49.3,
+   "calls": [
+    {
+     "tool": "read",
+     "url": "https://isolvedit.me/policies/shipping-policy",
+     "terms": [
+      "delivery",
+      "$",
+      "Byblos"
+     ]
+    },
+    {
+     "tool": "open",
+     "url": "https://technodel.net/product/logitech-logitech-wired-h390-with-noise-canceling-mic-in-line-controls-usb-a-black-981-000406"
+    },
+    {
+     "tool": "read",
+     "url": "https://www.macrotronics.net/products/microsoft-lx-3000-business-headset-essential-jug",
+     "terms": [
+      "new",
+      "USB",
+      "mute"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 4,
+   "notes": "Verify physical mute on the strongest delivered-price match.",
+   "at_s": 57.6,
+   "calls": [
+    {
+     "tool": "read",
+     "url": "https://technodel.net/product/logitech-logitech-wired-h390-with-noise-canceling-mic-in-line-controls-usb-a-black-981-000406",
+     "terms": [
+      "mute",
+      "controls"
+     ]
+    }
+   ]
+  },
+  {
+   "turn": 5,
+   "notes": "Strongest match has explicit new-condition, USB-A, microphone, cable mute and nationwide fee evidence.",
+   "at_s": 76.5,
+   "finished": true
+  }
+ ],
+ "tool_calls": [
+  {
+   "tool": "search",
+   "ms": 13687,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 14328,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 14640,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "search",
+   "ms": 14906,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 1063,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 1547,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 2047,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 2437,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 3109,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "shop_info",
+   "ms": 4875,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 719,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "open",
+   "ms": 969,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 1375,
+   "ok": true,
+   "error": null
+  },
+  {
+   "tool": "read",
+   "ms": 500,
+   "ok": true,
+   "error": null
+  }
+ ],
+ "model_calls": [
+  {
+   "turn": 1,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 9766,
+   "usage": {
+    "actual_usd": "0.004343",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 3237,
+     "output_tokens": 128,
+     "total_tokens": 3365
+    },
+    "latency_ms": 4234,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 2,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 8906,
+   "usage": {
+    "actual_usd": "0.0263255",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 11586,
+     "output_tokens": 239,
+     "total_tokens": 11825
+    },
+    "latency_ms": 6063,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 3,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 7953,
+   "usage": {
+    "actual_usd": "0.0384155",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 16674,
+     "output_tokens": 176,
+     "total_tokens": 16850
+    },
+    "latency_ms": 4985,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 4,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 6969,
+   "usage": {
+    "actual_usd": "0.043038",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 18887,
+     "output_tokens": 85,
+     "total_tokens": 18972
+    },
+    "latency_ms": 3781,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": false
+  },
+  {
+   "turn": 5,
+   "attempt": 1,
+   "status": "completed",
+   "ms": 17485,
+   "usage": {
+    "actual_usd": "0.051393",
+    "reserved_usd": "0.2900000",
+    "billing": "known",
+    "tokens": {
+     "input_tokens": 19697,
+     "output_tokens": 718,
+     "total_tokens": 20415
+    },
+    "latency_ms": 13641,
+    "actual_model": "openai/gpt-6.1-sol",
+    "serving_provider": "OpenAI"
+   },
+   "must_finish": true
+  }
+ ],
+ "retailer_requests": 115,
+ "seconds": 76.5,
+ "spend": {
+  "settled_usd": "0.1635150",
+  "uncertain_usd": "0",
+  "model_calls": 5,
+  "ledger_job": "scout-c06-20261128T060613"
+ },
+ "fallback": false,
+ "warnings": [],
+ "prompt_version": "scout-1",
+ "observations": [
+  {
+   "obs": "P1",
+   "kind": "product",
+   "url": "https://abedtahan.com/products/logitech-h390-usb-stereo-headset-noise-cancelling",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T06:06:36+00:00",
+   "sha256": "a5a9c4f15ea64dc8412b678316a4c45aaafdd26e60b90a8ddf78154804c8a6f9",
+   "product": {
+    "shop": "Abed Tahan",
+    "shop_id": "abed_tahan",
+    "title": "Logitech H390 USB Stereo Headset Noise-Cancelling",
+    "url": "https://abedtahan.com/products/logitech-h390-usb-stereo-headset-noise-cancelling",
+    "vendor": "LOGITECH",
+    "product_type": "Headsets & Microphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T06:06:36+00:00",
+    "variants": [
+     {
+      "variant_id": "45563910029491",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "32.00",
+      "compare_at": "32.00",
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "HED-H390#",
+      "url": "https://abedtahan.com/products/logitech-h390-usb-stereo-headset-noise-cancelling?variant=45563910029491"
+     }
+    ],
+    "description": "",
+    "extra": {
+     "tags": [
+      "Anv",
+      "b2s",
+      "bf2026",
+      "Computer Accessories",
+      "Computers and Tablets",
+      "fday26",
+      "Headsets & Microphones",
+      "N",
+      "new-322060",
+      "R",
+      "smalldelivery",
+      "Wired",
+      "Y"
+     ]
+    }
+   }
+  },
+  {
+   "obs": "P2",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/logitech-h390-usb-headset-black",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T06:06:36+00:00",
+   "sha256": "985bdf1c209c5486098a41abedbb7312f590565395f8f59107ca5288ec5a1b38",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "Logitech H390 USB Headset Black",
+    "url": "https://outgeeked.net/products/logitech-h390-usb-headset-black",
+    "vendor": "Logitech",
+    "product_type": "Headset",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T06:06:36+00:00",
+    "variants": [
+     {
+      "variant_id": "50968143823106",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "26.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "OG-PC-0622",
+      "url": "https://outgeeked.net/products/logitech-h390-usb-headset-black?variant=50968143823106"
+     }
+    ],
+    "description": "The Logitech H390 USB Headset Black is a wired headset that connects over USB. It measures 151 mm high, 171 mm wide and 68 mm deep, and weighs 197 g.\nIt suits people who want a simple plug-in headset for a desktop or laptop, such as for work calls, online classes or everyday listening. Because it uses USB, you plug it straight into a free port. You can order it with cash on delivery across Lebanon.\nHighlights\nWired USB connection\nHeadset weight: 197 g (6.95 oz)\nHeadset height: 151 mm (5.94 in)\nHeadset width: 171 mm (6.73 in)\nHeadset depth: 68 mm (2.68 in)\nBlack colour\nBest for\nVideo calls and online meetings from a home or office PC\nOnline classes and remote learning\nA plug-in headset for a desktop or laptop with a free USB port\nSpecifications\nHeadset height\n5.94 in (151 mm)\nHeadset width\n6.73 in (171 mm)\nHeadset depth\n2.68 in (68 mm)\nHeadset weight\n6.95 oz (197 g)\nCompatibility and related parts\nThe H390 connects by USB, so check that your computer has a free USB port. If you are putting together a new desktop, you can add it to your setup in our PC builder, which checks compatibility and includes free assembly and testing for full builds. You can compare it with other PC headsets and speakers, or browse more Logitech products for a matching mouse or keyboard.",
+    "extra": {
+     "tags": [
+      "Not New Arrival",
+      "PC Headset",
+      "PC Launch Draft"
+     ]
+    }
+   }
+  },
+  {
+   "obs": "P3",
+   "kind": "product",
+   "url": "https://isolvedit.me/products/logitech-h390-wired-headset-h390",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T06:06:37+00:00",
+   "sha256": "1891a87f54f915e72cade9c62038bc9d77c19ff1e4eafe6b2c69f28e8af1bd18",
+   "product": {
+    "shop": "iSolved IT Solutions",
+    "shop_id": "isolvedit",
+    "title": "Logitech H390 USB Headset with Noise-Cancelling Mic",
+    "url": "https://isolvedit.me/products/logitech-h390-wired-headset-h390",
+    "vendor": "Logitech",
+    "product_type": "Headset",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T06:06:37+00:00",
+    "variants": [
+     {
+      "variant_id": "42047722291311",
+      "title": "Black",
+      "options": {
+       "Color": "Black"
+      },
+      "price": "33.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "981-000014",
+      "url": "https://isolvedit.me/products/logitech-h390-wired-headset-h390?variant=42047722291311"
+     },
+     {
+      "variant_id": "68472660656239",
+      "title": "Pink",
+      "options": {
+       "Color": "Pink"
+      },
+      "price": "34.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "981-001280",
+      "url": "https://isolvedit.me/products/logitech-h390-wired-headset-h390?variant=68472660656239"
+     }
+    ],
+    "description": "A comfortable USB headset with in-line controls and clear digital sound.\nKey features\nUSB plug-and-play\nNoise-cancelling mic\nIn-line volume and mute controls\nSpecifications\nBrand\nLogitech\nType\nHeadset\nPart number\n981-000014 / 981-001280\nCondition\nNew, original\nOriginal Logitech with warranty. Delivery all over Lebanon with cash on delivery, or pick it up from iSolved IT Solutions in Bourj Hammoud, Beirut. Message us on WhatsApp for any question.",
+    "extra": {
+     "tags": [
+      "Accessories",
+      "Headset",
+      "ibc",
+      "isolvedit",
+      "Logitech",
+      "New"
+     ]
+    }
+   }
+  },
+  {
+   "obs": "P4",
+   "kind": "product",
+   "url": "https://isolvedit.me/products/logitech-h340-usb-headset-with-noise-cancelling-mic",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T06:06:37+00:00",
+   "sha256": "859896e1c8e1c645f158bfa2c16d9c6f5e4521fa897a8b86045c3a61dc775c65",
+   "product": {
+    "shop": "iSolved IT Solutions",
+    "shop_id": "isolvedit",
+    "title": "Logitech H340 USB Headset with Noise-Cancelling Mic",
+    "url": "https://isolvedit.me/products/logitech-h340-usb-headset-with-noise-cancelling-mic",
+    "vendor": "Logitech",
+    "product_type": "Headset",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T06:06:37+00:00",
+    "variants": [
+     {
+      "variant_id": "68472651776111",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "28.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "981-000475",
+      "url": "https://isolvedit.me/products/logitech-h340-usb-headset-with-noise-cancelling-mic?variant=68472651776111"
+     }
+    ],
+    "description": "A plug-and-play USB headset with clear digital stereo sound.\nKey features\nUSB connection, no sound card needed\nNoise-cancelling mic\nLightweight padded headband\nSpecifications\nBrand\nLogitech\nType\nHeadset\nPart number\n981-000475\nCondition\nNew, original\nOriginal Logitech with warranty. Delivery all over Lebanon with cash on delivery, or pick it up from iSolved IT Solutions in Bourj Hammoud, Beirut. Message us on WhatsApp for any question.",
+    "extra": {
+     "tags": [
+      "Accessories",
+      "Headset",
+      "ibc",
+      "isolvedit",
+      "Logitech",
+      "New"
+     ]
+    }
+   }
+  },
+  {
+   "obs": "P5",
+   "kind": "product",
+   "url": "https://outgeeked.net/products/logitech-h340-usb-headset-981-000475",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T06:06:37+00:00",
+   "sha256": "d5ec48b1d2176ae7690ba2c6c84f8c20f39cdc27e7b20dac8e0dd469fc943924",
+   "product": {
+    "shop": "OutGeeked",
+    "shop_id": "outgeeked",
+    "title": "Logitech H340 USB Headset 981-000475",
+    "url": "https://outgeeked.net/products/logitech-h340-usb-headset-981-000475",
+    "vendor": "Logitech",
+    "product_type": "Headset",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T06:06:37+00:00",
+    "variants": [
+     {
+      "variant_id": "50968142905602",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "19.98",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "OG-PC-0621",
+      "url": "https://outgeeked.net/products/logitech-h340-usb-headset-981-000475?variant=50968142905602"
+     }
+    ],
+    "description": "The Logitech H340 USB Headset 981-000475 is a wired USB headset with a bi-directional microphone, a 20 Hz - 20 kHz headphone frequency response and a 1.8 m cable. It weighs 0.1 kg.\nIt suits video calls, online classes, voice chat and everyday listening at a desk, especially where a single USB connection is simpler than separate audio jacks. Browse more options in our PC headsets and speakers.\nHighlights\nUSB wired connection with a 1.8 m (5.91 ft) cable\nBi-directional microphone with 100 Hz - 16 kHz frequency response\nHeadset frequency response of 20 Hz - 20 kHz\nHeadphone sensitivity of 115 dB +/-3 dB and 22 Ohms input impedance\nLight build at 0.1 kg (0.22 lbs)\nBest for\nVideo calls and online meetings from a home or office desk\nOnline classes and remote learning\nVoice chat and general listening on a PC or laptop with a USB port\nSpecifications\nMicrophone Type\nBi-directional\nInput Impedance\n22 Ohms\nSensitivity (headphone)\n115 dB +/-3 dB\nSensitivity (microphone)\n-42 dBV/Pa +/- 3 dB\nFrequency response (Headset)\n20 Hz - 20 kHz\nFrequency response (Microphone)\n100 Hz - 16 KHz\nH340 Headset height\n6.3 in (160 mm)\nH340 Headset width\n6.89 in (175 mm)\nH340 Headset depth\n2.36 in (60 mm)\nH340 Headset weight\n0.22 lbs (0.1 kg)\nCable Length length\n5.91 ft (1.8 m)\nCompatibility and related parts\nThe H340 connects by USB, so check that your desktop or laptop has a free USB port within reach of the 1.8 m cable. If you are putting together a new computer, the PC builder checks part compatibility, ",
+    "extra": {
+     "tags": [
+      "Not New Arrival",
+      "PC Headset",
+      "PC Launch Draft"
+     ]
+    }
+   }
+  },
+  {
+   "obs": "P6",
+   "kind": "product",
+   "url": "https://jakcomputer.com/products/logih340-logitech-headset-wired-h340",
+   "shop_id": "jak_computer",
+   "observed_at": "2026-11-28T06:06:37+00:00",
+   "sha256": "0f5b78af40a7767e9cea4270e0aff639ed2fcdd03e5d4ebac33327a5f6e8d47c",
+   "product": {
+    "shop": "JAK Computer",
+    "shop_id": "jak_computer",
+    "title": "Logitech H340 Headset Wired",
+    "url": "https://jakcomputer.com/products/logih340-logitech-headset-wired-h340",
+    "vendor": "Logitech",
+    "product_type": "Headsets",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T06:06:37+00:00",
+    "variants": [
+     {
+      "variant_id": "44593484693551",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "30.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "LOGIH340",
+      "url": "https://jakcomputer.com/products/logih340-logitech-headset-wired-h340?variant=44593484693551"
+     }
+    ],
+    "description": "Logitech H340 USB Headset Wired: Crystal Clear Everyday Audio\nThe Logitech H340 USB Headset Wired is the perfect lightweight solution for your daily communication needs. Whether you are jumping on a quick video call, attending an online class, or listening to your favorite podcast, this headset delivers clear digital audio with plug-and-play simplicity. At JAK Computer, we understand the need for reliable, high-performance gear that doesn't complicate your day. This headset is a staple for professional and educational environments in Beirut, offering a comfortable fit that lasts through long sessions.\nDigital Clarity: Logitech H340 USB Headset Wired\nExperience the difference of pure digital sound with the Logitech H340 USB Headset Wired. Unlike traditional analog connections, the USB-A plug-and-play interface ensures a consistent, high-quality audio experience across all your devices. The noise-canceling microphone is a standout feature for users in Lebanon, as it effectively reduces background chatter, ensuring your voice is heard clearly during important calls. At jakcomputer.com, we recommend this headset for its durable build and its ability to provide a focused, professional audio environment in any setting.\nComfort is at the forefront of the Logitech H340 USB Headset Wired design. The lightweight, flexible headband is easily adjustable to provide the perfect fit, while the soft foam ear cups ensure you stay comfortable even during back-to-back meetings. The 1.8-meter (6",
+    "extra": {
+     "tags": [
+      "HEADSET",
+      "LOGITECH"
+     ]
+    }
+   }
+  },
+  {
+   "obs": "P7",
+   "kind": "product",
+   "url": "https://www.macrotronics.net/products/microsoft-lx-3000-business-headset-essential-jug",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T06:06:38+00:00",
+   "sha256": "cbb506a87c96dec36e6b90ef9d727c8bddbcc4549aff735586f5b01bc62e8ba3",
+   "product": {
+    "shop": "Macrotronics",
+    "shop_id": "macrotronics",
+    "title": "Microsoft LX-3000 Business Headset JUG-00015",
+    "url": "https://www.macrotronics.net/products/microsoft-lx-3000-business-headset-essential-jug",
+    "vendor": "Microsoft",
+    "product_type": "Earphones and Headphones",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T06:06:38+00:00",
+    "variants": [
+     {
+      "variant_id": "48590608466209",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "39.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": "1003490",
+      "url": "https://www.macrotronics.net/products/microsoft-lx-3000-business-headset-essential-jug?variant=48590608466209"
+     }
+    ],
+    "description": "High-quality audio for phone calls or listening to music.\nSuperior sound with digital USB 2.0 connectivity.\nComfortable leatherette ear pads.\nInline volume control, mic mute/unmute, and answer/end call buttons.\nDimensions: 17.8 x 16.2 cm."
+   }
+  },
+  {
+   "obs": "P8",
+   "kind": "product",
+   "url": "https://phonefinity.net/products/microsoft-lifechat-lx-3000-headset/",
+   "shop_id": "phonefinity",
+   "observed_at": "2026-11-28T06:06:38+00:00",
+   "sha256": "2b7e3749f814e47b878e151b685ec732fc3835cad3f925eb745b771c128d1407",
+   "product": {
+    "shop": "Phonefinity",
+    "shop_id": "phonefinity",
+    "title": "Microsoft LifeChat LX-3000 Headset",
+    "url": "https://phonefinity.net/products/microsoft-lifechat-lx-3000-headset/",
+    "vendor": null,
+    "product_type": null,
+    "condition": null,
+    "source": "woo_store_api",
+    "observed_at": "2026-11-28T06:06:38+00:00",
+    "variants": [
+     {
+      "variant_id": "49768",
+      "title": "Microsoft LifeChat LX-3000 Headset",
+      "options": {},
+      "price": "35.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": false,
+      "stock_text": "Out of stock",
+      "sku": null,
+      "url": "https://phonefinity.net/products/microsoft-lifechat-lx-3000-headset/"
+     }
+    ],
+    "description": "Compatible devices: Requires a PC that meets the requirements for and has installed one of these operating systems: Microsoft Windows 10, Windows 8.1, Windows 8 and Windows 7\nConnectivity technology: Wired\nClarity, Comfort, and Convenience – Digital USB for superior clarity, built-in unidirectional microphone with acoustic noise cancellation\nLeatherette ear pads for improved comfort, in-line volume controls\nPivoting boom microphone with 180-degree movement, flexible 6-foot cable\nSound investment\nThis comfortable, stereo headset features high-quality, digital sound and a noise-cancelling microphone that automatically picks up your voice with remarkable clarity. Hold clear, private, internet voice calls, enjoy music and movies, or become fully immersed in your games.\nHighlights\nHigh-quality audio for phone calls or listening to music.\nSuperior sound with digital USB 2.0 connectivity.\nComfortable leatherette ear pads – listen and play for hours in total comfort.\nIdeal for voice and video chat, hear friends and family as if they were there."
+   }
+  },
+  {
+   "obs": "P9",
+   "kind": "product",
+   "url": "https://technodel.net/product/jabra-jabra-headset-evolve2-23189-999-979",
+   "shop_id": "technodel",
+   "observed_at": "2026-11-28T06:06:39+00:00",
+   "sha256": "eecd1e37069762dcfb7df52dbdb8a9ca689997fc28c48d22e94da1a349e18e4b",
+   "product": {
+    "shop": "Technodel",
+    "shop_id": "technodel",
+    "title": "Jabra HeadSet Evolve2 23189-999-979 Price in Lebanon",
+    "url": "https://technodel.net/product/jabra-jabra-headset-evolve2-23189-999-979",
+    "vendor": "Jabra",
+    "product_type": null,
+    "condition": "NewCondition",
+    "source": "schema_org_jsonld",
+    "observed_at": "2026-11-28T06:06:39+00:00",
+    "variants": [
+     {
+      "variant_id": "RK-MXB8NNBH",
+      "title": "Jabra HeadSet Evolve2 23189-999-979",
+      "options": {},
+      "price": "99.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": "InStock",
+      "sku": "RK-MXB8NNBH",
+      "url": "https://technodel.net/product/jabra-jabra-headset-evolve2-23189-999-979",
+      "condition": "NewCondition"
+     }
+    ],
+    "description": "Jabra Headsets at Technodel Lebanon."
+   }
+  },
+  {
+   "obs": "T1",
+   "kind": "page",
+   "url": "https://jakcomputer.com/pages/faq-delivery-information",
+   "shop_id": "jak_computer",
+   "observed_at": "2026-11-28T06:06:39+00:00",
+   "sha256": "6a06d25fb1e91d8b82a69a95d297da6354cd0d196309f39c7a2b94568701b209",
+   "excerpt": "FAQ & Delivery Info | JAK Computer Lebanon\nSkip to content\nYour cart is empty\nContinue shopping\nHave an account?\nLog in to checkout faster.\nShopping cart (0)\nLoading...\nYou might like\nRECCI Armor Series RPB-W20 High Power Fast Charging Power Bank 5000mAh\nRegular price\n$40.00 USD\nSale price\n$40.00 USD\nRegular price\nUnit price\n/\nper\nSale\nSold out\nRAZER BARRACUDA X WHITE HEADSET RZ04-04430200-R3M1\nRegular price\n$110.00 USD\nSale price\n$110.00 USD\nRegular price\nUnit price\n/\nper\nSale\nSold out\nFor Store Pickups: Please enter your phone number here before checking out.\nFor Store Pickups: Please enter your phone number here before checking out.\nSubtotal (0)\n$0.00 USD\nVAT calculated at checkout.\nView Cart\nCheckout\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. If it's on our website, it's on our shelves right now!\n⚡ 100% Real Stock: Synchronized second-by-second. I",
+   "quoted": []
+  },
+  {
+   "obs": "P10",
+   "kind": "product",
+   "url": "https://classic-phones.com/products/new-microsoft-life-chats-lx-3000-microsoft",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T06:06:39+00:00",
+   "sha256": "75bbc50e24ff55a170ecf40934860962ec04849e5d8ce770f489c5b8ea051f32",
+   "product": {
+    "shop": "Classic Phones",
+    "shop_id": "classic_phones",
+    "title": "Microsoft life chats lx 3000 Microsoft",
+    "url": "https://classic-phones.com/products/new-microsoft-life-chats-lx-3000-microsoft",
+    "vendor": "Classic Phones",
+    "product_type": "",
+    "condition": null,
+    "source": "shopify_product_js",
+    "observed_at": "2026-11-28T06:06:39+00:00",
+    "variants": [
+     {
+      "variant_id": "44248269947115",
+      "title": "Default Title",
+      "options": {
+       "Title": "Default Title"
+      },
+      "price": "25.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": null,
+      "sku": null,
+      "url": "https://classic-phones.com/products/new-microsoft-life-chats-lx-3000-microsoft?variant=44248269947115"
+     }
+    ],
+    "description": "Microsoft LifeChat LX-3000, Black\nBrand\nMicrosoft\nColor\nBlack\nEar Placement\nOver Ear\nForm Factor\nOver Ear\nNoise Control\nActive Noise Cancellation\nAbout this item\nProduct Description: Microsoft LifeChat LX-3000 - headset\nProduct Type: Headset - wired\nRecommended Use: PC multimedia\nLocalisation: EMEA\nHeadphones Type: Headphones - binaural\nProduct Description\nThis comfortable, high-quality stereo headset gives you the simplicity of USB installation and high-quality digital sound that cannot be matched by analog. Hold clear, private Internet voice calls, enjoy music and movies, and become fully immersed in your games.\nProduct information\nHeadphones Jack\nusb\nModel Name\nMicrosoft LifeChat LX-3000 Headset (JUG-00013)\nConnectivity Technology\nWired\nWireless Communication Technology\nWi-Fi\nSpecial Feature\nAndroid Phone Control\nAge Range (Description)\nAdult\nSpecific Uses For Product\npersonal\nCable Feature\nRetractable\nItem Weight\n8.3 Ounces\nUnit Count\n1.0 Count\nNumber of Items\n1\nIs Autographed\nNo\nIs Electric\nNo\nUPC\n882224251860 616268718733 885370430219 723856362367\nGlobal Trade Identification Number\n05052916568889\nManufacturer\nMicrosoft\nProduct Dimensions\n6.38 x 7.01 x 7.01 inches\nItem Weight\n8.3 ounces\nASIN\nB000JSDOMO\nItem model number\nJUG-00014\nBatteries\n1 A batteries required.\nCustomer Reviews\n4.5 4.5 out of 5 stars 2,743 ratings\n4.5 out of 5 stars\nBest Sellers Rank\n#292 in Computer Headsets\nIs Discontinued By Manufacturer\nNo\nDate First Available\nMarch 20, 2011",
+    "extra": {
+     "tags": [
+      "Accessories",
+      "Audio",
+      "Headphones",
+      "Microsoft",
+      "New"
+     ]
+    }
+   }
+  },
+  {
+   "obs": "T2",
+   "kind": "page",
+   "url": "https://www.macrotronics.net/policies/shipping-policy",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T06:06:39+00:00",
+   "sha256": "83bdd39a99ba85439e4fa8b01b236a5adfa4433937203dc73167e12c10db28b8",
+   "excerpt": "Shipping policy – Macrotronics\nSkip to content\nFacebook\nTwitter\nInstagram\nHelpline +961 71 854 621 | +961 9 853 008\nTechnical Support +961 71 94 84 94\nPause slideshow\nPlay slideshow\nComputers\nComputers\nLaptops\nOn-Demand Laptops\nLaptop Power Adapters\nLaptop Accessories\nApple Computers\nApple Accessories\niPads and Tablets\nTablets Accessories\nComputer & Smart Monitors\nMonitor Accessories\nServers, Workstations and NAS\nDesktops and Mini PCs\nPOS and POS Equipment\nOriginal Softwares and Antivirus\nComputer Parts\nComputer Parts\nProcessors\nGraphic Cards\nMotherboards\nRAMs\nSSD\nHDD\nCPU Coolers\nThermal Paste and Pads\nPower Supplies\nComputer Cases\nComputer Case Accessories\nMore PC Components\nLegacy Computer Parts\nUsed Computer Parts\nComputer Peripherals\nComputer Peripherals\nMice & Keyboards\nEarphones & Headphones\nComputer & Bluetooth Speakers\nWebcams & Microphones\nLaptop Bags & Cases\nComputer & Video Cables\nFlash Drives & Memory Cards\nPrinters, Scanners & Faxes\nPaper & Media Supplies\nGenuine Inks & Ribbons\nGenuine Toners & Drums\nCompatible Toners & Drums\nOffice Furniture\nElectronics & More\nElectronics & More\nUPS\nBatteries\nSmart Appliances\nAdapters and Converters\nEducational Electronics\nConsumer Electronics\nSurveillance and Security\nProjectors, Screens and More\nRouters, Repeaters and APs\nNetwork Switches\nNetwork Adapters\nNetworking and Tools\nGaming\nGaming\nGaming PCs\nGaming Monitors\nGaming Headsets\nGaming Pads\nGaming Mice\nGaming Keyboards\nGaming Chairs\nGaming Desks\nGaming Console and VR\nGaming",
+   "quoted": []
+  },
+  {
+   "obs": "T3",
+   "kind": "page",
+   "url": "https://isolvedit.me/policies/shipping-policy",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T06:06:40+00:00",
+   "sha256": "695d881fa7f925d1c2258ea85ee792f2ee5cd8b1eddc23f786e3089dbb746f3e",
+   "excerpt": "Shipping policy | iSolved IT\nSkip to content\nYour cart is empty\nContinue shopping\nHave an account?\nLog in to check out faster.\nYour cart\nLoading...\nEstimated total\n$0.00 USD\n✅ All prices include VAT – nothing extra to pay. Discounts and shipping calculated at checkout.\nCheck out\n🎄 Christmas deals are live — order on WhatsApp\n✅ All prices include VAT — nothing extra to pay\n💵 Cash on delivery\n🛡️ 6-month warranty on used laptops\nShop\nApple\nApple\nApple Accessories\nApple Macbook\nApple iPad\nGaming\nGaming\nGaming Laptops\nGaming Monitors\nGaming Consoles\nGaming Accessories\nLaptops\nLaptops\nApple Laptops\nAsus Laptops\nAcer Laptops\nDell Laptops\nHp laptops\nLenovo Laptops\nMsi Laptops\nSecond Hand Laptops\nSony Laptops\nLaptop Parts\nDesktops\nDesktops\nAll Desktops & All-in-Ones\nDesktop PCs\nAll-in-One PCs\nComputer Parts\nComputer Parts\nMotherboards\nCPU's\nGPU's\nStorages\nRAM's\nCases and Chassis\nPower Supply\nAccessories\nAccessories\nAdapters & Converters\nBackpacks & Bags\nCables\nExternal Hard Drives\nFlash Drives & SD Cards\nMobile Accessories\nPower Banks\nChargers\nPhone Holders & Car Mounts\nDocking Stations & USB-C Hubs\nLaptop Stands & Coolers\nWebcams\nWireless Presenters\nInks & Toners\nMouse\nMouse Pads & Wrist Pads\nKeyboards\nAudio\nAudio\nEarbuds\nSpeakers\nHeadsets\nMicrophones\nElectronics\nElectronics\nTablets\nGadgets\nMonitors\nPrinters & Scanners\nPaper Shredders\nPOS & Barcode Scanners\nNetworking Products\nNetworking Products\nFiber Optic\nNetworking Accessories\nSwitches\nNetwork & Server Cabinets\nRouters & Modems\nC",
+   "quoted": [
+    {
+     "quote": "🚚 Delivery all over Lebanon",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T4",
+   "kind": "page",
+   "url": "https://technodel.net/api/llm-context",
+   "shop_id": "technodel",
+   "observed_at": "2026-11-28T06:06:40+00:00",
+   "sha256": "b55d9346dff533ed1909b1f8a99169bed1f5e262d2fdf59ad12d96d780aa7c84",
+   "excerpt": "{\"_metadata\":{\"site\":\"Technodel Lebanon\",\"description\":\"Lebanon's premier online tech store - laptops, desktops, PC components, gaming gear, networking and accessories, with nationwide delivery.\",\"company\":\"Technodel\",\"founded\":2010,\"slogan\":\"We deliver Technology.\",\"url\":\"https://technodel.net\",\"currency\":\"USD\",\"languages\":[\"English\",\"Arabic\"],\"contact\":{\"phone\":\"+961 3 659 872\",\"whatsapp\":\"+961 3 659 872\",\"whatsappUrl\":\"https://wa.me/9613659872\",\"supportEmail\":\"support@technodel.net\",\"ordersEmail\":\"orders@technodel.net\"},\"stores\":[{\"area\":\"Beirut area\",\"address\":\"Badaro, Beirut\"},{\"area\":\"South Lebanon\",\"address\":\"Abbassiyeh (serving Tyre / Sour and the South)\"}],\"delivery\":{\"coverage\":\"Nationwide delivery across all of Lebanon\",\"sameDayAreas\":\"Beirut, Sour, Tripoli and surroundings\",\"otherRegions\":\"1-2 days\",\"sameDay\":\"Same-day delivery to Beirut, Sour, Tripoli and surroundings\",\"costUsd\":4,\"costNote\":\"Flat $4 anywhere in Lebanon; free on orders of $500 or more\",\"freeDeliveryAboveUsd\":500},\"payments\":[\"Cash on Delivery (USD)\",\"Wish Money\",\"Cryptocurrency (USDT, BTC, ETH)\"],\"warranty\":{\"summary\":\"Manufacturer warranty on everything, handled through Technodel.\",\"laptopsAndPcs\":\"1-2 years\",\"accessories\":\"minimum 6 months\"},\"returns\":{\"returnDays\":30,\"policy\":\"30-day returns: any eligible product can be returned within 30 days of delivery for a full refund, free of charge at the Badaro (Beirut) or Abbassiyeh (Tyre) branch. Digital codes once revealed, opened consumables and op",
+   "quoted": [
+    {
+     "quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more",
+     "found": true
+    },
+    {
+     "quote": "Flat $4 anywhere in Lebanon; free on orders of $500 or more",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "T5",
+   "kind": "page",
+   "url": "https://abedtahan.com/pages/contact",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T06:06:40+00:00",
+   "sha256": "9799e8f75ae32a8d06d840f62b96c49d2ab24d8b0c4991e8c8b6ff2814b5519f",
+   "excerpt": "Contact\n– Abed Tahan\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles & Crepe Makers\nIce Cube, Ice Cream & Yoghurt Makers\nSaj Machines\nL",
+   "quoted": []
+  },
+  {
+   "obs": "T6",
+   "kind": "page",
+   "url": "https://phonefinity.net/",
+   "shop_id": "phonefinity",
+   "observed_at": "2026-11-28T06:06:40+00:00",
+   "sha256": "f70236ae30bac542aed215e4e7f765be06c639058fa3e86c74cdfd43471e69e6",
+   "excerpt": "Phonefinity.net: Genuine Products. Quality Service.\nSkip to content\n[email protected]\nOnline Only | Cash on Delivery\nOnline Only | Cash on Delivery\nSearch for:\nLogin / Register\nCart\n0\nNo products in the cart.\nReturn to shop\nSearch for:\n0\nCart\nNo products in the cart.\nReturn to shop\nPhones\nTablets\nApple iPads\nAndroid Tablets\nAmazon Kindles\nMacbooks\nSmart\nSmart Watches & Bands\nSmart Scales\nSmart Display\nAudio\nEarphones\nHeadphones\nSpeakers\nMicrophones\nMedia Streaming\nGaming\nPlayStation\nNintendo Switch\nNetworking\nCameras\nAccessories\nCables\nChargers & Power Banks\nMobile & Tablet Covers\nMobile Accessories\nComputer Accessories\nSleeves, Carrying Cases & Backpacks\nUSB Hubs\nPRELOVED\nFilter\nNew\nPower\nAnker Prime Charger (160W, 3 Ports, Smart Display)\n$132\nNew\nPower\nAnker Prime Power Bank (26K, 300W)\n$176\nNew\nPower\nAnker Prime Wireless Charging Base (100W, 3 Ports)\n$65\nEarphones\nApple AirPods 5\n$140 – $165Price range: $140 through $165\nNew\nApple iPads\nApple iPad mini (2026)\n$820 – $920Price range: $820 through $920\nPhones\nApple iPhone 18 Pro\n$1,550 – $1,825Price range: $1,550 through $1,825\nPhones\nApple iPhone 18 Pro Max\n$1,700 – $2,000Price range: $1,700 through $2,000\nSmart Watches & Bands\nApple Watch Series 12\n$440 – $490Price range: $440 through $490\nSmart Watches & Bands\nApple Watch Ultra 4\n$850 – $1,000Price range: $850 through $1,000\nEarphones\nCMF by Nothing Buds Neo\n$50\nEarphones\nCMF Clip Pro\n$110\nNetworking\nDeco XE75 Pro\n$154 – $374Price range: $154 through $374\nCameras\nDJI OSMO",
+   "quoted": []
+  },
+  {
+   "obs": "T7",
+   "kind": "page",
+   "url": "https://www.classic-phones.com/policies/shipping-policy",
+   "shop_id": "classic_phones",
+   "observed_at": "2026-11-28T06:06:41+00:00",
+   "sha256": "30bd48270de57621b32c6598b3ffd3a10c69a81617734eb2c732fa8b1ea36c03",
+   "excerpt": "Shipping policy\nSkip to content\nDelivery Available All Over Lebanon\nFacebook\nInstagram\nShop All\nCameras\nCameras\nGo to Cameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nLaptops\nLaptops\nGo to Laptops\nMacbook\nNew\nUsed\nTablets\nTablets\nGo to Tablets\nApple\nSamsung\nXiaomi\nBlackview\nModio\nSmart Watch\nSmart Watch\nGo to Smart Watch\nApple\nSamsung\nFitbit\nHuawei\nAmazfit\nXiaomi\nGreen Lion\nProdo\nKieslect\nAccessories\nAccessories\nGo to Accessories\nAdapters & Cables\nStorage\nKids\nScooters\nGaming\nGaming\nGo to Gaming\nNintendo\nPS\nXBOX\nOthers\nPersonal Care\nPersonal Care\nGo to Personal Care\nHome Accessories\nPerfume\nMassage\nOthers\nTech Gadgets\nTech Gadgets\nGo to Tech Gadgets\nKits (Cleaning, Repair...)\nPower Devices\nSmart Devices\nRouters\nBags\nKindle\nStands\nCalculator\nHandy Phones\nAudio\nAudio\nGo to Audio\nEarphones\nSpeakers\nHeadphones\nEarbuds\nMicrophones\nCases\nCases\nGo to Cases\nApple\nSamsung\nOthers\nWatch Accessories\nKeyboards & Mouses\nOthers\nBlogs\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nLebanon\nFast Delivery\nFacebook\nInstagram\nLog in\nSearch\nGet in touchOur Hotline\nLebanon\n+961 81 672 136\nMar ellies, Beirut 961, Lebanon\ninfo@classic-phones.com\nSearch\nLog in\n0\n00 items\nSubtotal\n$0\nShop All\nCameras\nCanon\nSony\nNikon\nSecurity\nLighting\nWeb Cam\nInsta360\nGo Pro\nDrones\nLens\nBatteries\nStands & Stabilizers\nGo to Cameras\nLaptops\nMacbook\nNew\nUsed\nGo to Laptops\nTablets\nApple\nSamsung\nXiaomi\nBlack",
+   "quoted": []
+  },
+  {
+   "obs": "T8",
+   "kind": "page",
+   "url": "https://isolvedit.me/products/logitech-h390-wired-headset-h390",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T06:06:50+00:00",
+   "sha256": "024e47a93c63bd143e741e0a455af123669b5f82d1a65676dc68b3096493c37e",
+   "excerpt": "Logitech H390 USB Headset with Noise-Cancelling Mic Price in Lebanon\nSkip to content\nYour cart is empty\nContinue shopping\nHave an account?\nLog in to check out faster.\nYour cart\nLoading...\nEstimated total\n$0.00 USD\n✅ All prices include VAT – nothing extra to pay. Discounts and shipping calculated at checkout.\nCheck out\n🎄 Christmas deals are live — order on WhatsApp\n✅ All prices include VAT — nothing extra to pay\n💵 Cash on delivery\n🛡️ 6-month warranty on used laptops\nShop\nApple\nApple\nApple Accessories\nApple Macbook\nApple iPad\nGaming\nGaming\nGaming Laptops\nGaming Monitors\nGaming Consoles\nGaming Accessories\nLaptops\nLaptops\nApple Laptops\nAsus Laptops\nAcer Laptops\nDell Laptops\nHp laptops\nLenovo Laptops\nMsi Laptops\nSecond Hand Laptops\nSony Laptops\nLaptop Parts\nDesktops\nDesktops\nAll Desktops & All-in-Ones\nDesktop PCs\nAll-in-One PCs\nComputer Parts\nComputer Parts\nMotherboards\nCPU's\nGPU's\nStorages\nRAM's\nCases and Chassis\nPower Supply\nAccessories\nAccessories\nAdapters & Converters\nBackpacks & Bags\nCables\nExternal Hard Drives\nFlash Drives & SD Cards\nMobile Accessories\nPower Banks\nChargers\nPhone Holders & Car Mounts\nDocking Stations & USB-C Hubs\nLaptop Stands & Coolers\nWebcams\nWireless Presenters\nInks & Toners\nMouse\nMouse Pads & Wrist Pads\nKeyboards\nAudio\nAudio\nEarbuds\nSpeakers\nHeadsets\nMicrophones\nElectronics\nElectronics\nTablets\nGadgets\nMonitors\nPrinters & Scanners\nPaper Shredders\nPOS & Barcode Scanners\nNetworking Products\nNetworking Products\nFiber Optic\nNetworking Accessories\nSwitches\nNetw",
+   "quoted": []
+  },
+  {
+   "obs": "T9",
+   "kind": "page",
+   "url": "https://www.macrotronics.net/meta.json",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T06:06:51+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"Macrotronics\", \"city\": \"Ghazir\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"www.macrotronics.net\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T10",
+   "kind": "page",
+   "url": "https://outgeeked.net/meta.json",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T06:06:51+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"OutGeeked\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"outgeeked.net\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T11",
+   "kind": "page",
+   "url": "https://outgeeked.net/products/logitech-h390-usb-headset-black",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T06:06:51+00:00",
+   "sha256": "6832f26c14a0c1a60dc3600b09fe4721c33f03e9b83cb32c70afec5113eeb447",
+   "excerpt": "Logitech H390 USB Headset Black | OutGeeked\nSkip to content\nCash on delivery\nall over Lebanon\nFacebook\nX (Twitter)\nInstagram\nTikTok\nSearch\nClear\nMost searched products\nSamsung Galaxy S26 12GB/256GB\nRegular price\n$848.00 USD\nSale price\n$848.00 USD\nRegular price\nUnit price\n/per\n4 colours\nView details\nChoose your option\n-9%\nApple iPhone 17 Pro Max (eSIM)\nRegular price\nFrom $1,470.00 USD\nSale price\nFrom $1,470.00 USD\nRegular price\n$1,630.00 USD\nUnit price\n/per\n256GB–2TB · 3 colours\nView details\nChoose your option\n-9%\nApple MacBook Pro M5 (14-inch, 2025)\nRegular price\nFrom $1,600.00 USD\nSale price\nFrom $1,600.00 USD\nRegular price\n$1,799.00 USD\nUnit price\n/per\n16GB/512GB–32GB/1TB · 2 colours\nView details\nChoose your option\n-24%\nSoundcore R50i NC\nRegular price\n$25.00 USD\nSale price\n$25.00 USD\nRegular price\n$33.00 USD\nUnit price\n/per\nIn stock\nView details\nChoose your option\nCart\n0\nBuild Your PC\nSmartphones\nShop All\niPhone\nAll iPhones\niPhone 18 Series\nAndroid Phones\nSamsung Galaxy\nHonor\nXiaomi\nRedmi\nPoco\nOppo\nTecno\nInfinix\nRealme\nRedMagic\nMore Phone Brands\nGoogle Pixel\nOnePlus\nNothing\nMotorola\nHuawei\nVivo\nCMF\nHMD\nBudget\nUnder $200$200–500$500–1,000$1,000+\nTop brands\nAppleSamsungXiaomiRedmiGoogleHonor\nAll brands →\nBest sellers\nSamsung\nSamsung Galaxy S26 12GB/256GB\n$848.00\nApple\nApple iPhone 17 Pro Max (eSIM)\nFrom $1,470.00$1,630.00\nTablets\nShop All\neReaders\nAndroid Tablets\nSamsung Galaxy Tab\nXiaomi\nRedmi\nHonor\nTecno\nHuawei\niPad\niPad\niPad Air\niPad Pro\niPad mini\nBudget\nUnder $300$300–700",
+   "quoted": []
+  },
+  {
+   "obs": "T12",
+   "kind": "page",
+   "url": "https://isolvedit.me/meta.json",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T06:06:51+00:00",
+   "sha256": "",
+   "excerpt": "{\"name\": \"iSolved IT Solutions\", \"city\": \"Beirut\", \"province\": \"\", \"country\": \"LB\", \"currency\": \"USD\", \"domain\": \"isolvedit.me\"}",
+   "quoted": []
+  },
+  {
+   "obs": "T13",
+   "kind": "page",
+   "url": "https://abedtahan.com/products/logitech-h390-usb-stereo-headset-noise-cancelling",
+   "shop_id": "abed_tahan",
+   "observed_at": "2026-11-28T06:06:51+00:00",
+   "sha256": "e289b420aaf3ad22b3298f6f8baf3fcf461d3ed1bf8e1ca929a5042aba773439",
+   "excerpt": "Logitech H390 USB Stereo Headset Noise-Cancelling – Abed Tahan\nRead the Privacy Policy\nSkip to content\nCategories\nBrands\nQuick Links\nWedding List\nStore Locator\nSupport\nAll Categories\nNew In\nBest Sellers\nBeauty & Wellness\nKitchen Appliances\nKitchen Appliances\nRefrigerators\nRefrigerators\nAll Refrigerators\nMini Fridges\nTop-Freezer\nBottom-Freezer\n4 Doors\nFreezerless\nBeverage Refrigerators\nBuilt-in Refrigerators\nFreezers\nFreezers\nAll Freezers\nUpright Freezers\nChest Freezers\nBuilt-in\nMicrowaves\nMicrowaves\nAll Microwaves\nOven and Microwave combos\nBuilt-in\nRange Hoods\nRange Hoods\nAll Range Hoods\nWall Mounted Hoods\nUnder-Cabinet Hoods\nIsland Hoods\nCooktops\nCooktops\nAll Cooktops\nGas Cooktops\nElectric Cooktops\nGas-Electric Cooktops\nBuilt In Ovens\nDishwashers\nDishwashers\nAll Dishwashers\nFreestanding Dishwashers\nBuilt-in\nCookers\nCookers\nAll Cookers\nWith Bottle Compartment\nWide\nWater Dispensers\nSmall Kitchen Appliances\nSmall Kitchen Appliances\nCooking\nCooking\nAll Cooking\nAir Fryers\nDeep Fryers\nMulticookers & Pressure Cookers\nMini Ovens\nBread Makers\nFood Preparations\nFood Preparations\nAll Food Preparations\nBlenders\nMixers\nFood Processors\nMicrowaves\nMeat Grinders & Mincers\nKitchen Scales\nCookware & Bakeware\nCookware & Bakeware\nAll Cookware & Bakeware\nCookware\nTrays\nBakeware\nBreakfast\nBreakfast\nAll Breakfast\nCoffee Machines\nCoffee & Tea\nCoffee Pods/Capsules\nCoffee & Travel Mugs\nKettles\nJuice & Juice Extractors\nFun Cooking\nFun Cooking\nAll Fun Cooking\nCotton Candy & Chocolate Fountains\nWaffles ",
+   "quoted": []
+  },
+  {
+   "obs": "T14",
+   "kind": "page",
+   "url": "https://www.macrotronics.net/",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T06:06:52+00:00",
+   "sha256": "deaed7348762f6f5af73e55c6fc82e969db000ed93ed9457f50f2b180feb5664",
+   "excerpt": "Macrotronics | PCs, Laptops, Gaming PCs & IT Equipment Lebanon\nSkip to content\nFacebook\nTwitter\nInstagram\nHelpline +961 71 854 621 | +961 9 853 008\nTechnical Support +961 71 94 84 94\nPause slideshow\nPlay slideshow\nComputers\nComputers\nLaptops\nOn-Demand Laptops\nLaptop Power Adapters\nLaptop Accessories\nApple Computers\nApple Accessories\niPads and Tablets\nTablets Accessories\nComputer & Smart Monitors\nMonitor Accessories\nServers, Workstations and NAS\nDesktops and Mini PCs\nPOS and POS Equipment\nOriginal Softwares and Antivirus\nComputer Parts\nComputer Parts\nProcessors\nGraphic Cards\nMotherboards\nRAMs\nSSD\nHDD\nCPU Coolers\nThermal Paste and Pads\nPower Supplies\nComputer Cases\nComputer Case Accessories\nMore PC Components\nLegacy Computer Parts\nUsed Computer Parts\nComputer Peripherals\nComputer Peripherals\nMice & Keyboards\nEarphones & Headphones\nComputer & Bluetooth Speakers\nWebcams & Microphones\nLaptop Bags & Cases\nComputer & Video Cables\nFlash Drives & Memory Cards\nPrinters, Scanners & Faxes\nPaper & Media Supplies\nGenuine Inks & Ribbons\nGenuine Toners & Drums\nCompatible Toners & Drums\nOffice Furniture\nElectronics & More\nElectronics & More\nUPS\nBatteries\nSmart Appliances\nAdapters and Converters\nEducational Electronics\nConsumer Electronics\nSurveillance and Security\nProjectors, Screens and More\nRouters, Repeaters and APs\nNetwork Switches\nNetwork Adapters\nNetworking and Tools\nGaming\nGaming\nGaming PCs\nGaming Monitors\nGaming Headsets\nGaming Pads\nGaming Mice\nGaming Keyboards\nGaming Chairs\nGaming De",
+   "quoted": []
+  },
+  {
+   "obs": "T15",
+   "kind": "page",
+   "url": "https://outgeeked.net/",
+   "shop_id": "outgeeked",
+   "observed_at": "2026-11-28T06:06:52+00:00",
+   "sha256": "3593dde58e5d4b1e06fd96eab0a8b94780a8d5a1702d793f22f2524ee97d67d7",
+   "excerpt": "Buy Smartphones & Laptops in Lebanon | OutGeeked.net\nSkip to content\nCash on delivery\nall over Lebanon\nFacebook\nX (Twitter)\nInstagram\nTikTok\nSearch\nClear\nMost searched products\nSamsung Galaxy S26 12GB/256GB\nRegular price\n$848.00 USD\nSale price\n$848.00 USD\nRegular price\nUnit price\n/per\n4 colours\nView details\nChoose your option\n-9%\nApple iPhone 17 Pro Max (eSIM)\nRegular price\nFrom $1,470.00 USD\nSale price\nFrom $1,470.00 USD\nRegular price\n$1,630.00 USD\nUnit price\n/per\n256GB–2TB · 3 colours\nView details\nChoose your option\n-9%\nApple MacBook Pro M5 (14-inch, 2025)\nRegular price\nFrom $1,600.00 USD\nSale price\nFrom $1,600.00 USD\nRegular price\n$1,799.00 USD\nUnit price\n/per\n16GB/512GB–32GB/1TB · 2 colours\nView details\nChoose your option\n-24%\nSoundcore R50i NC\nRegular price\n$25.00 USD\nSale price\n$25.00 USD\nRegular price\n$33.00 USD\nUnit price\n/per\nIn stock\nView details\nChoose your option\nCart\n0\nBuild Your PC\nSmartphones\nShop All\niPhone\nAll iPhones\niPhone 18 Series\nAndroid Phones\nSamsung Galaxy\nHonor\nXiaomi\nRedmi\nPoco\nOppo\nTecno\nInfinix\nRealme\nRedMagic\nMore Phone Brands\nGoogle Pixel\nOnePlus\nNothing\nMotorola\nHuawei\nVivo\nCMF\nHMD\nBudget\nUnder $200$200–500$500–1,000$1,000+\nTop brands\nAppleSamsungXiaomiRedmiGoogleHonor\nAll brands →\nBest sellers\nSamsung\nSamsung Galaxy S26 12GB/256GB\n$848.00\nApple\nApple iPhone 17 Pro Max (eSIM)\nFrom $1,470.00$1,630.00\nTablets\nShop All\neReaders\nAndroid Tablets\nSamsung Galaxy Tab\nXiaomi\nRedmi\nHonor\nTecno\nHuawei\niPad\niPad\niPad Air\niPad Pro\niPad mini\nBudget\nUnder $30",
+   "quoted": []
+  },
+  {
+   "obs": "T16",
+   "kind": "page",
+   "url": "https://isolvedit.me/",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T06:06:53+00:00",
+   "sha256": "db69cd89b52e94bddcea4663df5dd0c51d4f4a6a958e4099c76f95e062b8afd1",
+   "excerpt": "iSolvedIT — Laptops, Computers, Monitors & UPS in Lebanon\nSkip to content\nYour cart is empty\nContinue shopping\nHave an account?\nLog in to check out faster.\nYour cart\nLoading...\nEstimated total\n$0.00 USD\n✅ All prices include VAT – nothing extra to pay. Discounts and shipping calculated at checkout.\nCheck out\n🎄 Christmas deals are live — order on WhatsApp\n✅ All prices include VAT — nothing extra to pay\n💵 Cash on delivery\n🛡️ 6-month warranty on used laptops\nShop\nApple\nApple\nApple Accessories\nApple Macbook\nApple iPad\nGaming\nGaming\nGaming Laptops\nGaming Monitors\nGaming Consoles\nGaming Accessories\nLaptops\nLaptops\nApple Laptops\nAsus Laptops\nAcer Laptops\nDell Laptops\nHp laptops\nLenovo Laptops\nMsi Laptops\nSecond Hand Laptops\nSony Laptops\nLaptop Parts\nDesktops\nDesktops\nAll Desktops & All-in-Ones\nDesktop PCs\nAll-in-One PCs\nComputer Parts\nComputer Parts\nMotherboards\nCPU's\nGPU's\nStorages\nRAM's\nCases and Chassis\nPower Supply\nAccessories\nAccessories\nAdapters & Converters\nBackpacks & Bags\nCables\nExternal Hard Drives\nFlash Drives & SD Cards\nMobile Accessories\nPower Banks\nChargers\nPhone Holders & Car Mounts\nDocking Stations & USB-C Hubs\nLaptop Stands & Coolers\nWebcams\nWireless Presenters\nInks & Toners\nMouse\nMouse Pads & Wrist Pads\nKeyboards\nAudio\nAudio\nEarbuds\nSpeakers\nHeadsets\nMicrophones\nElectronics\nElectronics\nTablets\nGadgets\nMonitors\nPrinters & Scanners\nPaper Shredders\nPOS & Barcode Scanners\nNetworking Products\nNetworking Products\nFiber Optic\nNetworking Accessories\nSwitches\nNetwork & Serve",
+   "quoted": []
+  },
+  {
+   "obs": "T17",
+   "kind": "page",
+   "url": "https://isolvedit.me/policies/shipping-policy",
+   "shop_id": "isolvedit",
+   "observed_at": "2026-11-28T06:07:03+00:00",
+   "sha256": "80c4a383284808a102add9563ff727ffac3648bf3ab97d488281479264b40c7a",
+   "excerpt": "Shipping policy | iSolved IT\nSkip to content\nYour cart is empty\nContinue shopping\nHave an account?\nLog in to check out faster.\nYour cart\nLoading...\nEstimated total\n$0.00 USD\n✅ All prices include VAT – nothing extra to pay. Discounts and shipping calculated at checkout.\nCheck out\n🎄 Christmas deals are live — order on WhatsApp\n✅ All prices include VAT — nothing extra to pay\n💵 Cash on delivery\n🛡️ 6-month warranty on used laptops\nShop\nApple\nApple\nApple Accessories\nApple Macbook\nApple iPad\nGaming\nGaming\nGaming Laptops\nGaming Monitors\nGaming Consoles\nGaming Accessories\nLaptops\nLaptops\nApple Laptops\nAsus Laptops\nAcer Laptops\nDell Laptops\nHp laptops\nLenovo Laptops\nMsi Laptops\nSecond Hand Laptops\nSony Laptops\nLaptop Parts\nDesktops\nDesktops\nAll Desktops & All-in-Ones\nDesktop PCs\nAll-in-One PCs\nComputer Parts\nComputer Parts\nMotherboards\nCPU's\nGPU's\nStorages\nRAM's\nCases and Chassis\nPower Supply\nAccessories\nAccessories\nAdapters & Converters\nBackpacks & Bags\nCables\nExternal Hard Drives\nFlash Drives & SD Cards\nMobile Accessories\nPower Banks\nChargers\nPhone Holders & Car Mounts\nDocking Stations & USB-C Hubs\nLaptop Stands & Coolers\nWebcams\nWireless Presenters\nInks & Toners\nMouse\nMouse Pads & Wrist Pads\nKeyboards\nAudio\nAudio\nEarbuds\nSpeakers\nHeadsets\nMicrophones\nElectronics\nElectronics\nTablets\nGadgets\nMonitors\nPrinters & Scanners\nPaper Shredders\nPOS & Barcode Scanners\nNetworking Products\nNetworking Products\nFiber Optic\nNetworking Accessories\nSwitches\nNetwork & Server Cabinets\nRouters & Modems\nC",
+   "quoted": [
+    {
+     "quote": "Discounts and shipping calculated at checkout.",
+     "found": true
+    }
+   ]
+  },
+  {
+   "obs": "P11",
+   "kind": "product",
+   "url": "https://technodel.net/product/logitech-logitech-wired-h390-with-noise-canceling-mic-in-line-controls-usb-a-black-981-000406",
+   "shop_id": "technodel",
+   "observed_at": "2026-11-28T06:07:03+00:00",
+   "sha256": "95eb666468acb10e2a67bd9093a5c39468a5aeb9ded6599085a968a0e4679aef",
+   "product": {
+    "shop": "Technodel",
+    "shop_id": "technodel",
+    "title": "Logitech Wired H390 with Noise-Canceling Mic in-line controls USB A (Black) 981-000406",
+    "url": "https://technodel.net/product/logitech-logitech-wired-h390-with-noise-canceling-mic-in-line-controls-usb-a-black-981-000406",
+    "vendor": "Logitech",
+    "product_type": null,
+    "condition": "NewCondition",
+    "source": "schema_org_jsonld",
+    "observed_at": "2026-11-28T06:07:03+00:00",
+    "variants": [
+     {
+      "variant_id": "RK-HPQYF11Q",
+      "title": "Logitech Wired H390 with Noise-Canceling Mic in-line controls USB A (Black) 981-000406",
+      "options": {},
+      "price": "26.00",
+      "compare_at": null,
+      "currency": "USD",
+      "available": true,
+      "stock_text": "InStock",
+      "sku": "RK-HPQYF11Q",
+      "url": "https://technodel.net/product/logitech-logitech-wired-h390-with-noise-canceling-mic-in-line-controls-usb-a-black-981-000406",
+      "condition": "NewCondition"
+     }
+    ],
+    "description": "Logitech H390 wired USB-A headset in black with a noise-cancelling microphone and in-line controls for clear calls and everyday listening."
+   }
+  },
+  {
+   "obs": "T18",
+   "kind": "page",
+   "url": "https://www.macrotronics.net/products/microsoft-lx-3000-business-headset-essential-jug",
+   "shop_id": "macrotronics",
+   "observed_at": "2026-11-28T06:07:04+00:00",
+   "sha256": "ce49660a450edff5b673a38169bd39a3eb37d23a926a05045e635dad3874448b",
+   "excerpt": "Microsoft Lx 3000 Business Headset Essential Jug – Macrotronics\nSkip to content\nFacebook\nTwitter\nInstagram\nHelpline +961 71 854 621 | +961 9 853 008\nTechnical Support +961 71 94 84 94\nPause slideshow\nPlay slideshow\nComputers\nComputers\nLaptops\nOn-Demand Laptops\nLaptop Power Adapters\nLaptop Accessories\nApple Computers\nApple Accessories\niPads and Tablets\nTablets Accessories\nComputer & Smart Monitors\nMonitor Accessories\nServers, Workstations and NAS\nDesktops and Mini PCs\nPOS and POS Equipment\nOriginal Softwares and Antivirus\nComputer Parts\nComputer Parts\nProcessors\nGraphic Cards\nMotherboards\nRAMs\nSSD\nHDD\nCPU Coolers\nThermal Paste and Pads\nPower Supplies\nComputer Cases\nComputer Case Accessories\nMore PC Components\nLegacy Computer Parts\nUsed Computer Parts\nComputer Peripherals\nComputer Peripherals\nMice & Keyboards\nEarphones & Headphones\nComputer & Bluetooth Speakers\nWebcams & Microphones\nLaptop Bags & Cases\nComputer & Video Cables\nFlash Drives & Memory Cards\nPrinters, Scanners & Faxes\nPaper & Media Supplies\nGenuine Inks & Ribbons\nGenuine Toners & Drums\nCompatible Toners & Drums\nOffice Furniture\nElectronics & More\nElectronics & More\nUPS\nBatteries\nSmart Appliances\nAdapters and Converters\nEducational Electronics\nConsumer Electronics\nSurveillance and Security\nProjectors, Screens and More\nRouters, Repeaters and APs\nNetwork Switches\nNetwork Adapters\nNetworking and Tools\nGaming\nGaming\nGaming PCs\nGaming Monitors\nGaming Headsets\nGaming Pads\nGaming Mice\nGaming Keyboards\nGaming Chairs\nGaming D",
+   "quoted": []
+  },
+  {
+   "obs": "T19",
+   "kind": "page",
+   "url": "https://technodel.net/product/logitech-logitech-wired-h390-with-noise-canceling-mic-in-line-controls-usb-a-black-981-000406",
+   "shop_id": "technodel",
+   "observed_at": "2026-11-28T06:07:11+00:00",
+   "sha256": "ff876569b7e236267875bf93d632c60855faeb519b288b4e0e88a8cded1602c1",
+   "excerpt": "Logitech Wired H390 with Noise-Canceling Mic in-line controls USB A (Black) 981-000406\nFlat $4 Fast Delivery across Lebanon\n🔥 Get exclusive daily tech deals before anyone else.Join Channel\nLight\nToday's offerEnds in--:--:--\nPC Builder· build & check compatibilityNEW\nPrice matchFound it cheaper?We'll match it\nBeirutBadaroSourAbbassiyeh\nBlog\nCompare\nCart\nPC Builder\nAll CategoriesBrands\nAudio▾\nMonitors▾\nHardwareComputer parts▾\nLaptops▾\nGaming▾\nNetworking▾\nDeals\nMy AccountOrdersLBP\nHome›Headsets›Logitech Headsets›Logitech Wired H390 with Noise-Canceling Mic in-line controls USB A (Black) 981-000406\nLOGITECH ›\nLogitech Wired H390 with Noise-Canceling Mic in-line controls USB A (Black) 981-000406\n$26\nWired USB-A headset with a noise-cancelling microphone and in-line controls, finished in black.\n✓Noise-cancelling boom microphone\n✓In-line volume and mute controls\n✓Wired USB-A connection\n✓Black finish\n✓Built for voice calls\n−\n1\n+\n🛒 Add to Cart🤍\nOrder via WhatsApp— Quick & Easy\n●In StockSKU: RK-HPQYF11Q\n🔕Watch price — get notified on drop🔗\n🛒 Frequently Bought Together\nLogitech\nLogitech Wireless Mouse Silent M220 (Charcoal) 910-004878\nMice\n$15\nAdd to Cart\nLogitech\nLogitech Dark Extended Gaming Mousepad\nMouse Pads\n$15\n$18\nAdd to Cart\nLogitech\nLogitech K120 USB Keyboard Full-Size Wired Plug & Play Spill-Resistant Durable Design With Number Pad\nKeyboards\n$12\n$13\nAdd to Cart\nAll 3 together\n$42\nAdd All to Cart\nSign in to write a review\n❓ Common Questions\nReal questions customers ask about th",
+   "quoted": [
+    {
+     "quote": "Wired USB-A connection",
+     "found": true
+    },
+    {
+     "quote": "Noise-cancelling boom microphone",
+     "found": true
+    },
+    {
+     "quote": "Volume and mute sit on the cable for quick adjustment without leaving the screen.",
+     "found": true
+    }
+   ]
+  }
+ ]
+}
