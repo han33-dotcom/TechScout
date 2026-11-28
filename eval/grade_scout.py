@@ -26,10 +26,17 @@ def references(kind: str) -> dict:
         data = json.loads(FROZEN.read_text(encoding='utf-8'))
         return {c['id']: c for c in data['cases']}
     data = json.loads(CONFIRM.read_text(encoding='utf-8'))
-    cases = data.get('cases', data) if isinstance(data, dict) else data
-    if isinstance(cases, dict):
-        return cases
-    return {c.get('id'): c for c in cases}
+    observations = data.get('observations') or {}
+    inputs = {c['id']: c for c in json.loads(
+        (ROOT / 'acceptance' / 'architecture-v2' / 'confirmation-inputs.json').read_text(encoding='utf-8'))}
+    out = {}
+    for c in data.get('cases', []):
+        # The confirmation grader names a reference status instead of a class, and keeps the
+        # evidence records separately; attach both so a grader sees the whole reference.
+        out[c['id']] = dict(c, expected_class=c.get('status'), expected_buyer_outcome=c.get('expected'),
+                            input=inputs.get(c['id'], {}),
+                            evidence_records={k: observations.get(k) for k in c.get('evidence', [])})
+    return out
 
 
 def show_run(run: dict) -> list[str]:

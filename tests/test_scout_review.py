@@ -186,6 +186,23 @@ class ShopTermsSpotCheckTests(unittest.TestCase):
         self.assertIsNone(fee_problem(flat, Decimal('4'), None, price, 'Tripoli'))
 
 
+class PreparedIndexTests(unittest.TestCase):
+    """Found by the held-out run: whole-index scoring in Python stalled parallel searches."""
+
+    def test_prepared_index_ranks_like_the_plain_score(self):
+        from app.scout.catalog import PreparedIndex, score
+        rows = [dict(title='Silicone Case for Samsung Galaxy S24 Ultra', url='u1'),
+                dict(title='Samsung Galaxy S24 Ultra 12GB 256GB', url='u2', skus=['SM-S928B']),
+                dict(title='Logitech H390 USB Computer Headset', url='u3'),
+                dict(title='Apple iPad A16 11 inch 128GB Blue', url='u4')] * 50
+        index = PreparedIndex(rows)
+        for query in ('galaxy s24 ultra', 'logitech h390 usb', 'sm s928b', 'ipad a16 128gb'):
+            fast = index.best(query, 3)
+            plain = sorted(rows, key=lambda r: -score(query, r['title'], ' '.join(r.get('skus') or [])))
+            self.assertEqual(fast[0][1]['url'], plain[0]['url'], query)
+        self.assertEqual(index.best('nothing matches this', 3), [])
+
+
 class SlowShopTests(unittest.TestCase):
     def test_a_slow_shop_is_dropped_not_waited_for(self):
         import time

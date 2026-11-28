@@ -13,6 +13,7 @@ claim a price or stock state.
 """
 from __future__ import annotations
 
+from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, wait
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
@@ -21,6 +22,7 @@ import json
 from pathlib import Path
 import re
 import sys
+import threading
 import time
 
 from app.scout import shops as shop_dir
@@ -30,7 +32,7 @@ from app.scout.web import FetchError, SafeWeb
 ROOT = Path(__file__).resolve().parents[2]
 CACHE_DIR = ROOT / 'var' / 'scout-catalog'
 INDEX_MAX_AGE = timedelta(days=2)
-SEARCH_SECONDS = 15.0  # shops that have not answered by then are reported as SLOW and skipped
+SEARCH_SECONDS = 9.0  # shops that have not answered by then are reported as SLOW and skipped
 TOKEN = re.compile(r'[a-z0-9]+(?:\.[0-9]+)?')
 STOP = {'the', 'a', 'an', 'and', 'or', 'for', 'with', 'new', 'of', 'in', 'to', 'by', 'gb', 'inch'}
 
@@ -71,6 +73,73 @@ def score(query: str, title: str, extra: str = '') -> float:
         elif t in more:
             got += 0.5
     return got / len(q) * accessory_penalty(query, title)
+
+
+class PreparedIndex:
+    """A shop's index rows with their words worked out once, and a word -> rows lookup.
+
+    Scoring every title of a 27,000-product index in pure Python for each query took most of a
+    search's time (and starved parallel searches of CPU). A search now scores only the rows that
+    share a word with the query, using words computed when the index was loaded."""
+
+    def __init__(self, rows: list[dict]):
+        self.rows = rows
+        self.title_words: list[set[str]] = []
+        self.joined: list[str] = []
+        self.more_words: list[set[str]] = []
+        self.lookup: dict[str, list[int]] = defaultdict(list)
+        for i, r in enumerate(rows):
+            title = tokens(r.get('title', ''))
+            more = tokens(' '.join(r.get('variant_titles') or []) + ' ' + ' '.join(r.get('skus') or [])
+                          + ' ' + str(r.get('vendor') or ''))
+            words = set(title)
+            self.title_words.append(words)
+            self.joined.append(''.join(title))
+            self.more_words.append(set(more))
+            for w in words | set(more):
+                self.lookup[w].append(i)
+
+    def best(self, query: str, k: int) -> list[tuple[float, dict]]:
+        q = [t for t in tokens(query) if t not in STOP] or tokens(query)
+        if not q:
+            return []
+        wanted = set(tokens(query))
+        candidates = set()
+        for t in q:
+            candidates.update(self.lookup.get(t, ()))
+        scored = []
+        for i in candidates:
+            words, joined, more = self.title_words[i], self.joined[i], self.more_words[i]
+            got = 0.0
+            for t in q:
+                if t in words or (len(t) >= 4 and t in joined):
+                    got += 1
+                elif t in more:
+                    got += 0.5
+            extra = (words & ACCESSORY) - wanted
+            penalty = 1.0 if not extra else (0.35 if 'for' in words or 'compatible' in words or len(extra) >= 2
+                                             else 0.6)
+            scored.append((got / len(q) * penalty, self.rows[i]))
+        scored.sort(key=lambda x: -x[0])
+        return scored[:k]
+
+
+_INDEXES: dict[str, tuple[float, PreparedIndex]] = {}   # index file path -> (mtime, prepared index)
+_INDEXES_LOCK = threading.Lock()
+
+
+def load_index(path: Path) -> PreparedIndex:
+    """One prepared index per file and process, reloaded only when the file changes."""
+    key = str(path)
+    mtime = path.stat().st_mtime if path.is_file() else 0.0
+    with _INDEXES_LOCK:
+        cached = _INDEXES.get(key)
+        if cached and cached[0] == mtime:
+            return cached[1]
+        rows = json.loads(path.read_text(encoding='utf-8')).get('rows', []) if mtime else []
+        prepared = PreparedIndex(rows)
+        _INDEXES[key] = (mtime, prepared)
+        return prepared
 
 
 @dataclass
@@ -135,12 +204,9 @@ class ShopSearch:
         return []
 
     def _indexed(self, shop, query: str, per_shop: int) -> list[Hit]:
-        rows = self.index(shop)
-        scored = sorted(((score(query, r['title'], ' '.join(r.get('variant_titles') or []) + ' ' +
-                                ' '.join(r.get('skus') or []) + ' ' + str(r.get('vendor') or '')), r)
-                         for r in rows), key=lambda x: -x[0])
+        scored = load_index(self.cache_dir / f'{shop.shop_id}.json').best(query, per_shop)
         hits = []
-        for s, r in scored[:per_shop]:
+        for s, r in scored:
             if s <= 0:
                 break
             hits.append(Hit(shop.shop_id, shop.name, r['title'], r['url'], money(r.get('price_min')),
@@ -149,15 +215,7 @@ class ShopSearch:
 
     # ---- local index for shops without live search -------------------------------------------
     def index(self, shop) -> list[dict]:
-        if shop.shop_id in self._index:
-            return self._index[shop.shop_id]
-        path = self.cache_dir / f'{shop.shop_id}.json'
-        rows: list[dict] = []
-        if path.is_file():
-            data = json.loads(path.read_text(encoding='utf-8'))
-            rows = data.get('rows', [])
-        self._index[shop.shop_id] = rows
-        return rows
+        return load_index(self.cache_dir / f'{shop.shop_id}.json').rows
 
     def refresh(self, shop, *, max_pages: int = 30) -> dict:
         """Rebuild one shop's local index from its public catalog. Returns a small report."""
@@ -185,7 +243,6 @@ class ShopSearch:
                        rows=rows)
         (self.cache_dir / f'{shop.shop_id}.json').write_text(json.dumps(payload, ensure_ascii=False),
                                                               encoding='utf-8')
-        self._index[shop.shop_id] = rows
         return dict(shop_id=shop.shop_id, status='ok', rows=len(rows), seconds=round(time.monotonic() - started, 1))
 
     def stale(self, shop) -> bool:
